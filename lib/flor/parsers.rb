@@ -216,7 +216,32 @@ require 'raabro'
 # {
 #   return fabr_seq(NULL, i, _postval, _val, NULL);
 # }
-#
+
+module Flor
+
+  module Json include Raabro
+
+    def shacom(i); rex(nil, i, /#[^\r\n]*/); end
+    def slacom(i); rex(nil, i, /\/\/[^\r\n]*/); end
+    def com(i); alt(nil, i, :shacom, :slacom); end
+
+    def ws(i); rex(nil, i, /[ \t]/); end
+    def rn(i); rex(nil, i, /[\r\n]/); end
+
+    def eol(i); seq(nil, i, :ws, '*', :com, '?', :rn, '*'); end
+
+    def val(i); seq(nil, i, :value, :postval); end
+    def postval(i); seq(nil, i, :eol, '*'); end
+
+    def djan(i); seq(nil, i, :postval, :val); end
+  end
+
+  module Radial
+
+    # TODO
+  end
+end
+
 # // radial
 #
 # static fabr_tree *_rad_g(fabr_input *i); // forward
@@ -308,36 +333,3 @@ require 'raabro'
 # {
 #   return fabr_rep(NULL, i, _rad_line, 0, 0);
 # }
-
-module Flor::Djan
-
-  def self.parse(s)
-
-    nil
-  end
-end
-
-# // path parser
-#
-# static fabr_tree *_pa_key(fabr_input *i)
-# {
-#   return fabr_rex("key", i, "(\\\\.|[^\n\r\t\\.])+");
-# }
-# static fabr_tree *_pa_index(fabr_input *i)
-# {
-#   return fabr_rex("index", i, "-?[0-9]+");
-# }
-# static fabr_tree *_pa_node(fabr_input *i)
-# {
-#   return fabr_altg("node", i, _pa_key, _pa_index, NULL);
-# }
-# static fabr_tree *_pa_dot(fabr_input *i)
-# {
-#   return fabr_str(NULL, i, ".");
-# }
-#
-# static fabr_tree *_path(fabr_input *i)
-# {
-#   return fabr_jseq(NULL, i, _pa_node, _pa_dot);
-# }
-
