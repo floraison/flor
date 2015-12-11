@@ -47,6 +47,21 @@ DB.create_table :flor_schedules do
   index :domain
   index :exid
 end
+
+DB.create_table :flor_logs do
+
+  primary_key :id, type: Bignum
+  Time :tstamp
+  String :domain, null: false
+  String :exid, null: false
+  String :reporter, null: false # 'dispatcher'
+  String :subject, null: false # 'execution x', 'node y'
+  String :action, null: false # 'dispatch', 'task', 'fail'
+  String :message, null: false # 'blah blah blah'
+
+  index :domain
+  index :exid
+end
 ```
 
 Well, that could become a single table...
