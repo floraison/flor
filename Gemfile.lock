@@ -4,11 +4,15 @@ PATH
     flor (0.1.0)
       raabro (>= 1.0.5)
 
+PATH
+  remote: ../../raabro/
+  specs:
+    raabro (1.0.6)
+
 GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.2.5)
-    raabro (1.0.5)
     rake (10.4.2)
     rspec (3.3.0)
       rspec-core (~> 3.3.0)
@@ -29,6 +33,7 @@ PLATFORMS
 
 DEPENDENCIES
   flor!
+  raabro!
   rake
   rspec (>= 2.13.0)
 

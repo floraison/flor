@@ -221,19 +221,75 @@ module Flor
 
   module Json include Raabro
 
+    # parsing
+
     def shacom(i); rex(nil, i, /#[^\r\n]*/); end
     def slacom(i); rex(nil, i, /\/\/[^\r\n]*/); end
     def com(i); alt(nil, i, :shacom, :slacom); end
 
     def ws(i); rex(nil, i, /[ \t]/); end
     def rn(i); rex(nil, i, /[\r\n]/); end
+    def colon(i); str(nil, i, ':'); end
 
     def eol(i); seq(nil, i, :ws, '*', :com, '?', :rn, '*'); end
+
+    def dol(i); rex(nil, i, /[^ \r\n\t\\)]+/); end
+    def dolstart(i); str(nil, i, '$('); end
+    def symcore(i); rex(nil, i, /[^: \b\f\n\r\t\"',\\(\\)\\[\\]\\{\\}#\\\\]+/); end
+    def symdol(i); seq(nil, i, :dolstart, :dol, :pend); end
+    def symelt(i); alt(nil, i, :symdol, :symcore, :colon); end
+
+    def symbol(i); rep(:symbol, i, :symelt, 1); end
+
+    def number(i); rex(:number, i, /-?[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?/); end
+
+# static fabr_tree *_string(fabr_input *i)
+# {
+#   return fabr_rex("string", i,
+#     "\""
+#       "("
+#         "\\\\[\"\\/\\\\bfnrt]" "|"
+#         "\\\\u[0-9a-fA-F]{4}" "|"
+#         "[^"
+#           "\"" "\\\\" /*"\\/"*/ "\b" "\f" "\n" "\r" "\t"
+#         "]"
+#       ")*"
+#     "\"");
+# }
+# static fabr_tree *_sqstring(fabr_input *i)
+# {
+#   return fabr_rex("sqstring", i,
+#     "'"
+#       "("
+#         "\\\\['\\/\\\\bfnrt]" "|"
+#         "\\\\u[0-9a-fA-F]{4}" "|"
+#         "[^"
+#           "'" "\\\\" /*"\\/"*/ "\b" "\f" "\n" "\r" "\t"
+#         "]"
+#       ")*"
+#     "'");
+# }
+
+    #def v(i); alt(nil, i, :string, :sqstring, :number, :object, :array, :true, :false, :null); end
+    def v(i); alt(nil, i, :number); end
+    #def value(i); altg(nil, i, :symbol, :v); end
+    def value(i); altg(nil, i, :v, :symbol); end
 
     def val(i); seq(nil, i, :value, :postval); end
     def postval(i); seq(nil, i, :eol, '*'); end
 
     def djan(i); seq(nil, i, :postval, :val); end
+
+    # rewriting
+
+    def rewrite_(t) # shouldn't that be part of raabro?
+
+      c = t.children.find { |c| c.length > 0 }
+      #c = t.children.find { |c| c.length > 0 || c.name }
+      c ? rewrite(c) : nil
+    end
+
+    def rewrite_number(t); t.string.to_i; end
   end
 
   module Radial
