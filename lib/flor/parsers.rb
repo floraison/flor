@@ -282,13 +282,6 @@ module Flor
 
     # rewriting
 
-    def rewrite_(t) # shouldn't that be part of raabro?
-
-      c = t.children.find { |c| c.length > 0 }
-      #c = t.children.find { |c| c.length > 0 || c.name }
-      c ? rewrite(c) : nil
-    end
-
     def rewrite_number(t); t.string.to_i; end
   end
 
