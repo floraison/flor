@@ -32,7 +32,8 @@ describe Flor::Json do
   context 'strings' do
 
     [
-      [ '"hello"', 'hello' ]
+      [ '"hello"', 'hello' ],
+      [ '"hello \"old bore\""', 'hello "old bore"' ]
     ].each do |a|
 
       it "parses #{a[0].inspect}" do

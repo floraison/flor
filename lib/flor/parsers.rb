@@ -257,9 +257,11 @@ module Flor
 #     "\"");
 # }
     def string(i)
+
       rex(:string, i, %r{
         "(
-          [^"\\ \b\f\n\r\t]
+          \\["/\b\f\n\r\t] |
+          [^"\\\b\f\n\r\t]
         )*"
       }x)
     end
@@ -295,7 +297,7 @@ module Flor
     end
 
     def rewrite_string(t)
-      t.string[1..-2]
+      Flor.unescape(t.string[1..-2])
     end
   end
 
@@ -303,7 +305,87 @@ module Flor
 
     # TODO
   end
+
+  def self.unescape(s)
+
+    sio = StringIO.new
+
+    cs = s.each_char
+
+    loop do
+
+      c = cs.next
+
+      break unless c
+
+      if c == '\\'
+        c = cs.next
+        if c == 'u'
+          # TODO
+        elsif c == '\\' || c == '"'
+          # let it go
+        elsif %w[ b f n r t ].include?(c)
+          sio.print('\\')
+        else
+          sio.print('\\') # well
+        end
+      end
+      sio.print(c)
+    end
+
+    sio.string
+  end
 end
+
+# // based on cutef8 by Jeff Bezanson
+# //
+# char *flu_n_unescape(const char *s, size_t n)
+# {
+#   char *d = calloc(n + 1, sizeof(char));
+#
+#   for (size_t is = 0, id = 0; is < n; is++)
+#   {
+#     if (s[is] != '\\') { d[id++] = s[is]; continue; }
+#
+#     char c = s[is + 1];
+#     if (c == '\\') d[id++] = '\\';
+#     else if (c == '"') d[id++] = '"';
+#     else if (c == 'b') d[id++] = '\b';
+#     else if (c == 'f') d[id++] = '\f';
+#     else if (c == 'n') d[id++] = '\n';
+#     else if (c == 'r') d[id++] = '\r';
+#     else if (c == 't') d[id++] = '\t';
+#     else if (c == 'u')
+#     {
+#       char *su = strndup(s + is + 2, 4);
+#       unsigned int u = strtol(su, NULL, 16);
+#       free(su);
+#       if (u < 0x80)
+#       {
+#         d[id++] = (char)u;
+#       }
+#       else if (u < 0x800)
+#       {
+#         d[id++] = (u >> 6) | 0xc0;
+#         d[id++] = (u & 0x3f) | 0x80;
+#       }
+#       else //if (u < 0x8000)
+#       {
+#         d[id++] = (u >> 12) | 0xe0;
+#         d[id++] = ((u >> 6) & 0x3f) | 0x80;
+#         d[id++] = (u & 0x3f) | 0x80;
+#       }
+#       is += 4;
+#     }
+#     else // leave as is
+#     {
+#       d[id++] = '\\'; d[id++] = c;
+#     }
+#     is++;
+#   }
+#
+#   return d;
+# }
 
 # // radial
 #
