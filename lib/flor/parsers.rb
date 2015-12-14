@@ -273,7 +273,7 @@ module Flor
     #def v(i); alt(nil, i, :string, :sqstring, :number, :object, :array, :true, :false, :null); end
     def v(i); alt(nil, i, :number); end
     #def value(i); altg(nil, i, :symbol, :v); end
-    def value(i); altg(nil, i, :v, :symbol); end
+    def value(i); altg(nil, i, :symbol, :v); end
 
     def val(i); seq(nil, i, :value, :postval); end
     def postval(i); seq(nil, i, :eol, '*'); end
