@@ -241,7 +241,7 @@ module Flor
 
     def symbol(i); rep(:symbol, i, :symelt, 1); end
 
-    def number(i); rex(:number, i, /-?[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?/); end
+    def number(i); rex(:number, i, /-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/); end
 
 # static fabr_tree *_string(fabr_input *i)
 # {
@@ -282,7 +282,10 @@ module Flor
 
     # rewriting
 
-    def rewrite_number(t); t.string.to_i; end
+    def rewrite_number(t)
+      s = t.string
+      s.index('.') ? s.to_f : s.to_i
+    end
   end
 
   module Radial

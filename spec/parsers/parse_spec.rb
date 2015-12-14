@@ -13,7 +13,12 @@ describe Flor::Json do
   context 'numbers' do
 
     [
-      [ '-1', -1 ]
+      [ '1', 1 ],
+      [ '-1', -1 ],
+      [ '123', 123 ],
+      [ '0.0', 0.0 ],
+      [ '10.01', 10.01 ],
+      [ '1.5e2', 150 ]
     ].each do |a|
 
       it "parses #{a[0].inspect}" do
