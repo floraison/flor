@@ -256,6 +256,14 @@ module Flor
 #       ")*"
 #     "\"");
 # }
+    def string(i)
+      rex(:string, i, %r{
+        "(
+          [^"\\ \b\f\n\r\t]
+        )*"
+      }x)
+    end
+
 # static fabr_tree *_sqstring(fabr_input *i)
 # {
 #   return fabr_rex("sqstring", i,
@@ -271,8 +279,7 @@ module Flor
 # }
 
     #def v(i); alt(nil, i, :string, :sqstring, :number, :object, :array, :true, :false, :null); end
-    def v(i); alt(nil, i, :number); end
-    #def value(i); altg(nil, i, :symbol, :v); end
+    def v(i); alt(nil, i, :string, :number); end
     def value(i); altg(nil, i, :symbol, :v); end
 
     def val(i); seq(nil, i, :value, :postval); end
@@ -285,6 +292,10 @@ module Flor
     def rewrite_number(t)
       s = t.string
       s.index('.') ? s.to_f : s.to_i
+    end
+
+    def rewrite_string(t)
+      t.string[1..-2]
     end
   end
 

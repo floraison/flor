@@ -28,5 +28,19 @@ describe Flor::Json do
       end
     end
   end
+
+  context 'strings' do
+
+    [
+      [ '"hello"', 'hello' ]
+    ].each do |a|
+
+      it "parses #{a[0].inspect}" do
+
+        #expect(Flor::Json.parse(a[0], debug: 1)).to eq(a[1])
+        expect(Flor::Json.parse(a[0])).to eq(a[1])
+      end
+    end
+  end
 end
 
