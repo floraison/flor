@@ -33,7 +33,12 @@ describe Flor::Json do
 
     [
       [ '"hello"', 'hello' ],
-      [ '"hello \"old bore\""', 'hello "old bore"' ]
+      [ '"hello \"old bore\""', 'hello "old bore"' ],
+      [ '"hello\ttab"', "hello\ttab" ],
+      [ '"hello \z"', nil ],
+      [ '"hello\nalpha"', "hello\nalpha" ],
+      [ "\"hello\\nbravo\"", "hello\nbravo" ],
+      [ '"hello \u0066ool"', "hello fool" ]
     ].each do |a|
 
       it "parses #{a[0].inspect}" do

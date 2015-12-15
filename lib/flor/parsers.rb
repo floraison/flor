@@ -260,7 +260,7 @@ module Flor
 
       rex(:string, i, %r{
         "(
-          \\["/\b\f\n\r\t] |
+          \\["bfnrt] |
           [^"\\\b\f\n\r\t]
         )*"
       }x)
@@ -319,18 +319,19 @@ module Flor
       break unless c
 
       if c == '\\'
-        c = cs.next
-        if c == 'u'
-          # TODO
-        elsif c == '\\' || c == '"'
-          # let it go
-        elsif %w[ b f n r t ].include?(c)
-          sio.print('\\')
-        else
-          sio.print('\\') # well
+        case cn = cs.next
+          when 'u' then sio.print(unescape_u(cs))
+          when '\\', '"' then sio.print(cn)
+          when 'b' then sio.print("\b")
+          when 'f' then sio.print("\f")
+          when 'n' then sio.print("\n")
+          when 'r' then sio.print("\r")
+          when 't' then sio.print("\t")
+          else sio.print("\\#{cn}")
         end
+      else
+        sio.print(c)
       end
-      sio.print(c)
     end
 
     sio.string
