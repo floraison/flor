@@ -254,6 +254,17 @@ module Flor
       }x)
     end
 
+    def sqstring(i)
+
+      rex(:string, i, %r{
+        '(
+          \\['bfnrt] |
+          \\u[0-9a-fA-F]{4} |
+          [^'\\\b\f\n\r\t]
+        )*'
+      }x)
+    end
+
 # static fabr_tree *_sqstring(fabr_input *i)
 # {
 #   return fabr_rex("sqstring", i,
@@ -269,7 +280,7 @@ module Flor
 # }
 
     #def v(i); alt(nil, i, :string, :sqstring, :number, :object, :array, :true, :false, :null); end
-    def v(i); alt(nil, i, :string, :number); end
+    def v(i); alt(nil, i, :string, :sqstring, :number); end
     def value(i); altg(nil, i, :symbol, :v); end
 
     def val(i); seq(nil, i, :value, :postval); end
@@ -316,7 +327,7 @@ module Flor
       if c == '\\'
         case cn = cs.next
           when 'u' then sio.print(unescape_u(cs))
-          when '\\', '"' then sio.print(cn)
+          when '\\', '"', '\'' then sio.print(cn)
           when 'b' then sio.print("\b")
           when 'f' then sio.print("\f")
           when 'n' then sio.print("\n")
