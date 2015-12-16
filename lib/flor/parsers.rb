@@ -241,6 +241,9 @@ module Flor
 
     def symbol(i); rep(:symbol, i, :symelt, 1); end
 
+    def tru(i); str(:true, i, 'true'); end
+    def fls(i); str(:false, i, 'false'); end
+
     def number(i); rex(:number, i, /-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/); end
 
     def string(i)
@@ -265,22 +268,8 @@ module Flor
       }x)
     end
 
-# static fabr_tree *_sqstring(fabr_input *i)
-# {
-#   return fabr_rex("sqstring", i,
-#     "'"
-#       "("
-#         "\\\\['\\/\\\\bfnrt]" "|"
-#         "\\\\u[0-9a-fA-F]{4}" "|"
-#         "[^"
-#           "'" "\\\\" /*"\\/"*/ "\b" "\f" "\n" "\r" "\t"
-#         "]"
-#       ")*"
-#     "'");
-# }
-
     #def v(i); alt(nil, i, :string, :sqstring, :number, :object, :array, :true, :false, :null); end
-    def v(i); alt(nil, i, :string, :sqstring, :number); end
+    def v(i); alt(nil, i, :string, :sqstring, :number, :tru, :fls); end
     def value(i); altg(nil, i, :symbol, :v); end
 
     def val(i); seq(nil, i, :value, :postval); end
@@ -289,6 +278,9 @@ module Flor
     def djan(i); seq(nil, i, :postval, :val); end
 
     # rewriting
+
+    def rewrite_true(t); true; end
+    def rewrite_false(t); false; end
 
     def rewrite_number(t)
       s = t.string
