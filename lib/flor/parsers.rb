@@ -241,6 +241,7 @@ module Flor
 
     def symbol(i); rep(:symbol, i, :symelt, 1); end
 
+    def null(i); str(:null, i, 'null'); end
     def tru(i); str(:true, i, 'true'); end
     def fls(i); str(:false, i, 'false'); end
 
@@ -269,7 +270,7 @@ module Flor
     end
 
     #def v(i); alt(nil, i, :string, :sqstring, :number, :object, :array, :true, :false, :null); end
-    def v(i); alt(nil, i, :string, :sqstring, :number, :tru, :fls); end
+    def v(i); alt(nil, i, :string, :sqstring, :number, :tru, :fls, :null); end
     def value(i); altg(nil, i, :symbol, :v); end
 
     def val(i); seq(nil, i, :value, :postval); end
@@ -279,6 +280,7 @@ module Flor
 
     # rewriting
 
+    def rewrite_null(t); nil; end
     def rewrite_true(t); true; end
     def rewrite_false(t); false; end
 
