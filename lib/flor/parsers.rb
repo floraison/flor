@@ -227,6 +227,8 @@ module Flor
     def slacom(i); rex(nil, i, /\/\/[^\r\n]*/); end
     def com(i); alt(nil, i, :shacom, :slacom); end
 
+    def comma(i); str(nil, i, ','); end
+
     def ws(i); rex(nil, i, /[ \t]/); end
     def rn(i); rex(nil, i, /[\r\n]/); end
     def colon(i); str(nil, i, ':'); end
@@ -269,8 +271,35 @@ module Flor
       }x)
     end
 
+# static fabr_tree *_postval(fabr_input *i)
+# {
+#   return fabr_seq(NULL, i, _eol, fabr_star, NULL);
+# }
+    def postval(i); rep(nil, i, :eol, 0); end
+
+# static fabr_tree *_sep(fabr_input *i)
+# {
+#   return fabr_seq(NULL, i, _comma, fabr_qmark, _postval, NULL);
+# }
+    def sep(i); seq(nil, i, :comma, '?', :postval); end
+
+# static fabr_tree *_val_qmark(fabr_input *i)
+# {
+#   return fabr_rep(NULL, i, _val, 0, 1);
+# }
+    def val_qmark(i); rep(nil, i, :val, 0, 1); end
+
+    def sbstart(i); str(nil, i, '['); end
+    def sbend(i); str(nil, i, ']'); end
+
+# static fabr_tree *_array(fabr_input *i)
+# {
+#   return fabr_eseq("array", i, _sbstart, _val_qmark, _sep, _sbend);
+# }
+    def array(i); eseq(:array, i, :sbstart, :val_qmark, :sep, :sbend); end
+
     #def v(i); alt(nil, i, :string, :sqstring, :number, :object, :array, :true, :false, :null); end
-    def v(i); alt(nil, i, :string, :sqstring, :number, :tru, :fls, :null); end
+    def v(i); alt(nil, i, :string, :sqstring, :number, :array, :tru, :fls, :null); end
     def value(i); altg(nil, i, :symbol, :v); end
 
     def val(i); seq(nil, i, :value, :postval); end
