@@ -237,7 +237,7 @@ module Flor
 
     def dol(i); rex(nil, i, /[^ \r\n\t\\)]+/); end
     def dolstart(i); str(nil, i, '$('); end
-    def symcore(i); rex(nil, i, /[^: \b\f\n\r\t\"',\\(\\)\\[\\]\\{\\}#\\\\]+/); end
+    def symcore(i); rex(nil, i, /[^: \b\f\n\r\t"',()\[\]{}#\\]+/); end
     def symdol(i); seq(nil, i, :dolstart, :dol, :pend); end
     def symelt(i); alt(nil, i, :symdol, :symcore, :colon); end
 
@@ -318,9 +318,8 @@ module Flor
       s.index('.') ? s.to_f : s.to_i
     end
 
-    def rewrite_string(t)
-      Flor.unescape(t.string[1..-2])
-    end
+    def rewrite_string(t); Flor.unescape(t.string[1..-2]); end
+    def rewrite_array(t); t.subgather(nil).collect { |n| rewrite(n) }; end
   end
 
   module Radial
