@@ -97,7 +97,8 @@ describe Flor::Json do
   context 'symbols' do
 
     [
-      [ 'yellow', 'yellow' ]
+      [ 'yellow', 'yellow' ],
+      [ 'sk8park', 'sk8park' ]
     ].each do |a|
 
       it "parses #{a[0].inspect}" do
@@ -119,6 +120,39 @@ describe Flor::Json do
       [ '[1,,3]', [ 1, 3 ] ],
       [ "[\n]", [] ],
       [ "[ red, 'green', \"blue\"]", %w[ red green blue ] ]
+    ].each do |a|
+
+      it "parses #{a[0].inspect}" do
+
+        #expect(Flor::Json.parse(a[0], debug: 1)).to eq(a[1])
+        expect(Flor::Json.parse(a[0])).to eq(a[1])
+      end
+    end
+  end
+
+  context 'objects' do
+
+    [
+      [ '{}',
+        {} ],
+      [ '{ }',
+        {} ],
+      [ "{\"a\":0,\"bb\":null,\"cc c\":true}",
+        { 'a' => 0, 'bb' => nil, 'cc c' => true } ],
+      [ "{ a_a: 0, bb_: null, c3:\"three\" }",
+        { 'a_a' => 0, 'bb_' => nil, 'c3' => 'three' } ],
+      [ "{ 'a_a': 0, 'bb_': null }",
+        { 'a_a' => 0, 'bb_' => nil } ],
+      [ "{ a_a: 0, bb_: null \"c\": true\nd: [ 1, 2 ] }",
+        { 'a_a' => 0, 'bb_' => nil, 'c' => true, 'd' => [ 1, 2 ] } ],
+      [ "{a:0,b:1,}",
+        { 'a' => 0, 'b' => 1 } ],
+      [ "{\n}",
+        {} ],
+      [ "\n{}",
+        {} ],
+      [ "{b : 1}",
+        { 'b' => 1 } ]
     ].each do |a|
 
       it "parses #{a[0].inspect}" do

@@ -25,197 +25,6 @@
 
 require 'raabro'
 
-# static fabr_tree *_ws(fabr_input *i) { return fabr_rng(NULL, i, " \t"); }
-# static fabr_tree *_rn(fabr_input *i) { return fabr_rng(NULL, i, "\r\n"); }
-# static fabr_tree *_comma(fabr_input *i) { return fabr_str(NULL, i, ","); }
-#
-# static fabr_tree *_shacom(fabr_input *i)
-# {
-#   return fabr_rex(NULL, i, "#[^\r\n]*");
-# }
-# static fabr_tree *_slacom(fabr_input *i)
-# {
-#   return fabr_rex(NULL, i, "//[^\r\n]*");
-# }
-# static fabr_tree *_com(fabr_input *i)
-# {
-#   return fabr_alt(NULL, i, _shacom, _slacom, NULL);
-# }
-# static fabr_tree *_eol(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i,
-#     _ws, fabr_star, _com, fabr_qmark, _rn, fabr_star,
-#     NULL);
-# }
-#
-# static fabr_tree *_postval(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i, _eol, fabr_star, NULL);
-# }
-#
-# static fabr_tree *_sep(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i, _comma, fabr_qmark, _postval, NULL);
-# }
-#
-# static fabr_tree *_value(fabr_input *i); // forward
-#
-# static fabr_tree *_string(fabr_input *i)
-# {
-#   return fabr_rex("string", i,
-#     "\""
-#       "("
-#         "\\\\[\"\\/\\\\bfnrt]" "|"
-#         "\\\\u[0-9a-fA-F]{4}" "|"
-#         "[^"
-#           "\"" "\\\\" /*"\\/"*/ "\b" "\f" "\n" "\r" "\t"
-#         "]"
-#       ")*"
-#     "\"");
-# }
-# static fabr_tree *_sqstring(fabr_input *i)
-# {
-#   return fabr_rex("sqstring", i,
-#     "'"
-#       "("
-#         "\\\\['\\/\\\\bfnrt]" "|"
-#         "\\\\u[0-9a-fA-F]{4}" "|"
-#         "[^"
-#           "'" "\\\\" /*"\\/"*/ "\b" "\f" "\n" "\r" "\t"
-#         "]"
-#       ")*"
-#     "'");
-# }
-# static fabr_tree *_rxstring(fabr_input *i)
-# {
-#   return fabr_rex("rxstring", i,
-#     "/"
-#       "("
-#         "\\\\['\\/\\\\bfnrt]" "|"
-#         "\\\\u[0-9a-fA-F]{4}" "|"
-#         "[^"
-#           "/" "\\\\" "\b" "\f" "\n" "\r" "\t"
-#         "]"
-#       ")*"
-#     "/i?");
-# }
-#
-# static fabr_tree *_colon(fabr_input *i) { return fabr_str(NULL, i, ":"); }
-# static fabr_tree *_dolstart(fabr_input *i) { return fabr_str(NULL, i, "$("); }
-# static fabr_tree *_pstart(fabr_input *i) { return fabr_str(NULL, i, "("); }
-# static fabr_tree *_pend(fabr_input *i) { return fabr_str(NULL, i, ")"); }
-#
-# static fabr_tree *_symcore(fabr_input *i)
-# {
-#   return fabr_rex(NULL, i, "[^: \b\f\n\r\t\"',\\(\\)\\[\\]\\{\\}#\\\\]+");
-# }
-#
-# static fabr_tree *_dol(fabr_input *i)
-# {
-#   return fabr_rex(NULL, i, "[^ \r\n\t\\)]+");
-# }
-#
-# static fabr_tree *_symdol(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i, _dolstart, _dol, _pend, NULL);
-# }
-#
-# static fabr_tree *_symeltk(fabr_input *i)
-# {
-#   return fabr_alt(NULL, i, _symdol, _symcore, NULL);
-# }
-# static fabr_tree *_symelt(fabr_input *i)
-# {
-#   return fabr_alt(NULL, i, _symdol, _symcore, _colon, NULL);
-# }
-#
-# static fabr_tree *_symbolk(fabr_input *i)
-# {
-#   return fabr_rep("symbolk", i, _symeltk, 1, 0);
-# }
-# static fabr_tree *_symbol(fabr_input *i)
-# {
-#   return fabr_rep("symbol", i, _symelt, 1, 0);
-# }
-#
-# static fabr_tree *_number(fabr_input *i)
-# {
-#   return fabr_rex("number", i, "-?[0-9]+(\\.[0-9]+)?([eE][+-]?[0-9]+)?");
-# }
-#
-# static fabr_tree *_val(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i, _value, _postval, NULL);
-# }
-# static fabr_tree *_val_qmark(fabr_input *i)
-# {
-#   return fabr_rep(NULL, i, _val, 0, 1);
-# }
-#
-# static fabr_tree *_key(fabr_input *i)
-# {
-#   return fabr_alt("key", i, _string, _sqstring, _symbolk, NULL);
-# }
-#
-# static fabr_tree *_entry(fabr_input *i)
-# {
-#   return fabr_seq("entry", i,
-#     _key, _postval, _colon, _postval, _value, _postval,
-#     NULL);
-# }
-# static fabr_tree *_entry_qmark(fabr_input *i)
-# {
-#   return fabr_rep(NULL, i, _entry, 0, 1);
-# }
-#
-# static fabr_tree *_pbstart(fabr_input *i) { return fabr_str(NULL, i, "{"); }
-# static fabr_tree *_pbend(fabr_input *i) { return fabr_rex(NULL, i, "}"); }
-#
-# static fabr_tree *_object(fabr_input *i)
-# {
-#   return fabr_eseq("object", i, _pbstart, _entry_qmark, _sep, _pbend);
-# }
-# static fabr_tree *_bjec(fabr_input *i)
-# {
-#   return fabr_jseq("object", i, _entry_qmark, _sep);
-# }
-# static fabr_tree *_ob(fabr_input *i)
-# {
-#   return fabr_alt(NULL, i, _object, _bjec, NULL);
-# }
-# static fabr_tree *_obj(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i, _postval, _ob, _postval, NULL);
-# }
-#
-# static fabr_tree *_sbstart(fabr_input *i) { return fabr_str(NULL, i, "["); }
-# static fabr_tree *_sbend(fabr_input *i) { return fabr_str(NULL, i, "]"); }
-#
-# static fabr_tree *_array(fabr_input *i)
-# {
-#   return fabr_eseq("array", i, _sbstart, _val_qmark, _sep, _sbend);
-# }
-#
-# static fabr_tree *_true(fabr_input *i) { return fabr_str("true", i, "true"); }
-# static fabr_tree *_false(fabr_input *i) { return fabr_str("false", i, "false"); }
-# static fabr_tree *_null(fabr_input *i) { return fabr_str("null", i, "null"); }
-#
-# static fabr_tree *_v(fabr_input *i)
-# {
-#   return fabr_alt(NULL, i,
-#     _string, _sqstring, _number, _object, _array, _true, _false, _null,
-#     NULL);
-# }
-#
-# static fabr_tree *_value(fabr_input *i)
-# {
-#   return fabr_altg(NULL, i, _symbol, _v, NULL);
-# }
-#
-# static fabr_tree *_djan(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i, _postval, _val, NULL);
-# }
 
 module Flor
 
@@ -240,8 +49,10 @@ module Flor
     def symcore(i); rex(nil, i, /[^: \b\f\n\r\t"',()\[\]{}#\\]+/); end
     def symdol(i); seq(nil, i, :dolstart, :dol, :pend); end
     def symelt(i); alt(nil, i, :symdol, :symcore, :colon); end
+    def symeltk(i); alt(nil, i, :symdol, :symcore); end
 
     def symbol(i); rep(:symbol, i, :symelt, 1); end
+    def symbolk(i); rep(:symbolk, i, :symeltk, 1, 0); end
 
     def null(i); str(:null, i, 'null'); end
     def tru(i); str(:true, i, 'true'); end
@@ -271,35 +82,28 @@ module Flor
       }x)
     end
 
-# static fabr_tree *_postval(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i, _eol, fabr_star, NULL);
-# }
     def postval(i); rep(nil, i, :eol, 0); end
 
-# static fabr_tree *_sep(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i, _comma, fabr_qmark, _postval, NULL);
-# }
     def sep(i); seq(nil, i, :comma, '?', :postval); end
 
-# static fabr_tree *_val_qmark(fabr_input *i)
-# {
-#   return fabr_rep(NULL, i, _val, 0, 1);
-# }
     def val_qmark(i); rep(nil, i, :val, 0, 1); end
 
     def sbstart(i); str(nil, i, '['); end
     def sbend(i); str(nil, i, ']'); end
 
-# static fabr_tree *_array(fabr_input *i)
-# {
-#   return fabr_eseq("array", i, _sbstart, _val_qmark, _sep, _sbend);
-# }
     def array(i); eseq(:array, i, :sbstart, :val_qmark, :sep, :sbend); end
 
-    #def v(i); alt(nil, i, :string, :sqstring, :number, :object, :array, :true, :false, :null); end
-    def v(i); alt(nil, i, :string, :sqstring, :number, :array, :tru, :fls, :null); end
+    def key(i); alt(:key, i, :string, :sqstring, :symbolk); end
+
+    def entry(i); seq(:entry, i, :key, :postval, :colon, :postval, :value, :postval); end
+    def entry_qmark(i); rep(nil, i, :entry, 0, 1); end
+
+    def pbstart(i); str(nil, i, '{'); end
+    def pbend(i); str(nil, i, '}'); end
+
+    def object(i); eseq(:object, i, :pbstart, :entry_qmark, :sep, :pbend); end
+
+    def v(i); alt(nil, i, :string, :sqstring, :number, :object, :array, :tru, :fls, :null); end
     def value(i); altg(nil, i, :symbol, :v); end
 
     def val(i); seq(nil, i, :value, :postval); end
@@ -321,8 +125,16 @@ module Flor
 
     def rewrite_string(t); Flor.unescape(t.string[1..-2]); end
     def rewrite_symbol(t); t.string; end
+    def rewrite_symbolk(t); t.string; end
 
     def rewrite_array(t); t.subgather(nil).collect { |n| rewrite(n) }; end
+
+    def rewrite_object(t);
+      t.subgather(nil).inject({}) do |h, tt|
+        h[rewrite(tt.children[0].children[0])] = rewrite(tt.children[4])
+        h
+      end
+    end
   end
 
   module Radial
