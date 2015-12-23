@@ -94,6 +94,20 @@ describe Flor::Json do
     end
   end
 
+  context 'symbols' do
+
+    [
+      [ 'yellow', 'yellow' ]
+    ].each do |a|
+
+      it "parses #{a[0].inspect}" do
+
+        #expect(Flor::Json.parse(a[0], debug: 1)).to eq(a[1])
+        expect(Flor::Json.parse(a[0])).to eq(a[1])
+      end
+    end
+  end
+
   context 'arrays' do
 
     [
@@ -103,7 +117,8 @@ describe Flor::Json do
       [ "[ 10 20,30, 40 50\t51\n52]", [ 10, 20, 30, 40, 50, 51, 52 ] ],
       [ '[1,2,]', [ 1, 2 ] ],
       [ '[1,,3]', [ 1, 3 ] ],
-      [ "[\n]", [] ]
+      [ "[\n]", [] ],
+      [ "[ red, 'green', \"blue\"]", %w[ red green blue ] ]
     ].each do |a|
 
       it "parses #{a[0].inspect}" do

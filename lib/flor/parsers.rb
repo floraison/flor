@@ -310,6 +310,7 @@ module Flor
     # rewriting
 
     def rewrite_null(t); nil; end
+
     def rewrite_true(t); true; end
     def rewrite_false(t); false; end
 
@@ -319,6 +320,8 @@ module Flor
     end
 
     def rewrite_string(t); Flor.unescape(t.string[1..-2]); end
+    def rewrite_symbol(t); t.string; end
+
     def rewrite_array(t); t.subgather(nil).collect { |n| rewrite(n) }; end
   end
 
