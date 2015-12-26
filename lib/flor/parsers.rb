@@ -135,11 +135,19 @@ module Flor
         h
       end
     end
+
+    make_includable
   end
 
-  module Radial
+  module Radial include Json
 
-    # TODO
+# static fabr_tree *_radial(fabr_input *i)
+# {
+#   return fabr_rep(NULL, i, _rad_line, 0, 0);
+# }
+    def x(i); str(nil, i, 'x '); end
+    def rad_line(i); seq(:rad_line, i, :x, :djan); end
+    def radial(i); rep(nil, i, :rad_line, 0); end
   end
 
   def self.unescape_u(cs)
