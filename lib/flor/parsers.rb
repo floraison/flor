@@ -141,12 +141,50 @@ module Flor
 
   module Radial include Json
 
-# static fabr_tree *_radial(fabr_input *i)
-# {
-#   return fabr_rep(NULL, i, _rad_line, 0, 0);
-# }
-    def x(i); str(nil, i, 'x '); end
-    def rad_line(i); seq(:rad_line, i, :x, :djan); end
+#static fabr_tree *_rxstring(fabr_input *i)
+#{
+#  return fabr_rex("rxstring", i,
+#    "/"
+#      "("
+#        "\\\\['\\/\\\\bfnrt]" "|"
+#        "\\\\u[0-9a-fA-F]{4}" "|"
+#        "[^"
+#          "/" "\\\\" "\b" "\f" "\n" "\r" "\t"
+#        "]"
+#      ")*"
+#    "/i?");
+#}
+    def rxstring(i)
+
+      rex(:rxstring, i, %r{
+        /(
+          \\[\/bfnrt] |
+          \\u[0-9a-fA-F]{4} |
+          [^'\\\b\f\n\r\t]
+        )*/
+      }x)
+    end
+
+    def pstart(i); str(nil, i, '('); end
+    def pend(i); str(nil, i, ')'); end
+
+    def rad_p(i); seq(:rad_p, i, :pstart, :eol, :ws, '*', :rad_g, :eol, :pend); end
+    def rad_v(i); alt(:rad_v, i, :rxstring, :rad_p, :value); end
+    def rad_k(i); alt(:rad_k, i, :string, :sqstring, :symbolk); end
+    def rad_kcol(i); seq(nil, i, :rad_k, :ws, '*', :colon, :eol, :ws, '*'); end
+    def rad_e(i); seq('rad_e', i, :rad_kcol, '?', :rad_v); end
+    def rad_com(i); seq(nil, i, :comma, :eol); end
+    def rad_comma(i); seq(nil, i, :ws, '*', :rad_com, '?', :ws, '*'); end
+    def rad_ce(i); seq(nil, i, :rad_comma, :rad_e); end
+    def rad_h(i); seq(:rad_h, i, :rad_v); end # ?
+    def rad_es(i); rep(nil, i, :rad_ce, 0); end
+    def rad_g(i); seq(:rad_g, i, :rad_h, :rad_es); end
+    def rad_i(i); rex(:rad_i, i, /[ \t]*/); end
+    def rad_eol(i); rex(nil, i, /[ \t]*(#[^\n\r]*)?[\n\r]?/); end
+
+    def rad_l(i); seq(:rad_l, i, :rad_i, :rad_g); end
+
+    def rad_line(i); seq(nil, i, :rad_l, '?', :rad_eol); end
     def radial(i); rep(nil, i, :rad_line, 0); end
   end
 
@@ -189,94 +227,3 @@ module Flor
   end
 end
 
-# // radial
-#
-# static fabr_tree *_rad_g(fabr_input *i); // forward
-#
-# static fabr_tree *_rad_p(fabr_input *i)
-# {
-#   return fabr_seq("rad_p", i,
-#     _pstart, _eol, _ws, fabr_star, _rad_g, _eol, _pend,
-#     NULL);
-# }
-#
-# static fabr_tree *_rad_v(fabr_input *i)
-# {
-#   return fabr_alt("rad_v", i, _rxstring, _rad_p, _value, NULL);
-# }
-#
-# static fabr_tree *_rad_k(fabr_input *i)
-# {
-#   return fabr_alt("rad_k", i, _string, _sqstring, _symbolk, NULL);
-# }
-#
-# static fabr_tree *_rad_kcol(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i,
-#     _rad_k, _ws, fabr_star, _colon, _eol, _ws, fabr_star,
-#     NULL);
-# }
-#
-# static fabr_tree *_rad_e(fabr_input *i)
-# {
-#   return fabr_seq("rad_e", i,
-#     //_rad_k, _ws, fabr_star, _colon, _eol, _rad_v,
-#     _rad_kcol, fabr_qmark, _rad_v,
-#     NULL);
-# }
-#
-# static fabr_tree *_rad_com(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i, _comma, _eol, NULL);
-# }
-# static fabr_tree *_rad_comma(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i,
-#     _ws, fabr_star, _rad_com, fabr_qmark, _ws, fabr_star,
-#     NULL);
-# }
-#
-# static fabr_tree *_rad_ce(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i, _rad_comma, _rad_e, NULL);
-# }
-#
-# static fabr_tree *_rad_h(fabr_input *i)
-# {
-#   return fabr_seq("rad_h", i, _rad_v, NULL);
-# }
-#
-# static fabr_tree *_rad_es(fabr_input *i)
-# {
-#   return fabr_rep(NULL, i, _rad_ce, 0, 0);
-# }
-#
-# static fabr_tree *_rad_g(fabr_input *i)
-# {
-#   return fabr_seq("rad_g", i, _rad_h, _rad_es, NULL);
-# }
-#
-# static fabr_tree *_rad_i(fabr_input *i)
-# {
-#   return fabr_rex("rad_i", i, "[ \t]*");
-# }
-#
-# static fabr_tree *_rad_l(fabr_input *i)
-# {
-#   return fabr_seq("rad_l", i, _rad_i, _rad_g, NULL);
-# }
-#
-# static fabr_tree *_rad_eol(fabr_input *i)
-# {
-#   return fabr_rex(NULL, i, "[ \t]*(#[^\n\r]*)?[\n\r]?");
-# }
-#
-# static fabr_tree *_rad_line(fabr_input *i)
-# {
-#   return fabr_seq(NULL, i, _rad_l, fabr_qmark, _rad_eol, NULL);
-# }
-#
-# static fabr_tree *_radial(fabr_input *i)
-# {
-#   return fabr_rep(NULL, i, _rad_line, 0, 0);
-# }
