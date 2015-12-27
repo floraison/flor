@@ -30,6 +30,8 @@ module Flor
 
   module Json include Raabro
 
+    make_includable
+
     # parsing
 
     def shacom(i); rex(nil, i, /#[^\r\n]*/); end
@@ -135,9 +137,7 @@ module Flor
         h
       end
     end
-
-    make_includable
-  end
+  end # module Json
 
   module Radial include Json
 
@@ -174,7 +174,7 @@ module Flor
     def rad_v(i); alt(:rad_v, i, :rxstring, :rad_p, :value); end
     def rad_k(i); alt(:rad_k, i, :string, :sqstring, :symbolk); end
     def rad_kcol(i); seq(nil, i, :rad_k, :ws, '*', :colon, :eol, :ws, '*'); end
-    def rad_e(i); seq('rad_e', i, :rad_kcol, '?', :rad_v); end
+    def rad_e(i); seq(:rad_e, i, :rad_kcol, '?', :rad_v); end
     def rad_com(i); seq(nil, i, :comma, :eol); end
     def rad_comma(i); seq(nil, i, :ws, '*', :rad_com, '?', :ws, '*'); end
     def rad_ce(i); seq(nil, i, :rad_comma, :rad_e); end
@@ -208,6 +208,9 @@ module Flor
 
           nam = t.lookup(:rad_h).string
           lin = determine_line_number(t)
+          #puts "---"
+          #p t
+
           @a = [ nam, {}, lin ]
 
         else
@@ -254,7 +257,7 @@ module Flor
 
       root.to_a
     end
-  end
+  end # module Radial
 
   def self.unescape_u(cs)
 
