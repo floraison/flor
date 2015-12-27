@@ -104,7 +104,8 @@ describe Flor::Radial do
           "  cc: true, # three\n" +
           "  dd: [ four ] # four",
           [ 'participant', {
-            _0: 'charly', aa: 0, bb: 'one', cc: true, dd: [ 'four' ]
+            '_0' => 'charly',
+            'aa' => 0, 'bb' => 'one', 'cc' => true, 'dd' => [ 'four' ]
           }, 1, [] ],
           __LINE__ ],
 

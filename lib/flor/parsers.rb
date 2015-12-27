@@ -208,10 +208,20 @@ module Flor
 
           nam = t.lookup(:rad_h).string
           lin = determine_line_number(t)
-          #puts "---"
-          #p t
 
-          @a = [ nam, {}, lin ]
+          atts = {}
+          t.gather(:rad_e).each_with_index do |et, i|
+
+            kt = et.lookup(:rad_k)
+            vt = et.lookup(:rad_v)
+
+            k = kt ? Flor::Radial.rewrite(kt.children[0]) : "_#{i}"
+            v = Flor::Radial.rewrite(vt.children[0])
+
+            atts[k] = v
+          end
+
+          @a = [ nam, atts, lin ]
 
         else
 
