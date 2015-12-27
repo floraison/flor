@@ -218,7 +218,7 @@ module Flor
             atts['_0'] = Flor::Radial.rewrite(vt)
           end
 
-          t.gather(:rad_e).each_with_index do |et, i|
+          t.lookup(:rad_g).c1.gather(:rad_e).each_with_index do |et, i|
 
             kt = et.lookup(:rad_k)
             vt = et.lookup(:rad_v)
