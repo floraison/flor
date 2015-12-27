@@ -267,6 +267,16 @@ module Flor
 
       root.to_a
     end
+
+    def parse(input, fname=nil, opts={})
+
+      opts = fname if fname.is_a?(Hash) && opts.empty?
+
+      r = super(input, opts)
+      r << fname if fname
+
+      r
+    end
   end # module Radial
 
   def self.unescape_u(cs)

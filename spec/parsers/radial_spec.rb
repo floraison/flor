@@ -29,7 +29,7 @@ describe Flor::Radial do
     it 'tracks the origin of the string' do
 
       expect(
-        Flor::Radial.parse('sequence timeout: 1d')
+        Flor::Radial.parse('sequence timeout: 1d', 'var/lib/one.rad')
       ).to eq(
         [ 'sequence', { 'timeout' => '1d' }, 1, [], 'var/lib/one.rad' ]
       )
