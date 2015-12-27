@@ -206,9 +206,6 @@ module Flor
 
           @indent = t.lookup(:rad_i).string.length
 
-          nam = t.lookup(:rad_h).string
-          lin = determine_line_number(t)
-
           atts = {}
           t.gather(:rad_e).each_with_index do |et, i|
 
@@ -220,6 +217,18 @@ module Flor
 
             atts[k] = v
           end
+
+          ht = t.lookup(:rad_h)
+          vt = ht.lookup(:rad_v).sublookup(nil)
+
+          nam = 'val'
+          if vt.name == :symbol || vt.name == :string
+            nam = vt.string
+          else
+            atts['_0'] = Flor::Radial.rewrite(vt)
+          end
+
+          lin = t.input.string[0..t.offset].scan("\n").count + 1
 
           @a = [ nam, atts, lin ]
 
@@ -242,13 +251,6 @@ module Flor
         else
           @parent.append(line)
         end
-      end
-
-      protected
-
-      def determine_line_number(t)
-
-        t.input.string[0..t.offset].scan("\n").count + 1
       end
     end # class Line
 
