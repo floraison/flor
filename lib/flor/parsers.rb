@@ -237,7 +237,7 @@ module Flor
           nam = 'val'
           if vt.name == :symbol || vt.name == :string
             nam = vt.string
-          elsif vt.name = :rad_p
+          elsif vt.name == :rad_p
             nam = Flor::Radial.rewrite(vt)
           else
             atts['_0'] = Flor::Radial.rewrite(vt)
