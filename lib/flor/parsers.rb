@@ -133,7 +133,7 @@ module Flor
 
     def rewrite_object(t);
       t.subgather(nil).inject({}) do |h, tt|
-        h[rewrite(tt.children[0].children[0])] = rewrite(tt.children[4])
+        h[rewrite(tt.c0.c0)] = rewrite(tt.c4)
         h
       end
     end
@@ -143,19 +143,6 @@ module Flor
 
     # parsing
 
-#static fabr_tree *_rxstring(fabr_input *i)
-#{
-#  return fabr_rex("rxstring", i,
-#    "/"
-#      "("
-#        "\\\\['\\/\\\\bfnrt]" "|"
-#        "\\\\u[0-9a-fA-F]{4}" "|"
-#        "[^"
-#          "/" "\\\\" "\b" "\f" "\n" "\r" "\t"
-#        "]"
-#      ")*"
-#    "/i?");
-#}
     def rxstring(i)
 
       rex(:rxstring, i, %r{
@@ -220,19 +207,7 @@ module Flor
 
           atts = {}
 
-          t.gather(:rad_e).each_with_index do |et, i|
-
-            kt = et.lookup(:rad_k)
-            vt = et.lookup(:rad_v)
-
-            k = kt ? Flor::Radial.rewrite(kt.children[0]) : "_#{i}"
-            v = Flor::Radial.rewrite(vt.children[0])
-
-            atts[k] = v
-          end
-
-          ht = t.lookup(:rad_h)
-          vt = ht.lookup(:rad_v).sublookup(nil)
+          vt = t.lookup(:rad_h).lookup(:rad_v).sublookup(nil)
 
           nam = 'val'
           if vt.name == :symbol || vt.name == :string
@@ -241,6 +216,17 @@ module Flor
             nam = Flor::Radial.rewrite(vt)
           else
             atts['_0'] = Flor::Radial.rewrite(vt)
+          end
+
+          t.gather(:rad_e).each_with_index do |et, i|
+
+            kt = et.lookup(:rad_k)
+            vt = et.lookup(:rad_v)
+
+            k = kt ? Flor::Radial.rewrite(kt.c0) : "_#{i}"
+            v = Flor::Radial.rewrite(vt.c0)
+
+            atts[k] = v
           end
 
           gt = t.lookup(:rad_g)
