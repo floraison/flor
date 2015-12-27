@@ -163,7 +163,7 @@ module Flor
           \\[\/bfnrt] |
           \\u[0-9a-fA-F]{4} |
           [^'\\\b\f\n\r\t]
-        )*/
+        )*/[a-z]*
       }x)
     end
 
@@ -191,6 +191,16 @@ module Flor
 
     # rewriting
 
+    def rewrite_rxstring(t)
+
+      ::Kernel.eval(t.string) # :-(
+    end
+
+    def rewrite_rad_p(t)
+
+      Line.new(t).to_a
+    end
+
     class Line
 
       attr_reader :indent, :children
@@ -204,9 +214,12 @@ module Flor
 
         if t
 
-          @indent = t.lookup(:rad_i).string.length
+          if it = t.lookup(:rad_i)
+            @indent = it.string.length
+          end
 
           atts = {}
+
           t.gather(:rad_e).each_with_index do |et, i|
 
             kt = et.lookup(:rad_k)
@@ -224,11 +237,14 @@ module Flor
           nam = 'val'
           if vt.name == :symbol || vt.name == :string
             nam = vt.string
+          elsif vt.name = :rad_p
+            nam = Flor::Radial.rewrite(vt)
           else
             atts['_0'] = Flor::Radial.rewrite(vt)
           end
 
-          lin = t.input.string[0..t.offset].scan("\n").count + 1
+          gt = t.lookup(:rad_g)
+          lin = gt.input.string[0..gt.offset].scan("\n").count + 1
 
           @a = [ nam, atts, lin ]
 
