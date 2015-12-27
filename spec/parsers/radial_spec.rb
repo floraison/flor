@@ -15,7 +15,7 @@ describe Flor::Radial do
     [
       [ '12[3', nil, __LINE__ ],
 
-      [ 'sequence', [ :sequence, {}, 1, [] ], __LINE__ ],
+      [ 'sequence', [ 'sequence', {}, 1, [] ], __LINE__ ],
 
       [ "sequence\n" +
         "  participant 'bravo'",

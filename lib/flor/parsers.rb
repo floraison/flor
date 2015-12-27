@@ -141,6 +141,8 @@ module Flor
 
   module Radial include Json
 
+    # parsing
+
 #static fabr_tree *_rxstring(fabr_input *i)
 #{
 #  return fabr_rex("rxstring", i,
@@ -185,7 +187,73 @@ module Flor
     def rad_l(i); seq(:rad_l, i, :rad_i, :rad_g); end
 
     def rad_line(i); seq(nil, i, :rad_l, '?', :rad_eol); end
-    def radial(i); rep(nil, i, :rad_line, 0); end
+    def radial(i); rep(:radial, i, :rad_line, 0); end
+
+    # rewriting
+
+    class Line
+
+      attr_reader :indent, :children
+      attr_accessor :parent
+
+      def initialize(t)
+
+        @parent = nil
+        @children = []
+        @indent = -1
+
+        if t
+
+          @indent = t.lookup(:rad_i).string.length
+
+          nam = t.lookup(:rad_h).string
+          lin = determine_line_number(t)
+          @a = [ nam, {}, lin ]
+
+        else
+
+          @a = [ 'sequence', {}, 0 ]
+        end
+      end
+
+      def to_a
+
+        [ *@a, @children ]
+      end
+
+      def append(line)
+
+        if line.indent > self.indent
+          @children << line.to_a
+          line.parent = self
+        else
+          @parent.append(line)
+        end
+      end
+
+      protected
+
+      def determine_line_number(t)
+
+        t.input.string[0..t.offset].scan("\n").count + 1
+      end
+    end # class Line
+
+    def rewrite_radial(t)
+
+      root = Line.new(nil)
+      prev = root
+
+      t.gather(:rad_l).each do |lt|
+        l = Line.new(lt)
+        prev.append(l)
+        prev = l
+      end
+
+      return root.children.first.to_a if root.children.count == 1
+
+      root.to_a
+    end
   end
 
   def self.unescape_u(cs)
