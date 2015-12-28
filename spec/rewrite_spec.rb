@@ -324,11 +324,13 @@ describe Flor do
 
       title = "rewrites #{source.inspect} rw#{line}"
 
-      it(title) do
-        t = Flor::Radial.parse(source, 'sx')
-        t = Flor.rewrite_tree(t)
-        expect(t).to eq(tree)
-      end
+      #pending(title)
+        #
+      #it(title) do
+      #  t = Flor::Radial.parse(source, 'sx')
+      #  t = Flor.rewrite_tree(t)
+      #  expect(t).to eq(tree)
+      #end
     end
   end
 end
