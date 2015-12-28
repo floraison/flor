@@ -23,13 +23,54 @@
 # Made in Japan.
 #++
 
+require 'sequel'
+
 
 module Flor
 
-  VERSION = '0.1.0'
-end
+  module Db
 
-require 'flor/db'
-require 'flor/parsers'
-#require 'flor/rewrite'
+    #def self.configure(uri)
+    #  Flor::DB = Sequel.connect(uri)
+    #end
+
+    def self.create_tables(db)
+
+      Flor::DB.create_table :flor_items do
+
+        primary_key :id, type: Bignum
+        String :type, null: false # 'execution', 'message', 'task', 'schedule'
+        String :subtype, null: false
+        String :schedule, null: false # '20141128.103239' or '00 23 * * *'
+        String :domain, null: false
+        String :exid, null: false
+        File :content # JSON
+        String :status, null: false
+        Time :tstamp
+
+        index :type
+        index :domain
+        index :exid
+      end
+    end
+
+    class Execution < Sequel::Model
+      #
+      self.set_dataset(
+        Flor::DB[:flor_items].where(flor_items__type: 'execution'))
+    end
+
+    class Message < Sequel::Model
+      #
+      self.set_dataset(
+        Flor::DB[:flor_items].where(flor_items__type: 'message'))
+    end
+
+    class Schedule < Sequel::Model
+      #
+      self.set_dataset(
+        Flor::DB[:flor_items].where(flor_items__type: 'schedule'))
+    end
+  end
+end
 

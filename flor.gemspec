@@ -27,6 +27,7 @@ the flon programs, in Ruby
   ]
 
   s.add_runtime_dependency 'raabro', '>= 1.0.5'
+  s.add_runtime_dependency 'sequel', '>= 4.29.0'
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '>= 2.13.0'

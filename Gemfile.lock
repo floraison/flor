@@ -3,6 +3,7 @@ PATH
   specs:
     flor (0.1.0)
       raabro (>= 1.0.5)
+      sequel (>= 4.29.0)
 
 PATH
   remote: ../../raabro/
@@ -27,6 +28,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.3.0)
     rspec-support (3.3.0)
+    sequel (4.29.0)
 
 PLATFORMS
   ruby
