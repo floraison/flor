@@ -26,9 +26,17 @@
 
 module Flor
 
-  VERSION = '0.1.0'
-end
+  class Executor
 
-require 'flor/parsers'
-#require 'flor/rewrite'
+    def initialize(exid)
+
+      Thread.new { execute }
+    end
+
+    protected
+
+    def execute
+    end
+  end
+end
 
