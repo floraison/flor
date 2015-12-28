@@ -11,8 +11,8 @@ require 'spec_helper'
 def determine_title(radial, tree, line)
 
   title =
-    radial.length > 35 ?
-    "#{(radial[0, 35] + '...').inspect} l#{line}" :
+    radial.length > 31 ?
+    "#{(radial[0, 31] + '...').inspect} l#{line}" :
     "#{radial.inspect} l#{line}"
   title =
     tree == nil ?

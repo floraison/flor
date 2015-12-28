@@ -23,12 +23,11 @@
 # Made in Japan.
 #++
 
-
 module Flor
 
-  VERSION = '0.1.0'
-end
+  def self.rewrite_tree(t)
 
-require 'flor/parsers'
-require 'flor/rewrite'
+    t
+  end
+end
 
