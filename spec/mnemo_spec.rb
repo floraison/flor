@@ -37,11 +37,11 @@ describe 'Flor::Mnemo' do
 
       expect {
         Flor::Mnemo.to_i('blah blah blah')
-      }.to raise_error(ArgumentError, 'nada')
+      }.to raise_error(ArgumentError, "unknown syllable 'bl'")
 
       expect {
         Flor::Mnemo.to_i('xabixabi')
-      }.to raise_error(ArgumentError, 'nada')
+      }.to raise_error(ArgumentError, "unknown syllable 'xa'")
     end
 
     it 'turns mnemo strings to integers' do

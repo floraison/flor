@@ -91,31 +91,8 @@ module Flor::Mnemo
      za  zi  zu  ze  zo
   ]
   SYL_COUNT = SYLS.count
-
   NEG = 'xa'
 
-#char *fmne_to_s(long long i)
-#{
-#  char *s = NULL;
-#  size_t l = 0;
-#  FILE *f = open_memstream(&s, &l);
-#
-#  if (i < 0) { fputs(fmne_neg, f); i = i * -1; }
-#
-#  fmne_tos(i, f);
-#
-#  fclose(f);
-#
-#  return s;
-#}
-
-#static void fmne_tos(long long i, FILE *f)
-#{
-#  long long mod = i % fmne_syl_count;
-#  long long rst = i / fmne_syl_count;
-#  if (rst > 0) fmne_tos(rst, f);
-#  fputs(fmne_syls[mod], f);
-#}
 
   def self.tos(i, sio)
 
@@ -143,7 +120,23 @@ module Flor::Mnemo
 
   def self.to_i(s)
 
-    -1
+    sign = 1
+    result = 0
+
+    if s[0, 2] == NEG
+      sign = -1
+      s = s[2..-1]
+    end
+
+    loop do
+      break if s.length < 1
+      i = SYLS.index(s[0, 2]) || SYLS.index(s[0, 3])
+      fail ArgumentError.new("unknown syllable '#{s[0, 2]}'") unless i
+      result = SYL_COUNT * result + i
+      s = s[SYLS[i].length..-1]
+    end
+
+    sign * result
   end
 end
 
