@@ -23,55 +23,42 @@
 # Made in Japan.
 #++
 
-require 'sequel'
-
 
 module Flor
 
-  module Db
+  class Dispatcher
 
-    #def self.configure(uri)
-    #  Flor::DB = Sequel.connect(uri)
-    #end
+    def initialize
 
-    def self.create_tables(db)
+      @thread = Thread.new { run }
+    end
 
-      Flor::DB.create_table :flor_items do
+    def run
 
-        primary_key :id, type: Bignum
-        String :type, null: false # 'execution', 'mdis', 'mexe', 'schedule', ...
-        String :subtype, null: false
-        String :schedule, null: false # '20141128.103239' or '00 23 * * *'
-        String :domain, null: false
-        String :exid, null: false
-        File :content # JSON
-        String :status, null: false # 'created' or something else
-        Time :tstamp
+      loop do
 
-        index :type
-        index :domain
-        index :exid
+        msgs = Flor::Db::Message.list(:mdis)
+        msgs.each { |msg| handle(msg) }
+
+        sleep(msgs.length > 0 ? 0.001, 0.350)
+
+          # This is too expensive, too many queries
+          # how about simply require Flor client to ping the dispatcher
+          # to wake it up?
+          # Or simply, when there is a new Message being inserted,
+          # Flor.dispatch is called with it
       end
+    #rescue
     end
 
-    class Execution < Sequel::Model
-      #
-      self.set_dataset(Flor::DB[:flor_items].where(type: 'execution'))
+    def stop
+
+      # TODO
     end
 
-    class Message < Sequel::Model
-      #
-      self.set_dataset(Flor::DB[:flor_items])
+    protected
 
-      def self.list(type)
-
-        self.where(type: type).order(:id).all
-      end
-    end
-
-    class Schedule < Sequel::Model
-      #
-      self.set_dataset(Flor::DB[:flor_items].where(type: 'schedule'))
+    def handle(msg)
     end
   end
 end
