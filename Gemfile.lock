@@ -29,6 +29,7 @@ GEM
       rspec-support (~> 3.3.0)
     rspec-support (3.3.0)
     sequel (4.29.0)
+    sqlite3 (1.3.11)
 
 PLATFORMS
   ruby
@@ -38,6 +39,7 @@ DEPENDENCIES
   raabro!
   rake
   rspec (>= 2.13.0)
+  sqlite3 (>= 1.3.11)
 
 BUNDLED WITH
    1.10.6

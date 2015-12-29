@@ -45,7 +45,7 @@ module Flor
         String :domain, null: false
         String :exid, null: false
         File :content # JSON
-        String :status, null: false
+        String :status, null: false # 'created' or something else
         Time :tstamp
 
         index :type

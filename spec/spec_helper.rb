@@ -8,5 +8,8 @@
 require 'pp'
 require 'ostruct'
 
+require 'sequel'
+module Flor; DB = Sequel.connect('sqlite:tmp/test.db'); end
+
 require 'flor'
 
