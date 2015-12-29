@@ -27,13 +27,10 @@
 module Flor
 
   VERSION = '0.1.0'
-end
 
-require 'flor/db'
-require 'flor/parsers'
-#require 'flor/rewrite'
-
-module Flor
+  require 'flor/db'
+  require 'flor/mnemo'
+  require 'flor/parsers'
 
 #char *flon_conf_uid()
 #{
