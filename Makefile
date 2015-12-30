@@ -21,3 +21,9 @@ build: gemspec_validate
 push: build
 	gem push pkg/$(NAME)-$(VERSION).gem
 
+
+## db tasks ##
+
+db:
+	ruby -Ilib lib/flor/db.rb
+

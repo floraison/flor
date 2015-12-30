@@ -25,6 +25,7 @@
 
 require 'json'
 require 'thread'
+require 'logger'
 
 require 'munemo'
 

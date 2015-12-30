@@ -23,6 +23,7 @@
 # Made in Japan.
 #++
 
+require 'logger'
 require 'sequel'
 
 
@@ -30,11 +31,21 @@ module Flor
 
   module Db
 
-    #def self.configure(uri)
-    #  Flor::DB = Sequel.connect(uri)
-    #end
+    if uri = ENV['FLOR_DB_URI']
 
-    def self.create_tables(db)
+      Flor::DB = Sequel.connect(uri)
+
+    elsif env = ENV['FLOR_ENV']
+
+      case env
+        when 'test', 'spec'
+          Flor::DB = Sequel.connect("sqlite://tmp/test.db")
+        when /^dev(elopment)?/
+          Flor::DB = Sequel.connect("sqlite://tmp/dev.db")
+      end
+    end
+
+    def self.create_tables
 
       Flor::DB.create_table :flor_items do
 
@@ -71,8 +82,8 @@ module Flor
       def self.store(type, msg)
 
         Flor::Db::Message.insert(
-          type: type,
-          subtype: msg[:point] || msg['point'],
+          type: type.to_s,
+          subtype: (msg[:point] || msg['point']).to_s,
           domain: msg[:domain] || msg['domain'],
           exid: msg[:exid] || msg['exid'],
           content: Sequel.blob(JSON.dump(msg)),
@@ -86,5 +97,12 @@ module Flor
       self.set_dataset(Flor::DB[:flor_items].where(type: 'schedule'))
     end
   end
+end
+
+
+if $0 == __FILE__
+
+  Flor::DB.loggers << Logger.new($stdout)
+  Flor::Db.create_tables
 end
 
