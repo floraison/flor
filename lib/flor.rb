@@ -23,13 +23,14 @@
 # Made in Japan.
 #++
 
+require 'munemo'
+
 
 module Flor
 
   VERSION = '0.1.0'
 
   require 'flor/db'
-  require 'flor/mnemo'
   require 'flor/parsers'
 
 #char *flon_conf_uid()
@@ -83,7 +84,7 @@ module Flor
     t = t.utc unless local
     t = t.strftime('%Y%m%d.%H%M')
 
-    sus = "bababa"
+    sus = "bababa" # TODO use menomo...
 
     "#{domain}-#{uid}-#{t}.#{sus}"
   end

@@ -26,6 +26,7 @@ the flon programs, in Ruby
     '*.gemspec', '*.txt', '*.rdoc', '*.md'
   ]
 
+  s.add_runtime_dependency 'munemo'
   s.add_runtime_dependency 'raabro', '>= 1.0.5'
   s.add_runtime_dependency 'sequel', '>= 4.29.0'
 
