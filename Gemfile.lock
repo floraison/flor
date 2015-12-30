@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    flor (0.1.0)
+    flor (0.2.0)
       munemo
       raabro (>= 1.0.5)
       sequel (>= 4.29.0)
@@ -16,20 +16,19 @@ GEM
   specs:
     diff-lcs (1.2.5)
     munemo (1.0.0)
-    rake (10.4.2)
-    rspec (3.3.0)
-      rspec-core (~> 3.3.0)
-      rspec-expectations (~> 3.3.0)
-      rspec-mocks (~> 3.3.0)
-    rspec-core (3.3.2)
-      rspec-support (~> 3.3.0)
-    rspec-expectations (3.3.1)
+    rspec (3.4.0)
+      rspec-core (~> 3.4.0)
+      rspec-expectations (~> 3.4.0)
+      rspec-mocks (~> 3.4.0)
+    rspec-core (3.4.0)
+      rspec-support (~> 3.4.0)
+    rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.3.0)
-    rspec-mocks (3.3.2)
+      rspec-support (~> 3.4.0)
+    rspec-mocks (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.3.0)
-    rspec-support (3.3.0)
+      rspec-support (~> 3.4.0)
+    rspec-support (3.4.0)
     sequel (4.29.0)
     sqlite3 (1.3.11)
 
@@ -39,8 +38,7 @@ PLATFORMS
 DEPENDENCIES
   flor!
   raabro!
-  rake
-  rspec (>= 2.13.0)
+  rspec (= 3.4.0)
   sqlite3 (>= 1.3.11)
 
 BUNDLED WITH

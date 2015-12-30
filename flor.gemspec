@@ -22,7 +22,7 @@ the flon programs, in Ruby
   #s.files = `git ls-files`.split("\n")
   s.files = Dir[
     'Rakefile',
-    'lib/**/*.rb', 'spec/**/*.rb', 'test/**/*.rb',
+    'lib/**/*.rb', #'spec/**/*.rb', 'test/**/*.rb',
     '*.gemspec', '*.txt', '*.rdoc', '*.md'
   ]
 
@@ -30,8 +30,7 @@ the flon programs, in Ruby
   s.add_runtime_dependency 'raabro', '>= 1.0.5'
   s.add_runtime_dependency 'sequel', '>= 4.29.0'
 
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec', '>= 2.13.0'
+  s.add_development_dependency 'rspec', '3.4.0'
 
   s.require_path = 'lib'
 end
