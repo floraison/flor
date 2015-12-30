@@ -23,6 +23,7 @@
 # Made in Japan.
 #++
 
+require 'json'
 require 'thread'
 
 require 'munemo'

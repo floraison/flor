@@ -40,13 +40,13 @@ module Flor
 
         primary_key :id, type: Bignum
         String :type, null: false # 'execution', 'mdis', 'mexe', 'schedule', ...
-        String :subtype, null: false
-        String :schedule, null: false # '20141128.103239' or '00 23 * * *'
+        String :subtype
+        String :schedule # '20141128.103239' or '00 23 * * *'
         String :domain, null: false
         String :exid, null: false
-        File :content # JSON
+        File :content, null: false # JSON
         String :status, null: false # 'created' or something else
-        Time :tstamp
+        Time :tstamp, null: false
 
         index :type
         index :domain
@@ -66,6 +66,18 @@ module Flor
       def self.list(type)
 
         self.where(type: type).order(:id).all
+      end
+
+      def self.store(type, msg)
+
+        Flor::Db::Message.insert(
+          type: type,
+          subtype: msg[:point] || msg['point'],
+          domain: msg[:domain] || msg['domain'],
+          exid: msg[:exid] || msg['exid'],
+          content: Sequel.blob(JSON.dump(msg)),
+          status: 'created',
+          tstamp: Time.now)
       end
     end
 
