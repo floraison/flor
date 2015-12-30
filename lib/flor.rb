@@ -23,82 +23,17 @@
 # Made in Japan.
 #++
 
+require 'thread'
+
 require 'munemo'
 
 
 module Flor
 
   VERSION = '0.1.0'
-
-  require 'flor/db'
-  require 'flor/parsers'
-
-#char *flon_conf_uid()
-#{
-#  char *gid = flon_conf_string("unit.gid", NULL);
-#  char *uid = flon_conf_string("unit.id", NULL);
-#
-#  if (gid == NULL && uid == NULL) return strdup("u0");
-#  if (gid == NULL) return uid;
-#
-#  char *r = flu_sprintf("%s.%s", gid, uid);
-#
-#  free(gid); free(uid);
-#
-#  return r;
-#}
-
-#char *flon_generate_exid(const char *domain)
-#{
-#  char *uid = flon_conf_uid();
-#  short local = flon_conf_is("unit.time", "local");
-#
-#  struct timeval tv;
-#  struct tm *tm;
-#  char t[20];
-#
-#  gettimeofday(&tv, NULL);
-#  tm = local ? localtime(&tv.tv_sec) : gmtime(&tv.tv_sec);
-#  strftime(t, 20, "%Y%m%d.%H%M", tm);
-#
-#  char *sus =
-#    fmne_to_s((tv.tv_sec % 60) * 100000000 + tv.tv_usec * 100 + counter);
-#
-#  char *r =
-#    flu_sprintf("%s-%s-%s.%s", domain, uid, t, sus);
-#
-#  free(sus);
-#  free(uid);
-#
-#  counter++; if (counter > 99) counter = 0;
-#
-#  return r;
-#}
-  def self.generate_exid(domain)
-
-    local = true
-
-    uid = 'u0'
-
-    t = Time.now
-    t = t.utc unless local
-    t = t.strftime('%Y%m%d.%H%M')
-
-    sus = "bababa" # TODO use menomo...
-
-    "#{domain}-#{uid}-#{t}.#{sus}"
-  end
-
-  def self.launch(domain, tree, payload, variables=nil)
-
-    exid = generate_exid(domain)
-
-    msg = { point: 'execute', domain: domain, exid: exid, payload: payload }
-    msg['vars'] = variables if variables
-
-    Flor::Db::Message.store(msg)
-
-    exid
-  end
 end
+
+require 'flor/db'
+require 'flor/parsers'
+require 'flor/launch'
 
