@@ -30,45 +30,69 @@ module Flor
 
     def initialize
 
-      @queue = Queue.new
+      @schedules = Flor::Db::Schedules.list
+      @status = :loading
       @thread = Thread.new { run }
-    end
-
-    def push(item)
-
-      @queue.push(item)
     end
 
     def run
 
       loop do
 
-        item = Queue.pop
+        break if @status == :stopping
 
-        break if item == :stop
+        count = 0
 
-        Flor::Db::Message.list(:dispatcher).each { |msg| dispatch(msg) }
+        count += trigger_schedules
+
+        next unless @status == :loading
+
+        @status = :loaded
+
+        Flor::Db::Message.list_for_dispatcher.each do |msgs|
+          count += msgs.length
+          dispatch(msgs)
+        end
+
+        sleep(count > 0 ? 0.001 : 0.490)
       end
     end
 
     def stop
 
-      @queue.push(:stop)
+      @status = :stopping
+    end
+
+    def touch
+
+      return if @status == :stopping
+      @status = :loading
     end
 
     protected
 
-    def dispatch(msg)
+    def dispatch(msgs)
+
+      return if msgs.empty?
 
       case msg.point
-        when 'execute' then execute(msg)
-        # ...
+        when 'schedule' then schedule(msgs)
+        #when 'execute', 'return', 'receive' then execute(msgs)
+        else execute(msgs)
+      end
+
+      if msgs.first.point == 'schedule'
+        schedule(msgs)
+      else
+        execute(msgs)
       end
 
     rescue => err
 
+      puts "=== dispatcher encountered issue"
       p err
       puts err.backtrace
+      puts "=== ."
     end
   end
 end
