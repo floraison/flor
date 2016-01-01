@@ -41,20 +41,13 @@ module Flor
 
         break if @status == :stopping
 
-        count = 0
+        msgs =
+          schedules_to_trigger +
+          Flor::Db::Message.list(:dispatcher)
 
-        count += trigger_schedules
+        msgs.group_by(&:exid).each { |ms| dispatch(ms) }
 
-        next unless @status == :loading
-
-        @status = :loaded
-
-        Flor::Db::Message.list_for_dispatcher.each do |msgs|
-          count += msgs.length
-          dispatch(msgs)
-        end
-
-        sleep(count > 0 ? 0.001 : 0.490)
+        sleep(msgs.length > 0 ? 0.001 : 0.490)
       end
     end
 
@@ -71,29 +64,47 @@ module Flor
 
     protected
 
+    def schedules_to_trigger
+
+      [] # TODO
+    end
+
     def dispatch(msgs)
 
-      return if msgs.empty?
+      schs = []
+      exes = []
+      tsks = []
 
-      case msg.point
-        when 'schedule' then schedule(msgs)
-        #when 'execute', 'return', 'receive' then execute(msgs)
-        else execute(msgs)
+      msgs.each do |msg|
+
+        if msg.point == 'task'
+          tsks << msg
+        elsif msg.point.match(/schedule\z/)
+          schs << msg
+        else
+          exes << msg
+        end
       end
 
-      if msgs.first.point == 'schedule'
-        schedule(msgs)
-      else
-        execute(msgs)
-      end
+      schedule(schs)
+      execute(exes)
+      task(tsks)
 
     rescue => err
 
-      puts "=== dispatcher encountered issue"
+      puts "=== #{self.class} encountered issue"
       p err
       puts err.backtrace
-      puts "=== ."
+      puts "=== #{self.class} ."
     end
-  end
+
+    def schedule(msgs)
+    end
+
+    def execute(msgs)
+    end
+
+    def task(msgs)
+    end
 end
 
