@@ -103,7 +103,7 @@ module Flor
     msg = { point: 'execute', domain: domain, exid: exid, payload: payload }
     msg[:vars] = variables if variables
 
-    Flor::Db::Message.store(:mdis, msg)
+    Flor::Db::Message.store(:dispatcher, msg)
 
     exid
   end

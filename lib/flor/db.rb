@@ -31,23 +31,25 @@ module Flor
 
   module Db
 
-    if uri = ENV['FLOR_DB_URI']
+    @con = Sequel.connect('sqlite:.')
+      # connection to an empty memory database
+      # before Flor::Db.connect() gets called
 
-      Flor::DB = Sequel.connect(uri)
+    def self.connect(uri)
 
-    elsif env = ENV['FLOR_ENV']
+      @con = Sequel.connect(uri)
 
-      case env
-        when 'test', 'spec'
-          Flor::DB = Sequel.connect("sqlite://tmp/test.db")
-        when /^dev(elopment)?/
-          Flor::DB = Sequel.connect("sqlite://tmp/dev.db")
-      end
+      Flor::Db::Message
+        .set_dataset(@con[:flor_items].where(type: 'message'))
+      Flor::Db::Execution
+        .set_dataset(@con[:flor_items].where(type: 'execution'))
+      Flor::Db::Schedule
+        .set_dataset(@con[:flor_items].where(type: 'schedule'))
     end
 
     def self.create_tables
 
-      Flor::DB.create_table :flor_items do
+      @con.create_table :flor_items do
 
         primary_key :id, type: Bignum
         String :type, null: false # 'execution', 'mdis', 'mexe', 'schedule', ...
@@ -67,23 +69,23 @@ module Flor
 
     class Execution < Sequel::Model
       #
-      self.set_dataset(Flor::DB[:flor_items].where(type: 'execution'))
+      #self.set_dataset(Flor::DB[:flor_items].where(type: 'execution'))
     end
 
     class Message < Sequel::Model
       #
-      self.set_dataset(Flor::DB[:flor_items])
+      #self.set_dataset(Flor::DB[:flor_items].where(type: 'message'))
 
       def self.list(type)
 
         self.where(type: type).order(:id).all
       end
 
-      def self.store(type, msg)
+      def self.store(subtype, msg)
 
         Flor::Db::Message.insert(
-          type: type.to_s,
-          subtype: (msg[:point] || msg['point']).to_s,
+          type: 'message',
+          subtype: subtype.to_s,
           domain: msg[:domain] || msg['domain'],
           exid: msg[:exid] || msg['exid'],
           content: Sequel.blob(JSON.dump(msg)),
@@ -94,7 +96,7 @@ module Flor
 
     class Schedule < Sequel::Model
       #
-      self.set_dataset(Flor::DB[:flor_items].where(type: 'schedule'))
+      #self.set_dataset(Flor::DB[:flor_items].where(type: 'schedule'))
     end
   end
 end
@@ -102,7 +104,17 @@ end
 
 if $0 == __FILE__
 
-  Flor::DB.loggers << Logger.new($stdout)
+  uri =
+    ENV['FLOR_DB_URI'] ||
+    case ENV['FLOR_ENV']
+      when 'test', 'spec' then 'sqlite://tmp/test.db'
+      #else /\Adev(elopment)?\z/ then 'sqlite://tmp/dev.db'
+      else 'sqlite://tmp/dev.db'
+    end
+
+  puts "Flor::Db.connect(#{uri.inspect})"
+  Flor::Db.connect(uri)
+  Flor::Db.instance_eval { @con.loggers << Logger.new($stdout) }
   Flor::Db.create_tables
 end
 
