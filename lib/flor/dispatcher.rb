@@ -30,35 +30,45 @@ module Flor
 
     def initialize
 
+      @queue = Queue.new
       @thread = Thread.new { run }
+    end
+
+    def push(item)
+
+      @queue.push(item)
     end
 
     def run
 
       loop do
 
-        msgs = Flor::Db::Message.list(:mdis)
-        msgs.each { |msg| handle(msg) }
+        item = Queue.pop
 
-        sleep(msgs.length > 0 ? 0.001, 0.350)
+        break if item == :stop
 
-          # This is too expensive, too many queries
-          # how about simply require Flor client to ping the dispatcher
-          # to wake it up?
-          # Or simply, when there is a new Message being inserted,
-          # Flor.dispatch is called with it
+        Flor::Db::Message.list(:dispatcher).each { |msg| dispatch(msg) }
       end
-    #rescue
     end
 
     def stop
 
-      # TODO
+      @queue.push(:stop)
     end
 
     protected
 
-    def handle(msg)
+    def dispatch(msg)
+
+      case msg.point
+        when 'execute' then execute(msg)
+        # ...
+      end
+
+    rescue => err
+
+      p err
+      puts err.backtrace
     end
   end
 end
