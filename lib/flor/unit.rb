@@ -53,6 +53,11 @@ module Flor
 
       [] # TODO
     end
+
+    def wait(exid, point, opts={}) # :nid, :maxsec
+
+      nil
+    end
   end
 end
 
