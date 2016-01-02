@@ -10,5 +10,3 @@ require 'ostruct'
 
 require 'flor'
 
-Flor::Db.connect('sqlite://tmp/test.db')
-

@@ -10,15 +10,23 @@ require 'spec_helper'
 
 describe 'Flor.launch' do
 
+  before :each do
+
+    @dom =
+      __FILE__[Dir.getwd.length + 1..-9].gsub(/\//, '.')
+    @flor =
+      Flor::Unit.new(storage_uri: 'sqlite://tmp/test.db', dispatcher: false)
+  end
+
   it 'launches' do
 
-    t = Flor::Radial.parse(%{
+    t = %{
       +
         1
         2
-    })
+    }
 
-    exid = Flor.launch('spec.x', t, {})
+    exid = @flor.launch("#{@dom}.#{__LINE__}", t, {})
   end
 end
 

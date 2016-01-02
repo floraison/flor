@@ -26,88 +26,36 @@
 
 module Flor
 
-  class Dispatcher
+  class Unit
 
-    def initialize(unit)
+    def initialize(opts)
 
-      @unit = unit
+      uri = opts[:storage_uri]
+      dispatcher = opts[:dispatcher] != false
+      clean = opts[:clean]
 
-      @schedules = @unit.list_schedules
-      @status = :loading
-      @thread = Thread.new { run }
-    end
+      fail ArgumentError.new('missing :storage_uri option') unless uri
 
-    def run
+      @options = opts
 
-      loop do
+      @storage = Sequel.connect(uri)
+      Flor::Db.delete_tables(@storage) if clean
 
-        break if @status == :stopping
-
-        msgs =
-          schedules_to_trigger +
-          Flor::Db::Message.list(:dispatcher)
-
-        msgs.group_by(&:exid).each { |ms| dispatch(ms) }
-
-        sleep(msgs.length > 0 ? 0.001 : 0.490)
-      end
+      @dispatcher = dispatcher ? Dispatcher.new(self) : nil
     end
 
     def stop
 
-      @status = :stopping
+      @dispatcher.stop if @dispatcher
     end
 
-    def touch
-
-      return if @status == :stopping
-      @status = :loading
-    end
-
-    protected
-
-    def schedules_to_trigger
+    def list_schedules
 
       [] # TODO
     end
-
-    def dispatch(msgs)
-
-      schs = []
-      exes = []
-      tsks = []
-
-      msgs.each do |msg|
-
-        if msg.point == 'task'
-          tsks << msg
-        elsif msg.point.match(/schedule\z/)
-          schs << msg
-        else
-          exes << msg
-        end
-      end
-
-      schedule(schs)
-      execute(exes)
-      task(tsks)
-
-    rescue => err
-
-      puts "=== #{self.class} encountered issue"
-      p err
-      puts err.backtrace
-      puts "=== #{self.class} ."
-    end
-
-    def schedule(msgs)
-    end
-
-    def execute(msgs)
-    end
-
-    def task(msgs)
-    end
   end
 end
+
+require 'flor/unit/storage'
+require 'flor/unit/launch'
 

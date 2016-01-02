@@ -12,13 +12,13 @@ describe 'Flor a to z' do
 
   before :each do
 
-    clean_flor
-    start_flor
+    @dom = __FILE__[Dir.getwd.length + 1..-9].gsub(/\//, '.')
+    @flor = Flor::Unit.new(storage_uri: 'sqlite://tmp/test.db', clean: true)
   end
 
   after :each do
 
-    stop_flor
+    @flor.stop
   end
 
   it 'adds numbers' do
@@ -29,10 +29,10 @@ describe 'Flor a to z' do
         1
     }
 
-    exid = Flor.launch(cmp, {})
+    exid = @flor.launch("#{@dom}.#{__LINE__}", cmp, {})
 
     #result = hlp_wait(exid, "terminated", NULL, 3); // exid, point, nid, maxsec
-    result = Flor.wait(exid, :terminated)
+    result = @flor.wait(exid, :terminated)
 
     expect(result.content['payload']).to eq({ 'ret' => 2 })
     expect(result.payload).to eq({ 'ret' => 2 })

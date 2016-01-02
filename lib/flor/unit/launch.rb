@@ -24,7 +24,7 @@
 #++
 
 
-module Flor
+class Flor::Unit
 
 #char *flon_conf_uid()
 #{
@@ -68,10 +68,24 @@ module Flor
 #  return r;
 #}
 
-  @exid_counter = 0
-  EXID_MUTEX = Mutex.new
+  def launch(domain, tree, payload, variables=nil)
 
-  def self.generate_exid(domain)
+    exid = generate_exid(domain)
+
+    msg = { point: 'execute', domain: domain, exid: exid, payload: payload }
+    msg[:vars] = variables if variables
+
+    store_message(:dispatcher, msg)
+
+    exid
+  end
+
+  protected
+
+  def generate_exid(domain)
+
+    @exid_counter ||= 0
+    @exid_mutex ||= Mutex.new
 
     local = true
 
@@ -81,7 +95,7 @@ module Flor
     t = t.utc unless local
 
     sus =
-      EXID_MUTEX.synchronize do
+      @exid_mutex.synchronize do
 
         sus = t.sec * 100000000 + t.usec * 100 + @exid_counter
 
@@ -94,18 +108,6 @@ module Flor
     t = t.strftime('%Y%m%d.%H%M')
 
     "#{domain}-#{uid}-#{t}.#{sus}"
-  end
-
-  def self.launch(domain, tree, payload, variables=nil)
-
-    exid = generate_exid(domain)
-
-    msg = { point: 'execute', domain: domain, exid: exid, payload: payload }
-    msg[:vars] = variables if variables
-
-    Flor::Db::Message.store(:dispatcher, msg)
-
-    exid
   end
 end
 

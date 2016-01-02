@@ -37,5 +37,6 @@ end
 
 require 'flor/db'
 require 'flor/parsers'
-require 'flor/launch'
+require 'flor/dispatcher'
+require 'flor/unit'
 
