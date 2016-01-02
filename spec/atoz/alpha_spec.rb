@@ -12,8 +12,12 @@ describe 'Flor a to z' do
 
   before :each do
 
-    @dom = __FILE__[Dir.getwd.length + 1..-9].gsub(/\//, '.')
-    @flor = Flor::Unit.new(storage_uri: 'sqlite://tmp/test.db', clean: true)
+    @dom =
+      __FILE__[Dir.getwd.length + 1..-9].gsub(/\//, '.')
+    @flor =
+      Flor::Unit.new(
+        storage_uri: 'sqlite://tmp/test.db',
+        storage_clean: true)
   end
 
   after :each do

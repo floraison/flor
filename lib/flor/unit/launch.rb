@@ -72,8 +72,13 @@ class Flor::Unit
 
     exid = generate_exid(domain)
 
-    msg = { point: 'execute', domain: domain, exid: exid, payload: payload }
-    msg[:vars] = variables if variables
+    msg = {
+      point: 'execute',
+      domain: domain,
+      exid: exid,
+      tree: tree.is_a?(String) ? Flor::Radial.parse(tree) : tree,
+      payload: payload,
+      vars: variables }
 
     store_message(:dispatcher, msg)
 

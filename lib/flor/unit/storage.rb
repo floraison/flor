@@ -24,38 +24,20 @@
 #++
 
 
-module Flor
+class Flor::Unit
 
-  class Unit
+  attr_reader :storage
 
-    def initialize(opts)
+  def store_message(subtype, msg)
 
-      uri = opts[:storage_uri]
-      clean = opts[:storage_clean]
-      dispatcher = opts[:dispatcher] != false
-
-      fail ArgumentError.new('missing :storage_uri option') unless uri
-
-      @options = opts
-
-      @storage = Sequel.connect(uri)
-      Flor::Db.delete_tables(@storage) if clean
-
-      @dispatcher = dispatcher ? Dispatcher.new(self) : nil
-    end
-
-    def stop
-
-      @dispatcher.stop if @dispatcher
-    end
-
-    def list_schedules
-
-      [] # TODO
-    end
+    @storage[:flor_items].insert(
+      type: 'message',
+      subtype: subtype.to_s,
+      domain: msg[:domain] || msg['domain'],
+      exid: msg[:exid] || msg['exid'],
+      content: Sequel.blob(JSON.dump(msg)),
+      status: 'created',
+      tstamp: Time.now)
   end
 end
-
-require 'flor/unit/storage'
-require 'flor/unit/launch'
 

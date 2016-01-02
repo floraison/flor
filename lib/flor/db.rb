@@ -60,54 +60,6 @@ module Flor
 
       storage[:flor_items].delete
     end
-
-#    @con = Sequel.connect('sqlite:.')
-#      # connection to an empty memory database
-#      # before Flor::Db.connect() gets called
-#
-#    def self.connect(uri)
-#
-#      @con = Sequel.connect(uri)
-#
-#      Flor::Db::Message
-#        .set_dataset(@con[:flor_items].where(type: 'message'))
-#      Flor::Db::Execution
-#        .set_dataset(@con[:flor_items].where(type: 'execution'))
-#      Flor::Db::Schedule
-#        .set_dataset(@con[:flor_items].where(type: 'schedule'))
-#    end
-#
-#    class Execution < Sequel::Model
-#      #
-#      #self.set_dataset(Flor::DB[:flor_items].where(type: 'execution'))
-#    end
-#
-#    class Message < Sequel::Model
-#      #
-#      #self.set_dataset(Flor::DB[:flor_items].where(type: 'message'))
-#
-#      def self.list(type)
-#
-#        self.where(type: type).order(:id).all
-#      end
-#
-#      def self.store(subtype, msg)
-#
-#        Flor::Db::Message.insert(
-#          type: 'message',
-#          subtype: subtype.to_s,
-#          domain: msg[:domain] || msg['domain'],
-#          exid: msg[:exid] || msg['exid'],
-#          content: Sequel.blob(JSON.dump(msg)),
-#          status: 'created',
-#          tstamp: Time.now)
-#      end
-#    end
-#
-#    class Schedule < Sequel::Model
-#      #
-#      #self.set_dataset(Flor::DB[:flor_items].where(type: 'schedule'))
-#    end
   end
 end
 
