@@ -27,6 +27,7 @@ require 'json'
 require 'thread'
 require 'logger'
 
+require 'sequel'
 require 'munemo'
 
 
@@ -35,8 +36,7 @@ module Flor
   VERSION = '0.2.0'
 end
 
-require 'flor/db'
+require 'flor/unit'
 require 'flor/parsers'
 require 'flor/dispatcher'
-require 'flor/unit'
 

@@ -25,6 +25,21 @@ describe 'Flor a to z' do
     @flor.stop
   end
 
+  it 'returns values on their own' do
+
+    cmp = %{
+      2
+    }
+
+    exid = @flor.launch("#{@dom}.#{__LINE__}", cmp, {})
+
+    #result = hlp_wait(exid, "terminated", NULL, 3); // exid, point, nid, maxsec
+    result = @flor.wait(exid, :terminated)
+
+    expect(result.content['payload']).to eq({ 'ret' => 2 })
+    expect(result.payload).to eq({ 'ret' => 2 })
+  end
+
   it 'adds numbers' do
 
     cmp = %{

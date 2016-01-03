@@ -25,5 +25,5 @@ push: build
 ## db tasks ##
 
 db:
-	ruby -Ilib lib/flor/db.rb
+	bundle exec ruby -Ilib lib/flor/make_db.rb
 

@@ -39,7 +39,7 @@ module Flor
       @options = opts
 
       @storage = Sequel.connect(uri)
-      Flor::Db.delete_tables(@storage) if clean
+      delete_tables if clean
 
       @dispatcher = dispatcher ? Dispatcher.new(self) : nil
     end
@@ -49,12 +49,9 @@ module Flor
       @dispatcher.stop if @dispatcher
     end
 
-    def list_schedules
-
-      [] # TODO
-    end
-
     def wait(exid, point, opts={}) # :nid, :maxsec
+
+      sleep 0.500
 
       nil
     end

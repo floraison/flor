@@ -45,12 +45,16 @@ module Flor
 
         msgs =
           schedules_to_trigger +
-          Flor::Db::Message.list(:dispatcher)
+          @unit.list_dispatcher_messages
 
-        msgs.group_by(&:exid).each { |ms| dispatch(ms) }
+        msgs.group_by(&:exid).values.each { |ms| dispatch(ms) }
 
         sleep(msgs.length > 0 ? 0.001 : 0.490)
       end
+
+    rescue => err
+
+      print_error(err)
     end
 
     def stop
@@ -79,6 +83,9 @@ module Flor
 
       msgs.each do |msg|
 
+p msg
+p msg.point
+return
         if msg.point == 'task'
           tsks << msg
         elsif msg.point.match(/schedule\z/)
@@ -94,7 +101,12 @@ module Flor
 
     rescue => err
 
-      puts "=== #{self.class} encountered issue"
+      print_error(err)
+    end
+
+    def print_error(err)
+
+      puts "=== #{self.class}"
       p err
       puts err.backtrace
       puts "=== #{self.class} ."
