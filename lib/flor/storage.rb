@@ -73,7 +73,7 @@ class Flor::Storage
         .first)
   end
 
-  def flag_as_consumed(items)
+  def flag_as(items, new_status)
 
     ids = items.collect(&:id).compact
 
@@ -81,7 +81,7 @@ class Flor::Storage
 
     @con[:flor_items]
       .where(id: ids)
-      .update(status: 'consumed')
+      .update(status: new_status)
   end
 
   def create_tables

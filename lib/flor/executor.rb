@@ -35,7 +35,7 @@ module Flor
       @msgs = msgs
 
       @execution = nil
-      @consumed_msgs = []
+      @processed_msgs = []
     end
 
     def execute
@@ -47,12 +47,14 @@ module Flor
         msg = @msgs.shift
         break unless msg
 
-        @consumed_msgs.push(msg)
+        @processed_msgs.push(msg)
         p msg
       end
 
-      @storage.flag_as_consumed(@consumed_msgs)
+      @storage.flag_as(@processed_msgs, 'processed')
     end
+
+    protected
   end
 end
 
