@@ -28,19 +28,19 @@ module Flor
 
   class Unit
 
+    attr_reader :storage
+    attr_reader :dispatcher
+
     def initialize(opts)
 
       uri = opts[:storage_uri]
-      clean = opts[:storage_clean]
       dispatcher = opts[:dispatcher] != false
 
       fail ArgumentError.new('missing :storage_uri option') unless uri
 
       @options = opts
 
-      @storage = Sequel.connect(uri)
-      delete_tables if clean
-
+      @storage = Flor::Storage.new(uri, opts)
       @dispatcher = dispatcher ? Dispatcher.new(self) : nil
     end
 
@@ -54,6 +54,53 @@ module Flor
       sleep 0.500
 
       nil
+    end
+
+    def launch(domain, tree, payload, variables=nil)
+
+      exid = generate_exid(domain)
+
+      msg = {
+        point: 'execute',
+        domain: domain,
+        exid: exid,
+        tree: tree.is_a?(String) ? Flor::Radial.parse(tree) : tree,
+        payload: payload,
+        vars: variables }
+
+      @storage.store_message(:dispatcher, msg)
+
+      exid
+    end
+
+    protected
+
+    def generate_exid(domain)
+
+      @exid_counter ||= 0
+      @exid_mutex ||= Mutex.new
+
+      local = true
+
+      uid = 'u0'
+
+      t = Time.now
+      t = t.utc unless local
+
+      sus =
+        @exid_mutex.synchronize do
+
+          sus = t.sec * 100000000 + t.usec * 100 + @exid_counter
+
+          @exid_counter = @exid_counter + 1
+          @exid_counter = 0 if @exid_counter > 99
+
+          Munemo.to_s(sus)
+        end
+
+      t = t.strftime('%Y%m%d.%H%M')
+
+      "#{domain}-#{uid}-#{t}.#{sus}"
     end
   end
 end

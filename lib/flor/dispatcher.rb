@@ -31,8 +31,9 @@ module Flor
     def initialize(unit)
 
       @unit = unit
+      @storage = unit.storage
 
-      @schedules = @unit.list_schedules
+      @schedules = @storage.list_schedules
       @status = :loading
       @thread = Thread.new { run }
     end
@@ -45,7 +46,7 @@ module Flor
 
         msgs =
           schedules_to_trigger +
-          @unit.list_dispatcher_messages
+          @storage.list_dispatcher_messages
 
         msgs.group_by(&:exid).values.each { |ms| dispatch(ms) }
 

@@ -11,6 +11,6 @@ uri =
 
 puts "uri: #{uri.inspect}"
 
-unit = Flor::Unit.new(storage_uri: uri, dispatcher: false)
-unit.create_tables
+sto = Flor::Storage.new(uri, dispatcher: false)
+sto.create_tables
 

@@ -24,13 +24,20 @@
 #++
 
 
-class Flor::Unit
+class Flor::Storage
 
-  attr_reader :storage
+  def initialize(uri, opts={})
+
+    @con = Sequel.connect(uri)
+
+    delete_tables if opts[:storage_clean]
+  end
+
+  def connection; @con; end
 
   def store_message(subtype, msg)
 
-    @storage[:flor_items].insert(
+    @con[:flor_items].insert(
       type: 'message',
       subtype: subtype.to_s,
       domain: msg[:domain] || msg['domain'],
@@ -42,7 +49,7 @@ class Flor::Unit
 
   def list_schedules
 
-    @storage[:flor_items]
+    @con[:flor_items]
       .where(type: 'schedule', status: 'created')
       .order(:id)
       .all
@@ -51,7 +58,7 @@ class Flor::Unit
 
   def list_dispatcher_messages
 
-    @storage[:flor_items]
+    @con[:flor_items]
       .where(type: 'message', subtype: 'dispatcher', status: 'created')
       .order(:id)
       .all
@@ -61,7 +68,7 @@ class Flor::Unit
   def load_execution(exid)
 
     Flor::Execution.new(
-      @storage[:flor_items]
+      @con[:flor_items]
         .where(type: 'execution', status: 'created', exid: exid)
         .first)
   end
@@ -72,14 +79,14 @@ class Flor::Unit
 
     return if ids.empty?
 
-    @storage[:flor_items]
+    @con[:flor_items]
       .where(id: ids)
       .update(status: 'consumed')
   end
 
   def create_tables
 
-    @storage.create_table :flor_items do
+    @con.create_table :flor_items do
 
       primary_key :id, type: Bignum
       String :type, null: false # 'execution', 'mdis', 'mexe', 'schedule', ...
@@ -99,7 +106,7 @@ class Flor::Unit
 
   def delete_tables
 
-    @storage[:flor_items].delete
+    @con[:flor_items].delete
   end
 end
 

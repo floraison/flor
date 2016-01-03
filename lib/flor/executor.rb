@@ -31,6 +31,7 @@ module Flor
     def initialize(unit, msgs)
 
       @unit = unit
+      @storage = unit.storage
       @msgs = msgs
 
       @execution = nil
@@ -39,7 +40,7 @@ module Flor
 
     def execute
 
-      @execution = @unit.load_execution(@msgs.first.exid)
+      @execution = @storage.load_execution(@msgs.first.exid)
 
       loop do
 
@@ -50,7 +51,7 @@ module Flor
         p msg
       end
 
-      @unit.flag_as_consumed(@consumed_msgs)
+      @storage.flag_as_consumed(@consumed_msgs)
     end
   end
 end
