@@ -26,35 +26,34 @@
 
 module Flor
 
-  class Unit
+  class Item
 
-    def initialize(opts)
+    attr_reader :values, :content
 
-      uri = opts[:storage_uri]
-      clean = opts[:storage_clean]
-      dispatcher = opts[:dispatcher] != false
+    def id; @values[:id]; end
+    def exid; @values[:exid]; end
 
-      fail ArgumentError.new('missing :storage_uri option') unless uri
+    def initialize(h)
 
-      @options = opts
-
-      @storage = Sequel.connect(uri)
-      delete_tables if clean
-
-      @dispatcher = dispatcher ? Dispatcher.new(self) : nil
+      @values = h
+      @content = JSON.parse(h[:content])
     end
+  end
 
-    def stop
+  class Message < Item
 
-      @dispatcher.stop if @dispatcher
+    def point; @content['point']; end
+  end
+
+  class Execution < Item
+
+    def initialize(h)
+
+      super(h || { content: '{}' })
     end
+  end
 
-    def wait(exid, point, opts={}) # :nid, :maxsec
-
-      sleep 0.500
-
-      nil
-    end
+  class Schedule < Item
   end
 end
 

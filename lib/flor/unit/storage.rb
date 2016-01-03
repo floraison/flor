@@ -46,7 +46,7 @@ class Flor::Unit
       .where(type: 'schedule', status: 'created')
       .order(:id)
       .all
-      .collect { |h| Schedule.new(h) }
+      .collect { |h| Flor::Schedule.new(h) }
   end
 
   def list_dispatcher_messages
@@ -55,12 +55,12 @@ class Flor::Unit
       .where(type: 'message', subtype: 'dispatcher', status: 'created')
       .order(:id)
       .all
-      .collect { |h| Message.new(h) }
+      .collect { |h| Flor::Message.new(h) }
   end
 
   def load_execution(exid)
 
-    Execution.new(
+    Flor::Execution.new(
       @storage[:flor_items]
         .where(type: 'execution', status: 'created', exid: exid)
         .first)
@@ -75,31 +75,6 @@ class Flor::Unit
     @storage[:flor_items]
       .where(id: ids)
       .update(status: 'consumed')
-  end
-
-  class Item
-
-    attr_reader :values, :content
-
-    def id; @values[:id]; end
-    def exid; @values[:exid]; end
-
-    def initialize(h)
-
-      @values = h
-      @content = h ? JSON.parse(h[:content]) : {}
-    end
-  end
-
-  class Message < Item
-
-    def point; @content['point']; end
-  end
-
-  class Execution < Item
-  end
-
-  class Schedule < Item
   end
 
   def create_tables
