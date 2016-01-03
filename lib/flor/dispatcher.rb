@@ -48,7 +48,7 @@ module Flor
           schedules_to_trigger +
           @storage.list_dispatcher_messages
 
-        msgs.group_by(&:exid).values.each { |ms| dispatch(ms) }
+        msgs.group_by { |h| h['exid'] }.values.each { |ms| dispatch(ms) }
 
         sleep(msgs.length > 0 ? 0.001 : 0.490)
       end
@@ -84,9 +84,9 @@ module Flor
 
       msgs.each do |msg|
 
-        if msg.point == 'task'
+        if msg['point'] == 'task'
           tsks << msg
-        elsif msg.point.match(/schedule\z/)
+        elsif msg['point'].match(/schedule\z/)
           schs << msg
         else
           exes << msg

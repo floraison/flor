@@ -53,7 +53,7 @@ class Flor::Storage
       .where(type: 'schedule', status: 'created')
       .order(:id)
       .all
-      .collect { |h| Flor::Schedule.new(h) }
+      .collect { |h| extract_item(h)}
   end
 
   def list_dispatcher_messages
@@ -62,12 +62,12 @@ class Flor::Storage
       .where(type: 'message', subtype: 'dispatcher', status: 'created')
       .order(:id)
       .all
-      .collect { |h| Flor::Message.new(h) }
+      .collect { |h| extract_item(h)}
   end
 
   def load_execution(exid)
 
-    Flor::Execution.new(
+    extract_item(
       @con[:flor_items]
         .where(type: 'execution', status: 'created', exid: exid)
         .first)
@@ -75,13 +75,24 @@ class Flor::Storage
 
   def flag_as(items, new_status)
 
-    ids = items.collect(&:id).compact
+    ids = items.collect { |h| h[:id] }.compact
 
     return if ids.empty?
 
     @con[:flor_items]
       .where(id: ids)
       .update(status: new_status)
+  end
+
+  def store_back(msgs)
+
+    msgs = msgs.reject(&:id) # don't store back messages already stored
+    return if msgs.empty?
+
+    #msgs.each do |msg|
+    #  store_message('dispatcher', msg)
+    #end
+      # TODO
   end
 
   def create_tables
@@ -107,6 +118,16 @@ class Flor::Storage
   def delete_tables
 
     @con[:flor_items].delete
+  end
+
+  def extract_item(h)
+
+    return nil unless h
+
+    i = JSON.parse(h[:content])
+    i['id'] = h[:id]
+
+    i
   end
 end
 

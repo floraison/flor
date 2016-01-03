@@ -36,7 +36,6 @@ module Flor
   VERSION = '0.2.0'
 end
 
-require 'flor/item'
 require 'flor/storage'
 require 'flor/unit'
 require 'flor/parsers'

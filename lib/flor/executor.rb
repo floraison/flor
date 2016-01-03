@@ -40,9 +40,12 @@ module Flor
 
     def execute
 
-      @execution = @storage.load_execution(@msgs.first.exid)
+      @execution = @storage.load_execution(@msgs.first['exid'])
 
       loop do
+
+        # TODO executor is not threaded, so have to break after
+        # a certain number of messages
 
         msg = @msgs.shift
         break unless msg
@@ -52,6 +55,7 @@ module Flor
       end
 
       @storage.flag_as(@processed_msgs, 'processed')
+      @storage.store_back(@msgs)
     end
 
     protected
