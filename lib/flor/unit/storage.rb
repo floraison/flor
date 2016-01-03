@@ -58,22 +58,45 @@ class Flor::Unit
       .collect { |h| Message.new(h) }
   end
 
+  def load_execution(exid)
+
+    Execution.new(
+      @storage[:flor_items]
+        .where(type: 'execution', status: 'created', exid: exid)
+        .first)
+  end
+
+  def flag_as_consumed(items)
+
+    ids = items.collect(&:id).compact
+
+    return if ids.empty?
+
+    @storage[:flor_items]
+      .where(id: ids)
+      .update(status: 'consumed')
+  end
+
   class Item
 
     attr_reader :values, :content
 
+    def id; @values[:id]; end
     def exid; @values[:exid]; end
 
     def initialize(h)
 
       @values = h
-      @content = JSON.parse(h[:content])
+      @content = h ? JSON.parse(h[:content]) : {}
     end
   end
 
   class Message < Item
 
     def point; @content['point']; end
+  end
+
+  class Execution < Item
   end
 
   class Schedule < Item

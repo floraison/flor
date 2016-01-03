@@ -39,4 +39,5 @@ end
 require 'flor/unit'
 require 'flor/parsers'
 require 'flor/dispatcher'
+require 'flor/executor'
 

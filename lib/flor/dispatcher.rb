@@ -83,9 +83,6 @@ module Flor
 
       msgs.each do |msg|
 
-p msg
-p msg.point
-return
         if msg.point == 'task'
           tsks << msg
         elsif msg.point.match(/schedule\z/)
@@ -113,12 +110,18 @@ return
     end
 
     def schedule(msgs)
+
+      # TODO
     end
 
     def execute(msgs)
+
+      Flor::Executor.new(@unit, msgs).execute
     end
 
     def task(msgs)
+
+      # TODO
     end
   end
 end

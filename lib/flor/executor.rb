@@ -28,14 +28,29 @@ module Flor
 
   class Executor
 
-    def initialize(exid)
+    def initialize(unit, msgs)
 
-      Thread.new { execute }
+      @unit = unit
+      @msgs = msgs
+
+      @execution = nil
+      @consumed_msgs = []
     end
 
-    protected
-
     def execute
+
+      @execution = @unit.load_execution(@msgs.first.exid)
+
+      loop do
+
+        msg = @msgs.shift
+        break unless msg
+
+        @consumed_msgs.push(msg)
+        p msg
+      end
+
+      @unit.flag_as_consumed(@consumed_msgs)
     end
   end
 end

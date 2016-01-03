@@ -26,6 +26,7 @@ describe 'Flor a to z' do
   end
 
   it 'returns values on their own' do
+@flor.storage.loggers << Logger.new($stdout)
 
     cmp = %{
       2
