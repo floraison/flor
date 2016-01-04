@@ -25,11 +25,45 @@
 
 
 class Flor::Instruction
+#static char exe_val(fdja_value *node, fdja_value *exe)
+#{
+#  fdja_value *atts = attributes(node, exe);
+#
+#  fdja_value *val = fdja_l(atts, "_0");
+#  if (val == NULL) val = fdja_v("null");
+#
+#  fdja_pset(exe, "payload.ret", fdja_clone(val));
+#
+#  fdja_free(atts);
+#
+#  return 'v'; // over
+#}
+
+#static fdja_value *tree(fdja_value *node, fdja_value *msg)
+#{
+#  fdja_value *r =  NULL;
+#
+#  if (msg) r = fdja_l(msg, "tree");
+#
+#  if (r) return r;
+#
+#  char *nid = fdja_ls(node, "nid", NULL);
+#  if (nid == NULL) return NULL;
+#
+#  r = flon_node_tree(nid);
+#
+#  free(nid);
+#
+#  return r;
+#}
 
   def initialize(node, msg)
 
     @node = node
     @msg = msg
+  end
+
+  def attributes
   end
 end
 
