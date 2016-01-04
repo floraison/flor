@@ -30,18 +30,21 @@ module Flor
 
     attr_reader :storage
     attr_reader :dispatcher
+    attr_reader :logger
 
     def initialize(opts)
 
       uri = opts[:storage_uri]
       dispatcher = opts[:dispatcher] != false
+      logger = opts[:logger] != false
 
       fail ArgumentError.new('missing :storage_uri option') unless uri
 
       @options = opts
 
       @storage = Flor::Storage.new(uri, opts)
-      @dispatcher = dispatcher ? Dispatcher.new(self) : nil
+      @dispatcher = dispatcher ? Flor::Dispatcher.new(self) : nil
+      @logger = logger ? Flor::Logger.new(self) : nil
     end
 
     def stop

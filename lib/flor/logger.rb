@@ -23,29 +23,17 @@
 # Made in Japan.
 #++
 
-require 'json'
-require 'thread'
-require 'logger'
 
-require 'sequel'
-require 'munemo'
+class Flor::Logger
 
+  def initialize(unit)
 
-module Flor
+    @unit = unit
+  end
 
-  VERSION = '0.2.0'
-end
+  def log(msg)
 
-require 'flor/storage'
-require 'flor/logger'
-require 'flor/unit'
-require 'flor/parsers'
-require 'flor/dispatcher'
-require 'flor/executor'
-
-require 'flor/instruction'
-
-Dir[File.join(File.dirname(__FILE__), 'flor/n/*.rb')].each do |path|
-  require path
+    puts "** logger * #{msg.inspect}"
+  end
 end
 

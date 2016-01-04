@@ -112,7 +112,7 @@ module Flor
 
     def log(msg)
 
-      # TODO
+      @unit.logger.log(msg)
     end
   end
 end
