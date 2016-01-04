@@ -54,9 +54,7 @@ module Flor
 
     def wait(exid, point, opts={}) # :nid, :maxsec
 
-      sleep 0.500
-
-      nil
+      @logger.wait(exid, point, opts)
     end
 
     def launch(domain, tree, payload, variables=nil)

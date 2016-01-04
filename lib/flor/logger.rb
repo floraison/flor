@@ -29,11 +29,83 @@ class Flor::Logger
   def initialize(unit)
 
     @unit = unit
+
+    @waiter_cb = WaiterCallback.new
+    @callbacks = [ @waiter_cb ]
   end
 
   def log(msg)
 
     puts "** logger * #{msg.inspect}"
+    @callbacks.each { |cb| cb.feed(msg) }
+  end
+
+  def wait(exid, point, opts) # :nid, :maxsec
+
+    @waiter_cb.register(exid, point, opts)
+  end
+
+  class WaiterCallback
+
+    def initialize
+
+      @waiters = []
+    end
+
+    def register(exid, point, opts)
+
+      @waiters << Waiter.new(exid, point, opts)
+
+      @waiters.last.wait
+    end
+
+    def feed(msg)
+
+      @waiters = @waiters.select(&:queue)
+      @waiters.each { |w| w.feed(msg) }
+    end
+
+    class Waiter
+
+      attr_reader :exid, :point, :nid
+      attr_reader :queue
+
+      def initialize(exid, point, opts)
+
+        @exid = exid
+        @point = point
+        @nid = opts[:nid]
+        @maxsec = opts[:maxsec] || 3
+
+        @queue = Queue.new
+      end
+
+      def wait
+
+        Thread.new do
+          begin
+            sleep @maxsec
+            @queue.push(:timed_out) if @queue
+          rescue => err
+            # nada
+          end
+        end if @maxsec > 0
+
+        r = @queue.pop
+        @queue = nil
+
+        r
+      end
+
+      def feed(msg)
+
+        return if @exid && @exid != msg['exid']
+        return if @point && @point != msg['point']
+        return if @nid && @nid != msg['nid']
+
+        @queue << msg
+      end
+    end
   end
 end
 

@@ -38,6 +38,7 @@ describe 'Flor a to z' do
     #result = hlp_wait(exid, "terminated", NULL, 3); // exid, point, nid, maxsec
     result = @flor.wait(exid, :terminated)
 
+    expect(result).to eq(:x)
     expect(result.content['payload']).to eq({ 'ret' => 2 })
     expect(result.payload).to eq({ 'ret' => 2 })
   end
