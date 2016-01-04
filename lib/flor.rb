@@ -42,3 +42,9 @@ require 'flor/parsers'
 require 'flor/dispatcher'
 require 'flor/executor'
 
+require 'flor/instructions'
+
+Dir[File.join(File.dirname(__FILE__), 'flor/n/*.rb')].each do |path|
+  require path
+end
+

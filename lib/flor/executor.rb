@@ -65,9 +65,19 @@ module Flor
 
     def handle_execute(execution, msg)
 
-      puts "==="
+      # TODO rewrite tree
+      t = msg['tree']
+
+      Flor::Instructions.send("exe_#{t.first}", execution, msg)
+    end
+
+    def handle_receive(execution, msg)
+
+      # TODO
+
+      puts "=== receive"
       p msg
-      puts "=== ."
+      puts "=== receive."
     end
   end
 end
