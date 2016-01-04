@@ -82,7 +82,8 @@ module Flor
 #  }
 
 #  char r = flon_call_instruction(order, node, msg);
-      r = Flor::Instructions.send("exe_#{tree.first}", execution, msg)
+      k = Flor::Ins.const_get(tree.first.capitalize)
+      r = k.new(node, msg).execute
 
       if r == :over
 #    flon_queue_msg(
@@ -111,7 +112,7 @@ module Flor
 
     def log(msg)
 
-      3 TODO
+      # TODO
     end
   end
 end

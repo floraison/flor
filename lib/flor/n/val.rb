@@ -1,6 +1,6 @@
 
 
-module Flor::Instructions
+class Flor::Ins::Val < Flor::Instruction
 
 #static char exe_val(fdja_value *node, fdja_value *exe)
 #{
@@ -15,7 +15,7 @@ module Flor::Instructions
 #
 #  return 'v'; // over
 #}
-  def self.exe_val(node, msg)
+  def execute
 
     :over
   end

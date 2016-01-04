@@ -23,28 +23,15 @@
 # Made in Japan.
 #++
 
-require 'json'
-require 'thread'
-require 'logger'
 
-require 'sequel'
-require 'munemo'
+class Flor::Instruction
 
+  def initialize(node, msg)
 
-module Flor
-
-  VERSION = '0.2.0'
+    @node = node
+    @msg = msg
+  end
 end
 
-require 'flor/storage'
-require 'flor/unit'
-require 'flor/parsers'
-require 'flor/dispatcher'
-require 'flor/executor'
-
-require 'flor/instruction'
-
-Dir[File.join(File.dirname(__FILE__), 'flor/n/*.rb')].each do |path|
-  require path
-end
+module Flor::Ins; end
 
