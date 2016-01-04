@@ -33,14 +33,12 @@ module Flor
       @unit = unit
       @storage = unit.storage
       @msgs = msgs
-
-      @execution = nil
-      @processed_msgs = []
     end
 
     def execute
 
-      @execution = @storage.load_execution(@msgs.first['exid'])
+      exe = @storage.load_execution(@msgs.first['exid'])
+      processed = []
 
       loop do
 
@@ -50,15 +48,27 @@ module Flor
         msg = @msgs.shift
         break unless msg
 
-        @processed_msgs.push(msg)
-        p msg
+        case msg['point']
+          when 'execute' then handle_execute(exe, msg)
+          when 'receive', 'cancel' then handle_receive(exe, msg)
+          else handle_event(exe, msg)
+        end
+
+        processed.push(msg)
       end
 
-      @storage.flag_as(@processed_msgs, 'processed')
+      @storage.flag_as(processed, 'processed')
       @storage.store_back(@msgs)
     end
 
     protected
+
+    def handle_execute(execution, msg)
+
+      puts "==="
+      p msg
+      puts "=== ."
+    end
   end
 end
 

@@ -75,7 +75,7 @@ class Flor::Storage
 
   def flag_as(items, new_status)
 
-    ids = items.collect { |h| h[:id] }.compact
+    ids = items.collect { |h| h['id'] }.compact
 
     return if ids.empty?
 
@@ -126,6 +126,7 @@ class Flor::Storage
 
     i = JSON.parse(h[:content])
     i['id'] = h[:id]
+    i['_item'] = h.reject { |k, v| k == :content }
 
     i
   end
