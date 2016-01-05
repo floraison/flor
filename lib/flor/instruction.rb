@@ -43,11 +43,6 @@ class Flor::Instruction
 
     tree[1]
   end
-
-  def duplicate(v)
-
-    Marshal.load(Marshal.dump(v))
-  end
 end
 
 module Flor::Ins; end

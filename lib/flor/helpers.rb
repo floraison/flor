@@ -23,30 +23,11 @@
 # Made in Japan.
 #++
 
-require 'json'
-require 'thread'
-require 'logger'
-
-require 'sequel'
-require 'munemo'
-
-
 module Flor
 
-  VERSION = '0.2.0'
-end
+  def self.dup(o)
 
-require 'flor/helpers'
-require 'flor/storage'
-require 'flor/logger'
-require 'flor/unit'
-require 'flor/parsers'
-require 'flor/dispatcher'
-require 'flor/executor'
-
-require 'flor/instruction'
-
-Dir[File.join(File.dirname(__FILE__), 'flor/n/*.rb')].each do |path|
-  require path
+    Marshal.load(Marshal.dump(o))
+  end
 end
 
