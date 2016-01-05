@@ -52,9 +52,14 @@ module Flor
       @dispatcher.stop if @dispatcher
     end
 
-    def wait(exid, point, opts={}) # :nid, :maxsec
+    def wait(exid, point, nid, maxsec=3)
 
-      @logger.wait(exid, point, opts)
+      @logger.wait(exid, point, nid, maxsec)
+    end
+
+    def on(exid, point, nid, &block)
+
+      @logger.on(exid, point, nid, &block)
     end
 
     def launch(domain, tree, payload, variables=nil)

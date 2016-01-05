@@ -28,6 +28,7 @@ describe 'Flor a to z' do
   it 'returns values on their own' do
 
 @flor.storage.connection.loggers << Logger.new($stdout)
+@flor.on(nil, nil, nil) { |msg| puts "*** msg *** #{msg.inspect}" }
 
     cmp = %{
       2
@@ -35,8 +36,7 @@ describe 'Flor a to z' do
 
     exid = @flor.launch("#{@dom}.#{__LINE__}", cmp, {})
 
-    #result = hlp_wait(exid, "terminated", NULL, 3); // exid, point, nid, maxsec
-    result = @flor.wait(exid, :terminated)
+    result = @flor.wait(exid, :terminated, nil)
 
     expect(result).to eq(:x)
     expect(result.content['payload']).to eq({ 'ret' => 2 })
@@ -53,8 +53,7 @@ describe 'Flor a to z' do
 
     exid = @flor.launch("#{@dom}.#{__LINE__}", cmp, {})
 
-    #result = hlp_wait(exid, "terminated", NULL, 3); // exid, point, nid, maxsec
-    result = @flor.wait(exid, :terminated)
+    result = @flor.wait(exid, :terminated, nil)
 
     expect(result.content['payload']).to eq({ 'ret' => 2 })
     expect(result.payload).to eq({ 'ret' => 2 })

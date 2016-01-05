@@ -30,81 +30,106 @@ class Flor::Logger
 
     @unit = unit
 
-    @waiter_cb = WaiterCallback.new
-    @callbacks = [ @waiter_cb ]
+    @callbacks = []
+    @mutex = Mutex.new
   end
 
   def log(msg)
 
-    puts "** logger * #{msg.inspect}"
-    @callbacks.each { |cb| cb.feed(msg) }
+    @mutex.synchronize do
+
+      @callbacks = @callbacks.reject(&:consumed)
+      @callbacks.each { |cb| cb.feed(msg) }
+    end
   end
 
-  def wait(exid, point, opts) # :nid, :maxsec
+  def wait(exid, point, nid, maxsec)
 
-    @waiter_cb.register(exid, point, opts)
+    w = WaitCallback.new(exid, point, nid, maxsec)
+
+    @mutex.synchronize { @callbacks << w }
+
+    w.activate
   end
 
-  class WaiterCallback
+  def on(exid, point, nid, &block)
 
-    def initialize
+    @mutex.synchronize do
 
-      @waiters = []
+      @callbacks << OnCallback.new(exid, point, nid, block).activate
+    end
+  end
+
+  class Callback
+
+    attr_reader :consumed
+
+    def initialize(exid, point, nid)
+
+      @exid = exid
+      @point = point
+      @nid = nid
+
+      @consumed = false
     end
 
-    def register(exid, point, opts)
+    def match(msg)
 
-      @waiters << Waiter.new(exid, point, opts)
-
-      @waiters.last.wait
+      return false if @exid && @exid != msg['exid']
+      return false if @point && @point != msg['point']
+      return false if @nid && @nid != msg['nid']
+      true
     end
 
     def feed(msg)
 
-      @waiters = @waiters.select(&:queue)
-      @waiters.each { |w| w.feed(msg) }
+      trigger(msg) if match(msg)
     end
 
-    class Waiter
+    def activate
 
-      attr_reader :exid, :point, :nid
-      attr_reader :queue
+      self
+    end
+  end
 
-      def initialize(exid, point, opts)
+  class OnCallback < Callback
 
-        @exid = exid
-        @point = point
-        @nid = opts[:nid]
-        @maxsec = opts[:maxsec] || 3
+    def initialize(exid, point, nid, block)
 
-        @queue = Queue.new
-      end
+      super(exid, point, nid)
+      @block = block
+    end
 
-      def wait
+    def trigger(msg)
 
-        Thread.new do
-          begin
-            sleep @maxsec
-            @queue.push(:timed_out) if @queue
-          rescue => err
-            # nada
-          end
-        end if @maxsec > 0
+      @block.call(msg)
+    end
+  end
 
-        r = @queue.pop
-        @queue = nil
+  class WaitCallback < Callback
 
-        r
-      end
+    def initialize(exid, point, nid, maxsec)
 
-      def feed(msg)
+      super(exid, point, nid)
+      @maxsec = maxsec
 
-        return if @exid && @exid != msg['exid']
-        return if @point && @point != msg['point']
-        return if @nid && @nid != msg['nid']
+      @queue = Queue.new
+    end
 
-        @queue << msg
-      end
+    def trigger(msg)
+
+      @consumed = true
+      @queue << msg
+    end
+
+    def activate
+
+      Thread.new do
+        sleep @maxsec
+        @queue << :timed_out
+      end if @maxsec > 0
+
+      @queue.pop
     end
   end
 end
