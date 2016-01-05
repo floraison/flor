@@ -37,6 +37,16 @@ class Flor::Instruction
     :over
   end
 
+  def self.register_as(*names)
+
+    names.each { |n| (@@instructions ||= {})[n] = self }
+  end
+
+  def self.lookup(name)
+
+    @@instructions[name]
+  end
+
   protected
 
   def tree
@@ -51,4 +61,7 @@ class Flor::Instruction
 end
 
 module Flor::Ins; end
+
+class Flor::Instruction
+end
 

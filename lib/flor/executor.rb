@@ -163,7 +163,7 @@ module Flor
         queue(:launched, nid, nil, payload: Flor.dup(payload))
       end
 
-      k = Flor::Ins.const_get(tree.first.capitalize)
+      k = Flor::Instruction.lookup(tree(node, msg).first)
       r = k.new(node, msg).execute
 
       if r == :over
@@ -205,7 +205,7 @@ module Flor
 
       pnid = msg['parent']
 
-      k = Flor::Ins.const_get(tree(node, msg).first.capitalize)
+      k = Flor::Instruction.lookup(tree(node, msg).first)
       n = k.new(node, msg)
       r = msg['point'] == 'receive' ? n.receive : n.cancel
 
