@@ -80,7 +80,7 @@ module Flor
       h['n'] = @execution['msg_counter'] = (@execution['msg_counter'] || 0) + 1
       h['nid'] = nid
       h[point == 'execute' ? 'parent' : 'from'] = from_nid
-      h['payload'] = {} if h['payload'].nil? && p == 'e' || p == 'r'
+      h['payload'] = {} if h['payload'].nil? && (p == 'e' || p == 'r')
       h['exid'] = @execution['exid']
 
       @msgs << h
