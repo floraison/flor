@@ -81,6 +81,7 @@ module Flor
       h['nid'] = nid
       h[point == 'execute' ? 'parent' : 'from'] = from_nid
       h['payload'] = {} if h['payload'].nil? && p == 'e' || p == 'r'
+      h['exid'] = @execution['exid']
 
       @msgs << h
     end
@@ -103,18 +104,62 @@ module Flor
       @unit.logger.log(msg)
     end
 
+#static fdja_value *node_tree(const char *nid)
+#{
+#  //fgaj_i("nid >%s<", nid);
+#
+#  fdja_value *t = fdja_l(execution, "nodes.%s.tree", nid);
+#  if (t) return t;
+#
+#  char *pnid = NULL;
+#
+#  pnid = fdja_ls(execution, "nodes.%s.parent", nid, NULL);
+#  if (pnid) t = node_tree(pnid);
+#  free(pnid);
+#
+#  if (t) return fdja_at(fdja_at(t, 3), flon_nid_index(nid));
+#
+#  fdja_value *t0 = NULL;
+#  pnid = flon_nid_parent(nid, 0);
+#  if (pnid) t0 = node_tree(pnid);
+#  free(pnid);
+#
+#  size_t index = flon_nid_index(nid);
+#
+#  if (t0) t0 = fdja_at(fdja_at(t0, 3), index);
+#  if (t0) return t0;
+#
+#  fdja_value *t1 = NULL;
+#  pnid = flon_nid_parent(nid, 1);
+#  if (pnid) t1 = node_tree(pnid);
+#  free(pnid);
+#
+#  return t1 ? fdja_at(fdja_at(t1, 3), index) : NULL;
+#}
+    def node_tree(nid)
+
+      # TODO
+
+      @execution['nodes'][nid]['tree']
+    end
+
+    def tree(node, msg)
+
+      (msg && msg['tree']) || node_tree(node['nid'])
+    end
+
     def handle_execute(msg)
 
       nid = msg['nid'] || '0'
       tree = msg['tree']
-      parent_nid = msg['parent']
+      pnid = msg['parent']
       payload = msg['payload']
 
-      node = create_node(msg, nid, parent_nid, tree)
+      node = create_node(msg, nid, pnid, tree)
 
       # TODO rewrite tree
 
-      if parent_nid == nil && nid == '0'
+      if pnid == nil && nid == '0'
         queue(:launched, nid, nil, payload: Flor.dup(payload))
       end
 
@@ -128,20 +173,25 @@ module Flor
       elsif r == :ok
       else # r == :error
         queue(
-          :failed, nid, parent_nid,
+          :failed, nid, pnid,
           payload: Flor.dup(payload), error: node['errors'][-1])
       end
 
       log(msg)
     end
 
+    def parent_nid(nid)
+
+      @execution['nodes'][nid]['p']
+    end
+
     def handle_event(msg)
 
       # TODO
 
-      puts "=== handle_event"
-      p msg
-      puts "=== handle_event."
+      #puts "=== handle_event"
+      #p msg
+      #puts "=== handle_event."
 
       log(msg)
     end
@@ -153,23 +203,23 @@ module Flor
 
       return @storage.flag_as([ msg ], 'rejected') unless node
 
-      parent_nid = msg['parent']
+      pnid = msg['parent']
 
-      k = Flor::Ins.const_get(tree.first.capitalize)
+      k = Flor::Ins.const_get(tree(node, msg).first.capitalize)
       n = k.new(node, msg)
       r = msg['point'] == 'receive' ? n.receive : n.cancel
 
       if r == :over
 
-        parent_nid = Flor.parent_nid(nid)
+        pnid = parent_nid(nid)
 
-        if parent_nid
+        if pnid
 
-          queue(:receive, parent_nid, nid, payload: Flor.dup(msg['payload']))
+          queue(:receive, pnid, nid, payload: Flor.dup(msg['payload']))
 
         else
 
-          log_delta(node) # log (debug) the age of the execution
+          #log_delta(node) # log (debug) the age of the execution # TODO
 
           queue(
             nid == '0' ? :terminated : :ceased, nid, nil,
@@ -185,7 +235,7 @@ module Flor
       else # r == :error
 
         queue(
-          :failed, nid, parent_nid,
+          :failed, nid, pnid,
           payload: Flor.dup(payload), error: node['errors'][-1])
       end
 

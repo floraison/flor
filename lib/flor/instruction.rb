@@ -32,6 +32,11 @@ class Flor::Instruction
     @msg = msg
   end
 
+  def receive
+
+    :over
+  end
+
   protected
 
   def tree

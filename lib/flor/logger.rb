@@ -67,7 +67,7 @@ class Flor::Logger
     def initialize(exid, point, nid)
 
       @exid = exid
-      @point = point
+      @point = point.to_s
       @nid = nid
 
       @consumed = false
