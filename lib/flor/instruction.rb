@@ -37,17 +37,6 @@ class Flor::Instruction
     :over
   end
 
-  def self.names(*names)
-
-    names.each { |n| (@@instructions ||= {})[n] = self }
-  end
-  class << self; alias :name :names; end
-
-  def self.lookup(name)
-
-    @@instructions[name]
-  end
-
   protected
 
   def tree
@@ -61,8 +50,21 @@ class Flor::Instruction
   end
 end
 
-module Flor::Ins; end
-
+# class methods
+#
 class Flor::Instruction
+
+  def self.names(*names)
+
+    names.each { |n| (@@instructions ||= {})[n] = self }
+  end
+  class << self; alias :name :names; end
+
+  def self.lookup(name)
+
+    @@instructions[name]
+  end
 end
+
+module Flor::Ins; end
 
