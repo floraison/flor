@@ -57,7 +57,7 @@ module Flor
 
         case msg['point']
           when 'execute' then handle_execute(msg)
-          when 'receive', 'cancel' then handle_receive(msg)
+          when 'receive', 'cancel' then handle_return(msg)
           else handle_event(msg)
         end
 
@@ -99,41 +99,34 @@ module Flor
 
       # TODO rewrite tree
 
-#  if (parent_nid == NULL && strcmp(nid, "0") == 0)
-#  {
-#    flon_queue_msg(
-#      "launched", nid, NULL, fdja_o("payload", fdja_clone(payload), NULL));
-#  }
       if parent_nid == nil && nid == '0'
         queue(:launched, nid, nil, payload: Flor.dup(payload))
       end
 
-#  char r = flon_call_instruction(order, node, msg);
       k = Flor::Ins.const_get(tree.first.capitalize)
       r = k.new(node, msg).execute
 
       if r == :over
-        queue(:receive, nid, nid, payload: Flor.dup(payload))
+        queue(
+          :receive, nid, nid,
+          payload: Flor.dup(payload))
       elsif r == :ok
       else # r == :error
-#    flon_queue_msg(
-#      "failed", nid, parent_nid,
-#      fdja_o(
-#        "payload", fdja_clone(payload),
-#        "error", fdja_lc(node, "errors.-1"),
-#        NULL));
+        queue(
+          :failed, nid, parent_nid,
+          payload: Flor.dup(payload), error: node['errors'][-1])
       end
 
       log(msg)
     end
 
-    def handle_receive(msg)
+    def handle_return(msg)
 
       # TODO
 
-      puts "=== handle_receive"
+      puts "=== handle_return"
       p msg
-      puts "=== handle_receive."
+      puts "=== handle_return."
     end
 
     def handle_event(msg)
@@ -151,4 +144,89 @@ module Flor
     end
   end
 end
+
+#static void handle_return(char order, fdja_value *msg)
+#{
+#  fgaj_i("%c", order);
+#
+#  char *nid = fdja_lsd(msg, "nid", "0");
+#  char *fname = fdja_ls(msg, "fname", NULL);
+#  char *parent_nid = NULL;
+#
+#  fdja_value *node = fdja_l(execution, "nodes.%s", nid);
+#
+#  if (node == NULL)
+#  {
+#    flon_move_to_rejected("var/spool/exe/%s", fname, "node not found");
+#    goto _over;
+#  }
+#
+#  parent_nid = fdja_ls(msg, "parent", NULL);
+#
+#  fdja_value *payload = fdja_l(msg, "payload");
+#
+#  //fgaj_d("%c %s", order, instruction);
+#
+#  //
+#  // perform instruction
+#
+#  char r = flon_call_instruction(order, node, msg);
+#
+#  //
+#  // v, k, r, handle instruction result
+#
+#  if (r == 'v') // over
+#  {
+#    free(parent_nid); parent_nid = flon_parent_nid(nid);
+#
+#    if (parent_nid)
+#    {
+#      flon_queue_msg(
+#        "receive", parent_nid, nid,
+#        fdja_o("payload", fdja_clone(payload), NULL));
+#    }
+#    else
+#    {
+#      log_delta(node); // log (debug) the age of the execution
+#
+#      if (strcmp(nid, "0") == 0)
+#      {
+#        flon_queue_msg(
+#          "terminated", nid, NULL,
+#          fdja_o("payload", fdja_clone(payload), NULL));
+#      }
+#      else
+#      {
+#        flon_queue_msg(
+#          "ceased", nid, NULL,
+#          fdja_o("payload", fdja_clone(payload), NULL));
+#      }
+#    }
+#
+#    fdja_pset(execution, "nodes.%s", nid, NULL); // remove node
+#  }
+#  else if (r == 'k') // ok
+#  {
+#    // nichts
+#  }
+#  else // error, 'r' or '?'
+#  {
+#    flon_queue_msg(
+#      "failed", nid, parent_nid,
+#      fdja_o(
+#        "payload", fdja_clone(payload),
+#        "error", fdja_lc(node, "errors.-1"),
+#        NULL));
+#  }
+#
+#  if (fname) flon_move_to_processed("var/spool/exe/%s", fname);
+#
+#  do_log(msg);
+#
+#_over:
+#
+#  free(nid);
+#  free(parent_nid);
+#  free(fname);
+#}
 
