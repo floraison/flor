@@ -37,10 +37,11 @@ class Flor::Instruction
     :over
   end
 
-  def self.register_as(*names)
+  def self.names(*names)
 
     names.each { |n| (@@instructions ||= {})[n] = self }
   end
+  class << self; alias :name :names; end
 
   def self.lookup(name)
 

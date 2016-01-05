@@ -2,7 +2,7 @@
 
 class Flor::Ins::Val < Flor::Instruction
 
-  register_as 'val'
+  name 'val'
 
   def execute
 

@@ -2,7 +2,7 @@
 
 class Flor::Ins::Arith < Flor::Instruction
 
-  register_as '+', '-'
+  names '+', '-'
 
   def execute
     :over
