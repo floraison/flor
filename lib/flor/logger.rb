@@ -43,20 +43,20 @@ class Flor::Logger
     end
   end
 
-  def wait(exid, point, nid, maxsec)
+  def wait(exid, point_s, nid, maxsec)
 
-    w = WaitCallback.new(exid, point, nid, maxsec)
+    w = WaitCallback.new(exid, point_s, nid, maxsec)
 
     @mutex.synchronize { @callbacks << w }
 
     w.activate
   end
 
-  def on(exid, point, nid, &block)
+  def on(exid, point_s, nid, &block)
 
     @mutex.synchronize do
 
-      @callbacks << OnCallback.new(exid, point, nid, block).activate
+      @callbacks << OnCallback.new(exid, point_s, nid, block).activate
     end
   end
 
@@ -64,10 +64,10 @@ class Flor::Logger
 
     attr_reader :consumed
 
-    def initialize(exid, point, nid)
+    def initialize(exid, point_s, nid)
 
       @exid = exid
-      @point = point.to_s
+      @points = point_s ? Array(point_s).collect(&:to_s) : nil
       @nid = nid
 
       @consumed = false
@@ -76,7 +76,7 @@ class Flor::Logger
     def match(msg)
 
       return false if @exid && @exid != msg['exid']
-      return false if @point && @point != msg['point']
+      return false if @points && ! @points.include?(msg['point'])
       return false if @nid && @nid != msg['nid']
       true
     end
@@ -94,9 +94,9 @@ class Flor::Logger
 
   class OnCallback < Callback
 
-    def initialize(exid, point, nid, block)
+    def initialize(exid, point_s, nid, block)
 
-      super(exid, point, nid)
+      super(exid, point_s, nid)
       @block = block
     end
 
@@ -108,9 +108,9 @@ class Flor::Logger
 
   class WaitCallback < Callback
 
-    def initialize(exid, point, nid, maxsec)
+    def initialize(exid, point_s, nid, maxsec)
 
-      super(exid, point, nid)
+      super(exid, point_s, nid)
       @maxsec = maxsec
 
       @queue = Queue.new
