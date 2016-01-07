@@ -38,13 +38,14 @@ describe 'Flor a to z' do
 
       exid = @flor.launch("#{@dom}.#{__LINE__}", cmp, {})
 
-      r = @flor.wait(exid, :terminated, nil)
+      r = @flor.wait(exid, :failed, nil)
 
-      expect(r['point']).to eq('terminated')
+      expect(r['point']).to eq('failed')
       expect(r['exid']).to eq(exid)
       expect(r['from']).to eq(nil)
-      expect(r['n']).to eq(3)
-      expect(r['payload']).to eq({ 'ret' => 2 })
+      expect(r['n']).to eq(2)
+      expect(r['payload']).to eq({})
+      expect(r['error']).to eq({ 'msg' => "unknown instruction 'nada'" })
     end
   end
 end

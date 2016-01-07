@@ -148,6 +148,23 @@ module Flor
       (msg && msg['tree']) || node_tree(node['nid'])
     end
 
+    def call_instruction(node, msg)
+
+      t = tree(node, msg)
+      i = t.first
+      k = Flor::Instruction.lookup(i)
+
+      if k.nil?
+
+        node['status'] = 'failed'
+        (node['errors'] ||= []) << { 'msg' => "unknown instruction '#{i}'" }
+
+        return '?'
+      end
+
+      k.new(node, msg).send(msg['point'].to_sym)
+    end
+
     def handle_execute(msg)
 
       nid = msg['nid'] || '0'
@@ -163,8 +180,9 @@ module Flor
         queue(:launched, nid, nil, payload: Flor.dup(payload))
       end
 
-      k = Flor::Instruction.lookup(tree(node, msg).first)
-      r = k.new(node, msg).execute
+      #k = Flor::Instruction.lookup(tree(node, msg).first)
+      #r = k.new(node, msg).execute
+      r = call_instruction(node, msg)
 
       if r == :over
         queue(
@@ -205,9 +223,10 @@ module Flor
 
       pnid = msg['parent']
 
-      k = Flor::Instruction.lookup(tree(node, msg).first)
-      n = k.new(node, msg)
-      r = msg['point'] == 'receive' ? n.receive : n.cancel
+      #k = Flor::Instruction.lookup(tree(node, msg).first)
+      #n = k.new(node, msg)
+      #r = msg['point'] == 'receive' ? n.receive : n.cancel
+      r = call_instruction(node, msg)
 
       if r == :over
 
