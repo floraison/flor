@@ -33,7 +33,7 @@ describe 'Flor.launch' do
 
     expect(exid).to match(/\Aspec\.unit\.launch\.\d+-u0-#{Time.now.year}/)
 
-    msg = @flor.storage[:flor_items].order(:id).last
+    msg = @flor.storage.connection[:flor_items].order(:id).last
     #p msg
 
     expect(msg[:type]).to eq('message')
