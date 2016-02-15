@@ -180,7 +180,8 @@ module Flor
 
     def rewrite_rxstring(t)
 
-      ::Kernel.eval(t.string) # :-(
+      #::Kernel.eval(t.string) # :-(
+      t.string
     end
 
     def rewrite_rad_p(t)

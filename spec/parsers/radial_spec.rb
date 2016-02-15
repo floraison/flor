@@ -40,9 +40,13 @@ describe Flor::Radial do
       pe = lambda { |x| parse_expectation.call(x) }
 
       [
-        [ '12[3', nil, __LINE__ ],
+        [ '12[3',
+          nil,
+          __LINE__ ],
 
-        [ 'sequence', [ 'sequence', {}, 1, [] ], __LINE__ ],
+        [ 'sequence',
+          [ 'sequence', {}, 1, [] ],
+          __LINE__ ],
 
         [ "sequence\n" +
           "  participant 'bravo'",
@@ -306,7 +310,7 @@ describe Flor::Radial do
           "sequence\n" +
           "  =~ ab /c d/\n",
           [ 'sequence', {}, 1, [
-            [ '=~', { '_0' => 'ab', '_1' => /c d/ }, 2, [] ]
+            [ '=~', { '_0' => 'ab', '_1' => "/c d/" }, 2, [] ]
           ] ],
           __LINE__ ],
 
@@ -314,7 +318,7 @@ describe Flor::Radial do
           "sequence\n" +
           "  =~ ab /c, d/i\n",
           [ 'sequence', {}, 1, [
-            [ '=~', { '_0' => 'ab', '_1' => /c, d/i }, 2, [] ]
+            [ '=~', { '_0' => 'ab', '_1' => "/c, d/i" }, 2, [] ]
           ] ],
           __LINE__ ]
 
