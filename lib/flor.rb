@@ -23,30 +23,35 @@
 # Made in Japan.
 #++
 
-require 'json'
-require 'thread'
-require 'logger'
+#require 'json'
+#require 'thread'
+#require 'logger'
 
-require 'sequel'
 require 'munemo'
 
 
 module Flor
 
-  VERSION = '0.2.0'
+  VERSION = '0.4.0'
 end
 
-require 'flor/helpers'
-require 'flor/storage'
-require 'flor/logger'
-require 'flor/unit'
 require 'flor/parsers'
-require 'flor/dispatcher'
-require 'flor/executor'
 
-require 'flor/instruction'
+#require 'flor/instruction'
+#Dir[File.join(File.dirname(__FILE__), 'flor/n/*.rb')].each do |path|
+#  require path
+#end
 
-Dir[File.join(File.dirname(__FILE__), 'flor/n/*.rb')].each do |path|
-  require path
+module Flor
+
+  def self.dup(o)
+
+    Marshal.load(Marshal.dump(o))
+  end
+
+  def self.tstamp(t=Time.now.utc)
+
+    t.strftime('%Y%m%d.%H%M%S') + sprintf('%06d', t.usec)
+  end
 end
 

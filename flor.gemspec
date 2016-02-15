@@ -13,10 +13,10 @@ Gem::Specification.new do |s|
   s.homepage = 'http://github.com/flon-io/flor'
   #s.rubyforge_project = 'flor'
   s.license = 'MIT'
-  s.summary = 'the flon programs, in Ruby'
+  s.summary = 'flon, Ruby version'
 
   s.description = %{
-the flon programs, in Ruby
+A Ruby version of flon
   }.strip
 
   #s.files = `git ls-files`.split("\n")
@@ -27,8 +27,8 @@ the flon programs, in Ruby
   ]
 
   s.add_runtime_dependency 'munemo'
-  s.add_runtime_dependency 'raabro', '>= 1.0.5'
-  s.add_runtime_dependency 'sequel', '>= 4.29.0'
+  s.add_runtime_dependency 'raabro', '>= 1.1.0'
+  #s.add_runtime_dependency 'sequel', '>= 4.29.0'
 
   s.add_development_dependency 'rspec', '3.4.0'
 

@@ -2,7 +2,7 @@
 = flor CHANGELOG.txt
 
 
-== flor 0.1.0  not yet released
+== flor 0.4.0  not yet released
 
 
 == flor 0.0.1  released 2015-11-04
