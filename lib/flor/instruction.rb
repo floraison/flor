@@ -47,27 +47,6 @@ class Flor::Node
   def payload; @message['payload']; end
   def parent; @node['parent']; end
 
-#  def lookup_tree(nid)
-#
-#    node = @execution['nodes'][nid]
-#
-#    tree = node['tree']
-#    return tree if tree
-#
-#    tree = lookup_tree(node['parent'])
-#
-#    id = nid.split('_').last
-#    id = id.split('-').last
-#    id = id.to_i
-#
-#    tree.last[id]
-#  end
-#
-#  def tree
-#
-#    @node['tree'] || lookup_tree(nid)
-#  end
-
   def lookup_tree(nid)
 
     node = @execution['nodes'][nid]
@@ -192,6 +171,22 @@ class Flor::Instruction < Flor::Node
   def error_reply(o)
 
     reply('point' => 'failed', 'error' => Flor.to_error(o))
+  end
+
+  def set_value(k, v)
+
+    #return if k == '_'
+
+    cat, mod, key = key_split(k)
+
+    case cat[0]
+      when 'f' then Flor.deep_set(payload, key, v)
+      when 'v' then set_var(mod, key, v)
+      when 'w' then set_war(key, v)
+      else fail IndexError.new("don't know how to set #{k.inspect}")
+    end
+
+    v
   end
 end
 
