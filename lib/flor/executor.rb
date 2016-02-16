@@ -86,9 +86,9 @@ module Flor
 
     def apply(node, message)
 
-      tree = message['tree'] || node['tree']
-
-      head = lookup_head(node, message, tree)
+      n = Flor::Node.new(@execution, node, message)
+      tree = n.lookup_tree(node['nid'])
+      head = n.lookup(tree[0])
 
       return error_reply(
         node, message, "don't know how to apply #{tree[0].inspect}"
@@ -99,11 +99,6 @@ module Flor
       else
         call(head)
       end
-    end
-
-    def lookup_head(node, message, tree)
-
-      Flor::Node.lookup(@execution, node, message, tree[0])
     end
 
 #    def expand(o, expander)

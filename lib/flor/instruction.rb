@@ -33,20 +33,6 @@ class Flor::Node
     @message = message
   end
 
-  def self.lookup(execution, node, message, name)
-
-    self.new(execution, node, message).send(:lookup, name)
-  end
-
-  protected
-
-  def exid; @message['exid']; end
-  def nid; @message['nid']; end
-  def from; @message['from']; end
-  def attributes; tree[1]; end
-  def payload; @message['payload']; end
-  def parent; @node['parent']; end
-
   def lookup_tree(nid)
 
     node = @execution['nodes'][nid]
@@ -65,6 +51,22 @@ class Flor::Node
     tree.last[id]
   end
 
+  def lookup(name)
+
+    cat, mod, key = key_split(name)
+
+    cat == 'v' ? lookup_var(@node, mod, key) : lookup_field(mod, key)
+  end
+
+  protected
+
+  def exid; @message['exid']; end
+  def nid; @message['nid']; end
+  def from; @message['from']; end
+  def attributes; tree[1]; end
+  def payload; @message['payload']; end
+  def parent; @node['parent']; end
+
   def tree
 
     lookup_tree(nid)
@@ -73,13 +75,6 @@ class Flor::Node
   def parent_node(node)
 
     @execution['nodes'][node['parent']]
-  end
-
-  def lookup(name)
-
-    cat, mod, key = key_split(name)
-
-    cat == 'v' ? lookup_var(@node, mod, key) : lookup_field(mod, key)
   end
 
   def lookup_dvar(mod, key)
