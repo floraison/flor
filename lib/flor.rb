@@ -62,6 +62,43 @@ module Flor
       { 'msg' => o.to_s }
     end
   end
+
+  def self.to_index(s)
+
+    return 0 if s == 'first'
+    return -1 if s == 'last'
+
+    i = s.to_i
+    fail ::IndexError.new("#{s.inspect} is not an array index") if i.to_s != s
+
+    i
+  end
+
+  def self.deep_get(o, k) # --> success(boolean), value
+
+    v = o
+    ks = k.split('.')
+
+    loop do
+
+      break unless kk = ks.shift
+
+      case v
+        when Array then v = v[to_index(kk)]
+        when Hash then v = v[kk]
+        else fail ::IndexError.new("#{kk.inspect} not found")
+      end
+    end
+
+    v
+  end
+
+  def self.deep_set(o, k, v) # --> success(boolean)
+
+    o[k] = v
+
+    true
+  end
 end
 
 Dir[File.join(File.dirname(__FILE__), 'flor/n/*.rb')].each do |path|
