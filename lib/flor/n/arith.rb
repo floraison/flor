@@ -23,48 +23,29 @@
 # Made in Japan.
 #++
 
-#require 'json'
-#require 'thread'
-#require 'logger'
 
-require 'munemo'
+class Flor::Ins::Arith < Flor::Instruction
 
+  names '+', '*'
 
-module Flor
+  def execute
 
-  VERSION = '0.4.0'
-end
+    @node['rets'] = []
 
-require 'flor/parsers'
-require 'flor/instruction'
-require 'flor/executor'
-
-
-module Flor
-
-  def self.dup(o)
-
-    Marshal.load(Marshal.dump(o))
+    receive
   end
 
-  def self.tstamp(t=Time.now.utc)
+  def receive
 
-    t.strftime('%Y%m%d.%H%M%S') + sprintf('%06d', t.usec)
-  end
+    ms = sequence_receive
 
-  def self.to_error(o)
-
-    if o.respond_to?(:message)
-      { 'msg' => o.message,
-        'kla' => o.class.to_s,
-        'trc' => o.backtrace[0, 7] }
-    else
-      { 'msg' => o.to_s }
+    m = ms.size == 1 && ms.first
+    #
+    if m['point'] == 'receive' && m['nid'] == parent
+      payload['ret'] = @node['rets'].reduce(&tree.first.to_sym) || 0
     end
-  end
-end
 
-Dir[File.join(File.dirname(__FILE__), 'flor/n/*.rb')].each do |path|
-  require path
+    ms
+  end
 end
 

@@ -2,5 +2,7 @@
 .ruby-version
 .rspec
 
+*.swp
+
 tmp/*.db
 
