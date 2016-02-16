@@ -40,16 +40,69 @@ class Flor::Node
 
   protected
 
-  def lookup(name)
+  def exid; @message['exid']; end
+  def nid; @message['nid']; end
+  def from; @message['from']; end
+  def attributes; tree[1]; end
+  def payload; @message['payload']; end
+  def parent; @node['parent']; end
 
-    cat, mod, key = key_split(name)
+#  def lookup_tree(nid)
+#
+#    node = @execution['nodes'][nid]
+#
+#    tree = node['tree']
+#    return tree if tree
+#
+#    tree = lookup_tree(node['parent'])
+#
+#    id = nid.split('_').last
+#    id = id.split('-').last
+#    id = id.to_i
+#
+#    tree.last[id]
+#  end
+#
+#  def tree
+#
+#    @node['tree'] || lookup_tree(nid)
+#  end
 
-    cat == 'v' ? lookup_var(@node, mod, key) : lookup_field(mod, key)
+  def lookup_tree(nid)
+
+p [ :nid, nid ]
+    node = @execution['nodes'][nid]
+p [ :node, node ]
+    return nil unless node
+
+    tree = node['tree']
+    return tree if tree
+
+    tree = lookup_tree(node['parent'])
+    #return nil unless tree # let it fail...
+
+    id = nid.split('_').last
+    id = id.split('-').last
+    id = id.to_i
+
+    tree.last[id]
+  end
+
+  def tree
+
+    lookup_tree(nid)
   end
 
   def parent_node(node)
 
     @execution['nodes'][node['parent']]
+  end
+
+  def lookup(name)
+
+    cat, mod, key = key_split(name)
+
+    cat == 'v' ? lookup_var(@node, mod, key) : lookup_field(mod, key)
   end
 
   def lookup_dvar(mod, key)
@@ -102,6 +155,42 @@ class Flor::Instruction < Flor::Node
   end
 
   class << self; alias :name :names; end
+
+  protected
+
+  def sequence_receive
+
+    i = @message['point'] == 'execute' ? 0 : next_id(from)
+    t = tree.last[i]
+
+    if i > 0 && rets = @node['rets']
+      rets << Flor.dup(payload['ret'])
+    end
+
+    if t == nil
+      reply
+    else
+      reply('point' => 'execute', 'nid' => "#{nid}_#{i}", 'tree' => t)
+    end
+  end
+
+  def reply(h={})
+
+    m = {}
+    m['point'] = 'receive'
+    m['exid'] = exid
+    m['nid'] = parent
+    m['from'] = nid
+    m['payload'] = payload
+    m.merge!(h)
+
+    [ m ]
+  end
+
+  def error_reply(o)
+
+    reply('point' => 'failed', 'error' => Flor.to_error(o))
+  end
 end
 
 # A namespace for instruction implementations

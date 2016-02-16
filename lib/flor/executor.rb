@@ -83,11 +83,11 @@ module Flor
 
     def apply(node, message)
 
-      name = (node['head'] ||= message['tree'])
+      tree = (node['tree'] ||= message['tree'])
       head = lookup_head(node, message)
 
       return error_reply(
-        node, message, "don't know how to apply #{name.inspect}"
+        node, message, "don't know how to apply #{tree[0].inspect}"
       ) if head == nil
 
       if head.ancestors.include?(Flor::Instruction)
@@ -134,25 +134,23 @@ module Flor
 #      node['tree'] = tree1 if node['nid'] == '0' || tree1 != tree0
 #    end
 
-#    def receive(message)
-#
-#      nid = message['nid']
-#      from = message['from']
-#
-#      fnode = @execution['nodes'].delete(from) || {}
-#        # TODO eventually: don't remove if it's a closure
-#
-#      return [
-#        message.merge('point' => 'terminated', 'vars' => fnode['vars'])
-#      ] if nid == nil
-#
-#      node = @execution['nodes'][nid]
-#
-#      kinst = Flor::Instruction.lookup(node['inst'])
-#      inst = kinst.new(@execution, node, message)
-#
-#      inst.receive
-#    end
+    def receive(message)
+
+      from = message['from']
+
+      fnode = @execution['nodes'].delete(from) || {}
+        # TODO eventually: don't remove if it's a closure
+
+      nid = message['nid']
+
+      return [
+        message.merge('point' => 'terminated', 'vars' => fnode['vars'])
+      ] if nid == nil
+
+      node = @execution['nodes'][nid]
+
+      apply(node, message)
+    end
 
     def log(m)
 
