@@ -75,6 +75,9 @@ module Flor
       if vs = message['tree'][1]['vars']
         node['vars'] = (node['vars'] || {}).merge(vs) if vs.is_a?(Hash)
       end
+      if nid == '0'
+        node['tree'] = message['tree']
+      end
 
       @execution['nodes'][nid] = node
 
@@ -83,8 +86,9 @@ module Flor
 
     def apply(node, message)
 
-      tree = (node['tree'] ||= message['tree'])
-      head = lookup_head(node, message)
+      tree = message['tree'] || node['tree']
+
+      head = lookup_head(node, message, tree)
 
       return error_reply(
         node, message, "don't know how to apply #{tree[0].inspect}"
@@ -97,9 +101,9 @@ module Flor
       end
     end
 
-    def lookup_head(node, message)
+    def lookup_head(node, message, tree)
 
-      Flor::Node.lookup(@execution, node, message, message['tree'][0])
+      Flor::Node.lookup(@execution, node, message, tree[0])
     end
 
 #    def expand(o, expander)
@@ -164,7 +168,7 @@ module Flor
       fr = m['from'] ? " from #{m['from']}" : ''
 
       t = m['tree'];
-      t0 = t ? " [[1;33m#{t[0][2..-1]}#{colo}" : '' # in yellow
+      t0 = t ? " [[1;33m#{t[0]}#{colo}" : '' # in yellow
       t = t ? " #{t[1..-2].inspect[1..-2]}]" : ''
 
       ind = '  ' * ni.split('_').size

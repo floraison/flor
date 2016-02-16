@@ -70,9 +70,7 @@ class Flor::Node
 
   def lookup_tree(nid)
 
-p [ :nid, nid ]
     node = @execution['nodes'][nid]
-p [ :node, node ]
     return nil unless node
 
     tree = node['tree']
@@ -109,7 +107,6 @@ p [ :node, node ]
 
     return nil if mod == 'd' # FIXME
 
-p Flor::Executor.instructions
     Flor::Executor.instructions[key]
   end
 
@@ -126,7 +123,7 @@ p Flor::Executor.instructions
 
     vars = node['vars']
 
-    return vars[key] if vars.has_key?(key)
+    return vars[key] if vars && vars.has_key?(key)
 
     lookup_var(pnode, mod, key)
   end
@@ -157,6 +154,11 @@ class Flor::Instruction < Flor::Node
   class << self; alias :name :names; end
 
   protected
+
+  def next_id(nid)
+
+    nid.split('_').last.to_i + 1
+  end
 
   def sequence_receive
 
