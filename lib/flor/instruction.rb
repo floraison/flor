@@ -168,6 +168,29 @@ class Flor::Instruction < Flor::Node
     reply('point' => 'failed', 'error' => Flor.to_error(o))
   end
 
+  def lookup_var_node(mode, node)
+
+    vars = node['vars']
+    return node if mode == 'l' && vars
+
+    par = parent_node(node)
+    return node if vars && par == nil && mode == 'g'
+    return lookup_var_node(mode, par) if par
+
+    nil
+  end
+
+  def set_var(mode, k, v)
+
+    fail IndexError.new("cannot set domain variables") if mode == 'd'
+
+    if node = lookup_var_node(mode, @node)
+      node['vars'][k] = v
+    else
+      fail IndexError.new("couldn't set var \"#{mode}v.#{k}\"")
+    end
+  end
+
   def set_value(k, v)
 
     #return if k == '_'
