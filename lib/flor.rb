@@ -36,6 +36,7 @@ module Flor
 end
 
 require 'flor/parsers'
+require 'flor/node'
 require 'flor/instruction'
 require 'flor/executor'
 

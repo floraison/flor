@@ -44,6 +44,10 @@ describe Flor::Radial do
           nil,
           __LINE__ ],
 
+        [ '+',
+          [ '+', {}, 1, [] ],
+          __LINE__ ],
+
         [ 'sequence',
           [ 'sequence', {}, 1, [] ],
           __LINE__ ],
