@@ -213,14 +213,16 @@ module Flor
 
           vt = t.lookup(:rad_h).lookup(:rad_v).sublookup(nil)
 
-          nam = 'val'
-          if vt.name == :symbol || vt.name == :string
-            nam = vt.string
-          elsif vt.name == :rad_p
-            nam = Flor::Radial.rewrite(vt)
-          else
-            nam = [ 'val', { '_0' => Flor::Radial.rewrite(vt) }, lin, [] ]
-          end
+          nam =
+            if vt.name == :symbol
+              vt.string
+            elsif vt.name == :string
+              vt.string[1..-2]
+            elsif vt.name == :rad_p
+              Flor::Radial.rewrite(vt)
+            else
+              [ 'val', { '_0' => Flor::Radial.rewrite(vt) }, lin, [] ]
+            end
 
           t.lookup(:rad_g).c1.gather(:rad_e).each_with_index do |et, i|
 

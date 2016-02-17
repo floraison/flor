@@ -213,11 +213,15 @@ describe Flor::Radial do
           "sequence\n" +
           "  3\n" +
           "  null\n" +
-          "  quatre\n",
+          "  quatre\n" +
+          "  'cinq'\n" +
+          "  \"six\"\n",
           [ 'sequence', {}, 1, [
             [ 'val', { '_0' => 3 }, 2, [] ],
             [ 'val', { '_0' => nil }, 3, [] ],
-            [ 'quatre', {}, 4, [] ]
+            [ 'quatre', {}, 4, [] ],
+            [ 'cinq', {}, 5, [] ],
+            [ 'six', {}, 6, [] ]
           ] ],
           __LINE__ ],
 
@@ -227,6 +231,7 @@ describe Flor::Radial do
           __LINE__ ]
 
       ].each do |radial, tree, line|
+
         it(determine_title(radial, tree, line)) do
           expect(Flor::Radial.parse(radial)).to eq(tree)
         end
