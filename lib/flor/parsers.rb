@@ -62,9 +62,9 @@ module Flor
 
     def number(i); rex(:number, i, /-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/); end
 
-    def string(i)
+    def dqstring(i)
 
-      rex(:string, i, %r{
+      rex(:dqstring, i, %r{
         "(
           \\["bfnrt] |
           \\u[0-9a-fA-F]{4} |
@@ -75,7 +75,7 @@ module Flor
 
     def sqstring(i)
 
-      rex(:string, i, %r{
+      rex(:sqstring, i, %r{
         '(
           \\['bfnrt] |
           \\u[0-9a-fA-F]{4} |
@@ -95,7 +95,7 @@ module Flor
 
     def array(i); eseq(:array, i, :sbstart, :val_qmark, :sep, :sbend); end
 
-    def key(i); alt(:key, i, :string, :sqstring, :symbolk); end
+    def key(i); alt(:key, i, :dqstring, :sqstring, :symbolk); end
 
     def entry(i); seq(:entry, i, :key, :postval, :colon, :postval, :value, :postval); end
     def entry_qmark(i); rep(nil, i, :entry, 0, 1); end
@@ -105,7 +105,7 @@ module Flor
 
     def object(i); eseq(:object, i, :pbstart, :entry_qmark, :sep, :pbend); end
 
-    def v(i); alt(nil, i, :string, :sqstring, :number, :object, :array, :tru, :fls, :null); end
+    def v(i); alt(nil, i, :dqstring, :sqstring, :number, :object, :array, :tru, :fls, :null); end
     def value(i); altg(nil, i, :symbol, :v); end
 
     def val(i); seq(nil, i, :value, :postval); end
@@ -125,7 +125,8 @@ module Flor
       s.index('.') ? s.to_f : s.to_i
     end
 
-    def rewrite_string(t); Flor.unescape(t.string[1..-2]); end
+    def rewrite_dqstring(t); Flor.unescape(t.string[1..-2]); end
+    def rewrite_sqstring(t); Flor.unescape(t.string[1..-2]); end
     def rewrite_symbol(t); t.string; end
     def rewrite_symbolk(t); t.string; end
 
@@ -159,7 +160,7 @@ module Flor
 
     def rad_p(i); seq(:rad_p, i, :pstart, :eol, :ws, '*', :rad_g, :eol, :pend); end
     def rad_v(i); alt(:rad_v, i, :rxstring, :rad_p, :value); end
-    def rad_k(i); alt(:rad_k, i, :string, :sqstring, :symbolk); end
+    def rad_k(i); alt(:rad_k, i, :dqstring, :sqstring, :symbolk); end
     def rad_kcol(i); seq(nil, i, :rad_k, :ws, '*', :colon, :eol, :ws, '*'); end
     def rad_e(i); seq(:rad_e, i, :rad_kcol, '?', :rad_v); end
     def rad_com(i); seq(nil, i, :comma, :eol); end
@@ -216,7 +217,7 @@ module Flor
           nam =
             if vt.name == :symbol
               vt.string
-            elsif vt.name == :string
+            elsif vt.name == :dqstring || vt.name == :sqstring
               vt.string[1..-2]
             elsif vt.name == :rad_p
               Flor::Radial.rewrite(vt)
