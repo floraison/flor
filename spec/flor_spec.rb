@@ -22,32 +22,33 @@ describe Flor do
   describe '.deep_get' do
 
     [
-      [ :cars, 'simca', nil ],
-      [ :cars, 'alpha', { 'id' => 'FR1' } ],
-      [ :cars, 'alpha.id', 'FR1' ],
+      [ :cars, 'simca', [ true, nil ], __LINE__ ],
+      [ :cars, 'alpha', [ true, { 'id' => 'FR1' } ], __LINE__ ],
+      [ :cars, 'alpha.id', [ true, 'FR1' ], __LINE__ ],
 
-      [ :cars, 'bentley.1', 'spur' ],
-      [ :cars, 'bentley.other', IndexError ],
-      [ :cars, 'bentley.other.nada', IndexError ],
+      [ :cars, 'bentley.1', [ true, 'spur' ], __LINE__ ],
+      [ :cars, 'bentley.other', [ false, nil ] ],
+      [ :cars, 'bentley.other.nada', [ false, nil ] ],
 
-      [ :ranking, '0', 'Anh' ],
-      [ :ranking, '1', 'Bob' ],
-      [ :ranking, '-1', 'Charly' ],
-      [ :ranking, '-2', 'Bob' ],
-      [ :ranking, 'first', 'Anh' ],
-      [ :ranking, 'last', 'Charly' ],
+      [ :ranking, '0', [ true, 'Anh' ], __LINE__ ],
+      [ :ranking, '1', [ true, 'Bob' ], __LINE__ ],
+      [ :ranking, '-1', [ true, 'Charly' ], __LINE__ ],
+      [ :ranking, '-2', [ true, 'Bob' ], __LINE__ ],
+      [ :ranking, 'first', [ true, 'Anh' ], __LINE__ ],
+      [ :ranking, 'last', [ true, 'Charly' ], __LINE__ ],
 
-    ].each do |o, k, v|
+    ].each do |o, k, v, l|
 
-      it "gets #{k.inspect}" do
+      it "gets #{k.inspect} (line #{l})" do
 
         o = self.instance_eval("@#{o}")
 
-        if v.is_a?(Class)
-          expect { Flor.deep_get(o, k) }.to raise_error(v)
-        else
-          expect(Flor.deep_get(o, k)).to eq(v)
-        end
+        #if v.is_a?(Class)
+        #  expect { Flor.deep_get(o, k) }.to raise_error(v)
+        #else
+        #  expect(Flor.deep_get(o, k)).to eq(v)
+        #end
+        expect(Flor.deep_get(o, k)).to eq(v)
       end
     end
   end
@@ -60,7 +61,38 @@ describe Flor do
       r = Flor.deep_set(o, 'a', 1)
 
       expect(o).to eq({ 'a' => 1 })
-      expect(r).to eq(true)
+      expect(r).to eq([ true, 1 ])
+    end
+
+    it 'sets at the second level in a hash' do
+
+      o = { 'h' => {} }
+      r = Flor.deep_set(o, 'h.i', 1)
+
+      expect(o).to eq({ 'h' => { 'i' => 1 } })
+      expect(r).to eq([ true, 1 ])
+    end
+
+    it 'sets at the second level in an array ' do
+
+      o = { 'a' => [ 1, 2, 3 ] }
+      r = Flor.deep_set(o, 'a.1', 1)
+
+      expect(o).to eq({ 'a' => [ 1, 1, 3 ] })
+      expect(r).to eq([ true, 1 ])
+    end
+
+    it 'returns false if it cannot set' do
+
+      c = {}
+      r = Flor.deep_set(c, 'a.b', 1)
+      expect(c).to eq({})
+      expect(r).to eq([ false, 1 ])
+
+      c = []
+      r = Flor.deep_set(c, 'a', 1)
+      expect(c).to eq([])
+      expect(r).to eq([ false, 1 ])
     end
   end
 end
