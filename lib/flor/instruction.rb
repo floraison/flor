@@ -185,10 +185,22 @@ class Flor::Instruction < Flor::Node
     fail IndexError.new("cannot set domain variables") if mode == 'd'
 
     if node = lookup_var_node(mode, @node)
-      node['vars'][k] = v
-    else
-      fail IndexError.new("couldn't set var \"#{mode}v.#{k}\"")
+
+      b, v = Flor.deep_set(node['vars'], k, v)
+
+      return v if b
     end
+
+    fail IndexError.new("couldn't set var #{mode}v.#{k}")
+  end
+
+  def set_field(k, v)
+
+    success, value = Flor.deep_set(payload, k, v)
+
+    fail IndexError.new("couldn't set field #{k}") unless success
+
+    value
   end
 
   def set_value(k, v)
@@ -198,13 +210,11 @@ class Flor::Instruction < Flor::Node
     cat, mod, key = key_split(k)
 
     case cat[0]
-      when 'f' then Flor.deep_set(payload, key, v)
+      when 'f' then set_field(key, v)
       when 'v' then set_var(mod, key, v)
       #when 'w' then set_war(key, v)
       else fail IndexError.new("don't know how to set #{k.inspect}")
     end
-
-    v
   end
 end
 

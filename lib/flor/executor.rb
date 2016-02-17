@@ -54,7 +54,7 @@ module Flor
         'nid' => '0',
         'tree' => t,
         'payload' => opts[:payload] || opts[:fields] || {},
-        'vars' => opts[:variables] || {} }
+        'vars' => opts[:variables] || opts[:vars] || {} }
     end
 
     def execute(message)
