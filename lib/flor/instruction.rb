@@ -200,7 +200,7 @@ class Flor::Instruction < Flor::Node
     case cat[0]
       when 'f' then Flor.deep_set(payload, key, v)
       when 'v' then set_var(mod, key, v)
-      when 'w' then set_war(key, v)
+      #when 'w' then set_war(key, v)
       else fail IndexError.new("don't know how to set #{k.inspect}")
     end
 
