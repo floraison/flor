@@ -306,6 +306,7 @@ describe Flor::Radial do
           __LINE__ ]
 
       ].each do |radial, tree, line|
+
         it(determine_title(radial, tree, line)) do
           expect(Flor::Radial.parse(radial)).to eq(tree)
         end
@@ -319,7 +320,11 @@ describe Flor::Radial do
           "sequence\n" +
           "  =~ ab /c d/\n",
           [ 'sequence', {}, 1, [
-            [ '=~', { '_0' => 'ab', '_1' => "/c d/" }, 2, [] ]
+            [ '=~',
+              { '_0' => 'ab', '_1' => [ 'regex', { '_0' => "/c d/" }, 2, [] ] },
+              2,
+              []
+            ]
           ] ],
           __LINE__ ],
 
@@ -327,11 +332,16 @@ describe Flor::Radial do
           "sequence\n" +
           "  =~ ab /c, d/i\n",
           [ 'sequence', {}, 1, [
-            [ '=~', { '_0' => 'ab', '_1' => "/c, d/i" }, 2, [] ]
+            [ '=~',
+              { '_0' => 'ab', '_1' => [ 'regex', { '_0' => "/c, d/i" }, 2, [] ] },
+              2,
+              []
+            ]
           ] ],
           __LINE__ ]
 
       ].each do |radial, tree, line|
+
         it(determine_title(radial, tree, line)) do
           expect(Flor::Radial.parse(radial)).to eq(tree)
         end

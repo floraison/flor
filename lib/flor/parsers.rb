@@ -179,10 +179,14 @@ module Flor
 
     # rewriting
 
+    def compute_line_number(t)
+
+      t.input.string[0..t.offset].scan("\n").count + 1
+    end
+
     def rewrite_rxstring(t)
 
-      #::Kernel.eval(t.string) # :-(
-      t.string
+      [ 'regex', { '_0' => t.string }, compute_line_number(t), [] ]
     end
 
     def rewrite_rad_p(t)
@@ -204,7 +208,7 @@ module Flor
         if t
 
           gt = t.lookup(:rad_g)
-          lin = gt.input.string[0..gt.offset].scan("\n").count + 1
+          lin = Radial.compute_line_number(gt)
 
           if it = t.lookup(:rad_i)
             @indent = it.string.length
