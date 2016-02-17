@@ -245,17 +245,13 @@ module Flor
 
       def to_a
 
-        if @a[1].empty? && @children.empty?
-          [ 'val', { '_0' => @a[0] }, @a[2], [] ]
-        else
-          [ *@a[0, 3], @children.collect(&:to_a) ]
-        end
+        [ *@a[0, 3], @children ]
       end
 
       def append(line)
 
         if line.indent > self.indent
-          @children << line
+          @children << line.to_a
           line.parent = self
         else
           @parent.append(line)
