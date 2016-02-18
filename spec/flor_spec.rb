@@ -95,5 +95,223 @@ describe Flor do
       expect(r).to eq([ false, 1 ])
     end
   end
+
+  describe '.to_djan' do
+
+    before :each do
+
+      @v = {
+        'type' => 'car',
+        'make/brand' => 'mitsubishi',
+        'id' => 2,
+        'ok' => true,
+        'suppliers,' => [],
+        'stuff' => 'nada',
+        "'branding'" => 'fail',
+        'x' => '4',
+        'list' => []
+      }
+    end
+
+    it 'quotes symbols that could be mistaken for numbers' do
+
+      expect(Flor.to_djan('123')).to eq('"123"')
+      expect(Flor.to_djan('123.456')).to eq('"123.456"')
+    end
+
+    it 'turns an object into a djan string' do
+
+      expect(Flor.to_djan(@v)).to eq(%{
+{ type: car, make/brand: mitsubishi, id: 2, ok: true, "suppliers,": [], stuff: nada, "'branding'": fail, x: "4", list: [] }
+      }.strip)
+    end
+  end
 end
+
+__END__
+  describe "fdja_to_djan()"
+  {
+    it "quotes symbols that could be mistaken for numbers"
+    {
+      v = fdja_s("1234.456");
+
+      expect(fdja_to_djan(v, 0) ===f "\"1234.456\"");
+    }
+  }
+
+  describe "fdja_to_djan() FDJA_F_ONELINE"
+  {
+    it "turns a fdja_value to a djan string"
+    {
+      v = fdja_v(
+        "{"
+          "type: car, "
+          "\"make/brand\": mitsubishi, "
+          "id: 2, "
+          "ok: true"
+          "\"suppliers,\": [ ]"
+          "stuff: nada"
+          "'branding': fail,"
+          "x: \"4\""
+          "list: []"
+        "}"
+      );
+
+      expect(v != NULL);
+
+      expect(fdja_to_djan(v, FDJA_F_ONELINE) ===f ""
+        "{ "
+          "type: car, "
+          "make/brand: mitsubishi, "
+          "id: 2, "
+          "ok: true, "
+          "\"suppliers,\": [], "
+          "stuff: nada, "
+          "branding: fail, "
+          "x: \"4\", "
+          "list: []"
+        " }"
+      );
+    }
+
+    it "doesn't print the key when the entry is on its own"
+    {
+      v = fdja_v("{ type: car, make: mitsubishi, id: 2 }");
+      fdja_value *vv = fdja_lookup(v, "type");
+
+      expect(fdja_to_djan(vv, FDJA_F_ONELINE) ===f "car");
+    }
+  }
+
+  describe "fdja_to_djan() FDJA_F_COMPACT"
+  {
+    it "doesn't print unnecessary spaces"
+    {
+      v = fdja_v(
+        "{"
+          "type: car, "
+          "\"make/brand\": mitsubishi, "
+          "id: 3, "
+          "ok: true"
+          "\"suppliers,\": [ ]"
+          "stuff: nada"
+          "'branding': fail,"
+          "x: \"4\""
+          "list: []"
+        "}"
+      );
+
+      expect(v != NULL);
+
+      expect(fdja_to_djan(v, FDJA_F_COMPACT) ===f ""
+        "{"
+          "type:car,"
+          "make/brand:mitsubishi,"
+          "id:3,"
+          "ok:true,"
+          "\"suppliers,\":[],"
+          "stuff:nada,"
+          "branding:fail,"
+          "x:\"4\","
+          "list:[]"
+        "}"
+      );
+    }
+
+    it "doesn't print the key when the entry is on its own"
+    {
+      v = fdja_v("{ type: car, make: mitsubishi, id: 2 }");
+      fdja_value *vv = fdja_lookup(v, "type");
+
+      expect(fdja_to_djan(vv, FDJA_F_ONELINE) ===f "car");
+    }
+  }
+
+  describe "fdja_to_djan() FDJA_F_OBJ"
+  {
+    it "doesn't output the top {} obj brackets (single line)"
+    {
+      v = fdja_v(
+        "{"
+          "type: car\n"
+          "\"make/brand\": mitsubishi\n"
+          "id: 3\n"
+        "}"
+      );
+
+      expect(v != NULL);
+
+      expect(fdja_to_djan(v, FDJA_F_OBJ) ===f ""
+        "type: car, make/brand: mitsubishi, id: 3"
+      );
+    }
+
+    it "doesn't output the top {} obj brackets"
+    {
+      v = fdja_v(
+        "{"
+          "type: car\n"
+          "\"make/brand\": mitsubishi\n"
+          "id: 3\n"
+          "ok: true\n"
+          "\"suppliers,\": [ ]\n"
+          "stuff: nada\n"
+          "'branding': fail\n"
+          "x: \"4\"\n"
+          "list: []"
+        "}"
+      );
+
+      expect(v != NULL);
+
+      expect(fdja_to_djan(v, FDJA_F_OBJ) ===f ""
+        "type: car\n"
+        "make/brand: mitsubishi\n"
+        "id: 3\n"
+        "ok: true\n"
+        "\"suppliers,\": []\n"
+        "stuff: nada\n"
+        "branding: fail\n"
+        "x: \"4\"\n"
+        "list: []\n"
+      );
+    }
+  }
+
+  describe "fdja_to_djan() multiline"
+  {
+    it "turns a fdja_value to a pretty djan string"
+    {
+      v = fdja_v(
+        "{"
+          "type: car, "
+          "\"make\\/brand\": mitsubishi, "
+          "id: 2, "
+          "ok: true"
+          "\"suppliers,\": [ alpha, bravo, charly, \"4\", 3 ]"
+          "list: []"
+          "stuff: nada"
+          "'branding': fail "
+          "0: ok"
+        "}"
+      );
+
+      expect(v != NULL);
+
+      //flu_putf(fdja_to_djan(v, 0));
+      expect(fdja_to_djan(v, 0) ===f ""
+        "{\n"
+        "  type: car\n"
+        "  \"make\\/brand\": mitsubishi\n"
+        "  id: 2\n"
+        "  ok: true\n"
+        "  \"suppliers,\": [ alpha, bravo, charly, \"4\", 3 ]\n"
+        "  list: []\n"
+        "  stuff: nada\n"
+        "  branding: fail\n"
+        "  0: ok\n"
+        "}"
+      );
+    }
+  }
 

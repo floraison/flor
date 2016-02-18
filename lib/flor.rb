@@ -124,7 +124,43 @@ module Flor
 
     [ true, v ]
   end
+
+  def self.to_djan(x, opts={})
+
+    case x
+      when nil
+        'null'
+      when String
+        if x.match(/\A[^: \b\f\n\r\t"',()\[\]{}#\\]+\z/)
+          if x.to_i.to_s == x || x.to_f.to_s == x
+            x.inspect
+          else
+            x
+          end
+        else
+          x.inspect
+        end
+      when Hash
+        if x.empty?
+          '{}'
+        else
+          '{ ' +
+          x.collect { |k, v| "#{to_djan(k)}: #{to_djan(v)}" }.join(', ') +
+          ' }'
+        end
+      when Array
+        x.empty? ? '[]' : '[ ' + x.collect { |e| to_djan(e) }.join(', ') + ' ]'
+      #when TrueClass, FalseClass
+      #  x.to_s
+      else
+        x.to_s
+    end
+  end
 end
+
+
+#
+# load instructions
 
 Dir[File.join(File.dirname(__FILE__), 'flor/n/*.rb')].each do |path|
   require path
