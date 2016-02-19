@@ -29,7 +29,7 @@ describe 'Flor procedures' do
       expect(r['payload']).to eq({})
     end
 
-    it 'chains instructions' do
+    it 'chains children' do
 
       rad = %{
         sequence

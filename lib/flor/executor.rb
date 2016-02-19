@@ -220,9 +220,9 @@ module Flor
   #
   class Executor
 
-    def self.instructions
+    def self.procedures
 
-      @@instructions ||= {}
+      @@procedures ||= {}
     end
   end
 

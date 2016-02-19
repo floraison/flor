@@ -81,7 +81,7 @@ class Flor::Node
 
     return nil if mod == 'd' # FIXME
 
-    Flor::Executor.instructions[key]
+    Flor::Executor.procedures[key]
   end
 
   def lookup_var(node, mod, key)
