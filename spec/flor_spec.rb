@@ -136,8 +136,6 @@ describe Flor do
       ).to eq(%{
 {type:car,make/brand:mitsubishi,id:2,ok:true,"suppliers,":[],stuff:nada,"'branding'":fail,x:"4",list:[],dict:{}}
       }.strip)
-
-      puts Flor.to_djan(@v, colour: true)
     end
   end
 end
