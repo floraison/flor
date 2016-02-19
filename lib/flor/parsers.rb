@@ -186,7 +186,14 @@ module Flor
 
     def rewrite_rxstring(t)
 
-      [ 'regex', { '_0' => t.string }, compute_line_number(t), [] ]
+      #t.string
+      #[ 'regex', { '_0' => t.string }, compute_line_number(t), [] ]
+      [
+        'val',
+        { 'type' => 'regexp', 'value' => t.string },
+        compute_line_number(t),
+        []
+      ]
     end
 
     def rewrite_rad_p(t)

@@ -321,7 +321,7 @@ describe Flor::Radial do
           "  =~ ab /c d/\n",
           [ 'sequence', {}, 1, [
             [ '=~',
-              { '_0' => 'ab', '_1' => [ 'regex', { '_0' => "/c d/" }, 2, [] ] },
+              { '_0' => 'ab', '_1' => [ 'val', { 'type' => 'regexp', 'value' => '/c d/' }, 2, [] ] },
               2,
               []
             ]
@@ -333,7 +333,7 @@ describe Flor::Radial do
           "  =~ ab /c, d/i\n",
           [ 'sequence', {}, 1, [
             [ '=~',
-              { '_0' => 'ab', '_1' => [ 'regex', { '_0' => "/c, d/i" }, 2, [] ] },
+              { '_0' => 'ab', '_1' => [ 'val', { 'type' => 'regexp', 'value' => '/c, d/i' }, 2, [] ] },
               2,
               []
             ]
