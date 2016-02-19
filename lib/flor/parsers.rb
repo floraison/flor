@@ -184,30 +184,24 @@ module Flor
       t.input.string[0..t.offset].scan("\n").count + 1
     end
 
-    def rewrite_qstring(t, type)
+    def to_val(t)
 
-      [
-        'val',
-        { 'type' => type, 'value' => Flor.unescape(t.string[1..-2]) },
-        compute_line_number(t),
-        []
-      ]
+      as =
+        case t.name
+          when :sqstring, :dqstring
+            { 't' => t.name.to_s, 'v' => Flor.unescape(t.string[1..-2]) }
+          when :rxstring
+            { 't' => t.name.to_s, 'v' => t.string }
+          else
+            { 'v' => rewrite(t) }
+        end
+
+      [ 'val', as, compute_line_number(t), [] ]
     end
 
-    def rewrite_sqstring(t); rewrite_qstring(t, 'sqstring'); end
-    def rewrite_dqstring(t); rewrite_qstring(t, 'dqstring'); end
-
-    def rewrite_rxstring(t)
-
-      #t.string
-      #[ 'regex', { '_0' => t.string }, compute_line_number(t), [] ]
-      [
-        'val',
-        { 'type' => 'regexp', 'value' => t.string },
-        compute_line_number(t),
-        []
-      ]
-    end
+    def rewrite_sqstring(t); to_val(t); end
+    def rewrite_dqstring(t); to_val(t); end
+    def rewrite_rxstring(t); to_val(t); end
 
     def rewrite_rad_p(t)
 
@@ -246,7 +240,8 @@ module Flor
             elsif vt.name == :rad_p
               Flor::Radial.rewrite(vt)
             else
-              [ 'val', { '_0' => Flor::Radial.rewrite(vt) }, lin, [] ]
+              #[ 'val', { '_0' => Flor::Radial.rewrite(vt) }, lin, [] ]
+              Flor::Radial.to_val(vt)
             end
 
           t.lookup(:rad_g).c1.gather(:rad_e).each_with_index do |et, i|

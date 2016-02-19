@@ -55,7 +55,7 @@ describe Flor::Radial do
         [ "sequence\n" +
           "  participant 'bravo'",
           [ 'sequence', {}, 1, [
-            [ 'participant', { '_0' => [ 'val', { 'type' => 'sqstring', 'value' => 'bravo' }, 2, [] ] }, 2, [] ]
+            [ 'participant', { '_0' => [ 'val', { 't' => 'sqstring', 'v' => 'bravo' }, 2, [] ] }, 2, [] ]
           ] ],
           __LINE__ ],
 
@@ -67,12 +67,12 @@ describe Flor::Radial do
           "    participant 'charly'\n" +
           "  participant 'delta'",
           [ 'sequence', {}, 1, [
-            [ 'participant', { '_0' => [ 'val', { 'type' => 'sqstring', 'value' => 'alpha' }, 2, [] ] }, 2, [] ],
+            [ 'participant', { '_0' => [ 'val', { 't' => 'sqstring', 'v' => 'alpha' }, 2, [] ] }, 2, [] ],
             [ 'concurrence', {}, 3, [
-              [ 'participant', { '_0' => [ 'val', { 'type' => 'sqstring', 'value' => 'bravo' }, 4, [] ] }, 4, [] ],
-              [ 'participant', { '_0' => [ 'val', { 'type' => 'sqstring', 'value' => 'charly' }, 5, [] ] }, 5, [] ]
+              [ 'participant', { '_0' => [ 'val', { 't' => 'sqstring', 'v' => 'bravo' }, 4, [] ] }, 4, [] ],
+              [ 'participant', { '_0' => [ 'val', { 't' => 'sqstring', 'v' => 'charly' }, 5, [] ] }, 5, [] ]
             ] ],
-            [ 'participant', { '_0' => [ 'val', { 'type' => 'sqstring', 'value' => 'delta' }, 6, [] ] }, 6, [] ]
+            [ 'participant', { '_0' => [ 'val', { 't' => 'sqstring', 'v' => 'delta' }, 6, [] ] }, 6, [] ]
           ] ],
           __LINE__ ],
 
@@ -221,8 +221,8 @@ describe Flor::Radial do
           "  'cinq'\n" +
           "  \"six\"\n",
           [ 'sequence', {}, 1, [
-            [ 'val', { '_0' => 3 }, 2, [] ],
-            [ 'val', { '_0' => nil }, 3, [] ],
+            [ 'val', { 'v' => 3 }, 2, [] ],
+            [ 'val', { 'v' => nil }, 3, [] ],
             [ 'quatre', {}, 4, [] ],
             [ 'cinq', {}, 5, [] ],
             [ 'six', {}, 6, [] ]
@@ -291,7 +291,7 @@ describe Flor::Radial do
           [ 'task', {
             '_0' => 'Alan',
             'value' => [
-              [ 'val', { '_0'=>1 }, 1, [] ],
+              [ 'val', { 'v' => 1 }, 1, [] ],
               { '_0' => '+', '_1' => 2 }, 1, [] ]
             }, 1, [] ],
           __LINE__ ],
@@ -300,7 +300,7 @@ describe Flor::Radial do
           "sub (1 + 2)",
           [ 'sub', {
             '_0' => [
-              [ 'val', { '_0' => 1 }, 1, [] ], { '_0' => '+', '_1' => 2 }, 1, []
+              [ 'val', { 'v' => 1 }, 1, [] ], { '_0' => '+', '_1' => 2 }, 1, []
             ]
           }, 1, [] ],
           __LINE__ ]
@@ -321,7 +321,7 @@ describe Flor::Radial do
           "  =~ ab /c d/\n",
           [ 'sequence', {}, 1, [
             [ '=~',
-              { '_0' => 'ab', '_1' => [ 'val', { 'type' => 'regexp', 'value' => '/c d/' }, 2, [] ] },
+              { '_0' => 'ab', '_1' => [ 'val', { 't' => 'rxstring', 'v' => '/c d/' }, 2, [] ] },
               2,
               []
             ]
@@ -333,7 +333,7 @@ describe Flor::Radial do
           "  =~ ab /c, d/i\n",
           [ 'sequence', {}, 1, [
             [ '=~',
-              { '_0' => 'ab', '_1' => [ 'val', { 'type' => 'regexp', 'value' => '/c, d/i' }, 2, [] ] },
+              { '_0' => 'ab', '_1' => [ 'val', { 't' => 'rxstring', 'v' => '/c, d/i' }, 2, [] ] },
               2,
               []
             ]
