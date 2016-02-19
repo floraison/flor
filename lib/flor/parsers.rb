@@ -184,6 +184,19 @@ module Flor
       t.input.string[0..t.offset].scan("\n").count + 1
     end
 
+    def rewrite_qstring(t, type)
+
+      [
+        'val',
+        { 'type' => type, 'value' => Flor.unescape(t.string[1..-2]) },
+        compute_line_number(t),
+        []
+      ]
+    end
+
+    def rewrite_sqstring(t); rewrite_qstring(t, 'sqstring'); end
+    def rewrite_dqstring(t); rewrite_qstring(t, 'dqstring'); end
+
     def rewrite_rxstring(t)
 
       #t.string

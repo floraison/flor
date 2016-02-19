@@ -55,7 +55,7 @@ describe Flor::Radial do
         [ "sequence\n" +
           "  participant 'bravo'",
           [ 'sequence', {}, 1, [
-            [ 'participant', { '_0' => 'bravo' }, 2, [] ]
+            [ 'participant', { '_0' => [ 'val', { 'type' => 'sqstring', 'value' => 'bravo' }, 2, [] ] }, 2, [] ]
           ] ],
           __LINE__ ],
 
@@ -67,12 +67,12 @@ describe Flor::Radial do
           "    participant 'charly'\n" +
           "  participant 'delta'",
           [ 'sequence', {}, 1, [
-            [ 'participant', { '_0' => 'alpha' }, 2, [] ],
+            [ 'participant', { '_0' => [ 'val', { 'type' => 'sqstring', 'value' => 'alpha' }, 2, [] ] }, 2, [] ],
             [ 'concurrence', {}, 3, [
-              [ 'participant', { '_0' => 'bravo' }, 4, [] ],
-              [ 'participant', { '_0' => 'charly' }, 5, [] ]
+              [ 'participant', { '_0' => [ 'val', { 'type' => 'sqstring', 'value' => 'bravo' }, 4, [] ] }, 4, [] ],
+              [ 'participant', { '_0' => [ 'val', { 'type' => 'sqstring', 'value' => 'charly' }, 5, [] ] }, 5, [] ]
             ] ],
-            [ 'participant', { '_0' => 'delta' }, 6, [] ]
+            [ 'participant', { '_0' => [ 'val', { 'type' => 'sqstring', 'value' => 'delta' }, 6, [] ] }, 6, [] ]
           ] ],
           __LINE__ ],
 
