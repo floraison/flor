@@ -23,32 +23,48 @@
 # Made in Japan.
 #++
 
-#require 'json'
-#require 'thread'
-#require 'logger'
-
-require 'munemo'
-
 
 module Flor
 
-  VERSION = '0.4.0'
-end
+  def self.string_to_d(x, opts)
 
-require 'flor/misc'
-require 'flor/deep'
-require 'flor/djan'
+    return x.inspect \
+      if (
+        x.match(/\A[^: \b\f\n\r\t"',()\[\]{}#\\]+\z/) == nil ||
+        x.to_i.to_s == x ||
+        x.to_f.to_s == x)
+    x
+  end
 
-require 'flor/parsers'
-require 'flor/node'
-require 'flor/instruction'
-require 'flor/executor'
+  def self.object_to_d(x, opts)
 
+    return '{}' if x.empty?
 
-#
-# load instructions
+    a, b, c, d = opts[:compact] ? %w[ { : , } ] : [ '{ ', ': ', ', ', ' }' ]
 
-Dir[File.join(File.dirname(__FILE__), 'flor/n/*.rb')].each do |path|
-  require path
+    a +
+    x.collect { |k, v| "#{to_djan(k, opts)}#{b}#{to_djan(v, opts)}" }.join(c) +
+    d
+  end
+
+  def self.array_to_d(x, opts)
+
+    return '[]' if x.empty?
+
+    a, b, c = opts[:compact] ? %w[ [ , ] ] : [ '[ ', ', ', ']' ]
+
+    a + x.collect { |e| to_djan(e, opts) }.join(b) + c
+  end
+
+  def self.to_djan(x, opts={})
+
+    case x
+      when nil then 'null'
+      when String then string_to_d(x, opts)
+      when Hash then object_to_d(x, opts)
+      when Array then array_to_d(x, opts)
+      else x.to_s
+    end
+  end
 end
 
