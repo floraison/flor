@@ -24,28 +24,18 @@
 #++
 
 
-class Flor::Ins::Arith < Flor::Instruction
+class Flor::Pro::Sequence < Flor::Procedure
 
-  names '+', '*'
+  name 'sequence'
 
   def execute
-
-    @node['rets'] = []
 
     receive
   end
 
   def receive
 
-    ms = sequence_receive
-
-    m = ms.size == 1 && ms.first
-    #
-    if m['point'] == 'receive' && m['nid'] == parent
-      payload['ret'] = @node['rets'].reduce(&tree.first.to_sym) || 0
-    end
-
-    ms
+    sequence_receive
   end
 end
 

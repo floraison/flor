@@ -94,7 +94,7 @@ module Flor
         node, message, "don't know how to apply #{tree[0].inspect}"
       ) if head == nil
 
-      if head.ancestors.include?(Flor::Instruction)
+      if head.ancestors.include?(Flor::Procedure)
         head.new(@execution, node, message).send(message['point'])
       else
         call(head)

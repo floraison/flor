@@ -24,18 +24,50 @@
 #++
 
 
-class Flor::Ins::Sequence < Flor::Instruction
+class Flor::Pro::Set < Flor::Procedure
 
-  name 'sequence'
+  name 'set'
 
   def execute
 
-    receive
+    @node['rets'] = []
+
+    sequence_receive
   end
 
   def receive
 
-    sequence_receive
+    ms = sequence_receive
+    return ms if ms.first['point'] == 'execute'
+
+    #val = payload['ret']
+    #uks = unkeyed_values(true)
+    #
+    #if val.is_a?(Array) && uks.size > 1
+    #  splat(uks, val)
+    #else
+    #  set_value(uks.first, val)
+    #end
+    set_value(attributes['_0'], payload['ret'])
+
+    reply
   end
+
+#  protected
+#
+#  def splat(ks, vs)
+#
+#    ks.inject(0) { |off, k|
+#      if k[0, 1] == '*'
+#        #p({ off: off, k: k, ks: ks[off + 1..-1], vs: vs[off..-1] })
+#        l = vs.length - ks.length + 1
+#        set_value(k[1..-1], vs[off, l])
+#        off + l
+#      else
+#        set_value(k, vs[off])
+#        off + 1
+#      end
+#    }
+#  end
 end
 

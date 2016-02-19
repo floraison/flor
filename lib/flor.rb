@@ -41,14 +41,14 @@ require 'flor/djan'
 
 require 'flor/parsers'
 require 'flor/node'
-require 'flor/instruction'
+require 'flor/procedure'
 require 'flor/executor'
 
 
 #
-# load instructions
+# load callables
 
-Dir[File.join(File.dirname(__FILE__), 'flor/n/*.rb')].each do |path|
+Dir[File.join(File.dirname(__FILE__), 'flor/p/*.rb')].each do |path|
   require path
 end
 

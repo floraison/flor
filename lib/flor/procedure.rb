@@ -24,7 +24,7 @@
 #++
 
 
-class Flor::Instruction < Flor::Node
+class Flor::Procedure < Flor::Node
 
   def self.names(*names)
 
@@ -124,7 +124,7 @@ class Flor::Instruction < Flor::Node
   end
 end
 
-# A namespace for instruction implementations
+# A namespace for primitive procedures
 #
-module Flor::Ins; end
+module Flor::Pro; end
 

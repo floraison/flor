@@ -24,7 +24,7 @@
 #++
 
 
-class Flor::Ins::Val < Flor::Instruction
+class Flor::Pro::Val < Flor::Procedure
 
   name 'val'
 
