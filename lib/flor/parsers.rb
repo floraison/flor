@@ -240,7 +240,6 @@ module Flor
             elsif vt.name == :rad_p
               Flor::Radial.rewrite(vt)
             else
-              #[ 'val', { '_0' => Flor::Radial.rewrite(vt) }, lin, [] ]
               Flor::Radial.to_val(vt)
             end
 
@@ -251,6 +250,15 @@ module Flor
 
             k = kt ? Flor::Radial.rewrite(kt.c0) : "_#{i}"
             v = Flor::Radial.rewrite(vt.c0)
+
+            if (
+              nam == 'val' &&
+              Flor.is_tree?(v) && v[0] == 'val' &&
+              (atts['t'] == nil || v[1]['t'] == atts['t'])
+            )
+              atts['t'] = v[1]['t'] if atts['t']
+              v = v[1]['v']
+            end
 
             atts[k] = v
           end

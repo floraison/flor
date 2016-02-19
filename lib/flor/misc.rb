@@ -46,5 +46,15 @@ module Flor
       { 'msg' => o.to_s }
     end
   end
+
+  def self.is_tree?(o)
+
+    o.is_a?(Array) &&
+    o[1].is_a?(Hash) &&
+    o[2].is_a?(Fixnum) &&
+    o[3].is_a?(Array) &&
+    (o[0].is_a?(String) || is_tree?(o[0])) &&
+    o[3].all? { |e| is_tree?(e) } # overkill?
+  end
 end
 

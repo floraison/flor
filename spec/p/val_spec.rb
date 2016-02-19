@@ -29,10 +29,34 @@ describe 'Flor instructions' do
       expect(r['payload']).to eq({ 'ret' => 1 })
     end
 
+    it 'works with integers, directly' do
+
+      rad = %{
+        val 1
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']).to eq({ 'ret' => 1 })
+    end
+
     it 'works with strings' do
 
       rad = %{
         val t: dqstring, v: "abc def"
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']).to eq({ 'ret' => "abc def" })
+    end
+
+    it 'works with strings, directly' do
+
+      rad = %{
+        val "abc def"
       }
 
       r = @executor.launch(rad)
