@@ -30,7 +30,11 @@ class Flor::Pro::Val < Flor::Procedure
 
   def execute
 
-    payload['ret'] = attributes['_0']
+    if attributes['t']
+      payload['ret'] = attributes['v'] # FIXME
+    else
+      payload['ret'] = attributes['v']
+    end
 
     reply
   end
