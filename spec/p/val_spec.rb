@@ -8,7 +8,7 @@
 require 'spec_helper'
 
 
-describe 'Flor instructions' do
+describe 'Flor procedures' do
 
   before :each do
 
