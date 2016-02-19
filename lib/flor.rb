@@ -125,35 +125,44 @@ module Flor
     [ true, v ]
   end
 
+  def self.string_to_d(x, opts)
+
+    return x.inspect \
+      if (
+        x.match(/\A[^: \b\f\n\r\t"',()\[\]{}#\\]+\z/) == nil ||
+        x.to_i.to_s == x ||
+        x.to_f.to_s == x)
+    x
+  end
+
+  def self.object_to_d(x, opts)
+
+    return '{}' if x.empty?
+
+    a, b, c, d = opts[:compact] ? %w[ { : , } ] : [ '{ ', ': ', ', ', ' }' ]
+
+    a +
+    x.collect { |k, v| "#{to_djan(k, opts)}#{b}#{to_djan(v, opts)}" }.join(c) +
+    d
+  end
+
+  def self.array_to_d(x, opts)
+
+    return '[]' if x.empty?
+
+    a, b, c = opts[:compact] ? %w[ [ , ] ] : [ '[ ', ', ', ']' ]
+
+    a + x.collect { |e| to_djan(e, opts) }.join(b) + c
+  end
+
   def self.to_djan(x, opts={})
 
     case x
-      when nil
-        'null'
-      when String
-        if x.match(/\A[^: \b\f\n\r\t"',()\[\]{}#\\]+\z/)
-          if x.to_i.to_s == x || x.to_f.to_s == x
-            x.inspect
-          else
-            x
-          end
-        else
-          x.inspect
-        end
-      when Hash
-        if x.empty?
-          '{}'
-        else
-          '{ ' +
-          x.collect { |k, v| "#{to_djan(k)}: #{to_djan(v)}" }.join(', ') +
-          ' }'
-        end
-      when Array
-        x.empty? ? '[]' : '[ ' + x.collect { |e| to_djan(e) }.join(', ') + ' ]'
-      #when TrueClass, FalseClass
-      #  x.to_s
-      else
-        x.to_s
+      when nil then 'null'
+      when String then string_to_d(x, opts)
+      when Hash then object_to_d(x, opts)
+      when Array then array_to_d(x, opts)
+      else x.to_s
     end
   end
 end

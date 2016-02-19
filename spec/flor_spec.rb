@@ -121,8 +121,19 @@ describe Flor do
 
     it 'turns an object into a djan string' do
 
-      expect(Flor.to_djan(@v)).to eq(%{
+      expect(
+        Flor.to_djan(@v)
+      ).to eq(%{
 { type: car, make/brand: mitsubishi, id: 2, ok: true, "suppliers,": [], stuff: nada, "'branding'": fail, x: "4", list: [] }
+      }.strip)
+    end
+
+    it 'returns a compact form when compact: true' do
+
+      expect(
+        Flor.to_djan(@v, compact: true)
+      ).to eq(%{
+{type:car,make/brand:mitsubishi,id:2,ok:true,"suppliers,":[],stuff:nada,"'branding'":fail,x:"4",list:[]}
       }.strip)
     end
   end
