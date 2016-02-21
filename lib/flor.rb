@@ -23,9 +23,7 @@
 # Made in Japan.
 #++
 
-#require 'json'
-#require 'thread'
-#require 'logger'
+require 'json'
 
 require 'munemo'
 
@@ -39,6 +37,7 @@ require 'flor/misc'
 require 'flor/deep'
 require 'flor/djan'
 
+require 'flor/dollar'
 require 'flor/parsers'
 require 'flor/node'
 require 'flor/procedure'
