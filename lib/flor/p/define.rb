@@ -46,7 +46,8 @@ class Flor::Pro::Define < Flor::Procedure
 
     vnid = lookup_var_node('l', @node)['nid']
 
-    as = { 't' => 'function', 'v' => { 'nid' => nid, 'vnid' => vnid } }
+    v = { 'nid' => nid, 'vnid' => vnid }
+    as = { 't' => 'function', 'v' => v }
     val = [ 'val', as, tr[2], [], *tr[4] ]
 
     set_var('l', tr[1]['_0'].to_s, val) if tr[0] == 'define' && tr[1]['_0']
