@@ -35,6 +35,12 @@ class Flor::Procedure < Flor::Node
 
   protected
 
+  def attribute(key)
+
+    attributes[key]
+    #expand(attributes[key]) # TODO
+  end
+
   def next_id(nid)
 
     nid.split('_').last.to_i + 1
