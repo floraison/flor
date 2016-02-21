@@ -94,9 +94,9 @@ module Flor
         node, message, "don't know how to apply #{tree[0].inspect}"
       ) if hval == nil
 
-      head = hval.is_a?(Array) ? Flor::Pro::Call : hval
+      head = hval.is_a?(Array) ? Flor::Pro::Apply : hval
       head = head.new(@execution, node, message)
-      head.called = hval if head.respond_to?(:called=)
+      head.applied = hval if head.respond_to?(:applied=)
 
       head.send(message['point'])
     end

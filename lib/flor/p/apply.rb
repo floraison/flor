@@ -24,11 +24,11 @@
 #++
 
 
-class Flor::Pro::Call < Flor::Procedure
+class Flor::Pro::Apply < Flor::Procedure
 
-  name 'call'
+  name 'apply'
 
-  def called=(val); @called = val; end
+  def applied=(val); @applied = val; end
 
   def execute
   end
