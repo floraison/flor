@@ -23,32 +23,12 @@
 # Made in Japan.
 #++
 
-require 'json'
-
-require 'munemo'
-
 
 module Flor
 
-  VERSION = '0.4.0'
-end
+  def self.next_id(nid)
 
-require 'flor/ids'
-require 'flor/misc'
-require 'flor/deep'
-require 'flor/djan'
-
-require 'flor/dollar'
-require 'flor/parsers'
-require 'flor/node'
-require 'flor/procedure'
-require 'flor/executor'
-
-
-#
-# load callables
-
-Dir[File.join(File.dirname(__FILE__), 'flor/p/*.rb')].each do |path|
-  require path
+    nid.split('_').last.to_i + 1
+  end
 end
 

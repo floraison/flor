@@ -41,14 +41,9 @@ class Flor::Procedure < Flor::Node
     #expand(attributes[key]) # TODO
   end
 
-  def next_id(nid)
-
-    nid.split('_').last.to_i + 1
-  end
-
   def sequence_receive
 
-    i = @message['point'] == 'execute' ? 0 : next_id(from)
+    i = @message['point'] == 'execute' ? 0 : Flor.next_id(from)
     t = tree.last[i]
 
     if i > 0 && rets = @node['rets']
