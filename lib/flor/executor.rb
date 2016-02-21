@@ -88,17 +88,17 @@ module Flor
 
       n = Flor::Node.new(@execution, node, message)
       tree = n.lookup_tree(node['nid'])
-      head = n.lookup(tree[0])
+      hval = n.lookup(tree[0])
 
       return error_reply(
         node, message, "don't know how to apply #{tree[0].inspect}"
-      ) if head == nil
+      ) if hval == nil
 
-      if head.ancestors.include?(Flor::Procedure)
-        head.new(@execution, node, message).send(message['point'])
-      else
-        call(head)
-      end
+      head = hval.is_a?(Array) ? Flor::Pro::Call : hval
+      head = head.new(@execution, node, message)
+      head.called = hval if head.respond_to?(:called=)
+
+      head.send(message['point'])
     end
 
 #    def expand(o, expander)
