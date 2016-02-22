@@ -30,5 +30,14 @@ module Flor
 
     nid.split('_').last.to_i + 1
   end
+
+  def self.parent_id(nid)
+
+    if i = nid.rindex('_')
+      nid[0, i]
+    else
+      nil
+    end
+  end
 end
 
