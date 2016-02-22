@@ -28,7 +28,10 @@ module Flor
 
   def self.child_id(nid)
 
-    nid.split('_').last.to_i
+    nid
+      .split('_').last
+      .split('-').first
+      .to_i
   end
 
   def self.next_child_id(nid)

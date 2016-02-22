@@ -42,13 +42,18 @@ class Flor::Node
     return tree if tree
 
     tree = lookup_tree(node['parent'])
-    #return nil unless tree # let it fail...
 
-    id = nid.split('_').last
-    id = id.split('-').last
-    id = id.to_i
+    tree.last[Flor.child_id(nid)]
+  end
 
-    tree.last[id]
+  def lookup_tree_anyway(nid)
+
+    tree = lookup_tree(nid)
+    return tree if tree
+
+    tree = lookup_tree_anyway(Flor.parent_id(nid))
+
+    tree.last[Flor.child_id(nid)]
   end
 
   def lookup(name)

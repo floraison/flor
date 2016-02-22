@@ -145,6 +145,7 @@ describe Flor do
 
       expect(Flor.next_child_id('0_0')).to eq(1)
       expect(Flor.next_child_id('0_0_9')).to eq(10)
+      expect(Flor.next_child_id('0_0_9-3')).to eq(10)
     end
   end
 
@@ -155,6 +156,7 @@ describe Flor do
       expect(Flor.parent_id('0')).to eq(nil)
       expect(Flor.parent_id('0_1')).to eq('0')
       expect(Flor.parent_id('0_1_9')).to eq('0_1')
+      expect(Flor.parent_id('0_1_9-6')).to eq('0_1')
     end
   end
 
@@ -165,6 +167,7 @@ describe Flor do
       expect(Flor.child_id('0')).to eq(0)
       expect(Flor.child_id('0_1')).to eq(1)
       expect(Flor.child_id('0_1_7')).to eq(7)
+      expect(Flor.child_id('0_1_9-6')).to eq(9)
     end
   end
 end

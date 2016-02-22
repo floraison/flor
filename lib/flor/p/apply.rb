@@ -31,6 +31,13 @@ class Flor::Pro::Apply < Flor::Procedure
   def applied=(val); @applied = val; end
 
   def execute
+
+    ni = @applied[1]['v']['nid']
+    #vni = @applied[1]['v']['vnid']
+    tree = lookup_tree_anyway(ni)
+p ni
+p tree
+    []
   end
 
   #def receive
