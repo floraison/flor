@@ -34,10 +34,16 @@ class Flor::Pro::Apply < Flor::Procedure
 
     ni = @applied[1]['v']['nid']
     #vni = @applied[1]['v']['vnid']
+
     tree = lookup_tree_anyway(ni)
-p ni
 p tree
-    []
+    tree = [ 'sequence', { 'vars' => {} }, *tree[2..4] ]
+p tree
+
+    reply(
+      'point' => 'execute',
+      'nid' => "#{nid}_0",
+      'tree' => tree)
   end
 
   #def receive

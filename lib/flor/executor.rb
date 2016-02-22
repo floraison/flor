@@ -75,9 +75,6 @@ module Flor
       if vs = message['tree'][1]['vars']
         node['vars'] = (node['vars'] || {}).merge(vs) if vs.is_a?(Hash)
       end
-      if nid == '0'
-        node['tree'] = message['tree']
-      end
 
       @execution['nodes'][nid] = node
 
@@ -87,7 +84,10 @@ module Flor
     def apply(node, message)
 
       n = Flor::Node.new(@execution, node, message)
+
       tree = n.lookup_tree(node['nid'])
+      node['tree'] = tree = message['tree'] unless tree
+
       hval = n.lookup(tree[0])
 
       return error_reply(

@@ -42,6 +42,7 @@ class Flor::Node
     return tree if tree
 
     tree = lookup_tree(node['parent'])
+    return nil unless tree
 
     tree.last[Flor.child_id(nid)]
   end
