@@ -86,7 +86,7 @@ module Flor
       n = Flor::Node.new(@execution, node, message)
 
       tree = n.lookup_tree(node['nid'])
-      node['tree'] = tree = message['tree'] unless tree
+      tree = node['tree'] = message['tree'] unless tree
 
       hval = n.lookup(tree[0])
 
