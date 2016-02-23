@@ -164,7 +164,8 @@ module Flor
 
       t = m['tree'];
       t0 = t ? " [[1;33m#{t[0]}#{colo}" : '' # in yellow
-      t = t ? " #{t[1..-2].inspect[1..-2]}]" : ''
+      #t = t ? " #{t[1..-2].inspect[1..-2]}]" : ''
+      t = t ? " #{Flor.to_d(t[1])} #{t[2]}]" : ''
 
       ind = '  ' * ni.split('_').size
 
