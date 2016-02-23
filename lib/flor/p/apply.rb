@@ -53,7 +53,9 @@ class Flor::Pro::Apply < Flor::Procedure
       'vars' => vars)
   end
 
-  #def receive
-  #end
+  def receive
+
+    reply
+  end
 end
 
