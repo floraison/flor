@@ -104,7 +104,7 @@ module Flor
         end
 
       head = head.new(@execution, node, message)
-      head.applied = hval if head.respond_to?(:applied=)
+      head.applied = hval if head.respond_to?(:applied=) && ! hval.is_a?(Class)
 
       head.send(message['point'])
     end
