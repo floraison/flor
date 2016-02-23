@@ -94,7 +94,15 @@ module Flor
         node, message, "don't know how to apply #{tree[0].inspect}"
       ) if hval == nil
 
-      head = hval.is_a?(Array) ? Flor::Pro::Apply : hval
+      head =
+        if hval.is_a?(Class)
+          hval
+        elsif Flor.is_tree?(hval)
+          Flor::Pro::Apply
+        else
+          Flor::Pro::Val
+        end
+
       head = head.new(@execution, node, message)
       head.applied = hval if head.respond_to?(:applied=)
 
