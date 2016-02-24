@@ -94,14 +94,10 @@ module Flor
         node, message, "don't know how to apply #{tree[0].inspect}"
       ) if hval == nil
 
-      head =
-        if hval.is_a?(Class) && (tree[1].any? || tree[3].any?)
-          hval
-        else
-          Flor::Pro::Apply
-        end
+      hkla = Flor::Pro::Apply
+      hkla = hval if hval.is_a?(Class) && (tree[1].any? || tree[3].any?)
 
-      head = head.new(@execution, node, message)
+      head = hkla.new(@execution, node, message)
       head.applied = hval if head.respond_to?(:applied=) && ! hval.is_a?(Class)
 
       head.send(message['point'])
