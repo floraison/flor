@@ -32,6 +32,8 @@ class Flor::Pro::Apply < Flor::Procedure
 
   def execute
 
+    return execute_as_val unless Flor.is_tree?(@applied)
+
     ni = @applied[1]['v']['nid']
     #vni = @applied[1]['v']['vnid']
 
@@ -54,6 +56,15 @@ class Flor::Pro::Apply < Flor::Procedure
   end
 
   def receive
+
+    reply
+  end
+
+  protected
+
+  def execute_as_val
+
+    payload['ret'] = @applied
 
     reply
   end

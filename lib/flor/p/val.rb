@@ -28,11 +28,9 @@ class Flor::Pro::Val < Flor::Procedure
 
   name 'val'
 
-  def applied=(v); @applied = v; end
-
   def execute
 
-    payload['ret'] = @applied || attributes['v'] || attributes['_0']
+    payload['ret'] = attributes['v'] || attributes['_0']
 
     reply
   end

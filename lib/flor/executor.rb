@@ -97,10 +97,8 @@ module Flor
       head =
         if hval.is_a?(Class)
           hval
-        elsif Flor.is_tree?(hval)
-          Flor::Pro::Apply
         else
-          Flor::Pro::Val
+          Flor::Pro::Apply
         end
 
       head = head.new(@execution, node, message)

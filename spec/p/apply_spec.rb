@@ -2,30 +2,26 @@
 #
 # specifying flor
 #
-# Sat Feb 20 20:57:16 JST 2016
+# Wed Feb 24 10:48:15 JST 2016
 #
 
 require 'spec_helper'
 
 
-describe 'Flor a-to-z' do
+describe 'Flor procedures' do
 
   before :each do
 
     @executor = Flor::TransientExecutor.new
   end
 
-  describe 'a function call' do
+  describe 'apply' do
 
-    it 'works' do
+    it 'applies a function' do
 
       rad = %{
         sequence
-          define sum a, b
-            +
-              a
-              b
-          sum 1 2
+          apply sum 1 2
       }
 
       r = @executor.launch(rad)
