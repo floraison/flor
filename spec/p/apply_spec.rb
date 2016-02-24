@@ -21,6 +21,10 @@ describe 'Flor procedures' do
 
       rad = %{
         sequence
+          define sum a b
+            +
+              a
+              b
           apply sum 1 2
       }
 
