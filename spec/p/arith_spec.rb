@@ -20,7 +20,7 @@ describe 'Flor procedures' do
     it 'returns 0 if empty' do
 
       rad = %{
-        +
+        + _
       }
 
       r = @executor.launch(rad)
@@ -64,7 +64,7 @@ describe 'Flor procedures' do
     it 'returns 0 if empty' do
 
       rad = %{
-        *
+        * _
       }
 
       r = @executor.launch(rad)

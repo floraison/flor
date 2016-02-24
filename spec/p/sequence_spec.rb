@@ -20,7 +20,7 @@ describe 'Flor procedures' do
     it 'returns immediately if empty' do
 
       rad = %{
-        sequence
+        sequence _
       }
 
       r = @executor.launch(rad)

@@ -95,7 +95,7 @@ module Flor
       ) if hval == nil
 
       head =
-        if hval.is_a?(Class)
+        if hval.is_a?(Class) && (tree[1].any? || tree[3].any?)
           hval
         else
           Flor::Pro::Apply

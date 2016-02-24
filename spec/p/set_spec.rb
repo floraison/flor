@@ -20,7 +20,7 @@ describe 'Flor procedures' do
     it 'has no effect on its own' do
 
       rad = %{
-        set
+        set _
       }
 
       r = @executor.launch(rad)

@@ -32,7 +32,40 @@ class Flor::Pro::Apply < Flor::Procedure
 
   def execute
 
-    return execute_as_val unless Flor.is_tree?(@applied)
+    @applied ||= lookup(tree[0])
+
+    if Flor.is_tree?(@applied) && (tree[1].any? || tree[3].any?)
+      apply
+    else
+      deref
+    end
+  end
+
+  def receive
+
+    reply
+  end
+
+  protected
+
+  def deref
+
+    ret =
+      case @applied
+        when Class
+          [ 'val',
+            { 't' => 'procedure', 'v' => { 'n' => tree[0] } },
+            *tree[2..-1] ]
+        else
+          @applied
+      end
+
+    payload['ret'] = ret
+
+    reply
+  end
+
+  def apply
 
     ni = @applied[1]['v']['nid']
     #vni = @applied[1]['v']['vnid']
@@ -53,20 +86,6 @@ class Flor::Pro::Apply < Flor::Procedure
       'nid' => "#{nid}_0",
       'tree' => [ 'sequence', {}, *tree[2..4] ],
       'vars' => vars)
-  end
-
-  def receive
-
-    reply
-  end
-
-  protected
-
-  def execute_as_val
-
-    payload['ret'] = @applied
-
-    reply
   end
 end
 
