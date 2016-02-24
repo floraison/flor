@@ -4,5 +4,8 @@
 
 *.swp
 
+.vimrc
+.viminfo
+
 tmp/*.db
 
