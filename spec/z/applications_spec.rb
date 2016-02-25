@@ -73,5 +73,29 @@ describe 'Flor a-to-z' do
       expect(r['payload']['ret']).to eq(3)
     end
   end
+
+  describe 'a closure' do
+
+    it 'works'
+#    it 'works' do
+#
+#      rad = %{
+#        sequence
+#          define make_adder x
+#            def y
+#              +
+#                x
+#                y
+#          set add3
+#            make_adder 3
+#          add3 7
+#      }
+#
+#      r = @executor.launch(rad)
+#
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['ret']).to eq(10)
+#    end
+  end
 end
 
