@@ -248,7 +248,8 @@ module Flor
       @execution = {
         'exid' => generate_exid('eval'),
         'nodes' => {},
-        'errors' => [] }
+        'errors' => [],
+        'sub_counter' => 0 }
     end
 
     def launch(tree, opts={})

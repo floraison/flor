@@ -1,4 +1,3 @@
-
 #--
 # Copyright (c) 2015-2016, John Mettraux, jmettraux+flon@gmail.com
 #
@@ -53,7 +52,8 @@ class Flor::Procedure < Flor::Node
     if t == nil
       reply
     else
-      reply('point' => 'execute', 'nid' => "#{nid}_#{i}", 'tree' => t)
+      #reply('point' => 'execute', 'nid' => "#{nid}_#{i}", 'tree' => t)
+      reply('point' => 'execute', 'nid' => Flor.sub_nid(nid, i), 'tree' => t)
     end
   end
 
@@ -122,6 +122,11 @@ class Flor::Procedure < Flor::Node
       #when 'w' then set_war(key, v)
       else fail IndexError.new("don't know how to set #{k.inspect}")
     end
+  end
+
+  def sub_counter_next
+
+    @execution['sub_counter'] += 1
   end
 end
 

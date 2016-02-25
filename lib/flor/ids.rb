@@ -1,4 +1,3 @@
-
 #--
 # Copyright (c) 2015-2016, John Mettraux, jmettraux+flon@gmail.com
 #
@@ -37,6 +36,13 @@ module Flor
   def self.next_child_id(nid)
 
     child_id(nid) + 1
+  end
+
+  def self.sub_nid(nid, i)
+
+    ab = nid.split('-')
+
+    "#{ab[0]}_#{i}#{ab[1] ? '-' : ''}#{ab[1]}"
   end
 
   def self.parent_id(nid)
