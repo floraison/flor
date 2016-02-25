@@ -108,6 +108,7 @@ module Flor
 
       head.applied = hval \
         if head.respond_to?(:applied=) && hval != Flor::Pro::Val
+          # save a lookup for Apply or Val...
 
       head.send(message['point'])
     end
