@@ -1,4 +1,3 @@
-
 #--
 # Copyright (c) 2015-2016, John Mettraux, jmettraux+flon@gmail.com
 #
@@ -32,15 +31,19 @@ class Flor::Pro::Apply < Flor::Procedure
 
   def execute
 
+    args = attributes.dup
+
+    @applied = lookup(args.delete('_0')) if @applied == self.class
+
     ni = @applied[1]['v']['nid']
-    #vni = @applied[1]['v']['vnid']
+    #vni = @applied[1]['v']['vnid'] # closure...
 
     tree = lookup_tree_anyway(ni)
     sig = tree[1]
     off = tree[0] == 'def' ? 0 : 1
     vars = {}
 
-    @message['tree'][1].each_with_index { |(k, v), i|
+    args.each_with_index { |(k, v), i|
       #p [ k, v, i, '-->', "_#{i + off}", sig["_#{i + off}"] ]
       vars[sig["_#{i + off}"]] = v
     }
