@@ -38,6 +38,8 @@ module Flor
           h[kv[0].to_sym] = kv[1] ? JSON.parse(kv[1]) : true
           h
         }
+      @options.merge!({ err: 1, log: 1, tree: 1 }) if @options[:all]
+
       @options.merge!(opts)
     end
 
@@ -93,7 +95,7 @@ module Flor
       tree = n.lookup_tree(node['nid'])
       tree = node['tree'] = message['tree'] unless tree
 
-      hval = n.lookup(tree[0])
+      hval = n.prepare_head(tree[0])
 
       return error_reply(
         node, message, "don't know how to apply #{tree[0].inspect}"

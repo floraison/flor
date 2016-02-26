@@ -1,4 +1,3 @@
-
 #--
 # Copyright (c) 2015-2016, John Mettraux, jmettraux+flon@gmail.com
 #
@@ -64,6 +63,22 @@ class Flor::Node
     cat == 'v' ? lookup_var(@node, mod, key) : lookup_field(mod, key)
   end
 
+  class Expander < Flor::Dollar
+
+    def initialize(n); @node = n; end
+
+    def lookup(k); @node.lookup(k); end
+  end
+
+  def prepare_head(head)
+
+    h = head
+    h = Expander.new(self).expand(h) if h.is_a?(String) && h.index('$')
+    h = h[1]['v']['n'] if Flor.is_tree?(h) && h[1]['t'] == 'procedure'
+
+    lookup(h)
+  end
+
   protected
 
   def exid; @message['exid']; end
@@ -106,6 +121,11 @@ class Flor::Node
     return vars[key] if vars && vars.has_key?(key)
 
     lookup_var(pnode, mod, key)
+  end
+
+  def lookup_field(mod, key)
+
+    Flor.deep_get(payload, key)[1]
   end
 
   def key_split(key) # => category, mode, key
