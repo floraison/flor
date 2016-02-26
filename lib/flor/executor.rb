@@ -171,22 +171,32 @@ module Flor
 
     def log(m)
 
-      return unless @options[:log]
-
-      colo = "[1;30m" # dark grey
+      _dg, _yl, _rs =
+        $stdout.tty? ? [ "[1;30m", "[1;33m", "[0;0m" ] : [ '', '', '' ]
 
       pt = m['point'][0, 3]
       ni = m['nid'] ? " #{m['nid']}" : ''
       fr = m['from'] ? " from #{m['from']}" : ''
 
       t = m['tree'];
-      t0 = t ? " [[1;33m#{t[0]}#{colo}" : '' # in yellow
+      t0 = t ? " [#{_yl}#{t[0]}#{_dg}" : ''
       #t = t ? " #{t[1..-2].inspect[1..-2]}]" : ''
       t = t ? " #{Flor.to_d(t[1])} #{t[2]}]" : ''
 
       ind = '  ' * ni.split('_').size
 
-      puts "#{colo}#{ind}#{pt}#{ni}#{t0}#{t}#{fr} [0;0m"
+      puts "#{_dg}#{ind}#{pt}#{ni}#{t0}#{t}#{fr}#{_rs}"
+    end
+
+    def print_tree(tree, nid='0')
+
+      _dg, _yl, _rs =
+        $stdout.tty? ? [ "[1;30m", "[1;33m", "[0;0m" ] : [ '', '', '' ]
+
+      puts "#{_dg}+" if nid == '0'
+      puts "#{_dg}| #{nid} #{_yl}#{tree[0]}#{_dg} #{Flor.to_d(tree[1])} #{tree[2]} #{tree[4]}#{_rs}"
+      tree[3].each_with_index { |ct, i| print_tree(ct, "#{nid}_#{i}") }
+      puts "#{_dg}+#{_rs}" if nid == '0'
     end
 
     def generate_exid(domain)
@@ -262,13 +272,15 @@ module Flor
       messages = [ make_launch_msg(tree, opts) ]
       message = nil
 
+      print_tree(messages.first['tree']) if @options[:tree]
+
       loop do
 
         message = messages.pop
 
         break unless message
 
-        log(message)
+        log(message) if @options[:log]
 
         point = message['point']
 
