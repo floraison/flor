@@ -260,7 +260,10 @@ describe Flor::Dollar do
         expect(@x.expand("$(exid)")).to eq('eval-u0-20160226.1807.bowageyiba')
       end
 
-      it 'understands $(tstamp)'
+      it 'understands $(tstamp)' do
+
+        expect(@x.expand("$(tstamp)")).to match(/^2\d{3}\d{4}\.\d+$/)
+      end
     end
   end
 end

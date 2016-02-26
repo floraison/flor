@@ -78,6 +78,7 @@ class Flor::Node
 
       return @node.nid if k == 'nid'
       return @node.exid if k == 'exid'
+      return Flor.tstamp if k == 'tstamp'
 
       @node.lookup(k)
     end
