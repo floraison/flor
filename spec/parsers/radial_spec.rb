@@ -10,6 +10,8 @@ require 'spec_helper'
 
 def determine_title(radial, tree, line)
 
+  radial = radial.strip
+
   title =
     radial.length > 31 ?
     "#{(radial[0, 31] + '...').inspect} l#{line}" :
@@ -232,6 +234,38 @@ describe Flor::Radial do
         [
           "set f.a: 1",
           [ 'set', { 'f.a' => 1 }, 1, [] ],
+          __LINE__ ]
+
+      ].each do |radial, tree, line|
+
+        it(determine_title(radial, tree, line)) do
+          expect(Flor::Radial.parse(radial)).to eq(tree)
+        end
+      end
+    end
+
+    context 'symbols and strings' do
+
+      # for now, symbols and strings go as symbol when "head"
+
+      [
+        [
+          %{
+            symbol
+          },
+          [ 'symbol', {}, 2, [] ],
+          __LINE__ ],
+        [
+          %{
+            'single'
+          },
+          [ 'single', {}, 2, [] ],
+          __LINE__ ],
+        [
+          %{
+            "double"
+          },
+          [ 'double', {}, 2, [] ],
           __LINE__ ]
 
       ].each do |radial, tree, line|
