@@ -34,7 +34,8 @@ module Flor
 
       @options =
         (ENV['FLOR_DEBUG'] || '').split(',').inject({}) { |h, k|
-          h[k.to_sym] = true
+          kv = k.split(':')
+          h[kv[0].to_sym] = kv[1] ? JSON.parse(kv[1]) : true
           h
         }
       @options.merge!(opts)
