@@ -102,6 +102,16 @@ module Flor
       #
       # the signature
 
+    # Called when joining multiple results in a string. Easily overwritable.
+    #
+    def stringify(v)
+
+      case v
+        when Array, Hash then JSON.dump(v)
+        else v.to_s
+      end
+    end
+
     def quote(s, force)
 
       return s if force == false && s[0, 1] == '"' && s[-1, 1] == '"'
@@ -155,7 +165,7 @@ module Flor
       #return t if t.is_a?(String)
       return unescape(t) if t.is_a?(String)
 
-      return t.collect { |c| do_eval(c) }.join if t[0] != :dol
+      return t.collect { |c| stringify(do_eval(c)) }.join if t[0] != :dol
 
       k = do_eval(t[1])
       ks = PipeParser.parse(k)

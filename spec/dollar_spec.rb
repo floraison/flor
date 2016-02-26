@@ -23,7 +23,9 @@ class SpecDollar < Flor::Dollar
       'ba' => 'black adder',
       'bs' => 'bLACK shEEp',
       'msg' => '"hello world"',
-      'msg1' => 'hello "le monde"' }
+      'msg1' => 'hello "le monde"',
+      'arr' => [ 1, 2, 3 ],
+      'hsh' => { 'a' => 'A', 'b' => 'B' } }
   end
 
   def lookup(k)
@@ -94,6 +96,26 @@ describe Flor::Dollar do
       ).to eq(
         '<>'
       )
+    end
+
+    it 'expands $(arr)' do
+
+      expect(@d.expand('$(arr)')).to eq([ 1, 2, 3 ])
+    end
+
+    it 'expands $(hsh)' do
+
+      expect(@d.expand('$(hsh)')).to eq({ 'a' => 'A', 'b' => 'B' })
+    end
+
+    it 'expands "a$(arr)z"' do
+
+      expect(@d.expand('a$(arr)z')).to eq('a[1,2,3]z')
+    end
+
+    it 'expands "a$(hsh)z"' do
+
+      expect(@d.expand('a$(hsh)z')).to eq('a{"a":"A","b":"B"}z')
     end
 
     it "doesn't expand \"a)b\"" do
