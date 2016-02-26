@@ -236,6 +236,27 @@ describe Flor::Dollar do
 
       it "understands |m/xx/ (match filter)"
     end
+
+    context 'builtin' do
+
+      before :each do
+
+        @x =
+          Flor::Node::Expander.new(
+            Flor::Node.new(
+              { 'nodes' => {} }, # execution
+              { 'nid' => '0_0-7' }, # node
+              nil)) # message
+      end
+
+      it 'understands $(nid)' do
+
+        expect(@x.expand("$(nid)")).to eq('0_0-7')
+      end
+
+      it 'understands $(exid)'
+      it 'understands $(tstamp)'
+    end
   end
 end
 

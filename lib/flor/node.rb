@@ -32,6 +32,13 @@ class Flor::Node
     @message = message
   end
 
+  def exid; @execution['exid']; end
+  def nid; @node['nid']; end
+  def parent; @node['parent']; end
+  def from; @message['from']; end
+  def attributes; tree[1]; end
+  def payload; @message['payload']; end
+
   def lookup_tree(nid)
 
     node = @execution['nodes'][nid]
@@ -67,7 +74,12 @@ class Flor::Node
 
     def initialize(n); @node = n; end
 
-    def lookup(k); @node.lookup(k); end
+    def lookup(k)
+
+      return @node.nid if k == 'nid'
+
+      @node.lookup(k)
+    end
   end
 
   def prepare_head(head)
@@ -80,13 +92,6 @@ class Flor::Node
   end
 
   protected
-
-  def exid; @message['exid']; end
-  def nid; @message['nid']; end
-  def from; @message['from']; end
-  def attributes; tree[1]; end
-  def payload; @message['payload']; end
-  def parent; @node['parent']; end
 
   def tree
 
