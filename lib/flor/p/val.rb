@@ -31,7 +31,7 @@ class Flor::Pro::Val < Flor::Procedure
 
   def execute
 
-    payload['ret'] = @applied || attributes['v'] || attributes['_0']
+    payload['ret'] = @applied || attribute('v') || attribute('_0')
 
     reply
   end

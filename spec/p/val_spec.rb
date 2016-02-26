@@ -64,6 +64,19 @@ describe 'Flor instructions' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => "abc def" })
     end
+
+    it 'expands its argument' do
+
+      rad = %{
+        sequence
+          val $(nid)
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']).to eq({ 'ret' => '0_0' })
+    end
   end
 end
 

@@ -84,13 +84,13 @@ class Flor::Node
     end
   end
 
-  def prepare_head(head)
+  def resolve(arg)
 
-    h = head
-    h = Expander.new(self).expand(h) if h.is_a?(String) && h.index('$')
-    h = h[1]['v']['n'] if Flor.is_tree?(h) && h[1]['t'] == 'procedure'
+    a = arg
+    a = Expander.new(self).expand(a) if a.is_a?(String) && a.index('$')
+    a = a[1]['v']['n'] if Flor.is_tree?(a) && a[1]['t'] == 'procedure'
 
-    lookup(h)
+    a.is_a?(String) ? lookup(a) : a
   end
 
   protected

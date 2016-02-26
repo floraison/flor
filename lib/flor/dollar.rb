@@ -99,6 +99,8 @@ module Flor
     #def lookup(s)
     #  # ...
     #end
+      #
+      # the signature
 
     def quote(s, force)
 

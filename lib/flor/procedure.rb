@@ -37,7 +37,7 @@ class Flor::Procedure < Flor::Node
   def attribute(key)
 
     attributes[key]
-    #expand(attributes[key]) # TODO
+    #resolve(attributes[key])
   end
 
   def sequence_receive
