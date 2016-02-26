@@ -15,17 +15,17 @@ describe 'Flor a-to-z' do
     @executor = Flor::TransientExecutor.new
   end
 
-  describe 'bare values' do
+  describe 'bare value' do
 
     it 'works with symbols' do
 
       rad = %{
-        "nada"
+        nada
       }
 
       r = @executor.launch(rad)
 
-      expect(r['point']).to eq('terminated')
+      expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq("don't know how to apply \"nada\"")
     end
 
