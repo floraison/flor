@@ -72,6 +72,26 @@ describe 'Flor a-to-z' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(3)
     end
+
+    it 'runs each time with a different subnid' do
+
+      rad = %{
+        sequence
+          define sub i
+            push f.l
+              val $(nid)
+              #[ i, $(nid) ]
+          sub 0
+          sub 1
+          sub 2
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('0_0_0_0')
+      expect(r['payload']['l']).to eq([ :xxx ])
+    end
   end
 
   describe 'a closure' do
