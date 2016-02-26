@@ -77,6 +77,7 @@ class Flor::Node
     def lookup(k)
 
       return @node.nid if k == 'nid'
+      return @node.exid if k == 'exid'
 
       @node.lookup(k)
     end

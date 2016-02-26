@@ -244,7 +244,8 @@ describe Flor::Dollar do
         @x =
           Flor::Node::Expander.new(
             Flor::Node.new(
-              { 'nodes' => {} }, # execution
+              { 'exid' => 'eval-u0-20160226.1807.bowageyiba',
+                'nodes' => {} }, # execution
               { 'nid' => '0_0-7' }, # node
               nil)) # message
       end
@@ -254,7 +255,11 @@ describe Flor::Dollar do
         expect(@x.expand("$(nid)")).to eq('0_0-7')
       end
 
-      it 'understands $(exid)'
+      it 'understands $(exid)' do
+
+        expect(@x.expand("$(exid)")).to eq('eval-u0-20160226.1807.bowageyiba')
+      end
+
       it 'understands $(tstamp)'
     end
   end
