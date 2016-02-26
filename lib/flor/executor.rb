@@ -32,7 +32,12 @@ module Flor
 
     def initialize(opts)
 
-      @options = opts
+      @options =
+        (ENV['FLOR_DEBUG'] || '').split(',').inject({}) { |h, k|
+          h[k.to_sym] = true
+          h
+        }
+      @options.merge!(opts)
     end
 
     protected
@@ -165,8 +170,7 @@ module Flor
 
     def log(m)
 
-      #return unless @options[:debug] || (ENV['FLOR_DEBUG'] || '').match(/log/)
-      return unless (ENV['FLOR_DEBUG'] || '').match(/log/)
+      return unless @options[:log]
 
       colo = "[1;30m" # dark grey
 
@@ -267,8 +271,7 @@ module Flor
 
         point = message['point']
 
-        pp message \
-          if point == 'failed' && (ENV['FLOR_DEBUG'] || '').match(/err/)
+        pp message if point == 'failed' && @options[:err]
 
         break if point == 'failed'
         break if point == 'terminated'
