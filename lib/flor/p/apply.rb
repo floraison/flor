@@ -27,15 +27,15 @@ class Flor::Pro::Apply < Flor::Procedure
 
   name 'apply'
 
-  def applied=(val); @applied = val; end
+  def heat=(t); @heat = t; end
 
   def execute
 
     args = attributes.dup
 
-    @applied = lookup(args.delete('_0')) if @applied == self.class
+    @heat ||= lookup(args.delete('_0'))
 
-    ni = @applied[1]['v']['nid']
+    ni = @heat[1]['v']['nid']
     #vni = @applied[1]['v']['vnid'] # closure...
 
     tree = lookup_tree_anyway(ni)

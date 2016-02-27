@@ -95,30 +95,50 @@ module Flor
       tree = n.lookup_tree(node['nid'])
       tree = node['tree'] = message['tree'] unless tree
 
-      hval = n.lookup(tree[0])
+      heat = n.expand(tree[0])
 
       return error_reply(
         node, message, "don't know how to apply #{tree[0].inspect}"
-      ) if hval == nil
+      ) if heat == nil
 
-      hkla =
-        if tree[1].empty? && tree[3].empty?
-          Flor::Pro::Val
-        elsif hval.is_a?(Class)
-          hval
-        elsif Flor.is_tree?(hval)
+      heak =
+        if heat[1]['t'] == 'procedure'
+          Flor::Executor.procedures[heat[1]['v']]
+        elsif heat[1]['t'] == 'function'
           Flor::Pro::Apply
         else
           Flor::Pro::Val
         end
 
-      head = hkla.new(@execution, node, message)
-
-      head.applied = hval \
-        if head.respond_to?(:applied=) && hval != Flor::Pro::Val
-          # save a lookup for Apply or Val...
+      head = heak.new(@execution, node, message)
+      head.heat = heat if head.respond_to?(:heat=)
 
       head.send(message['point'])
+
+#      hval = n.lookup(tree[0])
+#
+#      return error_reply(
+#        node, message, "don't know how to apply #{tree[0].inspect}"
+#      ) if hval == nil
+#
+#      hkla =
+#        if tree[1].empty? && tree[3].empty?
+#          Flor::Pro::Val
+#        elsif hval.is_a?(Class)
+#          hval
+#        elsif Flor.is_tree?(hval)
+#          Flor::Pro::Apply
+#        else
+#          Flor::Pro::Val
+#        end
+#
+#      head = hkla.new(@execution, node, message)
+#
+#      head.applied = hval \
+#        if head.respond_to?(:applied=) && hval != Flor::Pro::Val
+#          # save a lookup for Apply or Val...
+#
+#      head.send(message['point'])
     end
 
 #    def expand(o, expander)

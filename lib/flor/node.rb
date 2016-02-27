@@ -84,6 +84,14 @@ class Flor::Node
     end
   end
 
+  def expand(o)
+
+    p [ :o, o ]
+    p [ :looked_up, lookup(o) ]
+
+    lookup(o)
+  end
+
 #  def resolve(arg)
 #
 #    a = arg
@@ -109,7 +117,9 @@ class Flor::Node
 
     return nil if mod == 'd' # FIXME
 
-    Flor::Executor.procedures[key]
+    Flor::Executor.procedures[key] ?
+      [ 'val', { 't' => 'procedure', 'v' => key }, -1, [] ] :
+      nil
   end
 
   def lookup_var(node, mod, key)
