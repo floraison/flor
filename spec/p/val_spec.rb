@@ -69,7 +69,7 @@ describe 'Flor instructions' do
 
       rad = %{
         sequence
-          val $(nid)
+          val "$(nid)"
       }
 
       r = @executor.launch(rad)
