@@ -22,7 +22,8 @@ describe 'Flor a-to-z' do
       rad = %{
         set f.a
           "sequence"
-        $(f.a)
+        #$(f.a)
+        f.a
           1
           2
       }
