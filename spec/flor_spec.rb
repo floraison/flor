@@ -170,5 +170,18 @@ describe Flor do
       expect(Flor.child_id('0_1_9-6')).to eq(9)
     end
   end
+
+  describe '.master_nid' do
+
+    it 'removes the sub_nid' do
+
+      expect(Flor.master_nid('0_7-1')).to eq('0_7')
+    end
+
+    it "doesn't remove a missing sub_nid" do
+
+      expect(Flor.master_nid('0_5')).to eq('0_5')
+    end
+  end
 end
 

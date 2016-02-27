@@ -38,6 +38,13 @@ module Flor
     child_id(nid) + 1
   end
 
+  # Remove the sub_nid if any.
+  #
+  def self.master_nid(nid)
+
+    nid.split('-').first
+  end
+
   def self.sub_nid(nid, i)
 
     ab = nid.split('-')
