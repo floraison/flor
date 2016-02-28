@@ -1,4 +1,3 @@
-
 #--
 # Copyright (c) 2015-2016, John Mettraux, jmettraux+flon@gmail.com
 #
@@ -25,6 +24,78 @@
 
 
 module Flor
+
+  #
+  # deep
+  #
+  # functions for deep getting/setting in structures
+
+  def self.to_index(s)
+
+    return 0 if s == 'first'
+    return -1 if s == 'last'
+
+    i = s.to_i
+    return nil if i.to_s != s
+
+    i
+  end
+
+  def self.deep_get(o, k) # --> success(boolean), value
+
+    return [ true, o ] unless k
+
+    val = o
+    ks = k.split('.')
+
+    loop do
+
+      break unless kk = ks.shift
+
+      case val
+        when Array
+          i = to_index(kk)
+          return [ false, nil ] unless i
+          val = val[i]
+        when Hash
+          val = val[kk]
+        else
+          return [ false, nil ]
+      end
+    end
+
+    [ true, val ]
+  end
+
+  def self.deep_set(o, k, v) # --> [ success(boolean), value ]
+
+    lastdot = k.rindex('.')
+    path = lastdot && k[0..lastdot - 1]
+    key = lastdot ? k[lastdot + 1..-1] : k
+
+    b, col = deep_get(o, path)
+
+    return [ false, v ] unless b
+
+    case col
+      when Array
+        i = to_index(key)
+        return [ false, v ] unless i
+        col[i] = v
+      when Hash
+        col[key] = v
+      else
+        return [ false, v ]
+    end
+
+    [ true, v ]
+  end
+
+
+  #
+  # djan
+  #
+  # functions about the "djan" silly version of JSON
 
   def self.to_djan(x, opts={})
 
@@ -106,6 +177,125 @@ module Flor
       a, b, c = a
 
       a + x.collect { |e| to_djan(e, opts) }.join(b) + c
+    end
+  end
+
+
+  #
+  # ids
+  #
+  # functions about exids, nids, sub_nids, ...
+
+  def self.child_id(nid)
+
+    nid
+      .split('_').last
+      .split('-').first
+      .to_i
+  end
+
+  def self.next_child_id(nid)
+
+    child_id(nid) + 1
+  end
+
+  # Remove the sub_nid if any.
+  #
+  def self.master_nid(nid)
+
+    nid.split('-').first
+  end
+
+  def self.sub_nid(nid, i)
+
+    ab = nid.split('-')
+
+    "#{ab[0]}_#{i}#{ab[1] ? '-' : ''}#{ab[1]}"
+  end
+
+  def self.parent_id(nid)
+
+    if i = nid.rindex('_')
+      nid[0, i]
+    else
+      nil
+    end
+  end
+
+
+  #
+  # misc
+  #
+  # miscellaneous functions
+
+  def self.dup(o)
+
+    Marshal.load(Marshal.dump(o))
+  end
+
+  def self.tstamp(t=Time.now.utc)
+
+    t.strftime('%Y%m%d.%H%M%S') + sprintf('%06d', t.usec)
+  end
+
+  def self.to_error(o)
+
+    if o.respond_to?(:message)
+      { 'msg' => o.message,
+        'kla' => o.class.to_s,
+        'trc' => o.backtrace[0, 7] }
+    else
+      { 'msg' => o.to_s }
+    end
+  end
+
+  def self.is_tree?(o)
+
+    o.is_a?(Array) &&
+    (o[0].is_a?(String) || is_tree?(o[0])) &&
+    o[1].is_a?(Hash) &&
+    o[2].is_a?(Fixnum) &&
+    o[3].is_a?(Array) &&
+    o[3].all? { |e| is_tree?(e) } # overkill?
+  end
+
+  def self.is_val?(o)
+
+    o.is_a?(Array) &&
+    o[0] == 'val' &&
+    o[1].is_a?(Hash) &&
+    o[2].is_a?(Fixnum) &&
+    o[3] == []
+  end
+
+  def self.is_string_val?(o)
+
+    o.is_a?(Array) &&
+    o[0] == 'val' &&
+    o[1].is_a?(Hash) &&
+    %w[ sqstring dqstring ].include?(o[1]['t']) &&
+    o[1]['v'].is_a?(String) &&
+    o[2].is_a?(Fixnum) &&
+    o[3] == []
+  end
+
+  def self.to_r(val)
+
+    return val unless is_val?(val)
+
+    if val[1]['t'] == 'rxstring'
+      Kernel.eval(val[1]['v']) # FIXME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    else
+      val[1]['v']
+    end
+  end
+
+  def self.de_val(o)
+
+    if is_val?(o)
+      o[1]['v']
+    else
+      o
     end
   end
 end

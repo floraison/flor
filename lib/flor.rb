@@ -33,11 +33,7 @@ module Flor
   VERSION = '0.4.0'
 end
 
-require 'flor/ids'
-require 'flor/misc'
-require 'flor/deep'
-require 'flor/djan'
-
+require 'flor/flor'
 require 'flor/dollar'
 require 'flor/parsers'
 require 'flor/node'
