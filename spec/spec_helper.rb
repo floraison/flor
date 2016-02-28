@@ -11,11 +11,6 @@ require 'ostruct'
 require 'flor'
 
 
-#def j(o)
-#  JSON.dump(o)
-#end
-
-
 RSpec::Matchers.define :eqj do |o|
 
   match do |actual|
@@ -32,5 +27,19 @@ RSpec::Matchers.define :eqj do |o|
   #end
   #failure_message_for_should_not do |actual|
   #end
+end
+
+RSpec::Matchers.define :eqd do |o|
+
+  match do |actual|
+
+    return Flor.to_d(actual) == o.strip
+  end
+
+  failure_message do |actual|
+
+    "expected #{o.strip}\n" +
+    "     got #{Flor.to_d(actual)}"
+  end
 end
 
