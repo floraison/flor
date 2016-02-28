@@ -141,9 +141,9 @@ class Flor::Procedure < Flor::Node
     end
   end
 
-  def sub_counter_next
+  def counter_next(key)
 
-    @execution['sub_counter'] += 1
+    @execution['counters'][key.to_s] += 1
   end
 end
 

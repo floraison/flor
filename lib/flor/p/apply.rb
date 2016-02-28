@@ -53,7 +53,7 @@ class Flor::Pro::Apply < Flor::Procedure
 
     reply(
       'point' => 'execute',
-      'nid' => "#{ni}-#{sub_counter_next}",
+      'nid' => "#{ni}-#{counter_next('sub')}",
       'tree' => [ 'sequence', {}, *tree[2..4] ],
       'vars' => vars)
   end

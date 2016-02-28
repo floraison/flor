@@ -32,10 +32,10 @@ class Flor::Pro::Define < Flor::Procedure
     tr = tree
 
     vnid = lookup_var_node('l', @node)['nid']
-p nid
-p vnid
+#p nid
+#p vnid
 
-    v = { 'nid' => nid, 'vnid' => vnid }
+    v = { 'nid' => nid, 'vnid' => vnid, 'fun' => counter_next('fun') }
     as = { 't' => 'function', 'v' => v }
     val = [ 'val', as, tr[2], [], *tr[4] ]
 

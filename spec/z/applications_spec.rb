@@ -49,7 +49,7 @@ describe 'Flor a-to-z' do
       expect(r['point']).to eq('terminated')
 
       expect(Flor.to_d(r['payload']['ret'])).to eq(%{
-        [ val, { t: function, v: { nid: 0_0, vnid: "0" } }, 3, [] ]
+        [ val, { t: function, v: { nid: 0_0, vnid: "0", fun: 0 } }, 3, [] ]
       }.strip)
     end
   end

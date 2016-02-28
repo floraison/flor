@@ -32,13 +32,11 @@ describe 'Flor procedures' do
       expect(r['vars']).to eq({ 'sum' => r['payload']['ret'] })
 
       expect(
-        r['payload']['ret']
+        Flor.to_d(r['payload']['ret'])
       ).to eq(
-        [ 'val',
-          { 't' => 'function', 'v' => { 'nid' => '0', 'vnid' => '0' } },
-          2,
-          []
-        ]
+        %{
+          [ val, { t: function, v: { nid: "0", vnid: "0", fun: 0 } }, 2, [] ]
+        }.strip
       )
     end
   end
@@ -60,13 +58,11 @@ describe 'Flor procedures' do
       expect(r['vars']).to eq({})
 
       expect(
-        r['payload']['ret']
+        Flor.to_d(r['payload']['ret'])
       ).to eq(
-        [ 'val',
-          { 't' => 'function', 'v' => { 'nid' => '0', 'vnid' => '0' } },
-          2,
-          []
-        ]
+        %{
+          [ val, { t: function, v: { nid: "0", vnid: "0", fun: 0 } }, 2, [] ]
+        }.strip
       )
     end
   end

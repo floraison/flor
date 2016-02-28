@@ -266,7 +266,7 @@ module Flor
         'exid' => generate_exid('eval'),
         'nodes' => {},
         'errors' => [],
-        'sub_counter' => 0 }
+        'counters' => { 'sub' => 0, 'fun' => -1 } }
     end
 
     def launch(tree, opts={})
