@@ -279,6 +279,17 @@ module Flor
     o[3] == []
   end
 
+  def self.is_procedure_val?(o)
+
+    o.is_a?(Array) &&
+    o[0] == 'val' &&
+    o[1].is_a?(Hash) &&
+    o[1]['t'] == 'procedure' &&
+    o[1]['v'].is_a?(String) &&
+    o[2].is_a?(Fixnum) &&
+    o[3] == []
+  end
+
   def self.to_r(val)
 
     return val unless is_val?(val)
