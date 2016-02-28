@@ -89,8 +89,8 @@ describe 'Flor a-to-z' do
       r = @executor.launch(rad, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq('0_0_0_0')
-      expect(r['payload']['l']).to eq([ :xxx ])
+      expect(r['payload']['ret']).to eq('0_0_0_0-3')
+      expect(r['payload']['l']).to eq(%w[ 0_0_0_0-1 0_0_0_0-2 0_0_0_0-3 ])
     end
   end
 

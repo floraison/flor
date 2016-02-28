@@ -84,6 +84,11 @@ class Flor::Node
     end
   end
 
+  def expand(s)
+
+    s.is_a?(String) ? Expander.new(self).expand(s) : s
+  end
+
   def deref(o)
 
     if o.is_a?(String)

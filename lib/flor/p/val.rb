@@ -33,6 +33,7 @@ class Flor::Pro::Val < Flor::Procedure
 
     v = attribute('_0') || attribute('v') || @heat
     v = Flor.de_val(v) unless Flor.is_procedure_val?(v)
+    v = expand(v)
 
     payload['ret'] = v
 
