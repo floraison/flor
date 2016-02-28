@@ -92,6 +92,24 @@ describe 'Flor a-to-z' do
       expect(r['payload']['ret']).to eq('0_0_0_0-3')
       expect(r['payload']['l']).to eq(%w[ 0_0_0_0-1 0_0_0_0-2 0_0_0_0-3 ])
     end
+
+    it 'works with an anonymous function' do
+
+      rad = %{
+        sequence
+          set sum
+            def x y
+              +
+                x
+                y
+          sum 7 3
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(10)
+    end
   end
 
   describe 'a closure' do

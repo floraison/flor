@@ -17,7 +17,7 @@ describe 'Flor procedures' do
 
   describe 'define' do
 
-    it 'binds a function' do
+    it 'binds and returns a function' do
 
       rad = %{
         define sum a, b
@@ -30,6 +30,34 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']).to eq({ 'sum' => r['payload']['ret'] })
+
+      expect(
+        r['payload']['ret']
+      ).to eq(
+        [ 'val',
+          { 't' => 'function', 'v' => { 'nid' => '0', 'vnid' => '0' } },
+          2,
+          []
+        ]
+      )
+    end
+  end
+
+  describe 'def' do
+
+    it 'returns a function' do
+
+      rad = %{
+        def a, b
+          +
+            a
+            b
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']).to eq({})
 
       expect(
         r['payload']['ret']
