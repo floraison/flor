@@ -243,7 +243,7 @@ module Flor
     if o.respond_to?(:message)
       { 'msg' => o.message,
         'kla' => o.class.to_s,
-        'trc' => o.backtrace[0, 7] }
+        'trc' => o.backtrace[0, 4] }
     else
       { 'msg' => o.to_s }
     end

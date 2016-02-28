@@ -86,7 +86,6 @@ class Flor::Node
 
   def expand(o)
 
-p [ :o, o ]
     if o.is_a?(String)
       lookup(o)
     elsif Flor.is_string_val?(o)

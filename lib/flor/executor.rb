@@ -111,9 +111,9 @@ module Flor
         else
           Flor::Pro::Val
         end
-p [ 0, :tree, tree ]
-p [ 1, :heat, heat ]
-p [ 2, :heak, heak ]
+#p [ 0, :tree, tree ]
+#p [ 1, :heat, heat ]
+#p [ 2, :heak, heak ]
 
       head = heak.new(@execution, node, message)
       head.heat = heat if head.respond_to?(:heat=)
