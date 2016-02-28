@@ -1,4 +1,3 @@
-
 #--
 # Copyright (c) 2015-2016, John Mettraux, jmettraux+flon@gmail.com
 #
@@ -32,19 +31,9 @@ class Flor::Pro::Define < Flor::Procedure
 
     tr = tree
 
-#    sig = [ tr[0], tr[1] ]
-#    t = [ 'sequence', { 'vars' => {} }, tr[2], Flor.dup(tr[3]) ]
-#    if tl = tr[4]; t << tl; end
-#
-#    vnid = lookup_var_node('l', @node)['nid']
-#
-#    val = {
-#      'signature' => sig,
-#      'tree' => t,
-#      'exid' => exid,
-#      'vnid' => vnid }
-
     vnid = lookup_var_node('l', @node)['nid']
+p nid
+p vnid
 
     v = { 'nid' => nid, 'vnid' => vnid }
     as = { 't' => 'function', 'v' => v }
