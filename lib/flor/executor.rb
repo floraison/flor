@@ -95,7 +95,7 @@ module Flor
       tree = n.lookup_tree(node['nid'])
       tree = node['tree'] = message['tree'] unless tree
 
-      heat = n.expand(tree[0])
+      heat = n.deref(tree[0])
 
       return error_reply(
         node, message, "don't know how to apply #{Flor.de_val(tree[0]).inspect}"

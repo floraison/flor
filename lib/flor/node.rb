@@ -84,7 +84,7 @@ class Flor::Node
     end
   end
 
-  def expand(o)
+  def deref(o)
 
     if o.is_a?(String)
       lookup(o)
