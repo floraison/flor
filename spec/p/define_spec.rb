@@ -35,7 +35,7 @@ describe 'Flor procedures' do
         r['payload']['ret']
       ).to eqd(
         %{
-          [ val, { t: function, v: { nid: "0", vnid: "0", fun: 0 } }, 2, [] ]
+          [ val, { t: function, v: { nid: "0", cnid: "0", fun: 0 } }, 2, [] ]
         }
       )
     end
@@ -61,7 +61,7 @@ describe 'Flor procedures' do
         r['payload']['ret']
       ).to eqd(
         %{
-          [ val, { t: function, v: { nid: "0", vnid: "0", fun: 0 } }, 2, [] ]
+          [ val, { t: function, v: { nid: "0", cnid: "0", fun: 0 } }, 2, [] ]
         }
       )
     end
