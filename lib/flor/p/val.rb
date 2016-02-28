@@ -27,15 +27,12 @@ class Flor::Pro::Val < Flor::Procedure
 
   name 'val'
 
-  def heat=(t)
-
-    @heat = Flor.is_procedure_val?(t) ? nil : t
-  end
+  def heat=(t); @heat = t; end
 
   def execute
 
-    v = @heat || attribute('_0') || attribute('v')
-    v = Flor.de_val(v)
+    v = attribute('_0') || attribute('v') || @heat
+    v = Flor.de_val(v) unless Flor.is_procedure_val?(v)
 
     payload['ret'] = v
 

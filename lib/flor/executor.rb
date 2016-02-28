@@ -102,13 +102,18 @@ module Flor
       ) if heat == nil
 
       heak =
-        if heat[1]['t'] == 'procedure'
+        if tree[1].empty? && tree[3].empty?
+          Flor::Pro::Val
+        elsif heat[1]['t'] == 'procedure'
           Flor::Executor.procedures[heat[1]['v']]
         elsif heat[1]['t'] == 'function'
           Flor::Pro::Apply
         else
           Flor::Pro::Val
         end
+p [ 0, :tree, tree ]
+p [ 1, :heat, heat ]
+p [ 2, :heak, heak ]
 
       head = heak.new(@execution, node, message)
       head.heat = heat if head.respond_to?(:heat=)
