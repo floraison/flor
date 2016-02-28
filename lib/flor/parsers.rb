@@ -236,7 +236,8 @@ module Flor
             if vt.name == :symbol
               vt.string
             elsif vt.name == :dqstring || vt.name == :sqstring
-              vt.string[1..-2]
+              #vt.string[1..-2]
+              Flor::Radial.rewrite(vt)
             elsif vt.name == :rad_p
               Flor::Radial.rewrite(vt)
             else
@@ -251,19 +252,20 @@ module Flor
             k = kt ? Flor::Radial.rewrite(kt.c0) : "_#{i}"
             v = Flor::Radial.rewrite(vt.c0)
 
-            if (
-              nam == 'val' &&
-              Flor.is_tree?(v) && v[0] == 'val' &&
-              (atts['t'] == nil || v[1]['t'] == atts['t'])
-            )
-              atts['t'] = v[1]['t'] if atts['t']
-              v = v[1]['v']
-            end
+            #if (
+            #  nam == 'val' &&
+            #  Flor.is_tree?(v) && v[0] == 'val' &&
+            #  (atts['t'] == nil || v[1]['t'] == atts['t'])
+            #)
+            #  atts['t'] = v[1]['t'] if atts['t']
+            #  v = v[1]['v']
+            #end
 
             atts[k] = v
           end
 
-          @a = (nam.is_a?(Array) && atts.empty?) ? nam : [ nam, atts, lin ]
+          #@a = (nam.is_a?(Array) && atts.empty?) ? nam : [ nam, atts, lin ]
+          @a = [ nam, atts, lin ]
 
         else
 

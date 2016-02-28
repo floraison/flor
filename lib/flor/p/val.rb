@@ -27,22 +27,13 @@ class Flor::Pro::Val < Flor::Procedure
 
   name 'val'
 
-  #def heat=(t); @heat = t; end
+  def heat=(t); @heat = t; end
 
   def execute
 
-    #payload['ret'] = @heat || attribute('v') || attribute('_0')
-    payload['ret'] = attribute('v') || attribute('_0')
+    payload['ret'] = Flor.de_val(@heat || attribute('v') || attribute('_0'))
 
     reply
   end
-
-#  protected
-#
-#  def wrap(a)
-#
-#    return a unless a.is_a?(Class)
-#    [ 'val', { 't' => 'procedure', 'v' => { 'n' => tree[0] } }, *tree[2..-1] ]
-#  end
 end
 

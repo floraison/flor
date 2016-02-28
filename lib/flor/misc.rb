@@ -50,11 +50,51 @@ module Flor
   def self.is_tree?(o)
 
     o.is_a?(Array) &&
+    (o[0].is_a?(String) || is_tree?(o[0])) &&
     o[1].is_a?(Hash) &&
     o[2].is_a?(Fixnum) &&
     o[3].is_a?(Array) &&
-    (o[0].is_a?(String) || is_tree?(o[0])) &&
     o[3].all? { |e| is_tree?(e) } # overkill?
+  end
+
+  def self.is_val?(o)
+
+    o.is_a?(Array) &&
+    o[0] == 'val' &&
+    o[1].is_a?(Hash) &&
+    o[2].is_a?(Fixnum) &&
+    o[3] == []
+  end
+
+  def self.is_string_val?(o)
+
+    o.is_a?(Array) &&
+    o[0] == 'val' &&
+    o[1].is_a?(Hash) &&
+    %w[ sqstring dqstring ].include?(o[1]['t']) &&
+    o[1]['v'].is_a?(String) &&
+    o[2].is_a?(Fixnum) &&
+    o[3] == []
+  end
+
+  def self.to_r(val)
+
+    return val unless is_val?(val)
+
+    if val[1]['t'] == 'rxstring'
+      Kernel.eval(val[1]['v']) # FIXME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    else
+      val[1]['v']
+    end
+  end
+
+  def self.de_val(o)
+
+    if is_val?(o)
+      o[1]['v']
+    else
+      o
+    end
   end
 end
 

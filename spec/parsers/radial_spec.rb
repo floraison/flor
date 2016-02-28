@@ -223,11 +223,11 @@ describe Flor::Radial do
           "  'cinq'\n" +
           "  \"six\"\n",
           [ 'sequence', {}, 1, [
-            [ 'val', { 'v' => 3 }, 2, [] ],
-            [ 'val', { 'v' => nil }, 3, [] ],
+            [ [ 'val', { 'v' => 3 }, 2, [] ], {}, 2, [] ],
+            [ [ 'val', { 'v' => nil }, 3, [] ], {}, 3, [] ],
             [ 'quatre', {}, 4, [] ],
-            [ 'cinq', {}, 5, [] ],
-            [ 'six', {}, 6, [] ]
+            [ [ 'val', { 't' => 'sqstring', 'v' => 'cinq' }, 5, [] ], {}, 5, [] ],
+            [ [ 'val', { 't' => 'dqstring', 'v' => 'six' }, 6, [] ], {}, 6, [] ]
           ] ],
           __LINE__ ],
 
@@ -251,21 +251,21 @@ describe Flor::Radial do
       [
         [
           %{
-            symbol
+            sym
           },
-          [ 'symbol', {}, 2, [] ],
+          [ 'sym', {}, 2, [] ],
           __LINE__ ],
         [
           %{
-            'single'
+            'sin'
           },
-          [ 'single', {}, 2, [] ],
+          [ [ 'val', { 't' => 'sqstring', 'v' => 'sin' }, 2, [] ], {}, 2, [] ],
           __LINE__ ],
         [
           %{
-            "double"
+            "dou"
           },
-          [ 'double', {}, 2, [] ],
+          [ [ 'val', { 't' => 'dqstring', 'v' => 'dou' }, 2, [] ], {}, 2, [] ],
           __LINE__ ]
 
       ].each do |radial, tree, line|

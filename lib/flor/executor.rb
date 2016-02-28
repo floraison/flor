@@ -98,7 +98,7 @@ module Flor
       heat = n.expand(tree[0])
 
       return error_reply(
-        node, message, "don't know how to apply #{tree[0].inspect}"
+        node, message, "don't know how to apply #{Flor.de_val(tree[0]).inspect}"
       ) if heat == nil
 
       heak =
@@ -114,31 +114,6 @@ module Flor
       head.heat = heat if head.respond_to?(:heat=)
 
       head.send(message['point'])
-
-#      hval = n.lookup(tree[0])
-#
-#      return error_reply(
-#        node, message, "don't know how to apply #{tree[0].inspect}"
-#      ) if hval == nil
-#
-#      hkla =
-#        if tree[1].empty? && tree[3].empty?
-#          Flor::Pro::Val
-#        elsif hval.is_a?(Class)
-#          hval
-#        elsif Flor.is_tree?(hval)
-#          Flor::Pro::Apply
-#        else
-#          Flor::Pro::Val
-#        end
-#
-#      head = hkla.new(@execution, node, message)
-#
-#      head.applied = hval \
-#        if head.respond_to?(:applied=) && hval != Flor::Pro::Val
-#          # save a lookup for Apply or Val...
-#
-#      head.send(message['point'])
     end
 
 #    def expand(o, expander)

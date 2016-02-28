@@ -183,5 +183,18 @@ describe Flor do
       expect(Flor.master_nid('0_5')).to eq('0_5')
     end
   end
+
+  describe '.is_tree?' do
+
+    it 'returns true when passed a tree' do
+
+      fail
+    end
+
+    it 'returns false when passed something other than a tree' do
+
+      fail
+    end
+  end
 end
 

@@ -86,20 +86,15 @@ class Flor::Node
 
   def expand(o)
 
-    p [ :o, o ]
-    p [ :looked_up, lookup(o) ]
-
-    lookup(o)
+p [ :o, o ]
+    if o.is_a?(String)
+      lookup(o)
+    elsif Flor.is_string_val?(o)
+      lookup(o[1]['v'])
+    else
+      o
+    end
   end
-
-#  def resolve(arg)
-#
-#    a = arg
-#    a = Expander.new(self).expand(a) if a.is_a?(String) && a.index('$')
-#    a = a[1]['v']['n'] if Flor.is_tree?(a) && a[1]['t'] == 'procedure'
-#
-#    a.is_a?(String) ? lookup(a) : a
-#  end
 
   protected
 
