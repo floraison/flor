@@ -303,11 +303,9 @@ module Flor
 
   def self.de_val(o)
 
-    if is_val?(o)
-      o[1]['v']
-    else
-      o
-    end
+    return o unless is_val?(o)
+    return o if o[1]['t'] == 'function'
+    o[1]['v']
   end
 end
 
