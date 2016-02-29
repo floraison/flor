@@ -131,7 +131,7 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('failed')
       expect(r['from']).to eq('0_0')
-      expect(r['error']['msg']).to eq("couldn't set var lv.h.i.j")
+      expect(r['error']['msg']).to eq("couldn't set var v.h.i.j")
       expect(r['payload']).to eq({ 'ret' => 9 })
     end
   end

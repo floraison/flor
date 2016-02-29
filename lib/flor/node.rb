@@ -157,10 +157,9 @@ class Flor::Node
       # spare that
 
     ca = (m[2] || 'v')[0, 1]
-    mo = m[1]; mo = 'l' if ca == 'v' && (mo == nil || mo == '')
+    mo = m[1]; mo = 'n' if ca == 'v' && (mo == nil || mo == '')
     ke = m[3]
 
-    #p [ key, '-->', ca, mo, ke ]
     [ ca, mo, ke ]
   end
 end

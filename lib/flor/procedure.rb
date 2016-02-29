@@ -79,7 +79,8 @@ class Flor::Procedure < Flor::Node
 
 #p [ node['nid'], node['cnid'] ]
     vars = node['vars']
-    return node if mode == 'l' && vars
+    #return node if mode == 'l' && vars
+    return node if 'ln'.index(mode) && vars
 
     par = parent_node(node)
     return node if vars && par == nil && mode == 'g'
@@ -99,7 +100,7 @@ class Flor::Procedure < Flor::Node
       return v if b
     end
 
-    fail IndexError.new("couldn't set var #{mode}v.#{k}")
+    fail IndexError.new("couldn't set var #{mode == 'n' ? '' : 'l'}v.#{k}")
   end
 
   def set_field(k, v)
