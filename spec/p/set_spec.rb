@@ -135,5 +135,39 @@ describe 'Flor procedures' do
       expect(r['payload']).to eq({ 'ret' => 9 })
     end
   end
+
+  describe 'set a' do
+
+    it 'sets locally if there is no a in the lookup chain' do
+
+      rad = %{
+        sequence
+          sequence vars: {}
+            set a
+              1
+            push f.l
+              a
+          push f.l
+            a
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('failed')
+      expect(r['payload']['l']).to eq([ 1 ])
+      expect(r['error']['msg']).to eq("don't know how to apply \"a\"")
+    end
+
+    it 'overwrites an already set a'
+  end
+
+  describe 'set v.a' do
+    it 'sets locally if there is no a in the lookup chain'
+    it 'overwrites an already set a'
+  end
+
+  describe 'set l.a' do
+    it 'always sets locally'
+  end
 end
 
