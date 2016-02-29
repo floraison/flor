@@ -38,7 +38,7 @@ class Flor::Pro::Apply < Flor::Procedure
     applied = @heat || lookup(args.delete('_0'))
 
     ni = applied[1]['v']['nid']
-    #vni = applied[1]['v']['vnid'] # closure...
+    cni = applied[1]['v']['cnid'] # closure...
 
     tree = lookup_tree_anyway(ni)
     sig = tree[1]
@@ -55,7 +55,8 @@ class Flor::Pro::Apply < Flor::Procedure
       'point' => 'execute',
       'nid' => "#{ni}-#{counter_next('sub')}",
       'tree' => [ 'sequence', {}, *tree[2..4] ],
-      'vars' => vars)
+      'vars' => vars,
+      'cnid' => cni)
   end
 
   def receive

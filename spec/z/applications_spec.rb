@@ -134,6 +134,11 @@ describe 'Flor a-to-z' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(10)
+
+#pp @executor.execution['nodes']
+      nodes = @executor.execution['nodes']
+
+      expect(nodes.keys).to eq(%w[ 0 0_0-1 ])
     end
   end
 end

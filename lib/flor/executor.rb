@@ -82,6 +82,9 @@ module Flor
       if vs = message['tree'][1]['vars']
         node['vars'] = (node['vars'] || {}).merge(vs) if vs.is_a?(Hash)
       end
+      if cnid = message['cnid']
+        node['cnid'] = cnid
+      end
 
       @execution['nodes'][nid] = node
 
@@ -157,13 +160,17 @@ module Flor
 
       from = message['from']
 
-      fnode = @execution['nodes'].delete(from) || {}
-        # TODO eventually: don't remove if it's a closure
+#p [ :delete, from ]
+      fnode = @execution['nodes'][from]
+      if fnode
+        fnode['deleted'] = true
+        @execution['nodes'].delete(from) if (fnode['closures'] || []).empty?
+      end
 
       nid = message['nid']
 
       return [
-        message.merge('point' => 'terminated', 'vars' => fnode['vars'])
+        message.merge('point' => 'terminated', 'vars' => (fnode || {})['vars'])
       ] if nid == nil
 
       node = @execution['nodes'][nid]

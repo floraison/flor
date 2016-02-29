@@ -33,11 +33,10 @@ class Flor::Pro::Define < Flor::Procedure
 
     cnode = lookup_var_node('l', @node)
     cnid = cnode['nid']
-#p nid
-#p cnode
-#p cnid
+    fun = counter_next('fun')
+    (cnode['closures'] ||= []) << fun
 
-    v = { 'nid' => nid, 'cnid' => cnid, 'fun' => counter_next('fun') }
+    v = { 'nid' => nid, 'cnid' => cnid, 'fun' => fun }
     as = { 't' => 'function', 'v' => v }
     val = [ 'val', as, tr[2], [], *tr[4] ]
 
