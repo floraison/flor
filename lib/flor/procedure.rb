@@ -77,6 +77,7 @@ class Flor::Procedure < Flor::Node
 
   def lookup_var_node(mode, node)
 
+#p [ node['nid'], node['cnid'] ]
     vars = node['vars']
     return node if mode == 'l' && vars
 
