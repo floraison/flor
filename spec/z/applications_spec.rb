@@ -116,7 +116,7 @@ describe 'Flor a-to-z' do
 
   describe 'a closure' do
 
-    it 'works' do
+    it 'works (read)' do
 
       rad = %{
         sequence
@@ -138,6 +138,29 @@ describe 'Flor a-to-z' do
       nodes = @executor.execution['nodes']
 
       expect(nodes.keys).to eq(%w[ 0 0_0-1 ])
+    end
+
+    it 'works (write)' do
+
+      # SICP p. 222
+
+      rad = %{
+        sequence
+          define make-withdraw bal
+            def amt
+              set bal
+                -
+                  bal
+                  amt
+          set w0
+            make-withdraw 100
+          w0 77
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(33)
     end
   end
 end
