@@ -158,16 +158,117 @@ describe 'Flor procedures' do
       expect(r['error']['msg']).to eq("don't know how to apply \"a\"")
     end
 
-    it 'overwrites an already set a'
+    it 'overwrites an already set a (locally)' do
+
+      rad = %{
+        sequence
+          set a
+            0
+          set a
+            1
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['a']).to eq(1)
+    end
+
+    it 'overwrites an already set a (above)' do
+
+      rad = %{
+        sequence
+          set a
+            0
+          sequence vars: {}
+            set a
+              1
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['a']).to eq(1)
+    end
   end
 
   describe 'set v.a' do
-    it 'sets locally if there is no a in the lookup chain'
-    it 'overwrites an already set a'
+
+    it 'sets locally if there is no a in the lookup chain' do
+
+      rad = %{
+        sequence
+          sequence vars: {}
+            set v.a
+              1
+            push f.l
+              a
+          push f.l
+            a
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('failed')
+      expect(r['payload']['l']).to eq([ 1 ])
+      expect(r['error']['msg']).to eq("don't know how to apply \"a\"")
+    end
+
+    it 'overwrites an already set a (locally)' do
+
+      rad = %{
+        sequence
+          set v.a
+            0
+          set v.a
+            1
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['a']).to eq(1)
+    end
+
+    it 'overwrites an already set a (above)' do
+
+      rad = %{
+        sequence
+          set v.a
+            0
+          sequence vars: {}
+            set v.a
+              1
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['a']).to eq(1)
+    end
   end
 
-  describe 'set l.a' do
-    it 'always sets locally'
+  describe 'set lv.a' do
+
+    it 'always sets locally' do
+
+      rad = %{
+        sequence
+          set lv.a
+            0
+          set b
+            10
+          set lv.a
+            1
+          set lv.b
+            11
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']).to eq({ 'a' => 1, 'b' => 11 })
+    end
   end
 end
 
