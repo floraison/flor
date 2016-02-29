@@ -40,7 +40,7 @@ class Flor::Pro::Define < Flor::Procedure
     as = { 't' => 'function', 'v' => v }
     val = [ 'val', as, tr[2], [], *tr[4] ]
 
-    set_var('n', tr[1]['_0'].to_s, val) if tr[0] == 'define' && tr[1]['_0']
+    set_var('', tr[1]['_0'].to_s, val) if tr[0] == 'define' && tr[1]['_0']
     payload['ret'] = val
 
     reply

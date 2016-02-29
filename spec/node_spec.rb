@@ -20,8 +20,8 @@ describe Flor::Node do
 
       n = Flor::Node.new(nil, nil, nil)
 
-      expect(n.key_split('a')).to eq(%w[ v n a ])
-      expect(n.key_split('v.a')).to eq(%w[ v n a ])
+      expect(n.key_split('a')).to eq([ 'v', '', 'a' ])
+      expect(n.key_split('v.a')).to eq([ 'v', '', 'a' ])
     end
 
     it 'splits keys for local variables' do
@@ -37,7 +37,7 @@ describe Flor::Node do
 
       expect(n.key_split('gv.a')).to eq(%w[ v g a ])
 
-      expect(n.key_split('g.a')).to eq(%w[ v n g.a ])
+      expect(n.key_split('g.a')).to eq([ 'v', '', 'g.a' ])
     end
 
     it 'splits keys for domain variables' do
@@ -46,7 +46,7 @@ describe Flor::Node do
 
       expect(n.key_split('dv.a')).to eq(%w[ v d a ])
 
-      expect(n.key_split('d.a')).to eq(%w[ v n d.a ])
+      expect(n.key_split('d.a')).to eq([ 'v', '', 'd.a' ])
     end
 
     it 'splits keys for wars' do
