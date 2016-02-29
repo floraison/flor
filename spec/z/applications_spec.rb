@@ -154,13 +154,18 @@ describe 'Flor a-to-z' do
                   amt
           set w0
             make-withdraw 100
-          w0 77
+          push f.l
+            w0 77
+          push f.l
+            w0 13
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(rad, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(33)
+      expect(r['payload']['l']).to eq([ 23, 10 ])
+
+      #pp @executor.execution['nodes'].values
     end
   end
 end
