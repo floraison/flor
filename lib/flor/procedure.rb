@@ -75,15 +75,20 @@ class Flor::Procedure < Flor::Node
     reply('point' => 'failed', 'error' => Flor.to_error(o))
   end
 
-  def lookup_var_node(mode, node)
+  def lookup_var_node(node, mode, k)
 
-#p [ node['nid'], node['cnid'] ]
     vars = node['vars']
-    return node if (mode == '' || mode == 'l') && vars
+#p [ mode, k, node['nid'], vars ]
+
+    if vars
+      return node if mode == 'l'
+      return node if mode == '' && Flor.deep_has_key?(vars, k)
+    end
 
     par = parent_node(node)
+
     return node if vars && par == nil && mode == 'g'
-    return lookup_var_node(mode, par) if par
+    return lookup_var_node(par, mode, k) if par
 
     nil
   end
@@ -92,7 +97,11 @@ class Flor::Procedure < Flor::Node
 
     fail IndexError.new("cannot set domain variables") if mode == 'd'
 
-    if node = lookup_var_node(mode, @node)
+#p [ :set_var, mode, k, v ]
+    node = lookup_var_node(@node, mode, k)
+    node = lookup_var_node(@node, 'l', k) if node.nil? && mode == ''
+
+    if node
 
       b, v = Flor.deep_set(node['vars'], k, v)
 

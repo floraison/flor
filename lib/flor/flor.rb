@@ -91,6 +91,11 @@ module Flor
     [ true, v ]
   end
 
+  def self.deep_has_key?(o, k)
+
+    false # TODO
+  end
+
 
   #
   # djan
