@@ -25,8 +25,7 @@
 
 class Flor::Pro::Arith < Flor::Procedure
 
-  #names %w[ + - * ]
-  names '+', '-', '*'
+  names %w[ + - * ]
 
   def execute
 

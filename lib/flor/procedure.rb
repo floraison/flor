@@ -27,7 +27,7 @@ class Flor::Procedure < Flor::Node
 
   def self.names(*names)
 
-    names.each { |n| Flor::Executor.procedures[n] = self }
+    names.flatten.each { |n| Flor::Executor.procedures[n] = self }
   end
 
   class << self; alias :name :names; end
