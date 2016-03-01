@@ -100,19 +100,14 @@ module Flor
 
       kk = ks.shift
 
-      if ks.empty?
-        return val.has_key?(kk) if val.is_a?(Hash)
-        return false unless val.is_a?(Array)
-        i = to_index(kk)
-        return false unless i
-        return i < 0 ? -i < val.length : i < val.length
-      end
-
       case val
         when Array
           i = to_index(kk)
+          return false unless i
+          return (i < 0 ? -i < val.length : i < val.length) if ks.empty?
           val = val[i]
         when Hash
+          return val.has_key?(kk) if ks.empty?
           val = val[kk]
         else
           return false
