@@ -132,23 +132,6 @@ class Flor::Procedure < Flor::Node
     end
   end
 
-  def get_field(k)
-
-    Flor.deep_get(payload, k)[1]
-  end
-
-  def get_value(k)
-
-    cat, mod, key = key_split(k)
-
-    case cat[0, 1]
-      when 'f' then get_field(key)
-      when 'v' then get_var(mod, key)
-      #when 'w' then get_war(mod, key)
-      else fail IndexError.new("don't know how to get #{k.inspect}")
-    end
-  end
-
   def counter_next(key)
 
     @execution['counters'][key.to_s] += 1

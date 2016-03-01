@@ -37,7 +37,8 @@ class Flor::Pro::Push < Flor::Procedure
     ms = sequence_receive
     return ms if ms.first['point'] == 'execute'
 
-    get_value(attributes['_0']) << payload['ret']
+    lookup(attributes['_0']) << payload['ret']
+      # TODO uniformize "push" and "set" on about _0
 
     reply
   end
