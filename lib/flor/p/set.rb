@@ -47,7 +47,12 @@ class Flor::Pro::Set < Flor::Procedure
     #else
     #  set_value(uks.first, val)
     #end
+
     set_value(attributes['_0'], payload['ret'])
+#p [ :set_value, attributes['_0'], payload['ret'] ]
+#@execution['nodes'].values.each do |n|
+#  p [ n['nid'], n['vars'] ]
+#end
 
     reply
   end
