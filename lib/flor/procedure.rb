@@ -75,10 +75,9 @@ class Flor::Procedure < Flor::Node
     reply('point' => 'failed', 'error' => Flor.to_error(o))
   end
 
-  def lookup_var_node(node, mode, k)
+  def lookup_var_node(node, mode, k=nil)
 
     vars = node['vars']
-#p [ mode, k, node['nid'], vars ]
 
     if vars
       return node if mode == 'l'
@@ -97,7 +96,6 @@ class Flor::Procedure < Flor::Node
 
     fail IndexError.new("cannot set domain variables") if mode == 'd'
 
-#p [ :set_var, mode, k, v ]
     node = lookup_var_node(@node, mode, k)
     node = lookup_var_node(@node, 'l', k) if node.nil? && mode == ''
 

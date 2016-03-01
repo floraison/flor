@@ -31,7 +31,7 @@ class Flor::Pro::Define < Flor::Procedure
 
     tr = tree
 
-    cnode = lookup_var_node('l', @node)
+    cnode = lookup_var_node(@node, 'l')
     cnid = cnode['nid']
     fun = counter_next('fun')
     (cnode['closures'] ||= []) << fun
