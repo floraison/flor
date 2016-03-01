@@ -95,5 +95,30 @@ describe Flor do
       expect(r).to eq([ false, 1 ])
     end
   end
+
+  describe '.deep_has_key?' do
+
+#@cars = {
+#  'alpha' => { 'id' => 'FR1' },
+#  'bentley' => %w[ blower spur markv ]
+#}
+#@ranking = %w[ Anh Bob Charly ]
+    it 'works' do
+
+      expect(Flor.deep_has_key?(@cars, 'nada')).to eq(false)
+      expect(Flor.deep_has_key?(@cars, 'alpha.nada')).to eq(false)
+      expect(Flor.deep_has_key?(@cars, 'bentley.nada')).to eq(false)
+      expect(Flor.deep_has_key?(@cars, 'bentley.3')).to eq(false)
+      expect(Flor.deep_has_key?(@cars, 'bentley.-4')).to eq(false)
+
+      expect(Flor.deep_has_key?(@cars, 'alpha')).to eq(true)
+      expect(Flor.deep_has_key?(@cars, 'alpha.id')).to eq(true)
+      expect(Flor.deep_has_key?(@cars, 'bentley')).to eq(true)
+      expect(Flor.deep_has_key?(@cars, 'bentley.0')).to eq(true)
+      expect(Flor.deep_has_key?(@cars, 'bentley.-1')).to eq(true)
+      expect(Flor.deep_has_key?(@cars, 'bentley.first')).to eq(true)
+      expect(Flor.deep_has_key?(@cars, 'bentley.last')).to eq(true)
+    end
+  end
 end
 
