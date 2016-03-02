@@ -67,5 +67,7 @@ class Flor::Pro::Cmp < Flor::Procedure
 
   alias string_eq generic_eq
   alias fixnum_eq generic_eq
+  alias trueclass_eq generic_eq
+  alias falseclass_eq generic_eq
 end
 

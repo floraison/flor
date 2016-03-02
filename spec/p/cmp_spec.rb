@@ -58,6 +58,31 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(false)
       expect(r['payload']['l']).to eq([ true, false ])
     end
+
+    it 'compares booleans' do
+
+      rad = %{
+        sequence
+          push f.l
+            =
+              true
+              true
+          push f.l
+            =
+              false
+              false
+          push f.l
+            =
+              true
+              false
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(false)
+      expect(r['payload']['l']).to eq([ true, true, false ])
+    end
   end
 end
 
