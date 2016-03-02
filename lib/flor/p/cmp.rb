@@ -59,12 +59,13 @@ class Flor::Pro::Cmp < Flor::Procedure
 
   protected
 
-  def string_eq(rets)
+  def generic_eq(rets)
 
-    first = rets[0]
-    rets[1..-1].each { |e| return false if e != first }
-
+    rets.inject(rets[0]) { |e0, e| return false if e != e0; e0 }
     true
   end
+
+  alias string_eq generic_eq
+  alias fixnum_eq generic_eq
 end
 
