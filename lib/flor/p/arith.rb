@@ -39,10 +39,9 @@ class Flor::Pro::Arith < Flor::Procedure
     ms = sequence_receive
 
     m = ms.size == 1 && ms.first
-    #
-    if m['point'] == 'receive' && m['nid'] == parent
-      payload['ret'] = @node['rets'].reduce(&tree.first.to_sym) || 0
-    end
+
+    payload['ret'] = @node['rets'].reduce(&tree.first.to_sym) || 0 \
+      if m['point'] == 'receive' && m['nid'] == parent
 
     ms
   end

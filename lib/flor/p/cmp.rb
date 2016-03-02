@@ -41,18 +41,16 @@ class Flor::Pro::Cmp < Flor::Procedure
     ms = sequence_receive
 
     m = ms.size == 1 && ms.first
-    #
-    if m['point'] == 'receive' && m['nid'] == parent
+    return ms unless  m['point'] == 'receive' && m['nid'] == parent
 
-      payload['ret'] =
-        if @node['rets'].empty?
-          true
-        else
-          send(
-            "#{@node['rets'].first.class.to_s.downcase}_#{FULL_NAMES[tree[0]]}",
-            @node['rets'])
-        end
-    end
+    payload['ret'] =
+      if @node['rets'].empty?
+        true
+      else
+        send(
+          "#{@node['rets'].first.class.to_s.downcase}_#{FULL_NAMES[tree[0]]}",
+          @node['rets'])
+      end
 
     ms
   end
