@@ -83,6 +83,27 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(false)
       expect(r['payload']['l']).to eq([ true, true, false ])
     end
+
+    it 'compares nulls' do
+
+      rad = %{
+        sequence
+          push f.l
+            =
+              null
+              null
+          push f.l
+            =
+              null
+              false
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(false)
+      expect(r['payload']['l']).to eq([ true, false ])
+    end
   end
 end
 
