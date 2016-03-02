@@ -65,6 +65,17 @@ class Flor::Pro::Cmp < Flor::Procedure
     true
   end
 
+  def f_to_s(n)
+
+    n.to_f.to_s
+  end
+
+  def float_eq(rets)
+
+    rets.inject(f_to_s(rets[0])) { |e0, e| return false if f_to_s(e) != e0; e0 }
+    true
+  end
+
   alias hash_eq generic_eq
   alias array_eq generic_eq
   alias string_eq generic_eq
