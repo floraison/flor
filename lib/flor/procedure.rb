@@ -84,6 +84,10 @@ class Flor::Procedure < Flor::Node
       return node if mode == '' && Flor.deep_has_key?(vars, k)
     end
 
+    if cnode = mode == '' && @execution['nodes'][node['cnid']]
+      return cnode if Flor.deep_has_key?(cnode['vars'], k)
+    end
+
     par = parent_node(node)
 
     return node if vars && par == nil && mode == 'g'
