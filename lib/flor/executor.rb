@@ -47,7 +47,10 @@ module Flor
 
     def make_launch_msg(tree, opts)
 
-      t = tree.is_a?(String) ? Flor::Radial.parse(tree, opts[:fname], opts) : t
+      t =
+        tree.is_a?(String) ?
+        Flor::Radial.parse(tree, opts[:fname], opts) :
+        tree
 
       unless t
         #h = opts.merge(prune: false, rewrite: false)
@@ -93,7 +96,7 @@ module Flor
 
     def rewrite(tree)
 
-      tree
+      Flor::Rewriter.rewrite(tree)
     end
 
     def apply(node, message)

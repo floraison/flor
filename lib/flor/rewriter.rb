@@ -1,4 +1,3 @@
-
 #--
 # Copyright (c) 2015-2016, John Mettraux, jmettraux+flon@gmail.com
 #
@@ -23,29 +22,57 @@
 # Made in Japan.
 #++
 
-require 'json'
 
-require 'munemo'
+class Flor::Rewriter < Flor::TransientExecutor
 
-
-module Flor
-
-  VERSION = '0.4.0'
-end
-
-require 'flor/flor'
-require 'flor/dollar'
-require 'flor/parsers'
-require 'flor/node'
-require 'flor/procedure'
-require 'flor/executor'
-require 'flor/rewriter'
-
-
+#def rewrite_parens(node, message, tree)
 #
-# load callables
+#  return tree unless tree[1].values.find { |c| is_tree?(c) }
+#
+#  ln = tree[2]
+#  catts = {}
+#  core = [ tree[0], catts, ln, tree[3] ]
+#  schildren = []
+#
+#  j = 0
+#  tree[1].each do |k, v|
+#    if is_tree?(v)
+#      schildren << [ 'set', { '_0' => "w._#{j}" }, ln, [ v ] ]
+#      catts[k] = "$(w._#{j})"
+#      j = j + 1
+#    else
+#      catts[k] = v
+#    end
+#  end
+#
+#  schildren << core
+#
+#  [ 'sequence', {}, ln, schildren, *tree[4] ]
+#end
+  TREE =
+    Flor::Radial.parse(%{
+      sequence
 
-Dir[File.join(File.dirname(__FILE__), 'flor/p/*.rb')].each do |path|
-  require path
+        define rewrite_parens tree
+          # return unless there is a tree among the attributes
+          1
+
+        rewrite_parens t
+    }, __FILE__)
+
+  def self.rewrite(tree)
+
+#    r = self.new({}).launch(TREE, vars: { 't' => tree })
+#pp r unless r['point'] == 'failed'
+
+    tree
+  end
+
+  protected
+
+  def rewrite(tree)
+
+    tree
+  end
 end
 
