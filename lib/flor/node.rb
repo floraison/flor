@@ -50,7 +50,7 @@ class Flor::Node
     tree = lookup_tree(node['parent'])
     return nil unless tree
 
-    tree.last[Flor.child_id(nid)]
+    tree[3][Flor.child_id(nid)]
   end
 
   def lookup_tree_anyway(nid)
@@ -60,7 +60,7 @@ class Flor::Node
 
     tree = lookup_tree_anyway(Flor.parent_id(nid))
 
-    tree.last[Flor.child_id(nid)]
+    tree[3][Flor.child_id(nid)]
   end
 
   def lookup(name)
