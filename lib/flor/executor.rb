@@ -91,12 +91,19 @@ module Flor
       apply(node, message)
     end
 
+    def rewrite(tree)
+
+      tree
+    end
+
     def apply(node, message)
 
       n = Flor::Node.new(@execution, node, message)
 
-      tree = n.lookup_tree(node['nid'])
-      tree = node['tree'] = message['tree'] unless tree
+      tree0 = n.lookup_tree(node['nid'])
+      tree0 = node['tree'] = message['tree'] unless tree0
+
+      tree = rewrite(tree0)
 
       heat = n.deref(tree[0])
 
