@@ -15,7 +15,7 @@ describe 'Flor instructions' do
     @executor = Flor::TransientExecutor.new
   end
 
-  describe 'sequence' do
+  describe 'val' do
 
     it 'works with integers' do
 
