@@ -43,7 +43,7 @@ class Flor::Procedure < Flor::Node
   def sequence_receive
 
     i = @message['point'] == 'execute' ? 0 : Flor.next_child_id(from)
-    t = tree.last[i]
+    t = tree[3][i]
 
     if i > 0 && rets = @node['rets']
       rets << Flor.dup(payload['ret'])
