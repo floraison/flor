@@ -29,7 +29,7 @@ class Flor::Pro::Push < Flor::Procedure
 
   def execute
 
-    sequence_receive
+    receive
   end
 
   def receive
@@ -37,8 +37,13 @@ class Flor::Pro::Push < Flor::Procedure
     ms = sequence_receive
     return ms if ms.first['point'] == 'execute'
 
-    lookup(attributes['_0']) << payload['ret']
-      # TODO uniformize "push" and "set" on about _0
+    payload['ret'] = attributes['_1'] \
+      if attributes.has_key?('_1') && tree[3].empty?
+        # TODO expand _1?
+
+    lookup(attributes['_0']) << payload['ret'] \
+      if attributes.has_key?('_1') || tree[3].any?
+        # TODO uniformize "push" and "set" on about _0
 
     reply
   end
