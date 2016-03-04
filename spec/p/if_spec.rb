@@ -149,6 +149,33 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(5)
       expect(r['payload']['l']).to eq([ 0, 1, 2, 5 ])
     end
+
+    it 'plays nicely with "then" and "else"' do
+
+      rad = %{
+        sequence
+          unless
+            false
+          then
+            push f.l 0
+          else
+            push f.l 1
+          push f.l 2
+          unless
+            true
+          then
+            push f.l 3
+          else
+            push f.l 4
+          push f.l 5
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(5)
+      expect(r['payload']['l']).to eq([ 0, 2, 4, 5 ])
+    end
   end
 end
 
