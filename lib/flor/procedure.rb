@@ -34,11 +34,11 @@ class Flor::Procedure < Flor::Node
 
   protected
 
-  def attribute(key)
-
-    attributes[key]
-    #resolve(attributes[key])
-  end
+#  def attribute(key)
+#
+#    attributes[key]
+#    #resolve(attributes[key])
+#  end
 
   def sequence_receive
 

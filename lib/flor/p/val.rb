@@ -31,7 +31,7 @@ class Flor::Pro::Val < Flor::Procedure
 
   def execute
 
-    v = attribute('_0') || attribute('v') || @heat
+    v = attributes['_0'] || attributes['v'] || @heat
     v = Flor.de_val(v) unless Flor.is_procedure_val?(v)
     v = expand(v)
 
