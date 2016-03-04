@@ -136,6 +136,11 @@ module Flor
     end
   end
 
+  def self.s_to_d(x, opts={})
+
+    x.is_a?(String) ? x : to_djan(x, opts)
+  end
+
   class << self
 
     alias to_d to_djan

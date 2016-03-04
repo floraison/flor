@@ -198,7 +198,7 @@ module Flor
       fr = m['from'] ? " from #{m['from']}" : ''
 
       t = m['tree'];
-      t0 = t ? " [#{_yl}#{t[0]}#{_dg}" : ''
+      t0 = t ? " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg}" : ''
       #t = t ? " #{t[1..-2].inspect[1..-2]}]" : ''
       t = t ? " #{Flor.to_d(t[1])} #{t[2]}]" : ''
 
@@ -213,7 +213,7 @@ module Flor
         $stdout.tty? ? [ "[1;30m", "[1;33m", "[0;0m" ] : [ '', '', '' ]
 
       puts "#{_dg}+" if nid == '0'
-      puts "#{_dg}| #{nid} #{_yl}#{tree[0]}#{_dg} #{Flor.to_d(tree[1])} #{tree[2]} #{tree[4]}#{_rs}"
+      puts "#{_dg}| #{nid} #{_yl}#{Flor.s_to_d(tree[0], compact: true)}#{_dg} #{Flor.to_d(tree[1])} #{tree[2]} #{tree[4]}#{_rs}"
       tree[3].each_with_index { |ct, i| print_tree(ct, "#{nid}_#{i}") }
       puts "#{_dg}+#{_rs}" if nid == '0'
     end
