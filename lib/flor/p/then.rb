@@ -23,21 +23,8 @@
 #++
 
 
-class Flor::Pro::Then < Flor::Procedure
+class Flor::Pro::Then < Flor::Pro::Sequence
 
   names 'then', 'else'
-
-  def execute
-
-    return reply if tree[0] == 'then' && payload['ret'] != true
-    return reply if tree[0] == 'else' && payload['ret'] != false
-
-    receive
-  end
-
-  def receive
-
-    sequence_receive
-  end
 end
 
