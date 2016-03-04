@@ -23,19 +23,21 @@
 #++
 
 
-class Flor::Pro::Then < Flor::Procedure
+class Flor::Pro::If < Flor::Procedure
 
   names 'if', 'unless'
 
   def execute
 
-    #return reply if tree[0] == 'then' && payload['ret'] != true
-    #return reply if tree[0] == 'else' && payload['ret'] != false
-
     receive
   end
 
   def receive
+
+    if @message['from'] == "#{nid}_0"
+      payload['ret'] = ! payload['ret'] if tree[0] == 'unless'
+      return reply if payload['ret'] == false
+    end
 
     sequence_receive
   end
