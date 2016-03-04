@@ -12,6 +12,7 @@ describe Flor::Node do
 
   class Flor::Node
     public :key_split
+    public :resolve
   end
 
   describe '#key_split' do
@@ -62,6 +63,47 @@ describe Flor::Node do
 
       expect(n.key_split('f.a')).to eq([ 'f', '', 'a' ])
     end
+  end
+
+  describe '#resolve' do
+
+    before :all do
+
+      exe = { 'nodes' => {} }
+      nod = { 'vars' => { 'v0' => 7, 'v1' => 3.1 } }
+      msg = nil
+
+      @n = Flor::Node.new(exe, nod, msg)
+    end
+
+    it 'leaves a pure value as is' do
+
+      expect(@n.resolve(11)).to eq(11)
+      expect(@n.resolve(12.01)).to eq(12.01)
+      expect(@n.resolve(true)).to eq(true)
+      expect(@n.resolve(false)).to eq(false)
+      expect(@n.resolve(nil)).to eq(nil)
+    end
+
+    it 'attempts to derefence a symbol' do
+
+      expect(@n.resolve('v0')).to eq(7)
+      expect(@n.resolve('v1')).to eq(3.1)
+    end
+
+    it 'returns a single quoted string as is' do
+
+      expect(
+        @n.resolve([ 'val', { 't' => 'sqstring', 'v' => 'sqs' }, -1, [] ])
+      ).to eq(
+        'sqs'
+      )
+    end
+
+    it 'attempts to derefence a dollar expression'
+
+    it 'resolves the elements of an array'
+    it 'resolves the entries of an object'
   end
 end
 

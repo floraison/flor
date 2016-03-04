@@ -84,6 +84,7 @@ describe 'Flor procedures' do
 
           push f.l 1
           push f.l true
+          push f.l 'buenos dias'
           push f.l "buenos dias"
           push f.l v0
           push f.l f.f0
@@ -92,8 +93,10 @@ describe 'Flor procedures' do
       r = @executor.launch(rad, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ 1, true, 'false', 'hello', 'world' ])
       expect(r['payload']['ret']).to eq('world')
+
+      expect(r['payload']['l']).to eq(
+        [ 1, true, 'buenos dias', 'buenos dias', 'hello', 'world' ])
     end
   end
 end

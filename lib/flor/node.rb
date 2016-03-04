@@ -102,6 +102,16 @@ class Flor::Node
 
   protected
 
+  def resolve(o)
+
+    return Flor.de_val(o) if Flor.is_val?(o)
+
+    r = expand(o)
+    r = deref(o)
+
+    r
+  end
+
   def tree
 
     lookup_tree(nid)
