@@ -71,6 +71,30 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq([])
     end
+
+    it 'lets its second attribute bloom' do
+
+      rad = %{
+        sequence
+
+          set v0
+            val "hello"
+          set f.f0
+            val "world"
+
+          push f.l 1
+          push f.l true
+          push f.l "buenos dias"
+          push f.l v0
+          push f.l f.f0
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ 1, true, 'false', 'hello', 'world' ])
+      expect(r['payload']['ret']).to eq('world')
+    end
   end
 end
 
