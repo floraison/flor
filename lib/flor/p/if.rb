@@ -39,6 +39,9 @@ class Flor::Pro::If < Flor::Procedure
       return reply if payload['ret'] == false
     end
 
+patree = lookup_tree(@node['parent'])
+p patree
+
     sequence_receive
   end
 end
