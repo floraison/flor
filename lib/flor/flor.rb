@@ -284,6 +284,16 @@ module Flor
     t.strftime('%Y%m%d.%H%M%S') + sprintf('%06d', t.usec)
   end
 
+  def self.false?(o)
+
+    o == nil || o == false
+  end
+
+  def self.true?(o)
+
+    o != nil && o != false
+  end
+
   def self.to_error(o)
 
     if o.respond_to?(:message)
