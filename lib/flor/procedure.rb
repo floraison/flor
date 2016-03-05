@@ -39,21 +39,25 @@ class Flor::Procedure < Flor::Node
     resolve(attributes[key])
   end
 
+  def execute_child(index)
+
+    return reply unless tree[3][index]
+
+    reply(
+      'point' => 'execute',
+      'nid' => Flor.sub_nid(nid, index),
+      'tree' => tree[3][index])
+  end
+
   def sequence_receive
 
     i = @message['point'] == 'execute' ? 0 : Flor.next_child_id(from)
-    t = tree[3][i]
 
     if i > 0 && rets = @node['rets']
       rets << Flor.dup(payload['ret'])
     end
 
-    if t == nil
-      reply
-    else
-      #reply('point' => 'execute', 'nid' => "#{nid}_#{i}", 'tree' => t)
-      reply('point' => 'execute', 'nid' => Flor.sub_nid(nid, i), 'tree' => t)
-    end
+    execute_child(i)
   end
 
   def reply(h={})
