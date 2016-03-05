@@ -37,7 +37,7 @@ class Flor::Pro::Ife < Flor::Procedure
     return reply if Flor.child_id(@message['from']) != 0
 
     nxt =
-      if tree[0] == 'unless'
+      if tree[0] == 'unlesse'
         Flor.false?(payload['ret']) ? 1 : 2
       else # 'if'
         Flor.true?(payload['ret']) ? 1 : 2

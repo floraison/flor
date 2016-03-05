@@ -91,7 +91,41 @@ describe 'Flor procedures' do
 
   describe 'unlesse' do
 
-    it 'flips burgers'
+    it 'triggers the then child when $(ret) false' do
+
+      rad = %{
+        sequence
+          unlesse
+            false
+            push f.l 0
+            push f.l 1
+          push f.l 2
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(2)
+      expect(r['payload']['l']).to eq([ 0, 2 ])
+    end
+
+    it 'triggers the else child when $(ret) true' do
+
+      rad = %{
+        sequence
+          unlesse
+            true
+            push f.l 0
+            push f.l 1
+          push f.l 2
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(2)
+      expect(r['payload']['l']).to eq([ 1, 2 ])
+    end
   end
 end
 
