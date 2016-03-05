@@ -55,7 +55,12 @@ class Flor::Rewriter < Flor::TransientExecutor
 
         define rewrite_parens tree
           # return unless there is a tree among the attributes
-          1
+          if
+            any? tree? tree.1
+          # then
+            # TODO
+          # else
+            # leave
 
         rewrite_parens t
     }, __FILE__)
