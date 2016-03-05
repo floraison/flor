@@ -199,6 +199,20 @@ module Flor
       ni = m['nid'] ? "#{m['nid']} " : ''
       fr = m['from'] ? " from #{m['from']}" : ''
 
+      rt =
+        if m['point'] == 'receive'
+          r =
+            case r = m['payload']['ret']
+              when Array then "[l#{r.length}]"
+              when Hash then "{l#{r.length}}"
+              when String then "\"#{r[0, 7]}...\"l#{r.length}"
+              else Flor.to_d(r)
+            end
+          " f.ret #{r}"
+        else
+          ''
+        end
+
       t = m['tree'];
       t0 = t ? " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg}" : ''
       #t = t ? " #{t[1..-2].inspect[1..-2]}]" : ''
@@ -206,7 +220,7 @@ module Flor
 
       #ind = '  ' * ni.split('_').size
 
-      puts "  #{_dg}#{ni}#{pt}#{t0}#{t}#{fr}#{_rs}"
+      puts "  #{_dg}#{ni}#{pt}#{t0}#{t}#{fr}#{rt}#{_rs}"
     end
 
     def generate_exid(domain)
