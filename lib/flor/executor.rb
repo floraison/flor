@@ -207,17 +207,6 @@ module Flor
       puts "#{_dg}#{ind}#{pt}#{ni}#{t0}#{t}#{fr}#{_rs}"
     end
 
-    def print_tree(tree, nid='0')
-
-      _dg, _yl, _rs =
-        $stdout.tty? ? [ "[1;30m", "[1;33m", "[0;0m" ] : [ '', '', '' ]
-
-      puts "#{_dg}+" if nid == '0'
-      puts "#{_dg}| #{nid} #{_yl}#{Flor.s_to_d(tree[0], compact: true)}#{_dg} #{Flor.to_d(tree[1])} #{tree[2]} #{tree[4]}#{_rs}"
-      tree[3].each_with_index { |ct, i| print_tree(ct, "#{nid}_#{i}") }
-      puts "#{_dg}+#{_rs}" if nid == '0'
-    end
-
     def generate_exid(domain)
 
       @exid_counter ||= 0
@@ -291,7 +280,7 @@ module Flor
       messages = [ make_launch_msg(tree, opts) ]
       message = nil
 
-      print_tree(messages.first['tree']) if @options[:tree]
+      Flor.print_tree(messages.first['tree']) if @options[:tree]
 
       loop do
 

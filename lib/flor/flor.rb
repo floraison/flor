@@ -253,6 +253,23 @@ module Flor
 
 
   #
+  # pretty printing
+
+  def self.print_tree(tree, nid='0', opts={ color: true })
+
+    _dg, _yl, _rs =
+      opts[:color] && $stdout.tty? ?
+      [ "[1;30m", "[1;33m", "[0;0m" ] :
+      [ '', '', '' ]
+
+    puts "#{_dg}+" if nid == '0'
+    puts "#{_dg}| #{nid} #{_yl}#{Flor.s_to_d(tree[0], compact: true)}#{_dg} #{Flor.to_d(tree[1])} #{tree[2]} #{tree[4]}#{_rs}"
+    tree[3].each_with_index { |ct, i| print_tree(ct, "#{nid}_#{i}", opts) }
+    puts "#{_dg}+#{_rs}" if nid == '0'
+  end
+
+
+  #
   # misc
   #
   # miscellaneous functions
