@@ -106,6 +106,10 @@ class Flor::Node
 
     return Flor.de_val(o) if Flor.is_val?(o)
 
+#puts "==="
+#p o
+#p expand(o)
+#p expand("$(#{o})")
     r = expand(o)
     r = deref(o)
 

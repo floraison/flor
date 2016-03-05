@@ -70,7 +70,14 @@ describe Flor::Node do
     before :all do
 
       exe = { 'nodes' => {} }
-      nod = { 'vars' => { 'v0' => 7, 'v1' => 3.1 } }
+      nod = {
+        'vars' => {
+          'v0' => 7,
+          'v1' => 3.1,
+          'v2' => [ 10, 11, 12, [ 130, 131 ], { 'a' => 140 } ],
+          'v3' => { 'a' => 20, 'b' => 21, 'c' => [ 220, 221 ] }
+        }
+      }
       msg = nil
 
       @n = Flor::Node.new(exe, nod, msg)
@@ -104,6 +111,16 @@ describe Flor::Node do
 
     it 'resolves the elements of an array'
     it 'resolves the entries of an object'
+
+    it 'resolves an indexed array' do
+
+      expect(@n.resolve('v2.2')).to eq(12)
+    end
+
+    it 'resolves an indexed object' do
+
+      expect(@n.resolve('v3.b')).to eq(21)
+    end
   end
 end
 
