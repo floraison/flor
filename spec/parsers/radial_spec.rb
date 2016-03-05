@@ -234,6 +234,11 @@ describe Flor::Radial do
         [
           "set f.a: 1",
           [ 'set', { 'f.a' => 1 }, 1, [] ],
+          __LINE__ ],
+
+        [
+          "any? tree? list.1",
+          [ 'any?', { '_0' => 'tree?', '_1' => 'list.1' }, 1, [] ],
           __LINE__ ]
 
       ].each do |radial, tree, line|
