@@ -36,7 +36,14 @@ class Flor::Pro::Ife < Flor::Procedure
 
     return reply if Flor.child_id(@message['from']) != 0
 
-    execute_child(payload['ret'] == (tree[0] == 'unless') ? 1 : 2)
+    nxt =
+      if tree[0] == 'unless'
+        Flor.false?(payload['ret']) ? 1 : 2
+      else # 'if'
+        Flor.true?(payload['ret']) ? 1 : 2
+      end
+
+    execute_child(nxt)
   end
 end
 

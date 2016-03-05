@@ -52,11 +52,46 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq([ true, false ])
     end
 
-    it 'triggers the then child when $(ret) != false'
-    it 'triggers the else child when $(ret) == false'
+    it 'triggers the then child when $(ret) true' do
+
+      rad = %{
+        sequence
+          ife
+            true
+            push f.l 0
+            push f.l 1
+          push f.l 2
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(2)
+      expect(r['payload']['l']).to eq([ 0, 2 ])
+    end
+
+    it 'triggers the else child when $(ret) false' do
+
+      rad = %{
+        sequence
+          ife
+            false
+            push f.l 0
+            push f.l 1
+          push f.l 2
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(2)
+      expect(r['payload']['l']).to eq([ 1, 2 ])
+    end
+  end
+
+  describe 'unlesse' do
+
+    it 'flips burgers'
   end
 end
-
-#    it 'evaluates its first child as conditional' do
-#    end
 
