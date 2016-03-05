@@ -287,6 +287,19 @@ describe Flor::Dollar do
         expect(@x.expand("$(tstamp)")).to match(/^2\d{3}\d{4}\.\d+$/)
       end
     end
+
+    context 'index' do
+
+      it 'indexes arrays' do
+
+        expect(@d.expand('$(arr.1)')).to eq(2)
+      end
+
+      it 'indexes objects' do
+
+        expect(@d.expand('$(hsh.b)')).to eq('B')
+      end
+    end
   end
 end
 

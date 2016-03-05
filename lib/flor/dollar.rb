@@ -102,6 +102,14 @@ module Flor
       #
       # the signature
 
+    def do_lookup(s)
+
+      key, path = s.split('.', 2)
+      val = lookup(key)
+
+      Flor.deep_get(val, path)[1]
+    end
+
     # Called when joining multiple results in a string. Easily overwritable.
     #
     def stringify(v)
@@ -181,7 +189,7 @@ module Flor
 
         result =
           if mode == :lookup
-            k[0, 1] == "'" ? k[1..-1] : lookup(k)
+            k[0, 1] == "'" ? k[1..-1] : do_lookup(k)
           else # :call
             call(k, result)
           end
