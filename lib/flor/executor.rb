@@ -190,11 +190,13 @@ module Flor
 
     def log(m)
 
-      _dg, _yl, _rs =
-        $stdout.tty? ? [ "[1;30m", "[1;33m", "[0;0m" ] : [ '', '', '' ]
+      _dg, _bl, _yl, _rs =
+        $stdout.tty? ?
+        [ "[1;30m", "[1;34m", "[1;33m", "[0;0m" ] :
+        [ '', '', '', '' ]
 
-      pt = m['point'][0, 3]
-      ni = m['nid'] ? " #{m['nid']}" : ''
+      pt = "#{_bl}#{m['point'][0, 3]}#{_dg}"
+      ni = m['nid'] ? "#{m['nid']} " : ''
       fr = m['from'] ? " from #{m['from']}" : ''
 
       t = m['tree'];
@@ -202,9 +204,9 @@ module Flor
       #t = t ? " #{t[1..-2].inspect[1..-2]}]" : ''
       t = t ? " #{Flor.to_d(t[1])} #{t[2]}]" : ''
 
-      ind = '  ' * ni.split('_').size
+      #ind = '  ' * ni.split('_').size
 
-      puts "#{_dg}#{ind}#{pt}#{ni}#{t0}#{t}#{fr}#{_rs}"
+      puts "  #{_dg}#{ni}#{pt}#{t0}#{t}#{fr}#{_rs}"
     end
 
     def generate_exid(domain)
