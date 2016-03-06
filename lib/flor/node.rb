@@ -66,8 +66,10 @@ class Flor::Node
   def lookup(name)
 
     cat, mod, key = key_split(name)
+    key, pth = key.split('.', 2)
 
-    cat == 'v' ? lookup_var(@node, mod, key) : lookup_field(mod, key)
+    val = cat == 'v' ? lookup_var(@node, mod, key) : lookup_field(mod, key)
+    pth ? Flor.deep_get(val, pth)[1] : val
   end
 
   class Expander < Flor::Dollar
@@ -86,7 +88,9 @@ class Flor::Node
 
   def expand(s)
 
-    s.is_a?(String) ? Expander.new(self).expand(s) : s
+    return s unless s.is_a?(String)
+
+    Expander.new(self).expand(s)
   end
 
   def deref(o)

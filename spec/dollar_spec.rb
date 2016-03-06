@@ -30,7 +30,8 @@ class SpecDollar < Flor::Dollar
 
   def lookup(k)
 
-    @h[k]
+    key, pth = k.split('.', 2)
+    pth ? Flor.deep_get(@h[key], pth)[1] : @h[key]
   end
 end
 

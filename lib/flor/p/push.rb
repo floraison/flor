@@ -37,6 +37,7 @@ class Flor::Pro::Push < Flor::Procedure
     ms = sequence_receive
     return ms if ms.first['point'] == 'execute'
 
+p [ '_1', attribute('_1') ]
     payload['ret'] = attribute('_1') \
       if attributes.has_key?('_1') && tree[3].empty?
 
