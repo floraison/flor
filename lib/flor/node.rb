@@ -104,16 +104,11 @@ class Flor::Node
 
   def resolve(o)
 
-    return Flor.de_val(o) if Flor.is_val?(o)
-
-#puts "==="
-#p o
-#p expand(o)
-#p expand("$(#{o})")
-    r = expand(o)
-    r = deref(o)
-
-    r
+    if Flor.is_val?(o)
+      Flor.de_val(o)
+    else
+      deref(expand(o))
+    end
   end
 
   def tree
