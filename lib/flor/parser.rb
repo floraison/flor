@@ -215,7 +215,7 @@ module Flor
     end
   end
 
-  module Json include Raabro
+  module JsonX include Raabro
 
     def rewrite_null(t); nil; end
 
@@ -242,7 +242,7 @@ module Flor
     end
   end # module Json
 
-  module Radial include Json
+  module RadialX include JsonX
 
     def to_val(t)
 
