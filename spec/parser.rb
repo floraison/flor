@@ -12,6 +12,39 @@ require 'flor/parser'
 
 describe Flor::Rad do
 
+  context 'atoms' do
+
+    [
+      [
+        %{ 1 },
+        [ 'number', 1, 1 ],
+        __LINE__
+      ],
+      [
+        %{ 11.01 },
+        [ 'number', 11.01, 1 ],
+        __LINE__
+      ],
+      [
+        %{ true },
+        [ 'boolean', true, 1 ],
+        __LINE__
+      ],
+      [
+        %{ false },
+        [ 'boolean', false, 1 ],
+        __LINE__
+      ],
+    ].each { |ra, tr, li|
+
+      rad = ra.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
+      rad = "#{rad[0, 60]}..." if rad.length > 60
+      title = "parses li#{li} `#{rad}`"
+
+      it(title) { expect(Flor::Rad.parse(ra)).to eq(tr) }
+    }
+  end
+
   context 'basic' do
 
     [
@@ -59,17 +92,14 @@ describe Flor::Rad do
         __LINE__
       ],
 
-    ].each do |ra, tr, li|
+    ].each { |ra, tr, li|
 
       rad = ra.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
       rad = "#{rad[0, 60]}..." if rad.length > 60
       title = "parses li#{li} `#{rad}`"
 
-      it(title) do
-
-        expect(Flor::Rad.parse(ra)).to eq(tr)
-      end
-    end
+      it(title) { expect(Flor::Rad.parse(ra)).to eq(tr) }
+    }
   end
 end
 

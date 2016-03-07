@@ -160,8 +160,11 @@ module Flor
 
       s = t.string
 
-      [ 'number', s.index('.') ? s.to_i : s.to_f, compute_line_number(t) ]
+      [ 'number', s.index('.') ? s.to_f : s.to_i, compute_line_number(t) ]
     end
+
+    def rewrite_true(t); [ 'boolean', true, compute_line_number(t) ]; end
+    def rewrite_false(t); [ 'boolean', false, compute_line_number(t) ]; end
 
     class Line
 
@@ -191,7 +194,11 @@ module Flor
 
       def to_a
 
-        [ @head, @children.collect(&:to_a), @line ]
+        if @head.is_a?(Array) && @children.empty?
+          @head
+        else
+          [ @head, @children.collect(&:to_a), @line ]
+        end
       end
 
       protected
@@ -205,7 +212,6 @@ module Flor
           @indent = it.string.length
         end
 
-        vt = tree.lookup(:rad_h).lookup(:rad_v).sublookup(nil)
         #  nam =
         #    if vt.name == :symbol
         #      vt.string
@@ -217,8 +223,13 @@ module Flor
         #    else
         #      Flor::Radial.to_val(vt)
         #    end
-
-        @head = vt.string
+        vt = tree.lookup(:rad_h).lookup(:rad_v).sublookup(nil)
+        @head =
+          if vt.name == :symbol
+            vt.string
+          else
+            Flor::Rad.rewrite(vt)
+          end
 
         attributes = []
         children = []
@@ -263,7 +274,7 @@ module Flor
 
       r
     end
-  end
+  end # module Rad
 
   module JsonX include Raabro
 
@@ -290,7 +301,7 @@ module Flor
         h
       end
     end
-  end # module Json
+  end # module JsonX
 
   module RadialX include JsonX
 
@@ -317,79 +328,7 @@ module Flor
 
       Line.new(t).to_a
     end
-
-    class Line
-
-      attr_reader :indent, :children
-      attr_accessor :parent
-
-      def initialize(t)
-
-        @parent = nil
-        @children = []
-        @indent = -1
-
-        if t
-
-          gt = t.lookup(:rad_g)
-          lin = Radial.compute_line_number(gt)
-
-          if it = t.lookup(:rad_i)
-            @indent = it.string.length
-          end
-
-          atts = {}
-
-          vt = t.lookup(:rad_h).lookup(:rad_v).sublookup(nil)
-
-          nam =
-            if vt.name == :symbol
-              vt.string
-            elsif vt.name == :dqstring || vt.name == :sqstring
-              #vt.string[1..-2]
-              Flor::Radial.rewrite(vt)
-            elsif vt.name == :rad_p
-              Flor::Radial.rewrite(vt)
-            else
-              Flor::Radial.to_val(vt)
-            end
-
-          t.lookup(:rad_g).c1.gather(:rad_e).each_with_index do |et, i|
-
-            kt = et.lookup(:rad_k)
-            vt = et.lookup(:rad_v)
-
-            k = kt ? Flor::Radial.rewrite(kt.c0) : "_#{i}"
-            v = Flor::Radial.rewrite(vt.c0)
-
-            atts[k] = v
-          end
-
-          #@a = (nam.is_a?(Array) && atts.empty?) ? nam : [ nam, atts, lin ]
-          @a = [ nam, atts, lin ]
-
-        else
-
-          @a = [ 'sequence', {}, 0 ]
-        end
-      end
-
-      def to_a
-
-        [ *@a[0, 3], @children ]
-      end
-
-      def append(line)
-
-        if line.indent > self.indent
-          @children << line.to_a
-          line.parent = self
-        else
-          @parent.append(line)
-        end
-      end
-    end # class Line
-  end # module Radial
+  end # module RadialX
 
   def self.unescape_u(cs)
 
