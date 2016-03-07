@@ -150,6 +150,19 @@ module Flor
       t.input.string[0..t.offset].scan("\n").count + 1
     end
 
+    def rewrite_symbol(t)
+
+      [ t.string, [], compute_line_number(t) ]
+    end
+    alias rewrite_symbolk rewrite_symbol
+
+    def rewrite_number(t)
+
+      s = t.string
+
+      [ s.index('.') ? s.to_i : s.to_f, [], compute_line_number(t) ]
+    end
+
     class Line
 
       attr_accessor :parent
@@ -204,9 +217,24 @@ module Flor
         #    else
         #      Flor::Radial.to_val(vt)
         #    end
+
         @head = vt.string
 
-        # TODO continue me
+        attributes = []
+        children = []
+
+        tree.lookup(:rad_g).c1.gather(:rad_e).each do |et|
+
+          if kt = et.lookup(:rad_k)
+            attributes << Flor::Rad.rewrite(kt.c0)
+            attributes << Flor::Rad.rewrite(et.lookup(:rad_v).c0)
+          else
+            children << Flor::Rad.rewrite(et.lookup(:rad_v).c0)
+          end
+        end
+
+        @children << [ 'attr', attributes, @line ] if attributes.any?
+        @children.concat(children)
       end
     end
 
@@ -333,15 +361,6 @@ module Flor
 
             k = kt ? Flor::Radial.rewrite(kt.c0) : "_#{i}"
             v = Flor::Radial.rewrite(vt.c0)
-
-            #if (
-            #  nam == 'val' &&
-            #  Flor.is_tree?(v) && v[0] == 'val' &&
-            #  (atts['t'] == nil || v[1]['t'] == atts['t'])
-            #)
-            #  atts['t'] = v[1]['t'] if atts['t']
-            #  v = v[1]['v']
-            #end
 
             atts[k] = v
           end

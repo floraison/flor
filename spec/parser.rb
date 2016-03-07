@@ -44,6 +44,20 @@ describe Flor::Rad do
         ], 2 ],
         __LINE__
       ],
+      [
+        %{
+          sequence a, vars: 1, timeout: 1h, b
+        },
+        [ 'sequence', [
+          [ 'attr', [
+            [ 'vars', [], 2 ], [ 1, [], 2 ],
+            [ 'timeout', [], 2 ], [ '1h', [], 2 ]
+          ], 2 ],
+          [ 'a', [], 2 ],
+          [ 'b', [], 2 ]
+        ], 2 ],
+        __LINE__
+      ],
 
     ].each do |ra, tr, li|
 
