@@ -39,8 +39,8 @@ describe Flor::Rad do
           sequence a b
         },
         [ 'sequence', [
-          [ 'a', [], 2 ],
-          [ 'b', [], 2 ]
+          [ 'symbol', 'a', 2 ],
+          [ 'symbol', 'b', 2 ]
         ], 2 ],
         __LINE__
       ],
@@ -49,12 +49,12 @@ describe Flor::Rad do
           sequence a, vars: 1, timeout: 1h, b
         },
         [ 'sequence', [
-          [ 'attr', [
-            [ 'vars', [], 2 ], [ 1, [], 2 ],
-            [ 'timeout', [], 2 ], [ '1h', [], 2 ]
+          [ 'attributes', [
+            [ 'symbol', 'vars', 2 ], [ 'number', 1, 2 ],
+            [ 'symbol', 'timeout', 2 ], [ 'symbol', '1h', 2 ]
           ], 2 ],
-          [ 'a', [], 2 ],
-          [ 'b', [], 2 ]
+          [ 'symbol', 'a', 2 ],
+          [ 'symbol', 'b', 2 ]
         ], 2 ],
         __LINE__
       ],

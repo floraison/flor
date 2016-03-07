@@ -152,7 +152,7 @@ module Flor
 
     def rewrite_symbol(t)
 
-      [ t.string, [], compute_line_number(t) ]
+      [ 'symbol', t.string, compute_line_number(t) ]
     end
     alias rewrite_symbolk rewrite_symbol
 
@@ -160,7 +160,7 @@ module Flor
 
       s = t.string
 
-      [ s.index('.') ? s.to_i : s.to_f, [], compute_line_number(t) ]
+      [ 'number', s.index('.') ? s.to_i : s.to_f, compute_line_number(t) ]
     end
 
     class Line
@@ -233,7 +233,7 @@ module Flor
           end
         end
 
-        @children << [ 'attr', attributes, @line ] if attributes.any?
+        @children << [ 'attributes', attributes, @line ] if attributes.any?
         @children.concat(children)
       end
     end
