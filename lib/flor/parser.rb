@@ -169,6 +169,16 @@ module Flor
     def rewrite_false(t); [ 'boolean', false, line_number(t) ]; end
     def rewrite_null(t); [ 'null', nil, line_number(t) ]; end
 
+    def rewrite_array(t)
+
+      [ 'array', t.subgather(nil).collect { |n| rewrite(n) }, ln(t) ]
+    end
+
+    def rewrite_object(t)
+
+      # TODO
+    end
+
     class Line
 
       attr_accessor :parent

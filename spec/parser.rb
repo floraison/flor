@@ -60,6 +60,13 @@ describe Flor::Rad do
         [ 'rxstring', '/jkl/i', 1 ],
         __LINE__
       ],
+      [
+        %{ [ 1, 2, 3 ] },
+        [ 'array', [
+          [ 'number', 1, 1 ], [ 'number', 2, 1 ], [ 'number', 3, 1 ]
+        ], 1 ],
+        __LINE__
+      ],
     ].each { |ra, tr, li|
 
       rad = ra.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
