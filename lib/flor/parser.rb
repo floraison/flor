@@ -145,26 +145,28 @@ module Flor
 
     # rewriting
 
-    def compute_line_number(t)
+    def line_number(t)
 
       t.input.string[0..t.offset].scan("\n").count + 1
     end
+    alias ln line_number
 
-    def rewrite_symbol(t)
-
-      [ 'symbol', t.string, compute_line_number(t) ]
-    end
+    def rewrite_symbol(t); [ 'symbol', t.string, ln(t) ]; end
     alias rewrite_symbolk rewrite_symbol
+
+    def rewrite_sqstring(t); [ 'sqstring', t.string[1..-2], ln(t) ]; end
+    def rewrite_dqstring(t); [ 'dqstring', t.string[1..-2], ln(t) ]; end
+    def rewrite_rxstring(t); [ 'rxstring', t.string, ln(t) ]; end
 
     def rewrite_number(t)
 
       s = t.string
 
-      [ 'number', s.index('.') ? s.to_f : s.to_i, compute_line_number(t) ]
+      [ 'number', s.index('.') ? s.to_f : s.to_i, line_number(t) ]
     end
 
-    def rewrite_true(t); [ 'boolean', true, compute_line_number(t) ]; end
-    def rewrite_false(t); [ 'boolean', false, compute_line_number(t) ]; end
+    def rewrite_true(t); [ 'boolean', true, line_number(t) ]; end
+    def rewrite_false(t); [ 'boolean', false, line_number(t) ]; end
 
     class Line
 
@@ -206,7 +208,7 @@ module Flor
       def read(tree)
 
         gt = tree.lookup(:rad_g)
-        @line = Rad.compute_line_number(gt)
+        @line = Rad.line_number(gt)
 
         if it = tree.lookup(:rad_i)
           @indent = it.string.length
@@ -317,7 +319,7 @@ module Flor
             { 'v' => rewrite(t) }
         end
 
-      [ 'val', as, compute_line_number(t), [] ]
+      [ 'val', as, line_number(t), [] ]
     end
 
     def rewrite_sqstring(t); to_val(t); end

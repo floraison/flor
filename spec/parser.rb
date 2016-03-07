@@ -35,6 +35,26 @@ describe Flor::Rad do
         [ 'boolean', false, 1 ],
         __LINE__
       ],
+      [
+        %{ abc },
+        [ 'abc', [], 1 ],
+        __LINE__
+      ],
+      [
+        %{ 'def' },
+        [ 'sqstring', 'def', 1 ],
+        __LINE__
+      ],
+      [
+        %{ "ghi" },
+        [ 'dqstring', 'ghi', 1 ],
+        __LINE__
+      ],
+      [
+        %{ /jkl/i },
+        [ 'rxstring', '/jkl/i', 1 ],
+        __LINE__
+      ],
     ].each { |ra, tr, li|
 
       rad = ra.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
