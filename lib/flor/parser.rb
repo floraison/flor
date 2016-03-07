@@ -172,7 +172,7 @@ module Flor
 
       def to_a
 
-        [ @head, @children, @line ]
+        [ @head, @children.collect(&:to_a), @line ]
       end
 
       protected
@@ -185,6 +185,22 @@ module Flor
         if it = tree.lookup(:rad_i)
           @indent = it.string.length
         end
+
+        vt = tree.lookup(:rad_h).lookup(:rad_v).sublookup(nil)
+        #  nam =
+        #    if vt.name == :symbol
+        #      vt.string
+        #    elsif vt.name == :dqstring || vt.name == :sqstring
+        #      #vt.string[1..-2]
+        #      Flor::Radial.rewrite(vt)
+        #    elsif vt.name == :rad_p
+        #      Flor::Radial.rewrite(vt)
+        #    else
+        #      Flor::Radial.to_val(vt)
+        #    end
+        @head = vt.string
+
+        # TODO continue me
       end
     end
 
