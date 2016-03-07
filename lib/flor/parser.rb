@@ -151,7 +151,7 @@ module Flor
     end
     alias ln line_number
 
-    def rewrite_symbol(t); [ '_sym', t.string, ln(t) ]; end
+    def rewrite_symbol(t); [ t.string, [], ln(t) ]; end
     alias rewrite_symbolk rewrite_symbol
 
     def rewrite_sqstring(t); [ '_sqs', t.string[1..-2], ln(t) ]; end

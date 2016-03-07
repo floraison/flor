@@ -104,8 +104,8 @@ describe Flor::Rad do
           sequence a b
         },
         [ 'sequence', [
-          [ '_sym', 'a', 2 ],
-          [ '_sym', 'b', 2 ]
+          [ 'a', [], 2 ],
+          [ 'b', [], 2 ]
         ], 2 ],
         __LINE__
       ],
@@ -115,11 +115,11 @@ describe Flor::Rad do
         },
         [ 'sequence', [
           [ '_atts', [
-            [ '_sym', 'vars', 2 ], [ '_num', 1, 2 ],
-            [ '_sym', 'timeout', 2 ], [ '_sym', '1h', 2 ]
+            [ 'vars', [], 2 ], [ '_num', 1, 2 ],
+            [ 'timeout', [], 2 ], [ '1h', [], 2 ]
           ], 2 ],
-          [ '_sym', 'a', 2 ],
-          [ '_sym', 'b', 2 ]
+          [ 'a', [], 2 ],
+          [ 'b', [], 2 ]
         ], 2 ],
         __LINE__
       ],
