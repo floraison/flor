@@ -67,6 +67,15 @@ describe Flor::Rad do
         ], 1 ],
         __LINE__
       ],
+      [
+        %{ { a: A, b: 2, c: true } },
+        [ '_obj', [
+          [ 'a', [], 1 ], [ 'A', [], 1 ],
+          [ 'b', [], 1 ], [ '_num', 2, 1 ],
+          [ 'c', [], 1 ], [ '_boo', true, 1 ]
+        ], 1 ],
+        __LINE__
+      ],
     ].each { |ra, tr, li|
 
       rad = ra.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')

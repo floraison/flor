@@ -174,7 +174,12 @@ module Flor
 
     def rewrite_object(t)
 
-      # TODO
+      cn =
+        t.subgather(nil).inject([]) do |a, tt|
+          a.concat([ rewrite(tt.c0.c0), rewrite(tt.c4) ])
+        end
+
+      [ '_obj', cn, ln(t) ]
     end
 
     class Line
@@ -287,34 +292,7 @@ module Flor
     end
   end # module Rad
 
-  module JsonX include Raabro
-
-    def rewrite_null(t); nil; end
-
-    def rewrite_true(t); true; end
-    def rewrite_false(t); false; end
-
-    def rewrite_number(t)
-      s = t.string
-      s.index('.') ? s.to_f : s.to_i
-    end
-
-    def rewrite_dqstring(t); Flor.unescape(t.string[1..-2]); end
-    def rewrite_sqstring(t); Flor.unescape(t.string[1..-2]); end
-    def rewrite_symbol(t); t.string; end
-    def rewrite_symbolk(t); t.string; end
-
-    def rewrite_array(t); t.subgather(nil).collect { |n| rewrite(n) }; end
-
-    def rewrite_object(t);
-      t.subgather(nil).inject({}) do |h, tt|
-        h[rewrite(tt.c0.c0)] = rewrite(tt.c4)
-        h
-      end
-    end
-  end # module JsonX
-
-  module RadialX include JsonX
+  module RadialX #include JsonX
 
     def to_val(t)
 
@@ -330,10 +308,6 @@ module Flor
 
       [ 'val', as, line_number(t), [] ]
     end
-
-    def rewrite_sqstring(t); to_val(t); end
-    def rewrite_dqstring(t); to_val(t); end
-    def rewrite_rxstring(t); to_val(t); end
 
     def rewrite_rad_p(t)
 
