@@ -36,6 +36,11 @@ describe Flor::Rad do
         __LINE__
       ],
       [
+        %{ null },
+        [ 'null', nil, 1 ],
+        __LINE__
+      ],
+      [
         %{ abc },
         [ 'abc', [], 1 ],
         __LINE__

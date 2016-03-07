@@ -167,6 +167,7 @@ module Flor
 
     def rewrite_true(t); [ 'boolean', true, line_number(t) ]; end
     def rewrite_false(t); [ 'boolean', false, line_number(t) ]; end
+    def rewrite_null(t); [ 'null', nil, line_number(t) ]; end
 
     class Line
 
