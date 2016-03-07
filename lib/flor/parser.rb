@@ -152,7 +152,8 @@ module Flor
 
     class Line
 
-      attr_reader :children
+      attr_accessor :parent
+      attr_reader :indent, :children
 
       def initialize(tree)
 
@@ -167,7 +168,12 @@ module Flor
 
       def append(line)
 
-        @children << line
+        if line.indent > self.indent
+          @children << line
+          line.parent = self
+        else
+          @parent.append(line)
+        end
       end
 
       def to_a
