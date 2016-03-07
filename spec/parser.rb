@@ -17,27 +17,27 @@ describe Flor::Rad do
     [
       [
         %{ 1 },
-        [ 'number', 1, 1 ],
+        [ '_num', 1, 1 ],
         __LINE__
       ],
       [
         %{ 11.01 },
-        [ 'number', 11.01, 1 ],
+        [ '_num', 11.01, 1 ],
         __LINE__
       ],
       [
         %{ true },
-        [ 'boolean', true, 1 ],
+        [ '_boo', true, 1 ],
         __LINE__
       ],
       [
         %{ false },
-        [ 'boolean', false, 1 ],
+        [ '_boo', false, 1 ],
         __LINE__
       ],
       [
         %{ null },
-        [ 'null', nil, 1 ],
+        [ '_nul', nil, 1 ],
         __LINE__
       ],
       [
@@ -47,23 +47,23 @@ describe Flor::Rad do
       ],
       [
         %{ 'def' },
-        [ 'sqstring', 'def', 1 ],
+        [ '_sqs', 'def', 1 ],
         __LINE__
       ],
       [
         %{ "ghi" },
-        [ 'dqstring', 'ghi', 1 ],
+        [ '_dqs', 'ghi', 1 ],
         __LINE__
       ],
       [
         %{ /jkl/i },
-        [ 'rxstring', '/jkl/i', 1 ],
+        [ '_rxs', '/jkl/i', 1 ],
         __LINE__
       ],
       [
         %{ [ 1, 2, 3 ] },
-        [ 'array', [
-          [ 'number', 1, 1 ], [ 'number', 2, 1 ], [ 'number', 3, 1 ]
+        [ '_arr', [
+          [ '_num', 1, 1 ], [ '_num', 2, 1 ], [ '_num', 3, 1 ]
         ], 1 ],
         __LINE__
       ],
@@ -104,8 +104,8 @@ describe Flor::Rad do
           sequence a b
         },
         [ 'sequence', [
-          [ 'symbol', 'a', 2 ],
-          [ 'symbol', 'b', 2 ]
+          [ '_sym', 'a', 2 ],
+          [ '_sym', 'b', 2 ]
         ], 2 ],
         __LINE__
       ],
@@ -114,12 +114,12 @@ describe Flor::Rad do
           sequence a, vars: 1, timeout: 1h, b
         },
         [ 'sequence', [
-          [ 'attributes', [
-            [ 'symbol', 'vars', 2 ], [ 'number', 1, 2 ],
-            [ 'symbol', 'timeout', 2 ], [ 'symbol', '1h', 2 ]
+          [ '_atts', [
+            [ '_sym', 'vars', 2 ], [ '_num', 1, 2 ],
+            [ '_sym', 'timeout', 2 ], [ '_sym', '1h', 2 ]
           ], 2 ],
-          [ 'symbol', 'a', 2 ],
-          [ 'symbol', 'b', 2 ]
+          [ '_sym', 'a', 2 ],
+          [ '_sym', 'b', 2 ]
         ], 2 ],
         __LINE__
       ],

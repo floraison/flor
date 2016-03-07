@@ -151,27 +151,25 @@ module Flor
     end
     alias ln line_number
 
-    def rewrite_symbol(t); [ 'symbol', t.string, ln(t) ]; end
+    def rewrite_symbol(t); [ '_sym', t.string, ln(t) ]; end
     alias rewrite_symbolk rewrite_symbol
 
-    def rewrite_sqstring(t); [ 'sqstring', t.string[1..-2], ln(t) ]; end
-    def rewrite_dqstring(t); [ 'dqstring', t.string[1..-2], ln(t) ]; end
-    def rewrite_rxstring(t); [ 'rxstring', t.string, ln(t) ]; end
+    def rewrite_sqstring(t); [ '_sqs', t.string[1..-2], ln(t) ]; end
+    def rewrite_dqstring(t); [ '_dqs', t.string[1..-2], ln(t) ]; end
+    def rewrite_rxstring(t); [ '_rxs', t.string, ln(t) ]; end
 
     def rewrite_number(t)
 
-      s = t.string
-
-      [ 'number', s.index('.') ? s.to_f : s.to_i, line_number(t) ]
+      s = t.string; [ '_num', s.index('.') ? s.to_f : s.to_i, ln(t) ]
     end
 
-    def rewrite_true(t); [ 'boolean', true, line_number(t) ]; end
-    def rewrite_false(t); [ 'boolean', false, line_number(t) ]; end
-    def rewrite_null(t); [ 'null', nil, line_number(t) ]; end
+    def rewrite_true(t); [ '_boo', true, line_number(t) ]; end
+    def rewrite_false(t); [ '_boo', false, line_number(t) ]; end
+    def rewrite_null(t); [ '_nul', nil, line_number(t) ]; end
 
     def rewrite_array(t)
 
-      [ 'array', t.subgather(nil).collect { |n| rewrite(n) }, ln(t) ]
+      [ '_arr', t.subgather(nil).collect { |n| rewrite(n) }, ln(t) ]
     end
 
     def rewrite_object(t)
@@ -257,7 +255,7 @@ module Flor
           end
         end
 
-        @children << [ 'attributes', attributes, @line ] if attributes.any?
+        @children << [ '_atts', attributes, @line ] if attributes.any?
         @children.concat(children)
       end
     end
