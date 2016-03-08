@@ -89,6 +89,8 @@ module Flor
     def pend(i); str(nil, i, ')'); end
     def sbstart(i); str(nil, i, '['); end
     def sbend(i); str(nil, i, ']'); end
+    def pbstart(i); str(nil, i, '{'); end
+    def pbend(i); str(nil, i, '}'); end
 
     def eol(i); seq(nil, i, :wspace, '*', :comment, '?', :retnew, '*'); end
 
@@ -102,29 +104,26 @@ module Flor
 #    #def symbol(i); rep(:symbol, i, :symelt, 1); end
 #    #def symbolk(i); rep(:symbolk, i, :symeltk, 1, 0); end
 #
-#
-#
-#
 #    def key(i); alt(:key, i, :dqstring, :sqstring, :symbolk); end
-#
-#    def entry(i); seq(:entry, i, :key, :postval, :colon, :postval, :value, :postval); end
-#    def entry_qmark(i); rep(nil, i, :entry, 0, 1); end
-#
-#    def pbstart(i); str(nil, i, '{'); end
-#    def pbend(i); str(nil, i, '}'); end
-#
-#    def object(i); eseq(:object, i, :pbstart, :entry_qmark, :sep, :pbend); end
 #
 #    def v(i); alt(nil, i, :dqstring, :sqstring, :number, :object, :array, :tru, :fls, :null); end
 #    def value(i); altg(nil, i, :symbol, :v); end
 #
-#    def val(i); seq(nil, i, :value, :postval); end
 #    def postval(i); seq(nil, i, :eol, '*'); end
+
+    def rad_ent(i)
+      seq(:rad_ent, i, :rad_key, :postval, :colon, :postval, :rad_val, :postval)
+    end
+    def rad_ent_qmark(i); rep(nil, i, :rad_ent, 0, 1); end
+
+    def rad_obj(i)
+      eseq(:rad_obj, i, :pbstart, :rad_ent_qmark, :sep, :pbend)
+    end
 
     def rad_val_qmark(i); rep(nil, i, :rad_val, 0, 1); end
 
-    def rad_array(i)
-      eseq(:rad_array, i, :sbstart, :rad_val_qmark, :sep, :sbend)
+    def rad_arr(i)
+      eseq(:rad_arr, i, :sbstart, :rad_val_qmark, :sep, :sbend)
     end
 
     def rad_ope(i)
@@ -135,14 +134,14 @@ module Flor
       seq(:rad_par, i, :pstart, :eol, :wspace, '*', :rad_grp, :eol, :pend)
     end
 
-#    def rad_v(i); alt(:rad_v, i, :rxstring, :rad_p, :value); end
-    def rad_val(i)
+    def rad_core_val(i)
       #alt(:rad_val, i, :rad_par, :rad_ope)
       alt(:rad_val, i,
         :number, :boolean, :null,
         :sqstring, :dqstring, :rxstring, :symbol,
-        :rad_array)
+        :rad_arr, :rad_obj)
     end
+    def rad_val(i); seq(nil, i, :rad_core_val, :postval); end
 
     def rad_key(i); alt(:rad_key, i, :dqstring, :sqstring, :symbol); end
       # TODO eventually, accept anything and stringify...
@@ -190,12 +189,12 @@ module Flor
 
     def rewrite_rad_val(t); rewrite(t.c0); end
 
-    def rewrite_rad_array(t)
+    def rewrite_rad_arr(t)
 
       [ '_arr', t.subgather(nil).collect { |n| rewrite(n) }, ln(t) ]
     end
 
-    def rewrite_object(t)
+    def rewrite_rad_obj(t)
 
       cn =
         t.subgather(nil).inject([]) do |a, tt|
