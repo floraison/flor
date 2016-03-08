@@ -79,11 +79,16 @@ module Flor
 
     def wspace(i); rex(nil, i, /[ \t]/); end
     def retnew(i); rex(nil, i, /[\r\n]/); end
-    def comma(i); str(nil, i, ','); end
     def colon(i); str(nil, i, ':'); end
+    def comma(i); str(nil, i, ','); end
+
+    def postval(i); rep(nil, i, :eol, 0); end
+    def sep(i); seq(nil, i, :comma, '?', :postval); end
 
     def pstart(i); str(nil, i, '('); end
     def pend(i); str(nil, i, ')'); end
+    def sbstart(i); str(nil, i, '['); end
+    def sbend(i); str(nil, i, ']'); end
 
     def eol(i); seq(nil, i, :wspace, '*', :comment, '?', :retnew, '*'); end
 
@@ -97,16 +102,8 @@ module Flor
 #    #def symbol(i); rep(:symbol, i, :symelt, 1); end
 #    #def symbolk(i); rep(:symbolk, i, :symeltk, 1, 0); end
 #
-#    def postval(i); rep(nil, i, :eol, 0); end
 #
-#    def sep(i); seq(nil, i, :comma, '?', :postval); end
 #
-#    def val_qmark(i); rep(nil, i, :val, 0, 1); end
-#
-#    def sbstart(i); str(nil, i, '['); end
-#    def sbend(i); str(nil, i, ']'); end
-#
-#    def array(i); eseq(:array, i, :sbstart, :val_qmark, :sep, :sbend); end
 #
 #    def key(i); alt(:key, i, :dqstring, :sqstring, :symbolk); end
 #
@@ -124,6 +121,12 @@ module Flor
 #    def val(i); seq(nil, i, :value, :postval); end
 #    def postval(i); seq(nil, i, :eol, '*'); end
 
+    def rad_val_qmark(i); rep(nil, i, :rad_val, 0, 1); end
+
+    def rad_array(i)
+      eseq(:rad_array, i, :sbstart, :rad_val_qmark, :sep, :sbend)
+    end
+
     def rad_ope(i)
       jseq(:rad_ope, i, :rad_val, :ope)
     end
@@ -137,8 +140,8 @@ module Flor
       #alt(:rad_val, i, :rad_par, :rad_ope)
       alt(:rad_val, i,
         :number, :boolean, :null,
-        :sqstring, :dqstring, :rxstring,
-        :symbol)
+        :sqstring, :dqstring, :rxstring, :symbol,
+        :rad_array)
     end
 
     def rad_key(i); alt(:rad_key, i, :dqstring, :sqstring, :symbol); end
@@ -185,7 +188,9 @@ module Flor
     def rewrite_boolean(t); [ '_boo', t.string == 'true', line_number(t) ]; end
     def rewrite_null(t); [ '_nul', nil, line_number(t) ]; end
 
-    def rewrite_array(t)
+    def rewrite_rad_val(t); rewrite(t.c0); end
+
+    def rewrite_rad_array(t)
 
       [ '_arr', t.subgather(nil).collect { |n| rewrite(n) }, ln(t) ]
     end
