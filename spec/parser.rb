@@ -132,6 +132,16 @@ describe Flor::Rad do
         ], 2 ],
         __LINE__
       ],
+      [
+        %{
+          sequence a: 1 + 1, 2
+        },
+        [ 'sequence', [
+          [ 'a', [], 2 ],
+          [ 'b', [], 2 ]
+        ], 2 ],
+        __LINE__
+      ],
 
     ].each { |ra, tr, li|
 

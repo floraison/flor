@@ -252,6 +252,7 @@ module Flor
 
         tree.lookup(:rad_g).c1.gather(:rad_e).each do |et|
 
+pp et
           if kt = et.lookup(:rad_k)
             attributes << Flor::Rad.rewrite(kt.c0)
             attributes << Flor::Rad.rewrite(et.lookup(:rad_v).c0)
