@@ -82,9 +82,6 @@ module Flor
     def colon(i); str(nil, i, ':'); end
     def comma(i); str(nil, i, ','); end
 
-    def postval(i); rep(nil, i, :eol, 0); end
-    def sep(i); seq(nil, i, :comma, '?', :postval); end
-
     def pstart(i); str(nil, i, '('); end
     def pend(i); str(nil, i, ')'); end
     def sbstart(i); str(nil, i, '['); end
@@ -93,23 +90,10 @@ module Flor
     def pbend(i); str(nil, i, '}'); end
 
     def eol(i); seq(nil, i, :wspace, '*', :comment, '?', :retnew, '*'); end
+    def postval(i); rep(nil, i, :eol, 0); end
+    def sep(i); seq(nil, i, :comma, '?', :postval); end
 
     def ope(i); rex(:ope, i, /(\+|-|\/|\*|%|==?|!=|<>|>=?|<=?)/); end
-
-#    def dol(i); rex(nil, i, /[^ \r\n\t\\)]+/); end
-#    def dolstart(i); str(nil, i, '$('); end
-#    #def symdol(i); seq(nil, i, :dolstart, :dol, :pend); end
-#    #def symelt(i); alt(nil, i, :symdol, :symcore, :colon); end
-#    #def symeltk(i); alt(nil, i, :symdol, :symcore); end
-#    #def symbol(i); rep(:symbol, i, :symelt, 1); end
-#    #def symbolk(i); rep(:symbolk, i, :symeltk, 1, 0); end
-#
-#    def key(i); alt(:key, i, :dqstring, :sqstring, :symbolk); end
-#
-#    def v(i); alt(nil, i, :dqstring, :sqstring, :number, :object, :array, :tru, :fls, :null); end
-#    def value(i); altg(nil, i, :symbol, :v); end
-#
-#    def postval(i); seq(nil, i, :eol, '*'); end
 
     def rad_ent(i)
       seq(:rad_ent, i, :rad_key, :postval, :colon, :postval, :rad_val, :postval)
@@ -135,11 +119,12 @@ module Flor
     end
 
     def rad_core_val(i)
-      #alt(:rad_val, i, :rad_par, :rad_ope)
-      alt(:rad_val, i,
-        :number, :boolean, :null,
-        :sqstring, :dqstring, :rxstring, :symbol,
-        :rad_arr, :rad_obj)
+#alt(:rad_val, i, :rad_par, :rad_ope)
+      altg(:rad_val, i,
+        :symbol,
+        :sqstring, :dqstring, :rxstring,
+        :rad_arr, :rad_obj,
+        :number, :boolean, :null)
     end
     def rad_val(i); seq(nil, i, :rad_core_val, :postval); end
 
