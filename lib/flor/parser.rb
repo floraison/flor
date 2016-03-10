@@ -93,7 +93,7 @@ module Flor
     def postval(i); rep(nil, i, :eol, 0); end
     def sep(i); seq(nil, i, :comma, '?', :postval); end
 
-    def ope(i); rex(:ope, i, /(\+|-|\/|\*|%|==?|!=|<>|>=?|<=?)/); end
+    #def ope(i); rex(:ope, i, /(\+|-|\/|\*|%|==?|!=|<>|>=?|<=?)/); end
 
     def rad_ent(i)
       seq(:rad_ent, i, :rad_key, :postval, :colon, :postval, :rad_val, :postval)
@@ -118,15 +118,14 @@ module Flor
       seq(:rad_par, i, :pstart, :eol, :wspace, '*', :rad_grp, :eol, :pend)
     end
 
-    def rad_core_val(i)
-#alt(:rad_val, i, :rad_par, :rad_ope)
-      altg(:rad_val, i,
-        :symbol,
-        :sqstring, :dqstring, :rxstring,
-        :rad_arr, :rad_obj,
-        :number, :boolean, :null)
-    end
-    def rad_val(i); seq(nil, i, :rad_core_val, :postval); end
+#    def rad_core_val(i)
+#      altg(:rad_val, i,
+#        :symbol,
+#        :sqstring, :dqstring, :rxstring,
+#        :rad_arr, :rad_obj,
+#        :number, :boolean, :null)
+#    end
+#    def rad_val(i); seq(nil, i, :rad_core_val, :postval); end
 
     def rad_key(i); alt(:rad_key, i, :dqstring, :sqstring, :symbol); end
       # TODO eventually, accept anything and stringify...
@@ -148,6 +147,38 @@ module Flor
 
     def rad_line(i); seq(nil, i, :rad_lin, '?', :rad_eol); end
     def radial(i); rep(:radial, i, :rad_line, 0); end
+
+    #ops = [
+    #  %w[ or or ], %w[ and and ],
+    #  %w[ equ == != <> ], %w[ lgt < > <= >= ], %w[ sum + - ], %w[ prd * / % ],
+    #  %w[ val x ]
+    #]
+
+    def rad_eval(i)
+    end
+
+    def rad_ssprd(i); rex(:rad_sop, i, /[\*\/%]/); end
+    def rad_sssum(i); rex(:rad_sop, i, /[+-]/); end
+    def rad_sslgt(i); rex(:rad_sop, i, /(<=?|>=?)/); end
+    def rad_ssequ(i); rex(:rad_sop, i, /(==?|!=|<>)/); end
+    def rad_ssand(i); str(:rad_sop, i, 'and'); end
+    def rad_ssor(i); str(:rad_sop, i, 'or'); end
+
+    def rad_sprd(i); seq(nil, i, :rad_ssprd, :eol, '?'); end
+    def rad_ssum(i); seq(nil, i, :rad_sssum, :eol, '?'); end
+    def rad_slgt(i); seq(nil, i, :rad_sslgt, :eol, '?'); end
+    def rad_sequ(i); seq(nil, i, :rad_ssequ, :eol, '?'); end
+    def rad_sand(i); seq(nil, i, :rad_ssand, :eol, '?'); end
+    def rad_sor(i); seq(nil, i, :rad_ssor, :eol, '?'); end
+
+    def rad_eprd(i); jseq(:rad_exp, i, :rad_eval, :rad_sprd); end
+    def rad_esum(i); jseq(:rad_exp, i, :rad_eprd, :rad_ssum); end
+    def rad_elgt(i); jseq(:rad_exp, i, :rad_esum, :rad_slgt); end
+    def rad_eequ(i); jseq(:rad_exp, i, :rad_elgt, :rad_sequ); end
+    def rad_eand(i); jseq(:rad_exp, i, :rad_eequ, :rad_sand); end
+    def rad_eor(i); jseq(:rad_exp, i, :rad_eand, :rad_sor); end
+
+    alias rad_exp rad_eor
 
     # rewriting
 

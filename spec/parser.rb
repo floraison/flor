@@ -86,6 +86,26 @@ describe Flor::Rad do
     }
   end
 
+  context 'operations' do
+
+    [
+      [
+        %{
+          1 + 1 * 2
+        },
+        [ 'xxx', [], 2 ],
+        __LINE__
+      ],
+    ].each { |ra, tr, li|
+
+      rad = ra.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
+      rad = "#{rad[0, 60]}..." if rad.length > 60
+      title = "parses li#{li} `#{rad}`"
+
+      it(title) { expect(Flor::Rad.parse(ra)).to eq(tr) }
+    }
+  end
+
   context 'basic' do
 
     [
