@@ -132,7 +132,6 @@ module Flor
     # precedence
     #  %w[ or or ], %w[ and and ],
     #  %w[ equ == != <> ], %w[ lgt < > <= >= ], %w[ sum + - ], %w[ prd * / % ],
-    #  %w[ val x ]
 
     def rad_ssprd(i); rex(:rad_sop, i, /[\*\/%]/); end
     def rad_sssum(i); rex(:rad_sop, i, /[+-]/); end
@@ -224,11 +223,32 @@ module Flor
     end
     # ...
 
+    # precedence
+    #  %w[ or or ], %w[ and and ],
+    #  %w[ equ == != <> ], %w[ lgt < > <= >= ], %w[ sum + - ], %w[ prd * / % ],
+    def to_generic_op(op)
+      case op
+        when '+', '-' then '+'
+        when '*', '/' then '*'
+        else op
+      end
+    end
+
     def rewrite_rad_exp(t)
 
       return rewrite(t.c0) if t.children.size == 1
+
 pp t
-      nil
+      op = nil
+      cn = [ rewrite(t.c0) ]
+      i = 1
+      loop do
+        sop = t.children[i]; break unless sop
+        sop = sop.c0.string
+        i = i + 2
+      end
+
+      [ op, cn, ln(t) ]
     end
 
     class Line
