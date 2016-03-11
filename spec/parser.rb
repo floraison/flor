@@ -91,7 +91,7 @@ describe Flor::Rad do
     [
       [
         %{
-          10 + 11
+          10 + 11 - 5
         },
         [ 'xxx', [], 2 ],
         __LINE__

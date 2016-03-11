@@ -226,29 +226,27 @@ module Flor
     # precedence
     #  %w[ or or ], %w[ and and ],
     #  %w[ equ == != <> ], %w[ lgt < > <= >= ], %w[ sum + - ], %w[ prd * / % ],
-    def to_generic_op(op)
-      case op
-        when '+', '-' then '+'
-        when '*', '/' then '*'
-        else op
-      end
-    end
 
     def rewrite_rad_exp(t)
 
       return rewrite(t.c0) if t.children.size == 1
 
-pp t
-      op = nil
       cn = [ rewrite(t.c0) ]
-      i = 1
+      op = t.lookup(:rad_sop).string
+
+      tcn = t.children[2..-1].dup
+
       loop do
-        sop = t.children[i]; break unless sop
-        sop = sop.c0.string
-        i = i + 2
+        c = tcn.shift; break unless c
+        cn << rewrite(c)
+        o = tcn.shift; break unless o
+        o = o.lookup(:rad_sop).string
+        next if o == op
+        cn = [ [ op, cn, cn.first[2] ] ]
+        op = o
       end
 
-      [ op, cn, ln(t) ]
+      [ op, cn, cn.first[2] ]
     end
 
     class Line
