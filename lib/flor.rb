@@ -35,11 +35,10 @@ end
 
 require 'flor/flor'
 require 'flor/dollar'
-require 'flor/parsers'
+require 'flor/parser'
 require 'flor/node'
 require 'flor/procedure'
 require 'flor/executor'
-require 'flor/rewriter'
 
 
 #
