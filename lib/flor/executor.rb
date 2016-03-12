@@ -49,7 +49,7 @@ module Flor
 
       t =
         tree.is_a?(String) ?
-        Flor::Radial.parse(tree, opts[:fname], opts) :
+        Flor::Rad.parse(tree, opts[:fname], opts) :
         tree
 
       unless t
