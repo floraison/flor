@@ -335,29 +335,6 @@ module Flor
     end
   end # module Rad
 
-  module RadialX #include JsonX
-
-    def to_val(t)
-
-      as =
-        case t.name
-          when :sqstring, :dqstring
-            { 't' => t.name.to_s, 'v' => Flor.unescape(t.string[1..-2]) }
-          when :rxstring
-            { 't' => t.name.to_s, 'v' => t.string }
-          else
-            { 'v' => rewrite(t) }
-        end
-
-      [ 'val', as, line_number(t), [] ]
-    end
-
-    def rewrite_rad_p(t)
-
-      Line.new(t).to_a
-    end
-  end # module RadialX
-
   def self.unescape_u(cs)
 
     s = ''; 4.times { s << cs.next }
