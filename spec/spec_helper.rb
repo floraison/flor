@@ -109,7 +109,7 @@ class RSpec::Core::ExampleGroup
 
             ru = Kernel.eval(rub)
 
-            it(title) { expect(Flor::Rad.parse(ra)).to eq(ru) }
+            it(title) { expect(Flor::Rad.parse(rad)).to eq(ru) }
           end
         end
       end

@@ -329,6 +329,7 @@ module Flor
       opts = fname if fname.is_a?(Hash) && opts.empty?
 
       #pp super(input, rewrite: false)
+      #pp super(input, debug: 3)
       r = super(input, opts)
       r << fname if fname
 
