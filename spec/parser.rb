@@ -129,13 +129,14 @@ describe Flor::Rad do
 
     [
       [
+        __LINE__,
         %{
           sequence
         },
-        [ 'sequence', [], 2 ],
-        __LINE__
+        [ 'sequence', [], 2 ]
       ],
       [
+        __LINE__,
         %{
           sequence
             a
@@ -144,20 +145,20 @@ describe Flor::Rad do
         [ 'sequence', [
           [ 'a', [], 3 ],
           [ 'b', [], 4 ]
-        ], 2 ],
-        __LINE__
+        ], 2 ]
       ],
       [
+        __LINE__,
         %{
           sequence a b
         },
         [ 'sequence', [
           [ 'a', [], 2 ],
           [ 'b', [], 2 ]
-        ], 2 ],
-        __LINE__
+        ], 2 ]
       ],
       [
+        __LINE__,
         %{
           sequence a, vars: 1, timeout: 1h, b
         },
@@ -168,21 +169,26 @@ describe Flor::Rad do
           ], 2 ],
           [ 'a', [], 2 ],
           [ 'b', [], 2 ]
-        ], 2 ],
-        __LINE__
+        ], 2 ]
       ],
       [
+        __LINE__,
         %{
           sequence a: 1 + 1, 2
         },
         [ 'sequence', [
-          [ 'a', [], 2 ],
-          [ 'b', [], 2 ]
-        ], 2 ],
-        __LINE__
+          [ '_atts', [
+            [ 'a', [], 2 ],
+            [ '+', [
+              [ '_num', 1, 2 ],
+              [ '_num', 1, 2 ],
+            ], 2 ]
+          ], 2 ],
+          [ '_num', 2, 2 ]
+        ], 2 ]
       ],
 
-    ].each { |ra, tr, li|
+    ].each { |li, ra, tr|
 
       rad = ra.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
       rad = "#{rad[0, 60]}..." if rad.length > 60

@@ -217,16 +217,6 @@ module Flor
       [ '_obj', cn, ln(t) ]
     end
 
-    def rewrite_sum(t)
-    end
-    def rewrite_prod(t)
-    end
-    # ...
-
-    # precedence
-    #  %w[ or or ], %w[ and and ],
-    #  %w[ equ == != <> ], %w[ lgt < > <= >= ], %w[ sum + - ], %w[ prd * / % ],
-
     def rewrite_rad_exp(t)
 
       return rewrite(t.c0) if t.children.size == 1
@@ -288,14 +278,14 @@ module Flor
 
       def read(tree)
 
-        gt = tree.lookup(:rad_grp)
-        @line = Rad.line_number(gt)
-
         if it = tree.lookup(:rad_ind)
           @indent = it.string.length
         end
 
-        ht = tree.lookup(:rad_hed)
+        gt = tree.lookup(:rad_grp)
+        @line = Rad.line_number(gt)
+
+        ht = gt.lookup(:rad_hed)
 
         @head = Flor::Rad.rewrite(ht.c0)
         @head = @head[0] if @head[0].is_a?(String) && @head[1] == []
@@ -303,13 +293,13 @@ module Flor
         attributes = []
         children = []
 
-        tree.lookup(:rad_grp).c1.gather(:rad_elt).each do |et|
+        gt.c1.gather(:rad_elt).each do |et|
 
           if kt = et.lookup(:rad_key)
             attributes << Flor::Rad.rewrite(kt.c0)
-            attributes << Flor::Rad.rewrite(et.lookup(:rad_val).c0)
+            attributes << Flor::Rad.rewrite(et.lookup(:rad_exp))
           else
-            children << Flor::Rad.rewrite(et.lookup(:rad_val).c0)
+            children << Flor::Rad.rewrite(et.lookup(:rad_exp))
           end
         end
 
