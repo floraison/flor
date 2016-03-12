@@ -16,67 +16,67 @@ describe Flor::Rad do
 
     [
       [
+        __LINE__,
         %{ 1 },
-        [ '_num', 1, 1 ],
-        __LINE__
+        [ '_num', 1, 1 ]
       ],
       [
+        __LINE__,
         %{ 11.01 },
-        [ '_num', 11.01, 1 ],
-        __LINE__
+        [ '_num', 11.01, 1 ]
       ],
       [
+        __LINE__,
         %{ true },
-        [ '_boo', true, 1 ],
-        __LINE__
+        [ '_boo', true, 1 ]
       ],
       [
+        __LINE__,
         %{ false },
-        [ '_boo', false, 1 ],
-        __LINE__
+        [ '_boo', false, 1 ]
       ],
       [
+        __LINE__,
         %{ null },
-        [ '_nul', nil, 1 ],
-        __LINE__
+        [ '_nul', nil, 1 ]
       ],
       [
+        __LINE__,
         %{ abc },
-        [ 'abc', [], 1 ],
-        __LINE__
+        [ 'abc', [], 1 ]
       ],
       [
+        __LINE__,
         %{ 'def' },
-        [ '_sqs', 'def', 1 ],
-        __LINE__
+        [ '_sqs', 'def', 1 ]
       ],
       [
+        __LINE__,
         %{ "ghi" },
-        [ '_dqs', 'ghi', 1 ],
-        __LINE__
+        [ '_dqs', 'ghi', 1 ]
       ],
       [
+        __LINE__,
         %{ /jkl/i },
-        [ '_rxs', '/jkl/i', 1 ],
-        __LINE__
+        [ '_rxs', '/jkl/i', 1 ]
       ],
       [
+        __LINE__,
         %{ [ 1, 2, 3 ] },
         [ '_arr', [
           [ '_num', 1, 1 ], [ '_num', 2, 1 ], [ '_num', 3, 1 ]
-        ], 1 ],
-        __LINE__
+        ], 1 ]
       ],
       [
+        __LINE__,
         %{ { a: A, b: 2, c: true } },
         [ '_obj', [
           [ 'a', [], 1 ], [ 'A', [], 1 ],
           [ 'b', [], 1 ], [ '_num', 2, 1 ],
           [ 'c', [], 1 ], [ '_boo', true, 1 ]
-        ], 1 ],
-        __LINE__
+        ], 1 ]
       ],
-    ].each { |ra, tr, li|
+    ].each { |li, ra, tr|
 
       rad = ra.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
       rad = "#{rad[0, 60]}..." if rad.length > 60
