@@ -214,6 +214,30 @@ parses to
   ], 1 ]
 ```
 
+```radial
+  sequence
+    define sum a b
+      +
+        a
+        b
+    apply sum 1 2
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ 'define', [
+      [ 'sum', [
+        [ 'a', [], 2 ],
+        [ 'b', [], 2 ],
+        [ '+', [
+          [ 'a', [], 4 ],
+          [ 'b', [], 5 ]
+        ], 3 ],
+      ], 2 ]
+    ], 2 ]
+  ], 1 ]
+```
+
 ## comments
 
 ```radial
