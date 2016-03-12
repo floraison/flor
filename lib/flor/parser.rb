@@ -295,15 +295,10 @@ module Flor
           @indent = it.string.length
         end
 
-        #vt = tree.lookup(:rad_hed).lookup(:rad_val).sublookup(nil)
-        #@head =
-        #  if vt.name == :symbol
-        #    vt.string
-        #  else
-        #    Flor::Rad.rewrite(vt)
-        #  end
         ht = tree.lookup(:rad_hed)
+
         @head = Flor::Rad.rewrite(ht.c0)
+        @head = @head[0] if @head[0].is_a?(String) && @head[1] == []
 
         attributes = []
         children = []
