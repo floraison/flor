@@ -246,3 +246,53 @@ parses to
 
 ## line breaks
 
+```radial
+  [ 1, 2 // trois
+    4 ]
+```
+parses to
+```ruby
+  [ '_arr', [
+    [ '_num', 1, 1 ],
+    [ '_num', 2, 1 ],
+    [ '_num', 4, 2 ]
+  ], 1 ]
+```
+---
+
+```radial
+  { a: "anthracite" # comment
+    b: "blue-yellow" cc: "carmin"
+  }
+```
+parses to
+```ruby
+  [ '_obj', [
+    [ 'a', [], 1 ],
+    [ '_dqs', 'anthracite', 1 ],
+    [ 'b', [], 2 ],
+    [ '_dqs', 'blue-yellow', 2 ],
+    [ 'cc', [], 2 ],
+    [ '_dqs', 'carmin', 2 ],
+  ], 1 ]
+```
+---
+
+```radial
+  sequence a, b, [ 1
+    2], c
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ 'a', [], 1 ],
+    [ 'b', [], 1 ],
+    [ '_arr', [
+      [ '_num', 1, 1 ],
+      [ '_num', 2, 2 ]
+    ], 1 ],
+    [ 'c', [], 2 ]
+  ], 1 ]
+```
+---
+
