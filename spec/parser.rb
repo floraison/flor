@@ -90,20 +90,32 @@ describe Flor::Rad do
 
     [
       [
+        __LINE__,
         %{
           10 + 11 - 5
         },
-        [ 'xxx', [], 2 ],
-        __LINE__
+        [ '-', [
+          [ '+', [
+            [ '_num', 10, 2 ],
+            [ '_num', 11, 2 ]
+          ], 2 ],
+          [ '_num', 5, 2 ]
+        ], 2 ]
       ],
       [
+        __LINE__,
         %{
           1 + 1 * 2
         },
-        [ 'xxx', [], 2 ],
-        __LINE__
+        [ '+', [
+          [ '_num', 1, 2 ],
+          [ '*', [
+            [ '_num', 1, 2 ],
+            [ '_num', 2, 2 ]
+          ], 2 ]
+        ], 2 ]
       ],
-    ].each { |ra, tr, li|
+    ].each { |li, ra, tr|
 
       rad = ra.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
       rad = "#{rad[0, 60]}..." if rad.length > 60

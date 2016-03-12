@@ -295,29 +295,15 @@ module Flor
           @indent = it.string.length
         end
 
+        #vt = tree.lookup(:rad_hed).lookup(:rad_val).sublookup(nil)
+        #@head =
+        #  if vt.name == :symbol
+        #    vt.string
+        #  else
+        #    Flor::Rad.rewrite(vt)
+        #  end
         ht = tree.lookup(:rad_hed)
-        #pp ht
-        x = Flor::Rad.rewrite(ht.c0)
-        pp x
-
-        #  nam =
-        #    if vt.name == :symbol
-        #      vt.string
-        #    elsif vt.name == :dqstring || vt.name == :sqstring
-        #      #vt.string[1..-2]
-        #      Flor::Radial.rewrite(vt)
-        #    elsif vt.name == :rad_p
-        #      Flor::Radial.rewrite(vt)
-        #    else
-        #      Flor::Radial.to_val(vt)
-        #    end
-        vt = tree.lookup(:rad_hed).lookup(:rad_val).sublookup(nil)
-        @head =
-          if vt.name == :symbol
-            vt.string
-          else
-            Flor::Rad.rewrite(vt)
-          end
+        @head = Flor::Rad.rewrite(ht.c0)
 
         attributes = []
         children = []
