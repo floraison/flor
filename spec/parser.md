@@ -84,7 +84,7 @@ parses to
 ```
 parses to
 ```ruby
-    [ '_arr', [
+  [ '_arr', [
     [ '_num', 1, 1 ], [ '_num', 2, 1 ], [ '_num', 3, 1 ]
   ], 1 ]
 ```
