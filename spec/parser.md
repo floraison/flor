@@ -5,7 +5,7 @@
 # Mon Mar  7 06:24:41 JST 2016
 -->
 
-# atoms
+## atoms
 
 ```radial
   1
@@ -101,7 +101,7 @@ parses to
   ], 1 ]
 ```
 
-# operations
+## operations
 
 ```radial
   10 + 11 - 5
@@ -131,7 +131,7 @@ parses to
   ], 1 ]
 ```
 
-# lines
+## lines
 
 ```radial
   sequence
@@ -179,7 +179,6 @@ parses to
     [ 'b', [], 1 ]
   ], 1 ]
 ```
-
 
 ```radial
   sequence a: 1 + 1, 2
