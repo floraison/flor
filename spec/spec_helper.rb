@@ -104,7 +104,7 @@ class RSpec::Core::ExampleGroup
           li_ra_ru_s.each do |lin, rad, rub|
 
             ra = rad.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
-            ra = "#{tra[0, 60]}..." if ra.length > 60
+            ra = "#{ra[0, 60]}..." if ra.length > 60
             title = "parses li#{lin} `#{ra}`"
 
             ru = Kernel.eval(rub)
