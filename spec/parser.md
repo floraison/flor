@@ -214,3 +214,35 @@ parses to
   ], 1 ]
 ```
 
+## comments
+
+```radial
+  sequence # long time
+    a
+    b # no see
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ 'a', [], 2 ],
+    [ 'b', [], 3 ]
+  ], 1 ]
+```
+---
+
+```radial
+  sequence // slash slash
+    a
+    b // baby
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ 'a', [], 2 ],
+    [ 'b', [], 3 ]
+  ], 1 ]
+```
+---
+
+## line breaks
+
