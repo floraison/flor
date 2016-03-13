@@ -126,7 +126,8 @@ module Flor
         :number, :boolean, :null)
     end
     def rad_valp(i)
-      seq(nil, i, :rad_val, :postval, '?')
+      #seq(nil, i, :rad_val, :postval, '?')
+      seq(nil, i, :rad_val, :wspace)
     end
 
     # precedence
