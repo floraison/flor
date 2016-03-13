@@ -82,9 +82,9 @@ module Flor
       if vs = message['vars']
         node['vars'] = vs
       end
-      if vs = message['tree'][1]['vars']
-        node['vars'] = (node['vars'] || {}).merge(vs) if vs.is_a?(Hash)
-      end
+#      if vs = message['tree'][1]['vars']
+#        node['vars'] = (node['vars'] || {}).merge(vs) if vs.is_a?(Hash)
+#      end
       if cnid = message['cnid']
         node['cnid'] = cnid
       end
@@ -96,7 +96,8 @@ module Flor
 
     def rewrite(tree)
 
-      Flor::Rewriter.rewrite(tree)
+      #Flor::Rewriter.rewrite(tree)
+      tree
     end
 
     def apply(node, message)
@@ -214,13 +215,15 @@ module Flor
         end
 
       t = m['tree'];
-      t0 = t ? " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg}" : ''
+      t0 = t ? " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} #{t[2]}]" : ''
       #t = t ? " #{t[1..-2].inspect[1..-2]}]" : ''
-      t = t ? " #{Flor.to_d(t[1])} #{t[2]}]" : ''
+
+      cn = t ? ' ' + Flor.to_d(t[1], compact: true)[1..-2] : ''
+      cn = cn.length > 49 ? "#{cn[0, 49]}..." : cn
 
       #ind = '  ' * ni.split('_').size
 
-      puts "  #{_dg}#{ni}#{pt}#{t0}#{t}#{fr}#{rt}#{_rs}"
+      puts "  #{_dg}#{ni}#{pt}#{t0}#{cn}#{fr}#{rt}#{_rs}"
     end
 
     def generate_exid(domain)

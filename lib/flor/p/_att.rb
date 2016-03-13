@@ -23,19 +23,18 @@
 #++
 
 
-class Flor::Pro::Val < Flor::Procedure
+class Flor::Pro::Att < Flor::Procedure
 
-  name 'val'
-
-  def heat=(t); @heat = t; end
+  name '_att'
 
   def execute
 
-    v = attributes['_0'] || attributes['v'] || @heat
-    v = Flor.de_val(v) unless Flor.is_procedure_val?(v)
-    v = expand(v)
+    return reply if tree[1] == [ [ '_', [], tree[2] ] ]
 
-    payload['ret'] = v
+    execute_child(-1)
+  end
+
+  def receive
 
     reply
   end

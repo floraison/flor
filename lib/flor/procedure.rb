@@ -41,12 +41,12 @@ class Flor::Procedure < Flor::Node
 
   def execute_child(index)
 
-    return reply unless tree[3][index]
+    return reply unless tree[1][index]
 
     reply(
       'point' => 'execute',
       'nid' => Flor.sub_nid(nid, index),
-      'tree' => tree[3][index])
+      'tree' => tree[1][index])
   end
 
   def sequence_receive
