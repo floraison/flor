@@ -129,7 +129,7 @@ module Flor
     #  %w[ or or ], %w[ and and ],
     #  %w[ equ == != <> ], %w[ lgt < > <= >= ], %w[ sum + - ], %w[ prd * / % ],
 
-    def ssprd(i); rex(:sop, i, /[\*\/%]/); end
+    def ssprd(i); rex(:sop, i, /(\*|\/(?!\/)|%)/); end
     def sssum(i); rex(:sop, i, /[+-]/); end
     def sslgt(i); rex(:sop, i, /(<=?|>=?)/); end
     def ssequ(i); rex(:sop, i, /(==?|!=|<>)/); end
