@@ -43,6 +43,25 @@ RSpec::Matchers.define :eqd do |o|
   end
 end
 
+RSpec::Matchers.define :eqt do |o|
+
+  match do |actual|
+
+    actual == o
+  end
+
+  failure_message do |actual|
+
+    sio = StringIO.new
+      .tap { |io| PP.pp(o, io, 49) }.string.gsub(/^/, ' ' * 10)
+    sactual = StringIO.new
+      .tap { |io| PP.pp(actual, io, 49) }.string.gsub(/^/, ' ' * 10)
+
+    "expected\n" + sio +
+    "     got\n" + sactual
+  end
+end
+
 
 class RSpec::Core::ExampleGroup
 
@@ -109,7 +128,7 @@ class RSpec::Core::ExampleGroup
 
             ru = Kernel.eval(rub)
 
-            it(title) { expect(Flor::Rad.parse(rad)).to eq(ru) }
+            it(title) { expect(Flor::Rad.parse(rad)).to eqt(ru) }
           end
         end
       end
