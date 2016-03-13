@@ -135,6 +135,34 @@ parses to
 ```
 ---
 
+```radial
+  { a: A b: 2 c: true }
+```
+parses to
+```ruby
+  [ '_obj', [
+    [ 'a', [], 1 ], [ 'A', [], 1 ],
+    [ 'b', [], 1 ], [ '_num', 2, 1 ],
+    [ 'c', [], 1 ], [ '_boo', true, 1 ]
+  ], 1 ]
+```
+---
+
+```radial
+  { a: A # ah ah ah
+    b: 2 c: // oh oh oh
+      true }
+```
+parses to
+```ruby
+  [ '_obj', [
+    [ 'a', [], 1 ], [ 'A', [], 1 ],
+    [ 'b', [], 2 ], [ '_num', 2, 2 ],
+    [ 'c', [], 2 ], [ '_boo', true, 3 ]
+  ], 1 ]
+```
+---
+
 ## operations
 
 ```radial
