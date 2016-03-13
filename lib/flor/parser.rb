@@ -111,12 +111,13 @@ module Flor
       eseq(:arr, i, :sbstart, :exp_qmark, :coll_sep, :sbend)
     end
 
-#    def rad_par(i)
-#      seq(:rad_par, i, :pstart, :eol, :ws_star, :rad_grp, :eol, :pend)
-#    end
+    def par(i)
+      seq(:par, i, :pstart, :eol, :ws_star, :grp, :eol, :pend)
+    end
 
     def val(i)
       altg(:val, i,
+        :par,
         :symbol, :sqstring, :dqstring, :rxstring,
         :arr, :obj,
         :number, :boolean, :null)
@@ -204,6 +205,11 @@ module Flor
         end
 
       [ '_obj', cn, ln(t) ]
+    end
+
+    def rewrite_par(t)
+
+      Line.new(t).to_a
     end
 
     def rewrite_exp(t)
