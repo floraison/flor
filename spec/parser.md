@@ -150,7 +150,7 @@ parses to
 
 ```radial
   { a: A # ah ah ah
-    b: 2 c: // oh oh oh
+    b: 2 c: # oh oh oh
       true }
 ```
 parses to
@@ -336,9 +336,9 @@ parses to
 ---
 
 ```radial
-  sequence // slash slash
+  sequence # slash slash
     a
-    b // baby
+    b # baby
 ```
 parses to
 ```ruby
@@ -352,7 +352,7 @@ parses to
 ## line breaks
 
 ```radial
-  [ 1, 2 // trois
+  [ 1, 2 # trois
     4 ]
 ```
 parses to
@@ -384,7 +384,7 @@ parses to
 ---
 
 ```radial
-  sequence a, b, [ 1 // in the middle
+  sequence a, b, [ 1 # in the middle
     2], c
 ```
 parses to

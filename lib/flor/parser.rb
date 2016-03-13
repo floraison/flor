@@ -73,9 +73,7 @@ module Flor
 
     def symbol(i); rex(:symbol, i, /[^: \b\f\n\r\t"',()\[\]{}#\\]+/); end
 
-    def shacomment(i); rex(nil, i, /#[^\r\n]*/); end
-    def slacomment(i); rex(nil, i, /\/\/[^\r\n]*/); end
-    def comment(i); alt(nil, i, :shacomment, :slacomment); end
+    def comment(i); rex(nil, i, /#[^\r\n]*/); end
 
     def ws_plus(i); rex(nil, i, /[ \t]+/); end
     def ws_star(i); rex(nil, i, /[ \t]*/); end
@@ -129,7 +127,7 @@ module Flor
     #  %w[ or or ], %w[ and and ],
     #  %w[ equ == != <> ], %w[ lgt < > <= >= ], %w[ sum + - ], %w[ prd * / % ],
 
-    def ssprd(i); rex(:sop, i, /(\*|\/(?!\/)|%)/); end
+    def ssprd(i); rex(:sop, i, /[\*\/%]/); end
     def sssum(i); rex(:sop, i, /[+-]/); end
     def sslgt(i); rex(:sop, i, /(<=?|>=?)/); end
     def ssequ(i); rex(:sop, i, /(==?|!=|<>)/); end
