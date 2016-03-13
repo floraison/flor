@@ -77,7 +77,8 @@ module Flor
     def slacomment(i); rex(nil, i, /\/\/[^\r\n]*/); end
     def comment(i); alt(nil, i, :shacomment, :slacomment); end
 
-    def wspace(i); rex(nil, i, /[ \t]*/); end
+    def ws_plus(i); rex(nil, i, /[ \t]+/); end
+    def ws_star(i); rex(nil, i, /[ \t]*/); end
     def retnew(i); rex(nil, i, /[\r\n]*/); end
     def colon(i); str(nil, i, ':'); end
     def comma(i); str(nil, i, ','); end
@@ -89,11 +90,13 @@ module Flor
     def pbstart(i); str(nil, i, '{'); end
     def pbend(i); str(nil, i, '}'); end
 
-    def eol(i); seq(nil, i, :wspace, :comment, '?', :retnew); end
+    def eol(i); seq(nil, i, :ws_star, :comment, '?', :retnew); end
     def postval(i); rep(nil, i, :eol, 0); end
-    def sep(i); seq(nil, i, :comma, '?', :postval); end
 
-    #def ope(i); rex(:ope, i, /(\+|-|\/|\*|%|==?|!=|<>|>=?|<=?)/); end
+    def comma_eol(i); seq(nil, i, :comma, :eol); end
+    def comma_qmark_eol(i); seq(nil, i, :comma, '?', :eol); end
+    def coll_sep(i); alt(nil, i, :comma_qmark_eol, :ws_star); end
+    def sep(i); alt(nil, i, :comma_eol, :ws_star); end
 
     def rad_ent(i)
       seq(:rad_ent, i, :rad_key, :postval, :colon, :postval, :rad_val, :postval)
@@ -101,22 +104,19 @@ module Flor
     def rad_ent_qmark(i); rep(nil, i, :rad_ent, 0, 1); end
 
     def rad_obj(i)
-      eseq(:rad_obj, i, :pbstart, :rad_ent_qmark, :sep, :pbend)
+      eseq(:rad_obj, i, :pbstart, :rad_ent_qmark, :coll_sep, :pbend)
     end
 
-    def rad_val_qmark(i); rep(nil, i, :rad_val, 0, 1); end
+    #def rad_exp_qmark(i); rep(nil, i, :rad_exp, 0, 1); end
+    def rad_exp_qmark(i); rep(nil, i, :rad_val, 0, 1); end
 
     def rad_arr(i)
-      eseq(:rad_arr, i, :sbstart, :rad_val_qmark, :sep, :sbend)
+      eseq(:rad_arr, i, :sbstart, :rad_exp_qmark, :coll_sep, :sbend)
     end
 
-    def rad_ope(i)
-      jseq(:rad_ope, i, :rad_val, :ope)
-    end
-
-    def rad_par(i)
-      seq(:rad_par, i, :pstart, :eol, :wspace, :rad_grp, :eol, :pend)
-    end
+#    def rad_par(i)
+#      seq(:rad_par, i, :pstart, :eol, :ws_star, :rad_grp, :eol, :pend)
+#    end
 
     def rad_val(i)
       altg(:rad_val, i,
@@ -125,9 +125,8 @@ module Flor
         :rad_arr, :rad_obj,
         :number, :boolean, :null)
     end
-    def rad_valp(i)
-      #seq(nil, i, :rad_val, :postval, '?')
-      seq(nil, i, :rad_val, :wspace)
+    def rad_val_ws(i)
+      seq(nil, i, :rad_val, :ws_star)
     end
 
     # precedence
@@ -148,7 +147,7 @@ module Flor
     def rad_sand(i); seq(nil, i, :rad_ssand, :eol, '?'); end
     def rad_sor(i); seq(nil, i, :rad_ssor, :eol, '?'); end
 
-    def rad_eprd(i); jseq(:rad_exp, i, :rad_valp, :rad_sprd); end
+    def rad_eprd(i); jseq(:rad_exp, i, :rad_val_ws, :rad_sprd); end
     def rad_esum(i); jseq(:rad_exp, i, :rad_eprd, :rad_ssum); end
     def rad_elgt(i); jseq(:rad_exp, i, :rad_esum, :rad_slgt); end
     def rad_eequ(i); jseq(:rad_exp, i, :rad_elgt, :rad_sequ); end
@@ -161,21 +160,21 @@ module Flor
       # TODO eventually, accept anything and stringify...
 
     def rad_kcol(i)
-      seq(nil, i, :rad_key, :wspace, :colon, :eol, :wspace)
+      #seq(nil, i, :rad_key, :ws_star, :colon, :eol, :ws_star)
+      seq(nil, i, :rad_key, :ws_star, :colon, :eol)
     end
     def rad_elt(i); seq(:rad_elt, i, :rad_kcol, '?', :rad_exp); end
-    def rad_coe(i); seq(nil, i, :comma, :eol); end
-    def rad_com(i); seq(nil, i, :wspace, :rad_coe, '?', :wspace); end
-    def rad_cel(i); seq(nil, i, :rad_com, :rad_elt); end
-    def rad_elts(i); rep(nil, i, :rad_cel, 0); end
-    def rad_hed(i); seq(:rad_hed, i, :rad_exp); end # ?
+    def rad_el(i); seq(:rad_el, i, :sep, :rad_elt); end
+    def rad_elts(i); rep(:rad_elts, i, :rad_el, 0); end
+    def rad_hed(i); seq(:rad_hed, i, :rad_exp); end
     def rad_grp(i); seq(:rad_grp, i, :rad_hed, :rad_elts); end
     def rad_ind(i); rex(:rad_ind, i, /[ \t]*/); end
-    def rad_eol(i); rex(nil, i, /[ \t]*(#[^\n\r]*)?[\n\r]?/); end
 
     def rad_lin(i); seq(:rad_lin, i, :rad_ind, :rad_grp); end
 
-    def rad_line(i); seq(nil, i, :rad_lin, '?', :rad_eol); end
+    #def rad_eol(i); rex(nil, i, /[ \t]*(#[^\n\r]*)?[\n\r]?/); end
+    #def rad_line(i); seq(nil, i, :rad_lin, '?', :rad_eol); end
+    def rad_line(i); seq(nil, i, :rad_lin, '?', :eol); end
     def radial(i); rep(:radial, i, :rad_line, 0); end
 
     # rewriting
@@ -327,7 +326,8 @@ module Flor
       opts = fname if fname.is_a?(Hash) && opts.empty?
 
       #pp super(input, rewrite: false)
-      #pp super(input, debug: 3)
+      pp super(input, debug: 3)
+      #pp super(input, debug: 2)
       r = super(input, opts)
       r << fname if fname
 

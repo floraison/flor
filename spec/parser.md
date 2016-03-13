@@ -100,6 +100,29 @@ parses to
 ---
 
 ```radial
+  [ 1 2 3 ]
+```
+parses to
+```ruby
+  [ '_arr', [
+    [ '_num', 1, 1 ], [ '_num', 2, 1 ], [ '_num', 3, 1 ]
+  ], 1 ]
+```
+---
+
+```radial
+  [1 2
+  3]
+```
+parses to
+```ruby
+  [ '_arr', [
+    [ '_num', 1, 1 ], [ '_num', 2, 1 ], [ '_num', 3, 2 ]
+  ], 1 ]
+```
+---
+
+```radial
   { a: A, b: 2, c: true }
 ```
 parses to
