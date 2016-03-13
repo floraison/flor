@@ -292,20 +292,20 @@ module Flor
         @head = @head[0] if @head[0].is_a?(String) && @head[1] == []
 
         attributes = []
-        children = []
+        #children = []
 
         gt.c1.gather(:rad_elt).each do |et|
 
           if kt = et.lookup(:rad_key)
             attributes << Flor::Rad.rewrite(kt.c0)
-            attributes << Flor::Rad.rewrite(et.lookup(:rad_exp))
           else
-            children << Flor::Rad.rewrite(et.lookup(:rad_exp))
+            attributes << [ '_nul', nil, -1 ]
           end
+          attributes << Flor::Rad.rewrite(et.lookup(:rad_exp))
         end
 
         @children << [ '_atts', attributes, @line ] if attributes.any?
-        @children.concat(children)
+        #@children.concat(children)
       end
     end
 
