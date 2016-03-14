@@ -52,12 +52,12 @@ RSpec::Matchers.define :eqt do |o|
 
   failure_message do |actual|
 
-    sio = StringIO.new
+    so = StringIO.new
       .tap { |io| PP.pp(o, io, 67) }.string.gsub(/^/, ' ' * 2)
     sactual = StringIO.new
       .tap { |io| PP.pp(actual, io, 67) }.string.gsub(/^/, ' ' * 2)
 
-    "expected:\n" + sio + "\ngot:\n" + sactual
+    "expected:\n" + so + "\ngot:\n" + sactual
   end
 end
 
