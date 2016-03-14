@@ -98,6 +98,18 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq(
         [ 1, true, 'buenos dias', 'buenos dias', 'hello', 'world' ])
     end
+
+    it 'pushes to f.ret by default' do
+
+      rad = %{
+        push 5
+      }
+
+      r = @executor.launch(rad, payload: { 'ret' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 5 ])
+    end
   end
 end
 
