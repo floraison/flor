@@ -129,9 +129,7 @@ class Flor::Node
 
     return nil if mod == 'd' # FIXME
 
-    Flor::Executor.procedures[key] ?
-      [ 'val', { 't' => 'procedure', 'v' => key }, -1, [] ] :
-      nil
+    Flor::Executor.procedures[key] ? [ '_proc', key, -1 ] : nil
   end
 
   def lookup_var(node, mod, key)

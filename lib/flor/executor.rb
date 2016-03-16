@@ -118,9 +118,9 @@ module Flor
       heak =
         #if tree[1].is_a?(Array) && tree[1].empty?
         #  Flor::Pro::Val
-        if heat[1]['t'] == 'procedure'
-          Flor::Executor.procedures[heat[1]['v']]
-        elsif heat[1]['t'] == 'function'
+        if heat[0] == '_proc'
+          Flor::Executor.procedures[heat[1]]
+        elsif heat[0] == '_func'
           Flor::Pro::Apply
         else
           Flor::Pro::Val
