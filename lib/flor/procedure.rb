@@ -34,6 +34,11 @@ class Flor::Procedure < Flor::Node
 
   protected
 
+  def atts
+
+    tree[1].select { |t| t[0] == '_att' }.collect { |t| t[1] }
+  end
+
   def attribute(key)
 
     resolve(attributes[key])

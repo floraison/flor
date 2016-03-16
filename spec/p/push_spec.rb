@@ -110,6 +110,8 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 5 ])
     end
+
+    it 'fails if it cannot push'
   end
 end
 
