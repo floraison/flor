@@ -47,7 +47,7 @@ class Flor::Pro::Push < Flor::Procedure
     nr = @node['ret']
 
     if c[0] == '_att' || cid + 1 == children.length
-      target = nr || lookup(children.first[1].first[0])
+      target = nr || lookup_target
       target << payload['ret'] unless target.hash == payload['ret'].hash
     end
 
@@ -57,6 +57,16 @@ class Flor::Pro::Push < Flor::Procedure
     payload['ret'] = nr if nr
 
     reply
+  end
+
+  protected
+
+  def lookup_target
+
+    c = children.first
+    c = c[1].last if c[0] == '_att'
+
+    lookup(c[0])
   end
 end
 

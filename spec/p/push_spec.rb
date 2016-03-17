@@ -46,6 +46,22 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq([ 2 ])
     end
 
+    it 'does not mind if the target list is given as a regular child' do
+
+      rad = %{
+        push
+          f.l
+          1
+          2
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(2)
+      expect(r['payload']['l']).to eq([ 2 ])
+    end
+
     it 'pushes its second attribute if any' do
 
       rad = %{
