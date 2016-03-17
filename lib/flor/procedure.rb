@@ -142,7 +142,7 @@ class Flor::Procedure < Flor::Node
 
   def set_value(k, v)
 
-    #return if k == '_'
+    return if k == '_'
 
     cat, mod, key = key_split(k)
 

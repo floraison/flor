@@ -28,6 +28,7 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
       expect(r['payload']).to eq({})
+      expect(r['vars'].has_key?('_')).to be(false)
     end
 
     it 'sequences its children' do
