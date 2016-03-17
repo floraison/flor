@@ -31,7 +31,7 @@ class Flor::Pro::Att < Flor::Procedure
 
     return reply if tree[1] == [ [ '_', [], tree[2] ] ]
 
-    execute_child(-1)
+    execute_child(children.size - 1)
   end
 
   def receive
