@@ -29,9 +29,7 @@ class Flor::Pro::Push < Flor::Procedure
 
   def execute
 
-    @node['rets'] = []
-
-    case atts.size
+    case children.size
       when 0
         reply
       when 1
@@ -44,20 +42,18 @@ class Flor::Pro::Push < Flor::Procedure
 
   def receive
 
+    cid = Flor.child_id(@message['from'])
+    c = children[cid]
+    nr = @node['ret']
+
+    if c[0] == '_att' || cid + 1 == children.length
+      (nr || lookup(children.first[1].first[0])) << payload['ret']
+    end
+
     ms = sequence_receive
     return ms if ms.first['point'] == 'execute'
 
-    # TODO
-    # if the value comes from an att, push it
-    # else take only the last value (block as sequence)
-
-    (
-      if atts.size == 1
-        payload['ret'] = @node['ret']
-      else
-        lookup(tree[1].first[1].first[0])
-      end
-    ).concat(@node['rets'])
+    payload['ret'] = nr if nr
 
     reply
   end

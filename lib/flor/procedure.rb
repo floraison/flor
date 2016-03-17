@@ -34,9 +34,19 @@ class Flor::Procedure < Flor::Node
 
   protected
 
+  def children
+
+    tree[1]
+  end
+
   def atts
 
     tree[1].select { |t| t[0] == '_att' }.collect { |t| t[1] }
+  end
+
+  def not_atts
+
+    tree[1].select { |t| t[0] != '_att' }
   end
 
   def attribute(key)
