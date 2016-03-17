@@ -36,7 +36,6 @@ class Flor::Node
   def nid; @node['nid']; end
   def parent; @node['parent']; end
   def from; @message['from']; end
-  def attributes; tree[1]; end
   def payload; @message['payload']; end
 
   def lookup_tree(nid)

@@ -59,7 +59,7 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq([ 7 ])
     end
 
-    it 'does not push anything if there is nothing to push' do
+    it 'behaves when it has a single child' do
 
       rad = %{
         push f.l
@@ -68,7 +68,7 @@ describe 'Flor procedures' do
       r = @executor.launch(rad, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['ret']).to eq([])
       expect(r['payload']['l']).to eq([])
     end
 

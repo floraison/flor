@@ -23,38 +23,19 @@
 #++
 
 
-class Flor::Pro::Push < Flor::Procedure
+class Flor::Pro::Val < Flor::Procedure
 
-  name 'push'
+  name 'val'
+
+  def heat=(t); @heat = t; end
 
   def execute
 
-    case children.size
-      when 0
-        reply
-      when 1
-        @node['ret'] = Flor.dup(payload['ret'])
-        execute_child(0)
-      else
-        execute_child(1)
-    end
-  end
+    #v = attributes['_0'] || attributes['v'] || @heat
+    #v = Flor.de_val(v) unless Flor.is_procedure_val?(v)
+    #v = expand(v)
 
-  def receive
-
-    cid = Flor.child_id(@message['from'])
-    c = children[cid]
-    nr = @node['ret']
-
-    if c[0] == '_att' || cid + 1 == children.length
-      target = nr || lookup(children.first[1].first[0])
-      target << payload['ret'] unless target.hash == payload['ret'].hash
-    end
-
-    ms = sequence_receive
-    return ms if ms.first['point'] == 'execute'
-
-    payload['ret'] = nr if nr
+    payload['ret'] = @heat
 
     reply
   end
