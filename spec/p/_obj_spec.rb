@@ -27,9 +27,7 @@ describe 'Flor procedures' do
       r = @executor.launch(%{ { a: 'A' } })
 
       expect(r['point']).to eq('terminated')
-      expect(Flor.to_d(r['payload']['ret'])).to eq(%{
-        { a: [ val, { t: sqstring, v: A }, 1, [] ] }
-      }.strip)
+      expect(r['payload']['ret']).to eqd({ a: 'A' })
     end
   end
 end

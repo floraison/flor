@@ -31,14 +31,18 @@ end
 
 RSpec::Matchers.define :eqd do |o|
 
+  o0 = o
+  o = Flor.to_d(o) unless o.is_a?(String)
+  o = o.strip
+
   match do |actual|
 
-    return Flor.to_d(actual) == o.strip
+    return Flor.to_d(actual) == o
   end
 
   failure_message do |actual|
 
-    "expected #{o.strip}\n" +
+    "expected #{o}\n" +
     "     got #{Flor.to_d(actual)}"
   end
 end
