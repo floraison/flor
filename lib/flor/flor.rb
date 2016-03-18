@@ -125,15 +125,21 @@ module Flor
 
     opts[:cl] = opts[:color] || opts[:colour]
 
-    case x
-      when nil then 'null'
-      when String then string_to_d(x, opts)
-      when Hash then object_to_d(x, opts)
-      when Array then array_to_d(x, opts)
-      when TrueClass then c_tru(x.to_s, opts)
-      when FalseClass then c_tru(x.to_s, opts)
-      else c_num(x.to_s, opts)
+    r =
+      case x
+        when nil then 'null'
+        when String then string_to_d(x, opts)
+        when Hash then object_to_d(x, opts)
+        when Array then array_to_d(x, opts)
+        when TrueClass then c_tru(x.to_s, opts)
+        when FalseClass then c_tru(x.to_s, opts)
+        else c_num(x.to_s, opts)
+      end
+    if opts[:inner]
+      opts.delete(:inner)
+      r = r[1..-2] if r[0, 1] == '[' || r[0, 1] == '{'
     end
+    r
   end
 
   def self.s_to_d(x, opts={})

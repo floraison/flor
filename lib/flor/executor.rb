@@ -218,7 +218,7 @@ module Flor
       t0 = t ? " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} #{t[2]}]" : ''
       #t = t ? " #{t[1..-2].inspect[1..-2]}]" : ''
 
-      cn = t ? ' ' + Flor.to_d(t[1], compact: true)[1..-2] : ''
+      cn = t ? ' ' + Flor.to_d(t[1], compact: true, inner: true) : ''
       cn = cn.length > 49 ? "#{cn[0, 49]}..." : cn
 
       #ind = '  ' * ni.split('_').size
