@@ -25,9 +25,11 @@
 
 class Flor::Pro::Atom < Flor::Procedure
 
-  names %w[ _num ]
+  names %w[ _num _boo _sqs _dqs ]
 
   def execute
+
+# TODO should I use dollar in _dqs?
 
     payload['ret'] = tree[1]
 
