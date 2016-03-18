@@ -17,7 +17,13 @@ describe 'Flor procedures' do
 
   describe '_key' do
 
-    it 'sets the key string in its f.ret'
+    it 'sets the key string in its f.ret' do
+
+      r = @executor.launch([ '_key', [ [ 'a', [], 1 ] ], 1 ])
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('a')
+    end
   end
 
   describe '_obj' do

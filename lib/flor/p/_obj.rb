@@ -23,9 +23,24 @@
 #++
 
 
+class Flor::Pro::Key < Flor::Procedure
+
+  name '_key'
+
+  def execute
+
+    payload['ret'] = children.first[0]
+
+    reply
+  end
+
+  #def receive
+  #end
+end
+
 class Flor::Pro::Obj < Flor::Procedure
 
-  names %w[ _obj ]
+  name '_obj'
 
   def execute
 
