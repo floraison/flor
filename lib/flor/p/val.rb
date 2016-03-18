@@ -27,7 +27,10 @@ class Flor::Pro::Val < Flor::Procedure
 
   name 'val'
 
-  def heat=(t); @heat = t; end
+  def heat=(t)
+
+    @heat = t unless t == [ '_proc', 'val', -1 ]
+  end
 
   def execute
 
