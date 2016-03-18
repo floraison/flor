@@ -201,7 +201,9 @@ module Flor
 
       cn =
         t.subgather(nil).inject([]) do |a, tt|
-          a.concat([ rewrite(tt.c0.c0), rewrite(tt.c4) ])
+          #a.concat([ rewrite(tt.c0.c0), rewrite(tt.c4) ])
+          a << [ '_key', [ rewrite(tt.c0.c0) ], ln(t) ]
+          a << rewrite(tt.c4)
         end
 
       [ '_obj', cn, ln(t) ]
