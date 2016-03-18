@@ -29,12 +29,30 @@ class Flor::Pro::Att < Flor::Procedure
 
   def execute
 
-    return reply if tree[1] == [ [ '_', [], tree[2] ] ]
+    return reply if children == [ [ '_', [], tree[2] ] ]
 
     execute_child(children.size - 1)
   end
 
   def receive
+
+    return receive_vars if key == 'vars'
+
+    reply
+  end
+
+  protected
+
+  def key
+
+    return nil if children.size < 2
+
+    children.first[0]
+  end
+
+  def receive_vars
+
+    parent_node['vars'] = payload['ret']
 
     reply
   end

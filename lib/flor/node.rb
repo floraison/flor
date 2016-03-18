@@ -119,7 +119,7 @@ class Flor::Node
     lookup_tree(nid)
   end
 
-  def parent_node(node)
+  def parent_node(node=@node)
 
     @execution['nodes'][node['parent']]
   end
