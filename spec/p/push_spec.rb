@@ -94,9 +94,11 @@ describe 'Flor procedures' do
         sequence
 
           set v0
-            val "hello"
+            #val "hello"
+            "hello"
           set f.f0
-            val "world"
+            #val "world"
+            "world"
 
           push f.l 1
           push f.l true

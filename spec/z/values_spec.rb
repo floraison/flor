@@ -29,12 +29,12 @@ describe 'Flor a-to-z' do
       expect(r['error']['msg']).to eq("don't know how to apply \"nada\"")
     end
 
-    it 'does not work with strings' do
+    it 'works with strings' do
 
       r = @executor.launch(%{ "abc def" })
 
-      expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq("don't know how to apply \"abc def\"")
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('abc def')
     end
 
     it 'works with arrays' do

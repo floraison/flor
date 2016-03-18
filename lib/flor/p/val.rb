@@ -25,7 +25,7 @@
 
 class Flor::Pro::Val < Flor::Procedure
 
-  name 'val'
+  #name 'val'
 
   def heat=(t)
 
