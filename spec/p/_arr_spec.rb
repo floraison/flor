@@ -17,14 +17,12 @@ describe 'Flor procedures' do
 
   describe '_arr' do
 
-    it 'works' do
+    it 'builds an array' do
 
       r = @executor.launch(%{ [ 1, 2, "trois" ] })
 
       expect(r['point']).to eq('terminated')
-      expect(Flor.to_d(r['payload']['ret'])).to eq(%{
-        [ 1, 2, [ val, { t: dqstring, v: trois }, 1, [] ] ]
-      }.strip)
+      expect(r['payload']['ret']).to eq([ 1, 2, 'trois' ])
     end
   end
 end
