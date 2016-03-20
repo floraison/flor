@@ -23,12 +23,12 @@ describe 'Flor procedures' do
         sequence
           push f.l
             =
-              val "alpha"
-              val alpha
+              "alpha"
+              "alpha"
           push f.l
             =
-              val "alpha"
-              val "bravo"
+              "alpha"
+              "bravo"
       }
 
       r = @executor.launch(rad, payload: { 'l' => [] })
