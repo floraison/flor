@@ -44,12 +44,24 @@ class Flor::Pro::Obj < Flor::Procedure
 
   def execute
 
+    @node['rets'] = []
+
+    receive
+  end
+
+  def receive
+
+    ms = sequence_receive
+    return ms if ms.first['point'] == 'execute'
+
     payload['ret'] = {}
+
+    loop do
+      kv = @node['rets'].shift(2); break if kv.empty?
+      payload['ret'][kv[0].to_s] = kv[1]
+    end
 
     reply
   end
-
-  #def receive
-  #end
 end
 
