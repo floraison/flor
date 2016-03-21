@@ -118,6 +118,8 @@ module Flor
       heak =
         if ! heat.is_a?(Array)
           Flor::Pro::Val
+        elsif tree[1] == []
+          Flor::Pro::Val
         elsif heat[0] == '_proc'
           Flor::Executor.procedures[heat[1]]
         elsif heat[0] == '_func'
@@ -125,9 +127,6 @@ module Flor
         else
           Flor::Pro::Val
         end
-#p [ 0, :tree, tree ]
-#p [ 1, :heat, heat ]
-#p [ 2, :heak, heak ]
 
       head = heak.new(@execution, node, message)
       head.heat = heat if head.respond_to?(:heat=)
