@@ -23,7 +23,7 @@
 #++
 
 
-class Flor::Pro::Arith < Flor::Procedure
+class Flor::Pro::Cmp < Flor::Procedure
 
   names %w[ = == ]
 
