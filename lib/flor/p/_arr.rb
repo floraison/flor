@@ -29,7 +29,7 @@ class Flor::Pro::Arr < Flor::Procedure
 
   def execute
 
-    return reply('payload' => payload.merge('ret' => [])) if tree[1].nil?
+    return reply('ret' => []) if tree[1] == nil
 
     @node['rets'] = []
 
