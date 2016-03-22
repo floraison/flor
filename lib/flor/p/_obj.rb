@@ -44,8 +44,7 @@ class Flor::Pro::Obj < Flor::Procedure
 
   def execute
 
-    return reply('payload' => payload.merge('ret' => {})) \
-      if tree[1] == [ '_' ]
+    return reply('payload' => payload.merge('ret' => {})) if tree[1].nil?
 
     @node['rets'] = []
 
