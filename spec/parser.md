@@ -89,6 +89,15 @@ parses to
 ---
 
 ```radial
+  []
+```
+parses to
+```ruby
+  [ '_arr', [], 1 ]
+```
+---
+
+```radial
   [ 1, 2, 3 ]
 ```
 parses to
@@ -119,6 +128,15 @@ parses to
   [ '_arr', [
     [ '_num', 1, 1 ], [ '_num', 2, 1 ], [ '_num', 3, 2 ]
   ], 1 ]
+```
+---
+
+```radial
+  {}
+```
+parses to
+```ruby
+  [ '_obj', [], 1 ]
 ```
 ---
 
@@ -293,6 +311,7 @@ parses to
     ], 1 ]
   ], 1 ]
 ```
+---
 
 ```radial
   sequence
@@ -316,6 +335,22 @@ parses to
       [ '_att', [ [ '_num', 1, 6 ], ], 6 ],
       [ '_att', [ [ '_num', 2, 6 ], ], 6 ]
     ], 6 ]
+  ], 1 ]
+```
+---
+
+```radial
+  sequence vars: {}
+    task nada, cc: []
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ '_att', [ [ 'vars', [], 1 ], [ '_obj', [], 1 ] ], 1 ],
+    [ 'task', [
+      [ '_att', [ [ 'nada', [], 2 ] ], 2 ],
+      [ '_att', [ [ 'cc', [], 2 ], [ '_arr', [], 2 ] ], 2 ]
+    ], 2 ]
   ], 1 ]
 ```
 
