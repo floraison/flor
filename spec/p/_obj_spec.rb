@@ -28,6 +28,14 @@ describe 'Flor procedures' do
 
   describe '_obj' do
 
+    it 'works (single _)' do
+
+      r = @executor.launch(%{ {} })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq({})
+    end
+
     it 'works' do
 
       r = @executor.launch(%{ { a: 'A' } })

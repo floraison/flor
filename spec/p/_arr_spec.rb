@@ -17,6 +17,14 @@ describe 'Flor procedures' do
 
   describe '_arr' do
 
+    it 'builds an empty array' do
+
+      r = @executor.launch(%{ [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([])
+    end
+
     it 'builds an array' do
 
       r = @executor.launch(%{ [ 1, 2, "trois" ] })

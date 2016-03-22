@@ -194,7 +194,10 @@ module Flor
 
     def rewrite_arr(t)
 
-      [ '_arr', t.subgather(nil).collect { |n| rewrite(n) }, ln(t) ]
+      cn = t.subgather(nil).collect { |n| rewrite(n) }
+      cn << '_' if cn.empty?
+
+      [ '_arr', cn, ln(t) ]
     end
 
     def rewrite_obj(t)
@@ -205,6 +208,7 @@ module Flor
           a << [ '_key', [ k ], k[2] ]
           a << rewrite(tt.c4)
         end
+      cn << '_' if cn.empty?
 
       [ '_obj', cn, ln(t) ]
     end
