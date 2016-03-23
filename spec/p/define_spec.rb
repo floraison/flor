@@ -33,10 +33,8 @@ describe 'Flor procedures' do
 
       expect(
         r['payload']['ret']
-      ).to eqd(
-        %{
-          [ val, { t: function, v: { nid: "0", cnid: "0", fun: 0 } }, 2, [] ]
-        }
+      ).to eq(
+        [ '_func', { nid: '0', cnid: '0' }, 2 ]
       )
     end
   end
@@ -59,10 +57,8 @@ describe 'Flor procedures' do
 
       expect(
         r['payload']['ret']
-      ).to eqd(
-        %{
-          [ val, { t: function, v: { nid: "0", cnid: "0", fun: 0 } }, 2, [] ]
-        }
+      ).to eq(
+        [ '_func', { nid: '0', cnid: '0' }, 2 ]
       )
     end
   end

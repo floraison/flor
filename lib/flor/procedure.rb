@@ -44,6 +44,11 @@ class Flor::Procedure < Flor::Node
     tree[1].select { |t| t[0] == '_att' }.collect { |t| t[1] }
   end
 
+  def not_att_index
+
+    tree[1].index { |t| t[0] != '_att' }
+  end
+
   def not_atts
 
     tree[1].select { |t| t[0] != '_att' }
@@ -160,10 +165,10 @@ class Flor::Procedure < Flor::Node
     end
   end
 
-  def counter_next(key)
-
-    @execution['counters'][key.to_s] += 1
-  end
+  #def counter_next(key)
+  #
+  #  @execution['counters'][key.to_s] += 1
+  #end
 end
 
 # A namespace for primitive procedures
