@@ -18,27 +18,27 @@ describe Flor::Executor do
 
   describe '#rewrite' do
 
-    context '():' do
-
-      it 'rewrites  task bob count: (+ 1 2)' do
-
-        t0 =
-          Flor::Radial.parse(%{
-            task bob count: (+ 1 2)
-          }, 'sx')
-
-        t1 = Flor::Executor.new({}).rewrite(t0)
-
-        expect(t1).to eq(
-          [ 'sequence', {}, 2, [
-            [ 'set', { '_0' => 'w._0' }, 2, [
-              [ '+', { '_0' => 1, '_1' => 2 }, 2, [] ]
-            ] ],
-            [ 'task', { '_0' => 'bob', 'count' => '$(w._0)' }, 2, [] ]
-          ], 'sx' ]
-        )
-      end
-    end
+#    context '():' do
+#
+#      it 'rewrites  task bob count: (+ 1 2)' do
+#
+#        t0 =
+#          Flor::Rad.parse(%{
+#            task bob count: (+ 1 2)
+#          }, 'sx')
+#
+#        t1 = Flor::Executor.new({}).rewrite(t0)
+#
+#        expect(t1).to eqt(
+#          [ 'sequence', {}, 2, [
+#            [ 'set', { '_0' => 'w._0' }, 2, [
+#              [ '+', { '_0' => 1, '_1' => 2 }, 2, [] ]
+#            ] ],
+#            [ 'task', { '_0' => 'bob', 'count' => '$(w._0)' }, 2, [] ]
+#          ], 'sx' ]
+#        )
+#      end
+#    end
   end
 end
 
