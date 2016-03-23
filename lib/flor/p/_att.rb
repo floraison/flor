@@ -32,14 +32,18 @@ class Flor::Pro::Att < Flor::Procedure
     return reply if children == [ [ '_', [], tree[2] ] ]
 
     @node['ret'] = Flor.dup(payload['ret']) \
-      if %w[ vars ].include?(key)
+      if key
+      #if %w[ vars ].include?(key)
 
     execute_child(children.size - 1)
   end
 
   def receive
 
-    return receive_vars if key == 'vars'
+    if k = key
+      m = "receive_#{k}"
+      return respond_to?(m) ? send(m) : receive_att(k)
+    end
 
     reply
   end
@@ -53,6 +57,21 @@ class Flor::Pro::Att < Flor::Procedure
     children.first[0]
   end
 
+  # default
+  #
+  def receive_att(key)
+
+    if parent_node.has_key?('atts')
+      atts = parent_node['atts']
+      atts[key] = payload['ret'] if atts.is_a?(Hash)
+      payload['ret'] = @node['ret']
+    end
+
+    reply
+  end
+
+  # vars: { ... }, inits a scope for the parent node
+  #
   def receive_vars
 
     parent_node['vars'] = payload['ret']
