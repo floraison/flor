@@ -165,10 +165,10 @@ class Flor::Procedure < Flor::Node
     end
   end
 
-  #def counter_next(key)
-  #
-  #  @execution['counters'][key.to_s] += 1
-  #end
+  def counter_next(key)
+
+    @execution['counters'][key.to_s] += 1
+  end
 end
 
 # A namespace for primitive procedures

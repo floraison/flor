@@ -59,7 +59,7 @@ class Flor::Node
 
     tree = lookup_tree_anyway(Flor.parent_id(nid))
 
-    tree[3][Flor.child_id(nid)]
+    tree[1][Flor.child_id(nid)]
   end
 
   def lookup(name)

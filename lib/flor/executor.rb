@@ -82,9 +82,6 @@ module Flor
       if vs = message['vars']
         node['vars'] = vs
       end
-#      if vs = message['tree'][1]['vars']
-#        node['vars'] = (node['vars'] || {}).merge(vs) if vs.is_a?(Hash)
-#      end
       if cnid = message['cnid']
         node['cnid'] = cnid
       end
@@ -94,20 +91,19 @@ module Flor
       apply(node, message)
     end
 
-    def rewrite(tree)
-
-      #Flor::Rewriter.rewrite(tree)
-      tree
-    end
+#    def rewrite(tree)
+#
+#      #Flor::Rewriter.rewrite(tree)
+#      tree
+#    end
 
     def apply(node, message)
 
       n = Flor::Node.new(@execution, node, message)
 
-      tree0 = n.lookup_tree(node['nid'])
-      tree0 = node['tree'] = message['tree'] unless tree0
-
-      tree = rewrite(tree0)
+      tree = message['tree']
+      node['tree'] = tree if tree
+      tree ||= n.lookup_tree(node['nid'])
 
       heat = n.deref(tree[0])
 
