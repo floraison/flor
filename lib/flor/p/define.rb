@@ -32,7 +32,7 @@ class Flor::Pro::Define < Flor::Procedure
     cnode = lookup_var_node(@node, 'l')
     cnid = cnode['nid']
 
-    val = [ '_func', { nid: nid, cnid: cnid }, tree[2] ]
+    val = [ '_func', { 'nid' => nid, 'cnid' => cnid }, tree[2] ]
       # TODO: counter next fun?
 
     set_var('', tree[1].first[1].first[0], val) if tree[0] == 'define'
