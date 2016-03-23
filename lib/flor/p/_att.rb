@@ -31,6 +31,9 @@ class Flor::Pro::Att < Flor::Procedure
 
     return reply if children == [ [ '_', [], tree[2] ] ]
 
+    @node['ret'] = Flor.dup(payload['ret']) \
+      if %w[ vars ].include?(key)
+
     execute_child(children.size - 1)
   end
 
@@ -53,6 +56,7 @@ class Flor::Pro::Att < Flor::Procedure
   def receive_vars
 
     parent_node['vars'] = payload['ret']
+    payload['ret'] = @node['ret']
 
     reply
   end

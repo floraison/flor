@@ -44,5 +44,23 @@ describe 'Flor a-to-z' do
       expect(r['payload']['ret']).to eq(nil)
     end
   end
+
+  context 'common _att' do
+
+    describe 'vars' do
+
+      it 'does not set f.ret' do
+
+        rad = %{
+          sequence vars: { a: 1 }
+        }
+
+        r = @executor.launch(rad)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(nil)
+      end
+    end
+  end
 end
 
