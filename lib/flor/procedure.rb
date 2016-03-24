@@ -65,7 +65,7 @@ class Flor::Procedure < Flor::Node
 
     reply(
       'point' => 'execute',
-      'nid' => Flor.sub_nid(nid, index),
+      'nid' => Flor.child_nid(nid, index),
       'tree' => tree[1][index])
   end
 

@@ -54,5 +54,17 @@ describe Flor do
       expect(Flor.master_nid('0_5')).to eq('0_5')
     end
   end
+
+  describe '.child_nid(nid, i)' do
+
+    it 'adds the given id to make a new nid' do
+
+      expect(
+        Flor.child_nid('0_0_0', 11)
+      ).to eq(
+        '0_0_0_11'
+      )
+    end
+  end
 end
 
