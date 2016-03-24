@@ -75,7 +75,7 @@ module Flor
 
     def comment(i); rex(nil, i, /#[^\r\n]*/); end
 
-    def ws_plus(i); rex(nil, i, /[ \t]+/); end
+    #def ws_plus(i); rex(nil, i, /[ \t]+/); end
     def ws_star(i); rex(nil, i, /[ \t]*/); end
     def retnew(i); rex(nil, i, /[\r\n]*/); end
     def colon(i); str(nil, i, ':'); end
@@ -97,14 +97,12 @@ module Flor
     def sep(i); alt(nil, i, :comma_eol, :ws_star); end
 
     def ent(i)
-      #seq(:ent, i, :key, :postval, :colon, :postval, :val, :postval)
       seq(:ent, i, :key, :postval, :colon, :postval, :exp, :postval)
     end
     def ent_qmark(i); rep(nil, i, :ent, 0, 1); end
 
     def obj(i); eseq(:obj, i, :pbstart, :ent_qmark, :coll_sep, :pbend); end
 
-    #def exp_qmark(i); rep(nil, i, :val, 0, 1); end
     def exp_qmark(i); rep(nil, i, :exp, 0, 1); end
 
     def arr(i)

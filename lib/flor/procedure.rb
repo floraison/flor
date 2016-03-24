@@ -39,25 +39,20 @@ class Flor::Procedure < Flor::Node
     tree[1]
   end
 
-  def atts
-
-    tree[1].select { |t| t[0] == '_att' }.collect { |t| t[1] }
-  end
-
-  def not_att_index
-
-    tree[1].index { |t| t[0] != '_att' }
-  end
-
-  def not_atts
-
-    tree[1].select { |t| t[0] != '_att' }
-  end
-
-  def attribute(key)
-
-    resolve(attributes[key])
-  end
+#  def atts
+#
+#    tree[1].select { |t| t[0] == '_att' }.collect { |t| t[1] }
+#  end
+#
+#  def not_att_index
+#
+#    tree[1].index { |t| t[0] != '_att' }
+#  end
+#
+#  def not_atts
+#
+#    tree[1].select { |t| t[0] != '_att' }
+#  end
 
   def execute_child(index)
 

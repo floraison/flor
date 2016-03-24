@@ -348,28 +348,6 @@ module Flor
     o[3] == []
   end
 
-  def self.is_procedure_val?(o)
-
-    o.is_a?(Array) &&
-    o[0] == 'val' &&
-    o[1].is_a?(Hash) &&
-    o[1]['t'] == 'procedure' &&
-    o[1]['v'].is_a?(String) &&
-    o[2].is_a?(Fixnum) &&
-    o[3] == []
-  end
-
-  def self.to_r(val)
-
-    return val unless is_val?(val)
-
-    if val[1]['t'] == 'rxstring'
-      Kernel.eval(val[1]['v']) # FIXME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    else
-      val[1]['v']
-    end
-  end
-
   def self.de_val(o)
 
     return o unless is_val?(o)
