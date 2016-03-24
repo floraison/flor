@@ -83,8 +83,8 @@ describe 'Flor a-to-z' do
         sequence
           define sub i
             push f.l
-              val $(nid)
-              #[ i, $(nid) ]
+              #val $(nid)
+              [ i, "$(nid)" ]
           sub 0
           sub 1
           sub 2
