@@ -43,15 +43,13 @@ class Flor::Pro::Apply < Flor::Procedure
 
     ms = sequence_receive
 
-    return ms if ms.first['point'] == 'execute'
-
-puts '--------------------------- ' + @node['applied'].inspect
-    return reply if @node['applied']
+    return (@node['applied'] ? reply : ms) if ms.first['point'] == 'execute'
 
     ni = @heat[1]['nid']
     cni = @heat[1]['cnid']
 
     @node['applied'] = "#{ni}-#{counter_next('sub')}"
+#fail "too much!" if @node['applied'].match(/-11$/)
 
     t = lookup_tree_anyway(ni)
     sig, bod = t[1].partition { |c| c[0] == '_att' }
