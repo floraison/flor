@@ -45,8 +45,12 @@ class Flor::Pro::Apply < Flor::Procedure
 
     return (@node['applied'] ? reply : ms) if ms.first['point'] == 'execute'
 
-    ni = @heat[1]['nid']
-    cni = @heat[1]['cnid']
+    src =
+      @heat[0, 2] == [ '_proc', 'apply' ] ?
+      @node['rets'].shift[1] :               # shift!
+      @heat[1]
+    ni = src['nid']
+    cni = src['cnid']
 
     @node['applied'] = "#{ni}-#{counter_next('sub')}"
 fail "too much!" if @node['applied'].match(/-11$/)
