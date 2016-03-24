@@ -281,6 +281,32 @@ module Flor
     puts "#{_dg}+#{_rs}" if nid == '0'
   end
 
+  def self.print_src(tree, opts={ color: true })
+
+    _dg, _rs =
+      opts[:color] && $stdout.tty? ?
+      [ "[1;30m", "[0;0m" ] :
+      [ '', '' ]
+
+    s =
+      if tree.is_a?(String)
+        tree
+      else
+        StringIO.new.tap { |o| PP.pp(tree, o, 77) }.string
+      end
+    ss = s.split("\n")
+    ind =
+      ss.inject(9999) { |i, l|
+        m = l.match(/\A(\s+)/)
+        ii = (m && m[1].length) || 9999
+        ii < i ? ii : i
+      }
+    ss.each do |l|
+      next if l.strip.length < 1
+      puts "#{_dg}|#{l[ind + 1..-1]}#{_rs}"
+    end
+  end
+
 
   #
   # misc

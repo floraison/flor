@@ -38,7 +38,7 @@ module Flor
           h[kv[0].to_sym] = kv[1] ? JSON.parse(kv[1]) : true
           h
         }
-      @options.merge!({ err: 1, log: 1, tree: 1 }) if @options[:all]
+      @options.merge!({ err: 1, log: 1, tree: 1, src: 1 }) if @options[:all]
 
       @options.merge!(opts)
     end
@@ -306,6 +306,7 @@ module Flor
       messages = [ make_launch_msg(tree, opts) ]
       message = nil
 
+      Flor.print_src(tree) if @options[:src]
       Flor.print_tree(messages.first['tree']) if @options[:tree]
 
       loop do
