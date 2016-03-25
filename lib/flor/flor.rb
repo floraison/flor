@@ -261,16 +261,13 @@ module Flor
   #
   # pretty printing
 
-# TODO use different color for log(m) f.ret tail
-# TODO show short arr/obj in log(m) f.ret tail
-
-  # return reset, dark grey, yellow, blue
+  # return reset, dark grey, yellow, blue, light grey
   #
   def self.colours(opts={ color: true })
 
     opts[:color] && $stdout.tty? ?
-    [ "[0;0m", "[1;30m", "[1;33m", "[1;34m" ] :
-    [ '', '', '', '' ]
+    [ "[0;0m", "[1;30m", "[1;33m", "[1;34m", "[0;37m" ] :
+    [ '', '', '', '', '' ]
   end
 
   def self.print_tree(tree, nid='0', opts={ color: true })
@@ -312,27 +309,23 @@ module Flor
     end
   end
 
+  def self.ret_to_s(m)
+
+    s = Flor.to_d(m['payload']['ret'], compact: true)
+    l = s.length
+    l < 35 ? s : "#{s[0, 35]}(...L#{l})"
+  end
+
   def self.log(m)
 
-    _rs, _dg, _yl, _bl = colours
+    _rs, _dg, _yl, _bl, _lg = colours
 
     pt = "#{_bl}#{m['point'][0, 3]}#{_dg}"
     ni = m['nid'] ? "#{m['nid']} " : ''
     fr = m['from'] ? " from #{m['from']}" : ''
 
-    rt =
-      if m['point'] == 'receive'
-        r =
-          case r = m['payload']['ret']
-            when Array then "[l#{r.length}]"
-            when Hash then "{l#{r.length}}"
-            when String then "\"#{r[0, 7]}...\"l#{r.length}"
-            else Flor.to_d(r)
-          end
-        " f.ret #{r}"
-      else
-        ''
-      end
+    rt = ret_to_s(m)
+    rt = rt.length > 0 ? " #{_lg}f.ret #{rt}" : ''
 
     t = m['tree'];
     t0 = t ? " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} #{t[2]}]" : ''
