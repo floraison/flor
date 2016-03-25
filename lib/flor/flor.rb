@@ -234,6 +234,11 @@ module Flor
     child_id(nid) + 1
   end
 
+  def self.sub_nid(nid, subid)
+
+    "#{nid.split('-').first}-#{subid}"
+  end
+
   # Remove the sub_nid if any.
   #
   def self.master_nid(nid)

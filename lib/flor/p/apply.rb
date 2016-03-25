@@ -54,7 +54,7 @@ class Flor::Pro::Apply < Flor::Procedure
     ni = src['nid']
     cni = src['cnid']
 
-    @node['applied'] = "#{ni}-#{counter_next('sub')}"
+    @node['applied'] = Flor.sub_nid(ni, counter_next('sub'))
 
     t = lookup_tree_anyway(ni)
     sig, bod = t[1].partition { |c| c[0] == '_att' }
