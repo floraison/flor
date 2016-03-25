@@ -261,13 +261,21 @@ module Flor
   #
   # pretty printing
 
+# TODO use different color for log(m) f.ret tail
+# TODO show short arr/obj in log(m) f.ret tail
+
+  # return reset, dark grey, yellow, blue
+  #
+  def self.colours(opts={ color: true })
+
+    opts[:color] && $stdout.tty? ?
+    [ "[0;0m", "[1;30m", "[1;33m", "[1;34m" ] :
+    [ '', '', '', '' ]
+  end
+
   def self.print_tree(tree, nid='0', opts={ color: true })
 
-#pp tree if nid == '0'
-    _dg, _yl, _rs =
-      opts[:color] && $stdout.tty? ?
-      [ "[1;30m", "[1;33m", "[0;0m" ] :
-      [ '', '', '' ]
+    _rs, _dg, _yl = colours(opts)
 
     h = "#{_yl}#{Flor.s_to_d(tree[0], compact: true)}"
     c = tree[1].is_a?(Array) ? '' : " #{_yl}#{tree[1]}"
@@ -283,10 +291,7 @@ module Flor
 
   def self.print_src(tree, opts={ color: true })
 
-    _dg, _rs =
-      opts[:color] && $stdout.tty? ?
-      [ "[1;30m", "[0;0m" ] :
-      [ '', '' ]
+    _rs, _dg = colours(opts)
 
     s =
       if tree.is_a?(String)
@@ -309,10 +314,7 @@ module Flor
 
   def self.log(m)
 
-    _dg, _bl, _yl, _rs =
-      $stdout.tty? ?
-      [ "[1;30m", "[1;34m", "[1;33m", "[0;0m" ] :
-      [ '', '', '', '' ]
+    _rs, _dg, _yl, _bl = colours
 
     pt = "#{_bl}#{m['point'][0, 3]}#{_dg}"
     ni = m['nid'] ? "#{m['nid']} " : ''
