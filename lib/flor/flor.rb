@@ -281,7 +281,7 @@ module Flor
 
     h = "#{_yl}#{Flor.s_to_d(tree[0], compact: true)}"
     c = tree[1].is_a?(Array) ? '' : " #{_yl}#{tree[1]}"
-    l = " #{_dg}#{tree[2]}"
+    l = " #{_dg}L#{tree[2]}"
 
     puts "#{_dg}+" if nid == '0'
     puts "#{_dg}| #{nid} #{h}#{c}#{l}#{_rs}"
@@ -310,7 +310,7 @@ module Flor
       }
     ss.each_with_index do |l, i|
       next if l.strip.length < 1
-      puts "#{_dg}#{'%03d' % (i + 1)}#{_lg}#{l[ind + 1..-1]}#{_rs}"
+      puts "#{_dg}L#{'%03d' % (i + 1)}#{_lg}#{l[ind + 1..-1]}#{_rs}"
     end
   end
 
@@ -333,7 +333,7 @@ module Flor
     rt = rt.length > 0 ? " #{_lg}f.ret #{rt}" : ''
 
     t = m['tree'];
-    t0 = t ? " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} #{t[2]}]" : ''
+    t0 = t ? " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} L#{t[2]}]" : ''
     #t = t ? " #{t[1..-2].inspect[1..-2]}]" : ''
 
     cn = t ? ' ' + Flor.to_d(t[1], compact: true, inner: true) : ''
