@@ -293,7 +293,7 @@ module Flor
 
   def self.print_src(tree, opts={ color: true })
 
-    _rs, _dg = colours(opts)
+    _rs, _dg, _, _, _lg = colours(opts)
 
     s =
       if tree.is_a?(String)
@@ -308,9 +308,9 @@ module Flor
         ii = (m && m[1].length) || 9999
         ii < i ? ii : i
       }
-    ss.each do |l|
+    ss.each_with_index do |l, i|
       next if l.strip.length < 1
-      puts "#{_dg}|#{l[ind + 1..-1]}#{_rs}"
+      puts "#{_dg}#{'%03d' % (i + 1)}#{_lg}#{l[ind + 1..-1]}#{_rs}"
     end
   end
 
