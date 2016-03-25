@@ -178,7 +178,6 @@ module Flor
 
       from = message['from']
 
-#p [ :delete, from ]
       fnode = @execution['nodes'][from]
       if fnode
         fnode['deleted'] = true
