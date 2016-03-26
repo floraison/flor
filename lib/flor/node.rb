@@ -96,8 +96,8 @@ class Flor::Node
 
     if o.is_a?(String)
       lookup(o)
-    elsif Flor.is_string_val?(o)
-      lookup(o[1]['v'])
+#    elsif Flor.is_string_val?(o)
+#      lookup(o[1]['v'])
     else
       o
     end
@@ -105,14 +105,14 @@ class Flor::Node
 
   protected
 
-  def resolve(o)
-
-    if Flor.is_val?(o)
-      Flor.de_val(o)
-    else
-      deref(expand(o))
-    end
-  end
+#  def resolve(o)
+#
+#    if Flor.is_val?(o)
+#      Flor.de_val(o)
+#    else
+#      deref(expand(o))
+#    end
+#  end
 
   def tree
 

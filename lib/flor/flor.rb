@@ -381,41 +381,41 @@ module Flor
     end
   end
 
-  def self.is_tree?(o)
+#  def self.is_tree?(o)
+#
+#    o.is_a?(Array) &&
+#    (o[0].is_a?(String) || is_tree?(o[0])) &&
+#    o[1].is_a?(Hash) &&
+#    o[2].is_a?(Fixnum) &&
+#    o[3].is_a?(Array) &&
+#    o[3].all? { |e| is_tree?(e) } # overkill?
+#  end
 
-    o.is_a?(Array) &&
-    (o[0].is_a?(String) || is_tree?(o[0])) &&
-    o[1].is_a?(Hash) &&
-    o[2].is_a?(Fixnum) &&
-    o[3].is_a?(Array) &&
-    o[3].all? { |e| is_tree?(e) } # overkill?
-  end
+#  def self.is_val?(o)
+#
+#    o.is_a?(Array) &&
+#    o[0] == 'val' &&
+#    o[1].is_a?(Hash) &&
+#    o[2].is_a?(Fixnum) &&
+#    o[3] == []
+#  end
 
-  def self.is_val?(o)
+#  def self.is_string_val?(o)
+#
+#    o.is_a?(Array) &&
+#    o[0] == 'val' &&
+#    o[1].is_a?(Hash) &&
+#    %w[ sqstring dqstring ].include?(o[1]['t']) &&
+#    o[1]['v'].is_a?(String) &&
+#    o[2].is_a?(Fixnum) &&
+#    o[3] == []
+#  end
 
-    o.is_a?(Array) &&
-    o[0] == 'val' &&
-    o[1].is_a?(Hash) &&
-    o[2].is_a?(Fixnum) &&
-    o[3] == []
-  end
-
-  def self.is_string_val?(o)
-
-    o.is_a?(Array) &&
-    o[0] == 'val' &&
-    o[1].is_a?(Hash) &&
-    %w[ sqstring dqstring ].include?(o[1]['t']) &&
-    o[1]['v'].is_a?(String) &&
-    o[2].is_a?(Fixnum) &&
-    o[3] == []
-  end
-
-  def self.de_val(o)
-
-    return o unless is_val?(o)
-    return o if o[1]['t'] == 'function'
-    o[1]['v']
-  end
+#  def self.de_val(o)
+#
+#    return o unless is_val?(o)
+#    return o if o[1]['t'] == 'function'
+#    o[1]['v']
+#  end
 end
 

@@ -120,7 +120,8 @@ module Flor
       heat = n.deref(tree[0])
 
       return error_reply(
-        node, message, "don't know how to apply #{Flor.de_val(tree[0]).inspect}"
+        #node, message, "don't know how to apply #{Flor.de_val(tree[0]).inspect}"
+        node, message, "don't know how to apply #{tree[0].inspect}"
       ) if heat == nil
 
       heak =

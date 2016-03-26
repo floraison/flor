@@ -53,21 +53,21 @@ describe Flor do
     end
   end
 
-  describe '.is_tree?' do
-
-    it 'returns true when passed a tree' do
-
-      expect(
-        Flor.is_tree?([ 'val', {}, -1, [] ])
-      ).to eq(true)
-    end
-
-    it 'returns false when passed something other than a tree' do
-
-      expect(
-        Flor.is_tree?([ 'val', {}, true, [] ])
-      ).to eq(false)
-    end
-  end
+#  describe '.is_tree?' do
+#
+#    it 'returns true when passed a tree' do
+#
+#      expect(
+#        Flor.is_tree?([ 'val', {}, -1, [] ])
+#      ).to eq(true)
+#    end
+#
+#    it 'returns false when passed something other than a tree' do
+#
+#      expect(
+#        Flor.is_tree?([ 'val', {}, true, [] ])
+#      ).to eq(false)
+#    end
+#  end
 end
 
