@@ -15,9 +15,9 @@ describe 'Flor a-to-z' do
     @executor = Flor::TransientExecutor.new
   end
 
-  describe 'dollar expressions' do
+  describe 'dollar extrapolation' do
 
-    it 'flips burgers' do
+    it 'substitutes heads' do
 
       rad = %{
         set f.a
