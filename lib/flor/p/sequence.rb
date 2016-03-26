@@ -25,7 +25,7 @@
 
 class Flor::Pro::Sequence < Flor::Procedure
 
-  name 'sequence'
+  names %w[ sequence _apply ]
 
   def execute
 

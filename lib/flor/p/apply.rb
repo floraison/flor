@@ -57,7 +57,7 @@ class Flor::Pro::Apply < Flor::Procedure
     @node['applied'] = Flor.sub_nid(ni, counter_next('sub'))
 
     t = lookup_tree_anyway(ni)
-    sig, bod = t[1].partition { |c| c[0] == '_att' }
+    sig = t[1].select { |c| c[0] == '_att' }
     sig = sig.drop(1) if t[0] == 'define'
 
     vars = {}
@@ -70,7 +70,7 @@ class Flor::Pro::Apply < Flor::Procedure
     reply(
       'point' => 'execute',
       'nid' => @node['applied'],
-      'tree' => [ 'sequence', bod, tree[2] ],
+      'tree' => [ '_apply', t[1], tree[2] ],
       'vars' => vars,
       'cnid' => cni)
   end

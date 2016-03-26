@@ -31,6 +31,9 @@ class Flor::Pro::Att < Flor::Procedure
 
     return reply if children == [ [ '_', [], tree[2] ] ]
 
+    pt = parent_node['tree']
+    return reply if pt && pt[0] == '_apply'
+
     @node['ret'] = Flor.dup(payload['ret']) \
       if key
       #if %w[ vars ].include?(key)

@@ -138,12 +138,11 @@ describe 'Flor a-to-z' do
 
       expect(r['vars'].keys.sort).to eq(%w[ add3 make_adder ])
       #
-      expect(r['vars']['add3']).to eq(
-        #[ '_func', { 'nid' => '0_0_0-1', 'cnid' => '0_0-1' }, 4 ]
-        [ '_func', { 'nid' => '0_0_0', 'cnid' => '0_0-1' }, 4 ]
-      )
       expect(r['vars']['make_adder']).to eq(
         [ '_func', { 'nid' => '0_0', 'cnid' => '0' }, 3 ]
+      )
+      expect(r['vars']['add3']).to eq(
+        [ '_func', { 'nid' => '0_0_2', 'cnid' => '0_0-1' }, 4 ]
       )
 
       expect(r['payload']['ret']).to eq(10)

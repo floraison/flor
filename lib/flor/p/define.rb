@@ -29,6 +29,8 @@ class Flor::Pro::Define < Flor::Procedure
 
   def execute
 
+# TODO: run the atts, bind in #receive
+
     cnode = lookup_var_node(@node, 'l')
     cnid = cnode['nid']
 
