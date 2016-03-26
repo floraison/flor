@@ -34,7 +34,7 @@ describe 'Flor procedures' do
       expect(
         r['payload']['ret']
       ).to eq(
-        [ '_func', { 'nid' => '0', 'cnid' => '0' }, 2 ]
+        [ '_func', { 'nid' => '0', 'cnid' => '0', 'fun' => 0 }, 2 ]
       )
     end
   end
@@ -58,7 +58,7 @@ describe 'Flor procedures' do
       expect(
         r['payload']['ret']
       ).to eq(
-        [ '_func', { 'nid' => '0', 'cnid' => '0' }, 2 ]
+        [ '_func', { 'nid' => '0', 'cnid' => '0', 'fun' => 0 }, 2 ]
       )
     end
   end

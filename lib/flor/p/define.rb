@@ -33,33 +33,15 @@ class Flor::Pro::Define < Flor::Procedure
 
     cnode = lookup_var_node(@node, 'l')
     cnid = cnode['nid']
+    fun = counter_next('fun')
+    (cnode['closures'] ||= []) << fun
 
-    val = [ '_func', { 'nid' => nid, 'cnid' => cnid }, tree[2] ]
-      # TODO: counter next fun?
+    val = [ '_func', { 'nid' => nid, 'cnid' => cnid, 'fun' => fun }, tree[2] ]
 
     set_var('', tree[1].first[1].first[0], val) if tree[0] == 'define'
     payload['ret'] = val
 
     reply
   end
-
-#  def execute
-#
-#    tr = tree
-#
-#    cnode = lookup_var_node(@node, 'l')
-#    cnid = cnode['nid']
-#    fun = counter_next('fun')
-#    (cnode['closures'] ||= []) << fun
-#
-#    v = { 'nid' => nid, 'cnid' => cnid, 'fun' => fun }
-#    as = { 't' => 'function', 'v' => v }
-#    val = [ 'val', as, tr[2], [], *tr[4] ]
-#
-#    set_var('', tr[1]['_0'].to_s, val) if tr[0] == 'define' && tr[1]['_0']
-#    payload['ret'] = val
-#
-#    reply
-#  end
 end
 
