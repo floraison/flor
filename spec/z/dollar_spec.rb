@@ -19,6 +19,8 @@ describe 'Flor a-to-z' do
 
     it 'substitutes heads' do
 
+      # TODO there is no dollar here...
+
       rad = %{
         set f.a
           sequence
