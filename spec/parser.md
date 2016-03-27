@@ -93,7 +93,7 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_arr', [], 1 ]
+  [ '_arr', 0, 1 ]
 ```
 ---
 
@@ -136,7 +136,7 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_obj', [], 1 ]
+  [ '_obj', 0, 1 ]
 ```
 ---
 
@@ -346,10 +346,10 @@ parses to
 parses to
 ```ruby
   [ 'sequence', [
-    [ '_att', [ [ 'vars', [], 1 ], [ '_obj', [], 1 ] ], 1 ],
+    [ '_att', [ [ 'vars', [], 1 ], [ '_obj', 0, 1 ] ], 1 ],
     [ 'task', [
       [ '_att', [ [ 'nada', [], 2 ] ], 2 ],
-      [ '_att', [ [ 'cc', [], 2 ], [ '_arr', [], 2 ] ], 2 ]
+      [ '_att', [ [ 'cc', [], 2 ], [ '_arr', 0, 2 ] ], 2 ]
     ], 2 ]
   ], 1 ]
 ```
