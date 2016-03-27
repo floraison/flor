@@ -22,29 +22,15 @@
 # Made in Japan.
 #++
 
-require 'json'
 
-require 'munemo'
+class Flor::FlorError < StandardError
 
+  attr_reader :node
 
-module Flor
+  def initialize(message, node=nil)
 
-  VERSION = '0.4.0'
-end
-
-require 'flor/flor'
-require 'flor/dollar'
-require 'flor/errors'
-require 'flor/parser'
-require 'flor/node'
-require 'flor/procedure'
-require 'flor/executor'
-
-
-#
-# load callables
-
-Dir[File.join(File.dirname(__FILE__), 'flor/p/*.rb')].each do |path|
-  require path
+    super(message)
+    @node = node
+  end
 end
 

@@ -129,7 +129,18 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([ 5 ])
     end
 
-    it 'fails if it cannot push'
+    it 'fails if it cannot push' do
+
+      rad = %{
+        push 5
+      }
+
+      r = @executor.launch(rad, payload: { 'ret' => 0 })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('cannot push to given target')
+      expect(r['error']['lin']).to eq(2)
+    end
   end
 end
 

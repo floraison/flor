@@ -47,7 +47,12 @@ class Flor::Pro::Push < Flor::Procedure
     nr = @node['ret']
 
     if c[0] == '_att' || cid + 1 == children.length
+
       target = nr || lookup_target
+
+      fail Flor::FlorError.new("cannot push to given target", self) \
+        unless target.respond_to?(:push)
+
       target << payload['ret'] unless target.hash == payload['ret'].hash
     end
 

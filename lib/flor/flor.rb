@@ -372,13 +372,21 @@ module Flor
 
   def self.to_error(o)
 
-    if o.respond_to?(:message)
-      { 'msg' => o.message,
-        'kla' => o.class.to_s,
-        'trc' => o.backtrace[0, 4] }
+    h = {}
+    h['kla'] = o.class.to_s
+
+    if o.is_a?(Exception)
+      h['msg'] = o.message
+      h['trc'] = o.backtrace[0, 4]
+      if n = o.respond_to?(:node) && o.node
+        h['lin'] = n.tree[2]
+        #h['tre'] = n.tree
+      end
     else
-      { 'msg' => o.to_s }
+      h['msg'] = o.to_s
     end
+
+    h
   end
 
 #  def self.is_tree?(o)

@@ -103,6 +103,11 @@ class Flor::Node
     end
   end
 
+  def tree
+
+    lookup_tree(nid)
+  end
+
   protected
 
 #  def resolve(o)
@@ -113,11 +118,6 @@ class Flor::Node
 #      deref(expand(o))
 #    end
 #  end
-
-  def tree
-
-    lookup_tree(nid)
-  end
 
   def parent_node(node=@node)
 

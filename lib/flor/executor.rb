@@ -224,7 +224,7 @@ module Flor
       "#{domain}-#{uid}-#{t}.#{sus}"
     end
 
-    def error_reply(node, message, o)
+    def error_reply(node, message, err)
 
       # TODO: use node (which may be nil)
 
@@ -235,7 +235,7 @@ module Flor
       m['from'] = message['from']
       m['payload'] = message['payload']
       m['tree'] = message['tree']
-      m['error'] = Flor.to_error(o)
+      m['error'] = Flor.to_error(err)
 
       [ m ]
     end
