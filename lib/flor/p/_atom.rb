@@ -29,9 +29,13 @@ class Flor::Pro::Atom < Flor::Procedure
 
   def execute
 
-# TODO should I use dollar in _dqs?
+    payload['ret'] =
+      if tree[0] == '_dqs'
+        expand(tree[1])
+      else
+        tree[1]
+      end
 
-    payload['ret'] = tree[1]
 
     reply
   end
