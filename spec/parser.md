@@ -455,4 +455,26 @@ parses to
     [ 'b', [], 3 ]
   ], 1 ]
 ```
+---
+
+## dollar
+
+```radial
+  sequence
+    f.a
+    "$(f.a)"
+    "$(f.a)-$(f.b)" 1
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ 'f.a', [], 2 ],
+    [ '_dqs', '$(f.a)', 3 ],
+    [ [ '_dqs', '$(f.a)-$(f.b)', 4 ], [
+      [ '_att', [
+        [ '_num', 1, 4 ]
+      ], 4 ]
+    ], 4 ]
+  ], 1 ]
+```
 
