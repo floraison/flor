@@ -51,26 +51,37 @@ class Flor::Pro::Apply < Flor::Procedure
       @heat[0, 2] == [ '_proc', 'apply' ] ?
       @node['rets'].shift[1] :               # shift!
       @heat[1]
-    ni = src['nid']
-    cni = src['cnid']
 
-    @node['applied'] = Flor.sub_nid(ni, counter_next('sub'))
+    ms = apply(src, @node['rets'], tree[2])
 
-    t = lookup_tree_anyway(ni)
+    @node['applied'] = ms.first['nid']
+
+    ms
+  end
+
+  protected
+
+  def apply(fun, args, line)
+
+    fni = fun['nid'] # fun nid
+    cni = fun['cnid'] # closure nid
+    ani = Flor.sub_nid(fni, counter_next('sub')) # applied nid
+
+    t = lookup_tree_anyway(fni)
     sig = t[1].select { |c| c[0] == '_att' }
     sig = sig.drop(1) if t[0] == 'define'
 
     vars = {}
-    vars['arguments'] = @node['rets'] # should I dup?
+    vars['arguments'] = args # should I dup?
     sig.each_with_index do |att, i|
       key = att[1].first[0]
-      vars[key] = @node['rets'][i]
+      vars[key] = args[i]
     end
 
     reply(
       'point' => 'execute',
-      'nid' => @node['applied'],
-      'tree' => [ '_apply', t[1], tree[2] ],
+      'nid' => ani,
+      'tree' => [ '_apply', t[1], line ],
       'vars' => vars,
       'cnid' => cni)
   end
