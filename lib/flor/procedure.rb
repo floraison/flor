@@ -165,6 +165,31 @@ class Flor::Procedure < Flor::Node
 
     @execution['counters'][key.to_s] += 1
   end
+
+  def apply(fun, args, line)
+
+    fni = fun[1]['nid'] # fun nid
+    cni = fun[1]['cnid'] # closure nid
+    ani = Flor.sub_nid(fni, counter_next('sub')) # applied nid
+
+    t = lookup_tree_anyway(fni)
+    sig = t[1].select { |c| c[0] == '_att' }
+    sig = sig.drop(1) if t[0] == 'define'
+
+    vars = {}
+    vars['arguments'] = args # should I dup?
+    sig.each_with_index do |att, i|
+      key = att[1].first[0]
+      vars[key] = args[i]
+    end
+
+    reply(
+      'point' => 'execute',
+      'nid' => ani,
+      'tree' => [ '_apply', t[1], line ],
+      'vars' => vars,
+      'cnid' => cni)
+  end
 end
 
 # A namespace for primitive procedures

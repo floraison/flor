@@ -60,12 +60,14 @@ class Flor::Pro::Map < Flor::Procedure
     return reply('ret' => @node['res']) \
       if @node['index'] == @node['coll'].size
 
-    acn = [ @node['fun'], Flor.to_tree(@node['coll'][@node['index']]) ]
+    #acn = [ @node['fun'], Flor.to_tree(@node['coll'][@node['index']]) ]
+    #
+    #reply(
+    #  'point' => 'execute',
+    #  'nid' => "#{nid}_#{@node['index']}",
+    #  'tree' => [ '_apply', acn, tree[2] ])
 
-    reply(
-      'point' => 'execute',
-      'nid' => "#{nid}_#{@node['index']}",
-      'tree' => [ '_apply', acn, tree[2] ])
+    apply(@node['fun'], @node['coll'][@node['index'], 1], tree[2])
   end
 end
 
