@@ -36,7 +36,6 @@ class Flor::Pro::Atom < Flor::Procedure
         tree[1]
       end
 
-
     reply
   end
 end

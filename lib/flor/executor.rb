@@ -117,7 +117,10 @@ module Flor
 
       #tree = rewrite(tree) # set node['tree']!!!
 
-      heat = n.deref(tree[0])
+      t0 = tree[0]
+      t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
+
+      heat = n.deref(t0)
 
       return error_reply(
         #node, message, "don't know how to apply #{Flor.de_val(tree[0]).inspect}"

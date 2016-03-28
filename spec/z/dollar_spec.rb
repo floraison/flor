@@ -19,20 +19,18 @@ describe 'Flor a-to-z' do
 
     it 'substitutes heads' do
 
-      # TODO there is no dollar here...
-
       rad = %{
-        set f.a
-          sequence
-        #$(f.a)
-        f.a
-          1
-          2
+        set f.a "sequ"
+        set f.b "ence"
+        "$(f.a)$(f.b)"
+          push f.l 1
+          push f.l 2
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(rad, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ 1, 2 ])
       expect(r['payload']['ret']).to eq(2)
     end
   end
