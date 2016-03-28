@@ -70,6 +70,7 @@ class Flor::Procedure < Flor::Node
 
     if i > 0 && rets = @node['rets']
       rets << Flor.dup(payload['ret'])
+      @node['mtime'] = Flor.tstamp
     end
 
     execute_child(i)
