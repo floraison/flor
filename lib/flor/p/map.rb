@@ -23,22 +23,49 @@
 #++
 
 
-class Flor::Pro::Atom < Flor::Procedure
+class Flor::Pro::Map < Flor::Procedure
 
-  names %w[ _num _boo _sqs _dqs _nul _func ]
+  name 'map'
 
   def execute
 
-    payload['ret'] =
-      if tree[0] == '_dqs'
-        expand(tree[1])
-      elsif tree[0] == '_func'
-        tree
-      else
-        tree[1]
-      end
+    @node['ret'] = Flor.dup(payload['ret'])
+    @node['index'] = -1
+    @node['fun'] = nil
+    @node['res'] = []
 
-    reply
+    execute_child(0)
+  end
+
+  def receive
+
+    if @node['coll'] == nil
+
+      if Flor.is_func?(payload['ret'])
+        @node['coll'] = Flor.to_coll(@node['ret'])
+      else
+        @node['coll'] = Flor.to_coll(payload['ret'])
+        return execute_child(1)
+      end
+    end
+
+    if @node['index'] < 0
+      @node['fun'] = payload['ret']
+    else
+      @node['res'] << payload['ret']
+    end
+
+    @node['index'] += 1; @node['mtime'] = Flor.tstamp
+
+    return reply('ret' => @node['res']) \
+      if @node['index'] == @node['coll'].size
+
+    acn = [ @node['fun'], Flor.to_tree(@node['coll'][@node['index']]) ]
+
+    reply(
+      'point' => 'execute',
+      'nid' => "#{nid}_#{@node['index']}",
+      'tree' => [ '_apply', acn, tree[2] ])
   end
 end
 

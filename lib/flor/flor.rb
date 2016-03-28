@@ -221,6 +221,11 @@ module Flor
   #
   # functions about exids, nids, sub_nids, ...
 
+  def self.split_nid(nid)
+
+    nid.split('-')
+  end
+
   def self.child_id(nid)
 
     nid
@@ -248,9 +253,9 @@ module Flor
 
   def self.child_nid(nid, i)
 
-    ab = nid.split('-')
+    ni, d = nid.split('-')
 
-    "#{ab[0]}_#{i}#{ab[1] ? '-' : ''}#{ab[1]}"
+    "#{ni}_#{i}#{d ? "-#{d}" : ''}"
   end
 
   def self.parent_id(nid)
@@ -389,41 +394,19 @@ module Flor
     h
   end
 
-#  def self.is_tree?(o)
-#
-#    o.is_a?(Array) &&
-#    (o[0].is_a?(String) || is_tree?(o[0])) &&
-#    o[1].is_a?(Hash) &&
-#    o[2].is_a?(Fixnum) &&
-#    o[3].is_a?(Array) &&
-#    o[3].all? { |e| is_tree?(e) } # overkill?
-#  end
+  def self.is_func?(o)
 
-#  def self.is_val?(o)
-#
-#    o.is_a?(Array) &&
-#    o[0] == 'val' &&
-#    o[1].is_a?(Hash) &&
-#    o[2].is_a?(Fixnum) &&
-#    o[3] == []
-#  end
+    o.is_a?(Array) &&
+    o[0] == '_func' &&
+    o[1].is_a?(Hash) && o[1].keys.sort == %w[ cnid fund nid ] &&
+    o[2].is_a?(Integer) &&
+    o.size < 5
+  end
 
-#  def self.is_string_val?(o)
-#
-#    o.is_a?(Array) &&
-#    o[0] == 'val' &&
-#    o[1].is_a?(Hash) &&
-#    %w[ sqstring dqstring ].include?(o[1]['t']) &&
-#    o[1]['v'].is_a?(String) &&
-#    o[2].is_a?(Fixnum) &&
-#    o[3] == []
-#  end
+  def self.to_coll(o)
 
-#  def self.de_val(o)
-#
-#    return o unless is_val?(o)
-#    return o if o[1]['t'] == 'function'
-#    o[1]['v']
-#  end
+    #o.respond_to?(:to_a) ? o.to_a : [ a ]
+    Array(o)
+  end
 end
 
