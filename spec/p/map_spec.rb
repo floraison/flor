@@ -31,7 +31,20 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([ 4, 5, 6 ])
     end
 
-    it 'maps f.ret by default'
+    it 'maps f.ret by default' do
+
+      rad = %{
+        [ 1, 2, 3 ]
+        map
+          def x
+            + x 2
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 3, 4, 5 ])
+    end
 
     it 'maps to a function by its name' do
 

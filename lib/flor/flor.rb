@@ -398,7 +398,7 @@ module Flor
 
     o.is_a?(Array) &&
     o[0] == '_func' &&
-    o[1].is_a?(Hash) && o[1].keys.sort == %w[ cnid fund nid ] &&
+    o[1].is_a?(Hash) && o[1].keys.sort == %w[ cnid fun nid ] &&
     o[2].is_a?(Integer) &&
     o.size < 5
   end
