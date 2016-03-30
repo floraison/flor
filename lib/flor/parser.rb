@@ -97,7 +97,7 @@ module Flor
     def sep(i); alt(nil, i, :comma_eol, :bslash_eol, :ws_star); end
 
     def comma_qmark_eol(i); seq(nil, i, :comma, '?', :eol); end
-    def coll_sep(i); alt(nil, i, :comma_qmark_eol, :ws_star); end
+    def coll_sep(i); alt(nil, i, :bslash_eol, :comma_qmark_eol, :ws_star); end
 
     def ent(i)
       seq(:ent, i, :key, :postval, :colon, :postval, :exp, :postval)
