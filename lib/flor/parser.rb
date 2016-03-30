@@ -91,7 +91,7 @@ module Flor
     def eol(i); seq(nil, i, :ws_star, :comment, '?', :retnew); end
     def postval(i); rep(nil, i, :eol, 0); end
 
-    def comma_eol(i); seq(nil, i, :comma, :eol); end
+    def comma_eol(i); seq(nil, i, :comma, :eol, :ws_star); end
     def comma_qmark_eol(i); seq(nil, i, :comma, '?', :eol); end
     def coll_sep(i); alt(nil, i, :comma_qmark_eol, :ws_star); end
     def sep(i); alt(nil, i, :comma_eol, :ws_star); end
@@ -101,13 +101,10 @@ module Flor
     end
     def ent_qmark(i); rep(nil, i, :ent, 0, 1); end
 
-    def obj(i); eseq(:obj, i, :pbstart, :ent_qmark, :coll_sep, :pbend); end
-
     def exp_qmark(i); rep(nil, i, :exp, 0, 1); end
 
-    def arr(i)
-      eseq(:arr, i, :sbstart, :exp_qmark, :coll_sep, :sbend)
-    end
+    def obj(i); eseq(:obj, i, :pbstart, :ent_qmark, :coll_sep, :pbend); end
+    def arr(i); eseq(:arr, i, :sbstart, :exp_qmark, :coll_sep, :sbend); end
 
     def par(i)
       seq(:par, i, :pstart, :eol, :ws_star, :grp, :eol, :pend)
