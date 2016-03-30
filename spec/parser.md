@@ -433,6 +433,35 @@ parses to
 ```
 ---
 
+```radial
+  sequence a, b, [ 1
+    2], c
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ '_att', [ [ 'a', [], 1 ] ], 1 ],
+    [ '_att', [ [ 'b', [], 1 ] ], 1 ],
+    [ '_att', [ [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 2, 2 ] ], 1 ], ], 1 ],
+    [ '_att', [ [ 'c', [], 2 ] ], 2 ]
+  ], 1 ]
+```
+---
+
+```radial
+  sequence a, b,
+    c
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ '_att', [ [ 'a', [], 1 ] ], 1 ],
+    [ '_att', [ [ 'b', [], 1 ] ], 1 ],
+    [ '_att', [ [ 'c', [], 2 ] ], 2 ]
+  ], 1 ]
+```
+---
+
 ## parentheses
 
 ```radial
@@ -477,4 +506,50 @@ parses to
     ], 4 ]
   ], 1 ]
 ```
+---
+
+## semicolon
+
+```radial
+  map [ 1, 2 ]; def x; + 1 x
+```
+parses to
+```ruby
+  [ 'map', [
+    [ '_att', [ [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 2, 1 ] ], 1 ] ], 1 ],
+    [ 'def', [
+      [ '_att', [ [ 'x', [], 1 ] ], 1 ],
+      [ '+', [
+        [ '_att', [ [ '_num', 1, 1 ] ], 1 ],
+        [ '_att', [ [ 'x', [], 1 ] ], 1 ]
+      ], 1 ]
+    ], 1 ]
+  ], 1 ]
+```
+---
+
+```radial
+  sequence; a;; b;; c
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ 'a', [], 1 ], [ 'b', [], 1 ], [ 'c', [], 1 ]
+  ], 1 ]
+```
+---
+
+```radial
+  map \
+    [ 1, 2 ]
+    fun
+```
+parses to
+```ruby
+  [ 'map', [
+    [ '_att', [ [ '_arr', [ [ '_num', 1, 2 ], [ '_num', 2, 2 ] ], 2 ] ], 2 ],
+    [ 'fun', [], 3 ]
+  ], 1 ]
+```
+---
 
