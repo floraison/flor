@@ -80,6 +80,7 @@ module Flor
     def retnew(i); rex(nil, i, /[\r\n]*/); end
     def colon(i); str(nil, i, ':'); end
     def comma(i); str(nil, i, ','); end
+    def bslash(i); str(nil, i, '\\'); end
 
     def pstart(i); str(nil, i, '('); end
     def pend(i); str(nil, i, ')'); end
@@ -92,9 +93,11 @@ module Flor
     def postval(i); rep(nil, i, :eol, 0); end
 
     def comma_eol(i); seq(nil, i, :comma, :eol, :ws_star); end
+    def bslash_eol(i); seq(nil, i, :bslash, :eol, :ws_star); end
+    def sep(i); alt(nil, i, :comma_eol, :bslash_eol, :ws_star); end
+
     def comma_qmark_eol(i); seq(nil, i, :comma, '?', :eol); end
     def coll_sep(i); alt(nil, i, :comma_qmark_eol, :ws_star); end
-    def sep(i); alt(nil, i, :comma_eol, :ws_star); end
 
     def ent(i)
       seq(:ent, i, :key, :postval, :colon, :postval, :exp, :postval)
