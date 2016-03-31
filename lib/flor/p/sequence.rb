@@ -25,11 +25,11 @@
 
 class Flor::Pro::Sequence < Flor::Procedure
 
-  names %w[ sequence _apply ]
+  names %w[ sequence _apply begin ]
 
   def execute
 
-    receive
+    execute_child(0)
   end
 
   def receive
