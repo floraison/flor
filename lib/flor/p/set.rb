@@ -29,6 +29,8 @@ class Flor::Pro::Set < Flor::Procedure
 
   def execute
 
+    @node['ret'] = Flor.dup(payload['ret'])
+
     return execute_child(1) if children.size > 1
     receive
   end
@@ -39,6 +41,7 @@ class Flor::Pro::Set < Flor::Procedure
     return ms if ms.first['point'] == 'execute'
 
     set_value(target, payload['ret'])
+    payload['ret'] = @node['ret'] unless target == 'f.ret'
 
     reply
   end

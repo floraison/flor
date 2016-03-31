@@ -27,7 +27,7 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
-      expect(r['payload']).to eq({})
+      expect(r['payload']).to eq({ 'ret' => nil })
       expect(r['vars'].has_key?('_')).to be(false)
     end
 
@@ -43,7 +43,7 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
-      expect(r['payload']).to eq({ 'a' => 1, 'ret' => 1 })
+      expect(r['payload']).to eq({ 'a' => 1, 'ret' => nil })
     end
 
     it 'sets fields' do
@@ -58,7 +58,7 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
       expect(r['vars']).to eq({})
-      expect(r['payload']).to eq({ 'a' => 0, 'ret' => 0 })
+      expect(r['payload']).to eq({ 'a' => 0, 'ret' => nil })
     end
 
     it 'sets fields deep' do
@@ -73,7 +73,7 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
       expect(r['vars']).to eq({})
-      expect(r['payload']).to eq({ 'h' => { 'count' => 7 }, 'ret' => 7 })
+      expect(r['payload']).to eq({ 'h' => { 'count' => 7 }, 'ret' => nil })
     end
 
     it 'fails when it cannot set a deep field' do
@@ -103,7 +103,7 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
       expect(r['vars']).to eq({ 'a' => 0 })
-      expect(r['payload']).to eq({ 'ret' => 0 })
+      expect(r['payload']).to eq({ 'ret' => nil })
     end
 
     it 'sets variables deep' do
@@ -118,7 +118,7 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
       expect(r['vars']).to eq({ 'h' => { 'count' => 8 } })
-      expect(r['payload']).to eq({ 'ret' => 8 })
+      expect(r['payload']).to eq({ 'ret' => nil })
     end
 
     it 'fails when it cannot set a deep variable' do
@@ -134,6 +134,33 @@ describe 'Flor procedures' do
       expect(r['from']).to eq('0_1')
       expect(r['error']['msg']).to eq("couldn't set var v.h.i.j")
       expect(r['payload']).to eq({ 'ret' => 9 })
+    end
+
+    it 'leaves f.ret untouched' do
+
+      rad = %{
+        11
+        set f.a 12
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['a']).to eq(12)
+      expect(r['payload']['ret']).to eq(11)
+    end
+
+    it 'leaves f.ret unless explicitely setting it' do
+
+      rad = %{
+        11
+        set f.ret 12
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(12)
     end
   end
 

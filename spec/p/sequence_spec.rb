@@ -42,7 +42,7 @@ describe 'Flor procedures' do
       r = @executor.launch(rad)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']).to eq({ 'a' => 0, 'b' => 1, 'ret' => 1 })
+      expect(r['payload']).to eq({ 'a' => 0, 'b' => 1, 'ret' => nil })
     end
 
     it 'returns the value of last child as $(ret)' do
