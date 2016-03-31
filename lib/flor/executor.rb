@@ -100,7 +100,8 @@ module Flor
       node['tree'] = mt if mt && (mt != nt)
       tree = node['tree'] || nt
 
-      #tree = rewrite(tree) # set node['tree']!!!
+      rt = rewrite(tree)
+      node['tree'] = tree = rt if rt != tree
 
       t0 = tree[0]
       t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
@@ -193,6 +194,11 @@ module Flor
       m['error'] = Flor.to_error(err)
 
       [ m ]
+    end
+
+    def rewrite(tree)
+
+      tree
     end
   end
 
