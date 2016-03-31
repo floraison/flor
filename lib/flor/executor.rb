@@ -91,25 +91,10 @@ module Flor
       apply(node, message)
     end
 
-    # TODO or remove
-    #
-    def rewrite(tree)
-
-      #Flor::Rewriter.rewrite(tree)
-      tree
-    end
-
     def apply(node, message)
 
       n = Flor::Node.new(@execution, node, message)
 
-      #tree = n.lookup_tree(node['nid'])
-      #tree = node['tree'] = message['tree'] unless tree
-        #
-      #tree = message['tree']
-      #node['tree'] = tree if tree
-      #tree ||= n.lookup_tree(node['nid'])
-        #
       mt = message['tree']
       nt = n.lookup_tree(node['nid'])
       node['tree'] = mt if mt && (mt != nt)
@@ -123,7 +108,6 @@ module Flor
       heat = n.deref(t0)
 
       return error_reply(
-        #node, message, "don't know how to apply #{Flor.de_val(tree[0]).inspect}"
         node, message, "don't know how to apply #{tree[0].inspect}"
       ) if heat == nil
 
@@ -145,38 +129,6 @@ module Flor
 
       head.send(message['point'])
     end
-
-#    def expand(o, expander)
-#
-#      case o
-#        when Array
-#          o.collect { |e| expand(e, expander) }
-#        when Hash
-#          o.inject({}) { |h, (k, v)|
-#            h[expand(k, expander)] = expand(v, expander); h }
-#        when String
-#          expander.expand(o)
-#        else
-#          o
-#      end
-#    end
-
-#    def rewrite_tree(node, message)
-#
-#      tree0 = message['tree']
-#
-#      expander = Flor::Instruction.new(@execution, node, message, true)
-#
-#      tree1 = [ *expand(tree0[0, 2], expander), *tree0[2..-1] ]
-#      tree1 = rewrite(node, message, tree1)
-#
-#      # TODO beware always reduplicating the tree children
-#      # TODO should be OK, the rewrite_ methods return a new tree as soon
-#      #      as they rewrite
-#
-#      node['inst'] = tree1.first
-#      node['tree'] = tree1 if node['nid'] == '0' || tree1 != tree0
-#    end
 
     def receive(message)
 
@@ -253,6 +205,9 @@ module Flor
       @@procedures ||= {}
     end
   end
+
+  #
+  # implementations
 
   class TransientExecutor < Executor
 
