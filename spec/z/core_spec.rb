@@ -45,26 +45,6 @@ describe 'Flor a-to-z' do
     end
   end
 
-  describe 'a variable as head' do
-
-    it 'is derefenced upon application' do
-
-      rad = %{
-        set f.a
-          sequence
-        #$(f.a)
-        f.a
-          1
-          2
-      }
-
-      r = @executor.launch(rad)
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(2)
-    end
-  end
-
   context 'common _att' do
 
     describe 'vars' do
