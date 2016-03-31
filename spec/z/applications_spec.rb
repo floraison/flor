@@ -169,7 +169,7 @@ describe 'Flor a-to-z' do
         sequence
           define make-withdraw bal
             def amt
-              set bal
+              setr bal
                 -
                   bal
                   amt

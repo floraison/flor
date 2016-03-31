@@ -298,5 +298,21 @@ describe 'Flor procedures' do
       expect(r['vars']).to eq({ 'a' => 1, 'b' => 11 })
     end
   end
+
+  describe 'setr' do
+
+    it 'sets and return the just set value' do
+
+      rad = %{
+        setr f.a
+          0
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']).to eq({ 'a' => 0, 'ret' => 0 })
+    end
+  end
 end
 

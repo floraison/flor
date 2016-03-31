@@ -25,7 +25,7 @@
 
 class Flor::Pro::Set < Flor::Procedure
 
-  name 'set'
+  names %w[ set setr ]
 
   def execute
 
@@ -41,7 +41,9 @@ class Flor::Pro::Set < Flor::Procedure
     return ms if ms.first['point'] == 'execute'
 
     set_value(target, payload['ret'])
-    payload['ret'] = @node['ret'] unless target == 'f.ret'
+
+    payload['ret'] = @node['ret'] \
+      unless tree[0] == 'setr' || target == 'f.ret'
 
     reply
   end
