@@ -37,12 +37,44 @@ describe Flor::Executor do
 
     context "when 'if' suffix" do
 
-      it 'wraps the suffixed line in an ife'
+      it 'wraps the suffixed line in an ife' do
+
+        t0 =
+          Flor::Rad.parse(%{
+            push 2 if a > b
+            #push 2 if > a b
+            #push 2 if (> a b)
+          })
+
+        t1 = Flor::Executor.new({}).rewrite(t0)
+
+        expect(t1).to eq(
+          [ 'ife', [
+            [ '>', [ [ 'a', [], 2 ], [ 'b', [], 2 ] ], 2 ],
+            [ 'push', [ [ '_att', [ [ '_num', 2, 2 ] ], 2 ] ], 2 ]
+          ], 2 ]
+        )
+      end
     end
 
     context "when 'unless' suffix" do
 
-      it 'wraps the suffixed line in an unlesse'
+      it 'wraps the suffixed line in an unlesse' do
+
+        t0 =
+          Flor::Rad.parse(%{
+            push 7 unless a > b
+          })
+
+        t1 = Flor::Executor.new({}).rewrite(t0)
+
+        expect(t1).to eq(
+          [ 'unlesse', [
+            [ '>', [ [ 'a', [], 2 ], [ 'b', [], 2 ] ], 2 ],
+            [ 'push', [ [ '_att', [ [ '_num', 7, 2 ] ], 2 ] ], 2 ]
+          ], 2 ]
+        )
+      end
     end
 
     context 'during execution' do
