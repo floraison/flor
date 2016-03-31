@@ -34,5 +34,22 @@ describe 'Flor a-to-z' do
       expect(r['payload']['ret']).to eq(2)
     end
   end
+
+  describe 'a variable deep reference' do
+
+    it 'yields the desired value' do
+
+      rad = %{
+        set f.c f.a.0
+        f.a.0.b
+      }
+
+      r = @executor.launch(rad, payload: { 'a' => [ { 'b' => 'c' } ] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['c']).to eq({ 'b' => 'c' })
+      expect(r['payload']['ret']).to eq('c')
+    end
+  end
 end
 
