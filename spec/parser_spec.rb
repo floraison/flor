@@ -12,6 +12,6 @@ require 'flor/parser'
 
 describe Flor::Rad do
 
-  interpret File.join(File.dirname(__FILE__), 'parser.md')
+  compare_rad_to_ruby File.join(File.dirname(__FILE__), 'parser.md')
 end
 

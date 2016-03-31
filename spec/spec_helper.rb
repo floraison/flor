@@ -70,7 +70,7 @@ class RSpec::Core::ExampleGroup
 
   class << self
 
-    def interpret(fpath)
+    def compare_rad_to_ruby(fpath)
 
       lines = File.readlines(fpath)
 
