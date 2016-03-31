@@ -71,7 +71,7 @@ module Flor
       }x)
     end
 
-    def symbol(i); rex(:symbol, i, /[^: \b\f\n\r\t"',()\[\]{}#\\]+/); end
+    def symbol(i); rex(:symbol, i, /[^:; \b\f\n\r\t"',()\[\]{}#\\]+/); end
 
     def comment(i); rex(nil, i, /#[^\r\n]*/); end
 
@@ -158,7 +158,7 @@ module Flor
     def elts(i); rep(:elts, i, :el, 0); end
     def hed(i); seq(:hed, i, :exp); end
     def grp(i); seq(:grp, i, :hed, :elts); end
-    def ind(i); rex(:ind, i, /[ \t]*/); end
+    def ind(i); rex(:ind, i, /[; \t]*/); end
 
     def lin(i); seq(:lin, i, :ind, :grp); end
 
@@ -240,8 +240,8 @@ module Flor
 
     class Line
 
-      attr_accessor :parent
-      attr_reader :indent, :children
+      attr_accessor :parent, :indent
+      attr_reader :children
 
       def initialize(tree)
 
@@ -255,6 +255,12 @@ module Flor
       end
 
       def append(line)
+
+        if line.indent == ';'
+          line.indent = self.indent + 2
+        elsif line.indent.is_a?(String)
+          line.indent = self.indent
+        end
 
         if line.indent > self.indent
           @children << line
@@ -278,7 +284,8 @@ module Flor
       def read(tree)
 
         if it = tree.lookup(:ind)
-          @indent = it.string.length
+          semis = it.string.chars.inject(0) { |t, c| c == ';' ? t + 1 : t }
+          @indent = semis > 0 ? ';' * semis : it.length
         end
 
         gt = tree.lookup(:grp)
