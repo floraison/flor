@@ -580,3 +580,28 @@ parses to
   ], 1 ]
 ```
 
+## suffix if and unless
+
+```radial
+  push 7 if a > b
+```
+parses to
+```ruby
+  [ 'ife', [
+    [ '>', [ [ 'a', [], 1 ], [ 'b', [], 1 ] ], 1 ],
+    [ 'push', [ [ '_att', [ [ '_num', 7, 1 ] ], 1 ] ], 1 ]
+  ], 1 ]
+```
+---
+
+```radial
+  push 8 unless a > b
+```
+parses to
+```ruby
+  [ 'unlesse', [
+    [ '>', [ [ 'a', [], 1 ], [ 'b', [], 1 ] ], 1 ],
+    [ 'push', [ [ '_att', [ [ '_num', 8, 1 ] ], 1 ] ], 1 ]
+  ], 1 ]
+```
+

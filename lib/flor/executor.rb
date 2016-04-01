@@ -100,9 +100,6 @@ module Flor
       node['tree'] = mt if mt && (mt != nt)
       tree = node['tree'] || nt
 
-      rt = rewrite(tree)
-      node['tree'] = tree = rt if rt != tree
-
       t0 = tree[0]
       t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
 
@@ -194,27 +191,6 @@ module Flor
       m['error'] = Flor.to_error(err)
 
       [ m ]
-    end
-
-    def rewrite(tree)
-
-      return tree unless tree[1].is_a?(Array)
-
-      atts = tree[1]
-        .inject([]) { |a, c| a << c[1] if c[0] == '_att'; a }
-      i = atts
-        .index { |c|
-          c.size == 1 && %w[ if unless ].include?(c[0][0]) && c[0][1] == []
-        }
-
-      return tree unless i
-
-      t =
-        [ atts[i][0][0] == 'if' ? 'ife' : 'unlesse', [], tree[2], *tree[3, 1] ]
-      t[1].concat(atts[i + 1..-1].collect(&:first))
-      t[1].push([ tree[0], tree[1][0, i], tree[2] ])
-
-      t
     end
   end
 

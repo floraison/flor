@@ -272,11 +272,28 @@ module Flor
 
       def to_a
 
-        if @head.is_a?(Array) && @children.empty?
-          @head
-        else
-          [ @head, @children.collect(&:to_a), @line ]
-        end
+        return @head if @head.is_a?(Array) && @children.empty?
+
+        cn = @children.collect(&:to_a)
+
+        # detect if/unles suffix
+
+        atts =
+          cn.inject([]) { |a, c| a << c[1] if c[0] == '_att'; a }
+        i =
+          atts.index { |c|
+            c.size == 1 && %w[ if unless ].include?(c[0][0]) && c[0][1] == []
+          }
+
+        return [ @head, cn, @line ] unless i
+
+        # rewrite if/unless suffix
+
+        t = [ atts[i][0][0] == 'if' ? 'ife' : 'unlesse', [], @line ]
+        t[1].concat(atts[i + 1..-1].collect(&:first))
+        t[1].push([ @head, cn[0, i], @line ])
+
+        t
       end
 
       protected
