@@ -315,7 +315,7 @@ module Flor
       }
     ss.each_with_index do |l, i|
       next if l.strip.length < 1
-      puts "#{_dg}L#{'%03d' % (i + 1)}#{_lg}#{l[ind + 1..-1]}#{_rs}"
+      puts "#{_dg}L#{'%03d' % (i + 1)} #{_lg}#{l[ind..-1]}#{_rs}"
     end
   end
 
