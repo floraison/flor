@@ -34,21 +34,16 @@ class Flor::Pro::Cond < Flor::Procedure
 
   def receive
 
-p @message
-    reply
+    return reply if @node['found']
+
+    f = Flor.child_id(from)
+
+    if Flor.true?(payload['ret'])
+      @node['found'] = true
+      execute_child(f + 1)
+    else
+      execute_child(f + 2)
+    end
   end
-#  def receive
-#
-#    return reply if Flor.child_id(@message['from']) != 0
-#
-#    nxt =
-#      if tree[0] == 'unlesse'
-#        Flor.false?(payload['ret']) ? 1 : 2
-#      else # 'if'
-#        Flor.true?(payload['ret']) ? 1 : 2
-#      end
-#
-#    execute_child(nxt)
-#  end
 end
 
