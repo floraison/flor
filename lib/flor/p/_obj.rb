@@ -59,8 +59,8 @@ class Flor::Pro::Obj < Flor::Procedure
     payload['ret'] = {}
 
     loop do
-      kv = @node['rets'].shift(2); break if kv.empty?
-      payload['ret'][kv[0].to_s] = kv[1]
+      k, v = @node['rets'].shift(2); break if k.nil?
+      payload['ret'][k.to_s] = v
     end
 
     reply
