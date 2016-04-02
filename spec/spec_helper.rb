@@ -82,6 +82,7 @@ class RSpec::Core::ExampleGroup
       mod = :out
       rad = []
       rub = []
+      pnd = false
 
       lines.each_with_index do |line, i|
 
@@ -91,11 +92,15 @@ class RSpec::Core::ExampleGroup
           current = []
           con = m[1]
 
-        elsif mod == :out && line == "```ruby\n"
+        elsif line.match(/pending/)
+
+          pnd = true
+
+        elsif mod == :out && line.match(/\A```ruby\b/)
 
           mod = :ruby
 
-        elsif mod == :out && line == "```radial\n"
+        elsif mod == :out && line.match(/\A```radial\b/)
 
           lin = i + 1
           mod = :radial
@@ -103,11 +108,13 @@ class RSpec::Core::ExampleGroup
         elsif line == "```\n"
 
           if mod == :ruby
-            current << [ lin, rad.join, rub.join ]
+
+            current << [ lin, rad.join, rub.join, pnd ]
 
             lin = -1
             rub = []
             rad = []
+            pnd = false
           end
           mod = :out
 
@@ -119,11 +126,11 @@ class RSpec::Core::ExampleGroup
 
       contexts << [ con, current ]
 
-      contexts.each do |con, li_ra_ru_s|
+      contexts.each do |con, li_ra_ru_pn_s|
 
         context(con) do
 
-          li_ra_ru_s.each do |lin, rad, rub|
+          li_ra_ru_pn_s.each do |lin, rad, rub, pnd|
 
             ra = rad.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
             ra = "#{ra[0, 60]}..." if ra.length > 60
@@ -131,7 +138,11 @@ class RSpec::Core::ExampleGroup
 
             ru = Kernel.eval(rub)
 
-            it(title) { expect(Flor::Rad.parse(rad)).to eqt(ru) }
+            if pnd
+              pending(title)
+            else
+              it(title) { expect(Flor::Rad.parse(rad)).to eqt(ru) }
+            end
           end
         end
       end
