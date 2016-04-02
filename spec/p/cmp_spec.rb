@@ -46,6 +46,7 @@ describe 'Flor procedures' do
             =
               1
               1
+              1
           push f.l
             =
               1
@@ -172,6 +173,47 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(false)
       expect(r['payload']['l']).to eq([ true, false ])
     end
+  end
+
+  describe '<' do
+
+    it 'compares integers' do
+
+      rad = %{
+        push f.l; < 2 3
+        push f.l; < 3 2
+        push f.l; > 2 3
+        push f.l; > 3 2
+        push f.l; > 3 2 1
+        push f.l; > 3 2 4
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ true, false, false, true, true, false ])
+    end
+
+    it 'compares floats' do
+
+      rad = %{
+        push f.l; < 2.0 3.0
+        push f.l; < 3 2.0
+        push f.l; > 2.0 3.0
+        push f.l; > 3 2.0
+        push f.l; > 3 2.0 1.0
+        push f.l; > 3 2.0 4.1
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ true, false, false, true, true, false ])
+    end
+
+    it 'compares strings'
+    it 'returns false as soon as a boolean is involved'
+    it 'returns false as soon as null is involved'
   end
 end
 
