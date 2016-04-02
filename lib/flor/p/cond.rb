@@ -29,6 +29,8 @@ class Flor::Pro::Cond < Flor::Procedure
 
   def execute
 
+    @node['ret'] = Flor.dup(payload['ret'])
+
     execute_child(0)
   end
 
@@ -41,8 +43,11 @@ class Flor::Pro::Cond < Flor::Procedure
     if Flor.true?(payload['ret'])
       @node['found'] = true
       execute_child(f + 1)
-    else
+    elsif tree[1][f + 2]
       execute_child(f + 2)
+    else # over
+      payload['ret'] = @node['ret']
+      reply
     end
   end
 end

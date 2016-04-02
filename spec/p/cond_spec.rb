@@ -50,6 +50,23 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('less than seven')
     end
+
+    it 'has no effect when there is no match' do
+
+      rad = %{
+        7
+        set a 10
+        cond
+          a < 4 ;; "less than four"
+          a < 7 ;; "less than seven"
+          a < 10 ;; "less than ten"
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(7)
+    end
   end
 end
 
