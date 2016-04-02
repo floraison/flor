@@ -44,7 +44,7 @@ class Flor::Pro::Obj < Flor::Procedure
     if i.even? && ti == nil
       reply
     elsif i.even? && ti[1] == []
-      @node['rets'] << tree[1][i][0]
+      @node['rets'] << (deref(ti[0]) || ti[0])
       execute_child(i + 1)
     else
       execute_child(i)

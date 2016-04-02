@@ -40,6 +40,27 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eqd({ a: 'A' })
     end
+
+    it 'turns keys to strings' do
+
+      r = @executor.launch(%{ { 7: 'sept' } })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq({ '7' => 'sept' })
+    end
+
+    it 'evaluates keys' do
+
+      rad = %{
+        set a "colour"
+        { a: 'yellow' }
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq({ 'colour' => 'yellow' })
+    end
   end
 end
 
