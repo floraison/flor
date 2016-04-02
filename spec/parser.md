@@ -88,6 +88,8 @@ parses to
 ```
 ---
 
+## arrays
+
 ```radial
   []
 ```
@@ -129,7 +131,8 @@ parses to
     [ '_num', 1, 1 ], [ '_num', 2, 1 ], [ '_num', 3, 2 ]
   ], 1 ]
 ```
----
+
+## objects
 
 ```radial
   {}
