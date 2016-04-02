@@ -39,16 +39,26 @@ class Flor::Pro::Cond < Flor::Procedure
     return reply if @node['found']
 
     f = Flor.child_id(from)
+    tf2 = tree[1][f + 2]
 
     if Flor.true?(payload['ret'])
       @node['found'] = true
       execute_child(f + 1)
-    elsif tree[1][f + 2]
+    elsif tf2 && tf2[0, 2] == [ 'else', [] ]
+      @node['found'] = true
+      execute_child(f + 3)
+    else
       execute_child(f + 2)
-    else # over
-      payload['ret'] = @node['ret']
-      reply
     end
+  end
+
+  protected
+
+  def execute_child(i)
+
+    payload['ret'] = @node['ret'] unless tree[1][i]
+
+    super(i)
   end
 end
 

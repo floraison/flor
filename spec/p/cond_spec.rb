@@ -67,6 +67,72 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(7)
     end
+
+    it 'defaults to the "else" if present' do
+
+      rad = %{
+        set a 11
+        cond
+          a < 4 ;; "less than four"
+          a < 7 ;; "less than seven"
+          else ;; "ten or bigger"
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('ten or bigger')
+    end
+
+    it 'does not mind an else followed by nothing' do
+
+      rad = %{
+        7
+        set a 11
+        cond
+          a < 4 ;; "less than four"
+          a < 7 ;; "less than seven"
+          else
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(7)
+    end
+
+    it 'is OK with a true instead of an "else"' do
+
+      rad = %{
+        set a 12
+        cond
+          a < 4 ;; "less than four"
+          a < 7 ;; "less than seven"
+          true ;; "ten or bigger"
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('ten or bigger')
+    end
+
+    it 'does not mind a true followed by nothing' do
+
+      rad = %{
+        7
+        set a 12
+        cond
+          a < 4 ;; "less than four"
+          a < 7 ;; "less than seven"
+          true
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(7)
+    end
   end
 end
 
