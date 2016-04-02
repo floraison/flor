@@ -31,6 +31,25 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(1)
       expect(r['payload']['l']).to eq([ 0, 1 ])
     end
+
+    it 'triggers' do
+
+      rad = %{
+        set a 4
+        cond
+          a < 4
+          "less than four"
+          a < 7
+          "less than seven"
+          a < 10
+          "less than ten"
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('less than seven')
+    end
   end
 end
 
