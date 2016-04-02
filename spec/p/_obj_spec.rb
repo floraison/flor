@@ -15,20 +15,9 @@ describe 'Flor procedures' do
     @executor = Flor::TransientExecutor.new
   end
 
-  describe '_key' do
-
-    it 'sets the key string in its f.ret' do
-
-      r = @executor.launch([ '_key', [ [ 'a', [], 1 ] ], 1 ])
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq('a')
-    end
-  end
-
   describe '_obj' do
 
-    it 'works (single _)' do
+    it 'works  {}' do
 
       r = @executor.launch(%{ {} })
 
@@ -36,7 +25,15 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq({})
     end
 
-    it 'works' do
+    it 'works  { "a": "A" }' do
+
+      r = @executor.launch(%{ { 'a': 'A' } })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eqd({ a: 'A' })
+    end
+
+    it 'works  { a: "A" }' do
 
       r = @executor.launch(%{ { a: 'A' } })
 

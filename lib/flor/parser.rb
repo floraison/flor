@@ -202,8 +202,7 @@ module Flor
 
       cn =
         t.subgather(nil).inject([]) do |a, tt|
-          k = rewrite(tt.c0.c0)
-          a << [ '_key', [ k ], k[2] ]
+          a << rewrite(tt.c0.c0)
           a << rewrite(tt.c4)
         end
       cn = 0 if cn.empty?

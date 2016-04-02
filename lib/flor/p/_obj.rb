@@ -23,21 +23,6 @@
 #++
 
 
-class Flor::Pro::Key < Flor::Procedure
-
-  name '_key'
-
-  def execute
-
-    payload['ret'] = children.first[0]
-
-    reply
-  end
-
-  #def receive
-  #end
-end
-
 class Flor::Pro::Obj < Flor::Procedure
 
   name '_obj'
@@ -46,24 +31,34 @@ class Flor::Pro::Obj < Flor::Procedure
 
     return reply('ret' => {}) if tree[1] == 0
 
-    @node['rets'] = []
-
     receive
   end
 
   def receive
 
-    ms = sequence_receive
-    return ms if ms.first['point'] == 'execute'
+    @node['rets'] << payload['ret'] if @message['point'] == 'receive'
 
-    payload['ret'] = {}
+    i = (@node['rets'] ||= []).size
+    ti = tree[1][i]
 
-    loop do
-      k, v = @node['rets'].shift(2); break if k.nil?
-      payload['ret'][k.to_s] = v
+    if i.even? && ti == nil
+      reply
+    elsif i.even? && ti[1] == []
+      @node['rets'] << tree[1][i][0]
+      execute_child(i + 1)
+    else
+      execute_child(i)
+    end
+  end
+
+  def reply(h={})
+
+    if h == {}
+      a = @node['rets'].inject([]) { |a, e| a.push(a.size.even? ? e.to_s : e) }
+      h['ret'] = Hash[*a]
     end
 
-    reply
+    super(h)
   end
 end
 
