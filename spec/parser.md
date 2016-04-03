@@ -219,6 +219,19 @@ parses to
     [ '_att', [ [ '_num', 3, 1 ] ], 1 ]
   ], 1 ]
 ```
+---
+
+```radial
+  (1,
+   a, # and comment
+   3)
+```
+parses to
+```ruby
+  [ '_arr', [
+    [ '_num', 1, 1 ], [ 'a', [], 2 ], [ '_num', 3, 3 ]
+  ], 1 ]
+```
 
 ## operations
 
