@@ -232,6 +232,19 @@ parses to
     [ '_num', 1, 1 ], [ 'a', [], 2 ], [ '_num', 3, 3 ]
   ], 1 ]
 ```
+---
+
+```radial
+  (1, \ 
+   a, # and comment
+   3)
+```
+parses to
+```ruby
+  [ '_arr', [
+    [ '_num', 1, 1 ], [ 'a', [], 2 ], [ '_num', 3, 3 ]
+  ], 1 ]
+```
 
 ## operations
 
@@ -445,11 +458,37 @@ parses to
 parses to
 ```ruby
   [ '_arr', [
-    [ '_num', 1, 1 ],
-    [ '_num', 2, 1 ],
-    [ '_num', 4, 2 ]
+    [ '_num', 1, 1 ], [ '_num', 2, 1 ], [ '_num', 4, 2 ]
   ], 1 ]
 ```
+---
+
+```radial
+  [ 1, 2, # trois
+    4 ]
+```
+parses to
+```ruby
+  [ '_arr', [
+    [ '_num', 1, 1 ], [ '_num', 2, 1 ], [ '_num', 4, 2 ]
+  ], 1 ]
+```
+---
+
+```radial
+  [ 1,
+  
+  2,
+\
+    4 ]
+```
+parses to
+```ruby
+  [ '_arr', [
+    [ '_num', 1, 1 ], [ '_num', 2, 3 ], [ '_num', 4, 5 ]
+  ], 1 ]
+```
+
 ---
 
 ```radial
