@@ -475,6 +475,7 @@ parses to
 ```
 ---
 
+(pending)
 ```radial
   hello /world/
 ```
