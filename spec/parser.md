@@ -95,6 +95,28 @@ parses to
 ```ruby
   [ '_rxs', '/jkl/i', 1 ]
 ```
+---
+
+```radial
+  /jkl\/3/i
+```
+parses to
+```ruby
+  [ '_rxs', '/jkl\/3/i', 1 ]
+```
+---
+
+```radial
+  /jkl/i / 1
+```
+parses to
+```ruby
+  [ '/', [
+    [ '_rxs', '/jkl/i', 1 ],
+    [ '_num', 1, 1 ]
+  ], 1 ]
+```
+---
 
 ## arrays
 
@@ -426,7 +448,8 @@ parses to
     ], 2 ]
   ], 1 ]
 ```
----
+
+## lines with regexes
 
 ```radial
   match v.a /hello world/
@@ -448,6 +471,36 @@ parses to
   [ 'match', [
     [ '_att', [ [ 'v.a', [], 1 ] ], 1 ],
     [ '_att', [ [ '_rxs', '/hello world/', 1 ] ], 1 ],
+  ], 1 ]
+```
+---
+
+```radial
+  hello /world/
+```
+parses to
+```ruby
+  [ 'hello', [ [ '_att', [ [ '_rxs', '/world/', 1 ] ], 1 ], ], 1 ]
+```
+---
+
+```radial
+  hello, /world/
+```
+parses to
+```ruby
+  [ 'hello', [ [ '_att', [ [ '_rxs', '/world/', 1 ] ], 1 ], ], 1 ]
+```
+---
+
+```radial
+  /hello/ / 'world'
+```
+parses to
+```ruby
+  [ '/', [
+    [ '_rxs', "/hello/", 1 ],
+    [ '_sqs', 'world', 1 ]
   ], 1 ]
 ```
 

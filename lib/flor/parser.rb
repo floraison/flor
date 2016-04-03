@@ -66,7 +66,7 @@ module Flor
         /(
           \\[\/bfnrt] |
           \\u[0-9a-fA-F]{4} |
-          [^'\\\b\f\n\r\t]
+          [^/\\\b\f\n\r\t]
         )*/[a-z]*
       }x)
     end
@@ -159,6 +159,7 @@ module Flor
     def el(i); seq(nil, i, :sep, :elt); end
     def elts(i); rep(:elts, i, :el, 0); end
     def hed(i); seq(:hed, i, :exp); end
+#def hed(i); seq(:hed, i, :val_ws); end
     def grp(i); seq(:grp, i, :hed, :elts); end
     def ind(i); rex(:ind, i, /[; \t]*/); end
 
@@ -372,9 +373,7 @@ module Flor
 
       opts = fname if fname.is_a?(Hash) && opts.empty?
 
-      #pp super(input, rewrite: false)
-      #pp super(input, debug: 3)
-      #pp super(input, debug: 2)
+      #Raabro.pp(super(input, debug: 3))
 
       r = super(input, opts)
       r << fname if fname

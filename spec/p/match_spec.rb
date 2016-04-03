@@ -17,16 +17,34 @@ describe 'Flor procedures' do
 
   describe 'match' do
 
-    it 'returns false when it does not match' do
+    it "returns false when it doesn't match" do
 
       rad = %{
-        match "alpha" /bravo/
+        match "alpha", /bravo/
       }
 
       r = @executor.launch(rad)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']).to eq({ 'ret' => 0 })
+      expect(r['payload']).to eq({ 'ret' => false })
+    end
+
+    it "returns the array of matches" do
+
+      rad = %{
+        push f.l
+          match "stuff", /stuf*/
+        push f.l
+          match "stuff", /s(tu)(f*)/
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['l']).to eq([
+        :x, :y
+      ])
     end
 
     it 'turns the second argument into a regular expression'
