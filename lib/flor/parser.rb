@@ -106,16 +106,18 @@ module Flor
 
     def exp_qmark(i); rep(nil, i, :exp, 0, 1); end
 
+    def bag_key(i); seq(:bag_key, i, :key, :postval, :colon, :postval); end
+    def bag_ent(i); seq(:bag_ent, i, :bag_key, '?', :exp); end
+
     def obj(i); eseq(:obj, i, :pbstart, :ent_qmark, :coll_sep, :pbend); end
     def arr(i); eseq(:arr, i, :sbstart, :exp_qmark, :coll_sep, :sbend); end
 
-    def par(i)
-      seq(:par, i, :pstart, :eol, :ws_star, :grp, :eol, :pend)
-    end
+    def par(i); seq(:par, i, :pstart, :eol, :ws_star, :grp, :eol, :pend); end
+    def bag(i); eseq(:bag, i, :pstart, :bag_ent, :comma_eol, :pend); end
 
     def val(i)
       altg(:val, i,
-        :par,
+        :par, :bag,
         :symbol, :sqstring, :dqstring, :rxstring,
         :arr, :obj,
         :number, :boolean, :null)
@@ -208,6 +210,29 @@ module Flor
       cn = 0 if cn.empty?
 
       [ '_obj', cn, ln(t) ]
+    end
+
+    def rewrite_bag(t)
+
+      l = ln(t)
+
+      ts =
+        t.subgather(nil).inject([]) do |a, tt|
+          k = tt.lookup(:bag_key)
+          a.push(k ? rewrite(k.c0.c0) : nil, rewrite(tt.clast))
+        end
+
+      es = []; while ts.any?; es << [ es.size, ts.shift, ts.shift ]; end
+
+      if es.all? { |e| e[1] == nil }
+        [ '_arr',
+          es.map { |e| e[2] },
+          l ]
+      else
+        [ '_obj',
+          es.map { |e| [ e[1] || [ "_#{e[0]}", [], l ], e[2] ] }.flatten(1),
+          l ]
+      end
     end
 
     def rewrite_par(t)
