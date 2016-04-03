@@ -211,9 +211,33 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq([ true, false, false, true, true, false ])
     end
 
-    it 'compares strings'
-    it 'returns false as soon as a boolean is involved'
-    it 'returns false as soon as null is involved'
+    it 'compares strings' do
+
+      rad = %{
+        push f.l; < 'aa' 'bb'
+        push f.l; < 'cc' 'bb'
+        push f.l; > 'zz' 'cc' 'bb'
+        push f.l; > 'bb' 'zz'
+        push f.l; > 'zz' 'aa' 'bb'
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ true, false, true, false, false ])
+    end
+
+    it 'fails when arguments are not comparable' do
+
+      r = @executor.launch(%{ < 'a' 1 })
+      expect(r['point']).to eq('failed')
+
+      r = @executor.launch(%{ < 'a' true })
+      expect(r['point']).to eq('failed')
+
+      r = @executor.launch(%{ < true true })
+      expect(r['point']).to eq('failed')
+    end
   end
 end
 

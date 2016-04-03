@@ -65,7 +65,7 @@ class Flor::Pro::Cmp < Flor::Procedure
 
   def check_lesser
 
-    a, b = @node['rets'].first, @node['rets'].last
+    a, b = @node['rets'][-2], @node['rets'][-1]
 
     case tree[0]
       when '<' then return false if a >= b
