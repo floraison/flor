@@ -80,13 +80,21 @@ parses to
 ---
 
 ```radial
+  /jkl/
+```
+parses to
+```ruby
+  [ '_rxs', '/jkl/', 1 ]
+```
+---
+
+```radial
   /jkl/i
 ```
 parses to
 ```ruby
   [ '_rxs', '/jkl/i', 1 ]
 ```
----
 
 ## arrays
 
@@ -416,6 +424,30 @@ parses to
       [ '_att', [ [ 'nada', [], 2 ] ], 2 ],
       [ '_att', [ [ 'cc', [], 2 ], [ '_arr', 0, 2 ] ], 2 ]
     ], 2 ]
+  ], 1 ]
+```
+---
+
+```radial
+  match v.a /hello world/
+```
+parses to
+```ruby
+  [ 'match', [
+    [ '_att', [ [ '/', [ ['v.a', [], 1 ], [ 'hello', [], 1 ] ], 1 ] ], 1 ],
+    [ '_att', [ [ 'world/', [], 1 ] ], 1 ]
+  ], 1 ]
+```
+---
+
+```radial
+  match v.a, /hello world/
+```
+parses to
+```ruby
+  [ 'match', [
+    [ '_att', [ [ 'v.a', [], 1 ] ], 1 ],
+    [ '_att', [ [ '_rxs', '/hello world/', 1 ] ], 1 ],
   ], 1 ]
 ```
 
