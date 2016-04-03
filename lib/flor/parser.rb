@@ -106,7 +106,7 @@ module Flor
 
     def exp_qmark(i); rep(nil, i, :exp, 0, 1); end
 
-    def bag_key(i); seq(:bag_key, i, :key, :postval, :colon, :postval); end
+    def bag_key(i); seq(nil, i, :key, :postval, :colon, :postval); end
     def bag_ent(i); seq(:bag_ent, i, :bag_key, '?', :exp); end
 
     def obj(i); eseq(:obj, i, :pbstart, :ent_qmark, :coll_sep, :pbend); end
@@ -218,8 +218,8 @@ module Flor
 
       ts =
         t.subgather(nil).inject([]) do |a, tt|
-          k = tt.lookup(:bag_key)
-          a.push(k ? rewrite(k.c0.c0) : nil, rewrite(tt.clast))
+          k = tt.lookup(:key)
+          a.push(k ? rewrite(k.c0) : nil, rewrite(tt.clast))
         end
 
       es = []; while ts.any?; es << [ es.size, ts.shift, ts.shift ]; end
