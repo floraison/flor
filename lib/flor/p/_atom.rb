@@ -25,17 +25,16 @@
 
 class Flor::Pro::Atom < Flor::Procedure
 
-  names %w[ _num _boo _sqs _dqs _nul _func ]
+  names %w[ _num _boo _sqs _dqs _rxs _nul _func ]
 
   def execute
 
     payload['ret'] =
-      if tree[0] == '_dqs'
-        expand(tree[1])
-      elsif tree[0] == '_func'
-        tree
-      else
-        tree[1]
+      case tree[0]
+        when '_dqs' then expand(tree[1])
+        when '_rxs' then [ tree[0], expand(tree[1]), *tree[2..-1] ]
+        when '_func' then tree
+        else tree[1]
       end
 
     reply

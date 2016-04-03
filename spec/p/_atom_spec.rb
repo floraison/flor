@@ -26,6 +26,25 @@ describe 'Flor procedures' do
     end
   end
 
+  describe '_rxs' do
+
+    it 'builds a regular expression' do
+
+      r = @executor.launch(%{ /hello world/i })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ '_rxs', '/hello world/i', 1 ])
+    end
+
+    it 'expands the expression' do
+
+      r = @executor.launch(%{ /hello $(f.to)/i }, payload: { 'to' => 'mundo' })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ '_rxs', '/hello mundo/i', 1 ])
+    end
+  end
+
   describe '_num' do
 
     it 'works with numbers' do
