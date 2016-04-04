@@ -26,7 +26,7 @@ describe 'Flor procedures' do
       r = @executor.launch(rad)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']).to eq({ 'ret' => false })
+      expect(r['payload']).to eq({ 'ret' => [] })
     end
 
     it "returns the array of matches" do
@@ -41,10 +41,7 @@ describe 'Flor procedures' do
       r = @executor.launch(rad, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-
-      expect(r['payload']['l']).to eq([
-        :x, :y
-      ])
+      expect(r['payload']['l']).to eq([ %w[ stuff ], %w[ stuff tu ff ] ])
     end
 
     it 'turns the second argument into a regular expression'

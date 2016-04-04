@@ -39,10 +39,35 @@ class Flor::Pro::Match < Flor::Procedure
     ms = sequence_receive
     return ms if ms.first['point'] == 'execute'
 
-    #payload['ret'] = success
-p @node['rets']
+    rex, str = arguments
+
+    payload['ret'] =
+      if m = rex.match(str)
+        m.to_a
+      else
+        []
+      end
 
     reply
+  end
+
+  protected
+
+  def arguments
+
+    fail ArgumentError.new(
+      "'match' needs at least 2 arguments"
+    ) if @node['rets'].size < 2
+
+    rex = @node['rets']
+      .find { |r| r.is_a?(Array) && r[0] == '_rxs' } || @node['rets'].last
+
+    str = (@node['rets'] - [ rex ]).first
+
+    rex = rex[1].to_s
+    rex = rex.match(/\A\/[^\/]*\/[a-z]*\z/) ? Kernel.eval(rex) : Regex.new(rex)
+
+    [ rex, str ]
   end
 end
 
