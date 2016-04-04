@@ -203,58 +203,5 @@ module Flor
       @@procedures ||= {}
     end
   end
-
-  #
-  # implementations
-
-  class TransientExecutor < Executor
-
-    def initialize(opts={})
-
-      super(opts)
-
-      @execution = {
-        'exid' => generate_exid('eval'),
-        'nodes' => {},
-        'errors' => [],
-        'counters' => { 'sub' => 0, 'fun' => -1 } }
-    end
-
-    def launch(tree, opts={})
-
-      messages = [ make_launch_msg(tree, opts) ]
-      message = nil
-
-      Flor.print_src(tree) if @options[:src]
-      Flor.print_tree(messages.first['tree']) if @options[:tree]
-
-      loop do
-
-        message = messages.pop
-
-        break unless message
-
-        Flor.log(message) if @options[:log]
-
-        point = message['point']
-
-        pp message if point == 'failed' && @options[:err]
-
-        break if point == 'failed'
-        break if point == 'terminated'
-
-        msgs =
-          begin
-            self.send(point.to_sym, message)
-          rescue => e
-            error_reply(nil, message, e)
-          end
-
-        messages.concat(msgs)
-      end
-
-      message
-    end
-  end
 end
 

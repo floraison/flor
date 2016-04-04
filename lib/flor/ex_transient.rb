@@ -22,31 +22,57 @@
 # Made in Japan.
 #++
 
-require 'json'
-
-require 'munemo'
-
 
 module Flor
 
-  VERSION = '0.4.0'
-end
+  class TransientExecutor < Executor
 
-require 'flor/flor'
-require 'flor/dollar'
-require 'flor/errors'
-require 'flor/parser'
-require 'flor/node'
-require 'flor/procedure'
+    def initialize(opts={})
 
-require 'flor/executor'
-require 'flor/ex_transient'
+      super(opts)
 
+      @execution = {
+        'exid' => generate_exid('eval'),
+        'nodes' => {},
+        'errors' => [],
+        'counters' => { 'sub' => 0, 'fun' => -1 } }
+    end
 
-#
-# load callables
+    def launch(tree, opts={})
 
-Dir[File.join(File.dirname(__FILE__), 'flor/p/*.rb')].each do |path|
-  require path
+      messages = [ make_launch_msg(tree, opts) ]
+      message = nil
+
+      Flor.print_src(tree) if @options[:src]
+      Flor.print_tree(messages.first['tree']) if @options[:tree]
+
+      loop do
+
+        message = messages.pop
+
+        break unless message
+
+        Flor.log(message) if @options[:log]
+
+        point = message['point']
+
+        pp message if point == 'failed' && @options[:err]
+
+        break if point == 'failed'
+        break if point == 'terminated'
+
+        msgs =
+          begin
+            self.send(point.to_sym, message)
+          rescue => e
+            error_reply(nil, message, e)
+          end
+
+        messages.concat(msgs)
+      end
+
+      message
+    end
+  end
 end
 
