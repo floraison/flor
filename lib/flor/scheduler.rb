@@ -22,33 +22,15 @@
 # Made in Japan.
 #++
 
-require 'json'
-
-require 'munemo'
-
 
 module Flor
 
-  VERSION = '0.4.0'
-end
+  class Scheduler
 
-require 'flor/flor'
-require 'flor/dollar'
-require 'flor/errors'
-require 'flor/parser'
-require 'flor/node'
-require 'flor/procedure'
+    def initialize(db)
 
-require 'flor/executor'
-require 'flor/ex_transient'
-
-require 'flor/scheduler'
-
-
-#
-# load callables
-
-Dir[File.join(File.dirname(__FILE__), 'flor/p/*.rb')].each do |path|
-  require path
+      @db = db
+    end
+  end
 end
 
