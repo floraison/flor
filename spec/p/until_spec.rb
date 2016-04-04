@@ -47,7 +47,22 @@ describe 'Flor procedures' do
       expect(r['payload']['a']).to eq(3)
     end
 
-    it "returns the last child's f.ret"
+    it "returns the last child's f.ret" do
+
+      rad = %{
+        set f.a 1
+        #until; = f.a 3
+        until (= f.a 3)
+          set f.a
+            + f.a 1
+          + f.a 10
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(13)
+    end
   end
 
   describe 'while' do
