@@ -45,8 +45,19 @@ class Flor::Pro::Until < Flor::Procedure
       tru = Flor.true?(payload['ret'])
 
       if (tru && t0 == 'until') || ( ! tru && t0 == 'while')
-        reply('ret' => @node['ret'])
+
+        # over
+
+        if @node.has_key?('ret')
+          reply('ret' => @node['ret'])
+        else
+          reply
+        end
+
       else
+
+        # one more loop
+
         @node['count'] += 1
         execute_child(1, @node['count'])
       end
