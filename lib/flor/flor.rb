@@ -251,9 +251,10 @@ module Flor
     nid.split('-').first
   end
 
-  def self.child_nid(nid, i)
+  def self.child_nid(nid, i, sub=0)
 
     ni, d = nid.split('-')
+    d = sub if d == nil && sub > 0
 
     "#{ni}_#{i}#{d ? "-#{d}" : ''}"
   end

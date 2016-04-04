@@ -66,5 +66,22 @@ describe Flor do
       )
     end
   end
+
+  describe '.child_nid(nid, i, sub)' do
+
+    it 'ads the given id and the given sub to make a new nid' do
+
+      expect(
+        Flor.child_nid('0_0_0', 11, 0)
+      ).to eq(
+        '0_0_0_11'
+      )
+      expect(
+        Flor.child_nid('0_0', 12, 1)
+      ).to eq(
+        '0_0_12-1'
+      )
+    end
+  end
 end
 
