@@ -30,7 +30,7 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(7)
     end
 
-    it 'loops until a condition evaluates to true' do
+    it 'loops until the condition evaluates to true' do
 
       rad = %{
         set f.a 1
@@ -67,9 +67,52 @@ describe 'Flor procedures' do
 
   describe 'while' do
 
-    it 'has no effect when it has no children'
-    it 'loops until a condition evaluates to true'
-    it "returns the last child's f.ret"
+    it 'has no effect when it has no children' do
+
+      rad = %{
+        8
+        while _
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(8)
+    end
+
+    it 'loops until the condition evaluates to false' do
+
+      rad = %{
+        set f.a 1
+        while
+          f.a < 3
+          set f.a
+            + f.a 1
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(true)
+      expect(r['payload']['a']).to eq(3)
+    end
+
+    it "returns the last child's f.ret" do
+
+      rad = %{
+        set f.a 1
+        #while; < f.a 3
+        while (< f.a 3)
+          set f.a
+            + f.a 1
+          + f.a 20
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(23)
+    end
   end
 end
 
