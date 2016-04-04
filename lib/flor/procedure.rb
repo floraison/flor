@@ -39,28 +39,13 @@ class Flor::Procedure < Flor::Node
     tree[1]
   end
 
-#  def atts
-#
-#    tree[1].select { |t| t[0] == '_att' }.collect { |t| t[1] }
-#  end
-#
-#  def not_att_index
-#
-#    tree[1].index { |t| t[0] != '_att' }
-#  end
-#
-#  def not_atts
-#
-#    tree[1].select { |t| t[0] != '_att' }
-#  end
-
-  def execute_child(index)
+  def execute_child(index, sub=0)
 
     return reply unless tree[1][index]
 
     reply(
       'point' => 'execute',
-      'nid' => Flor.child_nid(nid, index),
+      'nid' => Flor.child_nid(nid, index, sub),
       'tree' => tree[1][index])
   end
 
