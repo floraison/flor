@@ -63,6 +63,20 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(13)
     end
+
+    it "doesn't iterate if the condition is immediately true" do
+
+      rad = %{
+        set f.a 1
+        until; = f.a 1
+          #6
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(true)
+    end
   end
 
   describe 'while' do
@@ -112,6 +126,20 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(23)
+    end
+
+    it "doesn't iterate if the condition is immediately false" do
+
+      rad = %{
+        set f.a 0
+        while; = f.a 1
+          #6
+      }
+
+      r = @executor.launch(rad)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(false)
     end
   end
 end
