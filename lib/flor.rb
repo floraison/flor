@@ -25,6 +25,7 @@
 require 'json'
 
 require 'munemo'
+require 'raabro'
 
 
 module Flor
