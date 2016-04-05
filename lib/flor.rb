@@ -48,7 +48,7 @@ require 'flor/scheduler'
 #
 # load callables
 
-Dir[File.join(File.dirname(__FILE__), 'flor/p/*.rb')].each do |path|
+Dir[File.join(File.dirname(__FILE__), 'flor/pcore/*.rb')].each do |path|
   require path
 end
 
