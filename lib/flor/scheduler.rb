@@ -22,14 +22,53 @@
 # Made in Japan.
 #++
 
+require 'logger'
+
 
 module Flor
 
   class Scheduler
 
-    def initialize(db)
+    def initialize(db, opts={})
 
       @db = db
+      @frequency = opts[:frequency] || 0.3
+      @logger = opts[:logger] || Logger.new($stdout)
+
+      @thread = nil
+
+      start
+    end
+
+    def start
+
+      @thread =
+        Thread.new do
+          loop do
+            begin
+              sleep(@frequency)
+              log(:info, "woke up at #{Flor.tstamp}")
+            rescue => e
+              log(:error, 'ouch', e)
+            end
+          end
+        end
+
+      self
+    end
+
+    def join
+
+      @thread.join
+    end
+
+    protected
+
+    def log(level, message, err=nil)
+
+      message = "#{message} #{err.inspect}" if err
+
+      @logger.send(level, message)
     end
   end
 end
