@@ -23,6 +23,7 @@
 #++
 
 require 'json'
+require 'thread'
 
 require 'munemo'
 require 'raabro'
