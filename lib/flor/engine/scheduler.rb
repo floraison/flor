@@ -27,11 +27,15 @@ require 'logger'
 
 module Flor
 
+  # TODO have a Logger class, shared by Scheduler and Executor (and Tasker)
+
   class Scheduler
 
     def initialize(db, opts={})
 
       @db = db
+      @opts = opts
+
       @frequency = opts[:frequency] || 0.3
       @logger = opts[:logger] || Logger.new($stdout)
 
@@ -42,12 +46,12 @@ module Flor
 
     def start
 
-      @thread =
+      @thread ||=
         Thread.new do
           loop do
             begin
               sleep(@frequency)
-              log(:info, "woke up at #{Flor.tstamp}")
+              #log(:info, "woke up at #{Flor.tstamp}")
             rescue => e
               log(:error, 'ouch', e)
             end
@@ -56,6 +60,21 @@ module Flor
 
       self
     end
+
+    def poke
+
+      # TODO forces scheduler to look at DB for incoming messages
+      # TODO should it check the thread? It might have died...
+    end
+
+    def pause
+
+      @thread.kill if @thread
+      @thread = nil
+    end
+
+    def started?; @thread && @thread.alive?; end
+    def paused?; @thread.nil?; end
 
     def join
 
@@ -69,6 +88,16 @@ module Flor
       message = "#{message} #{err.inspect}" if err
 
       @logger.send(level, message)
+    end
+
+    def process_messages
+
+      # load messages from db and process if any
+    end
+
+    def process_timers
+
+      # ...
     end
   end
 end
