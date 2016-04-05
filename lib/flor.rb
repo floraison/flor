@@ -48,7 +48,23 @@ require 'flor/scheduler'
 #
 # load callables
 
-Dir[File.join(File.dirname(__FILE__), 'flor/pcore/*.rb')].each do |path|
-  require path
+module Flor
+
+  def self.load_procedures(dir)
+
+    dirpath =
+      if dir.match(/\A[.\/]/)
+        File.join(dir, '*.rb')
+      else
+        File.join(File.dirname(__FILE__), 'flor', dir, '*.rb')
+      end
+
+    Dir[dirpath].each { |path| require(path) }
+  end
 end
+
+Flor.load_procedures('pcore')
+
+#Flor.load_procedures('pstan')
+  # to be loaded only if using more than the transient executor
 
