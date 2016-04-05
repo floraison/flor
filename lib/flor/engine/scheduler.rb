@@ -67,14 +67,14 @@ module Flor
       # TODO should it check the thread? It might have died...
     end
 
-    def pause
+    def stop
 
       @thread.kill if @thread
       @thread = nil
     end
 
-    def started?; @thread && @thread.alive?; end
-    def paused?; @thread.nil?; end
+    def running?; @thread && @thread.alive?; end
+    def stopped?; @thread.nil?; end
 
     def join
 
