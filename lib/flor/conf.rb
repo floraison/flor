@@ -22,51 +22,32 @@
 # Made in Japan.
 #++
 
-require 'json'
-require 'logger'
-require 'thread'
-
-require 'munemo'
-require 'raabro'
-
 
 module Flor
 
-  VERSION = '0.4.0'
-end
+  module Conf
 
-require 'flor/flor'
-require 'flor/dollar'
-require 'flor/errors'
-require 'flor/parser'
-require 'flor/node'
-require 'flor/procedure'
-require 'flor/conf'
+    def self.read(s)
 
-require 'flor/engine/executor'
-require 'flor/transient'
+      s = File.read(s).strip unless s.match(/[\r\n]/)
+      s = "{#{s}}"
 
-
-#
-# load callables
-
-module Flor
-
-  def self.load_procedures(dir)
-
-    dirpath =
-      if dir.match(/\A[.\/]/)
-        File.join(dir, '*.rb')
-      else
-        File.join(File.dirname(__FILE__), 'flor', dir, '*.rb')
+      vs = Hash.new { |h, k| k }
+      class << vs
+        def has_key?(k); ! Flor::Executor.procedures.has_key?(k); end
       end
 
-    Dir[dirpath].each { |path| require(path) }
+      x = Flor::TransientExecutor.new
+
+      r = x.launch(s, vars: vs)
+        # TODO pass special var hash...
+
+      fail ArgumentError.new(
+        "error while reading conf: #{r['error']['msg']}"
+      ) unless r['point'] == 'terminated'
+
+      r['payload']['ret']
+    end
   end
 end
-
-Flor.load_procedures('pcore')
-
-#Flor.load_procedures('pstan')
-  # to be loaded only if using more than the transient executor
 
