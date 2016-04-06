@@ -25,13 +25,21 @@
 
 module Flor
 
-  class Message < Sequel::Model
-  end
+  class Storage
 
-  class Execution < Sequel::Model
-  end
+    def initialize(engine)
 
-  class Timer < Sequel::Model
+      @engine = engine
+    end
+
+    class Message
+    end
+
+    class Execution
+    end
+
+    class Timer
+    end
   end
 end
 

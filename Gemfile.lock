@@ -24,6 +24,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
+    sequel (4.33.0)
+    sqlite3 (1.3.11)
 
 PLATFORMS
   ruby
@@ -31,6 +33,8 @@ PLATFORMS
 DEPENDENCIES
   flor!
   rspec (= 3.4.0)
+  sequel (= 4.33.0)
+  sqlite3 (= 1.3.11)
 
 BUNDLED WITH
    1.10.6

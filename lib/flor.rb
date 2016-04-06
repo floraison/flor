@@ -42,10 +42,8 @@ require 'flor/parser'
 require 'flor/node'
 require 'flor/procedure'
 
-require 'flor/engine/logger'
 require 'flor/engine/executor'
-require 'flor/engine/ex_transient'
-require 'flor/engine/scheduler'
+require 'flor/transient'
 
 
 #
