@@ -22,12 +22,18 @@
 # Made in Japan.
 #++
 
-require 'flor/scheduler/logger'
+require 'sequel'
+
+require 'flor'
+require 'flor/executor/persistent'
 require 'flor/scheduler/core'
+require 'flor/scheduler/logger'
+require 'flor/scheduler/storage'
 
 
 module Flor
 
   Unit = Scheduler
+    # an alias
 end
 

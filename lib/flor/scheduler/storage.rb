@@ -27,19 +27,19 @@ module Flor
 
   class Storage
 
-    def initialize(engine)
+    def initialize(scheduler)
 
-      @engine = engine
+      @scheduler = scheduler
     end
 
-    class Message
-    end
-
-    class Execution
-    end
-
-    class Timer
-    end
+#    class Message
+#    end
+#
+#    class Execution
+#    end
+#
+#    class Timer
+#    end
   end
 end
 

@@ -22,22 +22,21 @@
 # Made in Japan.
 #++
 
-require 'flor'
-require 'flor/executor/persistent'
-
 
 module Flor
 
   class Scheduler
 
+    attr_reader :conf, :logger, :storage
+
     def initialize(conf={})
 
-      @db = nil
       @conf = conf
 
-      @frequency = conf[:frequency] || 0.3
-      @logger = Flor::Logger.new(conf)
+      @logger = Flor::Logger.new(self)
+      @storage = Flor::Storage.new(self)
 
+      #@frequency = conf[:frequency] || 0.3
       @thread = nil
 
       start
@@ -51,7 +50,7 @@ module Flor
         Thread.new do
           loop do
             begin
-              sleep(@frequency)
+              sleep(0.3)
 p "... #{Time.now}"
             rescue => e
               @logger.error('ouch!', e)
