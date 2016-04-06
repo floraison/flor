@@ -22,75 +22,10 @@
 # Made in Japan.
 #++
 
-require 'flor/persistent'
-
 
 module Flor
 
-  class Scheduler
-
-    def initialize(conf={})
-
-      @db = nil
-      @conf = conf
-
-      @frequency = conf[:frequency] || 0.3
-      @logger = Flor::Logger.new(conf)
-
-      @thread = nil
-
-      start
-    end
-
-    def start
-
-      # TODO heartbeat, every x minutes, when idle, log something
-
-      @thread ||=
-        Thread.new do
-          loop do
-            begin
-              sleep(@frequency)
-            rescue => e
-              @logger.error('ouch!', e)
-            end
-          end
-        end
-
-      self
-    end
-
-    def poke
-
-      # TODO forces scheduler to look at DB for incoming messages
-      # TODO should it check the thread? It might have died...
-    end
-
-    def stop
-
-      @thread.kill if @thread
-      @thread = nil
-    end
-
-    def running?; @thread && @thread.alive?; end
-    def stopped?; @thread.nil?; end
-
-    def join
-
-      @thread.join
-    end
-
-    protected
-
-    def process_messages
-
-      # load messages from db and process if any
-    end
-
-    def process_timers
-
-      # ...
-    end
+  class PersistentExecutor < Flor::Executor
   end
 end
 

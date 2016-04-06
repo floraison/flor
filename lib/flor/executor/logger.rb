@@ -22,51 +22,10 @@
 # Made in Japan.
 #++
 
-require 'json'
-require 'logger'
-require 'thread'
 
-require 'munemo'
-require 'raabro'
+class Flor::Executor
 
-
-module Flor
-
-  VERSION = '0.4.0'
-end
-
-require 'flor/flor'
-require 'flor/dollar'
-require 'flor/errors'
-require 'flor/parser'
-require 'flor/conf'
-
-require 'flor/executor/node'
-require 'flor/executor/procedure'
-require 'flor/executor/core'
-require 'flor/executor/transient'
-
-
-#
-# load callables
-
-module Flor
-
-  def self.load_procedures(dir)
-
-    dirpath =
-      if dir.match(/\A[.\/]/)
-        File.join(dir, '*.rb')
-      else
-        File.join(File.dirname(__FILE__), 'flor', dir, '*.rb')
-      end
-
-    Dir[dirpath].each { |path| require(path) }
+  class Logger
   end
 end
-
-Flor.load_procedures('pcore')
-
-#Flor.load_procedures('pstan')
-  # to be loaded only if using more than the transient executor
 
