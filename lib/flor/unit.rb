@@ -23,6 +23,7 @@
 #++
 
 require 'sequel'
+require 'sequel/extensions/migration'
 
 require 'flor'
 require 'flor/executor/persistent'

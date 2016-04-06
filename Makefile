@@ -1,4 +1,6 @@
 
+## gem tasks ##
+
 NAME = \
   $(shell ruby -e "s = eval(File.read(Dir['*.gemspec'][0])); puts s.name")
 VERSION = \
@@ -22,8 +24,10 @@ push: build
 	gem push pkg/$(NAME)-$(VERSION).gem
 
 
-## db tasks ##
+## flor tasks ##
+
+RUBY=bundle exec ruby
 
 db:
-	bundle exec ruby -Ilib lib/flor/make_db.rb
+	$(RUBY) -Ilib -e "require 'flor/unit'; u = Flor::Unit.new('.flor-dev.conf').storage.migrate"
 

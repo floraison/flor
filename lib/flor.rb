@@ -22,6 +22,7 @@
 # Made in Japan.
 #++
 
+require 'pp'
 require 'json'
 require 'logger'
 require 'thread'

@@ -30,16 +30,22 @@ module Flor
     def initialize(scheduler)
 
       @scheduler = scheduler
+      @db = connect
     end
 
-#    class Message
-#    end
-#
-#    class Execution
-#    end
-#
-#    class Timer
-#    end
+    def migrate(to=nil, from=nil)
+
+      dir = @scheduler.conf['db_migrations'] || 'migrations'
+
+      Sequel::Migrator.apply(@db, dir, to, from)
+    end
+
+    protected
+
+    def connect
+
+      # TODO
+    end
   end
 end
 
