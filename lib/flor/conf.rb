@@ -40,7 +40,6 @@ module Flor
       x = Flor::TransientExecutor.new
 
       r = x.launch(s, vars: vs)
-        # TODO pass special var hash...
 
       fail ArgumentError.new(
         "error while reading conf: #{r['error']['msg']}"

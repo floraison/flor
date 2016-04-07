@@ -40,13 +40,12 @@ module Flor
 
       #@frequency = conf[:frequency] || 0.3
       @thread = nil
-
-      start
     end
 
     def start
 
       # TODO heartbeat, every x minutes, when idle, log something
+      # TODO once per minute, querying flor_messages for incoming messages
 
       @thread ||=
         Thread.new do
