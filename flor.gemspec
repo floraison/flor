@@ -26,7 +26,7 @@ A Ruby version of flon
     '*.gemspec', '*.txt', '*.rdoc', '*.md'
   ]
 
-  s.add_runtime_dependency 'munemo'
+  s.add_runtime_dependency 'munemo', '>= 1.0.1'
   s.add_runtime_dependency 'raabro', '>= 1.1.2'
 
   s.add_development_dependency 'rspec', '3.4.0'
