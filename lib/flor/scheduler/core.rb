@@ -27,11 +27,13 @@ module Flor
 
   class Scheduler
 
-    attr_reader :conf, :logger, :storage
+    attr_reader :conf, :env
+    attr_reader :logger, :storage
 
     def initialize(conf={})
 
-      @conf = conf
+      @conf = conf.is_a?(Hash) ? conf : Flor::Conf.read(conf)
+      @env = @conf['env'] ||= 'dev'
 
       @logger = Flor::Logger.new(self)
       @storage = Flor::Storage.new(self)

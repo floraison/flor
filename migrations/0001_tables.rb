@@ -3,7 +3,7 @@ Sequel.migration do
 
   up do
 
-    DB.create_table :flor_messages do
+    create_table :flor_messages do
 
       primary_key :id, type: Bignum
       String :domain, null: false
@@ -17,7 +17,7 @@ Sequel.migration do
       index :exid
     end
 
-    DB.create_table :flor_executions do
+    create_table :flor_executions do
 
       primary_key :id, type: Bignum
       String :domain, null: false
@@ -31,7 +31,7 @@ Sequel.migration do
       index :exid
     end
 
-    DB.create_table :flor_timers do
+    create_table :flor_timers do
 
       primary_key :id, type: Bignum
       String :domain, null: false
@@ -46,7 +46,7 @@ Sequel.migration do
       index :exid
     end
 
-    DB.create_table :flor_logs do
+    create_table :flor_logs do
 
       primary_key :id, type: Bignum
       String :domain, null: false
@@ -65,10 +65,10 @@ Sequel.migration do
 
   down do
 
-    DB.drop_table :flor_messages
-    DB.drop_table :flor_executions
-    DB.drop_table :flor_timers
-    DB.drop_table :flor_logs
+    drop_table :flor_messages
+    drop_table :flor_executions
+    drop_table :flor_timers
+    drop_table :flor_logs
   end
 end
 

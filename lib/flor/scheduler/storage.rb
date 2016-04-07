@@ -44,7 +44,7 @@ module Flor
 
     def connect
 
-      # TODO
+      Sequel.connect(@scheduler.conf['db_uri'])
     end
   end
 end
