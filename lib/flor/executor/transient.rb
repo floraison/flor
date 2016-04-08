@@ -27,9 +27,23 @@ module Flor
 
   class TransientExecutor < Executor
 
-    def initialize(opts={})
+    class TransientUnit
+      attr_accessor :conf
+      def initialize(conf); @conf = conf; end
+    end
 
-      super(opts)
+    def initialize(conf={})
+
+      h =
+        (ENV['FLOR_DEBUG'] || '').split(',').inject({}) { |h, k|
+          kv = k.split(':')
+          h[kv[0].to_sym] = kv[1] ? JSON.parse(kv[1]) : true
+          h
+        }
+      h.merge!({ err: 1, log: 1, tree: 1, src: 1 }) if h[:all]
+      h.merge!(conf)
+
+      super(TransientUnit.new(h))
 
       @execution = {
         'exid' => generate_exid('eval'),
@@ -43,8 +57,8 @@ module Flor
       messages = [ make_launch_msg(tree, opts) ]
       message = nil
 
-      Flor.print_src(tree) if @options[:src]
-      Flor.print_tree(messages.first['tree']) if @options[:tree]
+      Flor.print_src(tree) if conf[:src]
+      Flor.print_tree(messages.first['tree']) if conf[:tree]
 
       loop do
 
@@ -52,11 +66,11 @@ module Flor
 
         break unless message
 
-        Flor.log(message) if @options[:log]
+        Flor.log(message) if conf[:log]
 
         point = message['point']
 
-        pp message if point == 'failed' && @options[:err]
+        pp message if point == 'failed' && conf[:err]
 
         break if point == 'failed'
         break if point == 'terminated'

@@ -27,15 +27,15 @@ module Flor
 
   class Storage
 
-    def initialize(scheduler)
+    def initialize(unit)
 
-      @scheduler = scheduler
+      @unit = unit
       @db = connect
     end
 
     def migrate(to=nil, from=nil)
 
-      dir = @scheduler.conf['db_migrations'] || 'migrations'
+      dir = @unit.conf['db_migrations'] || 'migrations'
 
       Sequel::Migrator.apply(@db, dir, to, from)
     end
@@ -44,7 +44,7 @@ module Flor
 
     def connect
 
-      Sequel.connect(@scheduler.conf['db_uri'])
+      Sequel.connect(@unit.conf['db_uri'])
     end
   end
 end

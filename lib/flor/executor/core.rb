@@ -28,20 +28,14 @@ module Flor
   class Executor
 
     attr_reader :execution
-    attr_reader :options
+    attr_reader :unit
 
-    def initialize(opts)
+    def initialize(unit)
 
-      @options =
-        (ENV['FLOR_DEBUG'] || '').split(',').inject({}) { |h, k|
-          kv = k.split(':')
-          h[kv[0].to_sym] = kv[1] ? JSON.parse(kv[1]) : true
-          h
-        }
-      @options.merge!({ err: 1, log: 1, tree: 1, src: 1 }) if @options[:all]
-
-      @options.merge!(opts)
+      @unit = unit
     end
+
+    def conf; @unit.conf; end
 
     protected
 

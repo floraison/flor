@@ -28,9 +28,9 @@ module Flor
 
     # NB: logger configuration entries start with "log_"
 
-    def initialize(conf)
+    def initialize(unit)
 
-      @conf = conf
+      @unit = unit
     end
 
     def error(message, err)
