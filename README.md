@@ -6,9 +6,13 @@
 
 ## How to use the transient executor
 
+The transient executor is a simple "interpreter" for flon's language. It hosts a single execution which is gone when the executor ends. No persistence.
+
 TODO
 
 ## How to use the "unit"
+
+The unit is a scheduler + storage interpreter. Executions are persistent.
 
 TODO
 
