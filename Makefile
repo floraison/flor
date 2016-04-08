@@ -29,6 +29,10 @@ push: build
 RUBY=bundle exec ruby
 FLOR_ENV?=dev
 
-db:
+migrate:
 	$(RUBY) -Ilib -e "require 'flor/unit'; Flor::Unit.new('.flor-$(FLOR_ENV).conf').storage.migrate"
+
+start:
+	$(RUBY) -Ilib -e "require 'flor/unit'; Flor::Unit.new('.flor-$(FLOR_ENV).conf').start.join"
+s: start
 

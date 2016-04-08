@@ -27,9 +27,9 @@ require 'sequel/extensions/migration'
 
 require 'flor'
 require 'flor/executor/persistent'
-require 'flor/scheduler/core'
-require 'flor/scheduler/logger'
-require 'flor/scheduler/storage'
+require 'flor/unit/logger'
+require 'flor/unit/storage'
+require 'flor/unit/scheduler'
 
 
 module Flor
