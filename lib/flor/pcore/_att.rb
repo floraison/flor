@@ -44,8 +44,11 @@ class Flor::Pro::Att < Flor::Procedure
   def receive
 
     if k = key
+
       m = "receive_#{k}"
-      return respond_to?(m) ? send(m) : receive_att(k)
+
+      return respond_to?(m, true) ? send(m) : receive_att(k)
+        # use `true` to include protected methods
     end
 
     reply
