@@ -42,6 +42,8 @@ module Flor
         }
       h.merge!({ err: 1, log: 1, tree: 1, src: 1 }) if h[:all]
       h.merge!(conf)
+        #
+        # TODO eventually prefix err, log, tree and src...
 
       super(TransientUnit.new(h))
 
@@ -66,7 +68,7 @@ module Flor
 
         break unless message
 
-        Flor.log(message) if conf[:log]
+        @logger.log(message)
 
         point = message['point']
 

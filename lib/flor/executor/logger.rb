@@ -26,6 +26,16 @@
 class Flor::Executor
 
   class Logger
+
+    def initialize(executor)
+
+      @executor = executor
+    end
+
+    def log(message)
+
+      Flor.log(message) if @executor.conf[:log]
+    end
   end
 end
 

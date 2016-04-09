@@ -28,11 +28,14 @@ module Flor
   class Executor
 
     attr_reader :execution
-    attr_reader :unit
+    attr_reader :unit, :logger
 
     def initialize(unit)
 
       @unit = unit
+
+      @logger = Flor::Executor::Logger.new(self)
+        # TODO instantiate a different logger based on the configuration
     end
 
     def conf; @unit.conf; end
