@@ -44,7 +44,19 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq([ %w[ stuff ], %w[ stuff tu ff ] ])
     end
 
-    it 'turns the second argument into a regular expression'
+    it 'turns the second argument into a regular expression' do
+
+      rad = %{
+        push f.l
+          #match "stuff", "^stuf*$"
+          match "stuff", "stuf*"
+      }
+
+      r = @executor.launch(rad, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ %w[ stuff ] ])
+    end
   end
 
   describe 'starts_with' do
