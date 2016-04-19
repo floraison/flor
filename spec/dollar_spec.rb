@@ -134,6 +134,11 @@ describe Flor::Dollar do
       expect(@d.expand('x$xxx')).to eq('x$xxx')
     end
 
+    it "doesn't expand \"^[bct]ar$\"" do
+
+      expect(@d.expand('^[bct]ar$')).to eq('^[bct]ar$')
+    end
+
     context 'init single quote' do
 
       it "doesn't expand \"$(nada||'$xxx)\"" do

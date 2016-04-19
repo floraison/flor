@@ -194,6 +194,9 @@ module Flor
       return s unless s.index('$')
 
       t = Parser.parse(s)
+
+      return s unless t
+
       t = t.first if t.size == 1
 
       do_eval(t)
