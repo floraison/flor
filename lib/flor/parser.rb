@@ -25,7 +25,7 @@
 
 module Flor
 
-  module Rad include Raabro
+  module Lang include Raabro
 
     # parsing
 
@@ -164,7 +164,7 @@ module Flor
     def lin(i); seq(:lin, i, :ind, :grp); end
 
     def line(i); seq(nil, i, :lin, '?', :eol); end
-    def radial(i); rep(:radial, i, :line, 0); end
+    def flon(i); rep(:flon, i, :line, 0); end
 
     # rewriting
 
@@ -329,20 +329,20 @@ module Flor
         end
 
         gt = tree.lookup(:grp)
-        @line = Rad.line_number(gt)
+        @line = Lang.line_number(gt)
 
         ht = gt.lookup(:hed)
 
-        @head = Flor::Rad.rewrite(ht.c0)
+        @head = Flor::Lang.rewrite(ht.c0)
         @head = @head[0] if @head[0].is_a?(String) && @head[1] == []
 
         @children.concat(
           gt.c1.gather(:elt).collect do |et|
 
-            v = Flor::Rad.rewrite(et.lookup(:exp))
+            v = Flor::Lang.rewrite(et.lookup(:exp))
 
             if kt = et.lookup(:key)
-              k = Flor::Rad.rewrite(kt.c0)
+              k = Flor::Lang.rewrite(kt.c0)
               [ '_att', [ k, v ], k[2] ]
             else
               [ '_att', [ v ], v[2] ]
@@ -351,7 +351,7 @@ module Flor
       end
     end
 
-    def rewrite_radial(t)
+    def rewrite_flon(t)
 
       root = Line.new(nil)
       prev = root
@@ -378,7 +378,7 @@ module Flor
 
       r
     end
-  end # module Rad
+  end # module Lang
 
   def self.unescape_u(cs)
 

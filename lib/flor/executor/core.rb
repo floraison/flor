@@ -46,14 +46,14 @@ module Flor
 
       t =
         tree.is_a?(String) ?
-        Flor::Rad.parse(tree, opts[:fname], opts) :
+        Flor::Lang.parse(tree, opts[:fname], opts) :
         tree
 
       unless t
         #h = opts.merge(prune: false, rewrite: false)
-        #p Flor::Radial.parse(tree, h[:fname], h)
+        #p Flor::Lang.parse(tree, h[:fname], h)
           # TODO re-parse and indicate what went wrong...
-        fail ArgumentError.new('radial parse failure')
+        fail ArgumentError.new('flon parse failure')
       end
 
       { 'point' => 'execute',

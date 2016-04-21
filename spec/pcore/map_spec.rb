@@ -19,13 +19,13 @@ describe 'Flor procedures' do
 
     it 'maps elements' do
 
-      rad = %{
+      flon = %{
         map [ 1, 2, 3 ]
           def x
             + x 3
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 4, 5, 6 ])
@@ -33,14 +33,14 @@ describe 'Flor procedures' do
 
     it 'maps f.ret by default' do
 
-      rad = %{
+      flon = %{
         [ 1, 2, 3 ]
         map
           def x
             + x 2
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 3, 4, 5 ])
@@ -48,13 +48,13 @@ describe 'Flor procedures' do
 
     it 'maps to a function by its name' do
 
-      rad = %{
+      flon = %{
         define add3 x
           + x 3
         map [ 0, 1 ] add3
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 3, 4 ])

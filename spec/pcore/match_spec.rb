@@ -19,11 +19,11 @@ describe 'Flor procedures' do
 
     it "returns false when it doesn't match" do
 
-      rad = %{
+      flon = %{
         match "alpha", /bravo/
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => [] })
@@ -31,14 +31,14 @@ describe 'Flor procedures' do
 
     it "returns the array of matches" do
 
-      rad = %{
+      flon = %{
         push f.l
           match "stuff", /stuf*/
         push f.l
           match "stuff", /s(tu)(f*)/
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ %w[ stuff ], %w[ stuff tu ff ] ])
@@ -46,13 +46,13 @@ describe 'Flor procedures' do
 
     it 'turns the second argument into a regular expression' do
 
-      rad = %{
+      flon = %{
         push f.l
           #match "stuff", "^stuf*$"
           match "stuff", "stuf*"
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ %w[ stuff ] ])

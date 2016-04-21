@@ -19,7 +19,7 @@ describe 'Flor a-to-z' do
 
     it 'is derefenced upon application' do
 
-      rad = %{
+      flon = %{
         set f.a
           sequence
         #$(f.a)
@@ -28,7 +28,7 @@ describe 'Flor a-to-z' do
           2
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)
@@ -39,12 +39,12 @@ describe 'Flor a-to-z' do
 
     it 'yields the desired value' do
 
-      rad = %{
+      flon = %{
         set f.c f.a.0
         f.a.0.b
       }
 
-      r = @executor.launch(rad, payload: { 'a' => [ { 'b' => 'c' } ] })
+      r = @executor.launch(flon, payload: { 'a' => [ { 'b' => 'c' } ] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['c']).to eq({ 'b' => 'c' })

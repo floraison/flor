@@ -10,8 +10,8 @@ require 'spec_helper'
 require 'flor/parser'
 
 
-describe Flor::Rad do
+describe Flor::Lang do
 
-  compare_rad_to_ruby File.join(File.dirname(__FILE__), 'parser.md')
+  compare_flon_to_ruby File.join(File.dirname(__FILE__), 'parser.md')
 end
 

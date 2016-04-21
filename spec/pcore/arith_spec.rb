@@ -19,11 +19,11 @@ describe 'Flor procedures' do
 
     it 'returns 0 if empty' do
 
-      rad = %{
+      flon = %{
         + _
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 0 })
@@ -31,13 +31,13 @@ describe 'Flor procedures' do
 
     it 'adds two numbers' do
 
-      rad = %{
+      flon = %{
         +
           1
           2
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 3 })
@@ -45,14 +45,14 @@ describe 'Flor procedures' do
 
     it 'adds three numbers' do
 
-      rad = %{
+      flon = %{
         +
           3
           2
           -1
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 4 })
@@ -63,12 +63,12 @@ describe 'Flor procedures' do
 
     it 'substracts' do
 
-      rad = %{
+      flon = %{
         -
           1
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 1 })
@@ -76,7 +76,7 @@ describe 'Flor procedures' do
 
     it 'substracts' do
 
-      rad = %{
+      flon = %{
         -
           3
           2
@@ -84,7 +84,7 @@ describe 'Flor procedures' do
           5
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => -3 })
@@ -95,11 +95,11 @@ describe 'Flor procedures' do
 
     it 'returns 0 if empty' do
 
-      rad = %{
+      flon = %{
         * _
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 0 })
@@ -107,14 +107,14 @@ describe 'Flor procedures' do
 
     it 'multiplies three numbers' do
 
-      rad = %{
+      flon = %{
         *
           3
           2
           -1
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => -6 })

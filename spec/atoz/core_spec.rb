@@ -19,11 +19,11 @@ describe 'Flor a-to-z' do
 
     it 'is returned' do
 
-      rad = %{
+      flon = %{
         sequence
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ '_proc', 'sequence', -1 ])
@@ -34,11 +34,11 @@ describe 'Flor a-to-z' do
 
     it 'is executed' do
 
-      rad = %{
+      flon = %{
         sequence _
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -51,11 +51,11 @@ describe 'Flor a-to-z' do
 
       it 'does not set f.ret' do
 
-        rad = %{
+        flon = %{
           sequence vars: { a: 1 }
         }
 
-        r = @executor.launch(rad)
+        r = @executor.launch(flon)
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(nil)

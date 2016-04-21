@@ -19,12 +19,12 @@ describe 'Flor procedures' do
 
     it 'pushes a value in a list' do
 
-      rad = %{
+      flon = %{
         push f.l
           7
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(7)
@@ -33,13 +33,13 @@ describe 'Flor procedures' do
 
     it 'pushes the result of its last child' do
 
-      rad = %{
+      flon = %{
         push f.l
           1
           2
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)
@@ -48,14 +48,14 @@ describe 'Flor procedures' do
 
     it 'does not mind if the target list is given as a regular child' do
 
-      rad = %{
+      flon = %{
         push
           f.l
           1
           2
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)
@@ -64,11 +64,11 @@ describe 'Flor procedures' do
 
     it 'pushes its second attribute if any' do
 
-      rad = %{
+      flon = %{
         push f.l 7
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(7)
@@ -77,11 +77,11 @@ describe 'Flor procedures' do
 
     it 'behaves when it has a single child' do
 
-      rad = %{
+      flon = %{
         push f.l
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([])
@@ -90,7 +90,7 @@ describe 'Flor procedures' do
 
     it 'lets its second attribute bloom' do
 
-      rad = %{
+      flon = %{
         sequence
 
           set v0
@@ -108,7 +108,7 @@ describe 'Flor procedures' do
           push f.l f.f0
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('world')
@@ -119,11 +119,11 @@ describe 'Flor procedures' do
 
     it 'pushes to f.ret by default' do
 
-      rad = %{
+      flon = %{
         push 5
       }
 
-      r = @executor.launch(rad, payload: { 'ret' => [] })
+      r = @executor.launch(flon, payload: { 'ret' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 5 ])
@@ -131,11 +131,11 @@ describe 'Flor procedures' do
 
     it 'fails if it cannot push' do
 
-      rad = %{
+      flon = %{
         push 5
       }
 
-      r = @executor.launch(rad, payload: { 'ret' => 0 })
+      r = @executor.launch(flon, payload: { 'ret' => 0 })
 
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq('cannot push to given target')

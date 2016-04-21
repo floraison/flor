@@ -19,13 +19,13 @@ describe 'Flor procedures' do
 
     it 'leaves f.ret as is' do
 
-      rad = %{
+      flon = %{
         sequence
           1
           noop _
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(1)

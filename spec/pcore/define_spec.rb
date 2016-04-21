@@ -19,14 +19,14 @@ describe 'Flor procedures' do
 
     it 'binds and returns a function' do
 
-      rad = %{
+      flon = %{
         define sum a, b
           +
             a
             b
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']).to eq({ 'sum' => r['payload']['ret'] })
@@ -43,14 +43,14 @@ describe 'Flor procedures' do
 
     it 'returns a function' do
 
-      rad = %{
+      flon = %{
         def a, b
           +
             a
             b
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']).to eq({})

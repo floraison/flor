@@ -19,12 +19,12 @@ describe 'Flor procedures' do
 
     it 'has no effect when it has no children' do
 
-      rad = %{
+      flon = %{
         7
         until _
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(7)
@@ -32,7 +32,7 @@ describe 'Flor procedures' do
 
     it 'loops until the condition evaluates to true' do
 
-      rad = %{
+      flon = %{
         set f.a 1
         until
           = f.a 3
@@ -40,7 +40,7 @@ describe 'Flor procedures' do
             + f.a 1
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(false)
@@ -49,7 +49,7 @@ describe 'Flor procedures' do
 
     it "returns the last child's f.ret" do
 
-      rad = %{
+      flon = %{
         set f.a 1
         #until; = f.a 3
         until (= f.a 3)
@@ -58,7 +58,7 @@ describe 'Flor procedures' do
           + f.a 10
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(13)
@@ -66,13 +66,13 @@ describe 'Flor procedures' do
 
     it "doesn't iterate if the condition is immediately true" do
 
-      rad = %{
+      flon = %{
         set f.a 1
         until; = f.a 1
           #6
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(true)
@@ -83,12 +83,12 @@ describe 'Flor procedures' do
 
     it 'has no effect when it has no children' do
 
-      rad = %{
+      flon = %{
         8
         while _
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(8)
@@ -96,7 +96,7 @@ describe 'Flor procedures' do
 
     it 'loops until the condition evaluates to false' do
 
-      rad = %{
+      flon = %{
         set f.a 1
         while
           f.a < 3
@@ -104,7 +104,7 @@ describe 'Flor procedures' do
             + f.a 1
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(true)
@@ -113,7 +113,7 @@ describe 'Flor procedures' do
 
     it "returns the last child's f.ret" do
 
-      rad = %{
+      flon = %{
         set f.a 1
         #while; < f.a 3
         while (< f.a 3)
@@ -122,7 +122,7 @@ describe 'Flor procedures' do
           + f.a 20
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(23)
@@ -130,13 +130,13 @@ describe 'Flor procedures' do
 
     it "doesn't iterate if the condition is immediately false" do
 
-      rad = %{
+      flon = %{
         set f.a 0
         while; = f.a 1
           #6
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(false)

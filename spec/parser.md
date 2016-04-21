@@ -7,7 +7,7 @@
 
 ## atoms
 
-```radial
+```flon
   1
 ```
 parses to
@@ -16,7 +16,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   11.01
 ```
 parses to
@@ -25,7 +25,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   true
 ```
 parses to
@@ -34,7 +34,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   false
 ```
 parses to
@@ -43,7 +43,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   null
 ```
 parses to
@@ -52,7 +52,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   abc
 ```
 parses to
@@ -61,7 +61,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   'def'
 ```
 parses to
@@ -70,7 +70,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   "ghi"
 ```
 parses to
@@ -79,7 +79,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   /jkl/
 ```
 parses to
@@ -88,7 +88,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   /jkl/i
 ```
 parses to
@@ -97,7 +97,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   /jkl\/3/i
 ```
 parses to
@@ -106,7 +106,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   /jkl/i / 1
 ```
 parses to
@@ -120,7 +120,7 @@ parses to
 
 ## arrays
 
-```radial
+```flon
   []
 ```
 parses to
@@ -129,7 +129,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   [ 1, 2, 3 ]
 ```
 parses to
@@ -140,7 +140,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   [ 1 2 3 ]
 ```
 parses to
@@ -151,7 +151,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   [1 2
   3]
 ```
@@ -164,7 +164,7 @@ parses to
 
 ## objects
 
-```radial
+```flon
   {}
 ```
 parses to
@@ -173,7 +173,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   { a: A, b: 2, c: true }
 ```
 parses to
@@ -186,7 +186,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   { a: A b: 2 c: true }
 ```
 parses to
@@ -199,7 +199,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   { a: A # ah ah ah
     b: 2 c: # oh oh oh
       true }
@@ -215,7 +215,7 @@ parses to
 
 ## bags
 
-```radial
+```flon
   (1, a: 2, 3)
 ```
 parses to
@@ -228,7 +228,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   (1, a, 3)
 ```
 parses to
@@ -239,7 +239,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   (1 a, 3)
 ```
 parses to
@@ -251,7 +251,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   (1,
    a, # and comment
    3)
@@ -264,7 +264,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   (1, \ 
    a, # and comment
    3)
@@ -278,7 +278,7 @@ parses to
 
 ## operations
 
-```radial
+```flon
   10 + 11 - 5
 ```
 parses to
@@ -293,7 +293,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   1 + 1 * 2
 ```
 parses to
@@ -308,7 +308,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   + 10 11 12
 ```
 parses to
@@ -321,7 +321,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   +
     10
     11
@@ -339,7 +339,7 @@ parses to
 
 ## lines
 
-```radial
+```flon
   sequence
 ```
 parses to
@@ -348,7 +348,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence
     a
     b
@@ -362,7 +362,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence a b
 ```
 parses to
@@ -374,7 +374,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence a, vars: 1, timeout: 1h, b
 ```
 parses to
@@ -388,7 +388,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence a: 1 + 1, 2
 ```
 parses to
@@ -408,7 +408,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence
     define sum a b
       +
@@ -434,7 +434,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence vars: {}
     task nada, cc: []
 ```
@@ -451,7 +451,7 @@ parses to
 
 ## lines with regexes
 
-```radial
+```flon
   match v.a /hello world/
 ```
 parses to
@@ -463,7 +463,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   match v.a, /hello world/
 ```
 parses to
@@ -476,7 +476,7 @@ parses to
 ---
 
 (pending)
-```radial
+```flon
   hello /world/
 ```
 parses to
@@ -485,7 +485,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   hello, /world/
 ```
 parses to
@@ -494,7 +494,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   /hello/ / 'world'
 ```
 parses to
@@ -507,7 +507,7 @@ parses to
 
 ## comments
 
-```radial
+```flon
   sequence # long time
     a
     b # no see
@@ -521,7 +521,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence # slash slash
     a
     b # baby
@@ -537,7 +537,7 @@ parses to
 
 ## line breaks
 
-```radial
+```flon
   [ 1, 2 # trois
     4 ]
 ```
@@ -549,7 +549,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   [ 1, 2, # trois
     4 ]
 ```
@@ -561,7 +561,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   [ 1,
   
   2,
@@ -577,7 +577,7 @@ parses to
 
 ---
 
-```radial
+```flon
   { a: "anthracite" # comment
     b: "blue-yellow" cc: "carmin"
   }
@@ -592,7 +592,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence a, b, [ 1 # in the middle
     2], c
 ```
@@ -607,7 +607,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence a, b, [ 1
     2], c
 ```
@@ -622,7 +622,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence a, b, [ 1 \
     2], c
 ```
@@ -637,7 +637,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence a, b,
     c
 ```
@@ -651,7 +651,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   map \
     [ 1, 2 ]
     fun
@@ -667,7 +667,7 @@ parses to
 
 ## parentheses
 
-```radial
+```flon
   sequence timeout: (+ 7 8 "h")
     a
     b
@@ -691,7 +691,7 @@ parses to
 
 ## dollar
 
-```radial
+```flon
   sequence
     f.a
     "$(f.a)"
@@ -713,7 +713,7 @@ parses to
 
 ## semicolon
 
-```radial
+```flon
   map [ 1, 2 ]; def x; + 1 x
 ```
 parses to
@@ -731,7 +731,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence; a;; b;; c
 ```
 parses to
@@ -742,7 +742,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   sequence
 ;a
     b;; c
@@ -756,7 +756,7 @@ parses to
 
 ## suffix if and unless
 
-```radial
+```flon
   push 7 if a > b
 ```
 parses to
@@ -768,7 +768,7 @@ parses to
 ```
 ---
 
-```radial
+```flon
   push 8 unless a > b
 ```
 parses to

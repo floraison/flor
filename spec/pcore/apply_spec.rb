@@ -19,7 +19,7 @@ describe 'Flor procedures' do
 
     it 'applies a function' do
 
-      rad = %{
+      flon = %{
         sequence
           define sum a b
             +
@@ -28,7 +28,7 @@ describe 'Flor procedures' do
           apply sum 1 2
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(3)

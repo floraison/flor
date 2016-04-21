@@ -51,12 +51,12 @@ describe 'Flor procedures' do
 
     it 'evaluates keys' do
 
-      rad = %{
+      flon = %{
         set a "colour"
         { a: 'yellow' }
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq({ 'colour' => 'yellow' })

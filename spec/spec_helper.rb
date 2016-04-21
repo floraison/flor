@@ -70,7 +70,7 @@ class RSpec::Core::ExampleGroup
 
   class << self
 
-    def compare_rad_to_ruby(fpath)
+    def compare_flon_to_ruby(fpath)
 
       lines = File.readlines(fpath)
 
@@ -80,7 +80,7 @@ class RSpec::Core::ExampleGroup
 
       lin = -1
       mod = :out
-      rad = []
+      flon = []
       rub = []
       pnd = false
 
@@ -100,27 +100,27 @@ class RSpec::Core::ExampleGroup
 
           mod = :ruby
 
-        elsif mod == :out && line.match(/\A```radial\b/)
+        elsif mod == :out && line.match(/\A```flon\b/)
 
           lin = i + 1
-          mod = :radial
+          mod = :flon
 
         elsif line == "```\n"
 
           if mod == :ruby
 
-            current << [ lin, rad.join, rub.join, pnd ]
+            current << [ lin, flon.join, rub.join, pnd ]
 
             lin = -1
             rub = []
-            rad = []
+            flon = []
             pnd = false
           end
           mod = :out
 
         elsif mod != :out
 
-          (mod == :ruby ? rub : rad) << line
+          (mod == :ruby ? rub : flon) << line
         end
       end
 
@@ -130,9 +130,9 @@ class RSpec::Core::ExampleGroup
 
         context(con) do
 
-          li_ra_ru_pn_s.each do |lin, rad, rub, pnd|
+          li_ra_ru_pn_s.each do |lin, flon, rub, pnd|
 
-            ra = rad.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
+            ra = flon.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
             ra = "#{ra[0, 60]}..." if ra.length > 60
             title = "parses li#{lin} `#{ra}`"
 
@@ -141,7 +141,7 @@ class RSpec::Core::ExampleGroup
             if pnd
               pending(title)
             else
-              it(title) { expect(Flor::Rad.parse(rad)).to eqt(ru) }
+              it(title) { expect(Flor::Lang.parse(flon)).to eqt(ru) }
             end
           end
         end

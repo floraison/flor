@@ -19,7 +19,7 @@ describe 'Flor a-to-z' do
 
     it 'substitutes heads' do
 
-      rad = %{
+      flon = %{
         set f.a "sequ"
         set f.b "ence"
         "$(f.a)$(f.b)"
@@ -27,7 +27,7 @@ describe 'Flor a-to-z' do
           push f.l 2
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 1, 2 ])
@@ -36,14 +36,14 @@ describe 'Flor a-to-z' do
 
     it "doesn't get in the way of regexps" do
 
-      rad = %{
+      flon = %{
         push f.l
           match "car", /^[bct]ar$/
         push f.l
           match "car", "^[bct]ar$"
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ %w[ car ], %w[ car ] ])

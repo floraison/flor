@@ -19,11 +19,11 @@ describe 'Flor a-to-z' do
 
     it 'returns the referenced procedure' do
 
-      rad = %{
+      flon = %{
         sequence
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
 
@@ -39,14 +39,14 @@ describe 'Flor a-to-z' do
 
     it 'returns the referenced function' do
 
-      rad = %{
+      flon = %{
         sequence
           define sum a, b
             # empty
           sum
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
 
@@ -62,7 +62,7 @@ describe 'Flor a-to-z' do
 
     it 'works' do
 
-      rad = %{
+      flon = %{
         sequence
           define sum a, b
             +
@@ -71,7 +71,7 @@ describe 'Flor a-to-z' do
           sum 1 2
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(3)
@@ -79,7 +79,7 @@ describe 'Flor a-to-z' do
 
     it 'runs each time with a different subnid' do
 
-      rad = %{
+      flon = %{
         sequence
           define sub i
             push f.l
@@ -90,7 +90,7 @@ describe 'Flor a-to-z' do
           sub 2
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
 
@@ -108,7 +108,7 @@ describe 'Flor a-to-z' do
 
     it 'works with an anonymous function' do
 
-      rad = %{
+      flon = %{
         sequence
           set sum
             def x y
@@ -118,7 +118,7 @@ describe 'Flor a-to-z' do
           sum 7 3
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(10)
@@ -129,7 +129,7 @@ describe 'Flor a-to-z' do
 
     it 'works (read)' do
 
-      rad = %{
+      flon = %{
         sequence
           define make_adder x
             def y
@@ -141,7 +141,7 @@ describe 'Flor a-to-z' do
           add3 7
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
 
@@ -165,7 +165,7 @@ describe 'Flor a-to-z' do
 
       # SICP p. 222
 
-      rad = %{
+      flon = %{
         sequence
           define make-withdraw bal
             def amt
@@ -181,7 +181,7 @@ describe 'Flor a-to-z' do
             w0 13
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 23, 10 ])

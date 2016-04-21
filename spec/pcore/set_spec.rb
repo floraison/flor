@@ -19,11 +19,11 @@ describe 'Flor procedures' do
 
     it 'has no effect on its own' do
 
-      rad = %{
+      flon = %{
         set _
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
@@ -33,13 +33,13 @@ describe 'Flor procedures' do
 
     it 'sequences its children' do
 
-      rad = %{
+      flon = %{
         set f.a
           0
           1
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
@@ -48,12 +48,12 @@ describe 'Flor procedures' do
 
     it 'sets fields' do
 
-      rad = %{
+      flon = %{
         set f.a
           0
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
@@ -63,12 +63,12 @@ describe 'Flor procedures' do
 
     it 'sets fields deep' do
 
-      rad = %{
+      flon = %{
         set f.h.count
           7
       }
 
-      r = @executor.launch(rad, payload: { 'h' => {} })
+      r = @executor.launch(flon, payload: { 'h' => {} })
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
@@ -78,12 +78,12 @@ describe 'Flor procedures' do
 
     it 'fails when it cannot set a deep field' do
 
-      rad = %{
+      flon = %{
         set f.h.i.j
           7
       }
 
-      r = @executor.launch(rad, payload: { 'h' => {} })
+      r = @executor.launch(flon, payload: { 'h' => {} })
 
       expect(r['point']).to eq('failed')
       expect(r['from']).to eq('0_1')
@@ -93,12 +93,12 @@ describe 'Flor procedures' do
 
     it 'sets variables' do
 
-      rad = %{
+      flon = %{
         set v.a
           0
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
@@ -108,12 +108,12 @@ describe 'Flor procedures' do
 
     it 'sets variables deep' do
 
-      rad = %{
+      flon = %{
         set v.h.count
           8
       }
 
-      r = @executor.launch(rad, vars: { 'h' => {} })
+      r = @executor.launch(flon, vars: { 'h' => {} })
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
@@ -123,12 +123,12 @@ describe 'Flor procedures' do
 
     it 'fails when it cannot set a deep variable' do
 
-      rad = %{
+      flon = %{
         set v.h.i.j
           9
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('failed')
       expect(r['from']).to eq('0_1')
@@ -138,12 +138,12 @@ describe 'Flor procedures' do
 
     it 'leaves f.ret untouched' do
 
-      rad = %{
+      flon = %{
         11
         set f.a 12
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['a']).to eq(12)
@@ -152,12 +152,12 @@ describe 'Flor procedures' do
 
     it 'leaves f.ret unless explicitely setting it' do
 
-      rad = %{
+      flon = %{
         11
         set f.ret 12
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(12)
@@ -168,7 +168,7 @@ describe 'Flor procedures' do
 
     it 'sets locally if there is no a in the lookup chain' do
 
-      rad = %{
+      flon = %{
         sequence
           sequence vars: {}
             set a
@@ -179,7 +179,7 @@ describe 'Flor procedures' do
             a
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('failed')
       expect(r['payload']['l']).to eq([ 1 ])
@@ -188,7 +188,7 @@ describe 'Flor procedures' do
 
     it 'overwrites an already set a (locally)' do
 
-      rad = %{
+      flon = %{
         sequence
           set a
             0
@@ -196,7 +196,7 @@ describe 'Flor procedures' do
             1
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(1)
@@ -204,7 +204,7 @@ describe 'Flor procedures' do
 
     it 'overwrites an already set a (above)' do
 
-      rad = %{
+      flon = %{
         sequence
           set a
             0
@@ -213,7 +213,7 @@ describe 'Flor procedures' do
               1
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(1)
@@ -224,7 +224,7 @@ describe 'Flor procedures' do
 
     it 'sets locally if there is no a in the lookup chain' do
 
-      rad = %{
+      flon = %{
         sequence
           sequence vars: {}
             set v.a
@@ -235,7 +235,7 @@ describe 'Flor procedures' do
             a
       }
 
-      r = @executor.launch(rad, payload: { 'l' => [] })
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('failed')
       expect(r['payload']['l']).to eq([ 1 ])
@@ -244,7 +244,7 @@ describe 'Flor procedures' do
 
     it 'overwrites an already set a (locally)' do
 
-      rad = %{
+      flon = %{
         sequence
           set v.a
             0
@@ -252,7 +252,7 @@ describe 'Flor procedures' do
             1
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(1)
@@ -260,7 +260,7 @@ describe 'Flor procedures' do
 
     it 'overwrites an already set a (above)' do
 
-      rad = %{
+      flon = %{
         sequence
           set v.a
             0
@@ -269,7 +269,7 @@ describe 'Flor procedures' do
               1
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(1)
@@ -280,7 +280,7 @@ describe 'Flor procedures' do
 
     it 'always sets locally' do
 
-      rad = %{
+      flon = %{
         sequence
           set lv.a
             0
@@ -292,7 +292,7 @@ describe 'Flor procedures' do
             11
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']).to eq({ 'a' => 1, 'b' => 11 })
@@ -303,12 +303,12 @@ describe 'Flor procedures' do
 
     it 'sets and return the just set value' do
 
-      rad = %{
+      flon = %{
         setr f.a
           0
       }
 
-      r = @executor.launch(rad)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'a' => 0, 'ret' => 0 })
