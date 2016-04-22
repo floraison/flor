@@ -36,11 +36,25 @@ module Flor
 
       @logger = Flor::Executor::Logger.new(self)
         # TODO instantiate a different logger based on the configuration
+
+      load_procedures('pcore')
     end
 
     def conf; @unit.conf; end
 
     protected
+
+    def load_procedures(dir)
+
+      dirpath =
+        if dir.match(/\A[.\/]/)
+          File.join(dir, '*.rb')
+        else
+          File.join(File.dirname(__FILE__), '..', dir, '*.rb')
+        end
+
+      Dir[dirpath].each { |path| require(path) }
+    end
 
     def make_launch_msg(tree, opts)
 
