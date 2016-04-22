@@ -49,10 +49,18 @@ module Flor
 
       @thread ||=
         Thread.new do
+
+          last_min = Time.now.min
+
           loop do
             begin
               sleep(0.3)
-p "... #{Time.now}"
+puts "... #{Time.now} (#{last_min})"
+              if (min = Time.now.min) != last_min
+                last_min = min
+                process_messages
+              end
+              process_timers
             rescue => e
               @logger.error('ouch!', e)
             end
@@ -87,6 +95,12 @@ p "... #{Time.now}"
     def process_messages
 
       # load messages from db and process if any
+
+      ms = @storage.fetch_messages
+
+      ms = ms.inject({}) { |h, m| (h[m.fei] ||= []) << m; h }
+
+      ms.values.each { |ms| VanillaExecutor.new(self, ms).run }
     end
 
     def process_timers

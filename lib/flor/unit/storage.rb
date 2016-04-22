@@ -40,6 +40,11 @@ module Flor
       Sequel::Migrator.apply(@db, dir, to, from)
     end
 
+    def fetch_messages
+
+      []
+    end
+
     protected
 
     def connect
