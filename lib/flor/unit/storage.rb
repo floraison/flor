@@ -49,6 +49,15 @@ module Flor
         .collect { |m| r = m.content; r['mid'] = m.id; r }
     end
 
+    def fetch_timers
+
+      @db[:flor_timers]
+        .select(:id, :content)
+        .where(status: 'created')
+        .order_by(:id)
+        .collect { |m| r = m.content; r['mid'] = m.id; r }
+    end
+
     protected
 
     def connect

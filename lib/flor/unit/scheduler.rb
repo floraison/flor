@@ -38,6 +38,9 @@ module Flor
       @logger = Flor::Logger.new(self)
       @storage = Flor::Storage.new(self)
 
+      @messages = []
+      @timers = []
+
       #@frequency = conf[:frequency] || 0.3
       @thread = nil
     end
@@ -50,7 +53,8 @@ module Flor
       @thread ||=
         Thread.new do
 
-          last_min = Time.now.min
+          load_timers
+          last_min = -1
 
           loop do
             begin
@@ -98,14 +102,29 @@ puts "... #{Time.now} (#{last_min})"
 
       ms = @storage.fetch_messages
 
-      ms = ms.inject({}) { |h, m| (h[m.fei] ||= []) << m; h }
+      ms = ms.inject({}) { |h, m| (h[m['fei']] ||= []) << m; h }
 
       ms.values.each { |ms| VanillaExecutor.new(self, ms).run }
     end
 
+    def load_timers
+
+      @storage.fetch_timers.each |t|
+
+        # turn timers as stored in db to the timers used here
+        # store in good order (early first)
+      end
+    end
+
     def process_timers
 
-      # ...
+      now = Time.now
+
+      loop do
+        timer = @timers.first
+        break if timer == nil || timer.at > now
+        trigger_timer(@timers.shift)
+      end
     end
   end
 end
