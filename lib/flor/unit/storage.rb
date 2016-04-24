@@ -42,7 +42,11 @@ module Flor
 
     def fetch_messages
 
-      []
+      @db[:flor_messages]
+        .select(:id, :content)
+        .where(status: 'created')
+        .order_by(:id)
+        .collect { |m| r = m.content; r['mid'] = m.id; r }
     end
 
     protected
