@@ -109,7 +109,7 @@ puts "... #{Time.now} (#{last_min})"
 
     def load_timers
 
-      @storage.fetch_timers.each |t|
+      @storage.fetch_timers.each do |t|
 
         # turn timers as stored in db to the timers used here
         # store in good order (early first)
