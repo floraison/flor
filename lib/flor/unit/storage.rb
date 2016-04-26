@@ -42,7 +42,7 @@ module Flor
 
     def fetch_messages
 
-      @db[:flor_messages]
+      @db[:flon_messages]
         .select(:id, :content)
         .where(status: 'created')
         .order_by(:id)
@@ -51,7 +51,7 @@ module Flor
 
     def fetch_timers
 
-      @db[:flor_timers]
+      @db[:flon_timers]
         .select(:id, :content)
         .where(status: 'created')
         .order_by(:id)
