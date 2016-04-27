@@ -26,9 +26,9 @@ require 'sequel'
 require 'sequel/extensions/migration'
 
 require 'flor'
-require 'flor/executor/persistent'
 require 'flor/unit/logger'
 require 'flor/unit/storage'
+require 'flor/unit/executor'
 require 'flor/unit/scheduler'
 
 
