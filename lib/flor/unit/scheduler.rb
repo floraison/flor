@@ -43,6 +43,13 @@ module Flor
 
       #@frequency = conf[:frequency] || 0.3
       @thread = nil
+
+      @poked = true # so that it checks db upon starting
+    end
+
+    def poke
+
+      @mutex.synchronize { @poked = true }
     end
 
     def start
@@ -58,13 +65,11 @@ module Flor
 
           loop do
             begin
-              sleep(0.3)
-puts "... #{Time.now} (#{last_min})"
-              if (min = Time.now.min) != last_min
-                last_min = min
-                process_messages
-              end
+              t = Time.now
               process_timers
+              process_messages
+              d = now - t
+              sleep [ 0.3 - d, 0.0 ].max
             rescue => e
               @logger.error('ouch!', e)
             end
@@ -98,12 +103,12 @@ puts "... #{Time.now} (#{last_min})"
 
     def process_messages
 
-      # load messages from db and process if any
+      poked = false; @mutex.synchronize { poked = @poked; @poked = false }
+
+      return unless poked
 
       ms = @storage.fetch_messages
-
       ms = ms.inject({}) { |h, m| (h[m['fei']] ||= []) << m; h }
-
       ms.values.each { |ms| VanillaExecutor.new(self, ms).run }
     end
 
