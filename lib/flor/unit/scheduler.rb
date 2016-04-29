@@ -44,6 +44,7 @@ module Flor
       #@frequency = conf[:frequency] || 0.3
       @thread = nil
 
+      @mutex = Mutex.new
       @poked = true # so that it checks db upon starting
     end
 
