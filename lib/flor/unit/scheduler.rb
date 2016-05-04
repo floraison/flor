@@ -38,8 +38,8 @@ module Flor
       @logger = Flor::Logger.new(self)
       @storage = Flor::Storage.new(self)
 
-      @reload_frequency = @conf[:reload_frequency] || 60
-      @max_executors = @conf[:max_executors] || 1
+      @reload_frequency = @conf[:sch_reload_frequency] || 60
+      @max_executors = @conf[:sch_max_executors] || 1
 
       @reloaded_at = nil
       @timers = []

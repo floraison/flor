@@ -27,6 +27,21 @@ module Flor
 
   module Conf
 
+    #
+    # * uni_ unit prefix (or no prefix like for :env)
+    # * sch_ scheduler prefix
+    # * sto_ storage prefix
+    # * exe_ executor prefix
+    #
+    #
+    # * :sch_reload_frequency
+    #   resync (reload) with db after how much time? (defaults to 60 (seconds))
+    #
+    # * :sch_max_executors
+    #   how many executor thread at most? (defaults to 7, 1 is OK in certain
+    #   environments)
+    #
+
     def self.read(s)
 
       s = File.read(s).strip unless s.match(/[\r\n]/)

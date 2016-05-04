@@ -54,8 +54,10 @@ module Flor
       @db[:flon_messages]
         .select(:exid)
         .where(status: 'created')
-        .order_by(:id)
-        .collect { |m| r = m.content; r['mid'] = m.id; r }
+        .order_by(:ctime)
+        .distinct
+        .all
+        .collect { |r| r[:exid] }
     end
 
     def load_timers
@@ -71,7 +73,7 @@ module Flor
 
     def connect
 
-      Sequel.connect(@unit.conf['db_uri'])
+      Sequel.connect(@unit.conf['sto_uri'])
     end
   end
 end
