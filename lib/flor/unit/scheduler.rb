@@ -38,52 +38,32 @@ module Flor
       @logger = Flor::Logger.new(self)
       @storage = Flor::Storage.new(self)
 
-      @messages = []
+      @reload_frequency = @conf[:reload_frequency] || 60
+      @max_executors = @conf[:max_executors] || 1
+
+      @reloaded_at = nil
       @timers = []
+      @exids = []
 
-      #@frequency = conf[:frequency] || 0.3
-      @thread = nil
-
-      @mutex = Mutex.new
-      @poked = true # so that it checks db upon starting
-    end
-
-    def poke
-
-      @mutex.synchronize { @poked = true }
+      @executors = []
     end
 
     def start
 
       # TODO heartbeat, every x minutes, when idle, log something
-      # TODO once per minute, querying flor_messages for incoming messages
 
       @thread ||=
         Thread.new do
 
-          load_timers
-          last_min = -1
-
           loop do
-            begin
-              t = Time.now
-              process_timers
-              process_messages
-              d = now - t
-              sleep [ 0.3 - d, 0.0 ].max
-            rescue => e
-              @logger.error('ouch!', e)
-            end
+
+            reload
+            trigger_timers
+            trigger_executions
           end
         end
 
       self
-    end
-
-    def poke
-
-      # TODO forces scheduler to look at DB for incoming messages
-      # TODO should it check the thread? It might have died...
     end
 
     def stop
@@ -102,34 +82,50 @@ module Flor
 
     protected
 
-    def process_messages
+    def reload
 
-      poked = false; @mutex.synchronize { poked = @poked; @poked = false }
+      now = Time.now
 
-      return unless poked
+      return if @reloaded_at && (now - @reloaded_at < @reload_frequency)
 
-      ms = @storage.fetch_messages
-      ms = ms.inject({}) { |h, m| (h[m['fei']] ||= []) << m; h }
-      ms.values.each { |ms| VanillaExecutor.new(self, ms).run }
+      @reloaded_at = now
+      @timers = load_timers
+      @exids = load_exids
     end
 
     def load_timers
 
-      @storage.fetch_timers.each do |t|
-
-        # turn timers as stored in db to the timers used here
-        # store in good order (early first)
-      end
+      @storage.load_timers.sort_by { |t| t[:id] }
+        # FIXME
     end
 
-    def process_timers
+    def load_exids
+
+      @storage.load_exids
+    end
+
+    def trigger_timers
 
       now = Time.now
 
       loop do
+
         timer = @timers.first
         break if timer == nil || timer.at > now
+
         trigger_timer(@timers.shift)
+      end
+    end
+
+    def trigger_executions
+
+      return if @exids.empty?
+
+      @executors = @executors.select { |e| e.alive? }
+
+      @exids.each do |fei|
+        break if @executors.size > @max_executors
+        @executors << VanillaExecutor.new(self, fei).run
       end
     end
   end

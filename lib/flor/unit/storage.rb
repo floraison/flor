@@ -40,16 +40,25 @@ module Flor
       Sequel::Migrator.apply(@db, dir, to, from)
     end
 
-    def fetch_messages
+#    def fetch_messages
+#
+#      @db[:flon_messages]
+#        .select(:id, :content)
+#        .where(status: 'created')
+#        .order_by(:id)
+#        .collect { |m| r = m.content; r['mid'] = m.id; r }
+#    end
+
+    def load_exids
 
       @db[:flon_messages]
-        .select(:id, :content)
+        .select(:exid)
         .where(status: 'created')
         .order_by(:id)
         .collect { |m| r = m.content; r['mid'] = m.id; r }
     end
 
-    def fetch_timers
+    def load_timers
 
       @db[:flon_timers]
         .select(:id, :content)
