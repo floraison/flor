@@ -82,9 +82,15 @@ module Flor
 
     def launch(tree, opts={})
 
-      m = make_launch_msg(tree, opts)
+      exid = Flor.generate_exid(
+        opts[:domain] || @conf[:domain] || 'domain0',
+        opts[:unit] || @conf[:unit] || 'u0')
 
-# TODO
+      m = Flor.make_launch_msg(exid, tree, opts)
+
+      p m
+
+      fail 'implement me!'
     end
 
     protected

@@ -48,7 +48,7 @@ module Flor
       super(TransientUnit.new(h))
 
       @execution = {
-        'exid' => generate_exid('eval'),
+        'exid' => Flor.generate_exid('eval', 'u0'),
         'nodes' => {},
         'errors' => [],
         'counters' => { 'sub' => 0, 'fun' => -1 } }
@@ -56,7 +56,7 @@ module Flor
 
     def launch(tree, opts={})
 
-      messages = [ make_launch_msg(tree, opts) ]
+      messages = [ Flor.make_launch_msg(@execution['exid'], tree, opts) ]
       message = nil
 
       Flor.print_src(tree) if conf[:src]

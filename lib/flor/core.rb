@@ -22,30 +22,54 @@
 # Made in Japan.
 #++
 
-require 'pp'
-require 'json'
-require 'logger'
-require 'thread'
-
-require 'munemo'
-require 'raabro'
-
-
 module Flor
 
-  VERSION = '0.4.0'
+  def self.generate_exid(domain, unit)
+
+    @exid_counter ||= 0
+    @exid_mutex ||= Mutex.new
+
+    local = true
+
+    t = Time.now
+    t = t.utc unless local
+
+    sus =
+      @exid_mutex.synchronize do
+
+        sus = t.sec * 100000000 + t.usec * 100 + @exid_counter
+
+        @exid_counter = @exid_counter + 1
+        @exid_counter = 0 if @exid_counter > 99
+
+        Munemo.to_s(sus)
+      end
+
+    t = t.strftime('%Y%m%d.%H%M')
+
+    "#{domain}-#{unit}-#{t}.#{sus}"
+  end
+
+  def self.make_launch_msg(exid, tree, opts)
+
+    t =
+      tree.is_a?(String) ?
+      Flor::Lang.parse(tree, opts[:fname], opts) :
+      tree
+
+    unless t
+      #h = opts.merge(prune: false, rewrite: false)
+      #p Flor::Lang.parse(tree, h[:fname], h)
+        # TODO re-parse and indicate what went wrong...
+      fail ArgumentError.new('flon parse failure')
+    end
+
+    { 'point' => 'execute',
+      'exid' => exid,
+      'nid' => '0',
+      'tree' => t,
+      'payload' => opts[:payload] || opts[:fields] || {},
+      'vars' => opts[:variables] || opts[:vars] || {} }
+  end
 end
-
-require 'flor/flor'
-require 'flor/dollar'
-require 'flor/errors'
-require 'flor/parser'
-require 'flor/conf'
-
-require 'flor/core'
-require 'flor/core/node'
-require 'flor/core/logger'
-require 'flor/core/procedure'
-require 'flor/core/executor'
-require 'flor/core/texecutor'
 

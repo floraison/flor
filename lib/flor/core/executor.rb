@@ -56,28 +56,6 @@ module Flor
       Dir[dirpath].each { |path| require(path) }
     end
 
-    def make_launch_msg(tree, opts)
-
-      t =
-        tree.is_a?(String) ?
-        Flor::Lang.parse(tree, opts[:fname], opts) :
-        tree
-
-      unless t
-        #h = opts.merge(prune: false, rewrite: false)
-        #p Flor::Lang.parse(tree, h[:fname], h)
-          # TODO re-parse and indicate what went wrong...
-        fail ArgumentError.new('flon parse failure')
-      end
-
-      { 'point' => 'execute',
-        'exid' => @execution['exid'],
-        'nid' => '0',
-        'tree' => t,
-        'payload' => opts[:payload] || opts[:fields] || {},
-        'vars' => opts[:variables] || opts[:vars] || {} }
-    end
-
     def execute(message)
 
       nid = message['nid']
@@ -158,34 +136,6 @@ module Flor
       node = @execution['nodes'][nid]
 
       apply(node, message)
-    end
-
-    def generate_exid(domain)
-
-      @exid_counter ||= 0
-      @exid_mutex ||= Mutex.new
-
-      local = true
-
-      uid = 'u0'
-
-      t = Time.now
-      t = t.utc unless local
-
-      sus =
-        @exid_mutex.synchronize do
-
-          sus = t.sec * 100000000 + t.usec * 100 + @exid_counter
-
-          @exid_counter = @exid_counter + 1
-          @exid_counter = 0 if @exid_counter > 99
-
-          Munemo.to_s(sus)
-        end
-
-      t = t.strftime('%Y%m%d.%H%M')
-
-      "#{domain}-#{uid}-#{t}.#{sus}"
     end
 
     def error_reply(node, message, err)

@@ -21,11 +21,20 @@ describe 'Flor core' do
     @unit.stop
   end
 
-  describe 'john doe' do
+  describe 'scheduler' do
 
-    it 'flips burgers' do
+    it 'runs a simple flow' do
 
-      fail
+      flon = %{
+        sequence
+          define sum a, b
+            +
+              a
+              b
+          sum 1 2
+      }
+
+      @unit.launch(flon)
     end
   end
 end
