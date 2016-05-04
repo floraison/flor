@@ -8,7 +8,7 @@
 require 'spec_helper'
 
 
-describe 'Flor a-to-z' do
+describe 'Flor core' do
 
   before :each do
 

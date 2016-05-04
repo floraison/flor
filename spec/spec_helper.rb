@@ -9,6 +9,7 @@ require 'pp'
 require 'ostruct'
 
 require 'flor'
+require 'flor/unit'
 
 
 RSpec::Matchers.define :eqj do |o|
