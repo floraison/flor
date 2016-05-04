@@ -80,6 +80,13 @@ module Flor
       @thread.join
     end
 
+    def launch(tree, opts={})
+
+      m = make_launch_msg(tree, opts)
+
+# TODO
+    end
+
     protected
 
     def reload
