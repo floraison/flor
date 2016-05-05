@@ -88,9 +88,9 @@ module Flor
 
       m = Flor.make_launch_msg(exid, tree, opts)
 
-      p m
+      @storage.put_message(m)
 
-      fail 'implement me!'
+      exid
     end
 
     protected

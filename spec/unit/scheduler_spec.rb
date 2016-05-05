@@ -19,6 +19,7 @@ describe 'Flor core' do
   after :each do
 
     @unit.stop
+    @unit.storage.clear
   end
 
   describe 'scheduler' do
@@ -34,7 +35,22 @@ describe 'Flor core' do
           sum 1 2
       }
 
-      @unit.launch(flon)
+      exid = @unit.launch(flon)
+
+      expect(
+        exid
+      ).to match(
+        /\Adomain0-u0-#{Time.now.year}\d{4}\.\d{4}\.[a-z]+\z/
+      )
+
+      ms = @unit.storage.db[:flon_messages].all
+      m = ms.first
+
+      expect(ms.size).to eq(1)
+      expect(m[:exid]).to eq(exid)
+      expect(m[:point]).to eq('execute')
+      expect(JSON.parse(m[:content])['exid']).to eq(exid)
+      fail
     end
   end
 end

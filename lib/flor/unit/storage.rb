@@ -27,6 +27,8 @@ module Flor
 
   class Storage
 
+    attr_reader :unit, :db
+
     def initialize(unit)
 
       @unit = unit
@@ -38,6 +40,13 @@ module Flor
       dir = @unit.conf['db_migrations'] || 'migrations'
 
       Sequel::Migrator.apply(@db, dir, to, from)
+    end
+
+    def clear
+
+      [ :flon_messages, :flon_executions, :flon_timers, :flon_logs ].each do |t|
+        @db[t].delete
+      end
     end
 
 #    def fetch_messages
@@ -67,6 +76,17 @@ module Flor
         .where(status: 'created')
         .order_by(:id)
         .collect { |m| r = m.content; r['mid'] = m.id; r }
+    end
+
+    def put_message(m)
+
+      @db[:flon_messages]
+        .insert(
+          exid: m['exid'],
+          point: m['point'],
+          content: Sequel.blob(JSON.dump(m)),
+          status: 'created',
+          ctime: Time.now)
     end
 
     protected
