@@ -6,35 +6,30 @@ Sequel.migration do
     create_table :flon_messages do
 
       primary_key :id, type: Bignum
-      String :domain, null: false
       String :exid, null: false
       String :point, null: false # 'execute', 'task', 'receive', 'schedule', ...
       File :content # JSON
       String :status, null: false
       Time :ctime
 
-      index :domain
       index :exid
     end
 
     create_table :flon_executions do
 
       primary_key :id, type: Bignum
-      String :domain, null: false
       String :exid, null: false
       File :content # JSON
       String :status, null: false # 'active' or something else like 'archived'
       Time :ctime
       Time :mtime
 
-      index :domain
       index :exid
     end
 
     create_table :flon_timers do
 
       primary_key :id, type: Bignum
-      String :domain, null: false
       String :exid, null: false
       String :type, null: false # 'at' or 'cron'
       String :schedule, null: false # '20141128.103239' or '00 23 * * *'
@@ -42,14 +37,12 @@ Sequel.migration do
       String :status, null: false
       Time :ctime
 
-      index :domain
       index :exid
     end
 
     create_table :flon_logs do
 
       primary_key :id, type: Bignum
-      String :domain, null: false
       String :exid, null: false
       String :reporter, null: false # 'dispatcher'
       String :subject, null: false # 'execution x', 'node y'
@@ -58,7 +51,6 @@ Sequel.migration do
       String :message, null: false # 'blah blah blah'
       Time :tstamp
 
-      index :domain
       index :exid
     end
   end
