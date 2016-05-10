@@ -72,7 +72,7 @@ module Flor
       @thread = nil
     end
 
-    def running?; @thread && @thread.alive?; end
+    def running?; !! (@thread && @thread.alive?); end
     def stopped?; @thread.nil?; end
 
     def join

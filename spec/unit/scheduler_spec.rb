@@ -22,36 +22,56 @@ describe 'Flor core' do
     @unit.storage.clear
   end
 
-  describe 'scheduler' do
+  describe Flor::Scheduler do
 
-    it 'runs a simple flow' do
+    describe '#stop' do
 
-      flon = %{
-        sequence
-          define sum a, b
-            +
-              a
-              b
-          sum 1 2
-      }
+      it 'stops' do
 
-      exid = @unit.launch(flon)
+        expect(@unit.running?).to eq(true)
+        expect(@unit.stopped?).to eq(false)
 
-      expect(
-        exid
-      ).to match(
-        /\Adomain0-u0-#{Time.now.year}\d{4}\.\d{4}\.[a-z]+\z/
-      )
+        @unit.stop
 
-      ms = @unit.storage.db[:flon_messages].all
-      m = ms.first
-
-      expect(ms.size).to eq(1)
-      expect(m[:exid]).to eq(exid)
-      expect(m[:point]).to eq('execute')
-      expect(JSON.parse(m[:content])['exid']).to eq(exid)
-      fail
+        expect(@unit.running?).to eq(false)
+        expect(@unit.stopped?).to eq(true)
+      end
     end
+
+    describe '#launch' do
+
+      it 'stores launch messages' do
+
+        @unit.stop
+
+        flon = %{
+          sequence
+            define sum a, b
+              +
+                a
+                b
+            sum 1 2
+        }
+
+        exid = @unit.launch(flon)
+
+        expect(
+          exid
+        ).to match(
+          /\Adomain0-u0-#{Time.now.year}\d{4}\.\d{4}\.[a-z]+\z/
+        )
+
+        ms = @unit.storage.db[:flon_messages].all
+        m = ms.first
+
+        expect(ms.size).to eq(1)
+        expect(m[:exid]).to eq(exid)
+        expect(m[:point]).to eq('execute')
+        expect(JSON.parse(m[:content])['exid']).to eq(exid)
+      end
+    end
+
+    it 'runs a simple flow'
   end
 end
 
