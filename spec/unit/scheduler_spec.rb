@@ -13,7 +13,9 @@ describe 'Flor core' do
 
   before :each do
 
-    @unit = Flor::Unit.new('.flor-test.conf').start
+    @unit = Flor::Unit.new('.flor-test.conf')
+    @unit.storage.migrate
+    @unit.start
   end
 
   after :each do
