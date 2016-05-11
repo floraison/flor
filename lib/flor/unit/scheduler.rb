@@ -38,6 +38,7 @@ module Flor
       @env = @conf['env'] ||= 'dev'
 
       @logger = Flor::Logger.new(self)
+      @waiter = Flor::Waiter.new(self)
       @storage = Flor::Storage.new(self)
 
       @reload_frequency = @conf[:sch_reload_frequency] || 60
@@ -56,6 +57,7 @@ module Flor
       @thread = nil
 
       @logger.shutdown
+      @waiter.shutdown
       @storage.shutdown
     end
 
@@ -75,12 +77,23 @@ module Flor
           Thread.new do
             loop do
 
-              Thread.stop if @thread_status == :stop
-              break if @thread_status == :shutdown
+              begin
 
-              reload
-              trigger_timers
-              trigger_executions
+                Thread.stop if @thread_status == :stop
+                break if @thread_status == :shutdown
+
+                reload
+                trigger_timers
+                trigger_executions
+
+              rescue => e
+                # TODO enhance me
+                puts "-" * 80
+                p e
+                puts e.backtrace[0, 7]
+                puts ("-" * 80) + ' .'
+                $stdout.flush
+              end
             end
           end
         end
@@ -111,7 +124,7 @@ module Flor
 
       @storage.put_message(m)
 
-      exid
+      opts[:wait] ? @waiter.wait(exid) : exid
     end
 
     protected
@@ -157,9 +170,9 @@ module Flor
 
       @executors = @executors.select { |e| e.alive? }
 
-      @exids.each do |fei|
+      @exids.each do |exid|
         break if @executors.size > @max_executors
-        @executors << VanillaExecutor.new(self, fei).run
+        @executors << UnitExecutor.new(self, exid).run
       end
     end
   end

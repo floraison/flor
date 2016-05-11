@@ -85,6 +85,7 @@ describe 'Flor core' do
             sum 1 2
         }
 
+fail
         msg = @unit.launch(flon, wait: true)
 
         expect(msg.class).to eq(Hash)

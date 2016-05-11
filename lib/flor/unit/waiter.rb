@@ -22,28 +22,30 @@
 # Made in Japan.
 #++
 
-
 module Flor
 
-  class UnitExecutor < Flor::Executor
+  class Waiter
 
-    def initialize(unit, exid)
+    # NB: logger configuration entries start with "wai_"
 
-      super(unit)
+    def initialize(unit)
 
-      @exid = exid
+      @unit = unit
     end
 
-    def run
+    def shutdown
 
       # TODO
-
-      self
     end
 
-    def alive?
+    def log(message)
 
-      true
+      # TODO
+    end
+
+    def wait(exid, point=nil)
+
+Queue.new.pop
     end
   end
 end
