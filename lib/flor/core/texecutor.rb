@@ -87,12 +87,7 @@ module Flor
         break if point == 'failed'
         break if point == 'terminated'
 
-        msgs =
-          begin
-            self.send(point.to_sym, message)
-          rescue => e
-            error_reply(nil, message, e)
-          end
+        msgs = process(message)
 
         @unit.log(:post, message)
 

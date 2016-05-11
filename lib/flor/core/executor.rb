@@ -150,6 +150,15 @@ module Flor
 
       [ m ]
     end
+
+    def process(message)
+
+      begin
+        self.send(message['point'].to_sym, message)
+      rescue => e
+        error_reply(nil, message, e)
+      end
+    end
   end
 
   # class methods

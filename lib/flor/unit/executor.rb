@@ -34,7 +34,10 @@ module Flor
       super(unit)
 
       @exid = exid
+      @alive = true
     end
+
+    def alive?; @alive; end
 
     def run
 
@@ -49,32 +52,22 @@ module Flor
 
         point = m['point']
 
-        p m if point == 'failed'
+p m if point == 'failed'
 
-        break if point == 'failed'
-        break if point == 'terminated'
-
-        ms =
-          begin
-            self.send(point.to_sym, m)
-          rescue => e
-            error_reply(nil, m, e)
-          end
+        ms = process(m)
 
         @unit.log(:post, m)
 
         messages.concat(ms)
       end
 
+      #@alive = false
+        # TODO
+
       # TODO: save remaining messages to DB
       # TODO: start work on tasks
 
       self
-    end
-
-    def alive?
-
-      true
     end
   end
 end
