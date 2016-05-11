@@ -33,6 +33,11 @@ module Flor
       @unit = unit
     end
 
+    def shutdown
+
+      # TODO
+    end
+
     def error(message, err)
 
       # TODO

@@ -30,6 +30,8 @@ module Flor
     attr_reader :conf, :env
     attr_reader :logger, :storage
 
+    attr_reader :thread_status
+
     def initialize(conf={})
 
       @conf = conf.is_a?(Hash) ? conf : Flor::Conf.read(conf)
@@ -48,18 +50,38 @@ module Flor
       @executors = []
     end
 
+    def shutdown
+
+      @thread_status = :shutdown
+      @thread = nil
+
+      @logger.shutdown
+      @storage.shutdown
+    end
+
     def start
 
       # TODO heartbeat, every x minutes, when idle, log something
 
-      @thread ||=
-        Thread.new do
+      @thread_status = :running
 
-          loop do
+      @thread =
+        if @thread
 
-            reload
-            trigger_timers
-            trigger_executions
+          @thread.run
+
+        else
+
+          Thread.new do
+            loop do
+
+              Thread.stop if @thread_status == :stop
+              break if @thread_status == :shutdown
+
+              reload
+              trigger_timers
+              trigger_executions
+            end
           end
         end
 
@@ -68,12 +90,11 @@ module Flor
 
     def stop
 
-      @thread.kill if @thread
-      @thread = nil
+      @thread_status = :stop
     end
 
-    def running?; !! (@thread && @thread.alive?); end
-    def stopped?; @thread.nil?; end
+    def running?; @thread_status == :running; end
+    def stopped?; ! running?; end
 
     def join
 

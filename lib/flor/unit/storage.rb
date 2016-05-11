@@ -35,6 +35,11 @@ module Flor
       @db = connect
     end
 
+    def shutdown
+
+      @db.disconnect
+    end
+
     def migrate(to=nil, from=nil)
 
       dir = @unit.conf['db_migrations'] || 'migrations'
