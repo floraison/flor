@@ -11,6 +11,7 @@ Sequel.migration do
       File :content # JSON
       String :status, null: false
       Time :ctime
+      Time :mtime
 
       index :exid
     end
@@ -36,6 +37,7 @@ Sequel.migration do
       File :content # JSON
       String :status, null: false
       Time :ctime
+      Time :mtime
 
       index :exid
     end

@@ -34,6 +34,8 @@ module Flor
       super(unit)
 
       @exid = exid
+      @messages = unit.storage.fetch_messages(exid)
+      @consumed = []
       @alive = true
     end
 
@@ -41,33 +43,58 @@ module Flor
 
     def run
 
-      messages = unit.storage.fetch_messages(@exid)
+      Thread.new { do_run }
+
+      self
+    end
+
+    protected
+
+    def do_run
 
       (@unit.conf['exe_max_messages'] || 35).times do |i|
 
-        m = messages.shift
+        m = @messages.shift
         break unless m
 
         @unit.log(:pre, m)
 
         point = m['point']
 
-p m if point == 'failed'
-
         ms = process(m)
+
+        @consumed << m
 
         @unit.log(:post, m)
 
-        messages.concat(ms)
+        @messages.concat(ms)
       end
 
-      #@alive = false
+      flag_consumed
+
+      @alive = false
         # TODO
 
       # TODO: save remaining messages to DB
       # TODO: start work on tasks
 
-      self
+    rescue => e
+puts "=" * 80
+p e
+puts e.backtrace[0, 7]
+puts ("=" * 80) + ' .'
+    end
+
+    def failed(message)
+
+puts " *** failed: " + message.inspect
+
+      []
+    end
+
+    def flag_consumed
+
+      @unit.storage.consume(@consumed)
     end
   end
 end

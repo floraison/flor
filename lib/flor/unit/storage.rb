@@ -83,6 +83,13 @@ module Flor
       end
     end
 
+    def consume(messages)
+
+      @db[:flon_messages]
+        .where(id: messages.collect { |m| m['mid'] }.compact)
+        .update(status: 'consumed', mtime: Time.now)
+    end
+
     def load_timers
 
       @db[:flon_timers]
