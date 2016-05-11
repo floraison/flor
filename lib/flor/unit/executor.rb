@@ -49,6 +49,8 @@ module Flor
 
         point = m['point']
 
+        p m if point == 'failed'
+
         break if point == 'failed'
         break if point == 'terminated'
 

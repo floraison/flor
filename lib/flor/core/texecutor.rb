@@ -28,8 +28,18 @@ module Flor
   class TransientExecutor < Executor
 
     class TransientUnit
+
       attr_accessor :conf
-      def initialize(conf); @conf = conf; end
+
+      def initialize(conf)
+
+        @conf = conf
+      end
+
+      def log(pos, message)
+
+        Flor.log(message) if pos == :pre && @conf[:log]
+      end
     end
 
     def initialize(conf={})
@@ -68,7 +78,7 @@ module Flor
 
         break unless message
 
-        @logger.log(message)
+        @unit.log(:pre, message)
 
         point = message['point']
 
@@ -83,6 +93,8 @@ module Flor
           rescue => e
             error_reply(nil, message, e)
           end
+
+        @unit.log(:post, message)
 
         messages.concat(msgs)
       end

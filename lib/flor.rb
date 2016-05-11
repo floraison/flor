@@ -44,7 +44,6 @@ require 'flor/conf'
 
 require 'flor/core'
 require 'flor/core/node'
-require 'flor/core/logger'
 require 'flor/core/procedure'
 require 'flor/core/executor'
 require 'flor/core/texecutor'
