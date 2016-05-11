@@ -31,47 +31,11 @@ module Flor
     def initialize(unit)
 
       @unit = unit
-
-      @waiters = []
-
-# TODO: synchronize access to log
-    end
-
-    def shutdown
-
-      @waiters
-        .each { |w| w[2].push({ 'point' => 'shutdown' }) }
-        .clear
-    end
-
-    def log(message)
-
-      Flor.log(message) #if @executor.conf[:log]
-
-      ws =
-        @waiters.select { |i, p, q, r|
-          ((i && message['exid'] == i) || i == nil) &&
-          ((p && message['point'] == p) || p == nil)
-        }
-
-      ws.each do |w|
-        @waiters.delete(w) unless w[3]
-        w[2].push(message)
-      end
     end
 
     def error(message, err)
 
       # TODO
-    end
-
-    def wait(exid, point)
-
-      q = Queue.new
-
-      @waiters << [ exid, point, q, false ] # repeat: false
-
-      q
     end
   end
 end
