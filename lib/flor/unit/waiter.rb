@@ -31,6 +31,9 @@ module Flor
     def initialize(unit)
 
       @unit = unit
+
+      @mutex = Mutex.new
+      @entries = []
     end
 
     def shutdown
@@ -40,12 +43,71 @@ module Flor
 
     def log(message)
 
-      # TODO
+      @mutex.synchronize do
+
+        es =
+          @entries.select { |e|
+            ((e.exid && message['exid'] == e.exid) || e.exid == nil) &&
+            ((e.point && message['point'] == e.point) || e.point == nil)
+          }
+
+        es.each do |e|
+          e.push(message)
+          @entries.delete(e) unless e.repeat
+        end
+      end
     end
 
-    def wait(exid, point=nil)
+    def wait(exid, point=nil, repeat=false)
 
-Queue.new.pop
+      e = Entry.new(exid, point, repeat)
+      @mutex.synchronize { @entries << e }
+
+      e.wait
+    end
+
+    class Entry
+
+      attr_reader :exid, :point, :repeat, :queue
+
+      def initialize(exid, point, repeat)
+
+        @exid = exid
+        @point = point
+        @repeat = repeat
+
+        @queue = []
+        @mutex = Mutex.new
+        @var = ConditionVariable.new
+      end
+
+      def push(x)
+
+        @mutex.synchronize do
+          @queue.push(x)
+          @var.signal
+        end
+
+        self
+      end
+
+      def wait(timeout=3)
+
+        @mutex.synchronize do
+
+          if @queue.empty?
+            @var.wait(@mutex, timeout) if timeout > 0
+            fail(RuntimeError, "timeout for #{self.to_s}") if @queue.empty?
+          end
+          @queue.shift
+        end
+      end
+
+      def to_s
+
+        self.class.to_s +
+        "(exid:#{@exid.inspect},point:#{point.inspect},repeat:#{@repeat})"
+      end
     end
   end
 end
