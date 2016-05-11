@@ -22,6 +22,7 @@ describe 'Flor core' do
 
     @unit.stop
     @unit.storage.clear
+    @unit.shutdown
   end
 
   describe Flor::Scheduler do
@@ -73,7 +74,21 @@ describe 'Flor core' do
       end
     end
 
-    it 'runs a simple flow'
+    it 'runs a simple flow' do
+
+        flon = %{
+          sequence
+            define sum a, b
+              +
+                a
+                b
+            sum 1 2
+        }
+
+        msg = @unit.launch(flon, wait: true)
+
+        expect(msg.class).to eq(Hash)
+    end
   end
 end
 

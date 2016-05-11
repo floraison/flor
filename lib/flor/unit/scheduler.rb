@@ -80,6 +80,12 @@ module Flor
       @thread.join
     end
 
+    def shutdown
+
+      @logger.shutdown
+      @storage.shutdown
+    end
+
     def launch(tree, opts={})
 
       exid = Flor.generate_exid(
@@ -88,9 +94,11 @@ module Flor
 
       m = Flor.make_launch_msg(exid, tree, opts)
 
+      w = opts[:wait] ? @logger.wait(exid, 'terminated') : nil
+
       @storage.put_message(m)
 
-      exid
+      w ? w.pop : exid
     end
 
     protected
