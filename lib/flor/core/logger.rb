@@ -25,6 +25,8 @@
 
 class Flor::Executor
 
+  # A simple worker for the transient executor
+  #
   class Logger
 
     def initialize(executor)

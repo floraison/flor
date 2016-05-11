@@ -38,9 +38,9 @@ module Flor
       # TODO
     end
 
-    def error(message, err)
+    def log(message)
 
-      # TODO
+      Flor.log(message)
     end
   end
 end

@@ -32,6 +32,8 @@ module Flor
     # * sch_ scheduler prefix
     # * sto_ storage prefix
     # * exe_ executor prefix
+    # * wai_ waiter prefix
+    # * log_ logger prefix
     #
     #
     # * :sch_reload_frequency
@@ -40,6 +42,10 @@ module Flor
     # * :sch_max_executors
     #   how many executor thread at most? (defaults to 7, 1 is OK in certain
     #   environments)
+    #
+    # * :exe_max_messages
+    #   how many messages will an executor run in a single session
+    #   (before quitting and passing the hand)
     #
 
     def self.read(s)

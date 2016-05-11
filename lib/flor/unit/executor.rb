@@ -27,6 +27,8 @@ module Flor
 
   class UnitExecutor < Flor::Executor
 
+    attr_reader :exid
+
     def initialize(unit, exid)
 
       super(unit)
@@ -36,7 +38,34 @@ module Flor
 
     def run
 
-      # TODO
+      messages = unit.storage.fetch_messages(@exid)
+
+      (@unit.conf['exe_max_messages'] || 35).times do |i|
+
+        m = messages.shift
+        break unless m
+
+        @unit.log(:pre, m)
+
+        point = m['point']
+
+        break if point == 'failed'
+        break if point == 'terminated'
+
+        ms =
+          begin
+            self.send(point.to_sym, m)
+          rescue => e
+            error_reply(nil, m, e)
+          end
+
+        @unit.log(:post, m)
+
+        messages.concat(ms)
+      end
+
+      # TODO: save remaining messages to DB
+      # TODO: start work on tasks
 
       self
     end

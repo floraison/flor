@@ -28,7 +28,7 @@ module Flor
   class Scheduler
 
     attr_reader :conf, :env
-    attr_reader :logger, :storage
+    attr_reader :logger, :waiter, :storage
 
     attr_reader :thread_status
 
@@ -127,6 +127,15 @@ module Flor
       opts[:wait] ? @waiter.wait(exid) : exid
     end
 
+    def log(pos, message)
+
+      if pos == :pre
+        @logger.log(message)
+      else # :post
+        @waiter.log(message)
+      end
+    end
+
     protected
 
     def reload
@@ -169,9 +178,13 @@ module Flor
       return if @exids.empty?
 
       @executors = @executors.select { |e| e.alive? }
+      exids = @executors.collect { |e| e.exid }
 
       @exids.each do |exid|
+
         break if @executors.size > @max_executors
+        next if exids.include?(exid)
+
         @executors << UnitExecutor.new(self, exid).run
       end
     end

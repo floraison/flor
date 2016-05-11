@@ -54,15 +54,6 @@ module Flor
       end
     end
 
-#    def fetch_messages
-#
-#      @db[:flon_messages]
-#        .select(:id, :content)
-#        .where(status: 'created')
-#        .order_by(:id)
-#        .collect { |m| r = m.content; r['mid'] = m.id; r }
-#    end
-
     def load_exids
 
       @db[:flon_messages]
@@ -74,13 +65,31 @@ module Flor
         .collect { |r| r[:exid] }
     end
 
+    def fetch_messages(exid)
+
+      @db.transaction do
+
+        ms = @db[:flon_messages]
+          .select(:id, :content)
+          .where(status: 'created', exid: exid)
+          .order_by(:id)
+          .map { |m| r = from_json(m[:content]) || {}; r['mid'] = m[:id]; r }
+
+        @db[:flon_messages]
+          .where(id: ms.collect { |m| m['mid'] })
+          .update(status: 'consumed')
+
+        ms
+      end
+    end
+
     def load_timers
 
       @db[:flon_timers]
         .select(:id, :content)
         .where(status: 'created')
         .order_by(:id)
-        .collect { |m| r = m.content; r['mid'] = m.id; r }
+        .collect { |m| r = from_json(m[:content]) || {}; r['mid'] = m[:id]; r }
     end
 
     def put_message(m)
@@ -99,6 +108,11 @@ module Flor
     def connect
 
       Sequel.connect(@unit.conf['sto_uri'])
+    end
+
+    def from_json(s)
+
+      JSON.parse(s) rescue nil
     end
   end
 end

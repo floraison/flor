@@ -45,16 +45,12 @@ module Flor
 
       @mutex.synchronize do
 
-        es =
-          @entries.select { |e|
-            ((e.exid && message['exid'] == e.exid) || e.exid == nil) &&
-            ((e.point && message['point'] == e.point) || e.point == nil)
+        @entries
+          .select { |e| e.match(message) }
+          .each { |e|
+            e.push(message)
+            @entries.delete(e) unless e.repeat
           }
-
-        es.each do |e|
-          e.push(message)
-          @entries.delete(e) unless e.repeat
-        end
       end
     end
 
@@ -70,15 +66,21 @@ module Flor
 
       attr_reader :exid, :point, :repeat, :queue
 
-      def initialize(exid, point, repeat)
+      def initialize(exid, points, repeat)
 
         @exid = exid
-        @point = point
+        @points = points
         @repeat = repeat
 
         @queue = []
         @mutex = Mutex.new
         @var = ConditionVariable.new
+      end
+
+      def match(message)
+
+        ((@exid && message['exid'] == @exid) || @exid == nil) &&
+        ((@point && message['point'] == @point) || @point == nil)
       end
 
       def push(x)
