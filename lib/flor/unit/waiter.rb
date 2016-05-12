@@ -93,7 +93,7 @@ module Flor
         self
       end
 
-      def wait(timeout=7)
+      def wait(timeout=3)
 
         @mutex.synchronize do
 

@@ -36,6 +36,10 @@ module Flor
     # * log_ logger prefix
     #
     #
+    # * :sch_heart_rate
+    #   defaults to 0.3s, checks for exids to run and timers to triggers
+    #   at least every 0.3s
+    #
     # * :sch_reload_frequency
     #   resync (reload) with db after how much time? (defaults to 60 (seconds))
     #

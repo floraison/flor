@@ -41,6 +41,7 @@ module Flor
       @waiter = Flor::Waiter.new(self)
       @storage = Flor::Storage.new(self)
 
+      @heart_rate = @conf[:sch_heart_rate] || 0.3
       @reload_frequency = @conf[:sch_reload_frequency] || 60
       @max_executors = @conf[:sch_max_executors] || 1
 
@@ -79,6 +80,8 @@ module Flor
 
               begin
 
+                t0 = Time.now
+
                 Thread.stop if @thread_status == :stop
                 break if @thread_status == :shutdown
 
@@ -86,13 +89,15 @@ module Flor
                 trigger_timers
                 trigger_executions
 
+                sleep [ @heart_rate - (Time.now - t0), 0 ].max
+
               rescue => e
-                # TODO enhance me
-                puts "-" * 80
-                p e
-                puts e.backtrace[0, 7]
-                puts ("-" * 80) + ' .'
-                $stdout.flush
+# TODO enhance me
+puts "-" * 80
+p e
+puts e.backtrace[0, 7]
+puts ("-" * 80) + ' .'
+$stdout.flush
               end
             end
           end
