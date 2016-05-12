@@ -31,7 +31,7 @@ A Ruby version of flon
 
   s.add_development_dependency 'rspec', '3.4.0'
   s.add_development_dependency 'sequel', '4.33.0'
-  s.add_development_dependency 'sqlite3', '1.3.11'
+  #s.add_development_dependency 'sqlite3', '1.3.11'
 
   s.require_path = 'lib'
 end

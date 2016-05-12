@@ -157,7 +157,12 @@ module Flor
 
     def connect
 
-      Sequel.connect(@unit.conf['sto_uri'])
+      uri = @unit.conf['sto_uri']
+
+      uri = "jdbc:#{uri}" \
+        if RUBY_PLATFORM.match(/java/) && uri.match(/\Asqlite:/)
+
+      Sequel.connect(uri)
     end
 
     def to_blob(h)
