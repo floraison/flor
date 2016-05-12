@@ -31,7 +31,7 @@ module Flor
 
     def initialize(unit, exid)
 
-      super(unit)
+      super(unit, unit.storage.load_execution(exid))
 
       @exid = exid
       @messages = unit.storage.fetch_messages(exid)
@@ -81,13 +81,20 @@ module Flor
     rescue => e
 puts "=" * 80
 p e
-puts e.backtrace[0, 7]
+puts e.backtrace
 puts ("=" * 80) + ' .'
     end
 
     def failed(message)
 
 puts " *** failed: " + message.inspect
+
+      []
+    end
+
+    def terminated(message)
+
+      # nothing to do
 
       []
     end

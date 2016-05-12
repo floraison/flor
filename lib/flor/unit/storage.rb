@@ -65,6 +65,41 @@ module Flor
         .collect { |r| r[:exid] }
     end
 
+    def load_execution(exid)
+
+      e = @db[:flon_executions]
+        .select(:id, :content)
+        .where(status: 'active', exid: exid)
+        .first
+
+      ex =
+        if e
+          ex =
+            from_json(e[:content]) ||
+            fail("couldn't parse execution (db id #{e[:id]})")
+          ex['id'] =
+            e[:id]
+          ex
+        else
+          ex = {
+            'exid' => exid,
+            'nodes' => {},
+            'errors' => [],
+            'counters' => { 'sub' => 0, 'fun' => -1 }
+          }
+          ex['id'] = @db[:flon_executions]
+            .insert(
+              exid: exid,
+              content: Sequel.blob(JSON.dump(ex)),
+              status: 'active',
+              ctime: Time.now,
+              mtime: Time.now)
+          ex
+        end
+
+      ex
+    end
+
     def fetch_messages(exid)
 
       @db.transaction do

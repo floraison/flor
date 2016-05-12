@@ -55,13 +55,14 @@ module Flor
         #
         # TODO eventually prefix err, log, tree and src...
 
-      super(TransientUnit.new(h))
-
-      @execution = {
-        'exid' => Flor.generate_exid('eval', 'u0'),
-        'nodes' => {},
-        'errors' => [],
-        'counters' => { 'sub' => 0, 'fun' => -1 } }
+      super(
+        TransientUnit.new(h),
+        {
+          'exid' => Flor.generate_exid('eval', 'u0'),
+          'nodes' => {},
+          'errors' => [],
+          'counters' => { 'sub' => 0, 'fun' => -1 }
+        })
     end
 
     def launch(tree, opts={})

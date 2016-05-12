@@ -30,9 +30,10 @@ module Flor
     attr_reader :execution
     attr_reader :unit
 
-    def initialize(unit)
+    def initialize(unit, execution)
 
       @unit = unit
+      @execution = execution
 
       load_procedures('pcore')
     end
