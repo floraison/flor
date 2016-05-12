@@ -124,7 +124,7 @@ module Flor
 
       @storage.put_message(m)
 
-      opts[:wait] ? @waiter.wait(exid) : exid
+      opts[:wait] ? @waiter.wait(exid, %w[ failed terminated ]) : exid
     end
 
     def log(pos, message)

@@ -46,7 +46,7 @@ module Flor
       @mutex.synchronize do
 
         @entries
-          .select { |e| e.match(message) }
+          .select { |e| e.match?(message) }
           .each { |e|
             e.push(message)
             @entries.delete(e) unless e.repeat
@@ -54,9 +54,9 @@ module Flor
       end
     end
 
-    def wait(exid, point=nil, repeat=false)
+    def wait(exid, points=nil, repeat=false)
 
-      e = Entry.new(exid, point, repeat)
+      e = Entry.new(exid, points, repeat)
       @mutex.synchronize { @entries << e }
 
       e.wait
@@ -64,7 +64,7 @@ module Flor
 
     class Entry
 
-      attr_reader :exid, :point, :repeat, :queue
+      attr_reader :exid, :points, :repeat, :queue
 
       def initialize(exid, points, repeat)
 
@@ -77,10 +77,10 @@ module Flor
         @var = ConditionVariable.new
       end
 
-      def match(message)
+      def match?(message)
 
         ((@exid && message['exid'] == @exid) || @exid == nil) &&
-        ((@point && message['point'] == @point) || @point == nil)
+        ((@points && @points.include?(message['point'])) || @points == nil)
       end
 
       def push(x)
@@ -108,7 +108,7 @@ module Flor
       def to_s
 
         self.class.to_s +
-        "(exid:#{@exid.inspect},point:#{point.inspect},repeat:#{@repeat})"
+        "(exid:#{@exid.inspect},points:#{@points.inspect},repeat:#{@repeat})"
       end
     end
   end
