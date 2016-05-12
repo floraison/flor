@@ -31,6 +31,7 @@ module Flor
 
     def initialize(unit, exid)
 
+#p [ self.class, :initialize, self.hash, exid ]
       super(unit, unit.storage.load_execution(exid))
 
       @exid = exid
@@ -76,10 +77,9 @@ module Flor
 
       @alive = false
         # TODO
-p [ :took, Time.now - t0, :consumed, @consumed.size ]
+p [ self.hash, @exid, :took, Time.now - t0, :consumed, @consumed.size ]; $stdout.flush
 
-      # TODO: save remaining messages to DB
-      # TODO: start work on tasks
+      @unit.storage.put_messages(@messages)
 
     rescue => e
 puts "=" * 80

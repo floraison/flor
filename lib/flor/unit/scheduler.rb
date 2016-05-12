@@ -45,6 +45,8 @@ module Flor
       @reload_frequency = @conf[:sch_reload_frequency] || 60
       @max_executors = @conf[:sch_max_executors] || 1
 
+      @mutex = Mutex.new
+
       @reloaded_at = nil
       @timers = []
       @exids = []
@@ -141,6 +143,11 @@ $stdout.flush
       end
     end
 
+    def ping(exids)
+
+      @mutex.synchronize { @exids.concat(exids).uniq! } if exids.any?
+    end
+
     protected
 
     def reload
@@ -149,9 +156,12 @@ $stdout.flush
 
       return if @reloaded_at && (now - @reloaded_at < @reload_frequency)
 
-      @reloaded_at = now
-      @timers = load_timers
-      @exids = load_exids
+      @mutex.synchronize do
+
+        @reloaded_at = now
+        @timers = load_timers
+        @exids = load_exids
+      end
     end
 
     def load_timers
@@ -182,13 +192,13 @@ $stdout.flush
 
       return if @exids.empty?
 
-      @executors = @executors.select { |e| e.alive? }
-      exids = @executors.collect { |e| e.exid }
+      while exid = @mutex.synchronize { @exids.shift }
 
-      @exids.each do |exid|
+        @executors = @executors.select { |e| e.alive? }
+          # drop done executors
 
         break if @executors.size > @max_executors
-        next if exids.include?(exid)
+        next if @executors.find { |e| e.exid == exid }
 
         @executors << UnitExecutor.new(self, exid).run
       end

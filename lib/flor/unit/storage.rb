@@ -90,7 +90,7 @@ module Flor
           ex['id'] = @db[:flon_executions]
             .insert(
               exid: exid,
-              content: Sequel.blob(JSON.dump(ex)),
+              content: to_blob(ex),
               status: 'active',
               ctime: Time.now,
               mtime: Time.now)
@@ -120,7 +120,6 @@ module Flor
 
     def consume(messages)
 
-      p messages.collect { |m| m['mid'] }.compact
       @db[:flon_messages]
         .where(id: messages.collect { |m| m['mid'] }.compact)
         .update(status: 'consumed', mtime: Time.now)
@@ -135,15 +134,23 @@ module Flor
         .collect { |m| r = from_json(m[:content]) || {}; r['mid'] = m[:id]; r }
     end
 
-    def put_message(m)
+    def put_messages(ms)
+
+      return if ms.empty?
+
+      n = Time.now
 
       @db[:flon_messages]
-        .insert(
-          exid: m['exid'],
-          point: m['point'],
-          content: Sequel.blob(JSON.dump(m)),
-          status: 'created',
-          ctime: Time.now)
+        .import(
+          [ :exid, :point, :content, :status, :ctime, :mtime ],
+          ms.map { |m| [ m['exid'], m['point'], to_blob(m), 'created', n, n ] })
+
+      @unit.ping(ms.collect { |m| m['exid'] }.uniq)
+    end
+
+    def put_message(m)
+
+      put_messages([ m ])
     end
 
     protected
@@ -151,6 +158,11 @@ module Flor
     def connect
 
       Sequel.connect(@unit.conf['sto_uri'])
+    end
+
+    def to_blob(h)
+
+      Sequel.blob(JSON.dump(h))
     end
 
     def from_json(s)
