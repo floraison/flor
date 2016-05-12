@@ -89,6 +89,7 @@ describe 'Flor core' do
 
         expect(msg.class).to eq(Hash)
         expect(msg['point']).to eq('terminated')
+        expect(msg['payload']['ret']).to eq(3)
     end
   end
 end

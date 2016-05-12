@@ -120,6 +120,7 @@ module Flor
 
     def consume(messages)
 
+      p messages.collect { |m| m['mid'] }.compact
       @db[:flon_messages]
         .where(id: messages.collect { |m| m['mid'] }.compact)
         .update(status: 'consumed', mtime: Time.now)

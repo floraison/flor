@@ -52,7 +52,9 @@ module Flor
 
     def do_run
 
-      (@unit.conf['exe_max_messages'] || 35).times do |i|
+      t0 = Time.now
+
+      (@unit.conf['exe_max_messages'] || 77).times do |i|
 
         m = @messages.shift
         break unless m
@@ -70,10 +72,11 @@ module Flor
         @messages.concat(ms)
       end
 
-      flag_consumed
+      @unit.storage.consume(@consumed)
 
       @alive = false
         # TODO
+p [ :took, Time.now - t0, :consumed, @consumed.size ]
 
       # TODO: save remaining messages to DB
       # TODO: start work on tasks
@@ -97,11 +100,6 @@ puts " *** failed: " + message.inspect
       # nothing to do
 
       []
-    end
-
-    def flag_consumed
-
-      @unit.storage.consume(@consumed)
     end
   end
 end
