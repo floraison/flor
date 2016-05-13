@@ -69,5 +69,25 @@ describe Flor do
 #      ).to eq(false)
 #    end
 #  end
+
+  describe '.tstamp' do
+
+    it 'returns the current timestamp' do
+
+      expect(Flor.tstamp).to match(/\A#{Time.now.year}\d{4}.\d{12}\z/)
+    end
+
+    it 'turns a Time instance into a String timestamp' do
+
+      t = Time.local(2015, 12, 19, 13, 30, 00)
+
+      expect(Flor.tstamp(t)).to eq('20151219.133000000000')
+    end
+  end
+
+  describe '.to_time' do
+
+    it 'turns a Flor timestamp into a Time instance'
+  end
 end
 
