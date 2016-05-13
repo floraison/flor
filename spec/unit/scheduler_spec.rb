@@ -72,6 +72,8 @@ describe 'Flor unit' do
         expect(m[:exid]).to eq(exid)
         expect(m[:point]).to eq('execute')
         expect(JSON.parse(m[:content])['exid']).to eq(exid)
+
+        expect(@unit.storage.db[:flon_executions].count).to eq(0)
       end
     end
 
@@ -91,6 +93,12 @@ describe 'Flor unit' do
         expect(msg.class).to eq(Hash)
         expect(msg['point']).to eq('terminated')
         expect(msg['payload']['ret']).to eq(3)
+
+        es = @unit.storage.db[:flon_executions].all
+        e = es.first
+
+        expect(es.size).to eq(1)
+        expect(e[:exid]).to eq(msg['exid'])
     end
   end
 end
