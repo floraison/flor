@@ -59,7 +59,8 @@ module Flor
         TransientUnit.new(h),
         {
           'exid' => Flor.generate_exid('eval', 'u0'),
-          'nodes' => {}, 'errors' => [], 'counters' => {}
+          'nodes' => {}, 'errors' => [], 'counters' => {},
+          'start' => Flor.tstamp
         })
     end
 

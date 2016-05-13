@@ -82,7 +82,8 @@ module Flor
           ex
         else
           ex = {
-            'exid' => exid, 'nodes' => {}, 'errors' => [], 'counters' => {}
+            'exid' => exid, 'nodes' => {}, 'errors' => [],
+            'counters' => {}, 'start' => Flor.tstamp
           }
           ex['id'] =
             @db[:flon_executions]
