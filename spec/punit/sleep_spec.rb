@@ -28,7 +28,18 @@ describe 'Flor punit' do
   describe 'sleep' do
 
     it 'does not sleep when t <= 0'
-    it 'makes an execution sleep for a while'
+
+    it 'makes an execution sleep for a while' do
+
+      flon = %{
+        sleep 1s
+      }
+
+      msg = @unit.launch(flon, wait: true)
+
+      expect(msg.class).to eq(Hash)
+      expect(msg['point']).to eq('terminated')
+    end
   end
 end
 
