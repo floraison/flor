@@ -124,8 +124,8 @@ $stdout.flush
     def launch(tree, opts={})
 
       exid = Flor.generate_exid(
-        opts[:domain] || @conf[:domain] || 'domain0',
-        opts[:unit] || @conf[:unit] || 'u0')
+        opts[:domain] || @conf['domain'] || 'domain0',
+        opts[:unit] || @conf['unit'] || 'u0')
 
       m = Flor.make_launch_msg(exid, tree, opts)
 

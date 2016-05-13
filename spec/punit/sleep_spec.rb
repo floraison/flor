@@ -13,6 +13,7 @@ describe 'Flor punit' do
   before :each do
 
     @unit = Flor::Unit.new('.flor-test.conf')
+    @unit.conf[:unit] = 'pu_sleep'
     @unit.storage.migrate
     @unit.start
   end

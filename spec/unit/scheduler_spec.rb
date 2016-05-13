@@ -9,11 +9,12 @@
 require 'spec_helper'
 
 
-describe 'Flor core' do
+describe 'Flor unit' do
 
   before :each do
 
     @unit = Flor::Unit.new('.flor-test.conf')
+    @unit.conf['unit'] = 'u'
     @unit.storage.migrate
     @unit.start
   end
@@ -61,7 +62,7 @@ describe 'Flor core' do
         expect(
           exid
         ).to match(
-          /\Adomain0-u0-#{Time.now.year}\d{4}\.\d{4}\.[a-z]+\z/
+          /\Atest-u-#{Time.now.year}\d{4}\.\d{4}\.[a-z]+\z/
         )
 
         ms = @unit.storage.db[:flon_messages].all
