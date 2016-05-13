@@ -75,9 +75,8 @@ describe 'Flor unit' do
 
         expect(@unit.storage.db[:flon_executions].count).to eq(0)
       end
-    end
 
-    it 'runs a simple flow' do
+      it 'runs a simple flow' do
 
         flon = %{
           sequence
@@ -99,6 +98,8 @@ describe 'Flor unit' do
 
         expect(es.size).to eq(1)
         expect(e[:exid]).to eq(msg['exid'])
+pp e
+      end
     end
   end
 end

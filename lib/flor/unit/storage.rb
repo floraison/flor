@@ -82,18 +82,16 @@ module Flor
           ex
         else
           ex = {
-            'exid' => exid,
-            'nodes' => {},
-            'errors' => [],
-            'counters' => { 'sub' => 0, 'fun' => -1 }
+            'exid' => exid, 'nodes' => {}, 'errors' => [], 'counters' => {}
           }
-          ex['id'] = @db[:flon_executions]
-            .insert(
-              exid: exid,
-              content: to_blob(ex),
-              status: 'active',
-              ctime: Time.now,
-              mtime: Time.now)
+          ex['id'] =
+            @db[:flon_executions]
+              .insert(
+                exid: exid,
+                content: to_blob(ex),
+                status: 'active',
+                ctime: Time.now,
+                mtime: Time.now)
           ex
         end
 

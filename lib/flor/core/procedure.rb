@@ -148,7 +148,10 @@ class Flor::Procedure < Flor::Node
 
   def counter_next(key)
 
-    @execution['counters'][key.to_s] += 1
+    k = key.to_s
+
+    @execution['counters'][k] ||= 0
+    @execution['counters'][k] += 1
   end
 
   def apply(fun, args, line)
