@@ -53,23 +53,6 @@ describe Flor do
     end
   end
 
-#  describe '.is_tree?' do
-#
-#    it 'returns true when passed a tree' do
-#
-#      expect(
-#        Flor.is_tree?([ 'val', {}, -1, [] ])
-#      ).to eq(true)
-#    end
-#
-#    it 'returns false when passed something other than a tree' do
-#
-#      expect(
-#        Flor.is_tree?([ 'val', {}, true, [] ])
-#      ).to eq(false)
-#    end
-#  end
-
   describe '.tstamp' do
 
     it 'returns the current timestamp' do
@@ -87,7 +70,13 @@ describe Flor do
 
   describe '.to_time' do
 
-    it 'turns a Flor timestamp into a Time instance'
+    it 'turns a Flor timestamp into a Time instance' do
+
+      ts = Flor.tstamp
+      t = Flor.to_time(ts)
+
+      expect(Flor.tstamp(t)).to eq(ts)
+    end
   end
 end
 
