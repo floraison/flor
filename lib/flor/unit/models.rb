@@ -22,21 +22,37 @@
 # Made in Japan.
 #++
 
-require 'sequel'
-require 'sequel/extensions/migration'
-
-require 'flor'
-require 'flor/unit/logger'
-require 'flor/unit/waiter'
-require 'flor/unit/storage'
-require 'flor/unit/executor'
-require 'flor/unit/scheduler'
-require 'flor/unit/models'
-
 
 module Flor
 
-  Unit = Scheduler
-    # an alias
+  DUMMY_DB = Sequel.connect(
+    RUBY_PLATFORM.match(/java/) ? 'jdbc:sqlite::memory:' : 'sqlite::memory:')
+      # TODO use dummy adapter not something real like sqlite...
+
+  class Execution < Sequel::Model(DUMMY_DB)
+  end
+  #class Task < Sequel::Model(DUMMY_DB)
+  #end
+
+  DUMMY_DB.disconnect
+
+  class Scheduler
+
+    def executions
+
+      @storage.models[:executions] ||=
+        Class.new(Flor::Execution) do
+          self.dataset = @storage.db[:flor_executions]
+        end
+    end
+
+    #def tasks
+    #
+    #  (@model_cache ||= {})[""] ||=
+    #    Class.new(Flor::Task) do
+    #      self.dataset = @storage.db[:flor_tasks]
+    #    end
+    #end
+  end
 end
 
