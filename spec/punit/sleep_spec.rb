@@ -63,6 +63,14 @@ describe 'Flor punit' do
 
       expect(msg.class).to eq(Hash)
       expect(msg['point']).to eq('terminated')
+
+      sleep 0.1
+
+      expect(@unit.executions.terminated.count).to eq(1)
+
+      e = @unit.executions.terminated.first
+
+      expect(e.data['duration']).to be > 1.0
     end
   end
 end

@@ -56,6 +56,11 @@ module Flor
   end
 
   class Execution < FlorModel
+
+    def self.terminated
+
+      self.where(status: 'terminated')
+    end
   end
 
   class Timer < FlorModel

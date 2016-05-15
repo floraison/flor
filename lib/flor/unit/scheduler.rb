@@ -143,12 +143,13 @@ $stdout.flush
       end
     end
 
-    def poke(eos) # exids or schedule
+    def poke(eot) # exids or timers
 
-      if eos.is_a?(Array) # exids
-        @mutex.synchronize { @exids.concat(eos).uniq!  } if eos.any?
+      if eot.is_a?(Array) # exids
+        @mutex.synchronize { @exids.concat(eot).uniq!  } if eot.any?
       else # a schedule message
         # TODO
+        @mutex.synchronize { @timers.push(eot); @timers.sort_by!(&:ntime) }
       end
     end
 
@@ -170,8 +171,7 @@ $stdout.flush
 
     def load_timers
 
-      @storage.load_timers.sort_by { |t| t[:id] }
-        # FIXME
+      @storage.load_timers.sort_by(&:ntime)
     end
 
     def load_exids
@@ -181,14 +181,14 @@ $stdout.flush
 
     def trigger_timers
 
-      now = Time.now
+      now = Time.now.utc
 
       loop do
 
         timer = @timers.first
-        break if timer == nil || timer.at > now
+        break if timer == nil || timer.ntime > now
 
-        trigger_timer(@timers.shift)
+        @storage.trigger_timer(@timers.shift)
       end
     end
 

@@ -96,13 +96,27 @@ module Flor
     def put_execution(ex)
 
       if i = ex['id']
+
+        status =
+          if ex['nodes'].empty?
+            'terminated'
+          else
+            'active'
+          end
+
+        ex['end'] ||= Flor.tstamp \
+          if status == 'terminated'
+        ex['duration'] = Flor.to_time(ex['end']) - Flor.to_time(ex['start']) \
+          if ex['end']
+
         @db[:flon_executions]
           .where(id: i)
           .update(
             content: to_blob(ex),
-            status: 'active', # 'terminated' or 'failed' (not sure)...
+            status: status,
             mtime: Time.now.utc)
       else
+
         ex['id'] =
           @db[:flon_executions]
             .insert(
@@ -174,16 +188,17 @@ module Flor
         if a = message['at']
           [ 'at', Rufus::Scheduler.parse(a).utc ]
         elsif i = message['in']
-          [ 'in', (Time.now + Rufus::Scheduler.parse(i)).utc ]
+          [ 'in', Time.now.utc + Rufus::Scheduler.parse(i) ]
         elsif message['cron']
-          [ 'cron', Time.now + 365 * 24 * 3600 ] # FIXME
+          [ 'cron', Time.now.utc + 365 * 24 * 3600 ] # FIXME
         else
-          [ 'every', Time.now + 365 * 24 * 3600 ] # FIXME
+          [ 'every', Time.now.utc + 365 * 24 * 3600 ] # FIXME
         end
+      p [ t, nt, Time.now.utc ]
 
       n = Time.now.utc
 
-      @db[:flon_timers].insert(
+      id = @db[:flon_timers].insert(
         exid: message['exid'],
         type: t,
         schedule: message[t],
@@ -193,7 +208,15 @@ module Flor
         ctime: n,
         mtime: n)
 
-      @unit.poke(message)
+      @unit.poke(@unit.timers[id])
+    end
+
+    def trigger_timer(timer)
+
+      @db.transaction do
+        @db[:flon_timers].where(id: timer.id).update(status: 'triggered')
+        put_message(timer.data['message'])
+      end
     end
 
     protected
