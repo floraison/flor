@@ -99,10 +99,9 @@ describe 'Flor unit' do
         expect(es.size).to eq(1)
         expect(e[:exid]).to eq(msg['exid'])
 
-p @unit.executions.all
-p @unit.executions.where(status: 'active').all
-p @unit.executions.where(status: 'active').first.exid
-p @unit.executions.where(status: 'terminated').all
+        d = @unit.executions.first.data
+
+        expect(d['counters']).to eq({ 'x' => 0 })
       end
     end
   end

@@ -42,7 +42,15 @@ module Flor
     DB = Sequel.connect(:adapter => Flor::DummySequelAdapter)
   end
 
-  class Execution < Sequel::Model(DummySequelAdapter::DB)
+  class FlorModel < Sequel::Model(DummySequelAdapter::DB)
+
+    def data
+
+      @data ||= JSON.parse(content)
+    end
+  end
+
+  class Execution < FlorModel
   end
   #class Task < Sequel::Model(DummySequelAdapter::DB)
   #end
