@@ -22,6 +22,8 @@
 # Made in Japan.
 #++
 
+require 'zlib'
+
 
 module Flor
 
@@ -206,12 +208,12 @@ module Flor
 
     def to_blob(h)
 
-      Sequel.blob(JSON.dump(h))
+      Sequel.blob(Zlib::Deflate.deflate(JSON.dump(h)))
     end
 
     def self.from_blob(content)
 
-      JSON.parse(content)
+      JSON.parse(Zlib::Inflate.inflate(content))
     end
 
     def from_blob(content)

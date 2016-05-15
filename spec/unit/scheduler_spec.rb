@@ -71,7 +71,7 @@ describe 'Flor unit' do
         expect(ms.size).to eq(1)
         expect(m[:exid]).to eq(exid)
         expect(m[:point]).to eq('execute')
-        expect(JSON.parse(m[:content])['exid']).to eq(exid)
+        expect(Flor::Storage.from_blob(m[:content])['exid']).to eq(exid)
 
         expect(@unit.storage.db[:flon_executions].count).to eq(0)
       end

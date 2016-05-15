@@ -35,17 +35,18 @@ describe 'Flor punit' do
 
       exid = @unit.launch(flon)
 
-      sleep 1
+      sleep 0.350
 
       ts = @unit.timers.all
       t = ts.first
       td = t.data
 
       expect(ts.count).to eq(1)
+
       expect(t.exid).to eq(exid)
       expect(t.type).to eq('at')
       expect(t.schedule).to eq('1y')
-pp td
+
       expect(td['message']['point']).to eq('receive')
     end
 
