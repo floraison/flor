@@ -101,7 +101,7 @@ module Flor
           .update(
             content: to_blob(ex),
             status: 'active', # 'terminated' or 'failed' (not sure)...
-            mtime: Time.now)
+            mtime: Time.now.utc)
       else
         ex['id'] =
           @db[:flon_executions]
@@ -109,8 +109,8 @@ module Flor
               exid: ex['exid'],
               content: to_blob(ex),
               status: 'active',
-              ctime: Time.now,
-              mtime: Time.now)
+              ctime: Time.now.utc,
+              mtime: Time.now.utc)
       end
 
       ex
@@ -138,7 +138,7 @@ module Flor
 
       @db[:flon_messages]
         .where(id: messages.collect { |m| m['mid'] }.compact)
-        .update(status: 'consumed', mtime: Time.now)
+        .update(status: 'consumed', mtime: Time.now.utc)
     end
 
     def load_timers
@@ -153,7 +153,7 @@ module Flor
 
       return if ms.empty?
 
-      n = Time.now
+      n = Time.now.utc
 
       @db[:flon_messages]
         .import(
@@ -181,7 +181,7 @@ module Flor
           [ 'every', Time.now + 365 * 24 * 3600 ] # FIXME
         end
 
-      n = Time.now
+      n = Time.now.utc
 
       @db[:flon_timers].insert(
         exid: message['exid'],
