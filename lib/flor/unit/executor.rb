@@ -34,6 +34,8 @@ module Flor
 #p [ self.class, :initialize, self.hash, exid ]
       super(unit, unit.storage.load_execution(exid))
 
+      load_procedures('punit')
+
       @exid = exid
       @messages = unit.storage.fetch_messages(exid)
       @consumed = []
