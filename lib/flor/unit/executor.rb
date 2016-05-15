@@ -107,6 +107,13 @@ puts " *** failed: " + message.inspect
 
       []
     end
+
+    def schedule(message)
+
+      @unit.storage.put_timer(message)
+
+      []
+    end
   end
 end
 

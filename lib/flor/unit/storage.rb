@@ -159,12 +159,37 @@ module Flor
           [ :exid, :point, :content, :status, :ctime, :mtime ],
           ms.map { |m| [ m['exid'], m['point'], to_blob(m), 'created', n, n ] })
 
-      @unit.ping(ms.collect { |m| m['exid'] }.uniq)
+      @unit.poke(ms.collect { |m| m['exid'] }.uniq)
     end
 
     def put_message(m)
 
       put_messages([ m ])
+    end
+
+    def put_timer(message)
+
+      t =
+        if message['at']
+          'at'
+        elsif message['cron']
+          'cron'
+        else
+          'every'
+        end
+
+      n = Time.now
+
+      @db[:flon_timers].insert(
+        exid: message['exid'],
+        type: t,
+        schedule: message[t],
+        content: to_blob(message),
+        status: 'active',
+        ctime: n,
+        mtime: n)
+
+      @unit.poke(message)
     end
 
     protected
@@ -182,6 +207,11 @@ module Flor
     def to_blob(h)
 
       Sequel.blob(JSON.dump(h))
+    end
+
+    def self.from_blob(content)
+
+      JSON.parse(content)
     end
 
     def from_json(s)

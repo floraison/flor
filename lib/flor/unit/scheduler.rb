@@ -143,9 +143,13 @@ $stdout.flush
       end
     end
 
-    def ping(exids)
+    def poke(eos) # exids or schedule
 
-      @mutex.synchronize { @exids.concat(exids).uniq! } if exids.any?
+      if eos.is_a?(Array) # exids
+        @mutex.synchronize { @exids.concat(eos).uniq!  } if eos.any?
+      else # a schedule message
+        # TODO
+      end
     end
 
     protected

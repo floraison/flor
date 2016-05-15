@@ -361,20 +361,6 @@ module Flor
     Marshal.load(Marshal.dump(o))
   end
 
-  def self.tstamp(t=Time.now.utc)
-
-    t.strftime('%Y%m%d.%H%M%S') + sprintf('%06d', t.usec)
-  end
-
-  def self.to_time(ts, utc=true)
-
-    m = ts.match(/\A(\d{4})(\d{2})(\d{2})\.(\d{2})(\d{2})(\d{2})(\d+)\z/)
-    fail ArgumentError.new("cannot parse timestamp #{ts.inspect}") unless m
-
-    return Time.utc(*m[1, 7].collect(&:to_i)) if utc
-    Time.local(*m[1, 7].collect(&:to_i))
-  end
-
   def self.false?(o)
 
     o == nil || o == false
@@ -418,5 +404,27 @@ module Flor
     #o.respond_to?(:to_a) ? o.to_a : [ a ]
     Array(o)
   end
+
+  #
+  # functions about time
+
+  def self.tstamp(t=Time.now.utc)
+
+    t.strftime('%Y%m%d.%H%M%S') + sprintf('%06d', t.usec)
+  end
+
+  def self.to_time(ts, utc=true)
+
+    m = ts.match(/\A(\d{4})(\d{2})(\d{2})\.(\d{2})(\d{2})(\d{2})(\d+)\z/)
+    fail ArgumentError.new("cannot parse timestamp #{ts.inspect}") unless m
+
+    return Time.utc(*m[1, 7].collect(&:to_i)) if utc
+    Time.local(*m[1, 7].collect(&:to_i))
+  end
+
+  #def self.to_at(s)
+  #
+  #  tstamp(Time.now.utc + Rufus::Scheduler.parse(s))
+  #end
 end
 

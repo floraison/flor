@@ -25,6 +25,8 @@
 require 'sequel'
 require 'sequel/extensions/migration'
 
+require 'rufus-scheduler'
+
 require 'flor'
 require 'flor/unit/logger'
 require 'flor/unit/waiter'

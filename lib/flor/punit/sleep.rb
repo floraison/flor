@@ -31,9 +31,9 @@ class Flor::Pro::Sleep < Flor::Procedure
 
     c = children.first
     c = c[1].last if c[0] == '_att'
-    t = Flor.to_at(c[0])
+    t = c[0]
 
-    m = reply('point' => 'receive')
+    m = reply('point' => 'receive').first
 
     reply(
       'point' => 'schedule',

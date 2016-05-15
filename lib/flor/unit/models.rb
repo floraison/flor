@@ -46,36 +46,36 @@ module Flor
 
     def data
 
-      @data ||= JSON.parse(content)
+      @data ||= Flor::Storage.from_blob(content)
     end
   end
 
   class Execution < FlorModel
   end
+
+  class Timer < FlorModel
+  end
+
   #class Task < Sequel::Model(DummySequelAdapter::DB)
   #end
 
   class Scheduler
 
-    def executions
+    [ :executions, :timers ].each do |k|
 
-      s = @storage
+      define_method(k) do
 
-      @storage.models[:executions] ||=
-        Flor.const_set(
-          "Execution#{s.db.hash.to_s.gsub('-', 'M')}",
-          Class.new(Flor::Execution) do
-            self.dataset = s.db[:flon_executions]
-          end)
+        s = @storage
+        c = k.to_s[0..-2].capitalize
+
+        @storage.models[k] ||=
+          Flor.const_set(
+            "#{c}#{s.db.hash.to_s.gsub('-', 'M')}",
+            Class.new(Flor.const_get(c)) do
+              self.dataset = s.db["flon_#{k}".to_sym]
+            end)
+      end
     end
-
-    #def tasks
-    #
-    #  (@model_cache ||= {})[""] ||=
-    #    Class.new(Flor::Task) do
-    #      self.dataset = @storage.db[:flor_tasks]
-    #    end
-    #end
   end
 end
 

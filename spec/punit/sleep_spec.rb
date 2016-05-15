@@ -27,6 +27,28 @@ describe 'Flor punit' do
 
   describe 'sleep' do
 
+    it 'creates a timer' do
+
+      flon = %{
+        sleep 1y
+      }
+
+      exid = @unit.launch(flon)
+
+      sleep 1
+
+      ts = @unit.timers.all
+      t = ts.first
+      td = t.data
+
+      expect(ts.count).to eq(1)
+      expect(t.exid).to eq(exid)
+      expect(t.type).to eq('at')
+      expect(t.schedule).to eq('1y')
+pp td
+      expect(td['message']['point']).to eq('receive')
+    end
+
     it 'does not sleep when t <= 0'
 
     it 'makes an execution sleep for a while' do
