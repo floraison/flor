@@ -28,10 +28,10 @@ A Ruby version of flon
 
   s.add_runtime_dependency 'munemo', '>= 1.0.1'
   s.add_runtime_dependency 'raabro', '>= 1.1.2'
+  s.add_runtime_dependency 'rufus-scheduler', '~> 3'
 
   s.add_development_dependency 'rspec', '3.4.0'
   s.add_development_dependency 'sequel', '4.34.0'
-  #s.add_development_dependency 'sqlite3', '1.3.11'
 
   s.require_path = 'lib'
 end
