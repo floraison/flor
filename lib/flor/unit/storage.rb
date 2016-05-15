@@ -27,12 +27,13 @@ module Flor
 
   class Storage
 
-    attr_reader :unit, :db
+    attr_reader :unit, :db, :models
 
     def initialize(unit)
 
       @unit = unit
       @db = connect
+      @models = {}
     end
 
     def shutdown

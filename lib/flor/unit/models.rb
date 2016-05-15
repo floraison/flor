@@ -40,10 +40,14 @@ module Flor
 
     def executions
 
+      s = @storage
+
       @storage.models[:executions] ||=
-        Class.new(Flor::Execution) do
-          self.dataset = @storage.db[:flor_executions]
-        end
+        Flor.const_set(
+          "Execution#{s.db.hash.to_s.gsub('-', 'M')}",
+          Class.new(Flor::Execution) do
+            self.dataset = s.db[:flon_executions]
+          end)
     end
 
     #def tasks

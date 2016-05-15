@@ -98,7 +98,8 @@ describe 'Flor unit' do
 
         expect(es.size).to eq(1)
         expect(e[:exid]).to eq(msg['exid'])
-pp e
+
+p @unit.executions.all
       end
     end
   end
