@@ -101,7 +101,9 @@ describe 'Flor unit' do
 
         d = @unit.executions.first.data
 
-        expect(d['counters']).to eq({ 'x' => 0 })
+        expect(
+          d['counters']
+        ).to eq({ 'fun' => 1, 'sub' => 1, 'runs' => 1 })
       end
     end
   end

@@ -79,6 +79,10 @@ module Flor
         # TODO
 p [ self.hash, @exid, :took, Time.now - t0, :consumed, @consumed.size ]; $stdout.flush
 
+      @execution['counters']['runs'] ||= 0
+      @execution['counters']['runs'] += 1
+
+      @unit.storage.put_execution(@execution)
       @unit.storage.put_messages(@messages)
 
     rescue => e

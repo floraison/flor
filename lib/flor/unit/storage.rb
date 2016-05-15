@@ -82,20 +82,34 @@ module Flor
             e[:id]
           ex
         else
-          ex = {
+          put_execution({
             'exid' => exid, 'nodes' => {}, 'errors' => [],
             'counters' => {}, 'start' => Flor.tstamp
-          }
-          ex['id'] =
-            @db[:flon_executions]
-              .insert(
-                exid: exid,
-                content: to_blob(ex),
-                status: 'active',
-                ctime: Time.now,
-                mtime: Time.now)
-          ex
+          })
         end
+
+      ex
+    end
+
+    def put_execution(ex)
+
+      if i = ex['id']
+        @db[:flon_executions]
+          .where(id: i)
+          .update(
+            content: to_blob(ex),
+            status: 'active', # 'terminated' or 'failed' (not sure)...
+            mtime: Time.now)
+      else
+        ex['id'] =
+          @db[:flon_executions]
+            .insert(
+              exid: ex['exid'],
+              content: to_blob(ex),
+              status: 'active',
+              ctime: Time.now,
+              mtime: Time.now)
+      end
 
       ex
     end
