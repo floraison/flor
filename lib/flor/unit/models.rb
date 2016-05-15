@@ -25,16 +25,27 @@
 
 module Flor
 
-  DUMMY_DB = Sequel.connect(
-    RUBY_PLATFORM.match(/java/) ? 'jdbc:sqlite::memory:' : 'sqlite::memory:')
-      # TODO use dummy adapter not something real like sqlite...
+  class DummySequelAdapter < Sequel::Dataset
 
-  class Execution < Sequel::Model(DUMMY_DB)
+    class Db
+      def supports_schema_parsing?; false; end
+      def transaction(opts={}); yield; end
+    end
+
+    def initialize(opts)
+      @opts = opts
+      @db = Db.new
+    end
+
+    def fetch_rows(sql); yield([]); end
+
+    DB = Sequel.connect(:adapter => Flor::DummySequelAdapter)
   end
-  #class Task < Sequel::Model(DUMMY_DB)
-  #end
 
-  DUMMY_DB.disconnect
+  class Execution < Sequel::Model(DummySequelAdapter::DB)
+  end
+  #class Task < Sequel::Model(DummySequelAdapter::DB)
+  #end
 
   class Scheduler
 
