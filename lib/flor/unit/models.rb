@@ -46,7 +46,12 @@ module Flor
 
     def data
 
-      @data ||= Flor::Storage.from_blob(content)
+      @data ||=
+        begin
+         d = Flor::Storage.from_blob(content)
+         d['id'] = id
+         d
+        end
     end
   end
 

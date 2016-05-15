@@ -37,7 +37,7 @@ class Flor::Pro::Sleep < Flor::Procedure
 
     reply(
       'point' => 'schedule',
-      'at' => t,
+      'in' => t,
       'message' => m,
       'payload' => {})
   end

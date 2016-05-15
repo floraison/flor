@@ -34,6 +34,7 @@ Sequel.migration do
       String :exid, null: false
       String :type, null: false # 'at' or 'cron'
       String :schedule, null: false # '20141128.103239' or '00 23 * * *'
+      Time :ntime # next time
       File :content # JSON
       String :status, null: false
       Time :ctime

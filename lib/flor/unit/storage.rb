@@ -143,11 +143,10 @@ module Flor
 
     def load_timers
 
-      @db[:flon_timers]
+      @unit.timers
         .select(:id, :content)
         .where(status: 'created')
         .order_by(:id)
-        .collect { |m| r = from_json(m[:content]) || {}; r['mid'] = m[:id]; r }
     end
 
     def put_messages(ms)
@@ -171,13 +170,15 @@ module Flor
 
     def put_timer(message)
 
-      t =
-        if message['at']
-          'at'
+      t, nt =
+        if a = message['at']
+          [ 'at', Rufus::Scheduler.parse(a).utc ]
+        elsif i = message['in']
+          [ 'in', (Time.now + Rufus::Scheduler.parse(i)).utc ]
         elsif message['cron']
-          'cron'
+          [ 'cron', Time.now + 365 * 24 * 3600 ] # FIXME
         else
-          'every'
+          [ 'every', Time.now + 365 * 24 * 3600 ] # FIXME
         end
 
       n = Time.now
@@ -186,6 +187,7 @@ module Flor
         exid: message['exid'],
         type: t,
         schedule: message[t],
+        ntime: nt,
         content: to_blob(message),
         status: 'active',
         ctime: n,
