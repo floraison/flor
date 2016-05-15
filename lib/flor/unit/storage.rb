@@ -76,7 +76,7 @@ module Flor
       ex =
         if e
           ex =
-            from_json(e[:content]) ||
+            from_blob(e[:content]) ||
             fail("couldn't parse execution (db id #{e[:id]})")
           ex['id'] =
             e[:id]
@@ -122,7 +122,7 @@ module Flor
           .select(:id, :content)
           .where(status: 'created', exid: exid)
           .order_by(:id)
-          .map { |m| r = from_json(m[:content]) || {}; r['mid'] = m[:id]; r }
+          .map { |m| r = from_blob(m[:content]) || {}; r['mid'] = m[:id]; r }
 
         @db[:flon_messages]
           .where(id: ms.collect { |m| m['mid'] })
@@ -214,9 +214,9 @@ module Flor
       JSON.parse(content)
     end
 
-    def from_json(s)
+    def from_blob(content)
 
-      JSON.parse(s) rescue nil
+      self.class.from_blob(content)
     end
   end
 end
