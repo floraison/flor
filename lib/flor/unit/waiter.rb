@@ -41,7 +41,7 @@ module Flor
       # TODO
     end
 
-    def log(message)
+    def message(message)
 
       @mutex.synchronize do
 

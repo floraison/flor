@@ -90,6 +90,15 @@ module Flor
 
       h
     end
+
+    def self.get_class(conf, key)
+
+      if v = conf[key]
+        Kernel.const_get(v)
+      else
+        nil
+      end
+    end
   end
 end
 

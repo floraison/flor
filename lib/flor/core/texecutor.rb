@@ -36,9 +36,9 @@ module Flor
         @conf = conf
       end
 
-      def log(pos, message)
+      def log_message(pos, message)
 
-        Flor.log(message) if pos == :pre && @conf['log_msg']
+        Flor.log_message(message) if pos == :pre && @conf['log_msg']
       end
     end
 
@@ -70,7 +70,7 @@ module Flor
 
         break unless message
 
-        @unit.log(:pre, message)
+        @unit.log_message(:pre, message)
 
         point = message['point']
 
@@ -81,7 +81,7 @@ module Flor
 
         msgs = process(message)
 
-        @unit.log(:post, message)
+        @unit.log_message(:post, message)
 
         messages.concat(msgs)
       end

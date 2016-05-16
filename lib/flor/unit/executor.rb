@@ -61,7 +61,7 @@ module Flor
         m = @messages.shift
         break unless m
 
-        @unit.log(:pre, m)
+        @unit.log_message(:pre, m)
 
         point = m['point']
 
@@ -69,7 +69,7 @@ module Flor
 
         @consumed << m
 
-        @unit.log(:post, m)
+        @unit.log_message(:post, m)
 
         @messages.concat(ms)
       end

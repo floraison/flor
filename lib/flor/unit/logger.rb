@@ -34,14 +34,22 @@ module Flor
     end
 
     def shutdown
-
-      # TODO
     end
 
-    def log(message)
+    def debug(*m); log(:debug, *m); end
+    def error(*m); log(:error, *m); end
+    def info(*m); log(:info, *m); end
+    def warn(*m); log(:warn, *m); end
 
-      Flor.log(message) if @unit.conf['log_msg']
+    def message(m)
+
+      Flor.log_message(m) if @unit.conf['log_msg']
     end
+  end
+
+  class DbLogger < Logger
+
+    # TODO
   end
 end
 

@@ -39,9 +39,12 @@ module Flor
 
       @env = @conf['env'] ||= 'dev'
 
-      @logger = Flor::Logger.new(self)
-      @waiter = Flor::Waiter.new(self)
-      @storage = Flor::Storage.new(self)
+      @logger =
+        (Flor::Conf.get_class(@conf, 'logger') || Flor::Logger).new(self)
+      @waiter =
+        (Flor::Conf.get_class(@conf, 'waiter') || Flor::Waiter).new(self)
+      @storage =
+        (Flor::Conf.get_class(@conf, 'storage') || Flor::Storage).new(self)
 
       @heart_rate = @conf[:sch_heart_rate] || 0.3
       @reload_frequency = @conf[:sch_reload_frequency] || 60
@@ -136,12 +139,12 @@ $stdout.flush
       opts[:wait] ? @waiter.wait(exid, %w[ failed terminated ]) : exid
     end
 
-    def log(pos, message)
+    def log_message(pos, message)
 
       if pos == :pre
-        @logger.log(message)
+        @logger.message(message)
       else # :post
-        @waiter.log(message)
+        @waiter.message(message)
       end
     end
 

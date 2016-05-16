@@ -25,7 +25,7 @@
 
 module Flor
 
-  def self.log(m, opts={})
+  def self.log_message(m, opts={})
 
     _rs, _dg, _yl, _bl, _lg = colours
 
