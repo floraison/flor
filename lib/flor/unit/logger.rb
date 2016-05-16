@@ -40,7 +40,7 @@ module Flor
 
     def log(message)
 
-      Flor.log(message)
+      Flor.log(message) if @unit.conf['log_msg']
     end
   end
 end

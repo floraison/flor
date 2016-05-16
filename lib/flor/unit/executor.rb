@@ -31,7 +31,6 @@ module Flor
 
     def initialize(unit, exid)
 
-#p [ self.class, :initialize, self.hash, exid ]
       super(unit, unit.storage.load_execution(exid))
 
       load_procedures('punit')

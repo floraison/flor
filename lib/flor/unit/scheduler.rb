@@ -35,6 +35,8 @@ module Flor
     def initialize(conf={})
 
       @conf = conf.is_a?(Hash) ? conf : Flor::Conf.read(conf)
+      @conf.merge!(Flor::Conf.read_env)
+
       @env = @conf['env'] ||= 'dev'
 
       @logger = Flor::Logger.new(self)
