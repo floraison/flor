@@ -121,7 +121,7 @@ module Flor
 
       fnode = @execution['nodes'][from]
       if fnode
-        fnode['deleted'] = true
+        fnode['deleted'] = true # or should I use "status" => "deleted" ?
         @execution['nodes'].delete(from) if (fnode['closures'] || []).empty?
       end
 
