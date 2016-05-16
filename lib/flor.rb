@@ -36,6 +36,7 @@ module Flor
   VERSION = '0.4.0'
 end
 
+require 'flor/log'
 require 'flor/flor'
 require 'flor/dollar'
 require 'flor/errors'
