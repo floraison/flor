@@ -99,6 +99,8 @@ describe 'Flor unit' do
         expect(es.size).to eq(1)
         expect(e[:exid]).to eq(msg['exid'])
 
+        sleep 0.3
+
         d = @unit.executions.first.data
 
         expect(
