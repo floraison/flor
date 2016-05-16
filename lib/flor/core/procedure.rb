@@ -85,6 +85,15 @@ class Flor::Procedure < Flor::Node
     reply('point' => 'failed', 'error' => Flor.to_error(o))
   end
 
+  def schedule(h)
+
+    h['point'] ||= 'schedule'
+    h['payload'] ||= {}
+    h['nid'] ||= nid
+
+    reply(h)
+  end
+
   def lookup_var_node(node, mode, k=nil)
 
     vars = node['vars']
