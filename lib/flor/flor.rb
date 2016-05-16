@@ -327,9 +327,18 @@ module Flor
     l < 35 ? s : "#{s[0, 35]}(...L#{l})"
   end
 
-  def self.log(m)
+  def self.log(m, opts={})
 
     _rs, _dg, _yl, _bl, _lg = colours
+
+    n =
+      Time.now
+    tm =
+      if opts[:date]
+        n.strftime('%Y%m%d.%H:%M:%S') + sprintf('.%06d', n.usec)[0, 4]
+      else
+        n.strftime('%H:%M:%S') + sprintf('.%06d', n.usec)[0, 4]
+      end
 
     pt = "#{_bl}#{m['point'][0, 3]}#{_dg}"
     ni = m['nid'] ? "#{m['nid']} " : ''
@@ -347,7 +356,7 @@ module Flor
 
     #ind = '  ' * ni.split('_').size
 
-    puts "  #{_dg}#{ni}#{pt}#{t0}#{cn}#{fr}#{rt}#{_rs}"
+    puts "  #{tm} #{_dg}#{ni}#{pt}#{t0}#{cn}#{fr}#{rt}#{_rs}"
   end
 
 
