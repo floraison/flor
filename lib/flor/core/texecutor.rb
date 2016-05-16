@@ -44,8 +44,11 @@ module Flor
 
     def initialize(conf={})
 
+      conf.merge!(Flor::Conf.read_env) unless conf['conf'] == true
+        # don't read FLOR_DEBUG if this executor is only meant to read the conf
+
       super(
-        TransientUnit.new(conf.merge(Flor::Conf.read_env)),
+        TransientUnit.new(conf),
         {
           'exid' => Flor.generate_exid('eval', 'u0'),
           'nodes' => {}, 'errors' => [], 'counters' => {},

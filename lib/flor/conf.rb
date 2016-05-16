@@ -62,7 +62,7 @@ module Flor
         def has_key?(k); ! Flor::Executor.procedures.has_key?(k); end
       end
 
-      x = Flor::TransientExecutor.new
+      x = Flor::TransientExecutor.new('conf' => true)
 
       r = x.launch(s, vars: vs)
 
