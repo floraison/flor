@@ -57,7 +57,7 @@ describe Flor do
 
     it 'returns the current timestamp' do
 
-      expect(Flor.tstamp).to match(/\A#{Time.now.year}\d{4}.\d{12}\z/)
+      expect(Flor.tstamp).to match(/\A#{Time.now.year}\d{4}.\d{12}u\z/)
     end
 
     it 'turns a Time instance into a String timestamp' do

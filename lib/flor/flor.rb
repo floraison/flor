@@ -410,15 +410,15 @@ module Flor
 
   def self.tstamp(t=Time.now.utc)
 
-    t.strftime('%Y%m%d.%H%M%S') + sprintf('%06d', t.usec)
+    t.strftime('%Y%m%d.%H%M%S') + sprintf('%06d', t.usec) + (t.utc? ? 'u' : '')
   end
 
-  def self.to_time(ts, utc=true)
+  def self.to_time(ts)
 
-    m = ts.match(/\A(\d{4})(\d{2})(\d{2})\.(\d{2})(\d{2})(\d{2})(\d+)\z/)
+    m = ts.match(/\A(\d{4})(\d{2})(\d{2})\.(\d{2})(\d{2})(\d{2})(\d+)([uU]?)\z/)
     fail ArgumentError.new("cannot parse timestamp #{ts.inspect}") unless m
 
-    return Time.utc(*m[1, 7].collect(&:to_i)) if utc
+    return Time.utc(*m[1, 7].collect(&:to_i)) if m[8].length > 0
     Time.local(*m[1, 7].collect(&:to_i))
   end
 

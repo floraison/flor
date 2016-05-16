@@ -290,7 +290,7 @@ describe Flor::Dollar do
 
       it 'understands $(tstamp)' do
 
-        expect(@x.expand("$(tstamp)")).to match(/^2\d{3}\d{4}\.\d+$/)
+        expect(@x.expand("$(tstamp)")).to match(/\A2\d{3}\d{4}\.\d+u\z/)
       end
     end
 
