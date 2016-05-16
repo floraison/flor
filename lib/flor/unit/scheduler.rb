@@ -181,7 +181,7 @@ $stdout.flush
 
     def trigger_timers
 
-      now = Time.now.utc
+      now = Time.now
 
       loop do
 

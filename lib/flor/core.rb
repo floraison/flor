@@ -29,10 +29,7 @@ module Flor
     @exid_counter ||= 0
     @exid_mutex ||= Mutex.new
 
-    local = true
-
-    t = Time.now
-    t = t.utc unless local
+    t = Time.now.utc
 
     sus =
       @exid_mutex.synchronize do

@@ -114,7 +114,7 @@ module Flor
           .update(
             content: to_blob(ex),
             status: status,
-            mtime: Time.now.utc)
+            mtime: Time.now)
       else
 
         ex['id'] =
@@ -123,8 +123,8 @@ module Flor
               exid: ex['exid'],
               content: to_blob(ex),
               status: 'active',
-              ctime: Time.now.utc,
-              mtime: Time.now.utc)
+              ctime: Time.now,
+              mtime: Time.now)
       end
 
       ex
@@ -152,7 +152,7 @@ module Flor
 
       @db[:flon_messages]
         .where(id: messages.collect { |m| m['mid'] }.compact)
-        .update(status: 'consumed', mtime: Time.now.utc)
+        .update(status: 'consumed', mtime: Time.now)
     end
 
     def load_timers
@@ -167,7 +167,7 @@ module Flor
 
       return if ms.empty?
 
-      n = Time.now.utc
+      n = Time.now
 
       @db[:flon_messages]
         .import(
@@ -184,19 +184,18 @@ module Flor
 
     def put_timer(message)
 
+      n = Time.now
+
       t, nt =
         if a = message['at']
-          [ 'at', Rufus::Scheduler.parse(a).utc ]
+          [ 'at', Rufus::Scheduler.parse(a) ]
         elsif i = message['in']
-          [ 'in', Time.now.utc + Rufus::Scheduler.parse(i) ]
+          [ 'in', n + Rufus::Scheduler.parse(i) ]
         elsif message['cron']
-          [ 'cron', Time.now.utc + 365 * 24 * 3600 ] # FIXME
+          [ 'cron', n + 365 * 24 * 3600 ] # FIXME
         else
-          [ 'every', Time.now.utc + 365 * 24 * 3600 ] # FIXME
+          [ 'every', n + 365 * 24 * 3600 ] # FIXME
         end
-      p [ t, nt, Time.now.utc ]
-
-      n = Time.now.utc
 
       id = @db[:flon_timers].insert(
         exid: message['exid'],

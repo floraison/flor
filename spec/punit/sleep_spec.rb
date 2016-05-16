@@ -46,7 +46,7 @@ describe 'Flor punit' do
       expect(t.exid).to eq(exid)
       expect(t.type).to eq('in')
       expect(t.schedule).to eq('1y')
-      expect(t.ntime.year).to eq(Time.now.utc.year + 1)
+      expect(t.ntime.year).to eq(Time.now.year + 1)
 
       expect(td['message']['point']).to eq('receive')
     end
