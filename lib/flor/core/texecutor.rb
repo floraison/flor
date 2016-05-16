@@ -38,25 +38,14 @@ module Flor
 
       def log(pos, message)
 
-        Flor.log(message) if pos == :pre && @conf[:log]
+        Flor.log(message) if pos == :pre && @conf['log_msg']
       end
     end
 
     def initialize(conf={})
 
-      h =
-        (ENV['FLOR_DEBUG'] || '').split(',').inject({}) { |h, k|
-          kv = k.split(':')
-          h[kv[0].to_sym] = kv[1] ? JSON.parse(kv[1]) : true
-          h
-        }
-      h.merge!({ err: 1, log: 1, tree: 1, src: 1 }) if h[:all]
-      h.merge!(conf)
-        #
-        # TODO eventually prefix err, log, tree and src...
-
       super(
-        TransientUnit.new(h),
+        TransientUnit.new(conf.merge(Flor::Conf.read_env)),
         {
           'exid' => Flor.generate_exid('eval', 'u0'),
           'nodes' => {}, 'errors' => [], 'counters' => {},
@@ -69,8 +58,8 @@ module Flor
       messages = [ Flor.make_launch_msg(@execution['exid'], tree, opts) ]
       message = nil
 
-      Flor.print_src(tree) if conf[:src]
-      Flor.print_tree(messages.first['tree']) if conf[:tree]
+      Flor.print_src(tree) if conf['log_src']
+      Flor.print_tree(messages.first['tree']) if conf['log_tree']
 
       loop do
 
@@ -82,7 +71,7 @@ module Flor
 
         point = message['point']
 
-        pp message if point == 'failed' && conf[:err]
+        pp message if point == 'failed' && conf['log_err']
 
         break if point == 'failed'
         break if point == 'terminated'

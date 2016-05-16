@@ -72,6 +72,24 @@ module Flor
 
       r['payload']['ret']
     end
+
+    LOG_KEYS = %w[ all msg err log tree src ]
+
+    def self.read_env
+
+      h =
+        (ENV['FLOR_DEBUG'] || '').split(',').inject({}) { |h, kv|
+          k, v = kv.split(':')
+          k = "log_#{k}" if LOG_KEYS.include?(k)
+          h[k] = v ? JSON.parse(v) : true
+          h
+        }
+      LOG_KEYS.each { |k|
+        h["log_#{k}"] = 1
+      } if h['log_all']
+
+      h
+    end
   end
 end
 
