@@ -41,7 +41,11 @@ describe 'Flor unit' do
 
       expect(xd['nodes'].keys).to eq(%w[ 0 ])
 
-      @unit.queue({ 'point' => 'cancel', 'exid' => exid, 'nid' => '0' })
+      r = @unit.queue(
+        { 'point' => 'cancel', 'exid' => exid, 'nid' => '0' },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
 fail
     end
 

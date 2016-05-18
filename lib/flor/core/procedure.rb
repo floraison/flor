@@ -193,6 +193,15 @@ class Flor::Procedure < Flor::Node
       'vars' => vars,
       'cnid' => cni)
   end
+
+  def cancel
+
+    #@node['state'] = 'cancelling'
+      # TODO
+
+    #reply('flavour' => 'cancelled')
+    reply
+  end
 end
 
 # A namespace for primitive procedures
