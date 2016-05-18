@@ -132,16 +132,18 @@ $stdout.flush
         opts[:domain] || @conf['domain'] || 'domain0',
         opts[:unit] || @conf['unit'] || 'u0')
 
-      m = Flor.make_launch_msg(exid, tree, opts)
-
-      @storage.put_message(m)
-
-      opts[:wait] ? @waiter.wait(exid, %w[ failed terminated ]) : exid
+      queue(Flor.make_launch_msg(exid, tree, opts), opts)
     end
 
-    def queue(message)
+    def queue(message, opts={})
 
       @storage.put_message(message)
+
+      if opts[:wait]
+        @waiter.wait(message['exid'], %w[ failed terminated ])
+      else
+        message['exid']
+      end
     end
 
     def log_message(pos, message)
