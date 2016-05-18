@@ -107,6 +107,69 @@ puts " *** failed: " + message.inspect
       []
     end
 
+#    def apply(node, message)
+#
+#      n = Flor::Node.new(@execution, node, message)
+#
+#      mt = message['tree']
+#      nt = n.lookup_tree(node['nid'])
+#      node['tree'] = mt if mt && (mt != nt)
+#      tree = node['tree'] || nt
+#
+#      t0 = tree[0]
+#      t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
+#
+#      heat = n.deref(t0)
+#
+#      return error_reply(
+#        node, message, "don't know how to apply #{tree[0].inspect}"
+#      ) if heat == nil
+#
+#      heak =
+#        if ! heat.is_a?(Array)
+#          Flor::Pro::Val
+#        elsif tree[1] == []
+#          Flor::Pro::Val
+#        elsif heat[0] == '_proc'
+#          Flor::Executor.procedures[heat[1]]
+#        elsif heat[0] == '_func'
+#          Flor::Pro::Apply
+#        else
+#          Flor::Pro::Val
+#        end
+#
+#      head = heak.new(@execution, node, message)
+#      head.heat = heat if head.respond_to?(:heat=)
+#
+#      head.send(message['point'])
+#    end
+
+#    def receive(message)
+#
+#      from = message['from']
+#
+#      fnode = @execution['nodes'][from]
+#      if fnode
+#        fnode['deleted'] = true # or should I use "status" => "deleted" ?
+#        @execution['nodes'].delete(from) if (fnode['closures'] || []).empty?
+#      end
+#
+#      nid = message['nid']
+#
+#      return [
+#        message.merge('point' => 'terminated', 'vars' => (fnode || {})['vars'])
+#      ] if nid == nil
+#
+#      node = @execution['nodes'][nid]
+#
+#      apply(node, message)
+#    end
+    def cancel(message)
+
+fail "implement me!"
+      []
+    end
+
     def schedule(message)
 
       @unit.storage.put_timer(message)

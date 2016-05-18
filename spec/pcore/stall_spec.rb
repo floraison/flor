@@ -24,9 +24,9 @@ describe 'Flor procedures' do
           stall _
       }
 
-      Thread.new { @executor.launch(flon) }
+      r = @executor.launch(flon)
 
-      sleep 0.05
+      expect(r).to eq(nil)
 
       ex = @executor.execution
 

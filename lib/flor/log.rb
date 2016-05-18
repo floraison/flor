@@ -107,7 +107,8 @@ module Flor
 
   def self.ret_to_s(m)
 
-    s = Flor.to_d(m['payload']['ret'], compact: true)
+    ret = (m['payload'] || {})['ret']
+    s = Flor.to_d(ret, compact: true)
     l = s.length
     l < 35 ? s : "#{s[0, 35]}(...L#{l})"
   end

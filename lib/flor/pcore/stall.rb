@@ -30,6 +30,7 @@ class Flor::Pro::Stall < Flor::Procedure
   def execute
 
     # do nothing, just stall
+    []
   end
 end
 

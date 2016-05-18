@@ -139,6 +139,11 @@ $stdout.flush
       opts[:wait] ? @waiter.wait(exid, %w[ failed terminated ]) : exid
     end
 
+    def queue(message)
+
+      @storage.put_message(message)
+    end
+
     def log_message(pos, message)
 
       if pos == :pre
