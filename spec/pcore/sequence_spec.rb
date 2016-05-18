@@ -58,6 +58,23 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 2 })
     end
+
+    it 'keeps track of its children' do
+
+      flon = %{
+        sequence
+          0
+          stall _
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r).to eq(nil)
+
+      n = @executor.execution['nodes']['0']
+
+      expect(n['cnodes']).to eq(%w[ 0_1 ])
+    end
   end
 end
 

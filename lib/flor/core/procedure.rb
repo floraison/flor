@@ -43,13 +43,19 @@ class Flor::Procedure < Flor::Node
 
     return reply unless tree[1][index]
 
+    cnid = Flor.child_nid(nid, index, sub)
+
+    (@node['cnodes'] ||= []) << cnid
+
     reply(
       'point' => 'execute',
-      'nid' => Flor.child_nid(nid, index, sub),
+      'nid' => cnid,
       'tree' => tree[1][index])
   end
 
   def sequence_receive
+
+    (@node['cnodes'] || []).delete(from)
 
     i = @message['point'] == 'execute' ? 0 : Flor.next_child_id(from)
 
