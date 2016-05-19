@@ -34,10 +34,11 @@ module Flor
     def initialize(unit)
 
       @unit = unit
-      @db = connect
-      @models = {}
 
+      @models = {}
       @archive = @unit.conf['sto_archive']
+
+      connect
     end
 
     def shutdown
@@ -257,6 +258,14 @@ module Flor
 
     protected
 
+    class DbLogger
+      def initialize(unit)
+        @unit = unit
+      end
+      def info(msg); @unit.logger.db_log(:info, msg); end
+      def error(msg); @unit.logger.db_log(:error, msg); end
+    end
+
     def connect
 
       uri = @unit.conf['sto_uri']
@@ -264,7 +273,10 @@ module Flor
       uri = "jdbc:#{uri}" \
         if RUBY_PLATFORM.match(/java/) && uri.match(/\Asqlite:/)
 
-      Sequel.connect(uri)
+      @db = Sequel.connect(uri)
+
+      @db_logger = DbLogger.new(@unit)
+      @db.loggers << @db_logger
     end
 
     def to_blob(h)

@@ -43,13 +43,19 @@ module Flor
 
     def message(m)
 
-      Flor.log_message(m) if @unit.conf['log_msg']
+      return unless @unit.conf['log_msg']
+
+      Flor.log_message(m)
     end
-  end
 
-  class DbLogger < Logger
+    def db_log(level, m)
 
-    # TODO
+      return unless @unit.conf['log_sto']
+
+      # TODO summarize content columns
+
+      puts "t#{Thread.current.hash} #{level.upcase} #{m}"
+    end
   end
 end
 
