@@ -66,12 +66,15 @@ module Flor
   class Timer < FlorModel
   end
 
+  class Trap < FlorModel
+  end
+
   #class Task < Sequel::Model(DummySequelAdapter::DB)
   #end
 
   class Scheduler
 
-    [ :executions, :timers ].each do |k|
+    [ :executions, :timers, :traps ].each do |k|
 
       define_method(k) do
 
