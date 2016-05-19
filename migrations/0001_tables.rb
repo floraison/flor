@@ -36,12 +36,33 @@ Sequel.migration do
       String :type, null: false # 'at' or 'cron'
       String :schedule, null: false # '20141128.103239' or '00 23 * * *'
       Time :ntime # next time
-      File :content # JSON
+      File :content # JSON msg to trigger
       String :status, null: false
       Time :ctime
       Time :mtime
 
       index :exid
+      index [ :exid, :nid ]
+    end
+
+    create_table :flon_traps do
+
+      primary_key :id, type: Bignum
+      String :exid, null: false
+      String :nid, null: false
+      #
+      String :texid, null: true
+      String :tnid, null: true
+      String :tpoint, null: true
+      #
+      File :content # JSON msg to trigger
+      #
+      String :status, null: false
+      Time :ctime
+      Time :mtime
+
+      index :exid
+      index [ :exid, :nid ]
     end
 
     create_table :flon_logs do
