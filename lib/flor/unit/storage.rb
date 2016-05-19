@@ -151,6 +151,14 @@ module Flor
       end
     end
 
+    def fetch_traps(exid)
+
+      traps
+        .select(:id, :content)
+        .where(status: 'active', exid: [ nil, exid ])
+        .all
+    end
+
     def consume(messages)
 
       if @archive
@@ -166,7 +174,7 @@ module Flor
 
     def load_timers
 
-      @unit.timers
+      timers
         .select(:id, :content)
         .where(status: 'created')
         .order_by(:id)
@@ -266,7 +274,9 @@ module Flor
     protected
 
     class DbLogger
+
       def initialize(unit); @unit = unit; end
+
       def info(msg); @unit.logger.db_log(:info, msg); end
       def error(msg); @unit.logger.db_log(:error, msg); end
     end

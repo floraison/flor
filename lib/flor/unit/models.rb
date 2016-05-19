@@ -72,22 +72,30 @@ module Flor
   #class Task < Sequel::Model(DummySequelAdapter::DB)
   #end
 
-  class Scheduler
+  class Storage
 
     [ :executions, :timers, :traps ].each do |k|
 
       define_method(k) do
 
-        s = @storage
+        s = self
         c = k.to_s[0..-2].capitalize
 
-        @storage.models[k] ||=
+        @models[k] ||=
           Flor.const_set(
-            "#{c}#{s.db.hash.to_s.gsub('-', 'M')}",
+            "#{c}#{@db.hash.to_s.gsub('-', 'M')}",
             Class.new(Flor.const_get(c)) do
               self.dataset = s.db["flon_#{k}".to_sym]
             end)
       end
+    end
+  end
+
+  class Scheduler
+
+    [ :executions, :timers, :traps ].each do |k|
+
+      define_method(k) { @storage.send(k) }
     end
   end
 end
