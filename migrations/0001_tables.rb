@@ -32,6 +32,7 @@ Sequel.migration do
 
       primary_key :id, type: Bignum
       String :exid, null: false
+      String :nid, null: false
       String :type, null: false # 'at' or 'cron'
       String :schedule, null: false # '20141128.103239' or '00 23 * * *'
       Time :ntime # next time

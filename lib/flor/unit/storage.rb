@@ -199,6 +199,7 @@ module Flor
 
       id = @db[:flon_timers].insert(
         exid: message['exid'],
+        nid: message['nid'],
         type: t,
         schedule: message[t],
         ntime: nt,
