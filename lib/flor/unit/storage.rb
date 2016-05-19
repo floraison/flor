@@ -243,15 +243,22 @@ module Flor
       @db.transaction do
 
         if @archive
+
           @db[:flon_timers]
             .where(exid: exid, nid: n['nid'])
             .update(status: 'removed')
-          # TODO: waiters
+          @db[:flon_traps]
+            .where(exid: exid, nid: n['nid'])
+            .update(status: 'removed')
+
         else
+
           @db[:flon_timers]
             .where(exid: exid, nid: n['nid'])
             .delete
-          # TODO: waiters
+          @db[:flon_traps]
+            .where(exid: exid, nid: n['nid'])
+            .delete
         end
       end
     end
@@ -259,9 +266,7 @@ module Flor
     protected
 
     class DbLogger
-      def initialize(unit)
-        @unit = unit
-      end
+      def initialize(unit); @unit = unit; end
       def info(msg); @unit.logger.db_log(:info, msg); end
       def error(msg); @unit.logger.db_log(:error, msg); end
     end
