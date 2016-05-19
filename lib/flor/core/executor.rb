@@ -40,6 +40,8 @@ module Flor
 
     def conf; @unit.conf; end
 
+    def exid; @execution['exid']; end
+
     protected
 
     def load_procedures(dir)
@@ -115,15 +117,28 @@ module Flor
       head.send(message['point'])
     end
 
+    def remove_node(n)
+
+      return unless n
+
+      n['deleted'] = true # or should I use "status" => "deleted" ?
+
+      @unit.storage.remove_node(exid, n)
+        # remove timers/waiters for this node, if any
+
+      return if (n['closures'] || []).any?
+        # don't remove the node if it's a closure for some other nodes
+
+      @execution['nodes'].delete(n['nid'])
+    end
+
     def receive(message)
 
       from = message['from']
 
       fnode = @execution['nodes'][from]
-      if fnode
-        fnode['deleted'] = true # or should I use "status" => "deleted" ?
-        @execution['nodes'].delete(from) if (fnode['closures'] || []).empty?
-      end
+
+      remove_node(fnode)
 
       nid = message['nid']
 

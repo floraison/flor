@@ -59,18 +59,25 @@ describe 'Flor punit' do
         sleep 1s
       }
 
-      msg = @unit.launch(flon, wait: true)
-
-      expect(msg.class).to eq(Hash)
-      expect(msg['point']).to eq('terminated')
+      msg = @unit.launch(flon)
 
       sleep 0.1
+
+      expect(@unit.storage.db[:flon_timers].count).to eq(1)
+      #expect(@unit.storage.db[:flon_waiters].count).to eq(0)
+        # TODO eventually
+
+      sleep 1.3
 
       expect(@unit.executions.terminated.count).to eq(1)
 
       e = @unit.executions.terminated.first
 
       expect(e.data['duration']).to be > 1.0
+
+      expect(@unit.storage.db[:flon_timers].count).to eq(0)
+      #expect(@unit.storage.db[:flon_waiters].count).to eq(0)
+        # TODO
     end
   end
 end

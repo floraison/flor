@@ -27,13 +27,20 @@ module Flor
 
   class TransientExecutor < Executor
 
+    class TransientStorage
+
+      def remove_node(exid, n); end
+    end
+
     class TransientUnit
 
+      attr_reader :storage
       attr_accessor :conf
 
       def initialize(conf)
 
         @conf = conf
+        @storage = TransientStorage.new
       end
 
       def log_message(pos, message)

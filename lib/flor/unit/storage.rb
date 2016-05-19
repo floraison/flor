@@ -36,6 +36,8 @@ module Flor
       @unit = unit
       @db = connect
       @models = {}
+
+      @archive = @unit.conf['sto_archive']
     end
 
     def shutdown
@@ -150,9 +152,15 @@ module Flor
 
     def consume(messages)
 
-      @db[:flon_messages]
-        .where(id: messages.collect { |m| m['mid'] }.compact)
-        .update(status: 'consumed', mtime: Time.now)
+      if @archive
+        @db[:flon_messages]
+          .where(id: messages.collect { |m| m['mid'] }.compact)
+          .update(status: 'consumed', mtime: Time.now)
+      else
+        @db[:flon_messages]
+          .where(id: messages.collect { |m| m['mid'] }.compact)
+          .delete
+      end
     end
 
     def load_timers
@@ -214,8 +222,36 @@ module Flor
     def trigger_timer(timer)
 
       @db.transaction do
-        @db[:flon_timers].where(id: timer.id).update(status: 'triggered')
+
+        if @archive
+          @db[:flon_timers]
+            .where(id: timer.id)
+            .update(status: 'triggered')
+        else
+          @db[:flon_timers]
+            .where(id: timer.id)
+            .delete
+        end
+
         put_message(timer.data['message'])
+      end
+    end
+
+    def remove_node(exid, n)
+
+      @db.transaction do
+
+        if @archive
+          @db[:flon_timers]
+            .where(exid: exid, nid: n['nid'])
+            .update(status: 'removed')
+          # TODO: waiters
+        else
+          @db[:flon_timers]
+            .where(exid: exid, nid: n['nid'])
+            .delete
+          # TODO: waiters
+        end
       end
     end
 
