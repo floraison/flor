@@ -145,7 +145,9 @@ module Flor
 
         @db[:flon_messages]
           .where(id: ms.collect { |m| m['mid'] })
-          .update(status: 'consumed')
+          .update(status: 'loaded')
+             #
+             # flag them as "loaded" so that other scheduler don't pick them
 
         ms
       end
