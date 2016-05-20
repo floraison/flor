@@ -64,8 +64,6 @@ module Flor
         m = @messages.shift
         break unless m
 
-        @unit.notify(m)
-
         point = m['point']
 
         ms = process(m)

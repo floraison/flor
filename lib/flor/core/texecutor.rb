@@ -82,8 +82,6 @@ module Flor
 
         break unless message
 
-        @unit.notify(message)
-
         point = message['point']
 
         pp message if point == 'failed' && conf['log_err']

@@ -172,10 +172,14 @@ module Flor
 
       begin
 
+        @unit.notify(message) # pre
+
         ms = self.send(message['point'].to_sym, message)
         message['consumed'] = Flor.tstamp
 
         notify_traps(message)
+
+        @unit.notify(message) # post
 
         ms
 
@@ -186,8 +190,6 @@ module Flor
 
     def notify_traps(message)
 
-      # traps
-
       to_remove = []
 
       @traps.each do |t|
@@ -196,10 +198,6 @@ module Flor
       end
 
       @traps -= to_remove
-
-      # potential waiters, herded by the @unit
-
-      @unit.notify(message)
     end
   end
 
