@@ -8,7 +8,7 @@
 require 'spec_helper'
 
 
-describe 'Flor unit' do
+describe 'Flor punit' do
 
   before :each do
 
@@ -26,6 +26,18 @@ describe 'Flor unit' do
   end
 
   describe 'trap' do
+
+    it 'fails when children count < 2' do
+
+      flon = %{
+        trap 'execute'
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('trap requires at least one child node')
+    end
 
     it 'traps messages' do
 
