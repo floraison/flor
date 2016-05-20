@@ -49,7 +49,7 @@ module Flor
         return unless @conf['log_msg']
         return if o['consumed']
 
-        Flor.log_message(message)
+        Flor.log_message(o)
       end
     end
 

@@ -67,6 +67,15 @@ module Flor
   end
 
   class Trap < FlorModel
+
+    def trigger(message)
+
+#puts "---"
+#p message
+#p self.values
+#puts "--- ."
+      false
+    end
   end
 
   #class Task < Sequel::Model(DummySequelAdapter::DB)

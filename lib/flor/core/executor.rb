@@ -193,11 +193,38 @@ module Flor
       to_remove = []
 
       @traps.each do |t|
-        remove = t.trigger(message)
-        to_remove << t if remove
+        r = t.trigger(message)
+        to_remove << t if r
       end
 
       @traps -= to_remove
+    end
+
+    def trap(message)
+
+      exid = message['exid']
+      nid = message['nid']
+      trap = message['trap']
+
+      node = @execution['nodes'][message['nid']]
+      node['exid'] = exid
+
+      texid = exid
+      tnid = nil
+      tpoint = trap['point']
+
+      msg = {
+        'point' => 'execute', 'exid' => exid, 'tree' => trap['tree']
+      }
+
+      @traps << @unit.trap(node, texid, tnid, tpoint, msg)
+
+      []
+    end
+
+    def counter_next(key)
+
+      Flor.counter_next(@execution, key)
     end
   end
 

@@ -51,7 +51,7 @@ describe 'Flor punit' do
           push f.l 'y'
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flon, payload: { 'l' => [] }, wait: true)
 
 pp r
       expect(r['point']).to eq('terminated')

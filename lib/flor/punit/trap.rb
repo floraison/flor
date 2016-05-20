@@ -36,9 +36,16 @@ class Flor::Pro::Trap < Flor::Procedure
       "trap requires at least one child node"
     ) if non_att_children.size < 1
 
-p @message
-pp children
-    []
+    execute_child
+  end
+
+  def receive
+
+    reply(
+      'point' => 'trap', 'nid' => nid,
+      'trap' => { 'point' => payload['ret'], 'tree' => children[1] }
+    ) +
+    reply
   end
 end
 

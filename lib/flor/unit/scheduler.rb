@@ -163,6 +163,11 @@ $stdout.flush
       end
     end
 
+    def trap(node, texid, tnid, tpoint, msg)
+
+      @storage.put_trap(node, texid, tnid, tpoint, msg)
+    end
+
     protected
 
     def notify_waiters(message)

@@ -273,6 +273,23 @@ module Flor
       end
     end
 
+    def put_trap(node, texid, tnid, tpoint, msg)
+
+      @db.transaction do
+
+        id = @db[:flon_traps].insert(
+          exid: node['exid'],
+          nid: node['nid'],
+          texid: texid,
+          tnid: tnid,
+          tpoint: tpoint,
+          content: to_blob(msg),
+          status: 'active')
+
+        traps[id]
+      end
+    end
+
     protected
 
     class DbLogger

@@ -49,7 +49,7 @@ class Flor::Procedure < Flor::Node
     children.select { |c| c[0] != '_att' }
   end
 
-  def execute_child(index, sub=0)
+  def execute_child(index=0, sub=0)
 
     return reply unless tree[1][index]
 
