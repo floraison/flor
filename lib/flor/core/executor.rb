@@ -173,7 +173,9 @@ module Flor
       begin
 
         ms = self.send(message['point'].to_sym, message)
-        untrap(message)
+        message['consumed'] = Flor.tstamp
+
+        notify_traps(message)
 
         ms
 
@@ -182,7 +184,7 @@ module Flor
       end
     end
 
-    def untrap(message)
+    def notify_traps(message)
 
       # traps
 
@@ -197,7 +199,7 @@ module Flor
 
       # potential waiters, herded by the @unit
 
-      @unit.post_message(message)
+      @unit.notify(message)
     end
   end
 

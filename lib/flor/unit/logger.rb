@@ -41,20 +41,20 @@ module Flor
     def info(*m); log(:info, *m); end
     def warn(*m); log(:warn, *m); end
 
-    def message(m)
+    def notify(message)
 
       return unless @unit.conf['log_msg']
 
-      Flor.log_message(m)
+      Flor.log_message(message)
     end
 
-    def db_log(level, m)
+    def db_log(level, msg)
 
       return unless @unit.conf['log_sto']
 
       # TODO summarize content columns
 
-      puts "t#{Thread.current.hash} #{level.upcase} #{m}"
+      puts "t#{Thread.current.hash} #{level.upcase} #{msg}"
     end
   end
 end

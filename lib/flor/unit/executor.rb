@@ -64,7 +64,7 @@ module Flor
         m = @messages.shift
         break unless m
 
-        @unit.logger.message(m)
+        @unit.notify(m)
 
         point = m['point']
 

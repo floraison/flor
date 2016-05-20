@@ -193,7 +193,7 @@ module Flor
           [ :exid, :point, :content, :status, :ctime, :mtime ],
           ms.map { |m| [ m['exid'], m['point'], to_blob(m), 'created', n, n ] })
 
-      @unit.poke(ms.collect { |m| m['exid'] }.uniq)
+      @unit.notify(ms.collect { |m| m['exid'] }.uniq)
     end
 
     def put_message(m)
@@ -227,7 +227,7 @@ module Flor
         ctime: n,
         mtime: n)
 
-      @unit.poke(@unit.timers[id])
+      @unit.notify(@unit.timers[id])
     end
 
     def trigger_timer(timer)

@@ -144,17 +144,28 @@ $stdout.flush
       end
     end
 
-    def poke(eot) # exids or timers
+    def notify(o)
 
-      if eot.is_a?(Array) # exids
-        @mutex.synchronize { @exids.concat(eot).uniq! } if eot.any?
-      else # a schedule message
-        # TODO
-        @mutex.synchronize { @timers.push(eot); @timers.sort_by!(&:ntime) }
+      case o
+        when Array # list of exids
+          @mutex.synchronize { @exids.concat(o).uniq! } if o.any?
+        when Timer
+          @mutex.synchronize { @timers.push(o); @timers.sort_by!(&:ntime) }
+        when Hash
+          if o['consumed']
+            notify_waiters(o)
+          else
+            @logger.notify(o)
+          end
+        else
+          fail ArgumentError.new(
+            "don't know what to do with a #{o.class} instance")
       end
     end
 
-    def post_message(message)
+    protected
+
+    def notify_waiters(message)
 
       @mutex.synchronize do
 
@@ -168,8 +179,6 @@ $stdout.flush
         @waiters -= to_remove
       end
     end
-
-    protected
 
     def wait(exid, points, timeout)
 

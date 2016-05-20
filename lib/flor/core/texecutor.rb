@@ -43,14 +43,13 @@ module Flor
         @storage = TransientStorage.new
       end
 
-      def pre_message(message)
+      def notify(o)
 
-        Flor.log_message(message) if @conf['log_msg']
-      end
+        return unless o.is_a?(Hash)
+        return unless @conf['log_msg']
+        return if o['consumed']
 
-      def post_message(message)
-
-        # nothing to do
+        Flor.log_message(message)
       end
     end
 
@@ -83,7 +82,7 @@ module Flor
 
         break unless message
 
-        @unit.pre_message(message)
+        @unit.notify(message)
 
         point = message['point']
 
