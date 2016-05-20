@@ -31,12 +31,14 @@ module Flor
 
     def initialize(unit, exid)
 
-      super(unit, unit.storage.load_execution(exid))
+      super(
+        unit,
+        unit.storage.fetch_traps(exid),
+        unit.storage.load_execution(exid))
 
       load_procedures('punit')
 
       @exid = exid
-      @traps = unit.storage.fetch_traps(exid)
       @messages = unit.storage.fetch_messages(exid)
       @consumed = []
       @alive = true
@@ -62,15 +64,13 @@ module Flor
         m = @messages.shift
         break unless m
 
-        @unit.log_message(:pre, m)
+        @unit.logger.message(m)
 
         point = m['point']
 
         ms = process(m)
 
         @consumed << m
-
-        @unit.log_message(:post, m)
 
         @messages.concat(ms)
       end

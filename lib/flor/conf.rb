@@ -32,7 +32,6 @@ module Flor
     # * sch_ scheduler prefix
     # * sto_ storage prefix
     # * exe_ executor prefix
-    # * wai_ waiter prefix
     # * log_ logger prefix
     #
     #

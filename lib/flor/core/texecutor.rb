@@ -43,9 +43,14 @@ module Flor
         @storage = TransientStorage.new
       end
 
-      def log_message(pos, message)
+      def pre_message(message)
 
-        Flor.log_message(message) if pos == :pre && @conf['log_msg']
+        Flor.log_message(message) if @conf['log_msg']
+      end
+
+      def post_message(message)
+
+        # nothing to do
       end
     end
 
@@ -56,6 +61,7 @@ module Flor
 
       super(
         TransientUnit.new(conf),
+        [], # no traps
         {
           'exid' => Flor.generate_exid('eval', 'u0'),
           'nodes' => {}, 'errors' => [], 'counters' => {},
@@ -77,7 +83,7 @@ module Flor
 
         break unless message
 
-        @unit.log_message(:pre, message)
+        @unit.pre_message(message)
 
         point = message['point']
 
@@ -87,8 +93,6 @@ module Flor
         break if point == 'terminated'
 
         msgs = process(message)
-
-        @unit.log_message(:post, message)
 
         messages.concat(msgs)
       end

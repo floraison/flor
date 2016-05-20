@@ -29,9 +29,9 @@ require 'rufus-scheduler'
 
 require 'flor'
 require 'flor/unit/logger'
-require 'flor/unit/waiter'
 require 'flor/unit/storage'
 require 'flor/unit/executor'
+require 'flor/unit/waiter'
 require 'flor/unit/scheduler'
 require 'flor/unit/models'
 

@@ -30,9 +30,10 @@ module Flor
     attr_reader :execution
     attr_reader :unit
 
-    def initialize(unit, execution)
+    def initialize(unit, traps, execution)
 
       @unit = unit
+      @traps = traps
       @execution = execution
 
       load_procedures('pcore')
@@ -170,10 +171,33 @@ module Flor
     def process(message)
 
       begin
-        self.send(message['point'].to_sym, message)
+
+        ms = self.send(message['point'].to_sym, message)
+        untrap(message)
+
+        ms
+
       rescue => e
         error_reply(nil, message, e)
       end
+    end
+
+    def untrap(message)
+
+      # traps
+
+      to_remove = []
+
+      @traps.each do |t|
+        remove = t.trigger(message)
+        to_remove << t if remove
+      end
+
+      @traps -= to_remove
+
+      # potential waiters, herded by the @unit
+
+      @unit.post_message(message)
     end
   end
 

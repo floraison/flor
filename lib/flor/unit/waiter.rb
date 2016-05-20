@@ -26,90 +26,47 @@ module Flor
 
   class Waiter
 
-    # NB: logger configuration entries start with "wai_"
+    def initialize(exid, points, timeout)
 
-    def initialize(unit)
+      @exid = exid
+      @points = points
+      @timeout = timeout == true ? 3 : timeout
 
-      @unit = unit
-
+      @message = nil
       @mutex = Mutex.new
-      @entries = []
+      @var = ConditionVariable.new
     end
 
-    def shutdown
+    def notify(message)
 
-      # TODO
+      return unless match?(message)
+
+      @mutex.synchronize do
+        @message = message
+        @var.signal
+      end
     end
 
-    def message(message)
+    def wait
 
       @mutex.synchronize do
 
-        @entries
-          .select { |e| e.match?(message) }
-          .each { |e|
-            e.push(message)
-            @entries.delete(e) unless e.repeat
-          }
+        if @message == nil
+          @var.wait(@mutex, @timeout) if @timeout > 0
+          fail(RuntimeError, "timeout for #{self.to_s}") if @message == nil
+        end
+
+        @message
       end
     end
 
-    def wait(exid, points=nil, repeat=false)
+    protected
 
-      e = Entry.new(exid, points, repeat)
-      @mutex.synchronize { @entries << e }
+    def match?(message)
 
-      e.wait
-    end
-
-    class Entry
-
-      attr_reader :exid, :points, :repeat, :queue
-
-      def initialize(exid, points, repeat)
-
-        @exid = exid
-        @points = points
-        @repeat = repeat
-
-        @queue = []
-        @mutex = Mutex.new
-        @var = ConditionVariable.new
-      end
-
-      def match?(message)
-
-        ((@exid && message['exid'] == @exid) || @exid == nil) &&
-        ((@points && @points.include?(message['point'])) || @points == nil)
-      end
-
-      def push(x)
-
-        @mutex.synchronize do
-          @queue.push(x)
-          @var.signal
-        end
-
-        self
-      end
-
-      def wait(timeout=3)
-
-        @mutex.synchronize do
-
-          if @queue.empty?
-            @var.wait(@mutex, timeout) if timeout > 0
-            fail(RuntimeError, "timeout for #{self.to_s}") if @queue.empty?
-          end
-          @queue.shift
-        end
-      end
-
-      def to_s
-
-        self.class.to_s +
-        "(exid:#{@exid.inspect},points:#{@points.inspect},repeat:#{@repeat})"
-      end
+      return false if @exid && @exid != message['exid']
+      return false if ! @points.include?(message['point'])
+      true
     end
   end
 end

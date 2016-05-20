@@ -28,7 +28,7 @@ module Flor
   class Scheduler
 
     attr_reader :conf, :env
-    attr_reader :logger, :waiter, :storage
+    attr_reader :logger, :storage
 
     attr_reader :thread_status
 
@@ -41,8 +41,6 @@ module Flor
 
       @logger =
         (Flor::Conf.get_class(@conf, 'logger') || Flor::Logger).new(self)
-      @waiter =
-        (Flor::Conf.get_class(@conf, 'waiter') || Flor::Waiter).new(self)
       @storage =
         (Flor::Conf.get_class(@conf, 'storage') || Flor::Storage).new(self)
 
@@ -57,6 +55,7 @@ module Flor
       @exids = []
 
       @executors = []
+      @waiters = []
     end
 
     def shutdown
@@ -65,7 +64,6 @@ module Flor
       @thread = nil
 
       @logger.shutdown
-      @waiter.shutdown
       @storage.shutdown
     end
 
@@ -139,19 +137,10 @@ $stdout.flush
 
       @storage.put_message(message)
 
-      if opts[:wait]
-        @waiter.wait(message['exid'], %w[ failed terminated ])
+      if to = opts[:wait]
+        wait(message['exid'], %w[ failed terminated ], to)
       else
         message['exid']
-      end
-    end
-
-    def log_message(pos, message)
-
-      if pos == :pre
-        @logger.message(message)
-      else # :post
-        @waiter.message(message)
       end
     end
 
@@ -165,7 +154,33 @@ $stdout.flush
       end
     end
 
+    def post_message(message)
+
+      @mutex.synchronize do
+
+        to_remove = []
+
+        @waiters.each do |w|
+          remove = w.notify(message)
+          to_remove << w if remove
+        end
+
+        @waiters -= to_remove
+      end
+    end
+
     protected
+
+    def wait(exid, points, timeout)
+
+      w = nil
+
+      @mutex.synchronize do
+        @waiters << (w = Waiter.new(exid, points, timeout))
+      end
+
+      w.wait
+    end
 
     def reload
 
