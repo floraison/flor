@@ -56,6 +56,8 @@ describe 'Flor punit' do
 pp r
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ x x x y x y z ])
+
+      expect(@unit.traps.count).to eq(0)
     end
   end
 end

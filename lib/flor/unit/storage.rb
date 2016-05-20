@@ -250,27 +250,27 @@ module Flor
 
     def remove_node(exid, n)
 
-      @db.transaction do
+      #@db.transaction do
 
-        if @archive
+      if @archive
 
-          @db[:flon_timers]
-            .where(exid: exid, nid: n['nid'])
-            .update(status: 'removed')
-          @db[:flon_traps]
-            .where(exid: exid, nid: n['nid'])
-            .update(status: 'removed')
+        @db[:flon_timers]
+          .where(exid: exid, nid: n['nid'])
+          .update(status: 'removed')
+        #@db[:flon_traps]
+        #  .where(exid: exid, nid: n['nid'])
+        #  .update(status: 'removed')
 
-        else
+      else
 
-          @db[:flon_timers]
-            .where(exid: exid, nid: n['nid'])
-            .delete
-          @db[:flon_traps]
-            .where(exid: exid, nid: n['nid'])
-            .delete
-        end
+        @db[:flon_timers]
+          .where(exid: exid, nid: n['nid'])
+          .delete
+        #@db[:flon_traps]
+        #  .where(exid: exid, nid: n['nid'])
+        #  .delete
       end
+      #end
     end
 
     def put_trap(node, texid, tnid, tpoint, msg)
