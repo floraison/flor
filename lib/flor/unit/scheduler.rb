@@ -147,7 +147,7 @@ $stdout.flush
     def poke(eot) # exids or timers
 
       if eot.is_a?(Array) # exids
-        @mutex.synchronize { @exids.concat(eot).uniq!  } if eot.any?
+        @mutex.synchronize { @exids.concat(eot).uniq! } if eot.any?
       else # a schedule message
         # TODO
         @mutex.synchronize { @timers.push(eot); @timers.sort_by!(&:ntime) }
@@ -176,7 +176,8 @@ $stdout.flush
       w = nil
 
       @mutex.synchronize do
-        @waiters << (w = Waiter.new(exid, points, timeout))
+        @waiters << (w = Waiter.new(exid, points, timeout, false))
+          # repeat: false
       end
 
       w.wait

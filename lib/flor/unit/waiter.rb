@@ -26,37 +26,42 @@ module Flor
 
   class Waiter
 
-    def initialize(exid, points, timeout)
+    def initialize(exid, points, timeout, repeat)
 
       @exid = exid
       @points = points
       @timeout = timeout == true ? 3 : timeout
+      @repeat = repeat
 
-      @message = nil
+      @queue = []
       @mutex = Mutex.new
       @var = ConditionVariable.new
     end
 
     def notify(message)
 
-      return unless match?(message)
+      return false unless match?(message)
 
       @mutex.synchronize do
-        @message = message
+        @queue << message
         @var.signal
       end
+
+      ! @repeat
+        # returning false: do not remove me, I want to listen/wait further
+        # returning true: remove me
     end
 
     def wait
 
       @mutex.synchronize do
 
-        if @message == nil
+        if @queue.empty?
           @var.wait(@mutex, @timeout) if @timeout > 0
-          fail(RuntimeError, "timeout for #{self.to_s}") if @message == nil
+          fail(RuntimeError, "timeout for #{self.to_s}") if @queue.empty?
         end
 
-        @message
+        @queue.shift
       end
     end
 
