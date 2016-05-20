@@ -86,6 +86,7 @@ p [ self.hash, @exid, :took, Time.now - t0, :consumed, @consumed.size ]; $stdout
       @unit.storage.put_messages(@messages)
 
     rescue => e
+# TODO
 puts "=" * 80
 p e
 puts e.backtrace
@@ -94,7 +95,7 @@ puts ("=" * 80) + ' .'
 
     def failed(message)
 
-puts " *** failed: " + message.inspect
+      pp message if @unit.conf['log_err']
 
       []
     end
