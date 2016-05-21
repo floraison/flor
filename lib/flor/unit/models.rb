@@ -68,24 +68,28 @@ module Flor
 
   class Trap < FlorModel
 
+    # returns [ remove, [ messages ] ]
+    #
     def notify(executor, message)
 
-      return false unless match?(message)
+      return [ false, [] ] unless match?(message)
 
-puts "*** #{message['point']}"
+puts "*** trapped: #{message['point']}\n#{self.data.inspect}"
 #p message
 #p self.values
 #p self.data
+#p message['payload']
       exe = {
         'point' => 'execute',
         'exid' => exid,
         'nid' => "#{nid}_0-#{executor.counter_next('sub')}",
-        'tree' => 'x',
-        'payload' => { 'msg' => message }
+        'tree' => self.data['tree'],
+        #'payload' => { 'msg' => message }
+        'payload' => message['payload'] # FIXME
       }
 #pp exe
 
-      true # so that the trap gets removed
+      [ true, [ exe ] ]
     end
 
     protected
