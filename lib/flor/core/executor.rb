@@ -193,7 +193,7 @@ module Flor
       to_remove = []
 
       @traps.each do |t|
-        r = t.trigger(message)
+        r = t.notify(self, message)
         to_remove << t if r
       end
 

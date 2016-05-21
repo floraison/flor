@@ -68,13 +68,40 @@ module Flor
 
   class Trap < FlorModel
 
-    def trigger(message)
+    def notify(executor, message)
 
-#puts "---"
+      return false unless match?(message)
+
+puts "*** #{message['point']}"
 #p message
 #p self.values
-#puts "--- ."
-      false
+#p self.data
+      exe = {
+        'point' => 'execute',
+        'exid' => exid,
+        'nid' => "#{nid}_0-#{executor.counter_next('sub')}",
+        'tree' => 'x',
+        'payload' => { 'msg' => message }
+      }
+#pp exe
+
+      true # so that the trap gets removed
+    end
+
+    protected
+
+    def match?(message)
+
+      return false if texid && texid != message['exid']
+      return false if tnid && tnid != message['nid']
+      return false if tpoints.any? && ! tpoints.include?(message['point'])
+      true
+    end
+
+    def tpoints
+
+      @tpoints ||=
+        (tpoint || '').split(',').collect(&:strip)
     end
   end
 
