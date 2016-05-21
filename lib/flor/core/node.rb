@@ -25,9 +25,15 @@
 
 class Flor::Node
 
-  def initialize(execution, node, message)
+  def initialize(executor, node, message)
 
-    @execution = execution
+    @executor, @execution =
+      case executor
+        when nil then [ nil, nil ] # for some tests
+        when Hash then [ nil, executor ] # from some other tests
+        else [ executor, executor.execution ] # vanilla case
+      end
+
     @node = node
     @message = message
   end

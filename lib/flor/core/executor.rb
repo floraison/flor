@@ -83,7 +83,7 @@ module Flor
 
     def apply(node, message)
 
-      n = Flor::Node.new(@execution, node, message)
+      n = Flor::Node.new(self, node, message)
 
       mt = message['tree']
       nt = n.lookup_tree(node['nid'])
@@ -112,7 +112,7 @@ module Flor
           Flor::Pro::Val
         end
 
-      head = heak.new(@execution, node, message)
+      head = heak.new(self, node, message)
       head.heat = heat if head.respond_to?(:heat=)
 
       head.send(message['point'])
