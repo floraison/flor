@@ -43,6 +43,14 @@ module Flor
 
     def exid; @execution['exid']; end
 
+    def counter_next(key)
+
+      k = key.to_s
+
+      @execution['counters'][k] ||= 0
+      @execution['counters'][k] += 1
+    end
+
     protected
 
     def load_procedures(dir)
@@ -220,11 +228,6 @@ module Flor
       @traps << @unit.trap(node, texid, tnid, tpoint, msg)
 
       []
-    end
-
-    def counter_next(key)
-
-      Flor.counter_next(@execution, key)
     end
   end
 

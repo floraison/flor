@@ -171,19 +171,11 @@ class Flor::Procedure < Flor::Node
     end
   end
 
-  def counter_next(key)
-
-    k = key.to_s
-
-    @execution['counters'][k] ||= 0
-    @execution['counters'][k] += 1
-  end
-
   def apply(fun, args, line)
 
     fni = fun[1]['nid'] # fun nid
     cni = fun[1]['cnid'] # closure nid
-    ani = Flor.sub_nid(fni, counter_next('sub')) # applied nid
+    ani = Flor.sub_nid(fni, @executor.counter_next('sub')) # applied nid
 
     t = lookup_tree_anyway(fni)
     sig = t[1].select { |c| c[0] == '_att' }
