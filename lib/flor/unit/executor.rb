@@ -70,12 +70,17 @@ module Flor
 
         @consumed << m
 
-        @messages.concat(ms)
+        ims, oms = ms.partition { |m| m['exid'] == 'exid'] }
+          # qui est "in", qui est "out"?
+
+        @messages.concat(ims)
+        @unit.storage.put_messages(oms)
       end
 
       @unit.storage.consume(@consumed)
 
       @alive = false
+
         # TODO
 p [ self.hash, @exid, :took, Time.now - t0, :consumed, @consumed.size ]; $stdout.flush
 
