@@ -81,6 +81,7 @@ puts "*** trapped: #{message['point']}\n#{self.data.inspect}"
 #p message['payload']
       exe = {
         'point' => 'execute',
+        'from' => nid, # FIXME (OK only if same exid)
         'exid' => exid,
         'nid' => "#{nid}_0-#{executor.counter_next('sub')}",
         'tree' => self.data['tree'],
@@ -89,7 +90,7 @@ puts "*** trapped: #{message['point']}\n#{self.data.inspect}"
       }
 #pp exe
 
-      [ true, [ exe ] ]
+      [ false, [ exe ] ]
     end
 
     protected

@@ -43,19 +43,20 @@ describe 'Flor punit' do
 
       flon = %{
         sequence
-          trap 'execute'
-            push f.l 'x'
+          #trap 'execute'
+          #  push l 'x'
           trap 'terminated'
-            push f.l 'z'
-          push f.l 'y'
-          push f.l 'y'
+            push gv.l 'z'
+          push gv.l 'y'
+          push gv.l 'y'
       }
 
-      r = @unit.launch(flon, payload: { 'l' => [] }, wait: true)
+      r = @unit.launch(flon, vars: { 'l' => [] }, wait: true)
 
-pp r
+#pp r
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq(%w[ x x x y x y z ])
+sleep 1
+      expect(r['vars']['l']).to eq(%w[ x x x y x y z ])
 
       expect(@unit.traps.count).to eq(0)
     end

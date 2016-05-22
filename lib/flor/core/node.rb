@@ -116,15 +116,6 @@ class Flor::Node
 
   protected
 
-#  def resolve(o)
-#
-#    if Flor.is_val?(o)
-#      Flor.de_val(o)
-#    else
-#      deref(expand(o))
-#    end
-#  end
-
   def parent_node(node=@node)
 
     @execution['nodes'][node['parent']]
@@ -144,7 +135,9 @@ class Flor::Node
     pnode = parent_node(node)
 
     if mod == 'g'
-      return node['vars'][key] if pnode == nil
+      vars = node['vars']
+      fail "node #{node['nid']} has no vars and no parent" unless vars
+      return vars[key] unless pnode
       return lookup_var(pnode, mod, key)
     end
 
