@@ -156,8 +156,7 @@ module Flor
     def fetch_traps(exid)
 
       traps
-        .select(:id, :content)
-        .where(status: 'active', exid: [ nil, exid ])
+        .where(status: 'active', texid: [ nil, exid ])
         .all
     end
 

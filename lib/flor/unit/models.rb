@@ -74,7 +74,7 @@ module Flor
 
       return [ false, [] ] unless match?(message)
 
-puts "*** trapped: #{message['point']}\n#{self.data.inspect}"
+puts "*** trapped: #{message['point']}\n  data: #{self.data.inspect}\n  values: #{self.values.select { |k, v| k != :content }.inspect}"
 #p message
 #p self.values
 #p self.data

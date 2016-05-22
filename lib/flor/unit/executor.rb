@@ -70,7 +70,7 @@ module Flor
 
         @consumed << m
 
-        ims, oms = ms.partition { |m| m['exid'] == 'exid'] }
+        ims, oms = ms.partition { |m| m['exid'] == @exid }
           # qui est "in", qui est "out"?
 
         @messages.concat(ims)
