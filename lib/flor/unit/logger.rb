@@ -43,9 +43,12 @@ module Flor
 
     def notify(message)
 
-      return unless @unit.conf['log_msg']
+      if message['point'] == 'execute' && message['nid'] == '0'
+        Flor.print_src(message['tree']) if @unit.conf['log_src']
+        Flor.print_tree(message['tree']) if @unit.conf['log_tree']
+      end
 
-      Flor.log_message(message)
+      Flor.log_message(message) if @unit.conf['log_msg']
     end
 
     def db_log(level, msg)

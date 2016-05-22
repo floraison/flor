@@ -46,10 +46,14 @@ module Flor
       def notify(o)
 
         return unless o.is_a?(Hash)
-        return unless @conf['log_msg']
         return if o['consumed']
 
-        Flor.log_message(o)
+        if o['point'] == 'execute' && o['nid'] == '0'
+          Flor.print_src(o['tree']) if conf['log_src']
+          Flor.print_tree(o['tree']) if conf['log_tree']
+        end
+
+        Flor.log_message(o) if @conf['log_msg']
       end
     end
 
@@ -72,9 +76,6 @@ module Flor
 
       messages = [ Flor.make_launch_msg(@execution['exid'], tree, opts) ]
       message = nil
-
-      Flor.print_src(tree) if conf['log_src']
-      Flor.print_tree(messages.first['tree']) if conf['log_tree']
 
       loop do
 
