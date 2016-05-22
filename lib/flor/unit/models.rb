@@ -72,7 +72,7 @@ module Flor
     #
     def notify(executor, message)
 
-      return [ false, [] ] unless match?(message)
+      return [ false, [] ] unless match?(executor, message)
 
 puts "*** trapped: #{message['point']}\n  data: #{self.data.inspect}\n  values: #{self.values.select { |k, v| k != :content }.inspect}"
 #p message
@@ -95,12 +95,28 @@ puts "*** trapped: #{message['point']}\n  data: #{self.data.inspect}\n  values: 
 
     protected
 
-    def match?(message)
+    def match?(executor, message)
+
+      return false if in_trap_itself?(executor, message)
 
       return false if texid && texid != message['exid']
       return false if tnid && tnid != message['nid']
       return false if tpoints.any? && ! tpoints.include?(message['point'])
       true
+    end
+
+    def in_trap_itself?(executor, message)
+
+      i = message['nid']
+
+      loop do
+        break unless i
+        return true if i == nid
+        node = executor.execution['nodes'][i]
+        i = node['parent']
+      end
+
+      false
     end
 
     def tpoints
