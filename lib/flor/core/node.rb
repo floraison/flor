@@ -136,9 +136,9 @@ class Flor::Node
 
     if mod == 'g'
       vars = node['vars']
-      fail "node #{node['nid']} has no vars and no parent" unless vars
-      return vars[key] unless pnode
-      return lookup_var(pnode, mod, key)
+      return lookup_var(pnode, mod, key) if pnode
+      return vars[key] if vars
+      fail "node #{node['nid']} has no vars and no parent"
     end
 
     vars = node['vars']
