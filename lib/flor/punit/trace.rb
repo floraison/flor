@@ -23,11 +23,13 @@
 #++
 
 
-class Flor::Pro::Sequence < Flor::Procedure
+class Flor::Pro::Trace < Flor::Procedure
 
-  names %w[ sequence _apply begin ]
+  name 'trace'
 
   def execute
+
+    @node['ret'] = Flor.dup(payload['ret'])
 
     execute_child
   end
@@ -35,6 +37,22 @@ class Flor::Pro::Sequence < Flor::Procedure
   def receive
 
     sequence_receive
+  end
+
+  def reply(h={})
+
+    ms = super(h)
+    m = ms.first
+
+    if m['point'] == 'receive' && m['nid'] == @node['parent']
+
+      @executor.unit.storage.trace(
+        exid, nid, "trace procedure", @message['payload']['ret'])
+
+      m['payload']['ret'] = @node['ret']
+    end
+
+    ms
   end
 end
 

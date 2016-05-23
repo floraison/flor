@@ -1,0 +1,51 @@
+
+#
+# specifying flor
+#
+# Mon May 23 10:54:18 JST 2016
+#
+
+require 'spec_helper'
+
+
+describe 'Flor punit' do
+
+  before :each do
+
+    @unit = Flor::Unit.new('.flor-test.conf')
+    @unit.conf['unit'] = 'u'
+    @unit.storage.migrate
+    @unit.start
+  end
+
+  after :each do
+
+    @unit.stop
+    @unit.storage.clear
+    @unit.shutdown
+  end
+
+  describe 'trace' do
+
+    it 'traces' do
+
+      flon = %{
+        trace 'hello'
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']).to eq({ 'ret' => nil })
+
+      traces = @unit.traces.all
+
+      expect(traces.count).to eq(1)
+      expect(traces[0].exid).to eq(r['exid'])
+      expect(traces[0].nid).to eq('0')
+      expect(traces[0].tracer).to eq('trace procedure')
+      expect(traces[0].text).to eq('hello')
+    end
+  end
+end
+

@@ -55,7 +55,10 @@ module Flor
 
     def clear
 
-      [ :flon_messages, :flon_executions, :flon_timers, :flon_logs ].each do |t|
+      [
+        :flon_messages, :flon_executions, :flon_timers, :flon_traps,
+        :flon_traces
+      ].each do |t|
         @db[t].delete
       end
     end
@@ -287,6 +290,16 @@ module Flor
 
         traps[id]
       end
+    end
+
+    def trace(exid, nid, tracer, text)
+
+      @db[:flon_traces].insert(
+        exid: exid,
+        nid: nid,
+        tracer: tracer,
+        text: text,
+        tstamp: Time.now)
     end
 
     protected

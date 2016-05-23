@@ -70,8 +70,8 @@ Sequel.migration do
       primary_key :id, type: Bignum
       String :exid, null: false
       String :nid, null: true
-      String :reporter, null: false # 'executor', 'trace'
-      String :message, null: false # 'blah blah blah'
+      String :tracer, null: false # 'executor', 'trace'
+      String :text, null: false # 'blah blah blah'
       Time :tstamp
 
       index :exid
@@ -83,7 +83,8 @@ Sequel.migration do
     drop_table :flon_messages
     drop_table :flon_executions
     drop_table :flon_timers
-    drop_table :flon_logs
+    drop_table :flon_traps
+    drop_table :flon_traces
   end
 end
 
