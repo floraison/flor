@@ -121,6 +121,10 @@ class Flor::Node
     @execution['nodes'][node['parent']]
   end
 
+  #def closure_node(node=@node)
+  #  @execution['nodes'][node['cnid']]
+  #end
+
   def lookup_dvar(mod, key)
 
     return nil if mod == 'd' # FIXME
@@ -133,11 +137,13 @@ class Flor::Node
     return lookup_dvar(mod, key) if node == nil || mod == 'd'
 
     pnode = parent_node(node)
+    #cnode = closure_node(node)
 
     if mod == 'g'
       vars = node['vars']
       return lookup_var(pnode, mod, key) if pnode
       return vars[key] if vars
+      #return lookup_var(cnode, mod, key) if cnode
       fail "node #{node['nid']} has no vars and no parent"
     end
 
