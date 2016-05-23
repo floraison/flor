@@ -74,7 +74,10 @@ module Flor
 
       return [ false, [] ] unless match?(executor, message)
 
-puts "*** trapped: #{message['point']}\n  data: #{self.data.inspect}\n  values: #{self.values.select { |k, v| k != :content }.inspect}"
+puts(
+  "*** trapped: #{message['point']}\n" +
+  "* data: #{self.data.inspect}\n" +
+  "* values: #{self.values.select { |k, v| k != :content }.inspect}")
 #p message
 #p self.values
 #p self.data
@@ -83,7 +86,8 @@ puts "*** trapped: #{message['point']}\n  data: #{self.data.inspect}\n  values: 
         'point' => 'execute',
         'from' => nid, # FIXME (OK only if same exid)
         'exid' => exid,
-        'nid' => "#{nid}_0-#{executor.counter_next('sub')}",
+        'nid' => Flor.sub_nid("#{nid}_0", executor.counter_next('sub')),
+        'cnid' => '0',
         'tree' => self.data['tree'],
         #'payload' => { 'msg' => message }
         'payload' => message['payload'] # FIXME

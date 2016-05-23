@@ -43,12 +43,12 @@ describe 'Flor punit' do
 
       flon = %{
         sequence
-          trap 'execute'
-            push gv.l 'x'
-          #trap 'terminated'
-          #  push gv.l 'z'
+          #trap 'execute'
+          #  push gv.l 'x'
+          trap 'terminated'
+            push gv.l 'z'
           push gv.l 'y'
-          #push gv.l 'y'
+          push gv.l 'y'
       }
 
       r = @unit.launch(flon, vars: { 'l' => [] }, wait: true)
