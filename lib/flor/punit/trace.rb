@@ -36,22 +36,14 @@ class Flor::Pro::Trace < Flor::Procedure
 
   def receive
 
-    sequence_receive
-  end
+    ms = sequence_receive
+    return ms if ms.first['point'] == 'execute'
 
-  def reply(h={})
+    @executor.unit.storage.trace(exid, nid, 'trace', payload['ret'])
 
-    ms = super(h)
-    m = ms.first
+    payload['ret'] = @node['ret']
 
-    if m['point'] == 'receive' && m['nid'] == @node['parent']
-
-      @executor.unit.storage.trace(exid, nid, 'trace', m['payload']['ret'])
-
-      m['payload']['ret'] = @node['ret']
-    end
-
-    ms
+    reply
   end
 end
 
