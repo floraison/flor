@@ -153,9 +153,14 @@ module Flor
 
       return [
         message.merge('point' => 'terminated', 'vars' => (fnode || {})['vars'])
-      ] if nid == nil
+      ] unless nid
 
       node = @execution['nodes'][nid]
+
+      return [] unless node
+      #return [
+      #  message.merge('point' => 'ceased')
+      #] unless node
 
       apply(node, message)
     end

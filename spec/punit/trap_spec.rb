@@ -44,21 +44,22 @@ describe 'Flor punit' do
       flon = %{
         sequence
           #trap 'execute'
-          #  push gv.l 'x'
+          #  trace 'x'
           trap 'terminated'
-            push gv.l 'z'
-          push gv.l 'y'
-          push gv.l 'y'
+            trace 't'
+          trace 's'
       }
 
       r = @unit.launch(flon, vars: { 'l' => [] }, wait: true)
 
 #pp r
       expect(r['point']).to eq('terminated')
-sleep 1
-      expect(r['vars']['l']).to eq(%w[ x x x y x y z ])
 
-      expect(@unit.traps.count).to eq(0)
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        's t'
+      )
     end
   end
 end

@@ -46,8 +46,7 @@ class Flor::Pro::Trace < Flor::Procedure
 
     if m['point'] == 'receive' && m['nid'] == @node['parent']
 
-      @executor.unit.storage.trace(
-        exid, nid, "trace procedure", @message['payload']['ret'])
+      @executor.unit.storage.trace(exid, nid, 'trace', m['payload']['ret'])
 
       m['payload']['ret'] = @node['ret']
     end

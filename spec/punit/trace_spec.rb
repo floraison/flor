@@ -43,7 +43,7 @@ describe 'Flor punit' do
       expect(traces.count).to eq(1)
       expect(traces[0].exid).to eq(r['exid'])
       expect(traces[0].nid).to eq('0')
-      expect(traces[0].tracer).to eq('trace procedure')
+      expect(traces[0].tracer).to eq('trace')
       expect(traces[0].text).to eq('hello')
     end
   end

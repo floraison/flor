@@ -117,7 +117,7 @@ puts(
         break unless i
         return true if i == nid
         node = executor.execution['nodes'][i]
-        i = node['parent']
+        i = (node || {})['parent']
       end
 
       false
