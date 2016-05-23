@@ -65,14 +65,12 @@ Sequel.migration do
       index [ :exid, :nid ]
     end
 
-    create_table :flon_logs do
+    create_table :flon_traces do
 
       primary_key :id, type: Bignum
       String :exid, null: false
-      String :reporter, null: false # 'dispatcher'
-      String :subject, null: false # 'execution x', 'node y'
-      String :point, null: false # 'dispatch', 'task', 'fail'
-      String :action, null: false # 'dispatch', 'task', 'fail'
+      String :nid, null: true
+      String :reporter, null: false # 'executor', 'trace'
       String :message, null: false # 'blah blah blah'
       Time :tstamp
 

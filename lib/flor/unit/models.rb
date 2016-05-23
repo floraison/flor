@@ -130,12 +130,17 @@ puts(
     end
   end
 
+  class Trace < FlorModel
+  end
+
   #class Task < Sequel::Model(DummySequelAdapter::DB)
   #end
 
+  MODELS = [ :executions, :timers, :traps, :traces ]
+
   class Storage
 
-    [ :executions, :timers, :traps ].each do |k|
+    MODELS.each do |k|
 
       define_method(k) do
 
@@ -154,7 +159,7 @@ puts(
 
   class Scheduler
 
-    [ :executions, :timers, :traps ].each do |k|
+    MODELS.each do |k|
 
       define_method(k) { @storage.send(k) }
     end
