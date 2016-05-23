@@ -52,8 +52,9 @@ describe 'Flor punit' do
 
       r = @unit.launch(flon, vars: { 'l' => [] }, wait: true)
 
-#pp r
       expect(r['point']).to eq('terminated')
+
+      sleep 0.100
 
       expect(
         @unit.traces.collect(&:text).join(' ')

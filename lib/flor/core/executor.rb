@@ -230,7 +230,9 @@ module Flor
       tpoint = trap['point']
 
       msg = {
-        'point' => 'execute', 'exid' => exid, 'tree' => trap['tree']
+        'point' => 'execute',
+        'exid' => exid, 'nid' => trap['nid'],
+        'tree' => trap['tree']
       }
 
       @traps << @unit.trap(node, texid, tnid, tpoint, msg)

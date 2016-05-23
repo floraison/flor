@@ -43,7 +43,11 @@ class Flor::Pro::Trap < Flor::Procedure
 
     reply(
       'point' => 'trap', 'nid' => nid,
-      'trap' => { 'point' => payload['ret'], 'tree' => children[1] }
+      'trap' => {
+        'point' => payload['ret'],
+        'tree' => children[1],
+        'nid' => "#{nid}_1"
+      }
     ) +
     reply
   end
