@@ -46,6 +46,29 @@ describe 'Flor punit' do
       expect(traces[0].tracer).to eq('trace')
       expect(traces[0].text).to eq('hello')
     end
+
+    it 'traces in sequence' do
+
+      flon = %{
+        sequence
+          trace 'a'
+          set x 0
+          trace 'b'
+          set x 1
+          trace 'c'
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']).to eq({ 'ret' => nil })
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'a b c'
+      )
+    end
   end
 end
 
