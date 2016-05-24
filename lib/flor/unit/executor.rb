@@ -81,11 +81,14 @@ module Flor
 
       @alive = false
 
-        # TODO
-p [ self.hash, @exid, :took, Time.now - t0, :consumed, @consumed.size ]; $stdout.flush
-
       @execution['counters']['runs'] ||= 0
       @execution['counters']['runs'] += 1
+
+      p [
+        self.class, self.hash, @exid,
+        { took: Time.now - t0, consumed: @consumed.size,
+          counters: @execution['counters'] }
+      ] if @unit.conf['log_run']
 
       @unit.storage.put_execution(@execution)
       @unit.storage.put_messages(@messages)

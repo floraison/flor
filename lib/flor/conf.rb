@@ -72,13 +72,14 @@ module Flor
       r['payload']['ret']
     end
 
-    LOG_KEYS = %w[ all msg err log tree src sto ]
+    LOG_KEYS = %w[ all msg err log tree src sto run ]
 
     def self.read_env
 
       h =
         (ENV['FLOR_DEBUG'] || '').split(',').inject({}) { |h, kv|
           k, v = kv.split(':')
+          k = 'sto' if k == 'db'
           k = "log_#{k}" if LOG_KEYS.include?(k)
           h[k] = v ? JSON.parse(v) : true
           h
