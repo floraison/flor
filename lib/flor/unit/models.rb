@@ -100,7 +100,8 @@ module Flor
 
       return false if texid && texid != message['exid']
       return false if tnid && tnid != message['nid']
-      return false if tpoints.any? && ! tpoints.include?(message['point'])
+      return false unless point_match?(message)
+      return false unless tag_match?(message)
       true
     end
 
@@ -118,10 +119,26 @@ module Flor
       false
     end
 
+    def point_match?(message)
+
+      tpoints.empty? ||
+      tpoints.include?(message['point'])
+    end
+
+    def tag_match?(message)
+
+      ttags.empty? ||
+      ttags.find { |t| message['tag'] && message['tag'].match(t) }
+    end
+
     def tpoints
 
-      @tpoints ||=
-        (tpoint || '').split(',').collect(&:strip)
+      @tpoints ||= (tpoint || '').split(',').collect(&:strip)
+    end
+
+    def ttags
+
+      @ttags ||= (ttag || '').split(',').collect(&:strip)
     end
   end
 
