@@ -61,7 +61,7 @@ module Flor
   #
   def self.colours(opts={ color: true })
 
-    opts[:color] && $stdout.tty? ?
+    (opts[:color] || opts[:colour]) && $stdout.tty? ?
     [ "[0;0m", "[1;30m", "[1;33m", "[1;34m", "[0;37m" ] :
     [ '', '', '', '', '' ]
   end
