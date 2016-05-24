@@ -55,11 +55,9 @@ module Flor
 
       return unless @unit.conf['log_sto']
 
-      # reminder: substitutes only one blob
-      m =
-        msg.match(/ (INSERT|UPDATE) .+ 0[xX]([a-fA-F0-9]+)/) || # ms-sql
-        msg.match(/ (INSERT|UPDATE) .+ [xX]'([a-fA-F0-9]+)'/)   # sqlite
+      m = msg.match(/ (INSERT|UPDATE) .+ (0?[xX]'?[a-fA-F0-9]+'?)/)
       msg = msg.sub(m[2], "#{m[2][0, 14]}(...len#{m[2].length})") if m
+        # reminder: substitutes only one blob
 
       puts "t#{Thread.current.hash} #{level.upcase} #{msg}"
     end
