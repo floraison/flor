@@ -51,15 +51,20 @@ module Flor
       Flor.log_message(message) if @unit.conf['log_msg']
     end
 
+    DBCOLS = Flor::Colours.set(%w[ reset bg_light_gray ])
+    NO_DBCOLS = [ '' ] * DBCOLS.length
+
     def db_log(level, msg)
 
       return unless @unit.conf['log_sto']
+
+      _rs, _co = $stdout.tty? ? DBCOLS : NO_DBCOLS
 
       m = msg.match(/ (INSERT|UPDATE) .+ (0?[xX]'?[a-fA-F0-9]+'?)/)
       msg = msg.sub(m[2], "#{m[2][0, 14]}(...len#{m[2].length})") if m
         # reminder: substitutes only one blob
 
-      puts "t#{Thread.current.hash} #{level.upcase} #{msg}"
+      puts "#{_co}sto#{_rs} t#{Thread.current.hash} #{level.upcase} #{msg}"
     end
   end
 end
