@@ -57,6 +57,8 @@ module Flor
       end
     end
 
+    attr_reader :journal
+
     def initialize(conf={})
 
       conf.merge!(Flor::Conf.read_env) unless conf['conf'] == true
@@ -70,6 +72,8 @@ module Flor
           'nodes' => {}, 'errors' => [], 'counters' => {},
           'start' => Flor.tstamp
         })
+
+      @journal = []
     end
 
     def launch(tree, opts={})
@@ -86,6 +90,8 @@ module Flor
         point = message['point']
 
         pp message if point == 'failed' && conf['log_err']
+
+        @journal << message if conf['exe_journal'] || opts[:journal]
 
         break if point == 'failed'
         break if point == 'terminated'
