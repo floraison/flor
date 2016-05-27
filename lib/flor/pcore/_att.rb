@@ -91,7 +91,7 @@ class Flor::Pro::Att < Flor::Procedure
     tag = payload['ret']
     parent_node['tag'] = tag
 
-    reply('point' => 'enter', 'tag' => tag) +
+    reply('point' => 'entered', 'tag' => tag) +
     reply
   end
 end

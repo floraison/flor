@@ -36,13 +36,13 @@ describe 'Flor core' do
         execute:0_0:
         execute:0_0_1:
         receive:0_0:
-        enter:0:aa
+        entered:0:aa
         receive:0:
         execute:0_1:
         execute:0_1_0:
         execute:0_1_0_1:
         receive:0_1_0:
-        enter:0_1:bb
+        entered:0_1:bb
         receive:0_1:
         receive:0:
         receive::

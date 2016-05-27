@@ -238,16 +238,6 @@ module Flor
 
       []
     end
-
-    def enter(message)
-
-      []
-    end
-
-    def leave(message)
-
-      []
-    end
   end
 
   # class methods
