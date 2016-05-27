@@ -83,7 +83,7 @@ module Flor
 
       loop do
 
-        message = messages.pop
+        message = messages.shift
 
         break unless message
 

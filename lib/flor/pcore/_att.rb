@@ -85,5 +85,14 @@ class Flor::Pro::Att < Flor::Procedure
 
     reply
   end
+
+  def receive_tag
+
+    tag = payload['ret']
+    parent_node['tag'] = tag
+
+    reply('point' => 'enter', 'tag' => tag) +
+    reply
+  end
 end
 
