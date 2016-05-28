@@ -45,7 +45,9 @@ describe 'Flor core' do
         entered:0_1:bb
         receive:0_1:
         receive:0:
+        left:0_1:bb
         receive::
+        left:0:aa
         terminated::
       ])
     end

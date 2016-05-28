@@ -141,27 +141,35 @@ module Flor
       @execution['nodes'].delete(n['nid'])
     end
 
+    def leave(node, message)
+
+      t = node['tag']
+      return [] unless t
+
+      [ { 'point' => 'left', 'tag' => t, 'nid' => node['nid'] } ]
+    end
+
     def receive(message)
 
       from = message['from']
-
       fnode = @execution['nodes'][from]
 
       remove_node(fnode)
+      messages = leave(fnode, messages)
 
       nid = message['nid']
 
-      return [
+      return messages + [
         message.merge('point' => 'terminated', 'vars' => (fnode || {})['vars'])
       ] unless nid
 
       node = @execution['nodes'][nid]
 
-      return [
+      return messages + [
         message.merge('point' => 'ceased', 'nid' => from, 'from' => nil)
       ] unless node
 
-      apply(node, message)
+      messages + apply(node, message)
     end
 
     def error_reply(node, message, err)
@@ -238,6 +246,9 @@ module Flor
 
       []
     end
+
+    def entered(message); []; end
+    def left(message); []; end
   end
 
   # class methods

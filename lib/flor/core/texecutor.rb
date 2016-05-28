@@ -76,9 +76,6 @@ module Flor
       @journal = []
     end
 
-    SKIPPERS = %w[ entered left ]
-    BREAKERS = %w[ failed terminated ]
-
     def launch(tree, opts={})
 
       messages = [ Flor.make_launch_msg(@execution['exid'], tree, opts) ]
@@ -96,10 +93,9 @@ module Flor
 
         @journal << message if conf['exe_journal'] || opts[:journal]
 
-        next if SKIPPERS.include?(point)
-        break if BREAKERS.include?(point)
-
         msgs = process(message)
+
+        break if %w[ failed terminated ].include?(point)
 
         messages.concat(msgs)
       end
