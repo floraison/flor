@@ -34,13 +34,16 @@ module Flor
 
     class TransientUnit
 
-      attr_reader :storage
-      attr_accessor :conf
+      attr_accessor :conf, :storage
+      attr_accessor :opts, :journal
 
       def initialize(conf)
 
         @conf = conf
         @storage = TransientStorage.new
+        @opts = {}
+
+        @journal = []
       end
 
       def notify(o)
@@ -54,10 +57,19 @@ module Flor
         end
 
         Flor.log_message(o) if @conf['log_msg']
+
+        @journal << o if journalize?
+      end
+
+      protected
+
+      def journalize?
+
+        return true if @opts[:journal]
+        return false if @opts[:journal] == false
+        @conf['exe_journal']
       end
     end
-
-    attr_reader :journal
 
     def initialize(conf={})
 
@@ -72,11 +84,16 @@ module Flor
           'nodes' => {}, 'errors' => [], 'counters' => {},
           'start' => Flor.tstamp
         })
+    end
 
-      @journal = []
+    def journal
+
+      @unit.journal
     end
 
     def launch(tree, opts={})
+
+      @unit.opts = opts
 
       messages = [ Flor.make_launch_msg(@execution['exid'], tree, opts) ]
       message = nil
@@ -90,8 +107,6 @@ module Flor
         point = message['point']
 
         pp message if point == 'failed' && conf['log_err']
-
-        @journal << message if conf['exe_journal'] || opts[:journal]
 
         msgs = process(message)
 
