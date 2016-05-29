@@ -46,10 +46,42 @@ describe 'Flor unit' do
         wait: true)
 
       expect(r['point']).to eq('terminated')
-fail
+
+      sleep 0.1
+
+      expect(
+        @unit.executions.where(status: 'active').count
+      ).to eq(0)
     end
 
-    it 'cancels a node and its children'
+    it 'cancels a node and its children' do
+
+      flon = %{
+        sequence
+          sequence
+            stall _
+      }
+
+      exid = @unit.launch(flon)
+
+      sleep 0.1
+
+      xd = @unit.executions[exid: exid].data
+
+      expect(xd['nodes'].keys).to eq(%w[ 0 0_0 0_0_0 ])
+
+      r = @unit.queue(
+        { 'point' => 'cancel', 'exid' => exid, 'nid' => '0_0' },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      sleep 0.1
+
+      expect(
+        @unit.executions.where(status: 'active').count
+      ).to eq(0)
+    end
   end
 end
 
