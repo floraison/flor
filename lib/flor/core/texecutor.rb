@@ -52,7 +52,6 @@ module Flor
         return if o['consumed']
 
         if o['point'] == 'execute' && o['nid'] == '0'
-          Flor.print_src(o['tree']) if conf['log_src']
           Flor.print_tree(o['tree']) if conf['log_tree']
         end
 

@@ -174,29 +174,6 @@ module Flor
     puts "#{_dg}+#{_rs}" if nid == '0'
   end
 
-  def self.print_src(tree, opts={ color: true })
-
-    _rs, _dg, _, _, _lg = colours(opts)
-
-    s =
-      if tree.is_a?(String)
-        tree
-      else
-        StringIO.new.tap { |o| PP.pp(tree, o, 77) }.string
-      end
-    ss = s.split("\n")
-    ind =
-      ss.inject(9999) { |i, l|
-        m = l.match(/\A(\s*)/)
-        ii = (m && m[1].length) || 9999
-        ii < i ? ii : i
-      }
-    ss.each_with_index do |l, i|
-      next if l.strip.length < 1
-      puts "#{_dg}L#{'%03d' % (i + 1)} #{_lg}#{l[ind..-1]}#{_rs}"
-    end
-  end
-
   def self.ret_to_s(m)
 
     ret = (m['payload'] || {})['ret']

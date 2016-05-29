@@ -44,7 +44,6 @@ module Flor
     def notify(message)
 
       if message['point'] == 'execute' && message['nid'] == '0'
-        Flor.print_src(message['tree']) if @unit.conf['log_src']
         Flor.print_tree(message['tree']) if @unit.conf['log_tree']
       end
 
