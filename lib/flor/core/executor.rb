@@ -165,9 +165,10 @@ module Flor
 
       node = @execution['nodes'][nid]
 
-      return messages + [
-        message.merge('point' => 'ceased', 'nid' => from, 'from' => nil)
-      ] unless node
+      #return messages + [
+      #  message.merge('point' => 'ceased', 'nid' => from, 'from' => nil)
+      #] unless node
+      return messages unless node
 
       messages + apply(node, message)
     end
