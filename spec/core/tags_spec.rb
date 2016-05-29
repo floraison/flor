@@ -30,7 +30,8 @@ describe 'Flor core' do
 
       expect(
         @executor.journal
-          .collect { |m| [ m['point'], m['nid'], m['tag'].to_s ].join(':') }
+          .collect { |m|
+            [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':') }
       ).to eq(%w[
         execute:0:
         execute:0_0:
@@ -48,6 +49,54 @@ describe 'Flor core' do
         left:0_1:bb
         receive::
         left:0:aa
+        terminated::
+      ])
+    end
+  end
+
+  describe 'the tags attribute' do
+
+    it 'lets multiple tags be flagged at once' do
+
+      flon = %{
+        sequence tag: 'aa', tag: 'bb'
+          sequence tags: [ 'cc', 'dd' ]
+      }
+
+      r = @executor.launch(flon, journal: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @executor.journal
+          .collect { |m|
+            [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':') }
+      ).to eq(%w[
+        execute:0:
+        execute:0_0:
+        execute:0_0_1:
+        receive:0_0:
+        entered:0:aa
+        receive:0:
+        execute:0_1:
+        execute:0_1_1:
+        receive:0_1:
+        entered:0:bb
+        receive:0:
+        execute:0_2:
+        execute:0_2_0:
+        execute:0_2_0_1:
+        execute:0_2_0_1_0:
+        receive:0_2_0_1:
+        execute:0_2_0_1_1:
+        receive:0_2_0_1:
+        receive:0_2_0:
+        entered:0_2:cc,dd
+        receive:0_2:
+        receive:0:
+        left:0_2:cc,dd
+        receive::
+        left:0:aa,bb
         terminated::
       ])
     end

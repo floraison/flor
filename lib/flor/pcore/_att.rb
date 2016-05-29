@@ -88,11 +88,14 @@ class Flor::Pro::Att < Flor::Procedure
 
   def receive_tag
 
-    tag = payload['ret']
-    parent_node['tag'] = tag
+    tags = Array(payload['ret'])
 
-    reply('point' => 'entered', 'tag' => tag) +
+    (parent_node['tags'] ||= []).concat(tags)
+    parent_node['tags'].uniq!
+
+    reply('point' => 'entered', 'tags' => tags) +
     reply
   end
+  alias receive_tags receive_tag
 end
 

@@ -143,10 +143,10 @@ module Flor
 
     def leave(node, message)
 
-      t = node['tag']
-      return [] unless t
+      ts = node['tags']
+      return [] unless ts
 
-      [ { 'point' => 'left', 'tag' => t, 'nid' => node['nid'] } ]
+      [ { 'point' => 'left', 'tags' => ts, 'nid' => node['nid'] } ]
     end
 
     def receive(message)
