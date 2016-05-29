@@ -187,7 +187,7 @@ module Flor
     ss = s.split("\n")
     ind =
       ss.inject(9999) { |i, l|
-        m = l.match(/\A(\s+)/)
+        m = l.match(/\A(\s*)/)
         ii = (m && m[1].length) || 9999
         ii < i ? ii : i
       }
