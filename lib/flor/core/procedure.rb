@@ -198,16 +198,11 @@ class Flor::Procedure < Flor::Node
 
   def cancel
 
-    creplies =
-      (@node['cnodes'] || [])
-        .collect { |cnode|
-          reply('point' => 'cancel', 'nid' => cnode, 'from' => nid) }
-        .flatten(1)
-
-    creplies.concat(reply('cause' => 'cancel')) if ! @message['from']
-      # only reply to parent if "root" of cancel...
-
-    creplies
+    (@node['cnodes'] || [])
+      .collect { |cnode|
+        reply('point' => 'cancel', 'nid' => cnode, 'from' => nid) }
+      .flatten(1) +
+    reply('cause' => 'cancel')
   end
 end
 
