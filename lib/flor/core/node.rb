@@ -121,6 +121,11 @@ class Flor::Node
     @execution['nodes'][node['parent']]
   end
 
+  def parent_node_tree(node=@node)
+
+    lookup_tree(node['parent'])
+  end
+
   #def closure_node(node=@node)
   #  @execution['nodes'][node['cnid']]
   #end
@@ -129,7 +134,7 @@ class Flor::Node
 
     return nil if mod == 'd' # FIXME
 
-    Flor::Executor.procedures[key] ? [ '_proc', key, -1 ] : nil
+    Flor::Procedure[key] ? [ '_proc', key, -1 ] : nil
   end
 
   def lookup_var(node, mod, key)

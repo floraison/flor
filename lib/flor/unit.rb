@@ -35,6 +35,7 @@ require 'flor/unit/waiter'
 require 'flor/unit/scheduler'
 require 'flor/unit/models'
 
+Flor.load_procedures('punit')
 
 module Flor
 

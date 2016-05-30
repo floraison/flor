@@ -35,8 +35,6 @@ module Flor
       @unit = unit
       @traps = traps
       @execution = execution
-
-      load_procedures('pcore')
     end
 
     def conf; @unit.conf; end
@@ -52,18 +50,6 @@ module Flor
     end
 
     protected
-
-    def load_procedures(dir)
-
-      dirpath =
-        if dir.match(/\A[.\/]/)
-          File.join(dir, '*.rb')
-        else
-          File.join(File.dirname(__FILE__), '..', dir, '*.rb')
-        end
-
-      Dir[dirpath].each { |path| require(path) }
-    end
 
     def execute(message)
 
@@ -113,7 +99,7 @@ module Flor
         elsif tree[1] == []
           Flor::Pro::Val
         elsif heat[0] == '_proc'
-          Flor::Executor.procedures[heat[1]]
+          Flor::Procedure[heat[1]]
         elsif heat[0] == '_func'
           Flor::Pro::Apply
         else
@@ -255,16 +241,6 @@ module Flor
 
     def entered(message); []; end
     def left(message); []; end
-  end
-
-  # class methods
-  #
-  class Executor
-
-    def self.procedures
-
-      @@procedures ||= {}
-    end
   end
 end
 

@@ -58,7 +58,7 @@ module Flor
 
       vs = Hash.new { |h, k| k }
       class << vs
-        def has_key?(k); ! Flor::Executor.procedures.has_key?(k); end
+        def has_key?(k); ! Flor::Procedure[k]; end
       end
 
       x = Flor::TransientExecutor.new('conf' => true)

@@ -50,7 +50,7 @@ describe 'Flor punit' do
           trace 's'
       }
 
-      r = @unit.launch(flon, vars: { 'l' => [] }, wait: true)
+      r = @unit.launch(flon, wait: true)
 
       expect(r['point']).to eq('terminated')
 
@@ -60,6 +60,30 @@ describe 'Flor punit' do
         @unit.traces.collect(&:text).join(' ')
       ).to eq(
         's t'
+      )
+    end
+
+    it 'traps tags' do
+
+      flon = %{
+        sequence
+          trace 'a'
+          trap tag: 'x'
+            trace 'b'
+          sequence tag: 'x'
+            trace 'c'
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      sleep 0.100
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'a b c'
       )
     end
   end

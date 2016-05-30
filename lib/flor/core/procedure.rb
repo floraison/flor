@@ -25,19 +25,26 @@
 
 class Flor::Procedure < Flor::Node
 
-  #def self.inherited(subclass)
-  #  (@@inherited ||= []) << subclass
-  #end
-  #def self.descendants
-  #  @@inherited
-  #end
+  def self.inherited(subclass)
 
-  def self.names(*names)
-
-    names.flatten.each { |n| Flor::Executor.procedures[n] = self }
+    (@@inherited ||= []) << subclass
   end
 
-  class << self; alias :name :names; end
+  def self.[](name)
+
+    @@inherited.find { |k| k.names && k.names.include?(name) }
+  end
+
+  class << self
+
+    def names(*names)
+      names = names.flatten
+      @names = names if names.any?
+      @names
+    end
+
+    alias :name :names
+  end
 
   protected
 

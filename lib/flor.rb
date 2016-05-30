@@ -49,3 +49,5 @@ require 'flor/core/procedure'
 require 'flor/core/executor'
 require 'flor/core/texecutor'
 
+Flor.load_procedures('pcore')
+

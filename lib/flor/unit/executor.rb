@@ -36,8 +36,6 @@ module Flor
         unit.storage.fetch_traps(exid),
         unit.storage.load_execution(exid))
 
-      load_procedures('punit')
-
       @exid = exid
       @messages = unit.storage.fetch_messages(exid)
       @consumed = []

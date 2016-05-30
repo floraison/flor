@@ -68,5 +68,17 @@ module Flor
       'payload' => opts[:payload] || opts[:fields] || {},
       'vars' => opts[:variables] || opts[:vars] || {} }
   end
+
+  def self.load_procedures(dir)
+
+    dirpath =
+      if dir.match(/\A[.\/]/)
+        File.join(dir, '*.rb')
+      else
+        File.join(File.dirname(__FILE__), dir, '*.rb')
+      end
+
+    Dir[dirpath].each { |path| require(path) }
+  end
 end
 

@@ -88,6 +88,11 @@ class Flor::Pro::Att < Flor::Procedure
 
   def receive_tag
 
+    pt = parent_node_tree
+
+    return receive_att('tags') \
+      if pt && Flor::Procedure[pt[0]].names.first == 'trap'
+
     tags = Array(payload['ret'])
 
     (parent_node['tags'] ||= []).concat(tags)
