@@ -25,6 +25,13 @@
 
 class Flor::Procedure < Flor::Node
 
+  #def self.inherited(subclass)
+  #  (@@inherited ||= []) << subclass
+  #end
+  #def self.descendants
+  #  @@inherited
+  #end
+
   def self.names(*names)
 
     names.flatten.each { |n| Flor::Executor.procedures[n] = self }
