@@ -146,7 +146,12 @@ module Flor
       ts = node['tags']
       return [] unless ts
 
-      [ { 'point' => 'left', 'tags' => ts, 'nid' => node['nid'] } ]
+      [
+        { 'point' => 'left',
+          'tags' => ts,
+          'exid' => exid,
+          'nid' => node['nid'] }
+      ]
     end
 
     def receive(message)
