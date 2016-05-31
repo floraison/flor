@@ -69,7 +69,7 @@ describe 'Flor punit' do
         sequence
           trace 'a'
           trap tag: 'x'
-            trace 'b'
+            trace f.msg.point
           sequence tag: 'x'
             trace 'c'
       }
@@ -83,7 +83,7 @@ describe 'Flor punit' do
       expect(
         @unit.traces.collect(&:text).join(' ')
       ).to eq(
-        'a b c'
+        'a entered c'
       )
     end
   end

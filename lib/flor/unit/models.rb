@@ -78,6 +78,10 @@ module Flor
 #  "*** trapped: #{message['point']}\n" +
 #  "* data: #{self.data.inspect}\n" +
 #  "* values: #{self.values.select { |k, v| k != :content }.inspect}")
+      msg = Flor.dup(message)
+      pld = msg.delete('payload')
+      pld['msg'] = msg
+
       exe = {
         'point' => 'execute',
         'from' => nid, # FIXME (OK only if same exid)
@@ -85,8 +89,7 @@ module Flor
         'nid' => Flor.sub_nid(self.data['nid'], executor.counter_next('sub')),
         'cnid' => '0',
         'tree' => self.data['tree'],
-        #'payload' => { 'msg' => message }
-        'payload' => message['payload'] # FIXME
+        'payload' => pld
       }
 
       [ false, [ exe ] ]
