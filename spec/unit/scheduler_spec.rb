@@ -108,6 +108,41 @@ describe 'Flor unit' do
         ).to eq({ 'fun' => 1, 'sub' => 1, 'runs' => 1 })
       end
     end
+
+    describe '#queue' do
+
+      it 'lets queue cancel messages'
+    end
+
+    describe '#cancel' do
+
+      it 'queues cancel messages' do
+
+        flon = %{
+          sequence
+            sequence
+              stall _
+        }
+
+        exid = @unit.launch(flon)
+
+        sleep 0.1
+
+        xd = @unit.executions[exid: exid].data
+
+        expect(xd['nodes'].keys).to eq(%w[ 0 0_0 0_0_0 ])
+
+        r = @unit.cancel(exid: exid, nid: '0_0', wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.1
+
+        expect(
+          @unit.executions.where(status: 'active').count
+        ).to eq(0)
+      end
+    end
   end
 end
 

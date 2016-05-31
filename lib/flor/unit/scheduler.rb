@@ -144,6 +144,15 @@ $stdout.flush
       end
     end
 
+    def cancel(h)
+
+      msg = { 'point' => 'cancel' }
+      msg['exid'] = h[:exid] || fail(ArgumentError.new('missing :exid key'))
+      if nid = h[:nid]; msg['nid'] = nid; end
+
+      queue(msg, h)
+    end
+
     def notify(o)
 
       case o
