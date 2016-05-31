@@ -224,17 +224,13 @@ module Flor
       node = @execution['nodes'][message['nid']]
       node['exid'] = exid
 
-      texid = exid
-      tnid = nil
-      tpoint = trap['point']
-
       msg = {
         'point' => 'execute',
         'exid' => exid, 'nid' => trap['nid'],
         'tree' => trap['tree']
       }
 
-      @traps << @unit.trap(node, texid, tnid, tpoint, msg)
+      @traps << @unit.trap(node, trap, msg)
 
       []
     end

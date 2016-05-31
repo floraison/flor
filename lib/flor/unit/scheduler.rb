@@ -172,9 +172,9 @@ $stdout.flush
       end
     end
 
-    def trap(node, texid, tnid, tpoint, msg)
+    def trap(node, tra, msg)
 
-      @storage.put_trap(node, texid, tnid, tpoint, msg)
+      @storage.put_trap(node, tra, msg)
     end
 
     protected

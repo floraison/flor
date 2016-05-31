@@ -41,6 +41,11 @@ module Flor
     i
   end
 
+  def self.to_a(o)
+
+    o.nil? ? nil : Array(o)
+  end
+
   def self.deep_get(o, k) # --> success(boolean), value
 
     return [ true, o ] unless k

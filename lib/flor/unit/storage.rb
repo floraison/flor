@@ -275,16 +275,17 @@ module Flor
       #end
     end
 
-    def put_trap(node, texid, tnid, tpoint, msg)
+    def put_trap(node, tra, msg)
 
       @db.transaction do
 
         id = @db[:flon_traps].insert(
           exid: node['exid'],
           nid: node['nid'],
-          texid: texid,
-          tnid: tnid,
-          tpoint: tpoint,
+          texid: tra['exid'],
+          tnids: tra['nids'],
+          tpoints: tra['points'],
+          ttags: tra['tags'],
           content: to_blob(msg),
           status: 'active')
 

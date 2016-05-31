@@ -99,7 +99,7 @@ module Flor
       return false if in_trap_itself?(executor, message)
 
       return false if texid && texid != message['exid']
-      return false if tnid && tnid != message['nid']
+      return false unless nid_match?(message)
       return false unless point_match?(message)
       return false unless tag_match?(message)
       true
@@ -119,6 +119,12 @@ module Flor
       false
     end
 
+    def nid_match?(message)
+
+      tnids.empty? ||
+      tnids.include?(message['point'])
+    end
+
     def point_match?(message)
 
       tpoints.empty? ||
@@ -128,17 +134,22 @@ module Flor
     def tag_match?(message)
 
       ttags.empty? ||
-      ttags.find { |t| message['tag'] && message['tag'].match(t) }
+      ttags.find { |t| (message['tags'] || []).find { |tag| tag.match(t) } }
     end
 
     def tpoints
 
-      @tpoints ||= (tpoint || '').split(',').collect(&:strip)
+      @atpoints ||= (@values[:tpoints] || '').split(',').collect(&:strip)
     end
 
     def ttags
 
-      @ttags ||= (ttag || '').split(',').collect(&:strip)
+      @attags ||= (@values[:ttags] || '').split(',').collect(&:strip)
+    end
+
+    def tnids
+
+      @atnids ||= (@values[:tnids] || '').split(',').collect(&:strip)
     end
   end
 

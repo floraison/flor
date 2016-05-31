@@ -36,17 +36,28 @@ class Flor::Pro::Trap < Flor::Procedure
       "trap requires at least one child node"
     ) if non_att_children.size < 1
 
+    @node['atts'] = {}
+      # so that atts get collected
+
     execute_child
   end
 
   def receive
 
+    atts = @node['atts']
+
+    points = Flor.to_a(atts['point'] || atts['points'])
+    tags = Flor.to_a(atts['tag'] || atts['tags'])
+    nids = Flor.to_a(atts['nid'] || atts['nids'])
+
+    points = Flor.to_a(payload['ret']) unless points || tags || nids
+    points = [ 'entered' ] if tags && ! nids && ! points
+
     reply(
       'point' => 'trap', 'nid' => nid,
       'trap' => {
-        'point' => payload['ret'],
-        'tree' => children[1],
-        'nid' => "#{nid}_1"
+        'points' => points, 'tags' => tags, 'nids' => nids,
+        'tree' => children[1], 'nid' => "#{nid}_1"
       }
     ) +
     reply

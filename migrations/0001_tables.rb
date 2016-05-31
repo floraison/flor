@@ -52,9 +52,9 @@ Sequel.migration do
       String :nid, null: false
       #
       String :texid, null: true
-      String :tnid, null: true
-      String :tpoint, null: true
-      String :ttag, null: true
+      String :tnids, null: true
+      String :tpoints, null: true
+      String :ttags, null: true
       #
       File :content # JSON msg to trigger
       #
