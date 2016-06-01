@@ -96,6 +96,21 @@ class Flor::Procedure < Flor::Node
     execute_child(i)
   end
 
+  # turns ```sleep "1y"``` into ```sleep _unkeyed: "1y"```
+  #
+  def rewrite_first_unkeyed_att
+
+    ci = children.index { |c| c[0] == '_att' && c[1].size == 1 }
+    return unless ci
+
+    t = tree
+    cn = Flor.dup(t[1])
+    c = cn[ci][1].first
+    cn[ci] = [ '_att', [ [ '_unkeyed', [], c[2] ], c ], c[2] ]
+
+    @node['tree'] = [ t[0], cn, t[1] ]
+  end
+
   def execute
 
     execute_child(0)

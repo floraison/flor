@@ -30,7 +30,7 @@ describe 'Flor punit' do
     it 'creates a timer' do
 
       flon = %{
-        sleep 1y
+        sleep '1y'
       }
 
       exid = @unit.launch(flon)
@@ -56,7 +56,7 @@ describe 'Flor punit' do
     it 'makes an execution sleep for a while' do
 
       flon = %{
-        sleep 1s
+        sleep '1s'
       }
 
       msg = @unit.launch(flon)
