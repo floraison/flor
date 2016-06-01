@@ -29,9 +29,10 @@ class Flor::Pro::Set < Flor::Procedure
 
   def execute
 
-# TODO: this doesn't let tag or timeout or ... (common atts) work!
-
     @node['ret'] = Flor.dup(payload['ret'])
+
+    # WARNING:
+    # it expects its first child to be the var name children.size > 1
 
     execute_child(children.size > 1 ? 1 : 0)
   end
