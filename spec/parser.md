@@ -778,4 +778,18 @@ parses to
     [ 'push', [ [ '_att', [ [ '_num', 8, 1 ] ], 1 ] ], 1 ]
   ], 1 ]
 ```
+---
+
+```flon
+  #a > b timeout: "3d"
+  > a b timeout: "3d"
+```
+parses to
+```ruby
+  [">",
+   [["_att", [["a", [], 2]], 2],
+    ["_att", [["b", [], 2]], 2],
+    ["_att", [["timeout", [], 2], ["_dqs", "3d", 2]], 2]],
+   2]
+```
 
