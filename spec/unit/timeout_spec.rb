@@ -39,7 +39,9 @@ describe 'Flor unit' do
 
       sleep 1
 
-      pp @unit.timers.all
+      ts = @unit.timers.all
+
+      expect(ts.size).to eq(1)
     end
 
     it 'triggers after the given time'
