@@ -27,7 +27,7 @@ class Flor::Pro::Trap < Flor::Procedure
 
   name 'trap'
 
-  def execute
+  def pre_execute
 
     fail ArgumentError.new(
       "trap requires at least one 'point' attribute"
@@ -38,8 +38,6 @@ class Flor::Pro::Trap < Flor::Procedure
 
     @node['atts'] = {}
       # so that atts get collected
-
-    execute_child
   end
 
   def receive
