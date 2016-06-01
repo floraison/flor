@@ -102,5 +102,15 @@ class Flor::Pro::Att < Flor::Procedure
     reply
   end
   alias receive_tags receive_tag
+
+  def receive_timeout
+
+p payload
+puts "=" * 80
+puts "= implement me!"
+puts ("=" * 80) + ' .'
+
+    reply
+  end
 end
 

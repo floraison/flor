@@ -27,10 +27,9 @@ class Flor::Pro::Stall < Flor::Procedure
 
   name 'stall'
 
-  def execute
+  def do_receive
 
-    # do nothing, just stall
-    []
+    [] # give back no messages, just stall...
   end
 end
 

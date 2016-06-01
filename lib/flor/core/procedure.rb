@@ -46,6 +46,11 @@ class Flor::Procedure < Flor::Node
     alias :name :names
   end
 
+  def pre_execute
+
+    # empty default implementation
+  end
+
   protected
 
   def children
@@ -89,6 +94,23 @@ class Flor::Procedure < Flor::Node
     end
 
     execute_child(i)
+  end
+
+  def execute
+
+    execute_child(0)
+  end
+
+  def receive
+
+    ms = sequence_receive
+    return ms if ms.first['point'] == 'execute'
+
+    if self.respond_to?(:do_receive)
+      do_receive
+    else
+      reply
+    end
   end
 
   def reply(h={})

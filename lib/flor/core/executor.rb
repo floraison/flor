@@ -109,6 +109,8 @@ module Flor
       head = heak.new(self, node, message)
       head.heat = heat if head.respond_to?(:heat=)
 
+      head.pre_execute if message['point'] == 'execute'
+
       head.send(message['point'])
     end
 
