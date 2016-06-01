@@ -36,7 +36,7 @@ class Flor::Pro::Sleep < Flor::Procedure
 
   def do_receive
 
-    t = @node['atts']['_unkeyed']
+    t = @node['atts']['for'] || @node['atts']['_unkeyed']
     m = reply('point' => 'receive').first
 
     schedule('in' => t, 'message' => m)

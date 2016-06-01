@@ -51,6 +51,30 @@ describe 'Flor punit' do
       expect(td['message']['point']).to eq('receive')
     end
 
+    it 'understands for:' do
+
+      flon = %{
+        sleep for: '2y'
+      }
+
+      exid = @unit.launch(flon)
+
+      sleep 0.350
+
+      ts = @unit.timers.all
+      t = ts.first
+      td = t.data
+
+      expect(ts.count).to eq(1)
+
+      expect(t.exid).to eq(exid)
+      expect(t.type).to eq('in')
+      expect(t.schedule).to eq('2y')
+      expect(t.ntime.year).to eq(Time.now.year + 2)
+
+      expect(td['message']['point']).to eq('receive')
+    end
+
     it 'does not sleep when t <= 0'
 
     it 'makes an execution sleep for a while' do
