@@ -61,9 +61,7 @@ module Flor
         def has_key?(k); ! Flor::Procedure[k]; end
       end
 
-      x = Flor::TransientExecutor.new('conf' => true)
-
-      r = x.launch(s, vars: vs)
+      r = (Flor::TransientExecutor.new('conf' => true)).launch(s, vars: vs)
 
       fail ArgumentError.new(
         "error while reading conf: #{r['error']['msg']}"
