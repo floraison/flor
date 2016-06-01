@@ -27,15 +27,13 @@ class Flor::Pro::Map < Flor::Procedure
 
   name 'map'
 
-  def execute
+  def pre_execute
 
     @node['ret'] = Flor.dup(payload['ret'])
     @node['col'] = nil
     @node['idx'] = -1
     @node['fun'] = nil
     @node['res'] = []
-
-    execute_child(0)
   end
 
   def receive

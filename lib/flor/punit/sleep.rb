@@ -29,6 +29,7 @@ class Flor::Pro::Sleep < Flor::Procedure
 
   def execute
 
+# TODO adapt me to new do_receive and co...
     c = children.first
     c = c[1].last if c[0] == '_att'
     t = c[0]

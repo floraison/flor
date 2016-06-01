@@ -27,18 +27,12 @@ class Flor::Pro::Arith < Flor::Procedure
 
   names %w[ + - * ]
 
-  def execute
+  def pre_execute
 
     @node['rets'] = []
-
-    receive
   end
 
-  def receive
-
-    ms = sequence_receive
-
-    return ms if ms.first['point'] == 'execute'
+  def do_receive
 
     payload['ret'] = @node['rets'].reduce(&tree.first.to_sym) || 0
 

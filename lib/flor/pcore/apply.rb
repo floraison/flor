@@ -32,11 +32,9 @@ class Flor::Pro::Apply < Flor::Procedure
     @heat = t
   end
 
-  def execute
+  def pre_execute
 
     @node['rets'] = []
-
-    receive
   end
 
   def receive

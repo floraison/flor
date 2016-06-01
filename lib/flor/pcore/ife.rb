@@ -27,11 +27,6 @@ class Flor::Pro::Ife < Flor::Procedure
 
   names 'ife', 'unlesse'
 
-  def execute
-
-    execute_child(0)
-  end
-
   def receive
 
     return reply if Flor.child_id(@message['from']) != 0

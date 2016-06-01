@@ -27,11 +27,9 @@ class Flor::Pro::Cond < Flor::Procedure
 
   name 'cond'
 
-  def execute
+  def pre_execute
 
     @node['ret'] = Flor.dup(payload['ret'])
-
-    execute_child(0)
   end
 
   def receive

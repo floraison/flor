@@ -29,16 +29,14 @@ class Flor::Pro::Set < Flor::Procedure
 
   def execute
 
+# TODO: this doesn't let tag or timeout or ... (common atts) work!
+
     @node['ret'] = Flor.dup(payload['ret'])
 
-    return execute_child(1) if children.size > 1
-    receive
+    execute_child(children.size > 1 ? 1 : 0)
   end
 
-  def receive
-
-    ms = sequence_receive
-    return ms if ms.first['point'] == 'execute'
+  def do_receive
 
     set_value(target, payload['ret'])
 

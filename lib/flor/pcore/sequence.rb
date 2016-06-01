@@ -26,15 +26,5 @@
 class Flor::Pro::Sequence < Flor::Procedure
 
   names %w[ sequence _apply begin ]
-
-  def execute
-
-    execute_child
-  end
-
-  def receive
-
-    sequence_receive
-  end
 end
 

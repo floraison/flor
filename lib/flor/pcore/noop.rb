@@ -26,10 +26,5 @@
 class Flor::Pro::Noop < Flor::Procedure
 
   name 'noop'
-
-  def execute
-
-    reply
-  end
 end
 

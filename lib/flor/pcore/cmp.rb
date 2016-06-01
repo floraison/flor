@@ -27,11 +27,9 @@ class Flor::Pro::Cmp < Flor::Procedure
 
   names %w[ = == < > ]
 
-  def execute
+  def pre_execute
 
     @node['rets'] = []
-
-    receive
   end
 
   def receive
