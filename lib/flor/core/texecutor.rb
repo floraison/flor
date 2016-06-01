@@ -34,31 +34,15 @@ module Flor
 
     class TransientUnit
 
-      attr_accessor :conf, :storage
-      attr_reader :opts, :journal
+      attr_accessor :conf, :storage, :opts
+      attr_reader :journal
 
       def initialize(conf)
 
         @conf = conf
         @storage = TransientStorage.new
         @opts = {}
-
-        @journal = nil
-        @journal = [] if Flor.true?(@conf['exe_journal'])
-      end
-
-      def opts=(h)
-
-        @opts = h
-
-        j = h[:journal]
-        if j.respond_to?(:<<)
-          @journal = j
-        elsif Flor.true?(j)
-          @journal ||= []
-        end
-
-        h
+        @journal = []
       end
 
       def notify(o)
@@ -72,7 +56,7 @@ module Flor
 
         Flor.log_message(o) if @conf['log_msg']
 
-        @journal << o if @journal
+        @journal << o
       end
     end
 
