@@ -37,6 +37,8 @@ class Flor::Pro::Sleep < Flor::Procedure
   def do_receive
 
     t = @node['atts']['for'] || @node['atts']['_unkeyed']
+    fail ArgumentError.new("missing a sleep time duration") unless t
+
     m = reply('point' => 'receive').first
 
     schedule('in' => t, 'message' => m)

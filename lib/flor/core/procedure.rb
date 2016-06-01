@@ -100,7 +100,10 @@ class Flor::Procedure < Flor::Node
   #
   def rewrite_first_unkeyed_att
 
-    ci = children.index { |c| c[0] == '_att' && c[1].size == 1 }
+    ci =
+      children.index { |c|
+        c[0] == '_att' && c[1].size == 1 && c[1].first[0] != '_'
+      }
     return unless ci
 
     t = tree

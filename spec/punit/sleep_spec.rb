@@ -75,6 +75,18 @@ describe 'Flor punit' do
       expect(td['message']['point']).to eq('receive')
     end
 
+    it 'fails when missing a duration' do
+
+      flon = %{
+        sleep _
+      }
+
+      msg = @unit.launch(flon, wait: true)
+
+      expect(msg['point']).to eq('failed')
+      expect(msg['error']['msg']).to eq('missing a sleep time duration')
+    end
+
     it 'does not sleep when t <= 0'
 
     it 'makes an execution sleep for a while' do
