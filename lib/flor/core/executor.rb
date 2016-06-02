@@ -120,7 +120,7 @@ module Flor
 
       n['deleted'] = true # or should I use "status" => "deleted" ?
 
-      @unit.storage.remove_node(exid, n)
+      @unit.remove_node(exid, n)
         # remove timers/waiters for this node, if any
 
       return if (n['closures'] || []).any?

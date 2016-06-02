@@ -178,6 +178,15 @@ $stdout.flush
       @storage.put_trap(node, tra, msg)
     end
 
+    def remove_node(exid, n)
+
+      @storage.remove_node(exid, n)
+
+      @mutex.synchronize do
+        @timers.reject! { |t| t.exid == exid && t.nid == n['nid'] }
+      end
+    end
+
     def journal
 
       @journal

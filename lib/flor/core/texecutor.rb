@@ -27,20 +27,14 @@ module Flor
 
   class TransientExecutor < Executor
 
-    class TransientStorage
-
-      def remove_node(exid, n); end
-    end
-
     class TransientUnit
 
-      attr_accessor :conf, :storage, :opts
+      attr_accessor :conf, :opts
       attr_reader :journal
 
       def initialize(conf)
 
         @conf = conf
-        @storage = TransientStorage.new
         @opts = {}
         @journal = []
       end
@@ -57,6 +51,11 @@ module Flor
         Flor.log_message(o) if @conf['log_msg']
 
         @journal << o
+      end
+
+      def remove_node(exid, n)
+
+        # nothing to do
       end
     end
 

@@ -82,7 +82,31 @@ describe 'Flor unit' do
       expect(can['payload']).to eq({ 'ret' => '1s' }) # really?
     end
 
-    it 'is removed if the node ends before timing out'
+    it 'is removed if the node ends before timing out' do
+
+      flon = %{
+        sleep '1s' timeout: '1.4s'
+      }
+
+      exid = @unit.launch(flon)
+
+      sleep 0.140
+
+      expect(
+        @unit.timers.collect { |t|
+          [ t.nid, t.data['message']['point'] ].join('/')
+        }
+      ).to eq(
+        %w[ 0/cancel 0/receive ]
+      )
+
+      sleep 2.1
+
+      expect(@unit.timers.count).to eq(0)
+
+      expect(@unit.journal.last['point']).to eq('terminated')
+      expect(@unit.journal.select { |m| m['point'] == 'cancel' }.size).to eq(0)
+    end
   end
 end
 
