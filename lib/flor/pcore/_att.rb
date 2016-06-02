@@ -105,11 +105,11 @@ class Flor::Pro::Att < Flor::Procedure
 
   def receive_timeout
 
-p payload
-puts "=" * 80
-puts "= implement me!"
-puts ("=" * 80) + ' .'
+    n = parent
+    m = reply('point' => 'cancel', 'nid' => n, 'flavour' => 'timeout').first
+    t = payload['ret']
 
+    schedule('in' => t, 'nid' => n, 'message' => m) +
     reply
   end
 end
