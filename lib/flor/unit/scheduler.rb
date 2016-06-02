@@ -164,6 +164,7 @@ $stdout.flush
           if o['consumed']
             notify_waiters(o)
           else
+            (@journal ||= []) << o if @conf['journal']
             @logger.notify(o)
           end
         else
@@ -175,6 +176,11 @@ $stdout.flush
     def trap(node, tra, msg)
 
       @storage.put_trap(node, tra, msg)
+    end
+
+    def journal
+
+      @journal
     end
 
     protected

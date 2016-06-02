@@ -14,7 +14,7 @@ describe 'Flor unit' do
 
     @unit = Flor::Unit.new('.flor-test.conf')
     @unit.conf['unit'] = 'u'
-    #@unit.conf['exe_journal'] = true
+    @unit.conf['journal'] = true
     @unit.storage.migrate
     @unit.start
   end
@@ -68,12 +68,18 @@ describe 'Flor unit' do
 
       t0 = Time.now
 
-      msg = @unit.launch(flon, journal: true, wait: true)
+      msg = @unit.launch(flon, wait: true)
 
       expect(Time.now - t0).to be_between(0.5, 1.5)
-      #p @unit.journal
 
       expect(@unit.timers.count).to eq(0)
+
+      can = @unit.journal.find { |m| m['point'] == 'cancel' }
+
+      expect(can['nid']).to eq('0_0')
+      expect(can['from']).to eq('0_0_0')
+      expect(can['flavour']).to eq('timeout')
+      expect(can['payload']).to eq({ 'ret' => '1s' }) # really?
     end
 
     it 'is removed if the node ends before timing out'
