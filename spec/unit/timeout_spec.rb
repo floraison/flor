@@ -14,6 +14,7 @@ describe 'Flor unit' do
 
     @unit = Flor::Unit.new('.flor-test.conf')
     @unit.conf['unit'] = 'u'
+    #@unit.conf['exe_journal'] = true
     @unit.storage.migrate
     @unit.start
   end
@@ -31,21 +32,50 @@ describe 'Flor unit' do
 
       flon = %{
         sequence
-          #stall timeout: 60
-          stall timeout: 60, tag: 'never'
+          stall timeout: 60
       }
 
       exid = @unit.launch(flon)
 
-      sleep 1
+      sleep 0.140
 
       ts = @unit.timers.all
+      t = ts.first
+      d = t.data
 
       expect(ts.size).to eq(1)
+
+      expect(t.exid).to eq(exid)
+      expect(t.nid).to eq('0_0')
+      expect(t.type).to eq('in')
+      expect(t.schedule).to eq('60')
+      expect(t.status).to eq('active')
+
+      expect(d['point']).to eq('schedule')
+      expect(d['from']).to eq('0_0_0')
+      expect(d['message']['point']).to eq('cancel')
+      expect(d['message']['nid']).to eq('0_0')
+      expect(d['message']['from']).to eq('0_0_0')
+      expect(d['message']['flavour']).to eq('timeout')
     end
 
-    it 'triggers after the given time'
-    it 'is removed after triggering'
+    it 'triggers after the given time' do
+
+      flon = %{
+        sequence
+          stall timeout: "1s"
+      }
+
+      t0 = Time.now
+
+      msg = @unit.launch(flon, journal: true, wait: true)
+
+      expect(Time.now - t0).to be_between(0.5, 1.5)
+      #p @unit.journal
+
+      expect(@unit.timers.count).to eq(0)
+    end
+
     it 'is removed if the node ends before timing out'
   end
 end
