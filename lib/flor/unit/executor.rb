@@ -122,9 +122,11 @@ puts ("=" * 80) + ' .'
 
     def cancel(message)
 
-      apply(
-        @execution['nodes'][message['nid']],
-        message)
+      if n = @execution['nodes'][message['nid']]
+        apply(n, message)
+      else
+        [] # nothing, node gone
+      end
     end
 
     def schedule(message)
