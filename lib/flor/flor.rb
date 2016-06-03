@@ -329,6 +329,11 @@ module Flor
   #
   # functions about time
 
+  def self.hstamp(t=Time.now.utc)
+
+    t.strftime('%H:%M:%S.') + sprintf('%06d', t.usec) + (t.utc? ? 'u' : '')
+  end
+
   def self.tstamp(t=Time.now.utc)
 
     t.strftime('%Y%m%d.%H%M%S') + sprintf('%06d', t.usec) + (t.utc? ? 'u' : '')
