@@ -68,8 +68,7 @@ class Flor::Procedure < Flor::Node
     children.select { |c| c[0] != '_att' }
   end
 
-  def execute_child(index=0, sub=0, dup=false)
-  #def execute_child(index=0, dup=false) # TODO sub should be gotten via @message
+  def execute_child(index=0, sub=0, duplicate_payload=false)
 
     return reply unless tree[1][index]
 
@@ -78,7 +77,7 @@ class Flor::Procedure < Flor::Node
     (@node['cnodes'] ||= []) << cnid
 
     pl = @message['payload']
-    pl = Flor.dup(pl) if dup
+    pl = Flor.dup(pl) if duplicate_payload
 
     reply(
       'point' => 'execute',
