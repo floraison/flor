@@ -68,7 +68,8 @@ class Flor::Procedure < Flor::Node
     children.select { |c| c[0] != '_att' }
   end
 
-  def execute_child(index=0, sub=0)
+  def execute_child(index=0, sub=0, dup=false)
+  #def execute_child(index=0, dup=false) # TODO sub should be gotten via @message
 
     return reply unless tree[1][index]
 
@@ -76,24 +77,14 @@ class Flor::Procedure < Flor::Node
 
     (@node['cnodes'] ||= []) << cnid
 
+    pl = @message['payload']
+    pl = Flor.dup(pl) if dup
+
     reply(
       'point' => 'execute',
       'nid' => cnid,
-      'tree' => tree[1][index])
-  end
-
-  def sequence_receive
-
-    (@node['cnodes'] || []).delete(from)
-
-    i = @message['point'] == 'execute' ? 0 : Flor.next_child_id(from)
-
-    if i > 0 && rets = @node['rets']
-      rets << Flor.dup(payload['ret'])
-      @node['mtime'] = Flor.tstamp
-    end
-
-    execute_child(i)
+      'tree' => tree[1][index],
+      'payload' => pl)
   end
 
   # turns ```sleep "1y"``` into ```sleep _unkeyed: "1y"```
@@ -114,11 +105,32 @@ class Flor::Procedure < Flor::Node
     @node['tree'] = [ t[0], cn, t[1] ]
   end
 
+  # By default, a procedure requests the execution of its first child
+  #
   def execute
 
     execute_child(0)
   end
 
+  # Receive and request the execution of the next child, if any.
+  #
+  def sequence_receive
+
+    (@node['cnodes'] || []).delete(from)
+
+    i = @message['point'] == 'execute' ? 0 : Flor.next_child_id(from)
+
+    if i > 0 && rets = @node['rets']
+      rets << Flor.dup(payload['ret'])
+      @node['mtime'] = Flor.tstamp
+    end
+
+    execute_child(i)
+  end
+
+  # By default, a procedure executes all its children then calls
+  # #do_receive or replies (to its parent)
+  #
   def receive
 
     ms = sequence_receive
