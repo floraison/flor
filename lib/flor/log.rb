@@ -27,7 +27,7 @@ module Flor
 
   def self.log_message(m, opts={})
 
-    _rs, _dg, _yl, _bl, _lg = colours(opts)
+    _rs, _dg, _yl, _bl, _lg, _gr = colours(opts)
 
     n =
       Time.now
@@ -54,7 +54,12 @@ module Flor
 
     #ind = '  ' * ni.split('_').size
 
-    puts "  #{tm} #{_dg}#{ni}#{pt}#{t0}#{cn}#{fr}#{rt}#{_rs}"
+    ta =
+      m['point'] == 'entered' || m['point'] == 'left' ?
+      " #{_dg}tags:#{_gr}#{m['tags'].join(',')}" :
+      nil
+
+    puts "  #{tm} #{_dg}#{ni}#{pt}#{t0}#{cn}#{fr}#{rt}#{ta}#{_rs}"
   end
 
   class Colours
@@ -148,10 +153,12 @@ module Flor
     end
   end
 
-  COLSET = Colours.set(%w[ reset dark_grey light_yellow blue light_grey ])
-  NO_COLSET = [ '' ] * COLSET.length
+  COLSET =
+    Colours.set(%w[ reset dark_grey light_yellow blue light_grey light_green ])
+  NO_COLSET =
+    [ '' ] * COLSET.length
 
-  # return reset, dark grey, yellow, blue, light grey
+  # return reset, dark grey, yellow, blue, light grey, light green
   #
   def self.colours(opts={})
 
