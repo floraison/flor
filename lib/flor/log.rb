@@ -27,7 +27,7 @@ module Flor
 
   def self.log_message(m, opts={})
 
-    _rs, _dg, _yl, _bl, _lg = colours
+    _rs, _dg, _yl, _bl, _lg = colours(opts)
 
     n =
       Time.now
@@ -153,12 +153,14 @@ module Flor
 
   # return reset, dark grey, yellow, blue, light grey
   #
-  def self.colours(opts={ color: true })
+  def self.colours(opts={})
+
+    opts[:colour] = true unless opts.has_key?(:color) || opts.has_key?(:colour)
 
     (opts[:color] || opts[:colour]) && $stdout.tty? ? COLSET : NO_COLSET
   end
 
-  def self.print_tree(tree, nid='0', opts={ color: true })
+  def self.print_tree(tree, nid='0', opts={})
 
     _rs, _dg, _yl = colours(opts)
 
