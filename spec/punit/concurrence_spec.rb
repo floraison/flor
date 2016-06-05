@@ -13,7 +13,8 @@ describe 'Flor punit' do
   before :each do
 
     @unit = Flor::Unit.new('.flor-test.conf')
-    @unit.conf[:unit] = 'pu_sleep'
+    @unit.conf['unit'] = 'pu_concurrence'
+    @unit.conf['journal'] = true
     @unit.storage.migrate
     @unit.start
   end
@@ -55,6 +56,19 @@ describe 'Flor punit' do
       ).to eq(
         'a b'
       )
+
+      expect(
+        @unit.journal
+          .select { |m| %w[ execute receive ].include?(m['point']) }
+          .collect { |m| [ m['point'], m['nid'] ].join(':') }
+      ).to comprise(%w[
+        execute:0_2
+        execute:0_3
+        execute:0_2_0
+        execute:0_3_0
+        execute:0_2_0_0
+        execute:0_3_0_0
+      ])
     end
   end
 end

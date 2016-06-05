@@ -66,6 +66,28 @@ RSpec::Matchers.define :eqt do |o|
   end
 end
 
+RSpec::Matchers.define :comprise do |o|
+
+  match do |actual|
+
+    return false unless actual.is_a?(Array)
+
+    a = actual
+    loop do
+      return false if a.length < o.length
+      return true if a[0, o.length] == o
+      a = a[1..-1]
+    end
+
+    false
+  end
+
+  failure_message do |actual|
+
+    "expected\n  #{actual.inspect}\nto comprise\n  #{o.inspect}"
+  end
+end
+
 
 class RSpec::Core::ExampleGroup
 
