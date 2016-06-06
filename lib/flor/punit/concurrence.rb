@@ -34,34 +34,28 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def receive
 
-    cid = Flor.child_id(@message['from'])
-    ctree = children[cid]
-
-    return concurrence_execute if ctree[0] == '_att'
-
-    @node['rets'][@message['from']] = @message['payload']
-
-    return [] \
-      if @node['rets'].size < children.reject { |c| c[0] == '_att' }.size
-
-    reply
-  end
-
-  protected
-
-  def concurrence_execute
+    return con_receive if @node['rets']
 
     ncid = Flor.child_id(@message['from']) + 1
     nctree = children[ncid]
-    return reply unless nctree
+
+    return reply if nctree == nil
     return sequence_receive if nctree[0] == '_att'
 
     @node['rets'] = {}
 
-    msgs = (ncid..children.size - 1)
+    (ncid..children.size - 1)
       .map { |i| execute_child(i, 0, true) }
       .flatten(1)
-    return msgs if msgs.any?
+  end
+
+  protected
+
+  def con_receive
+
+    @node['rets'][@message['from']] = @message['payload']
+
+    return [] if @node['rets'].size < children.count { |c| c[0] != '_att' }
 
     reply
   end
