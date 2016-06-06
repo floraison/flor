@@ -34,7 +34,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def receive
 
-    return con_receive if @node['rets']
+    return con_receive if @node['receiver']
 
     ncid = Flor.child_id(@message['from']) + 1
     nctree = children[ncid]
@@ -42,7 +42,8 @@ class Flor::Pro::Concurrence < Flor::Procedure
     return reply if nctree == nil
     return sequence_receive if nctree[0] == '_att'
 
-    @node['rets'] = {}
+    @node['receiver'] = determine_receiver
+    @node['merger'] = determine_merger
 
     (ncid..children.size - 1)
       .map { |i| execute_child(i, 0, true) }
@@ -53,11 +54,35 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def con_receive
 
-    @node['rets'][@message['from']] = @message['payload']
+    over = self.send(@node['receiver'])
 
-    return [] if @node['rets'].size < children.count { |c| c[0] != '_att' }
+    return [] unless over
 
-    reply
+    pld = self.send(@node['merger'])
+
+    reply('payload' => pld)
+  end
+
+  def determine_receiver
+
+    'default_receive'
+  end
+
+  def determine_merger
+
+    'default_merge'
+  end
+
+  def default_receive
+
+    (@node['payloads'] ||= {})[@message['from']] = @message['payload']
+
+    @node['payloads'].size >= children.count { |c| c[0] != '_att' }
+  end
+
+  def default_merge
+
+    @node['payloads'].values.last
   end
 end
 
