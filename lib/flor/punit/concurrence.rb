@@ -30,6 +30,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
   def pre_execute
 
     @node['atts'] = {}
+    @node['payload'] = Flor.dup(@message['payload'])
   end
 
   def receive
@@ -48,19 +49,37 @@ class Flor::Pro::Concurrence < Flor::Procedure
     (ncid..children.size - 1)
       .map { |i| execute_child(i, 0, true) }
       .flatten(1)
+        #
+        # call execute for each of the (non _att) children
   end
 
   protected
 
   def con_receive
 
-    over = self.send(@node['receiver'])
+    over = invoke_receiver
+      # true: the concurrence is over, false: the concurrence is still waiting
 
     return [] unless over
 
-    pld = self.send(@node['merger'])
+    pld = invoke_merger
+      # determine post-concurrence payload
 
     reply('payload' => pld)
+  end
+
+  def invoke_receiver
+
+    # TODO: receiver function case
+
+    self.send(@node['receiver'])
+  end
+
+  def invoke_merger
+
+    # TODO: merger function case
+
+    self.send(@node['merger'])
   end
 
   def determine_receiver
