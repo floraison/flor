@@ -85,6 +85,41 @@ describe 'Flor punit' do
         execute:0_2_0_0 execute:0_3_0_0
       ])
     end
+
+    describe 'by default' do
+
+      it 'merges all the payload, first reply wins' do
+
+        flon = %{
+          concurrence _
+            set f.a 0
+            set f.a 1
+            set f.b 2
+        }
+
+        msg = @unit.launch(flon, wait: true)
+
+        expect(msg['point']).to eq('terminated')
+        expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0, 'b' => 2 })
+      end
+    end
+
+    describe 'expect:' do
+
+      it 'accepts an integer > 0' do
+
+        flon = %{
+          concurrence expect: 1
+            set f.a 0
+            set f.b 1
+        }
+
+        msg = @unit.launch(flon, wait: true)
+
+        expect(msg['point']).to eq('terminated')
+        expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
+      end
+    end
   end
 end
 

@@ -101,7 +101,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def default_merge
 
-    @node['payloads'].values.last
+    @node['payloads'].values.reverse.inject({}) { |h, pl| h.merge!(pl) }
   end
 end
 
