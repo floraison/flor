@@ -77,12 +77,11 @@ describe 'Flor punit' do
 
       expect(
         @unit.journal
-          .select { |m| %w[ execute receive ].include?(m['point']) }
-          .collect { |m| [ m['point'], m['nid'] ].join(':') }
+          .collect { |m| [ m['point'][0, 3], m['nid'] ].join(':') }
       ).to comprise(%w[
-        execute:0_2 execute:0_3
-        execute:0_2_0 execute:0_3_0
-        execute:0_2_0_0 execute:0_3_0_0
+        exe:0_2 exe:0_3
+        exe:0_2_0 exe:0_3_0
+        exe:0_2_0_0 exe:0_3_0_0
       ])
     end
 
@@ -121,10 +120,9 @@ describe 'Flor punit' do
 
         expect(
           @unit.journal
-            .select { |m| %w[ execute receive ].include?(m['point']) }
-            .collect { |m| [ m['point'], m['nid'] ].join(':') }
+            .collect { |m| [ m['point'][0, 3], m['nid'] ].join(':') }
         ).to comprise(%w[
-          receive:0 receive:0 receive:
+          rec:0 rec:0 can:0_2 rec: ter:
         ])
       end
     end

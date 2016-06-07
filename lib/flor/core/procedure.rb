@@ -272,10 +272,6 @@ class Flor::Procedure < Flor::Node
 
   def cancel
 
-    #(@node['cnodes'] || [])
-    #  .collect { |cnode|
-    #    reply('point' => 'cancel', 'nid' => cnode, 'from' => nid) }
-    #  .flatten(1) +
     cancel_children(@node['cnodes']) +
     reply('cause' => 'cancel')
   end

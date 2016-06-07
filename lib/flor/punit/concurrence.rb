@@ -40,6 +40,8 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def receive
 
+    (@node['cnodes'] || []).delete(from)
+
     return [] if @node['over']
     return con_receive if @node['receiver']
 
@@ -75,7 +77,15 @@ class Flor::Pro::Concurrence < Flor::Procedure
     pld = invoke_merger
       # determine post-concurrence payload
 
+    cancel_remaining +
     reply('payload' => pld)
+  end
+
+  def cancel_remaining
+
+    # TODO: obey "remaining" _att
+
+    cancel_children(@node['cnodes'])
   end
 
   def invoke_receiver
