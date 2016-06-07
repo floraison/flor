@@ -85,7 +85,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     # TODO: obey "remaining" _att
 
-    cancel_children(@node['cnodes'])
+    cancel_nodes(@node['cnodes'])
   end
 
   def invoke_receiver
