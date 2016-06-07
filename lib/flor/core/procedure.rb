@@ -68,6 +68,14 @@ class Flor::Procedure < Flor::Node
     children.select { |c| c[0] != '_att' }
   end
 
+  def att(*keys)
+
+    atts = @node['atts']
+
+    keys.each { |k| k = k.to_s; return atts[k] if atts.has_key?(k) }
+    nil
+  end
+
   def execute_child(index=0, sub=0, duplicate_payload=false)
 
     return reply unless tree[1][index]

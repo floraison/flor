@@ -88,7 +88,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
     # * 'forget'
     # * 'wait'
 
-    rem = @node['atts']['remaining'] || @node['atts']['rem']
+    rem = att(:remaining, :rem)
 
     return [] if rem == 'forget'
 
@@ -111,7 +111,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def determine_receiver
 
-    ex = @node['atts']['expect']
+    ex = att(:expect)
 
     return 'expect_integer_receive' if ex && ex.is_a?(Integer) && ex > 0
 
@@ -132,14 +132,14 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     store_payload
 
-    @node['payloads'].size >= children.count { |c| c[0] != '_att' }
+    @node['payloads'].size >= non_att_children.size
   end
 
   def expect_integer_receive
 
     store_payload
 
-    @node['payloads'].size >= @node['atts']['expect']
+    @node['payloads'].size >= att(:expect)
   end
 
   def default_merge
