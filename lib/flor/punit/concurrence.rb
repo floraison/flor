@@ -83,7 +83,14 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def cancel_remaining
 
-    # TODO: obey "remaining" _att
+    # remaining:
+    # * 'cancel' (default)
+    # * 'forget'
+    # * 'wait'
+
+    rem = @node['atts']['remaining'] || @node['atts']['rem']
+
+    return [] if rem == 'forget'
 
     cancel_nodes(@node['cnodes'])
   end

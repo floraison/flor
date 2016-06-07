@@ -126,6 +126,30 @@ describe 'Flor punit' do
         ])
       end
     end
+
+    describe 'remaining:' do
+
+      it 'prevents child cancelling when "forget"' do
+
+        flon = %{
+          concurrence expect: 1 rem: 'forget'
+            set f.a 0
+            set f.b 1
+        }
+
+        msg = @unit.launch(flon, wait: true)
+
+        expect(msg['point']).to eq('terminated')
+        expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
+
+        expect(
+          @unit.journal
+            .collect { |m| [ m['point'][0, 3], m['nid'] ].join(':') }
+        ).to comprise(%w[
+          rec:0 rec:0 rec: ter:
+        ])
+      end
+    end
   end
 end
 
