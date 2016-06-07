@@ -91,7 +91,7 @@ describe 'Flor punit' do
       it 'merges all the payload, first reply wins' do
 
         flon = %{
-          concurrence _
+          concurrence
             set f.a 0
             set f.a 1
             set f.b 2

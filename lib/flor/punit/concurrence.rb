@@ -33,12 +33,19 @@ class Flor::Pro::Concurrence < Flor::Procedure
     @node['payload'] = Flor.dup(@message['payload'])
   end
 
+  def execute
+
+    receive
+  end
+
   def receive
 
     return con_receive if @node['receiver']
 
-    ncid = Flor.child_id(@message['from']) + 1
-    nctree = children[ncid]
+    ncid =
+      @message['point'] == 'execute' ? 0 : Flor.child_id(@message['from']) + 1
+    nctree =
+      children[ncid]
 
     return reply if nctree == nil
     return sequence_receive if nctree[0] == '_att'
