@@ -118,6 +118,14 @@ describe 'Flor punit' do
 
         expect(msg['point']).to eq('terminated')
         expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
+
+        expect(
+          @unit.journal
+            .select { |m| %w[ execute receive ].include?(m['point']) }
+            .collect { |m| [ m['point'], m['nid'] ].join(':') }
+        ).to comprise(%w[
+          receive:0 receive:0 receive:
+        ])
       end
     end
   end

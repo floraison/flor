@@ -40,6 +40,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def receive
 
+    return [] if @node['over']
     return con_receive if @node['receiver']
 
     ncid =
@@ -69,6 +70,8 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     return [] unless over
 
+    @node['over'] = true
+
     pld = invoke_merger
       # determine post-concurrence payload
 
@@ -91,6 +94,10 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def determine_receiver
 
+    ex = @node['atts']['expect']
+
+    return 'expect_integer_receive' if ex && ex.is_a?(Integer) && ex > 0
+
     'default_receive'
   end
 
@@ -99,11 +106,23 @@ class Flor::Pro::Concurrence < Flor::Procedure
     'default_merge'
   end
 
-  def default_receive
+  def store_payload
 
     (@node['payloads'] ||= {})[@message['from']] = @message['payload']
+  end
+
+  def default_receive
+
+    store_payload
 
     @node['payloads'].size >= children.count { |c| c[0] != '_att' }
+  end
+
+  def expect_integer_receive
+
+    store_payload
+
+    @node['payloads'].size >= @node['atts']['expect']
   end
 
   def default_merge
