@@ -31,12 +31,12 @@ class Flor::Pro::Sleep < Flor::Procedure
 
     rewrite_first_unkeyed_att
 
-    @node['atts'] = {}
+    @node['atts'] = []
   end
 
   def do_receive
 
-    t = @node['atts']['for'] || @node['atts']['_unkeyed']
+    t = att('for', '_unkeyed')
     fail ArgumentError.new("missing a sleep time duration") unless t
 
     m = reply('point' => 'receive').first

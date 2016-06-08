@@ -29,7 +29,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def pre_execute
 
-    @node['atts'] = {}
+    @node['atts'] = []
     @node['payload'] = Flor.dup(@message['payload'])
   end
 

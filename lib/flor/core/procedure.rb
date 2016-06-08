@@ -72,10 +72,7 @@ class Flor::Procedure < Flor::Node
 
   def att(*keys)
 
-    atts = @node['atts']
-
-    keys.each { |k| k = k.to_s; return atts[k] if atts.has_key?(k) }
-    nil
+    (keys.find { |k| @node['atts'].assoc(k.to_s) } || []).last
   end
 
   def execute_child(index=0, sub=0, duplicate_payload=false)

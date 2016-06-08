@@ -44,9 +44,6 @@ class Flor::Pro::Att < Flor::Procedure
   def receive
 
     k = key
-
-    return receive_art unless k
-
     m = "receive_#{k}"
 
     respond_to?(m, true) ? send(m) : receive_att(k)
@@ -62,37 +59,12 @@ class Flor::Pro::Att < Flor::Procedure
     children.first[0]
   end
 
-  def parent_set(colname, key)
-
-    col = parent_node[colname]
-
-    return false unless col
-
-    if colname == 'atts'
-      col[key] = Flor.dup(payload['ret'])
-    else # 'arts'
-      col << [ key, Flor.dup(payload['ret']) ]
-    end
-
-    parent_node['mtime'] = Flor.tstamp
-
-    true
-  end
-
-  def receive_art
-
-    parent_set('arts', nil)
-
-    payload['ret'] = @node['ret']
-
-    reply
-  end
-
-  # default
-  #
   def receive_att(key)
 
-    parent_set('atts', nil) || parent_set('arts', nil)
+    if parent_node['atts']
+      parent_node['atts'] << [ key, payload['ret'] ]
+      parent_node['mtime'] = Flor.tstamp
+    end
 
     payload['ret'] = @node['ret']
 
