@@ -27,19 +27,14 @@ class Flor::Pro::Arr < Flor::Procedure
 
   name '_arr'
 
-  def execute
-
-    return reply('ret' => []) if tree[1] == 0
+  def pre_execute
 
     @node['rets'] = []
-
-    receive
   end
 
-  def receive
+  def do_receive
 
-    ms = sequence_receive
-    return ms if ms.first['point'] == 'execute'
+    return reply('ret' => []) if tree[1] == 0
 
     payload['ret'] = @node['rets']
 

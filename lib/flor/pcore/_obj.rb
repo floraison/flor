@@ -29,36 +29,42 @@ class Flor::Pro::Obj < Flor::Procedure
 
   def execute
 
-    return reply('ret' => {}) if tree[1] == 0
-
+    return reply('ret' => {}) if children == 0
     receive
   end
 
-  def receive
+  def post_att_receive
 
-    @node['rets'] << payload['ret'] if @message['point'] == 'receive'
-
-    i = (@node['rets'] ||= []).size
-    ti = tree[1][i]
-
-    if i.even? && ti == nil
-      reply
-    elsif i.even? && ti[1] == []
-      @node['rets'] << (deref(ti[0]) || ti[0])
-      execute_child(i + 1)
-    else
-      execute_child(i)
-    end
+p @ncid
+p children
+    reply
   end
 
-  def reply(h={})
-
-    if h == {}
-      a = @node['rets'].inject([]) { |a, e| a.push(a.size.even? ? e.to_s : e) }
-      h['ret'] = Hash[*a]
-    end
-
-    super(h)
-  end
+#  def receive
+#
+#    @node['rets'] << payload['ret'] if @message['point'] == 'receive'
+#
+#    i = (@node['rets'] ||= []).size
+#    ti = tree[1][i]
+#
+#    if i.even? && ti == nil
+#      reply
+#    elsif i.even? && ti[1] == []
+#      @node['rets'] << (deref(ti[0]) || ti[0])
+#      execute_child(i + 1)
+#    else
+#      execute_child(i)
+#    end
+#  end
+#
+#  def reply(h={})
+#
+#    if h == {}
+#      a = @node['rets'].inject([]) { |a, e| a.push(a.size.even? ? e.to_s : e) }
+#      h['ret'] = Hash[*a]
+#    end
+#
+#    super(h)
+#  end
 end
 

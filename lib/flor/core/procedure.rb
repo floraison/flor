@@ -38,8 +38,10 @@ class Flor::Procedure < Flor::Node
   class << self
 
     def names(*names)
+
       names = names.flatten
       @names = names if names.any?
+
       @names
     end
 
@@ -112,42 +114,43 @@ class Flor::Procedure < Flor::Node
     @node['tree'] = [ t[0], cn, t[1] ]
   end
 
-  # By default, a procedure requests the execution of its first child
-  #
   def execute
 
-    execute_child(0)
+    receive
   end
 
-  # Receive and request the execution of the next child, if any.
-  #
-  def sequence_receive
-
-    (@node['cnodes'] || []).delete(from)
-
-    i = @message['point'] == 'execute' ? 0 : Flor.next_child_id(from)
-
-    if i > 0 && rets = @node['rets']
-      rets << Flor.dup(payload['ret'])
-      @node['mtime'] = Flor.tstamp
-    end
-
-    execute_child(i)
-  end
-
-  # By default, a procedure executes all its children then calls
-  # #do_receive or replies (to its parent)
-  #
   def receive
 
-    ms = sequence_receive
-    return ms if ms.first['point'] == 'execute'
+    cnode = @node['cnodes'] ? @node['cnodes'].delete(from) : false
 
-    if self.respond_to?(:do_receive)
-      do_receive
-    else
-      reply
+    @ncid = @message['point'] == 'execute' ? 0 : Flor.next_child_id(from)
+
+    nctree = children.is_a?(Array) ? children[@ncid] : nil
+    nctree = nil unless cnode # annihilate unless coming from child (cnode)
+
+    if nctree && nctree[0] == '_att'
+
+      return execute_child(@ncid)
     end
+
+    if cid = @message['point'] == 'receive' ? Flor.child_id(from) : nil
+
+      ctree = children.is_a?(Array) ? children[cid] : []
+
+      if @node['rets'] && ctree[0] != '_att'
+        @node['rets'] << Flor.dup(payload['ret'])
+        @node['mtime'] = Flor.tstamp
+      end
+
+      return do_receive if nctree.nil? && self.respond_to?(:do_receive)
+    end
+
+    post_att_receive
+  end
+
+  def post_att_receive
+
+    execute_child(@ncid)
   end
 
   def reply(h={})

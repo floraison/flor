@@ -34,27 +34,42 @@ class Flor::Pro::Apply < Flor::Procedure
 
   def pre_execute
 
-    @node['rets'] = []
+    @node['arts'] = []
   end
 
-  def receive
+  def do_receive
 
     return reply if @node['applied']
 
-    ms = sequence_receive
+    arts = @node['arts'].collect(&:last)
 
-    return ms if ms.first['point'] == 'execute'
+    src = @heat[0, 2] == [ '_proc', 'apply' ] ?  arts.shift : @heat
 
-    src =
-      @heat[0, 2] == [ '_proc', 'apply' ] ?
-      @node['rets'].shift :
-      @heat
-
-    ms = apply(src, @node['rets'], tree[2])
+    ms = apply(src, arts, tree[2])
 
     @node['applied'] = ms.first['nid']
 
     ms
   end
+
+#  def receive
+#
+#    return reply if @node['applied']
+#
+#    ms = sequence_receive
+#
+#    return ms if ms.first['point'] == 'execute'
+#
+#    src =
+#      @heat[0, 2] == [ '_proc', 'apply' ] ?
+#      @node['rets'].shift :
+#      @heat
+#
+#    ms = apply(src, @node['rets'], tree[2])
+#
+#    @node['applied'] = ms.first['nid']
+#
+#    ms
+#  end
 end
 
