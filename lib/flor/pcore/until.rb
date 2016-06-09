@@ -27,50 +27,50 @@ class Flor::Pro::Until < Flor::Procedure
 
   names %w[ until while ]
 
-  def execute
-
-    @node['count'] = 1
-
-    execute_child(0, @node['count'])
-  end
-
-  def receive
-
-    fid = Flor.child_id(from)
-    @node['mtime'] = Flor.tstamp
-
-    if fid == 0
-
-      t0 = tree[0]
-      tru = Flor.true?(payload['ret'])
-
-      if (tru && t0 == 'until') || ( ! tru && t0 == 'while')
-
-        # over
-
-        if @node.has_key?('ret')
-          reply('ret' => @node['ret'])
-        else
-          reply
-        end
-
-      else
-
-        # one more loop
-
-        @node['count'] += 1
-        execute_child(1, @node['count'])
-      end
-
-    else
-
-      @node['ret'] = Flor.dup(payload['ret'])
-
-      fnid = fid + 1
-      fnid = 0 if tree[1][fnid] == nil
-
-      execute_child(fnid, @node['count'])
-    end
-  end
+#  def execute
+#
+#    @node['count'] = 1
+#
+#    execute_child(0, @node['count'])
+#  end
+#
+#  def receive
+#
+#    fid = Flor.child_id(from)
+#    @node['mtime'] = Flor.tstamp
+#
+#    if fid == 0
+#
+#      t0 = tree[0]
+#      tru = Flor.true?(payload['ret'])
+#
+#      if (tru && t0 == 'until') || ( ! tru && t0 == 'while')
+#
+#        # over
+#
+#        if @node.has_key?('ret')
+#          reply('ret' => @node['ret'])
+#        else
+#          reply
+#        end
+#
+#      else
+#
+#        # one more loop
+#
+#        @node['count'] += 1
+#        execute_child(1, @node['count'])
+#      end
+#
+#    else
+#
+#      @node['ret'] = Flor.dup(payload['ret'])
+#
+#      fnid = fid + 1
+#      fnid = 0 if tree[1][fnid] == nil
+#
+#      execute_child(fnid, @node['count'])
+#    end
+#  end
 end
 
