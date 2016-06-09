@@ -27,19 +27,26 @@ class Flor::Pro::Set < Flor::Procedure
 
   names %w[ set setr ]
 
-  def execute
+  def pre_execute
 
     @node['ret'] = Flor.dup(payload['ret'])
+    @node['atts'] = []
 
-    # WARNING:
-    # it expects its first child to be the var name children.size > 1
-
-    execute_child(children.size > 1 ? 1 : 0)
+    stringify_first_att
   end
 
   def do_receive
 
-    set_value(target, payload['ret'])
+    target = att(nil)
+
+    val =
+      if @node['atts'].size > 1
+        @node['atts'].last.last
+      else
+        payload['ret']
+      end
+
+    set_value(target, val)
 
     payload['ret'] = @node['ret'] \
       unless tree[0] == 'setr' || target == 'f.ret'
@@ -47,46 +54,16 @@ class Flor::Pro::Set < Flor::Procedure
     reply
   end
 
-  protected
-
-  def target
-
-    c = children.first
-    c = c[1].last if c[0] == '_att'
-
-    c[0]
-  end
-end
-
-#  def execute
+#  def do_receive
 #
-#    @node['rets'] = []
+#    set_value(target, payload['ret'])
 #
-#    sequence_receive
-#  end
-#
-#  def receive
-#
-#    ms = sequence_receive
-#    return ms if ms.first['point'] == 'execute'
-#
-#    #val = payload['ret']
-#    #uks = unkeyed_values(true)
-#    #
-#    #if val.is_a?(Array) && uks.size > 1
-#    #  splat(uks, val)
-#    #else
-#    #  set_value(uks.first, val)
-#    #end
-#
-#    set_value(attributes['_0'], payload['ret'])
-##p [ :set_value, attributes['_0'], payload['ret'] ]
-##@execution['nodes'].values.each do |n|
-##  p [ n['nid'], n['vars'] ]
-##end
+#    payload['ret'] = @node['ret'] \
+#      unless tree[0] == 'setr' || target == 'f.ret'
 #
 #    reply
 #  end
+end
 
 #  protected
 #
@@ -104,4 +81,6 @@ end
 #      end
 #    }
 #  end
+  #
+  # TODO need a splat a some point
 
