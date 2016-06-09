@@ -30,41 +30,29 @@ class Flor::Pro::Obj < Flor::Procedure
   def execute
 
     return reply('ret' => {}) if children == 0
+
+    @node['rets'] = []
+
     receive
   end
 
   def post_att_receive
 
-p @ncid
-p children
-    reply
+    nct = children[@ncid]
+
+    if @ncid.even? && nct[1] == []
+      @node['rets'] << (deref(nct[0]) || nct[0])
+      execute_child(@ncid + 1)
+    else
+      execute_child(@ncid)
+    end
   end
 
-#  def receive
-#
-#    @node['rets'] << payload['ret'] if @message['point'] == 'receive'
-#
-#    i = (@node['rets'] ||= []).size
-#    ti = tree[1][i]
-#
-#    if i.even? && ti == nil
-#      reply
-#    elsif i.even? && ti[1] == []
-#      @node['rets'] << (deref(ti[0]) || ti[0])
-#      execute_child(i + 1)
-#    else
-#      execute_child(i)
-#    end
-#  end
-#
-#  def reply(h={})
-#
-#    if h == {}
-#      a = @node['rets'].inject([]) { |a, e| a.push(a.size.even? ? e.to_s : e) }
-#      h['ret'] = Hash[*a]
-#    end
-#
-#    super(h)
-#  end
+  def do_receive
+
+    payload['ret'] = Hash[*@node['rets']]
+
+    reply
+  end
 end
 
