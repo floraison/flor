@@ -72,7 +72,13 @@ class Flor::Procedure < Flor::Node
 
   def att(*keys)
 
-    (keys.find { |k| @node['atts'].assoc(k.to_s) } || []).last
+    keys.each do |k|
+      k = k.to_s unless k == nil
+      a = @node['atts'].assoc(k)
+      return a.last if a
+    end
+
+    nil
   end
 
   def execute_child(index=0, sub=0, duplicate_payload=false)
@@ -107,6 +113,23 @@ class Flor::Procedure < Flor::Node
     cn = Flor.dup(t[1])
     c = cn[ci][1].first
     cn[ci] = [ '_att', [ [ '_unkeyed', [], c[2] ], c ], c[2] ]
+
+    @node['tree'] = [ t[0], cn, t[1] ]
+  end
+
+  # only works with an unkeyed first att (like in ```push f.a 1```)
+  #
+  def stringify_first_att
+
+    c = children.first
+    return unless c && c[0] == '_att' && c[1].is_a?(Array) && c[1].size == 1
+
+    cc = c[1].first
+    return unless cc[0].is_a?(String) && cc[1] == []
+
+    t = tree
+    cn = Flor.dup(t[1])
+    cn.first[1][0] = [ '_dqs', cc[0], cc[2] ]
 
     @node['tree'] = [ t[0], cn, t[1] ]
   end

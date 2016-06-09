@@ -32,11 +32,9 @@ class Flor::Pro::Cmp < Flor::Procedure
     @node['rets'] = []
   end
 
-  def receive
+  def do_receive
 
-    ms = sequence_receive
-
-    success =
+    payload['ret'] =
       if @node['rets'].size > 1
         case tree[0]
           when '=', '==' then check_equal
@@ -46,10 +44,6 @@ class Flor::Pro::Cmp < Flor::Procedure
       else
         true
       end
-
-    return ms if success && ms.first['point'] == 'execute'
-
-    payload['ret'] = success
 
     reply
   end

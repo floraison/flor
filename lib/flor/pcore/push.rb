@@ -27,51 +27,31 @@ class Flor::Pro::Push < Flor::Procedure
 
   name 'push'
 
-  def execute
+  def pre_execute
 
-    case children.size
-      when 0
-        reply
-      when 1
-        @node['ret'] = Flor.dup(payload['ret'])
-        execute_child(0)
-      else
-        execute_child(1)
-    end
+    stringify_first_att
+
+    ret = @node['ret']
+    @node['ret'] = Flor.dup(ret) if ret.respond_to?(:push)
+
+    @node['atts'] = []
+    @node['rets'] = []
   end
 
-  def receive
+  def do_receive
 
-    cid = Flor.child_id(@message['from'])
-    c = children[cid]
     nr = @node['ret']
 
-    if c[0] == '_att' || cid + 1 == children.length
+    target = nr || lookup(att(nil))
 
-      target = nr || lookup_target
+    fail Flor::FlorError.new("cannot push to given target", self) \
+      unless target.respond_to?(:push)
 
-      fail Flor::FlorError.new("cannot push to given target", self) \
-        unless target.respond_to?(:push)
-
-      target << payload['ret'] unless target.hash == payload['ret'].hash
-    end
-
-    ms = sequence_receive
-    return ms if ms.first['point'] == 'execute'
+    target << payload['ret'] unless target.hash == payload['ret'].hash
 
     payload['ret'] = nr if nr
 
     reply
-  end
-
-  protected
-
-  def lookup_target
-
-    c = children.first
-    c = c[1].last if c[0] == '_att'
-
-    lookup(c[0])
   end
 end
 
