@@ -39,30 +39,13 @@ class Flor::Pro::Set < Flor::Procedure
 
     target = att(nil)
 
-    val =
-      if @node['atts'].size > 1
-        @node['atts'].last.last
-      else
-        payload['ret']
-      end
-
-    set_value(target, val)
+    set_value(target, payload['ret'])
 
     payload['ret'] = @node['ret'] \
       unless tree[0] == 'setr' || target == 'f.ret'
 
     reply
   end
-
-#  def do_receive
-#
-#    set_value(target, payload['ret'])
-#
-#    payload['ret'] = @node['ret'] \
-#      unless tree[0] == 'setr' || target == 'f.ret'
-#
-#    reply
-#  end
 end
 
 #  protected

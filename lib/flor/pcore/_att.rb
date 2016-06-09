@@ -66,7 +66,7 @@ class Flor::Pro::Att < Flor::Procedure
       parent_node['mtime'] = Flor.tstamp
     end
 
-    payload['ret'] = @node['ret']
+    payload['ret'] = @node['ret'] if key
 
     reply
   end
