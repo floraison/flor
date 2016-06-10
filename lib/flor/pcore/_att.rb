@@ -64,8 +64,7 @@ class Flor::Pro::Att < Flor::Procedure
     if parent_node['atts']
       parent_node['atts'] << [ key, payload['ret'] ]
       parent_node['mtime'] = Flor.tstamp
-    end
-    if key == nil && parent_node['rets']
+    elsif key == nil && parent_node['rets']
       parent_node['rets'] << payload['ret']
       parent_node['mtime'] = Flor.tstamp
     end
