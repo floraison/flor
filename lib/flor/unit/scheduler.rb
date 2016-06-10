@@ -126,6 +126,8 @@ $stdout.flush
 
     def launch(tree, opts={})
 
+      Flor.print_src(tree, opts) if @conf['log_src']
+
       exid = Flor.generate_exid(
         opts[:domain] || @conf['domain'] || 'domain0',
         opts[:unit] || @conf['unit'] || 'u0')

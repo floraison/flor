@@ -167,6 +167,17 @@ module Flor
     (opts[:color] || opts[:colour]) && $stdout.tty? ? COLSET : NO_COLSET
   end
 
+  def self.print_src(src, opts={})
+
+    _rs, _dg, _yl = colours(opts)
+
+    puts "#{_dg}+---#{_rs}"
+    src.split("\n").select { |l| l.strip.length > 0 }.each do |line|
+      puts "#{_dg}| #{_yl}#{line}#{_rs}"
+    end
+    puts "#{_dg}.#{_rs}"
+  end
+
   def self.print_tree(tree, nid='0', opts={})
 
     _rs, _dg, _yl = colours(opts)
@@ -175,12 +186,12 @@ module Flor
     c = tree[1].is_a?(Array) ? '' : " #{_yl}#{tree[1]}"
     l = " #{_dg}L#{tree[2]}"
 
-    puts "#{_dg}+" if nid == '0'
+    puts "#{_dg}+---#{_rs}" if nid == '0'
     puts "#{_dg}| #{nid} #{h}#{c}#{l}#{_rs}"
     if tree[1].is_a?(Array)
       tree[1].each_with_index { |ct, i| print_tree(ct, "#{nid}_#{i}", opts) }
     end
-    puts "#{_dg}+#{_rs}" if nid == '0'
+    puts "#{_dg}.#{_rs}" if nid == '0'
   end
 
   def self.ret_to_s(m)

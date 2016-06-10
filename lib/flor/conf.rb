@@ -70,7 +70,7 @@ module Flor
       r['payload']['ret']
     end
 
-    LOG_KEYS = %w[ all msg err log tree sto run ]
+    LOG_KEYS = %w[ all msg err log src tree sto run ]
 
     def self.read_env
 
