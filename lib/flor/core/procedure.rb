@@ -75,9 +75,9 @@ class Flor::Procedure < Flor::Node
     children.select { |c| c[0] != '_att' || c[1].size == 1 }
   end
 
-  def first_non_att_child
+  def first_unkeyed_child
 
-    children.index { |c| c[0] != '_att' } || -1
+    children.index { |c| c[0] != '_att' || c[1].size == 1 }
   end
 
   def att(*keys)
@@ -93,7 +93,7 @@ class Flor::Procedure < Flor::Node
 
   def execute_child(index=0, sub=0, duplicate_payload=false)
 
-    return reply unless tree[1][index]
+    return reply if index < 0 || tree[1][index] == nil
 
     cnid = Flor.child_nid(nid, index, sub)
 

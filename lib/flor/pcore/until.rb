@@ -34,68 +34,35 @@ class Flor::Pro::Until < Flor::Procedure
 
   def post_att_receive
 
-fail if @node['count'] > 21
-    if @message['point'] != 'execute' && Flor.child_id(from) != 0
+    return execute_child(first_unkeyed_child, @node['count'] += 1) \
+      if @message['point'] == 'execute'
+
+    #@node['mtime'] = Flor.tstamp
+
+    func = first_unkeyed_child
+    fcid = Flor.child_id(from)
+
+    if fcid == func # from condition
 
       t0 = tree[0]
       tru = Flor.true?(payload['ret'])
-
       if (tru && t0 == 'until') || ( ! tru && t0 == 'while')
+        payload['ret'] = @node['ret'] if @node.has_key?('ret')
         reply
       else
-        execute_child(first_non_att_child + 1, @node['count'])
+        execute_child(func + 1, @node['count'])
       end
 
-    else
+    elsif fcid == children.size - 1 # from last child
 
-      execute_child(first_non_att_child, @node['count'] += 1)
+      @node['ret'] = Flor.dup(payload['ret'])
+      execute_child(func, @node['count'] += 1)
+
+    else # from a child in the middle
+
+      @node['ret'] = Flor.dup(payload['ret'])
+      execute_child(fcid + 1, @node['count'])
     end
   end
-
-#  def execute
-#
-#    @node['count'] = 1
-#
-#    execute_child(0, @node['count'])
-#  end
-#
-#  def receive
-#
-#    fid = Flor.child_id(from)
-#    @node['mtime'] = Flor.tstamp
-#
-#    if fid == 0
-#
-#      t0 = tree[0]
-#      tru = Flor.true?(payload['ret'])
-#
-#      if (tru && t0 == 'until') || ( ! tru && t0 == 'while')
-#
-#        # over
-#
-#        if @node.has_key?('ret')
-#          reply('ret' => @node['ret'])
-#        else
-#          reply
-#        end
-#
-#      else
-#
-#        # one more loop
-#
-#        @node['count'] += 1
-#        execute_child(1, @node['count'])
-#      end
-#
-#    else
-#
-#      @node['ret'] = Flor.dup(payload['ret'])
-#
-#      fnid = fid + 1
-#      fnid = 0 if tree[1][fnid] == nil
-#
-#      execute_child(fnid, @node['count'])
-#    end
-#  end
 end
 
