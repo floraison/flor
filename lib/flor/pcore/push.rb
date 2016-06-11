@@ -30,6 +30,7 @@ class Flor::Pro::Push < Flor::Procedure
   def pre_execute
 
     stringify_first_ref
+p tree
 
     @node['ret'] = Flor.dup(payload['ret'])
 
@@ -38,12 +39,16 @@ class Flor::Pro::Push < Flor::Procedure
 
   def do_receive
 
+p children.last
+p @node['atts']
      ref = @node['atts'].first[1]
      val = payload['ret']
+p({ ref: ref, val: val })
 
      ref = @node['ret'] if ref == val
 
      arr = ref.is_a?(String) ? lookup(ref) : ref
+p arr
 
      if arr
 

@@ -17,6 +17,20 @@ describe 'Flor procedures' do
 
   describe 'push' do
 
+    it 'xxx' do
+
+      flon = %{
+        true
+        push f.l f.ret
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ true ])
+      expect(r['payload']['ret']).to eq(:x)
+    end
+
     it 'pushes a value in a list' do
 
       flon = %{
