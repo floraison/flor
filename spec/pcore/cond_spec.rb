@@ -21,14 +21,14 @@ describe 'Flor procedures' do
 
       flon = %{
         push f.l 0
-        cond
+        cond _
         push f.l 1
       }
 
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(1)
+      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq([ 0, 1 ])
     end
 

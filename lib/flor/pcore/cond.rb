@@ -32,8 +32,9 @@ class Flor::Pro::Cond < Flor::Procedure
     @node['ret'] = Flor.dup(payload['ret'])
   end
 
-  def receive
+  def post_att_receive
 
+    return execute_child(0) if @message['point'] == 'execute'
     return reply if @node['found']
 
     f = Flor.child_id(from)
