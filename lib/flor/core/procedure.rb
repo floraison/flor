@@ -70,6 +70,11 @@ class Flor::Procedure < Flor::Node
     children.select { |c| c[0] != '_att' }
   end
 
+  def unkeyed_children
+
+    children.select { |c| c[0] != '_att' || c[1].size == 1 }
+  end
+
   def att(*keys)
 
     keys.each do |k|

@@ -25,12 +25,11 @@
 
 class Flor::Pro::Push < Flor::Procedure
 
-  name 'push'
+  name 'push', 'pushr'
 
   def pre_execute
 
     stringify_first_ref
-p tree
 
     @node['ret'] = Flor.dup(payload['ret'])
 
@@ -39,28 +38,22 @@ p tree
 
   def do_receive
 
-p children.last
-p @node['atts']
-     ref = @node['atts'].first[1]
-     val = payload['ret']
-p({ ref: ref, val: val })
+    arr = att(nil)
+    arr = lookup(arr) if arr.is_a?(String)
 
-     ref = @node['ret'] if ref == val
+    fail Flor::FlorError.new("cannot push to given target", self) \
+      unless arr.respond_to?(:push)
 
-     arr = ref.is_a?(String) ? lookup(ref) : ref
-p arr
+    val =
+      unkeyed_children.size > 1 ?
+      payload['ret'] :
+      @node['ret']
 
-     if arr
+    arr.push(val)
 
-       fail Flor::FlorError.new("cannot push to given target", self) \
-         unless arr.respond_to?(:push)
+    payload['ret'] = @node['ret'] unless tree[0] == 'pushr'
 
-       arr.push(val)
-     end
-
-     payload['ret'] = @node['ret'] if ref == @node['ret']
-
-     reply
+    reply
   end
 end
 

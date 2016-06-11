@@ -17,143 +17,116 @@ describe 'Flor procedures' do
 
   describe 'push' do
 
-    it 'xxx' do
+    it 'takes the first child as target' do
 
       flon = %{
         true
-        push f.l f.ret
+        push f.l
       }
 
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ true ])
-      expect(r['payload']['ret']).to eq(:x)
+      expect(r['payload']['ret']).to eq(true)
     end
 
-    it 'pushes a value in a list' do
+    it 'fails if it cannot push to the first child' do
 
       flon = %{
-        push f.l
-          7
-      }
-
-      r = @executor.launch(flon, payload: { 'l' => [] })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(7)
-      expect(r['payload']['l']).to eq([ 7 ])
-    end
-
-    it 'pushes the result of its last child' do
-
-      flon = %{
-        push f.l
-          1
-          2
-      }
-
-      r = @executor.launch(flon, payload: { 'l' => [] })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(2)
-      expect(r['payload']['l']).to eq([ 2 ])
-    end
-
-    it 'does not mind if the target list is given as a regular child' do
-
-      flon = %{
-        push
-          f.l
-          1
-          2
-      }
-
-      r = @executor.launch(flon, payload: { 'l' => [] })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(2)
-      expect(r['payload']['l']).to eq([ 2 ])
-    end
-
-    it 'pushes its second attribute if any' do
-
-      flon = %{
-        push f.l 7
-      }
-
-      r = @executor.launch(flon, payload: { 'l' => [] })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(7)
-      expect(r['payload']['l']).to eq([ 7 ])
-    end
-
-    it 'behaves when it has a single child' do
-
-      flon = %{
+        1
         push f.l
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(nil)
-      expect(r['payload']['l']).to eq([])
-    end
-
-    it 'lets its second attribute bloom' do
-
-      flon = %{
-        sequence
-
-          set v0
-            #val "hello"
-            "hello"
-          set f.f0
-            #val "world"
-            "world"
-
-          push f.l 1
-          push f.l true
-          push f.l 'buenos dias'
-          push f.l "buenos dias"
-          push f.l v0
-          push f.l f.f0
-      }
-
-      r = @executor.launch(flon, payload: { 'l' => [] })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq('world')
-
-      expect(r['payload']['l']).to eq(
-        [ 1, true, 'buenos dias', 'buenos dias', 'hello', 'world' ])
-    end
-
-    it 'pushes to f.ret by default' do
-
-      flon = %{
-        push 5
-      }
-
-      r = @executor.launch(flon, payload: { 'ret' => [] })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ 5 ])
-    end
-
-    it 'fails if it cannot push' do
-
-      flon = %{
-        push 5
-      }
-
-      r = @executor.launch(flon, payload: { 'ret' => 0 })
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq('cannot push to given target')
-      expect(r['error']['lin']).to eq(2)
+      expect(r['error']['lin']).to eq(3)
+    end
+
+    it 'pushes f.ret by default' do
+
+      flon = %{
+        "le silence"
+        push f.l
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ 'le silence' ])
+      expect(r['payload']['ret']).to eq('le silence')
+    end
+
+    it 'pushes the value of the last child' do
+
+      flon = %{
+        0
+        push f.l 1
+        push f.l 1 2
+        push f.l 1 2
+          3
+        push f.l 1 2
+          3
+          4
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ 1, 2, 3, 4 ])
+      expect(r['payload']['ret']).to eq(0)
+    end
+
+    it 'leaves the current f.ret intact' do
+
+      flon = %{
+        'de la mer'
+        push f.l 1
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ 1 ])
+      expect(r['payload']['ret']).to eq('de la mer')
+    end
+
+    it 'pushes' do
+
+      flon = %{
+        0
+        push f.l
+          + 0 1
+        push f.l
+          + 1 2
+        push f.l
+          + 2 3
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ 1, 3, 5 ])
+      expect(r['payload']['ret']).to eq(0)
+    end
+  end
+
+  describe 'pushr' do
+
+    it 'returns the pushed value' do
+
+      flon = %{
+        'vercors'
+        pushr f.l 2
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ 2 ])
+      expect(r['payload']['ret']).to eq(2)
     end
   end
 end
