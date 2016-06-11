@@ -25,7 +25,32 @@
 
 class Flor::Pro::Until < Flor::Procedure
 
-  names %w[ until while ]
+  names 'until', 'while'
+
+  def pre_execute
+
+    @node['count'] = 0
+  end
+
+  def post_att_receive
+
+fail if @node['count'] > 21
+    if @message['point'] != 'execute' && Flor.child_id(from) != 0
+
+      t0 = tree[0]
+      tru = Flor.true?(payload['ret'])
+
+      if (tru && t0 == 'until') || ( ! tru && t0 == 'while')
+        reply
+      else
+        execute_child(first_non_att_child + 1, @node['count'])
+      end
+
+    else
+
+      execute_child(first_non_att_child, @node['count'] += 1)
+    end
+  end
 
 #  def execute
 #

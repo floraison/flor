@@ -75,6 +75,11 @@ class Flor::Procedure < Flor::Node
     children.select { |c| c[0] != '_att' || c[1].size == 1 }
   end
 
+  def first_non_att_child
+
+    children.index { |c| c[0] != '_att' } || -1
+  end
+
   def att(*keys)
 
     keys.each do |k|
