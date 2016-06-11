@@ -29,16 +29,17 @@ class Flor::Pro::Ife < Flor::Procedure
 
   def receive
 
-    return reply if Flor.child_id(@message['from']) != 0
+    return execute_child(0) if @message['point'] == 'execute'
+    return reply if Flor.child_id(from) != 0
 
-    nxt =
+    ncid =
       if tree[0] == 'unlesse'
         Flor.false?(payload['ret']) ? 1 : 2
-      else # 'if'
+      else # 'ife'
         Flor.true?(payload['ret']) ? 1 : 2
       end
 
-    execute_child(nxt)
+    execute_child(ncid)
   end
 end
 
