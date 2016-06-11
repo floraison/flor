@@ -172,9 +172,13 @@ module Flor
     _rs, _dg, _yl = colours(opts)
 
     puts "#{_dg}+---#{_rs}"
+
+    puts "#{_dg}| #{opts.inspect}#{_rs}" if opts.any?
+
     src.split("\n").select { |l| l.strip.length > 0 }.each do |line|
       puts "#{_dg}| #{_yl}#{line}#{_rs}"
     end
+
     puts "#{_dg}.#{_rs}"
   end
 
