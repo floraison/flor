@@ -29,7 +29,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(1)
+      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq([ 0, 1 ])
     end
 
@@ -39,10 +39,10 @@ describe 'Flor procedures' do
         sequence
           ife
             true
-          push f.l f.ret
+          push f.l
           ife
             false
-          push f.l f.ret
+          push f.l
       }
 
       r = @executor.launch(flon, payload: { 'l' => [] })
@@ -66,7 +66,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(2)
+      expect(r['payload']['ret']).to eq(true)
       expect(r['payload']['l']).to eq([ 0, 2 ])
     end
 
@@ -84,7 +84,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(2)
+      expect(r['payload']['ret']).to eq(false)
       expect(r['payload']['l']).to eq([ 1, 2 ])
     end
   end
@@ -105,7 +105,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(2)
+      expect(r['payload']['ret']).to eq(false)
       expect(r['payload']['l']).to eq([ 0, 2 ])
     end
 
@@ -123,7 +123,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(2)
+      expect(r['payload']['ret']).to eq(true)
       expect(r['payload']['l']).to eq([ 1, 2 ])
     end
   end

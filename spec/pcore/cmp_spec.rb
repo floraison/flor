@@ -34,7 +34,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(false)
+      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq([ true, false ])
     end
 
@@ -56,7 +56,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(false)
+      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq([ true, false ])
     end
 
@@ -81,7 +81,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(false)
+      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq([ true, true, false ])
     end
 
@@ -106,7 +106,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(false)
+      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq([ true, true, false ])
     end
 
@@ -127,7 +127,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(false)
+      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq([ true, false ])
     end
 
@@ -149,7 +149,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(false)
+      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq([ true, false ])
     end
 
@@ -170,7 +170,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(false)
+      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq([ true, false ])
     end
   end
