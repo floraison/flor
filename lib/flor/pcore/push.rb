@@ -29,29 +29,33 @@ class Flor::Pro::Push < Flor::Procedure
 
   def pre_execute
 
-    stringify_first_att
+    stringify_first_ref
 
-    ret = @node['ret']
-    @node['ret'] = Flor.dup(ret) if ret.respond_to?(:push)
+    @node['ret'] = Flor.dup(payload['ret'])
 
     @node['atts'] = []
-    @node['rets'] = []
   end
 
   def do_receive
 
-    nr = @node['ret']
+     ref = @node['atts'].first[1]
+     val = payload['ret']
 
-    target = nr || lookup(att(nil))
+     ref = @node['ret'] if ref == val
 
-    fail Flor::FlorError.new("cannot push to given target", self) \
-      unless target.respond_to?(:push)
+     arr = ref.is_a?(String) ? lookup(ref) : ref
 
-    target << payload['ret'] unless target.hash == payload['ret'].hash
+     if arr
 
-    payload['ret'] = nr if nr
+       fail Flor::FlorError.new("cannot push to given target", self) \
+         unless arr.respond_to?(:push)
 
-    reply
+       arr.push(val)
+     end
+
+     payload['ret'] = @node['ret'] if ref == @node['ret']
+
+     reply
   end
 end
 

@@ -32,17 +32,18 @@ class Flor::Pro::Set < Flor::Procedure
     @node['ret'] = Flor.dup(payload['ret'])
     @node['atts'] = []
 
-    stringify_first_att
+    stringify_first_ref
   end
 
   def do_receive
 
-    target = att(nil)
+    if target = att(nil)
 
-    set_value(target, payload['ret'])
+      set_value(target, payload['ret'])
 
-    payload['ret'] = @node['ret'] \
-      unless tree[0] == 'setr' || target == 'f.ret'
+      payload['ret'] = @node['ret'] \
+        unless tree[0] == 'setr' || target == 'f.ret'
+    end
 
     reply
   end

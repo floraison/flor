@@ -84,7 +84,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([])
+      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq([])
     end
 

@@ -103,6 +103,8 @@ class Flor::Procedure < Flor::Node
   #
   def rewrite_first_unkeyed_att
 
+    # TODO is that really necessary?
+
     ci =
       children.index { |c|
         c[0] == '_att' && c[1].size == 1 && c[1].first[0] != '_'
@@ -117,21 +119,36 @@ class Flor::Procedure < Flor::Node
     @node['tree'] = [ t[0], cn, t[1] ]
   end
 
-  # only works with an unkeyed first att (like in ```push f.a 1```)
-  #
-  def stringify_first_att
+  def is_symbol_tree?(t)
 
-    c = children.first
-    return unless c && c[0] == '_att' && c[1].is_a?(Array) && c[1].size == 1
+    t[0].is_a?(String) && t[1] == []
+  end
 
-    cc = c[1].first
-    return unless cc[0].is_a?(String) && cc[1] == []
+  def stringify_first_ref
+
+    c = children
+      .find { |c|
+        if c[0] == '_att'
+          c[1].size == 1 && is_symbol_tree?(c[1][0]) && c[1][0][0] != '_'
+        else
+          is_symbol_tree?(c)
+        end
+      }
+    return false unless c
+
+    cc = c
+    cc = c[1][0] if c[0] == '_att'
+
+    dqs = [ '_dqs', cc[0], cc[2] ]
+    dqs = [ '_att', [ dqs ], c[2] ] #if c[0] == '_att'
 
     t = tree
-    cn = Flor.dup(t[1])
-    cn.first[1][0] = [ '_dqs', cc[0], cc[2] ]
+    cn = Flor.dup(children)
+    cn[children.index(c)] = dqs
 
-    @node['tree'] = [ t[0], cn, t[1] ]
+    @node['tree'] = [ t[0], cn, t[2] ]
+
+    true
   end
 
   def execute
