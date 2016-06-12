@@ -27,7 +27,7 @@ module Flor
 
   def self.log_message(m, opts={})
 
-    @tree_cache ||= {}
+    @tree_cache ||= Rufus::Lru::Hash.new(1024)
 
     _rs, _dg, _yl, _bl, _lg, _gr = colours(opts)
 
