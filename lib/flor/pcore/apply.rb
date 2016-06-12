@@ -37,9 +37,14 @@ class Flor::Pro::Apply < Flor::Procedure
     @node['atts'] = []
   end
 
-  def do_receive
+  def receive
 
-    return reply if @node['applied']
+    return reply if from == @node['applied']
+
+    super
+  end
+
+  def receive_last
 
     args = @node['atts'].collect(&:last)
 
@@ -51,25 +56,5 @@ class Flor::Pro::Apply < Flor::Procedure
 
     ms
   end
-
-#  def receive
-#
-#    return reply if @node['applied']
-#
-#    ms = sequence_receive
-#
-#    return ms if ms.first['point'] == 'execute'
-#
-#    src =
-#      @heat[0, 2] == [ '_proc', 'apply' ] ?
-#      @node['rets'].shift :
-#      @heat
-#
-#    ms = apply(src, @node['rets'], tree[2])
-#
-#    @node['applied'] = ms.first['nid']
-#
-#    ms
-#  end
 end
 
