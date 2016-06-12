@@ -32,7 +32,7 @@ class Flor::Pro::Cond < Flor::Procedure
     @node['ret'] = Flor.dup(payload['ret'])
   end
 
-  def post_att_receive
+  def receive_non_att
 
     return execute_child(0) if @message['point'] == 'execute'
     return reply if @node['found']
