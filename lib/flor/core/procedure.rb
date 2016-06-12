@@ -93,7 +93,8 @@ class Flor::Procedure < Flor::Node
 
   def execute_child(index=0, sub=0, duplicate_payload=false)
 
-    return reply if index < 0 || tree[1][index] == nil
+    return reply \
+      if index < 0 || ! tree[1].is_a?(Array) || tree[1][index] == nil
 
     cnid = Flor.child_nid(nid, index, sub)
 
@@ -134,31 +135,26 @@ class Flor::Procedure < Flor::Node
     t[0].is_a?(String) && t[1] == []
   end
 
-  def stringify_first_ref
+  def unatt_unkeyed_children
 
-    c = children
-      .find { |c|
-        if c[0] == '_att'
-          c[1].size == 1 && is_symbol_tree?(c[1][0]) && c[1][0][0] != '_'
-        else
-          is_symbol_tree?(c)
-        end
-      }
-    return false unless c
+    unkeyed, keyed = att_children.partition { |c| c[1].size == 1 }
 
-    cc = c
-    cc = c[1][0] if c[0] == '_att'
+    cn = keyed + unkeyed.collect { |c| c[1].first } + non_att_children
 
-    dqs = [ '_dqs', cc[0], cc[2] ]
-    dqs = [ '_att', [ dqs ], c[2] ] #if c[0] == '_att'
+    @node['tree'] = [ tree[0], cn, tree[2] ] if cn != children
+  end
 
-    t = tree
+  def stringify_first_child
+
+    c = non_att_children.first
+    return unless c
+    return unless c[1] == [] && c[0].is_a?(String)
+
+    ci = children.index(c)
     cn = Flor.dup(children)
-    cn[children.index(c)] = dqs
+    cn[ci] = [ '_sqs', c[0], c[2] ]
 
-    @node['tree'] = [ t[0], cn, t[2] ]
-
-    true
+    @node['tree'] = [ tree[0], cn, tree[2] ]
   end
 
   def execute
@@ -194,10 +190,16 @@ class Flor::Procedure < Flor::Node
 
   def receive_last_att
 
+    return receive_last if children[@ncid] == nil
     execute_child(@ncid)
   end
 
   def receive_non_att
+
+    if @node['rets']
+      @node['rets'] << Flor.dup(payload['ret'])
+      @node['mtime'] = Flor.tstamp
+    end
 
     return receive_last if children[@ncid] == nil
     execute_child(@ncid)
@@ -207,35 +209,6 @@ class Flor::Procedure < Flor::Node
 
     reply
   end
-
-#  def receive
-#
-#    cnode = @node['cnodes'] ? @node['cnodes'].delete(from) : false
-#
-#    @ncid = @message['point'] == 'execute' ? 0 : Flor.next_child_id(from)
-#
-#    nctree = children.is_a?(Array) ? children[@ncid] : nil
-#    nctree = nil unless cnode # annihilate unless coming from child (cnode)
-#
-#    if nctree && nctree[0] == '_att'
-#
-#      return execute_child(@ncid)
-#    end
-#
-#    if cid = @message['point'] == 'receive' ? Flor.child_id(from) : nil
-#
-#      ctree = children.is_a?(Array) ? children[cid] : []
-#
-#      if @node['rets'] && ctree[0] != '_att'
-#        @node['rets'] << Flor.dup(payload['ret'])
-#        @node['mtime'] = Flor.tstamp
-#      end
-#
-#      return do_receive if nctree.nil? && self.respond_to?(:do_receive)
-#    end
-#
-#    post_att_receive
-#  end
 
   def reply(h={})
 

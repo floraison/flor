@@ -30,19 +30,30 @@ class Flor::Pro::Set < Flor::Procedure
   def pre_execute
 
     @node['ret'] = Flor.dup(payload['ret'])
-    @node['atts'] = []
 
-    stringify_first_ref
+    unatt_unkeyed_children
+    stringify_first_child
+  end
+
+  def receive_non_att
+
+    @node['ref'] ||= payload['ret']
+
+    super
   end
 
   def receive_last
 
-    ref = att(nil)
+    set_value(@node['ref'], payload['ret'])
 
-    set_value(ref, payload['ret'])
-
-    payload['ret'] = @node['ret'] \
-      unless tree[0] == 'setr' || ref == 'f.ret'
+    #payload['ret'] = @node['ret'] \
+    #  unless tree[0] == 'setr' || @node['ref'] == 'f.ret'
+    payload['ret'] =
+      if tree[0] == 'setr' || @node['ref'] == 'f.ret'
+        payload['ret']
+      else
+        @node['ret']
+      end
 
     reply
   end

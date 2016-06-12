@@ -29,16 +29,22 @@ class Flor::Pro::Push < Flor::Procedure
 
   def pre_execute
 
-    stringify_first_ref
-
     @node['ret'] = Flor.dup(payload['ret'])
 
-    @node['atts'] = []
+    unatt_unkeyed_children
+    stringify_first_child
   end
 
-  def do_receive
+  def receive_non_att
 
-    arr = att(nil)
+    @node['arr'] ||= payload['ret']
+
+    super
+  end
+
+  def receive_last
+
+    arr = @node['arr']
     arr = lookup(arr) if arr.is_a?(String)
 
     fail Flor::FlorError.new("cannot push to given target", self) \

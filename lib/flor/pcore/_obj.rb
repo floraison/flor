@@ -27,32 +27,36 @@ class Flor::Pro::Obj < Flor::Procedure
 
   name '_obj'
 
-  def execute
+  def pre_execute
+
+    @node['rets'] = []
+  end
+
+  def receive_first
 
     return reply('ret' => {}) if children == 0
 
-    @node['rets'] = []
+    cn = children
+      .inject([]) { |a, e| a << (a.size.even? ? stringify(e) : e); a }
 
-    receive
+    @node['tree'] = [ tree[0], cn, tree[2] ] if children != cn
+
+    super
   end
 
-  def post_att_receive
-
-    nct = children[@ncid]
-
-    if @ncid.even? && nct[1] == []
-      @node['rets'] << (deref(nct[0]) || nct[0])
-      execute_child(@ncid + 1)
-    else
-      execute_child(@ncid)
-    end
-  end
-
-  def do_receive
+  def receive_last
 
     payload['ret'] = Hash[*@node['rets']]
 
     reply
+  end
+
+  protected
+
+  def stringify(t)
+
+    return t unless t[1] == [] && t[0].is_a?(String)
+    [ '_sqs', deref(t[0]) || t[0], t[2] ]
   end
 end
 
