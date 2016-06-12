@@ -35,15 +35,14 @@ class Flor::Pro::Set < Flor::Procedure
     stringify_first_ref
   end
 
-  def do_receive
+  def receive_last
 
-    if target = att(nil)
+    ref = att(nil)
 
-      set_value(target, payload['ret'])
+    set_value(ref, payload['ret'])
 
-      payload['ret'] = @node['ret'] \
-        unless tree[0] == 'setr' || target == 'f.ret'
-    end
+    payload['ret'] = @node['ret'] \
+      unless tree[0] == 'setr' || ref == 'f.ret'
 
     reply
   end

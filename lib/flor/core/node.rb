@@ -41,6 +41,8 @@ class Flor::Node
   def exid; @execution['exid']; end
   def nid; @node['nid']; end
   def parent; @node['parent']; end
+
+  def point; @message['point']; end
   def from; @message['from']; end
   def payload; @message['payload']; end
 

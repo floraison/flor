@@ -27,7 +27,7 @@ class Flor::Pro::Stall < Flor::Procedure
 
   name 'stall'
 
-  def do_receive
+  def receive_last_att
 
     [] # give back no messages, just stall...
   end

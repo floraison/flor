@@ -170,35 +170,72 @@ class Flor::Procedure < Flor::Node
 
     cnode = @node['cnodes'] ? @node['cnodes'].delete(from) : false
 
-    @ncid = @message['point'] == 'execute' ? 0 : Flor.next_child_id(from)
+    @fcid = point == 'receive' ? Flor.child_id(from) : nil
+    @ncid = (@fcid || -1) + 1
 
-    nctree = children.is_a?(Array) ? children[@ncid] : nil
-    nctree = nil unless cnode # annihilate unless coming from child (cnode)
+    return receive_first if @fcid == nil
+    return receive_att if children[@fcid][0] == '_att'
 
-    if nctree && nctree[0] == '_att'
-
-      return execute_child(@ncid)
-    end
-
-    if cid = @message['point'] == 'receive' ? Flor.child_id(from) : nil
-
-      ctree = children.is_a?(Array) ? children[cid] : []
-
-      if @node['rets'] && ctree[0] != '_att'
-        @node['rets'] << Flor.dup(payload['ret'])
-        @node['mtime'] = Flor.tstamp
-      end
-
-      return do_receive if nctree.nil? && self.respond_to?(:do_receive)
-    end
-
-    post_att_receive
+    receive_non_att
   end
 
-  def post_att_receive
+  def receive_first
 
     execute_child(@ncid)
   end
+
+  def receive_att
+
+    nctree = children[@ncid]
+
+    return receive_last_att if nctree == nil || nctree[0] != '_att'
+    execute_child(@ncid)
+  end
+
+  def receive_last_att
+
+    execute_child(@ncid)
+  end
+
+  def receive_non_att
+
+    return receive_last if children[@ncid] == nil
+    execute_child(@ncid)
+  end
+
+  def receive_last
+
+    reply
+  end
+
+#  def receive
+#
+#    cnode = @node['cnodes'] ? @node['cnodes'].delete(from) : false
+#
+#    @ncid = @message['point'] == 'execute' ? 0 : Flor.next_child_id(from)
+#
+#    nctree = children.is_a?(Array) ? children[@ncid] : nil
+#    nctree = nil unless cnode # annihilate unless coming from child (cnode)
+#
+#    if nctree && nctree[0] == '_att'
+#
+#      return execute_child(@ncid)
+#    end
+#
+#    if cid = @message['point'] == 'receive' ? Flor.child_id(from) : nil
+#
+#      ctree = children.is_a?(Array) ? children[cid] : []
+#
+#      if @node['rets'] && ctree[0] != '_att'
+#        @node['rets'] << Flor.dup(payload['ret'])
+#        @node['mtime'] = Flor.tstamp
+#      end
+#
+#      return do_receive if nctree.nil? && self.respond_to?(:do_receive)
+#    end
+#
+#    post_att_receive
+#  end
 
   def reply(h={})
 
