@@ -27,6 +27,8 @@ module Flor
 
   def self.log_message(m, opts={})
 
+    @tree_cache ||= {}
+
     _rs, _dg, _yl, _bl, _lg, _gr = colours(opts)
 
     n =
@@ -45,9 +47,16 @@ module Flor
     rt = ret_to_s(m)
     rt = rt.length > 0 ? " #{_lg}f.ret #{rt}" : ''
 
-    t = m['tree'];
-    t0 = t ? " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} L#{t[2]}]" : ''
-    #t = t ? " #{t[1..-2].inspect[1..-2]}]" : ''
+    t = m['tree']
+    t0 =
+      if t
+        @tree_cache["#{m['exid']}|#{ni}"] = [ t[0], t[2] ]
+        " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} L#{t[2]}]"
+      elsif ct = @tree_cache["#{m['exid']}|#{ni}"]
+        " [#{_dg}#{Flor.s_to_d(ct[0], compact: true)}#{_dg} L#{ct[1]}]"
+      else
+        ''
+      end
 
     cn = t ? ' ' + Flor.to_d(t[1], compact: true, inner: true) : ''
     cn = cn.length > 49 ? "#{cn[0, 49]}..." : cn
