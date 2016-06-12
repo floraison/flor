@@ -32,7 +32,7 @@ class Flor::Pro::Match < Flor::Procedure
     @node['rets'] = []
   end
 
-  def do_receive
+  def receive_last
 
     rex, str = arguments
 

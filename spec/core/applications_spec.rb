@@ -85,6 +85,7 @@ describe 'Flor core' do
             push f.l
               #val $(nid)
               [ i, "$(nid)" ]
+            + i 1
           sub 0
           sub 1
           sub 2
@@ -97,7 +98,7 @@ describe 'Flor core' do
       expect(
         r['payload']['ret']
       ).to eq(
-        [ 2, '0_0_2_1_1-3' ]
+        3
       )
       expect(
         r['payload']['l']
