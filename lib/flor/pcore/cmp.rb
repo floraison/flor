@@ -32,7 +32,7 @@ class Flor::Pro::Cmp < Flor::Procedure
     @node['rets'] = []
   end
 
-  def do_receive
+  def receive_last
 
     payload['ret'] =
       if @node['rets'].size > 1
