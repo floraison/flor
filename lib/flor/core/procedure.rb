@@ -139,7 +139,11 @@ class Flor::Procedure < Flor::Node
 
     unkeyed, keyed = att_children.partition { |c| c[1].size == 1 }
 
-    cn = keyed + unkeyed.collect { |c| c[1].first } + non_att_children
+    unkeyed = unkeyed
+      .collect { |c| c[1].first }
+      .reject { |c| c[0] == '_' && c[1] == [] }
+
+    cn = keyed + unkeyed + non_att_children
 
     @node['tree'] = [ tree[0], cn, tree[2] ] if cn != children
   end
