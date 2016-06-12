@@ -25,6 +25,6 @@
 
 class Flor::Pro::Noop < Flor::Procedure
 
-  name 'noop'
+  names %w[ noop _ ]
 end
 
