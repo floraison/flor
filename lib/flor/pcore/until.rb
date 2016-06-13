@@ -29,39 +29,39 @@ class Flor::Pro::Until < Flor::Procedure
 
   def pre_execute
 
-    @node['count'] = 0
+    @node['count'] = 1
+
+    unatt_unkeyed_children
   end
 
-  def post_att_receive
+  def receive_first
 
-    return execute_child(first_unkeyed_child, @node['count'] += 1) \
-      if @message['point'] == 'execute'
+    execute_child(first_unkeyed_child_id || 0, @node['count'])
+  end
 
-    #@node['mtime'] = Flor.tstamp
+  def receive_non_att
 
-    func = first_unkeyed_child
-    fcid = Flor.child_id(from)
-
-    if fcid == func # from condition
+    if @fcid == first_unkeyed_child_id
 
       t0 = tree[0]
       tru = Flor.true?(payload['ret'])
+
       if (tru && t0 == 'until') || ( ! tru && t0 == 'while')
+
         payload['ret'] = @node['ret'] if @node.has_key?('ret')
-        reply
-      else
-        execute_child(func + 1, @node['count'])
+
+        return reply
       end
 
-    elsif fcid == children.size - 1 # from last child
+      execute_child(@ncid, @node['count'])
 
-      @node['ret'] = Flor.dup(payload['ret'])
-      execute_child(func, @node['count'] += 1)
+    elsif @ncid >= children.size
 
-    else # from a child in the middle
+      execute_child(first_unkeyed_child_id, @node['count'] += 1)
 
-      @node['ret'] = Flor.dup(payload['ret'])
-      execute_child(fcid + 1, @node['count'])
+    else
+
+      execute_child(@ncid, @node['count'])
     end
   end
 end

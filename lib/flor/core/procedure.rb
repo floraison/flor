@@ -75,7 +75,7 @@ class Flor::Procedure < Flor::Node
     children.select { |c| c[0] != '_att' || c[1].size == 1 }
   end
 
-  def first_unkeyed_child
+  def first_unkeyed_child_id
 
     children.index { |c| c[0] != '_att' || c[1].size == 1 }
   end
