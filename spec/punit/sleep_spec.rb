@@ -95,15 +95,15 @@ describe 'Flor punit' do
         sleep '1s'
       }
 
-      msg = @unit.launch(flon)
+      exid = @unit.launch(flon)
 
-      sleep 0.1
+      sleep 0.350
 
       expect(@unit.storage.db[:flon_timers].count).to eq(1)
       #expect(@unit.storage.db[:flon_waiters].count).to eq(0)
         # TODO eventually
 
-      sleep 1.3
+      sleep 1.4
 
       expect(@unit.executions.terminated.count).to eq(1)
 
