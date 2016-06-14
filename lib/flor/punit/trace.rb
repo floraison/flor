@@ -32,7 +32,7 @@ class Flor::Pro::Trace < Flor::Procedure
     @node['ret'] = Flor.dup(payload['ret'])
   end
 
-  def do_receive
+  def receive_last
 
     @executor.unit.storage.trace(exid, nid, 'trace', payload['ret'])
 
