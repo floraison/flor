@@ -29,6 +29,7 @@ class Flor::Pro::Until < Flor::Procedure
 
   def pre_execute
 
+    @node['ret'] = Flor.dup(payload['ret'])
     @node['count'] = 1
 
     unatt_unkeyed_children
@@ -48,19 +49,23 @@ class Flor::Pro::Until < Flor::Procedure
 
       if (tru && t0 == 'until') || ( ! tru && t0 == 'while')
 
-        payload['ret'] = @node['ret'] if @node.has_key?('ret')
+        reply('ret' => @node['uret'] || @node['ret'])
 
-        return reply
+      else
+
+        payload['ret'] = Flor.dup(@node['ret'])
+        execute_child(@ncid, @node['count'])
       end
-
-      execute_child(@ncid, @node['count'])
 
     elsif @ncid >= children.size
 
+      @node['uret'] = payload['ret']
+      payload['ret'] = Flor.dup(@node['ret'])
       execute_child(first_unkeyed_child_id, @node['count'] += 1)
 
     else
 
+      # no need to set 'ret', we're in some kind of sequence
       execute_child(@ncid, @node['count'])
     end
   end
