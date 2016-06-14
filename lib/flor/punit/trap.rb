@@ -42,6 +42,8 @@ class Flor::Pro::Trap < Flor::Procedure
 
   def receive
 
+    return execute_child(0) if point == 'execute'
+
     points = Flor.to_a(att('point', 'points'))
     tags = Flor.to_a(att('tag', 'tags'))
     nids = Flor.to_a(att('nid', 'nids'))
