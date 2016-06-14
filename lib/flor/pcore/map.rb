@@ -34,9 +34,11 @@ class Flor::Pro::Map < Flor::Procedure
     @node['idx'] = -1
     @node['fun'] = nil
     @node['res'] = []
+
+    unatt_unkeyed_children
   end
 
-  def receive
+  def receive_non_att
 
     if @node['col'] == nil
 
