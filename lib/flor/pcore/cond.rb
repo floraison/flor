@@ -37,17 +37,16 @@ class Flor::Pro::Cond < Flor::Procedure
     return execute_child(0) if @message['point'] == 'execute'
     return reply if @node['found']
 
-    f = Flor.child_id(from)
-    tf2 = tree[1][f + 2]
+    tf2 = tree[1][@fcid + 2]
 
     if Flor.true?(payload['ret'])
       @node['found'] = true
-      execute_child(f + 1)
+      execute_child(@fcid + 1)
     elsif tf2 && tf2[0, 2] == [ 'else', [] ]
       @node['found'] = true
-      execute_child(f + 3)
+      execute_child(@fcid + 3)
     else
-      execute_child(f + 2)
+      execute_child(@fcid + 2)
     end
   end
 
