@@ -181,6 +181,7 @@ class Flor::Procedure < Flor::Node
 
   def receive_first
 
+    return receive_last_att if children[0] && children[0][0] != '_att'
     execute_child(@ncid)
   end
 

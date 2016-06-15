@@ -30,42 +30,28 @@ class Flor::Pro::Concurrence < Flor::Procedure
   def pre_execute
 
     @node['atts'] = []
-    @node['payload'] = Flor.dup(@message['payload'])
+    #@node['payload'] = Flor.dup(@message['payload'])
   end
 
-  def execute
+  def receive_last_att
 
-    receive
-  end
+    return reply unless children[@ncid]
 
-  def receive
-
-    (@node['cnodes'] || []).delete(from)
-
-    return [] if @node['over']
-    return con_receive if @node['receiver']
-
-    ncid =
-      @message['point'] == 'execute' ? 0 : Flor.child_id(@message['from']) + 1
-    nctree =
-      children[ncid]
-
-    return reply if nctree == nil
-    return sequence_receive if nctree[0] == '_att'
-
-    @node['receiver'] = determine_receiver
-    @node['merger'] = determine_merger
-
-    (ncid..children.size - 1)
+    (@ncid..children.size - 1)
       .map { |i| execute_child(i, 0, true) }
       .flatten(1)
         #
         # call execute for each of the (non _att) children
   end
 
-  protected
+  def receive_non_att
 
-  def con_receive
+    @node['receiver'] ||= determine_receiver
+    @node['merger'] ||= determine_merger
+
+    (@node['cnodes'] || []).delete(from)
+
+    return [] if @node['over']
 
     over = invoke_receiver
       # true: the concurrence is over, false: the concurrence is still waiting
@@ -79,6 +65,22 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     cancel_remaining +
     reply('payload' => pld)
+  end
+
+  protected
+
+  def determine_receiver
+
+    ex = att(:expect)
+
+    return 'expect_integer_receive' if ex && ex.is_a?(Integer) && ex > 0
+
+    'default_receive'
+  end
+
+  def determine_merger
+
+    'default_merge'
   end
 
   def cancel_remaining
@@ -107,20 +109,6 @@ class Flor::Pro::Concurrence < Flor::Procedure
     # TODO: merger function case
 
     self.send(@node['merger'])
-  end
-
-  def determine_receiver
-
-    ex = att(:expect)
-
-    return 'expect_integer_receive' if ex && ex.is_a?(Integer) && ex > 0
-
-    'default_receive'
-  end
-
-  def determine_merger
-
-    'default_merge'
   end
 
   def store_payload
