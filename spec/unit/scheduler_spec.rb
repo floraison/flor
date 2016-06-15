@@ -126,7 +126,7 @@ describe 'Flor unit' do
 
         exid = @unit.launch(flon)
 
-        sleep 0.1
+        sleep 0.350
 
         xd = @unit.executions[exid: exid].data
 
