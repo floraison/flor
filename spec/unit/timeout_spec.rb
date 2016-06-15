@@ -37,7 +37,7 @@ describe 'Flor unit' do
 
       exid = @unit.launch(flon)
 
-      sleep 0.140
+      sleep 0.350
 
       ts = @unit.timers.all
       t = ts.first
@@ -70,7 +70,7 @@ describe 'Flor unit' do
 
       msg = @unit.launch(flon, wait: true)
 
-      expect(Time.now - t0).to be_between(0.5, 1.5)
+      expect(Time.now - t0).to be_between(0.5, 1.6)
 
       expect(@unit.timers.count).to eq(0)
 
@@ -90,7 +90,7 @@ describe 'Flor unit' do
 
       exid = @unit.launch(flon)
 
-      sleep 0.140
+      sleep 0.350
 
       expect(
         @unit.timers.collect { |t|
