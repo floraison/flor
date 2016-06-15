@@ -87,6 +87,20 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(false)
       expect(r['payload']['l']).to eq([ 1, 2 ])
     end
+
+    it 'does not mind atts on the ife' do
+
+      flon = %{
+        ife false tag: 'nada'
+          'then'
+          'else'
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('else')
+    end
   end
 
   describe 'unlesse' do

@@ -27,19 +27,24 @@ class Flor::Pro::Ife < Flor::Procedure
 
   names 'ife', 'unlesse'
 
-  def receive
+  def pre_execute
 
-    return execute_child(0) if @message['point'] == 'execute'
-    return reply if Flor.child_id(from) != 0
+    unatt_unkeyed_children
+  end
 
-    ncid =
+  def receive_non_att
+
+    return reply if @fcid > first_unkeyed_child_id
+      # "else" or "then" answered, replying to parent...
+
+    off =
       if tree[0] == 'unlesse'
         Flor.false?(payload['ret']) ? 1 : 2
       else # 'ife'
         Flor.true?(payload['ret']) ? 1 : 2
       end
 
-    execute_child(ncid)
+    execute_child(@fcid + off)
   end
 end
 
