@@ -32,10 +32,10 @@ TO?=nil
 FROM?=nil
 
 migrate:
-	$(RUBY) -Ilib -e "require 'flor/unit'; Flor::Unit.new('.flor-$(FLOR_ENV).conf').storage.migrate($(TO), $(FROM))"
+	$(RUBY) -Ilib -e "require 'flor/unit'; Flor::Unit.new('envs/$(FLOR_ENV)/etc/conf.json').storage.migrate($(TO), $(FROM))"
 
 start:
-	$(RUBY) -Ilib -e "require 'flor/unit'; Flor::Unit.new('.flor-$(FLOR_ENV).conf').start.join"
+	$(RUBY) -Ilib -e "require 'flor/unit'; Flor::Unit.new('envs/$(FLOR_ENV)/etc/conf.json').start.join"
 s: start
 
 
