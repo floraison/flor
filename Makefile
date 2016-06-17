@@ -38,3 +38,10 @@ start:
 	$(RUBY) -Ilib -e "require 'flor/unit'; Flor::Unit.new('.flor-$(FLOR_ENV).conf').start.join"
 s: start
 
+
+## misc tasks ##
+
+backup_notes_and_todos:
+	tar czvf flor_notes_$(shell date "+%Y%m%d_%H%M").tgz .notes.md .todo.md && mv flor_notes_*.tgz ~/Dropbox/backup/
+ba: backup_notes_and_todos
+
