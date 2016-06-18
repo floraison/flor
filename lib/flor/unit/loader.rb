@@ -36,12 +36,12 @@ module Flor
     def shutdown
     end
 
-    def variables(path)
+    def variables(domain)
 
-      vars = load(File.join('etc/variables/dot.json'))
-      vars.merge(load(File.join('etc/variables/dot.json')))
-
-      vars
+      files(domain, 'etc/variables').inject({}) do |vars, path|
+        p path
+        vars.merge!(interpret(path))
+      end
     end
 
     #def procedures(path)
@@ -58,11 +58,42 @@ module Flor
     protected
 
     # TODO: cache based on files mtime
-    def load(path)
+
+    def files(domain, type)
 
       root = @unit.conf['lod_path'] || @unit.conf['_path']
+      ds = split(domain)
 
-      Flor::ConfExecutor.interpret(File.join(root, path))
+      files = []
+
+      path = File.join(root, type, 'dot.json')
+      files << path if File.exist?(path)
+
+      ds.each do |d|
+
+        fp = File.join(root, type, d)
+
+        path = fp + '.json'
+        files << path if File.exist?(path)
+
+        Dir[File.join(fp, '*.json')].each { |pa| files << pa }
+      end
+
+      ds.each do |d|
+
+        fp = File.join(root, 'usr', d, type)
+
+        Dir[File.join(fp, '*.json')].each { |pa| files << pa }
+      end
+
+      files
+    end
+
+    def interpret(path)
+
+      # TODO: cache based on mtime!
+
+      Flor::ConfExecutor.interpret(path)
     end
 
     def split(domain)
