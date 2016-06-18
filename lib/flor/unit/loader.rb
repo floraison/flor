@@ -36,7 +36,40 @@ module Flor
     def shutdown
     end
 
+    def variables(path)
+
+      vars = load(File.join('etc/variables/dot.json'))
+      vars.merge(load(File.join('etc/variables/dot.json')))
+
+      vars
+    end
+
+    #def procedures(path)
+    #
+    #  # TODO
+    #end
+
+    def library(path)
+    end
+
+    def tasker(path)
+    end
+
+    protected
+
+    # TODO: cache based on files mtime
     def load(path)
+
+      root = @unit.conf['lod_path'] || @unit.conf['_path']
+
+      Flor::ConfExecutor.interpret(File.join(root, path))
+    end
+
+    def split(domain)
+
+      domain
+        .split('.')
+        .inject([]) { |a, e| a << (a.last ? [ a.last, e ].join('.') : e); a }
     end
   end
 end

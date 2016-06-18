@@ -53,21 +53,7 @@ module Flor
 
     def self.read(s)
 
-      s = File.read(s).strip unless s.match(/[\r\n]/)
-      s = "{#{s}}"
-
-      vs = Hash.new { |h, k| k }
-      class << vs
-        def has_key?(k); ! Flor::Procedure[k]; end
-      end
-
-      r = (Flor::TransientExecutor.new('conf' => true)).launch(s, vars: vs)
-
-      fail ArgumentError.new(
-        "error while reading conf: #{r['error']['msg']}"
-      ) unless r['point'] == 'terminated'
-
-      r['payload']['ret']
+      Flor::ConfExecutor.interpret(s)
     end
 
     LOG_KEYS = %w[ all msg err log src tree sto run ]

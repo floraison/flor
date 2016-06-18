@@ -108,5 +108,33 @@ module Flor
       message
     end
   end
+
+  class ConfExecutor < TransientExecutor
+
+    def self.interpret(path)
+
+      s = path
+
+      s = File.read(s).strip unless s.match(/[\r\n]/)
+      s = "{#{s}}"
+
+      vs = Hash.new { |h, k| k }
+      class << vs
+        def has_key?(k); ! Flor::Procedure[k]; end
+      end
+
+      r = (self.new('conf' => true)).launch(s, vars: vs)
+
+      fail ArgumentError.new(
+        "error while reading conf: #{r['error']['msg']}"
+      ) unless r['point'] == 'terminated'
+
+      h = r['payload']['ret']
+
+      h.merge!('_path' => path) unless path.match(/[\r\n]/)
+
+      h
+    end
+  end
 end
 
