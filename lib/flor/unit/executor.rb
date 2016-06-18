@@ -91,12 +91,17 @@ module Flor
       @unit.storage.put_execution(@execution)
       @unit.storage.put_messages(@messages)
 
-    rescue => e
+    rescue => er
 # TODO
-puts "=" * 80
-p e
+puts '=' * 80
+p er
 puts e.backtrace
-puts ("=" * 80) + ' .'
+puts ('=' * 80) + ' .'
+    rescue Exception => ex
+puts '!' * 80
+p ex
+puts e.backtrace
+puts ('!' * 80) + ' .'
     end
 
     def failed(message)

@@ -22,30 +22,27 @@
 # Made in Japan.
 #++
 
-module Flor
 
-  class Tasker
+class Flor::Pro::Task < Flor::Procedure
 
-    # NB: tasker configuration entries start with "tsk_"
+  name 'task'
 
-    def initialize(unit)
+  def pre_execute
 
-      @unit = unit
-    end
+    @node['atts'] = []
+  end
 
-    def shutdown
-    end
+    # TODO: allow for replies coming from the tasker
+    #
+  #def receive
+  #end
 
-    def task(tasker_name, fei, payload)
+  def receive_last_att
 
-p [ tasker_name, fei, payload ]
-      fail NotImplementedError
-    end
+# TODO catch errs?
+    @executor.unit.tasker.task(att(nil), fei, payload)
 
-    def cancel(tasker_name, fei)
-
-      fail NotImplementedError
-    end
+    []
   end
 end
 

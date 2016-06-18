@@ -199,6 +199,8 @@ module Flor
 
       rescue => e
         error_reply(nil, message, e)
+      rescue ScriptError => se
+        error_reply(nil, message, se)
       end
     end
 

@@ -116,6 +116,11 @@ class Flor::Node
     lookup_tree(nid)
   end
 
+  def fei
+
+    "#{exid}-#{nid}"
+  end
+
   protected
 
   def parent_node(node=@node)
