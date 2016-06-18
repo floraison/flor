@@ -22,26 +22,22 @@
 # Made in Japan.
 #++
 
-require 'sequel'
-require 'sequel/extensions/migration'
-
-require 'rufus-scheduler'
-
-require 'flor'
-require 'flor/unit/logger'
-require 'flor/unit/storage'
-require 'flor/unit/executor'
-require 'flor/unit/waiter'
-require 'flor/unit/scheduler'
-require 'flor/unit/models'
-require 'flor/unit/loader'
-require 'flor/unit/tasker'
-
-Flor.load_procedures('punit')
-
 module Flor
 
-  Unit = Scheduler
-    # an alias
+  class Loader
+
+    # NB: tasker configuration entries start with "loa_"
+
+    def initialize(unit)
+
+      @unit = unit
+    end
+
+    def shutdown
+    end
+
+    def load(path)
+    end
+  end
 end
 
