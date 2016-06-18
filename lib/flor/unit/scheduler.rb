@@ -28,7 +28,7 @@ module Flor
   class Scheduler
 
     attr_reader :conf, :env
-    attr_reader :logger, :storage
+    attr_reader :logger, :storage, :tasker
 
     attr_reader :thread_status
 
@@ -43,6 +43,8 @@ module Flor
         (Flor::Conf.get_class(@conf, 'logger') || Flor::Logger).new(self)
       @storage =
         (Flor::Conf.get_class(@conf, 'storage') || Flor::Storage).new(self)
+      @tasker =
+        (Flor::Conf.get_class(@conf, 'tasker') || Flor::Tasker).new(self)
 
       @heart_rate = @conf[:sch_heart_rate] || 0.3
       @reload_frequency = @conf[:sch_reload_frequency] || 60
@@ -65,6 +67,7 @@ module Flor
 
       @logger.shutdown
       @storage.shutdown
+      @tasker.shutdown
     end
 
     def start

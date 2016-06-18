@@ -22,25 +22,29 @@
 # Made in Japan.
 #++
 
-require 'sequel'
-require 'sequel/extensions/migration'
-
-require 'rufus-scheduler'
-
-require 'flor'
-require 'flor/unit/logger'
-require 'flor/unit/storage'
-require 'flor/unit/executor'
-require 'flor/unit/waiter'
-require 'flor/unit/scheduler'
-require 'flor/unit/models'
-require 'flor/unit/tasker'
-
-Flor.load_procedures('punit')
-
 module Flor
 
-  Unit = Scheduler
-    # an alias
+  class Tasker
+
+    # NB: tasker configuration entries start with "tsk_"
+
+    def initialize(unit)
+
+      @unit = unit
+    end
+
+    def shutdown
+    end
+
+    def task(tasker_name, fei, payload)
+
+      fail NotImplementedError.new
+    end
+
+    def cancel(tasker_name, fei)
+
+      fail NotImplementedError.new
+    end
+  end
 end
 
