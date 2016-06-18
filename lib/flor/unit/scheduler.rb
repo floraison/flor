@@ -32,10 +32,11 @@ module Flor
 
     attr_reader :thread_status
 
-    def initialize(conf={})
+    def initialize(conf={}, over_conf={})
 
       @conf = conf.is_a?(Hash) ? conf : Flor::Conf.read(conf)
       @conf.merge!(Flor::Conf.read_env)
+      @conf.merge!(over_conf)
 
       @env = @conf['env'] ||= 'dev'
 
