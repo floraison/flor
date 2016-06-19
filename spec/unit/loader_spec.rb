@@ -22,7 +22,9 @@ describe Flor::Loader do
   # spec/unit/loader
   # ├── etc
   # │   └── variables
-  # │       └── dot.json
+  # │       ├── dot.json
+  # │       ├── net.example.json
+  # │       └── net.json
   # ├── lib
   # │   ├── flows
   # │   │   ├── net.example
@@ -33,6 +35,7 @@ describe Flor::Loader do
   # │       ├── alice
   # │       │   └── dot.json
   # │       ├── net.example
+  # │       │   └── .gitkeep
   # │       └── org.example
   # │           ├── alice
   # │           │   └── dot.json
@@ -57,18 +60,21 @@ describe Flor::Loader do
   #             ├── flows
   #             │   └── flow1.flon
   #             └── taskers
+  #                 └── .gitkeep
 
   describe '#variables' do
 
     it 'loads variables' do
 
-      vs = @loader.variables('net.example')
+      net = @loader.variables('net')
+      net_example = @loader.variables('net.example')
+      org_example = @loader.variables('org.example')
 
-      expect(vs['flower']).to eq('rose')
-
-      vs = @loader.variables('org.example')
-
-      expect(vs['flower']).to eq('lilly')
+      expect(net['car']).to eq('fiat')
+      expect(net_example['car']).to eq('alfa romeo')
+      expect(org_example['car']).to eq(nil)
+      expect(net_example['flower']).to eq('rose')
+      expect(org_example['flower']).to eq('lilly')
     end
   end
 
@@ -78,8 +84,12 @@ describe Flor::Loader do
 
       expect(
         @loader.send(:split, 'org.example.x.y.z')
-      ).to eq(%w[
-        org org.example org.example.x org.example.x.y org.example.x.y.z
+      ).to eq([
+        [ 'org', 'example.x.y.z' ],
+        [ 'org.example', 'x.y.z' ],
+        [ 'org.example.x', 'y.z' ],
+        [ 'org.example.x.y', 'z' ],
+        [ 'org.example.x.y.z', nil ]
       ])
     end
   end

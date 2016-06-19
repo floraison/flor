@@ -62,7 +62,7 @@ module Flor
     def files(domain, type)
 
       root = @unit.conf['lod_path'] || @unit.conf['_path']
-      ds = split(domain)
+      ds = split(domain).collect(&:first) # FIXME use #last !!!!
 
       files = []
 
@@ -100,7 +100,11 @@ module Flor
 
       domain
         .split('.')
-        .inject([]) { |a, e| a << (a.last ? [ a.last, e ].join('.') : e); a }
+        .inject([]) { |a, e|
+          left = a.last ? [ a.last.first, e ].join('.') : e
+          right = domain[left.length + 1..-1]
+          a.push([ left, right ])
+        }
     end
   end
 end
