@@ -57,19 +57,17 @@ module Flor
 
     protected
 
-    # TODO: cache based on files mtime
-
     def files(domain, type)
 
       root = @unit.conf['lod_path'] || @unit.conf['_path']
-      ds = split(domain).collect(&:first) # FIXME use #last !!!!
+      ds = split(domain)
 
       files = []
 
       path = File.join(root, type, 'dot.json')
       files << path if File.exist?(path)
 
-      ds.each do |d|
+      ds.each do |d, right|
 
         fp = File.join(root, type, d)
 
@@ -79,7 +77,7 @@ module Flor
         Dir[File.join(fp, '*.json')].each { |pa| files << pa }
       end
 
-      ds.each do |d|
+      ds.each do |d, right|
 
         fp = File.join(root, 'usr', d, type)
 
