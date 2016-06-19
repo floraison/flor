@@ -31,6 +31,9 @@ module Flor
     def initialize(unit)
 
       @unit = unit
+
+      @cache = {}
+      @mutex = Mutex.new
     end
 
     def shutdown
@@ -89,9 +92,15 @@ module Flor
 
     def interpret(path)
 
-      # TODO: cache based on mtime!
+      @mutex.synchronize do
 
-      Flor::ConfExecutor.interpret(path)
+        mt1 = File.mtime(path)
+        val, mt0 = @cache[path]
+        #p [ :cached, path ] if val && mt1 == mt0
+        return val if val && mt1 == mt0
+
+        (@cache[path] = [ Flor::ConfExecutor.interpret(path), mt1 ]).first
+      end
     end
 
     def split(domain)
