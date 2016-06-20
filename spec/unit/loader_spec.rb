@@ -86,5 +86,27 @@ describe Flor::Loader do
       expect(nea['flower']).to eq('forget-me-not')
     end
   end
+
+  describe '#library' do
+
+    it 'loads a lib' do
+
+      f = @loader.library('net.example', 'flow1')
+
+      expect(
+        f.strip
+      ).to eq(%{
+        task 'alice'
+      }.strip)
+
+      f = @loader.library('org.example', 'flow1')
+
+      expect(
+        f.strip
+      ).to eq(%{
+        task 'oskar'
+      }.strip)
+    end
+  end
 end
 

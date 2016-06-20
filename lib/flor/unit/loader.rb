@@ -54,10 +54,22 @@ module Flor
     #  # TODO
     #end
 
-    def library(path)
+    def library(domain, name)
+
+      path =
+        (Dir[File.join(root, '**/*.flon')] + Dir[File.join(root, '**/*.flor')])
+          .sort
+          .sort_by(&:length)
+          .select { |f| f.index('/lib/') }
+          .select { |f| matches?(domain, f, name) }
+          .first
+
+      File.read(path)
     end
 
-    def tasker(path)
+    def tasker(domain, name)
+
+      # TODO
     end
 
     protected
@@ -67,17 +79,20 @@ module Flor
       File.absolute_path(@unit.conf['lod_path'] || @unit.conf['_path'])
     end
 
-    def matches?(domain, f)
+    def matches?(domain, f, name=nil)
 
       f = f[root.length..-1]
       f = f[5..-1] if f[0, 5] == '/usr/'
 
       f = f
         .sub(/\/etc\/variables\//, '/')
+        .sub(/\/lib\/flows\//, '/')
         .sub(/\/(flon|flor|dot)\.json\z/, '')
-        .sub(/\.json\z/, '')
+        .sub(/\.(flon|flor|json)\z/, '')
         .sub(/\A\//, '')
         .gsub(/\//, '.')
+
+      domain += '.' + name if name
 
 #p [ domain[0, f.length], f, '=>', domain[0, f.length] == f ]
       domain[0, f.length] == f
