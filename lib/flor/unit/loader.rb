@@ -74,7 +74,7 @@ module Flor
 
       f = f
         .sub(/\/etc\/variables\//, '/')
-        .sub(/\/dot\.json\z/, '')
+        .sub(/\/(flon|flor|dot)\.json\z/, '')
         .sub(/\.json\z/, '')
         .sub(/\A\//, '')
         .gsub(/\//, '.')
