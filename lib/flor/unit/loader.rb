@@ -41,10 +41,11 @@ module Flor
 
     def variables(domain)
 
-      files(domain, 'etc/variables').inject({}) do |vars, path|
-        p path
-        vars.merge!(interpret(path))
-      end
+      Dir[File.join(root, '**/*.json')]
+        .sort_by(&:length)
+        .select { |f| f.index('/etc/variables/') }
+        .select { |f| matches?(domain, f) }
+        .inject({}) { |vars, f| vars.merge!(interpret(f)) }
     end
 
     #def procedures(path)
@@ -60,34 +61,24 @@ module Flor
 
     protected
 
-    def files(domain, type)
+    def root
 
-      root = @unit.conf['lod_path'] || @unit.conf['_path']
-      ds = split(domain)
+      File.absolute_path(@unit.conf['lod_path'] || @unit.conf['_path'])
+    end
 
-      files = []
+    def matches?(domain, f)
 
-      path = File.join(root, type, 'dot.json')
-      files << path if File.exist?(path)
+      f = f[root.length..-1]
+      f = f[5..-1] if f[0, 5] == '/usr/'
 
-      ds.each do |d, right|
+      f = f
+        .sub(/\/etc\/variables\//, '/')
+        .sub(/\/dot\.json\z/, '')
+        .sub(/\.json\z/, '')
+        .sub(/\A\//, '')
 
-        fp = File.join(root, type, d)
-
-        path = fp + '.json'
-        files << path if File.exist?(path)
-
-        Dir[File.join(fp, '*.json')].each { |pa| files << pa }
-      end
-
-      ds.each do |d, right|
-
-        fp = File.join(root, 'usr', d, type)
-
-        Dir[File.join(fp, '*.json')].each { |pa| files << pa }
-      end
-
-      files
+#p [ domain[0, f.length], f, '=>', domain[0, f.length] == f ]
+      domain[0, f.length] == f
     end
 
     def interpret(path)
@@ -101,17 +92,6 @@ module Flor
 
         (@cache[path] = [ Flor::ConfExecutor.interpret(path), mt1 ]).first
       end
-    end
-
-    def split(domain)
-
-      domain
-        .split('.')
-        .inject([]) { |a, e|
-          left = a.last ? [ a.last.first, e ].join('.') : e
-          right = domain[left.length + 1..-1]
-          a.push([ left, right ])
-        }
     end
   end
 end

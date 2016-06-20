@@ -67,30 +67,18 @@ describe Flor::Loader do
     it 'loads variables' do
 
       net = @loader.variables('net')
-      net_example = @loader.variables('net.example')
-      org_example = @loader.variables('org.example')
 
       expect(net['car']).to eq('fiat')
+
+      net_example = @loader.variables('net.example')
+
       expect(net_example['car']).to eq('alfa romeo')
-      expect(org_example['car']).to eq(nil)
       expect(net_example['flower']).to eq('rose')
+
+      org_example = @loader.variables('org.example')
+
+      expect(org_example['car']).to eq(nil)
       expect(org_example['flower']).to eq('lilly')
-    end
-  end
-
-  describe '#split' do
-
-    it 'splits domains' do
-
-      expect(
-        @loader.send(:split, 'org.example.x.y.z')
-      ).to eq([
-        [ 'org', 'example.x.y.z' ],
-        [ 'org.example', 'x.y.z' ],
-        [ 'org.example.x', 'y.z' ],
-        [ 'org.example.x.y', 'z' ],
-        [ 'org.example.x.y.z', nil ]
-      ])
     end
   end
 end
