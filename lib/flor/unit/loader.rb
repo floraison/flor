@@ -42,6 +42,7 @@ module Flor
     def variables(domain)
 
       Dir[File.join(root, '**/*.json')]
+        .sort # just to be sure
         .sort_by(&:length)
         .select { |f| f.index('/etc/variables/') }
         .select { |f| matches?(domain, f) }
@@ -76,6 +77,7 @@ module Flor
         .sub(/\/dot\.json\z/, '')
         .sub(/\.json\z/, '')
         .sub(/\A\//, '')
+        .gsub(/\//, '.')
 
 #p [ domain[0, f.length], f, '=>', domain[0, f.length] == f ]
       domain[0, f.length] == f

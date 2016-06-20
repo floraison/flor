@@ -66,19 +66,24 @@ describe Flor::Loader do
 
     it 'loads variables' do
 
-      net = @loader.variables('net')
+      n = @loader.variables('net')
 
-      expect(net['car']).to eq('fiat')
+      expect(n['car']).to eq('fiat')
 
-      net_example = @loader.variables('net.example')
+      ne = @loader.variables('net.example')
 
-      expect(net_example['car']).to eq('alfa romeo')
-      expect(net_example['flower']).to eq('rose')
+      expect(ne['car']).to eq('alfa romeo')
+      expect(ne['flower']).to eq('rose')
 
-      org_example = @loader.variables('org.example')
+      oe = @loader.variables('org.example')
 
-      expect(org_example['car']).to eq(nil)
-      expect(org_example['flower']).to eq('lilly')
+      expect(oe['car']).to eq(nil)
+      expect(oe['flower']).to eq('lilly')
+
+      nea = @loader.variables('net.example.alpha')
+
+      expect(nea['car']).to eq('lancia')
+      expect(nea['flower']).to eq('forget-me-not')
     end
   end
 end
