@@ -83,7 +83,11 @@ module Flor
 
     def root
 
-      File.absolute_path(@unit.conf['lod_path'] || @unit.conf['_path'])
+      if lp = @unit.conf['lod_path']
+        File.absolute_path(lp)
+      else
+        File.dirname(File.absolute_path(@unit.conf['_path'] + '/..'))
+      end
     end
 
     def path_matches?(domain, f)
