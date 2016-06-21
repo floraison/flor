@@ -28,7 +28,7 @@ module Flor
   class Scheduler
 
     attr_reader :conf, :env
-    attr_reader :logger, :storage, :tasker
+    attr_reader :logger, :storage, :loader, :tasker
 
     attr_reader :thread_status
 
@@ -44,6 +44,8 @@ module Flor
         (Flor::Conf.get_class(@conf, 'logger') || Flor::Logger).new(self)
       @storage =
         (Flor::Conf.get_class(@conf, 'storage') || Flor::Storage).new(self)
+      @loader =
+        (Flor::Conf.get_class(@conf, 'loader') || Flor::Loader).new(self)
       @tasker =
         (Flor::Conf.get_class(@conf, 'tasker') || Flor::Tasker).new(self)
 

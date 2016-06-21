@@ -1,0 +1,8 @@
+
+# alpha tasker
+
+on_task: {
+  require: 'alpha.rb'
+  class: AlphaTasker
+}
+

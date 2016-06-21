@@ -38,11 +38,58 @@ module Flor
 
     def task(tasker_name, fei, payload)
 
+      domain = fei.split('-', 2).first
+
 p [ tasker_name, fei, payload ]
-      fail NotImplementedError
+      tconf =
+        @unit.loader.tasker(domain, 'tasker') ||
+        @unit.loader.tasker(domain, tasker_name)
+
+      fail ArgumentError.new(
+        "tasker #{tasker_name.inspect} not found"
+      ) unless tconf
+
+      return ruby_task(
+        tasker_name, fei, payload, tconf
+      ) if tconf['on_task']['require']
+
+      return cmd_task(
+        tasker_name, fei, payload, tconf
+      ) if tconf['on_task']['cmd']
+
+      fail ArgumentError.new(
+        "don't know how to user tasker at #{tconf['_path']}"
+      )
     end
 
     def cancel(tasker_name, fei)
+
+      # TODO use on_cancel || on_task
+
+      fail NotImplementedError
+    end
+
+    protected
+
+    def ruby_task(tname, fei, payload, tconf)
+
+p tconf
+      root = File.dirname(tconf['_path'])
+
+      Array(tconf['on_task']['require'])
+        .each { |pa| require(File.join(root, pa)) }
+
+      k = tconf['on_task']['class']
+      k = Kernel.const_get(k)
+
+      tasker = k.new(self, tconf)
+      tasker.task(fei, payload)
+p k
+
+# TODO ...
+    end
+
+    def cmd_task(tname, fei, payload, tconf)
 
       fail NotImplementedError
     end

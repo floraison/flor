@@ -30,7 +30,7 @@ describe 'Flor punit' do
     it 'tasks' do
 
       flon = %{
-        task 'alfred'
+        task 'alpha'
       }
 
       r = @unit.launch(flon, wait: true)
