@@ -100,13 +100,17 @@ module Flor
 
                 sleep [ @heart_rate - (Time.now - t0), 0 ].max
 
-              rescue => e
-# TODO enhance me
-puts "-" * 80
-p e
-puts e.backtrace[0, 7]
-puts ("-" * 80) + ' .'
-$stdout.flush
+# TODO FIXME
+              rescue => re
+puts '=' * 80
+p re
+puts e.backtrace
+puts ('=' * 80) + ' .'
+              rescue Exception => ex
+puts '!' * 80
+p ex
+puts e.backtrace
+puts ('!' * 80) + ' .'
               end
             end
           end
