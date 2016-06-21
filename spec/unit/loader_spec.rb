@@ -108,5 +108,40 @@ describe Flor::Loader do
       }.strip)
     end
   end
+
+  describe '#tasker' do
+
+    it 'loads a tasker configuration' do
+
+      t = @loader.tasker('', 'alice')
+
+      expect(t['description']).to eq('basic alice')
+      expect(t.keys).to eq(%w[ description a _path ])
+
+      t = @loader.tasker('net.example', 'alice')
+
+      expect(t['description']).to eq('basic alice')
+      expect(t.keys).to eq(%w[ description a _path ])
+
+      t = @loader.tasker('org.example', 'alice')
+
+      expect(t['description']).to eq('org.example alice')
+      expect(t.keys).to eq(%w[ description ao _path ])
+
+      t = @loader.tasker('', 'bob')
+
+      expect(t).to eq(nil)
+
+      t = @loader.tasker('net.example', 'bob')
+
+      expect(t['description']).to eq('usr net.example bob')
+      expect(t.keys).to eq(%w[ description ubn _path ])
+
+      t = @loader.tasker('org.example', 'bob')
+
+      expect(t['description']).to eq('org.example bob')
+      expect(t.keys).to eq(%w[ description bo _path ])
+    end
+  end
 end
 

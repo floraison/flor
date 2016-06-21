@@ -42,10 +42,10 @@ module Flor
     def variables(domain)
 
       Dir[File.join(root, '**/*.json')]
+        .select { |f| f.index('/etc/variables/') }
         .sort # just to be sure
         .sort_by(&:length)
-        .select { |f| f.index('/etc/variables/') }
-        .select { |f| matches?(domain, f) }
+        .select { |f| path_matches?(domain, f) }
         .inject({}) { |vars, f| vars.merge!(interpret(f)) }
     end
 
@@ -61,7 +61,7 @@ module Flor
           .sort
           .sort_by(&:length)
           .select { |f| f.index('/lib/') }
-          .select { |f| matches?(domain, f, name) }
+          .select { |f| path_name_matches?(domain, name, f) }
           .first
 
       File.read(path)
@@ -69,7 +69,14 @@ module Flor
 
     def tasker(domain, name)
 
-      # TODO
+      path = Dir[File.join(root, '**/*.json')]
+        .select { |f| f.index('/lib/taskers/') }
+        .sort # just to be sure
+        .sort_by(&:length)
+        .select { |f| path_name_matches?(domain, name, f) }
+        .last
+
+      path ? interpret(path) : nil
     end
 
     protected
@@ -79,23 +86,32 @@ module Flor
       File.absolute_path(@unit.conf['lod_path'] || @unit.conf['_path'])
     end
 
-    def matches?(domain, f, name=nil)
+    def path_matches?(domain, f)
 
       f = f[root.length..-1]
       f = f[5..-1] if f[0, 5] == '/usr/'
 
       f = f
         .sub(/\/etc\/variables\//, '/')
-        .sub(/\/lib\/flows\//, '/')
+        .sub(/\/lib\/(flows|taskers)\//, '/')
+        .sub(/\/\z/, '')
         .sub(/\/(flon|flor|dot)\.json\z/, '')
         .sub(/\.(flon|flor|json)\z/, '')
         .sub(/\A\//, '')
         .gsub(/\//, '.')
 
-      domain += '.' + name if name
-
-#p [ domain[0, f.length], f, '=>', domain[0, f.length] == f ]
+#p [ :pm, domain[0, f.length], f, '=>', domain[0, f.length] == f ]
       domain[0, f.length] == f
+    end
+
+    def path_name_matches?(domain, name, f)
+
+#p [ :pnm, domain, name, f ]
+      f = f.sub(/\/(flon|flor|dot)\.json\z/, '.json')
+
+      return false if File.basename(f).split('.').first != name
+
+      path_matches?(domain, File.dirname(f) + '/')
     end
 
     def interpret(path)
