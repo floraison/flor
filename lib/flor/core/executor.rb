@@ -131,7 +131,7 @@ module Flor
 
     def leave(node, message)
 
-      ts = node['tags']
+      ts = node && node['tags']
       return [] unless ts
 
       [

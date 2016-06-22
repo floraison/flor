@@ -225,6 +225,20 @@ module Flor
   #
   # functions about exids, nids, sub_nids, ...
 
+  def self.split_fei(fei)
+
+    if m = fei.match(/\A([^-]+-[^-]+-\d+\.\d+\.[^-]+)-(.*)\z/)
+      [ m[1], m[2] ]
+    else
+      [ nil ]
+    end
+  end
+
+  def self.exid(fei)
+
+    split_fei(fei).first
+  end
+
   def self.split_nid(nid)
 
     nid.split('-')
@@ -232,10 +246,7 @@ module Flor
 
   def self.child_id(nid)
 
-    nid
-      .split('_').last
-      .split('-').first
-      .to_i
+    nid ? nid.split('_').last.split('-').first.to_i : nil
   end
 
   def self.next_child_id(nid)

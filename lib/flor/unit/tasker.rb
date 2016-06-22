@@ -40,7 +40,6 @@ module Flor
 
       domain = fei.split('-', 2).first
 
-p [ tasker_name, fei, payload ]
       tconf =
         @unit.loader.tasker(domain, 'tasker') ||
         @unit.loader.tasker(domain, tasker_name)
@@ -69,11 +68,23 @@ p [ tasker_name, fei, payload ]
       fail NotImplementedError
     end
 
+    def reply(tasker_name, fei, payload)
+
+      exid, nid = Flor.split_fei(fei)
+
+      @unit.queue({
+        'point' => 'receive',
+        'exid' => exid,
+        'nid' => nid,
+        'payload' => payload,
+        #'from' => nid,
+        'tasker_name' => tasker_name })
+    end
+
     protected
 
     def ruby_task(tname, fei, payload, tconf)
 
-p tconf
       root = File.dirname(tconf['_path'])
 
       Array(tconf['on_task']['require'])
@@ -83,10 +94,7 @@ p tconf
       k = Kernel.const_get(k)
 
       tasker = k.new(self, tconf)
-      tasker.task(fei, payload)
-p k
-
-# TODO ...
+      tasker.task(tname, fei, payload)
     end
 
     def cmd_task(tname, fei, payload, tconf)

@@ -32,17 +32,18 @@ class Flor::Pro::Task < Flor::Procedure
     @node['atts'] = []
   end
 
-    # TODO: allow for replies coming from the tasker
-    #
-  #def receive
-  #end
+  def receive
+
+    return reply if point == 'receive' && from == nil
+
+    super
+  end
 
   def receive_last_att
 
-# TODO catch errs?
     @executor.unit.tasker.task(att(nil), fei, payload)
 
-    []
+    [] # the task replies asynchronously
   end
 end
 

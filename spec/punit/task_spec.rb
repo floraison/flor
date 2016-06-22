@@ -36,7 +36,9 @@ describe 'Flor punit' do
       r = @unit.launch(flon, wait: true)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']).to eq({ 'ret' => nil })
+      expect(r['payload']['ret']).to eq('alpha')
+      expect(r['payload']['seen'][0]).to eq('alpha')
+      expect(r['payload']['seen'][1]).to eq('AlphaTasker')
     end
   end
 end
