@@ -59,14 +59,11 @@ describe 'Flor procedures' do
     end
   end
 
-  describe 'starts_with' do
-
-    it 'works'
-  end
-
-  describe 'ends_with' do
-
-    it 'works'
-  end
+  #describe 'starts_with' do
+  #  it 'works'
+  #end
+  #describe 'ends_with' do
+  #  it 'works'
+  #end
 end
 
