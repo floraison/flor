@@ -36,25 +36,26 @@ module Flor
     def shutdown
     end
 
-    def task(tasker_name, fei, payload)
+    def task(message)
 
-      domain = fei.split('-', 2).first
+      domain = message['exid'].split('-', 2).first
+      tname = message['tasker']
 
       tconf =
         @unit.loader.tasker(domain, 'tasker') ||
-        @unit.loader.tasker(domain, tasker_name)
+        @unit.loader.tasker(domain, message['tasker'])
+          #
+          # FIXME tasker tasker tasker lookup loop?
 
       fail ArgumentError.new(
-        "tasker #{tasker_name.inspect} not found"
+        "tasker #{tname.inspect} not found"
       ) unless tconf
 
-      return ruby_task(
-        tasker_name, fei, payload, tconf
-      ) if tconf['on_task']['require']
+      message['tconf'] = tconf \
+        unless tconf['on_task']['include_tconf'] == false
 
-      return cmd_task(
-        tasker_name, fei, payload, tconf
-      ) if tconf['on_task']['cmd']
+      return ruby_task(message, tconf) if tconf['on_task']['require']
+      return cmd_task(message, tconf) if tconf['on_task']['cmd']
 
       fail ArgumentError.new(
         "don't know how to user tasker at #{tconf['_path']}"
@@ -68,22 +69,19 @@ module Flor
       fail NotImplementedError
     end
 
-    def reply(tasker_name, fei, payload)
-
-      exid, nid = Flor.split_fei(fei)
+    def reply(message)
 
       @unit.queue({
-        'point' => 'receive',
-        'exid' => exid,
-        'nid' => nid,
-        'payload' => payload,
-        #'from' => nid,
-        'tasker_name' => tasker_name })
+        'point' => 'return',
+        'exid' => message['exid'],
+        'nid' => message['nid'],
+        'payload' => message['payload'],
+        'tasker' => message['tasker'] })
     end
 
     protected
 
-    def ruby_task(tname, fei, payload, tconf)
+    def ruby_task(message, tconf)
 
       root = File.dirname(tconf['_path'])
 
@@ -94,12 +92,16 @@ module Flor
       k = Kernel.const_get(k)
 
       tasker = k.new(self, tconf)
-      tasker.task(tname, fei, payload)
+      tasker.task(message)
+
+      []
     end
 
-    def cmd_task(tname, fei, payload, tconf)
+    def cmd_task(message, tconf)
 
       fail NotImplementedError
+
+      []
     end
   end
 end

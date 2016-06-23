@@ -182,6 +182,22 @@ module Flor
       [ m ]
     end
 
+    def task(message)
+
+      @unit.tasker.task(message)
+    end
+
+    def return(message)
+
+      [
+        { 'point' => 'receive',
+          'exid' => message['exid'],
+          'nid' => message['nid'],
+          'payload' => message['payload'],
+          'tasker' => message['tasker'] }
+      ]
+    end
+
     def process(message)
 
       begin

@@ -236,6 +236,8 @@ class Flor::Procedure < Flor::Node
     [ m ]
   end
 
+  def queue(h); reply(h); end
+
   def error_reply(o)
 
     reply('point' => 'failed', 'error' => Flor.to_error(o))

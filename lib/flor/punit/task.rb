@@ -41,9 +41,11 @@ class Flor::Pro::Task < Flor::Procedure
 
   def receive_last_att
 
-    @executor.unit.tasker.task(att(nil), fei, payload)
-
-    [] # the task replies asynchronously
+    queue(
+      'point' => 'task',
+      'exid' => exid, 'nid' => nid,
+      'tasker' => att(nil),
+      'payload' => payload)
   end
 end
 

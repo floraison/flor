@@ -9,11 +9,12 @@ class AlphaTasker
     @conf = conf
   end
 
-  def task(tasker_name, fei, payload)
+  def task(message)
 
-    payload['seen'] = [ tasker_name, self.class, Time.now ]
+    message['payload']['seen'] =
+      [ message['tasker'], self.class, Time.now ]
 
-    @tasker.reply(tasker_name, fei, payload)
+    @tasker.reply(message)
   end
 end
 
