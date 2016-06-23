@@ -87,7 +87,24 @@ describe 'Flor punit' do
       expect(msg['error']['msg']).to eq('missing a sleep time duration')
     end
 
-    it 'does not sleep when t <= 0'
+    it 'does not sleep when t <= 0' do
+      flon = %{
+        sleep '0s'
+      }
+
+      exid = @unit.launch(flon)
+
+      sleep 0.350
+
+      expect(@unit.executions.terminated.count).to eq(1)
+
+      e = @unit.executions.terminated.first
+      expect(e.data['duration']).to be < 0.350
+
+      expect(@unit.storage.db[:flon_timers].count).to eq(0)
+      #expect(@unit.storage.db[:flon_waiters].count).to eq(0)
+        # TODO
+    end
 
     it 'makes an execution sleep for a while' do
 
