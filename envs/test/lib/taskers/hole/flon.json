@@ -1,0 +1,8 @@
+
+# hole tasker
+
+on_task: {
+  require: 'hole.rb'
+  class: HoleTasker
+}
+

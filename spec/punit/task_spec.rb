@@ -41,17 +41,17 @@ describe 'Flor punit' do
       expect(r['payload']['seen'][1]).to eq('AlphaTasker')
     end
 
-    it 'can be cancelled'
-#    do
-#
-#      flon = %{
-#        task 'hole'
-#      }
-#
-#      r = @unit.launch(flon, wait: 1)
-#
-#      #expect(r['
-#    end
+    it 'can be cancelled' do
+
+      flon = %{
+        task 'hole'
+      }
+
+      r = @unit.launch(flon, wait: 'receive 0')
+
+      #expect(r['
+pp r
+    end
   end
 end
 
