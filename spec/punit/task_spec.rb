@@ -47,7 +47,7 @@ describe 'Flor punit' do
         task 'hole'
       }
 
-      r = @unit.launch(flon, wait: 'receive 0')
+      r = @unit.launch(flon, wait: 3)
 
       #expect(r['
 pp r
