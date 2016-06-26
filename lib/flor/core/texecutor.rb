@@ -116,7 +116,7 @@ module Flor
       s = path
 
       s = File.read(s).strip unless s.match(/[\r\n]/)
-      s = "{#{s}}"
+      s = "{\n#{s}\n}"
 
       vs = Hash.new { |h, k| k }
       class << vs
