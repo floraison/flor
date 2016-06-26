@@ -26,12 +26,12 @@ module Flor
 
   class Waiter
 
-    def initialize(exid, points, owait, repeat)
+    def initialize(exid, serie, timeout, repeat)
 
       @exid = exid
-      @points = points
-      @timeout = owait == true ? 3 : owait
-      @repeat = repeat
+      @original_serie = repeat ? Flor.dup(serie) : nil
+      @serie = serie
+      @timeout = timeout == true ? 3 : timeout
 
       @queue = []
       @mutex = Mutex.new
@@ -40,16 +40,26 @@ module Flor
 
     def notify(message)
 
-      return false unless match?(message)
-
       @mutex.synchronize do
+
+        return false unless match?(message)
+
+        @serie.shift
+        return false unless @serie.empty?
+
         @queue << message
         @var.signal
       end
 
-      ! @repeat
-        # returning false: do not remove me, I want to listen/wait further
-        # returning true: remove me
+      # then...
+      # returning false: do not remove me, I want to listen/wait further
+      # returning true: remove me
+
+      return true unless @original_serie
+
+      @serie = Flor.dup(@original_serie) # reset serie
+
+      false # do not remove me
     end
 
     def wait
@@ -73,7 +83,11 @@ module Flor
     def match?(message)
 
       return false if @exid && @exid != message['exid']
-      return false if ! @points.include?(message['point'])
+
+      nid, points = @serie.first
+      return false if nid && ! nid.match(message['nid'])
+      return false if ! points.include?(message['point'])
+
       true
     end
   end
