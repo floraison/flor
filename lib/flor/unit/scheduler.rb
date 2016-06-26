@@ -149,8 +149,8 @@ puts ('!' * 80) + ' .'
 
       @storage.put_message(message)
 
-      if ow = opts[:wait]
-        wait(message['exid'], ow)
+      if opts[:wait]
+        wait(message['exid'], opts)
       else
         message['exid']
       end
@@ -221,14 +221,37 @@ puts ('!' * 80) + ' .'
       end
     end
 
-    def wait(exid, owait)
+    def parse_serie(s)
+
+      return s if s.is_a?(Array)
+
+      s.split(',').map { |s| s.strip.split(/ +/).map(&:strip) }
+    end
+
+    def wait(exid, opts)
+
+      owait = opts[:wait]
 
       w = nil
 
-      serie, timeout, repeat = [
-        [ [ nil, %w[ failed terminated ] ] ],
-        owait,
-        false ]
+      serie, timeout, repeat =
+        if owait == true
+          [ [ [ nil, %w[ failed terminated ] ] ], # serie
+            3, # timeout
+            false ] # repeat
+        elsif owait.is_a?(Numeric)
+          [ [ [ nil, %w[ failed terminated ] ] ], # serie
+            owait, # timeout
+            false ] # repeat
+        elsif owait.is_a?(String)
+          [ parse_serie(owait), # serie
+            opts[:timeout] || 3, # timeout
+            false ] # repeat
+        elsif owait.is_a?(Hash)
+          [ parse_serie(owait[:serie]),
+            owait[:timeout],
+            owait[:repeat] ]
+        end
 
       @mutex.synchronize do
 
