@@ -75,6 +75,7 @@ describe 'Flor unit' do
         wait: true)
 
       expect(r['point']).to eq('terminated')
+expect(r['payload']).not_to eq(nil)
 
       sleep 0.1
 

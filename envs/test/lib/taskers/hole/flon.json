@@ -5,4 +5,7 @@ on_task: {
   require: 'hole.rb'
   class: HoleTasker
 }
+#on_cancel: {
+#}
+# defaults to on_task:
 

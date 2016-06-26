@@ -44,13 +44,23 @@ describe 'Flor punit' do
     it 'can be cancelled' do
 
       flon = %{
-        task 'hole'
+        sequence
+          task 'hole'
       }
 
-      r = @unit.launch(flon, wait: '0 receive')
+      r = @unit.launch(flon, wait: '0_0 task')
 
-      #expect(r['
+      #pp r
+      expect(HoleTasker.message['exid']).to eq(r['exid'])
+
+      r = @unit.queue(
+        { 'point' => 'cancel', 'exid' => r['exid'], 'nid' => '0_0' },
+        wait: true)
+
 pp r
+      expect(HoleTasker.message).to eq(nil)
+      expect(r['point']).to eq('terminated')
+expect(r['payload']).not_to eq(nil)
     end
   end
 end

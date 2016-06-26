@@ -87,6 +87,7 @@ module Flor
 
       Array(tconf['on_task']['require'])
         .each { |pa| require(File.join(root, pa)) }
+# TODO 'load' too
 
       k = tconf['on_task']['class']
       k = Kernel.const_get(k)
