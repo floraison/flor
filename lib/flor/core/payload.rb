@@ -22,34 +22,26 @@
 # Made in Japan.
 #++
 
-require 'pp'
-require 'json'
-require 'logger'
-require 'thread'
-require 'digest'
 
-require 'munemo'
-require 'raabro'
-require 'rufus-lru'
+class Flor::Payload
 
+  attr_reader :execution, :digest
 
-module Flor
+  def initialize(execution, d_or_h)
 
-  VERSION = '0.4.0'
+    @execution = execution
+  end
+
+  def to_json(*states)
+
+    @digest.inspect
+  end
+
+  def []=(k, v)
+    # TODO
+  end
+  def delete(k)
+    # TODO
+  end
 end
-
-require 'flor/log'
-require 'flor/flor'
-require 'flor/dollar'
-require 'flor/errors'
-require 'flor/parser'
-require 'flor/conf'
-
-require 'flor/core'
-require 'flor/core/node'
-require 'flor/core/procedure'
-require 'flor/core/executor'
-require 'flor/core/texecutor'
-
-Flor.load_procedures('pcore')
 
