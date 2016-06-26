@@ -26,11 +26,11 @@ module Flor
 
   class Waiter
 
-    def initialize(exid, points, timeout, repeat)
+    def initialize(exid, points, owait, repeat)
 
       @exid = exid
       @points = points
-      @timeout = timeout == true ? 3 : timeout
+      @timeout = owait == true ? 3 : owait
       @repeat = repeat
 
       @queue = []
@@ -57,7 +57,10 @@ module Flor
       @mutex.synchronize do
 
         if @queue.empty?
-          @var.wait(@mutex, @timeout) if @timeout > 0
+
+          @var.wait(@mutex, @timeout)
+            # will wait "as aetername" if @timeout is nil
+
           fail(RuntimeError, "timeout for #{self.to_s}") if @queue.empty?
         end
 

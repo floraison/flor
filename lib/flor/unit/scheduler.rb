@@ -149,8 +149,8 @@ puts ('!' * 80) + ' .'
 
       @storage.put_message(message)
 
-      if to = opts[:wait]
-        wait(message['exid'], %w[ failed terminated ], to)
+      if ow = opts[:wait]
+        wait(message['exid'], %w[ failed terminated ], ow)
       else
         message['exid']
       end
@@ -221,12 +221,13 @@ puts ('!' * 80) + ' .'
       end
     end
 
-    def wait(exid, points, timeout)
+    def wait(exid, points, owait)
 
       w = nil
 
       @mutex.synchronize do
-        @waiters << (w = Waiter.new(exid, points, timeout, false))
+
+        @waiters << (w = Waiter.new(exid, points, owait, false))
           # repeat: false
       end
 
