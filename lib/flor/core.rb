@@ -61,12 +61,15 @@ module Flor
       fail ArgumentError.new('flon parse failure')
     end
 
+    pl = opts[:payload] || opts[:fields] || {}
+    vs = opts[:variables] || opts[:vars] || {}
+
     { 'point' => 'execute',
       'exid' => exid,
       'nid' => '0',
       'tree' => t,
-      'payload' => opts[:payload] || opts[:fields] || {},
-      'vars' => opts[:variables] || opts[:vars] || {} }
+      'payload' => pl,
+      'vars' => vs }
   end
 
   def self.load_procedures(dir)
