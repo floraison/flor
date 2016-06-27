@@ -69,7 +69,7 @@ module Flor
         [], # no traps
         {
           'exid' => Flor.generate_exid('eval', 'u0'),
-          'nodes' => {}, 'errors' => [], 'counters' => {},
+          'nodes' => {}, 'errors' => [], 'counters' => {}, #'ashes' => {},
           'start' => Flor.tstamp
         })
     end
@@ -101,6 +101,8 @@ module Flor
         msgs = process(message)
 
         break if %w[ failed terminated ].include?(point)
+
+        #Flor::Ash.digest(@execution, msgs)
 
         messages.concat(msgs)
       end

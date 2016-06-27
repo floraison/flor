@@ -44,7 +44,11 @@ class Flor::Node
 
   def point; @message['point']; end
   def from; @message['from']; end
+
   def payload; @message['payload']; end
+  #def payload
+  #  Flor::Ash.new(@execution, @message, 'payload')
+  #end
 
   def lookup_tree(nid)
 

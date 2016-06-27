@@ -46,6 +46,7 @@ require 'flor/parser'
 require 'flor/conf'
 
 require 'flor/core'
+require 'flor/core/ash'
 require 'flor/core/node'
 require 'flor/core/procedure'
 require 'flor/core/executor'
