@@ -27,33 +27,33 @@ class Flor::Ash
 
   FUN = 'SHA256'
 
-  def self.digest(execution, msgs)
-
-    msgs.each do |m|
-
-      pl = m['payload']
-      vs = m['vars']
-
-      if pl.class != String && pl.class != NilClass
-        m['payload'] = do_digest(execution, pl)
-      end
-      if vs.class != String && vs.class != NilClass
-        m['vars'] = do_digest(execution, vs)
-      end
-    end
-  end
-
-  def self.do_digest(execution, hash)
-
-    return hash.code if hash.is_a?(Flor::Ash)
-
-    afun = Digest.const_get(FUN)
-    code = "#{FUN}:#{afun.hexdigest(JSON.dump(hash))}"
-
-    execution['ashes'][code] = hash
-
-    code
-  end
+#  def self.digest(execution, msgs)
+#
+#    msgs.each do |m|
+#
+#      pl = m['payload']
+#      vs = m['vars']
+#
+#      if pl.class != String && pl.class != NilClass
+#        m['payload'] = do_digest(execution, pl)
+#      end
+#      if vs.class != String && vs.class != NilClass
+#        m['vars'] = do_digest(execution, vs)
+#      end
+#    end
+#  end
+#
+#  def self.do_digest(execution, hash)
+#
+#    return hash.code if hash.is_a?(Flor::Ash)
+#
+#    afun = Digest.const_get(FUN)
+#    code = "#{FUN}:#{afun.hexdigest(JSON.dump(hash))}"
+#
+#    execution['ashes'][code] = hash
+#
+#    code
+#  end
 
   attr_reader :code
 
@@ -69,10 +69,7 @@ class Flor::Ash
 
   def []=(k, v)
 
-    @val ||= Flor.dup(@execution['ashes'][@code])
-
-    @code = nil
-    @val[k] = v
+    deref[k] = v
   end
 
   def [](k)
@@ -80,12 +77,26 @@ class Flor::Ash
     (@val ? @val : @execution['ashes'][@code])[k]
   end
 
-  #def to_json(*states)
-  #  if @val
-  #    @code = do_digest(@execution, @val)
-  #    @val = nil
-  #  end
-  #  @code.inspect
-  #end
+  def ref(k)
+
+    @code ||= store
+
+    "#{@code}:#{k}"
+  end
+
+  def deref
+
+    @val ||= Flor.dup(@execution['ashes'][@code])
+    @code = nil
+
+    @val
+  end
+
+  protected
+
+  def store
+
+    Digest.const_get(FUN).hexdigest(JSON.dump(@val))
+  end
 end
 

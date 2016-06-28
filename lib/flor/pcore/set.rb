@@ -30,6 +30,7 @@ class Flor::Pro::Set < Flor::Procedure
   def pre_execute
 
     @node['ret'] = Flor.dup(payload['ret'])
+    #@node['ret'] = payload.ref('ret')
 
     unatt_unkeyed_children
     stringify_first_child
