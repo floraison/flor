@@ -30,7 +30,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
   def pre_execute
 
     @node['atts'] = []
-    #@node['payload'] = Flor.dup(@message['payload'])
+    #@node['payload'] = Flor.dup(payload)
   end
 
   def receive_last_att
@@ -113,7 +113,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def store_payload
 
-    (@node['payloads'] ||= {})[@message['from']] = @message['payload']
+    (@node['payloads'] ||= {})[@message['from']] = payload
   end
 
   def default_receive
