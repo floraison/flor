@@ -106,7 +106,7 @@ puts ('!' * 80) + ' .'
 
     def failed(message)
 
-      pp message if @unit.conf['log_err']
+      Flor.detail_msg(@execution, message) if @unit.conf['log_err']
 
       []
     end

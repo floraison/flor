@@ -162,10 +162,10 @@ module Flor
     end
   end
 
-  COLSET =
-    Colours.set(%w[ reset dark_grey light_yellow blue light_grey light_green ])
-  NO_COLSET =
-    [ '' ] * COLSET.length
+  COLSET = Colours.set(%w[
+    reset dark_grey light_yellow blue light_grey light_green light_red
+  ])
+  NO_COLSET = [ '' ] * COLSET.length
 
   # return reset, dark grey, yellow, blue, light grey, light green
   #
@@ -213,6 +213,20 @@ module Flor
     s = Flor.to_d(ret, compact: true)
     l = s.length
     l < 35 ? s : "#{s[0, 35]}(...L#{l})"
+  end
+
+  def self.detail_msg(execution, m, opts={})
+
+    #_rs, _dg, _yl, _bl, _gy, _gn, _rd = colours(opts)
+    _rs, _dg, _yl = colours(opts)
+
+    puts "#{_dg}<Flor.detail_msg>#{_rs}"
+    print "#{_yl}"
+    pp m
+    puts "#{_dg}payload:#{_yl}"
+    pp Flor::Ash.inflate(execution, m['payload'])
+    print "#{_rs}"
+    puts "#{_dg}</Flor.detail_msg>#{_rs}"
   end
 end
 

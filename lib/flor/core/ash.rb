@@ -116,6 +116,8 @@ class Flor::Ash
 
   def self.inflate(execution, k)
 
+    return k.inflate if k.is_a?(Flor::Ash)
+
     ks = k.split(':')
     kk = ks[2]
 

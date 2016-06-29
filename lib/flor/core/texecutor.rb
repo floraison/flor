@@ -96,7 +96,8 @@ module Flor
 
         point = message['point']
 
-        pp message if point == 'failed' && conf['log_err']
+        Flor.detail_msg(@execution, message) \
+          if point == 'failed' && conf['log_err']
 
         msgs = process(message)
 
