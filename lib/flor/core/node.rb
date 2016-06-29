@@ -52,7 +52,7 @@ class Flor::Node
     @message['payload'] = Flor::Ash.new(@execution, @message['payload'])
   end
   def copy_payload
-    (@message['payload'] = Flor::Ash.new(@execution, @message['payload'])).copy
+    payload.copy
   end
 
   def lookup_tree(nid)
