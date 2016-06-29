@@ -25,7 +25,7 @@
 
 module Flor
 
-  def self.log_message(m, opts={})
+  def self.log_message(execution, m, opts={})
 
     @tree_cache ||= Rufus::Lru::Hash.new(1024)
 
@@ -44,7 +44,7 @@ module Flor
     ni = m['nid'] ? "#{m['nid']} " : ''
     fr = m['from'] ? " from #{m['from']}" : ''
 
-    rt = ret_to_s(m)
+    rt = ret_to_s(execution, m)
     rt = rt.length > 0 ? " #{_lg}f.ret #{rt}" : ''
 
     t = m['tree']
@@ -207,9 +207,9 @@ module Flor
     puts "#{_dg}.#{_rs}" if nid == '0'
   end
 
-  def self.ret_to_s(m)
+  def self.ret_to_s(execution, m)
 
-    ret = (m['payload'] || {})['ret']
+    ret = (execution['ashes'][m['payload']] || {})['ret']
     s = Flor.to_d(ret, compact: true)
     l = s.length
     l < 35 ? s : "#{s[0, 35]}(...L#{l})"

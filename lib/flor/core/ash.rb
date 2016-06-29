@@ -25,78 +25,118 @@
 
 class Flor::Ash
 
-  FUN = 'SHA256'
+  FUN_NAME = 'SHA256'
 
-#  def self.digest(execution, msgs)
-#
-#    msgs.each do |m|
-#
-#      pl = m['payload']
-#      vs = m['vars']
-#
-#      if pl.class != String && pl.class != NilClass
-#        m['payload'] = do_digest(execution, pl)
-#      end
-#      if vs.class != String && vs.class != NilClass
-#        m['vars'] = do_digest(execution, vs)
-#      end
-#    end
-#  end
-#
-#  def self.do_digest(execution, hash)
-#
-#    return hash.code if hash.is_a?(Flor::Ash)
-#
-#    afun = Digest.const_get(FUN)
-#    code = "#{FUN}:#{afun.hexdigest(JSON.dump(hash))}"
-#
-#    execution['ashes'][code] = hash
-#
-#    code
-#  end
-
-  attr_reader :code
-
-  def initialize(execution, message, key)
+  def initialize(execution, code)
 
     @execution = execution
-    @message = message
-    @key = key
-
-    x = message[key]
-    @code, @val = x.is_a?(String) ? [ x, nil ] : [ nil, x ]
+    @code = code
   end
 
-  def []=(k, v)
+  def deflate
 
-    deref[k] = v
+    return @code if @val.nil?
+
+    @code = Flor::Ash.deflate(@execution, @val)
+    @val = nil
+
+    @code
   end
 
-  def [](k)
+  def ref(key=nil)
 
-    (@val ? @val : @execution['ashes'][@code])[k]
+    [ @code, key ].compact.join(':')
   end
 
-  def ref(k)
+  def copy
 
-    @code ||= store
+    return @val if @val
 
-    "#{@code}:#{k}"
-  end
-
-  def deref
-
-    @val ||= Flor.dup(@execution['ashes'][@code])
+    @val = Flor.dup(@execution['ashes'][@code])
     @code = nil
 
     @val
   end
 
-  protected
+  def []=(k, v)
 
-  def store
+    copy[k] = v
+  end
 
-    Digest.const_get(FUN).hexdigest(JSON.dump(@val))
+  def inflate
+
+    @val || @execution['ashes'][@code]
+  end
+
+  def [](k)
+
+    inflate[k]
+  end
+
+  def inspect
+
+    "<#{self.class};@code=#{@code || 'nil'};@val=#{@val.inspect}>"
+  end
+
+  # class methods
+
+  def self.deep_freeze(o)
+
+    if o.is_a?(Array)
+      o.each { |e| e.freeze }
+    elsif o.is_a?(Hash)
+      o.each { |k, v| k.freeze; v.freeze }
+    end
+
+    o.freeze
+  end
+
+  def self.deflate(execution, o, key=nil)
+
+    val = key ? o[key] : o
+
+    return if val.nil? || val.is_a?(String)
+
+    code = "SHA256:#{Digest::SHA256.hexdigest(JSON.dump(val))}"
+
+    execution['ashes'][code] = deep_freeze(val)
+
+    key ? (o[key] = code) : code
+  end
+
+  def self.deflate_all(a)
+
+    Array(a).each do |h|
+
+      h
+        .select { |k, v| v.is_a?(Flor::Ash) }
+        .each { |k, v|
+          #h["_#{k}"] = v.ref
+          h[k] = v.deflate }
+    end
+  end
+
+  def self.inflate(execution, k)
+
+    ks = k.split(':')
+    kk = ks[2]
+
+    r = execution['ashes'][ks[0, 2].join(':')]
+
+    kk ? r[kk] : r
+  end
+
+  def self.inflate_all(execution, h)
+
+    h.each do |k, v|
+      if v.is_a?(String) && v[0, 7] == 'SHA256:'
+        h[k] = execution['ashes'][v]
+      elsif v.is_a?(Flor::Ash)
+        h[k] = v.instance_eval { @val }
+      end
+    end if h
+
+    h
   end
 end
 

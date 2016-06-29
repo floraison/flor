@@ -41,13 +41,13 @@ module Flor
     def info(*m); log(:info, *m); end
     def warn(*m); log(:warn, *m); end
 
-    def notify(message)
+    def notify(execution, message)
 
       if message['point'] == 'execute' && message['nid'] == '0'
         Flor.print_tree(message['tree']) if @unit.conf['log_tree']
       end
 
-      Flor.log_message(message) if @unit.conf['log_msg']
+      Flor.log_message(execution, message) if @unit.conf['log_msg']
     end
 
     DBCOLS = Flor::Colours.set(%w[ reset bg_light_gray ])

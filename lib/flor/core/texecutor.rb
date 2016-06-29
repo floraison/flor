@@ -39,7 +39,7 @@ module Flor
         @journal = []
       end
 
-      def notify(o)
+      def notify(execution, o)
 
         return unless o.is_a?(Hash)
         return if o['consumed']
@@ -48,7 +48,7 @@ module Flor
           Flor.print_tree(o['tree']) if conf['log_tree']
         end
 
-        Flor.log_message(o) if @conf['log_msg']
+        Flor.log_message(execution, o) if @conf['log_msg']
 
         @journal << o
       end
@@ -69,7 +69,7 @@ module Flor
         [], # no traps
         {
           'exid' => Flor.generate_exid('eval', 'u0'),
-          'nodes' => {}, 'errors' => [], 'counters' => {}, #'ashes' => {},
+          'nodes' => {}, 'errors' => [], 'counters' => {}, 'ashes' => {},
           'start' => Flor.tstamp
         })
     end
@@ -107,7 +107,7 @@ module Flor
         messages.concat(msgs)
       end
 
-      message
+      Flor::Ash.inflate_all(@execution, message)
     end
   end
 

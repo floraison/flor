@@ -45,7 +45,11 @@ class Flor::Pro::Push < Flor::Procedure
   def receive_last
 
     arr = @node['arr']
-    arr = lookup(arr) if arr.is_a?(String)
+
+    if arr.is_a?(String)
+      copy_payload if arr[0, 1] == 'f'
+      arr = lookup(arr)
+    end
 
     fail Flor::FlorError.new("cannot push to given target", self) \
       unless arr.respond_to?(:push)

@@ -202,14 +202,18 @@ module Flor
 
       begin
 
-        @unit.notify(message) # pre
+        Flor::Ash.deflate(@execution, message, 'payload')
+
+        @unit.notify(@execution, message) # pre
 
         ms = self.send(message['point'].to_sym, message)
         message['consumed'] = Flor.tstamp
 
         ms += notify_traps(message)
 
-        @unit.notify(message) # post
+        @unit.notify(@execution, message) # post
+
+        Flor::Ash.deflate_all(ms)
 
         ms
 

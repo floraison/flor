@@ -29,8 +29,8 @@ class Flor::Pro::Set < Flor::Procedure
 
   def pre_execute
 
-    @node['ret'] = Flor.dup(payload['ret'])
-    #@node['ret'] = payload.ref('ret')
+    #@node['ret'] = Flor.dup(payload['ret'])
+    @node['ret'] = payload.ref('ret')
 
     unatt_unkeyed_children
     stringify_first_child
@@ -53,7 +53,7 @@ class Flor::Pro::Set < Flor::Procedure
       if tree[0] == 'setr' || @node['ref'] == 'f.ret'
         payload['ret']
       else
-        @node['ret']
+        Flor::Ash.inflate(@execution, @node['ret'])
       end
 
     reply
