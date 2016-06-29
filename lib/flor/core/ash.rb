@@ -25,8 +25,6 @@
 
 class Flor::Ash
 
-  FUN_NAME = 'SHA256'
-
   def initialize(execution, code)
 
     @execution = execution
