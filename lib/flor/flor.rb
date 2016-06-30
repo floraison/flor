@@ -309,13 +309,19 @@ module Flor
     h['kla'] = o.class.to_s
 
     if o.is_a?(Exception)
+
       h['msg'] = o.message
-      h['trc'] = o.backtrace[0, 4]
+
+      t = o.backtrace
+      h['trc'] = t[0..(t.rindex { |l| l.match(/\/lib\/flor\//) }) + 1]
+
       if n = o.respond_to?(:node) && o.node
         h['lin'] = n.tree[2]
         #h['tre'] = n.tree
       end
+
     else
+
       h['msg'] = o.to_s
     end
 
