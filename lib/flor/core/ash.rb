@@ -96,6 +96,9 @@ class Flor::Ash
     return if val.nil? || val.is_a?(String)
 
     code = "SHA256:#{Digest::SHA256.hexdigest(JSON.dump(val))}"
+      #
+    #code = "SHA256:#{Digest::SHA256.hexdigest(Marshal.dump(val))}"
+      # potentially faster, but may vary from platform to plaftorm
 
     execution['ashes'][code] = deep_freeze(val)
 
