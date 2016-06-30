@@ -78,7 +78,7 @@ class Flor::Pro::Att < Flor::Procedure
   #
   def receive_vars
 
-    parent_node['vars'] = payload['ret']
+    parent_node['vars'] = payload.copy['ret']
     payload['ret'] = @node['ret']
 
     reply
