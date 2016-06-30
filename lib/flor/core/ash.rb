@@ -132,7 +132,7 @@ class Flor::Ash
       if v.is_a?(String) && v[0, 7] == 'SHA256:'
         h[k] = execution['ashes'][v]
       elsif v.is_a?(Flor::Ash)
-        h[k] = v.instance_eval { @val }
+        h[k] = v.inflate
       end
     end if h
 
