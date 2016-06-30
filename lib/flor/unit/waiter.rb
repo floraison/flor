@@ -76,7 +76,7 @@ module Flor
 
         exe, msg = @queue.shift
 
-        Flor::Ash.inflate_all(exe, msg)
+        Flor::Ash.inflate_all(exe, Flor.dup(msg))
       end
     end
 
