@@ -93,7 +93,12 @@ class Flor::Ash
 
     val = key ? o[key] : o
 
-    return if val.nil? || val.is_a?(String)
+    if val.nil? || val.is_a?(String)
+      return
+    end
+    if val.is_a?(Flor::Ash)
+      return key ? o[key] = val.ref : val.ref
+    end
 
     code = "SHA256:#{Digest::SHA256.hexdigest(JSON.dump(val))}"
       #

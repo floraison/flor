@@ -174,7 +174,7 @@ puts ('!' * 80) + ' .'
           @mutex.synchronize { @timers.push(o); @timers.sort_by!(&:ntime) }
         when Hash
           if o['consumed']
-            notify_waiters(o)
+            notify_waiters(execution, o)
           else
             (@journal ||= []) << o if @conf['journal']
             @logger.notify(execution, o)
@@ -206,14 +206,14 @@ puts ('!' * 80) + ' .'
 
     protected
 
-    def notify_waiters(message)
+    def notify_waiters(execution, message)
 
       @mutex.synchronize do
 
         to_remove = []
 
         @waiters.each do |w|
-          remove = w.notify(message)
+          remove = w.notify(execution, message)
           to_remove << w if remove
         end
 

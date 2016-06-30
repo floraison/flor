@@ -38,7 +38,7 @@ module Flor
       @var = ConditionVariable.new
     end
 
-    def notify(message)
+    def notify(execution, message)
 
       @mutex.synchronize do
 
@@ -47,7 +47,7 @@ module Flor
         @serie.shift
         return false unless @serie.empty?
 
-        @queue << message
+        @queue << [ execution, message ]
         @var.signal
       end
 
@@ -74,7 +74,9 @@ module Flor
           fail(RuntimeError, "timeout for #{self.to_s}") if @queue.empty?
         end
 
-        @queue.shift
+        exe, msg = @queue.shift
+
+        Flor::Ash.inflate_all(exe, msg)
       end
     end
 
