@@ -132,7 +132,7 @@ module Flor
         "error while reading conf: #{r['error']['msg']}"
       ) unless r['point'] == 'terminated'
 
-      h = r['payload']['ret']
+      h = Flor.dup(r['payload']['ret'])
 
       h.merge!('_path' => path) unless path.match(/[\r\n]/)
 

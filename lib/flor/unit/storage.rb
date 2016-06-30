@@ -91,7 +91,7 @@ module Flor
           ex
         else
           put_execution({
-            'exid' => exid, 'nodes' => {}, 'errors' => [],
+            'exid' => exid, 'nodes' => {}, 'errors' => [], 'ashes' => {},
             'counters' => {}, 'start' => Flor.tstamp
           })
         end
@@ -195,7 +195,7 @@ module Flor
           [ :exid, :point, :content, :status, :ctime, :mtime ],
           ms.map { |m| [ m['exid'], m['point'], to_blob(m), 'created', n, n ] })
 
-      @unit.notify(ms.collect { |m| m['exid'] }.uniq)
+      @unit.notify(nil, ms.collect { |m| m['exid'] }.uniq)
     end
 
     def put_message(m)
@@ -229,7 +229,7 @@ module Flor
         ctime: n,
         mtime: n)
 
-      @unit.notify(@unit.timers[id])
+      @unit.notify(nil, @unit.timers[id])
     end
 
     def trigger_timer(timer)

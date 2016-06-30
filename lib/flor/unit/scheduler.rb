@@ -165,7 +165,7 @@ puts ('!' * 80) + ' .'
       queue(msg, h)
     end
 
-    def notify(o)
+    def notify(execution, o)
 
       case o
         when Array # list of exids
@@ -177,7 +177,7 @@ puts ('!' * 80) + ' .'
             notify_waiters(o)
           else
             (@journal ||= []) << o if @conf['journal']
-            @logger.notify(o)
+            @logger.notify(execution, o)
           end
         else
           fail ArgumentError.new(
