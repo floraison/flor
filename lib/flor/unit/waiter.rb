@@ -69,7 +69,7 @@ module Flor
         if @queue.empty?
 
           @var.wait(@mutex, @timeout)
-            # will wait "as aetername" if @timeout is nil
+            # will wait "in aeternum" if @timeout is nil
 
           fail(RuntimeError, "timeout for #{self.to_s}") if @queue.empty?
         end
