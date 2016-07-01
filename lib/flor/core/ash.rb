@@ -122,16 +122,21 @@ class Flor::Ash
     end
   end
 
-  def self.inflate(execution, k)
+  def self.inflate(execution, code)
 
-    return k.inflate if k.is_a?(Flor::Ash)
+    return code.inflate if code.is_a?(Flor::Ash)
 
-    ks = k.split(':')
-    kk = ks[2]
+    cs = code.split(':')
+    c2 = cs[2]
 
-    r = execution['ashes'][ks[0, 2].join(':')]
+    r = execution['ashes'][cs[0, 2].join(':')]
 
-    kk ? r[kk] : r
+    c2 ? r[c2] : r
+  end
+
+  def self.copy(execution, code)
+
+    Flor.dup(inflate(execution, code))
   end
 
   def self.inflate_all(execution, h)

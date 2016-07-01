@@ -78,8 +78,16 @@ module Flor
 #  "*** trapped: #{message['point']}\n" +
 #  "* data: #{self.data.inspect}\n" +
 #  "* values: #{self.values.select { |k, v| k != :content }.inspect}")
+
       msg = Flor.dup(message)
-      pld = msg.delete('payload')
+
+      #pld = msg.delete('payload')
+        #
+      pld = msg['payload']
+        #
+        # the payload is merely a code, no need to delete it
+
+      pld = Flor::Ash.copy(executor.execution, pld)
       pld['msg'] = msg
 
       exe = {
