@@ -113,7 +113,8 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def store_payload
 
-    (@node['payloads'] ||= {})[@message['from']] = payload
+    (@node['payloads'] ||= {})[@message['from']] =
+      Flor::Ash.deflate(@excution, payload)
   end
 
   def default_receive
@@ -132,7 +133,9 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def default_merge
 
-    @node['payloads'].values.reverse.inject({}) { |h, pl| h.merge!(pl) }
+    @node['payloads'].values
+      .reverse
+      .inject({}) { |h, pl| h.merge!(Flor::Ash.copy(@execution, pl)) }
   end
 end
 
