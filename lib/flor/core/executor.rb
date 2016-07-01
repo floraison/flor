@@ -184,7 +184,7 @@ module Flor
 
     def task(message)
 
-      @unit.tasker.task(message)
+      @unit.tasker.task(Flor::Ash.inflate_all(@execution, message))
     end
 
     def return(message)

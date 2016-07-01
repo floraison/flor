@@ -114,7 +114,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
   def store_payload
 
     (@node['payloads'] ||= {})[@message['from']] =
-      Flor::Ash.deflate(@excution, payload)
+      Flor::Ash.deflate(@execution, payload)
   end
 
   def default_receive
