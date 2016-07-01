@@ -43,6 +43,8 @@ class Flor::Ash
 
   def ref(key=nil)
 
+    deflate
+
     [ @code, key ].compact.join(':')
   end
 
@@ -94,7 +96,7 @@ class Flor::Ash
     val = key ? o[key] : o
 
     if val.nil? || val.is_a?(String)
-      return
+      return nil
     end
     if val.is_a?(Flor::Ash)
       return key ? o[key] = val.ref : val.ref
@@ -105,7 +107,8 @@ class Flor::Ash
     #code = "SHA256:#{Digest::SHA256.hexdigest(Marshal.dump(val))}"
       # potentially faster, but may vary from platform to plaftorm
 
-    execution['ashes'][code] = deep_freeze(val)
+    execution['ashes'][code] = deep_freeze(val) \
+      unless execution['ashes'].has_key?(code)
 
     key ? (o[key] = code) : code
   end
