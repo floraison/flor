@@ -39,7 +39,7 @@ module Flor
         @journal = []
       end
 
-      def notify(execution, o)
+      def notify(executor, o)
 
         return unless o.is_a?(Hash)
         return if o['consumed']
@@ -48,7 +48,7 @@ module Flor
           Flor.print_tree(o['tree']) if conf['log_tree']
         end
 
-        Flor.log_message(execution, o) if @conf['log_msg']
+        Flor.log_message(executor, o) if @conf['log_msg']
 
         @journal << o
       end
@@ -96,19 +96,17 @@ module Flor
 
         point = message['point']
 
-        Flor.detail_msg(@execution, message) \
+        Flor.detail_msg(self, message) \
           if point == 'failed' && conf['log_err']
 
         msgs = process(message)
 
         break if %w[ failed terminated ].include?(point)
 
-        #Flor::Ash.digest(@execution, msgs)
-
         messages.concat(msgs)
       end
 
-      Flor::Ash.inflate_all(@execution, message)
+      unash_all!(message)
     end
   end
 

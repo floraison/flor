@@ -23,136 +23,73 @@
 #++
 
 
-class Flor::Ash
+module Flor::Ash
 
-  def initialize(execution, code)
+  ASH_KEYS = %w[ payload ]
 
-    @execution = execution
-    @code = code
+  def ash_value(value)
+
+    return value if value.is_a?(String)
+
+    "SHA256:#{Digest::SHA256.hexdigest(JSON.dump(value))}"
   end
 
-  def deflate
+  def unash_value(code)
 
-    return @code if @val.nil?
+    return code unless code.is_a?(String)
 
-    @code = Flor::Ash.deflate(@execution, @val)
-    @val = nil
+    c0, c1 = code.index(':'), code.rindex(':')
 
-    @code
-  end
-
-  def ref(key=nil)
-
-    deflate
-
-    [ @code, key ].compact.join(':')
-  end
-
-  def copy
-
-    return @val if @val
-
-    @val = Flor.dup(@execution['ashes'][@code])
-    @code = nil
-
-    @val
-  end
-
-  def []=(k, v)
-
-    copy[k] = v
-  end
-
-  def inflate
-
-    @val || @execution['ashes'][@code]
-  end
-
-  def [](k)
-
-    inflate[k]
-  end
-
-  def inspect
-
-    "<#{self.class};@code=#{@code || 'nil'};@val=#{@val.inspect}>"
-  end
-
-  # class methods
-
-  def self.deep_freeze(o)
-
-    if o.is_a?(Array)
-      o.each { |e| e.freeze }
-    elsif o.is_a?(Hash)
-      o.each { |k, v| k.freeze; v.freeze }
-    end
-
-    o.freeze
-  end
-
-  def self.deflate(execution, o, key=nil)
-
-    val = key ? o[key] : o
-
-    if val.nil? || val.is_a?(String)
-      return nil
-    end
-    if val.is_a?(Flor::Ash)
-      return key ? o[key] = val.ref : val.ref
-    end
-
-    code = "SHA256:#{Digest::SHA256.hexdigest(JSON.dump(val))}"
-      #
-    #code = "SHA256:#{Digest::SHA256.hexdigest(Marshal.dump(val))}"
-      # potentially faster, but may vary from platform to plaftorm
-
-    execution['ashes'][code] = deep_freeze(val) \
-      unless execution['ashes'].has_key?(code)
-
-    key ? (o[key] = code) : code
-  end
-
-  def self.deflate_all(a)
-
-    Array(a).each do |h|
-
-      h
-        .select { |k, v| v.is_a?(Flor::Ash) }
-        .each { |k, v|
-          #h["_#{k}"] = v.ref
-          h[k] = v.deflate }
+    if c1 > c0
+      (@execution['ashes'][code[0..c1 - 1]] || {})[code[c1 + 1..-1]]
+    else
+      @execution['ashes'][code]
     end
   end
 
-  def self.inflate(execution, code)
+  def ash_all!(h)
 
-    return code.inflate if code.is_a?(Flor::Ash)
-
-    cs = code.split(':')
-    c2 = cs[2]
-
-    r = execution['ashes'][cs[0, 2].join(':')]
-
-    c2 ? r[c2] : r
-  end
-
-  def self.copy(execution, code)
-
-    Flor.dup(inflate(execution, code))
-  end
-
-  def self.inflate_all(execution, h)
-
-    h.each do |k, v|
-      if v.is_a?(String) && v[0, 7] == 'SHA256:'
-        h[k] = execution['ashes'][v]
-      elsif v.is_a?(Flor::Ash)
-        h[k] = v.inflate
-      end
-    end if h
+    ASH_KEYS.each { |k| ash!(h, k) }
 
     h
+  end
+
+  def unash_all!(h)
+
+    ASH_KEYS.each { |k| unash!(h, k) }
+
+    h
+  end
+
+  def ash!(h, key, subkey=nil)
+
+pp [ :ash!, h, key, subkey ]
+    v = h[key]
+    a = ash_value(v)
+
+    @execution['ashes'][a] = Flor.deep_freeze(v) \
+      unless @execution['ashes'].has_key?(a)
+
+    subkey ? "#{a}:#{subkey}" : a
+  end
+
+  def unash(h, key)
+
+    unash_value(h[key])
+  end
+
+  def unash!(h, key, copy=false)
+
+    code = h[key]
+
+    if code.is_a?(String)
+      val = unash_value(code)
+      h[key] = copy ? Flor.dup(val) : val
+    elsif copy && code.frozen?
+      h[key] = Flor.dup(code)
+    else
+      code
+    end
   end
 end
 

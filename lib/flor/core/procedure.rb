@@ -223,11 +223,11 @@ class Flor::Procedure < Flor::Node
     m['nid'] = parent
     m['from'] = nid
 
-    m['payload'] = payload
-    #m['payload'] = Flor.dup(payload) # too easy, too resource intensive
-
     ret = :no
     ret = h.delete('ret') if h.has_key?('ret')
+
+    m['payload'] = @message['payload']
+    unash!(m, 'payload', ret != :no)
 
     m.merge!(h)
 
@@ -292,8 +292,7 @@ class Flor::Procedure < Flor::Node
 
   def set_field(k, v)
 
-    #success, value = Flor.deep_set(payload, k, v)
-    success, value = Flor.deep_set(payload.copy, k, v)
+    success, value = Flor.deep_set(payload, k, v)
 
     fail IndexError.new("couldn't set field #{k}") unless success
 

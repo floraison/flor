@@ -46,7 +46,7 @@ class Flor::Pro::Obj < Flor::Procedure
 
   def receive_last
 
-    payload['ret'] = Hash[*@node['rets']]
+    payload_copy['ret'] = Hash[*@node['rets']]
 
     reply
   end

@@ -47,7 +47,7 @@ class Flor::Pro::Push < Flor::Procedure
     arr = @node['arr']
 
     if arr.is_a?(String)
-      copy_payload if arr[0, 1] == 'f'
+      payload_copy if arr[0, 1] == 'f'
       arr = lookup(arr)
     end
 

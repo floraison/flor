@@ -54,7 +54,7 @@ class Flor::Pro::Cond < Flor::Procedure
 
   def execute_child(i)
 
-    payload['ret'] = @node['ret'] unless tree[1][i]
+    payload_copy['ret'] = @node['ret'] unless tree[1][i]
 
     super(i)
   end

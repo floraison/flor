@@ -34,7 +34,7 @@ class Flor::Pro::Cmp < Flor::Procedure
 
   def receive_last
 
-    payload['ret'] =
+    payload_copy['ret'] =
       if @node['rets'].size > 1
         case tree[0]
           when '=', '==' then check_equal

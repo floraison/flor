@@ -25,7 +25,7 @@
 
 module Flor
 
-  def self.log_message(execution, m, opts={})
+  def self.log_message(executor, m, opts={})
 
     @tree_cache ||= Rufus::Lru::Hash.new(1024)
 
@@ -44,7 +44,7 @@ module Flor
     ni = m['nid'] ? "#{m['nid']} " : ''
     fr = m['from'] ? " from #{m['from']}" : ''
 
-    rt = ret_to_s(execution, m)
+    rt = ret_to_s(executor, m)
     rt = rt.length > 0 ? " #{_lg}f.ret #{rt}" : ''
 
     t = m['tree']
@@ -207,15 +207,15 @@ module Flor
     puts "#{_dg}.#{_rs}" if nid == '0'
   end
 
-  def self.ret_to_s(execution, m)
+  def self.ret_to_s(executor, m)
 
-    ret = (execution['ashes'][m['payload']] || {})['ret']
+    ret = (executor.unash(m, 'payload') || {})['ret']
     s = Flor.to_d(ret, compact: true)
     l = s.length
     l < 35 ? s : "#{s[0, 35]}(...L#{l})"
   end
 
-  def self.detail_msg(execution, m, opts={})
+  def self.detail_msg(executor, m, opts={})
 
     #_rs, _dg, _yl, _bl, _gy, _gn, _rd = colours(opts)
     _rs, _dg, _yl = colours(opts)
@@ -224,7 +224,7 @@ module Flor
     print "#{_yl}"
     pp m
     puts "#{_dg}payload:#{_yl}"
-    pp Flor::Ash.inflate(execution, m['payload'])
+    pp executor.unash(m, 'payload')
     print "#{_rs}"
     puts "#{_dg}</Flor.detail_msg>#{_rs}"
   end

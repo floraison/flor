@@ -26,6 +26,7 @@
 module Flor
 
   class Executor
+    include Flor::Ash
 
     attr_reader :execution
     attr_reader :unit
@@ -138,7 +139,8 @@ module Flor
         { 'point' => 'left',
           'tags' => ts,
           'exid' => exid,
-          'nid' => node['nid'] }
+          'nid' => node['nid'],
+          'payload' => message['payload'] }
       ]
     end
 
@@ -184,7 +186,8 @@ module Flor
 
     def task(message)
 
-      @unit.tasker.task(Flor::Ash.inflate_all(@execution, message))
+      #@unit.tasker.task(Flor::Ash.inflate_all(@execution, message))
+      @unit.tasker.task(unash(message))
     end
 
     def return(message)
@@ -202,9 +205,9 @@ module Flor
 
       begin
 
-        Flor::Ash.deflate(@execution, message, 'payload')
+        ash_all!(message)
 
-        @unit.notify(@execution, message) # pre
+        @unit.notify(self, message) # pre
 
         ms = self.send(message['point'].to_sym, message)
         message['consumed'] = Flor.tstamp
@@ -213,9 +216,7 @@ module Flor
 
         @unit.notify(@execution, message) # post
 
-        Flor::Ash.deflate_all(ms)
-
-        ms
+        ms.collect { |m| ash_all!(m) }
 
       rescue => e
         error_reply(nil, message, e)

@@ -24,6 +24,7 @@
 
 
 class Flor::Node
+  include Flor::Ash
 
   def initialize(executor, node, message)
 
@@ -46,13 +47,22 @@ class Flor::Node
   def from; @message['from']; end
 
   #def payload; @message['payload']; end
+  #def payload
+  #  pl = @message['payload']
+  #  return pl if pl.is_a?(Flor::Ash)
+  #  @message['payload'] = Flor::Ash.new(@execution, @message['payload'])
+  #end
+  #def copy_payload
+  #  payload.copy
+  #end
   def payload
-    pl = @message['payload']
-    return pl if pl.is_a?(Flor::Ash)
-    @message['payload'] = Flor::Ash.new(@execution, @message['payload'])
+    unash!(@message, 'payload')
   end
-  def copy_payload
-    payload.copy
+  def payload_ref(key)
+    ash!(@message, 'payload', key)
+  end
+  def payload_copy
+    unash!(@message, 'payload', true)
   end
 
   def lookup_tree(nid)
@@ -182,7 +192,7 @@ class Flor::Node
 
   def lookup_field(mod, key)
 
-    Flor.deep_get(payload.inflate, key)[1]
+    Flor.deep_get(payload, key)[1]
   end
 
   def key_split(key) # => category, mode, key

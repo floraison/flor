@@ -165,7 +165,7 @@ puts ('!' * 80) + ' .'
       queue(msg, h)
     end
 
-    def notify(execution, o)
+    def notify(executor, o)
 
       case o
         when Array # list of exids
@@ -174,10 +174,10 @@ puts ('!' * 80) + ' .'
           @mutex.synchronize { @timers.push(o); @timers.sort_by!(&:ntime) }
         when Hash
           if o['consumed']
-            notify_waiters(execution, o)
+            notify_waiters(executor, o)
           else
             (@journal ||= []) << o if @conf['journal']
-            @logger.notify(execution, o)
+            @logger.notify(executor, o)
           end
         else
           fail ArgumentError.new(

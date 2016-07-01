@@ -293,6 +293,17 @@ module Flor
     Marshal.load(Marshal.dump(o))
   end
 
+  def self.deep_freeze(o)
+
+    if o.is_a?(Array)
+      o.each { |e| e.freeze }
+    elsif o.is_a?(Hash)
+      o.each { |k, v| k.freeze; v.freeze }
+    end
+
+    o.freeze
+  end
+
   def self.false?(o)
 
     o == nil || o == false

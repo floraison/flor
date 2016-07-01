@@ -38,7 +38,7 @@ class Flor::Pro::Val < Flor::Procedure
     #v = Flor.de_val(v) unless Flor.is_procedure_val?(v)
     #v = expand(v)
 
-    payload['ret'] = @heat
+    payload_copy['ret'] = @heat
 
     reply
   end
