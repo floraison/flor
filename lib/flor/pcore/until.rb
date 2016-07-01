@@ -53,14 +53,14 @@ class Flor::Pro::Until < Flor::Procedure
 
       else
 
-        payload['ret'] = Flor.dup(@node['ret'])
+        payload_copy['ret'] = Flor.dup(@node['ret'])
         execute_child(@ncid, @node['count'])
       end
 
     elsif @ncid >= children.size
 
       @node['uret'] = payload['ret']
-      payload['ret'] = Flor.dup(@node['ret'])
+      payload_copy['ret'] = Flor.dup(@node['ret'])
       execute_child(first_unkeyed_child_id, @node['count'] += 1)
 
     else

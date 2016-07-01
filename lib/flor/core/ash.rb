@@ -63,7 +63,6 @@ module Flor::Ash
 
   def ash!(h, key, subkey=nil)
 
-pp [ :ash!, h, key, subkey ]
     v = h[key]
     a = ash_value(v)
 

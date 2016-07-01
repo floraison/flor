@@ -150,7 +150,7 @@ module Flor
       fnode = @execution['nodes'][from]
 
       remove_node(fnode)
-      messages = leave(fnode, messages)
+      messages = leave(fnode, message)
 
       nid = message['nid']
 

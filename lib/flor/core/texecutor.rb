@@ -106,7 +106,7 @@ module Flor
         messages.concat(msgs)
       end
 
-      unash_all!(message)
+      message ? unash_all!(message) : nil
     end
   end
 

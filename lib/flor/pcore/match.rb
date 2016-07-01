@@ -36,7 +36,7 @@ class Flor::Pro::Match < Flor::Procedure
 
     rex, str = arguments
 
-    payload['ret'] =
+    payload_copy['ret'] =
       if m = rex.match(str)
         m.to_a
       else
