@@ -31,7 +31,10 @@ module Flor::Ash
 
     return value if value.is_a?(String)
 
-    "SHA256:#{Digest::SHA256.hexdigest(JSON.dump(value))}"
+    j = (value == nil) ? 'null' : JSON.dump(value)
+      # so that Ruby 1.9.x doesn't choke
+
+    "SHA256:#{Digest::SHA256.hexdigest(j)}"
   end
 
   def unash_value(code, copy=false)
