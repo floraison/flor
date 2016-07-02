@@ -57,9 +57,9 @@ module Flor::Ash
     h
   end
 
-  def unash_all!(h)
+  def unash_all!(h, copy=false)
 
-    ASH_KEYS.each { |k| unash!(h, k) }
+    ASH_KEYS.each { |k| unash!(h, k, copy) }
 
     h
   end

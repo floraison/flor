@@ -186,7 +186,7 @@ module Flor
 
     def task(message)
 
-      @unit.tasker.task(unash(message))
+      @unit.tasker.task(unash_all!(message, true))
     end
 
     def return(message)
