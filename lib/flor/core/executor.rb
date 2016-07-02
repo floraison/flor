@@ -186,7 +186,6 @@ module Flor
 
     def task(message)
 
-      #@unit.tasker.task(Flor::Ash.inflate_all(@execution, message))
       @unit.tasker.task(unash(message))
     end
 
@@ -214,7 +213,7 @@ module Flor
 
         ms += notify_traps(message)
 
-        @unit.notify(@execution, message) # post
+        @unit.notify(self, message) # post
 
         ms.collect { |m| ash_all!(m) }
 

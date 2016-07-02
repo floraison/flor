@@ -36,7 +36,7 @@ class Flor::Pro::Trace < Flor::Procedure
 
     @executor.unit.storage.trace(exid, nid, 'trace', payload['ret'])
 
-    payload['ret'] = @node['ret']
+    payload_copy['ret'] = @node['ret']
 
     reply
   end

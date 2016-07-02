@@ -34,17 +34,20 @@ module Flor::Ash
     "SHA256:#{Digest::SHA256.hexdigest(JSON.dump(value))}"
   end
 
-  def unash_value(code)
+  def unash_value(code, copy=false)
 
-    return code unless code.is_a?(String)
+    return (copy ? Flor.dup(code) : code) unless code.is_a?(String)
 
     c0, c1 = code.index(':'), code.rindex(':')
 
-    if c1 > c0
-      (@execution['ashes'][code[0..c1 - 1]] || {})[code[c1 + 1..-1]]
-    else
-      @execution['ashes'][code]
-    end
+    r =
+      if c1 > c0
+        (@execution['ashes'][code[0..c1 - 1]] || {})[code[c1 + 1..-1]]
+      else
+        @execution['ashes'][code]
+      end
+
+    copy ? Flor.dup(r) : r
   end
 
   def ash_all!(h)
@@ -82,8 +85,7 @@ module Flor::Ash
     code = h[key]
 
     if code.is_a?(String)
-      val = unash_value(code)
-      h[key] = copy ? Flor.dup(val) : val
+      h[key] = unash_value(code, copy)
     elsif copy && code.frozen?
       h[key] = Flor.dup(code)
     else

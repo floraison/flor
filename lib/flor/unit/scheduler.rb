@@ -206,14 +206,14 @@ puts ('!' * 80) + ' .'
 
     protected
 
-    def notify_waiters(execution, message)
+    def notify_waiters(executor, message)
 
       @mutex.synchronize do
 
         to_remove = []
 
         @waiters.each do |w|
-          remove = w.notify(execution, message)
+          remove = w.notify(executor, message)
           to_remove << w if remove
         end
 
