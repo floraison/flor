@@ -17,7 +17,7 @@ describe 'Flor procedures' do
 
   describe 'match' do
 
-    it "returns false when it doesn't match" do
+    it "returns empty array when it doesn't match" do
 
       flon = %{
         match "alpha", /bravo/
