@@ -72,7 +72,7 @@ module Flor::Ash
     h
   end
 
-  def ash!(h, key)
+  def ash(h, key)
 
     val = h[key]
 
@@ -83,7 +83,12 @@ module Flor::Ash
     @execution['ashes'][ash] = Flor.deep_freeze(val) \
       unless @execution['ashes'].has_key?(ash)
 
-    h[key] = ash
+    ash
+  end
+
+  def ash!(h, key)
+
+    h[key] = ash(h, key)
   end
 
   def ash_ref!(h, key, subkey)
