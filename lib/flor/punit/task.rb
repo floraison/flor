@@ -47,5 +47,14 @@ class Flor::Pro::Task < Flor::Procedure
       'tasker' => att(nil),
       'payload' => payload)
   end
+
+  def cancel
+
+    queue(
+      'point' => 'detask',
+      'exid' => exid, 'nid' => nid,
+      'tasker' => att(nil),
+      'payload' => payload)
+  end
 end
 

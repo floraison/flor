@@ -345,12 +345,16 @@ class Flor::Procedure < Flor::Node
       .flatten(1)
   end
 
-  def cancel
+  def cancel_reply # "cancel" as a noun
 
-    cancel_nodes(@node['cnodes']) +
     reply(
       'cause' => 'cancel',
       'payload' => @message['payload'] || @node['payload'])
+  end
+
+  def cancel
+
+    cancel_nodes(@node['cnodes']) + cancel_reply
   end
 end
 

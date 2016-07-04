@@ -93,7 +93,12 @@ module Flor
       k = Kernel.const_get(k)
 
       tasker = k.new(self, tconf)
-      tasker.task(message)
+
+      if message['point'] == 'detask'
+        tasker.cancel(message)
+      else
+        tasker.task(message)
+      end
 
       []
     end

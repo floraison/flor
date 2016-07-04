@@ -189,6 +189,7 @@ module Flor
 
       @unit.tasker.task(unash_all!(message, true))
     end
+    alias detask task
 
     def return(message)
 

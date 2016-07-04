@@ -48,19 +48,22 @@ describe 'Flor punit' do
           task 'hole'
       }
 
-      r = @unit.launch(flon, wait: '0_0 task')
-
+      r = @unit.launch(
+        flon,
+        payload: { 'song' => 'Marcia Baila' },
+        wait: '0_0 task')
       #pp r
+
       expect(HoleTasker.message['exid']).to eq(r['exid'])
 
       r = @unit.queue(
         { 'point' => 'cancel', 'exid' => r['exid'], 'nid' => '0_0' },
         wait: true)
+      #pp r
 
-pp r
       expect(HoleTasker.message).to eq(nil)
       expect(r['point']).to eq('terminated')
-expect(r['payload']).not_to eq(nil)
+      expect(r['payload'].keys).to eq(%w[ holed ])
     end
   end
 end

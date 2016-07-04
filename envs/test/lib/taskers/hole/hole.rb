@@ -4,6 +4,8 @@
 class HoleTasker
 
   def initialize(tasker, conf)
+
+    @tasker = tasker
   end
 
   def task(message)
@@ -14,7 +16,7 @@ class HoleTasker
 
   def cancel(message)
 
-    message['payload']['holed'] = @@message
+    (message['payload'] ||= {})['holed'] = @@message
     @@message = nil
 
     @tasker.reply(message)
