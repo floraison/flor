@@ -111,7 +111,24 @@ describe 'Flor unit' do
 
     describe '#queue' do
 
-      it 'lets queue cancel messages'
+      it 'lets queue cancel messages' do
+
+        flon = %{
+          sequence
+            sequence
+              stall _
+        }
+
+        exid = @unit.launch(flon)
+
+        sleep 0.350
+
+        r = @unit.queue(
+          { 'point' => 'cancel', 'exid' => exid, 'nid' => '0_0' },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+      end
     end
 
     describe '#cancel' do
