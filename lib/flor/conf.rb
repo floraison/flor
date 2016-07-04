@@ -56,7 +56,8 @@ module Flor
       Flor::ConfExecutor.interpret(s)
     end
 
-    LOG_KEYS = %w[ all msg err log src tree sto run ]
+    LOG_DBG_KEYS = %w[ dbg msg err src tree ]
+    LOG_ALL_KEYS = %w[ all log sto run ] + LOG_DBG_KEYS
 
     def self.read_env
 
@@ -64,13 +65,12 @@ module Flor
         (ENV['FLOR_DEBUG'] || '').split(',').inject({}) { |h, kv|
           k, v = kv.split(':')
           k = 'sto' if k == 'db'
-          k = "log_#{k}" if LOG_KEYS.include?(k)
+          k = "log_#{k}" if LOG_ALL_KEYS.include?(k)
           h[k] = v ? JSON.parse(v) : true
           h
         }
-      LOG_KEYS.each { |k|
-        h["log_#{k}"] = 1
-      } if h['log_all']
+      LOG_ALL_KEYS.each { |k| h["log_#{k}"] = 1 } if h['log_all']
+      LOG_DBG_KEYS.each { |k| h["log_#{k}"] = 1 } if h['log_dbg']
 
       h
     end
