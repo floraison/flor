@@ -245,24 +245,28 @@ describe Flor::Dollar do
 
       it "understands |l>4 (length filter)" do
 
-        expect(@d.expand("$(lazy|l>4||'none)")).to eq("none");
-        expect(@d.expand("$(lazy|l<4||'none)")).to eq("dog");
+        expect(@d.expand("$(lazy|l>4||'none)")).to eq("none")
+        expect(@d.expand("$(lazy|l<4||'none)")).to eq("dog")
 
-        expect(@d.expand("$(lazy|l<=3||'none)")).to eq("dog");
-        expect(@d.expand("$(lazy|l>=3||'none)")).to eq("dog");
+        expect(@d.expand("$(lazy|l<=3||'none)")).to eq("dog")
+        expect(@d.expand("$(lazy|l>=3||'none)")).to eq("dog")
 
-        expect(@d.expand("$(lazy|l=3||'none)")).to eq("dog");
-        expect(@d.expand("$(lazy|l=4||'none)")).to eq("none");
-        expect(@d.expand("$(lazy|l==3||'none)")).to eq("dog");
-        expect(@d.expand("$(lazy|l==4||'none)")).to eq("none");
+        expect(@d.expand("$(lazy|l=3||'none)")).to eq("dog")
+        expect(@d.expand("$(lazy|l=4||'none)")).to eq("none")
+        expect(@d.expand("$(lazy|l==3||'none)")).to eq("dog")
+        expect(@d.expand("$(lazy|l==4||'none)")).to eq("none")
 
-        expect(@d.expand("$(lazy|l!=4||'none)")).to eq("dog");
-        expect(@d.expand("$(lazy|l!=3||'none)")).to eq("none");
-        expect(@d.expand("$(lazy|l<>4||'none)")).to eq("dog");
-        expect(@d.expand("$(lazy|l<>3||'none)")).to eq("none");
+        expect(@d.expand("$(lazy|l!=4||'none)")).to eq("dog")
+        expect(@d.expand("$(lazy|l!=3||'none)")).to eq("none")
+        expect(@d.expand("$(lazy|l<>4||'none)")).to eq("dog")
+        expect(@d.expand("$(lazy|l<>3||'none)")).to eq("none")
       end
 
-      it "understands |m/xx/ (match filter)"
+      it "understands |m/xx/ (match filter)" do
+
+        expect(@d.expand("$(brown|m/black/||'none)")).to eq('none')
+        expect(@d.expand("$(ba|m/black/||'none)")).to eq('black adder')
+      end
     end
 
     context 'builtin' do
