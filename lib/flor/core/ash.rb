@@ -27,7 +27,7 @@ module Flor::Ash
 
   ASH_KEYS = %w[ payload ]
 
-  def ash_value(value)
+  def compute_ash(value)
 
     return value if value.is_a?(String)
 
@@ -37,17 +37,22 @@ module Flor::Ash
     "SHA256:#{Digest::SHA256.hexdigest(j)}"
   end
 
-  def unash_value(code, copy=false)
+  def ash?(s)
 
-    return (copy ? Flor.dup(code) : code) unless code.is_a?(String)
+    s.is_a?(String) && s.match(/\ASHA256:[0-9A-Fa-f]+(:.+)?\z/)
+  end
 
-    c0, c1 = code.index(':'), code.rindex(':')
+  def lookup_ash(ash, copy=false)
+
+    return (copy ? Flor.dup(ash) : ash) unless ash?(ash)
+
+    c0, c1 = ash.index(':'), ash.rindex(':')
 
     r =
       if c1 > c0
-        (@execution['ashes'][code[0..c1 - 1]] || {})[code[c1 + 1..-1]]
+        (@execution['ashes'][ash[0..c1 - 1]] || {})[ash[c1 + 1..-1]]
       else
-        @execution['ashes'][code]
+        @execution['ashes'][ash]
       end
 
     copy ? Flor.dup(r) : r
@@ -67,20 +72,28 @@ module Flor::Ash
     h
   end
 
-  def ash!(h, key, subkey=nil)
+  def ash!(h, key)
 
-    v = h[key]
-    a = ash_value(v)
+    val = h[key]
 
-    @execution['ashes'][a] = Flor.deep_freeze(v) \
-      unless @execution['ashes'].has_key?(a)
+    return val if ash?(val)
 
-    subkey ? "#{a}:#{subkey}" : a
+    ash = compute_ash(val)
+
+    @execution['ashes'][ash] = Flor.deep_freeze(val) \
+      unless @execution['ashes'].has_key?(ash)
+
+    h[key] = ash
+  end
+
+  def ash_ref!(h, key, subkey)
+
+    "#{ash!(h, key)}:#{subkey}"
   end
 
   def unash(h, key)
 
-    unash_value(h[key])
+    lookup_ash(h[key])
   end
 
   def unash!(h, key, copy=false)
@@ -88,7 +101,7 @@ module Flor::Ash
     code = h[key]
 
     if code.is_a?(String)
-      h[key] = unash_value(code, copy)
+      h[key] = lookup_ash(code, copy)
     elsif copy && code.frozen?
       h[key] = Flor.dup(code)
     else

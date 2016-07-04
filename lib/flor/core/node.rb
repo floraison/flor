@@ -47,19 +47,12 @@ class Flor::Node
   def from; @message['from']; end
 
   #def payload; @message['payload']; end
-  #def payload
-  #  pl = @message['payload']
-  #  return pl if pl.is_a?(Flor::Ash)
-  #  @message['payload'] = Flor::Ash.new(@execution, @message['payload'])
-  #end
-  #def copy_payload
-  #  payload.copy
-  #end
   def payload
     unash!(@message, 'payload')
   end
   def payload_ref(key)
-    ash!(@message, 'payload', key)
+    #ash!(@message, 'payload', key)
+    ash_ref!(@message, 'payload', key)
   end
   def payload_copy
     unash!(@message, 'payload', true)

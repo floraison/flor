@@ -87,7 +87,7 @@ module Flor
         #
         # the payload is merely a code, no need to delete it
 
-      pld = executor.unash_value(pld, true)
+      pld = executor.lookup_ash(pld, true)
       pld['msg'] = msg
 
       exe = {
