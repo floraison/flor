@@ -83,6 +83,28 @@ describe 'Flor unit' do
         @unit.executions.where(status: 'active').count
       ).to eq(0)
     end
+
+    it 'can force a new payload on the cancelled node' do
+
+      flon = %{
+        sequence
+          sequence
+            stall _
+      }
+
+      exid = @unit.launch(flon, payload: { 'x' => '0' })
+
+      sleep 0.350
+
+      r = @unit.queue(
+        { 'point' => 'cancel',
+          'exid' => exid, 'nid' => '0_0',
+          'payload' => { 'x' => 1 } },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']).to eq({ 'x' => 1 })
+    end
   end
 end
 
