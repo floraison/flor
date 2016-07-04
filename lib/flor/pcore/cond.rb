@@ -27,11 +27,6 @@ class Flor::Pro::Cond < Flor::Procedure
 
   name 'cond'
 
-  def pre_execute
-
-    @node['ret'] = Flor.dup(payload['ret'])
-  end
-
   def receive_non_att
 
     return execute_child(0) if @message['point'] == 'execute'
@@ -54,7 +49,7 @@ class Flor::Pro::Cond < Flor::Procedure
 
   def execute_child(i)
 
-    payload_copy['ret'] = @node['ret'] unless tree[1][i]
+    payload_copy['ret'] = node_payload('ret', true) unless tree[1][i]
 
     super(i)
   end

@@ -46,16 +46,19 @@ class Flor::Node
   def point; @message['point']; end
   def from; @message['from']; end
 
-  #def payload; @message['payload']; end
   def payload
     unash!(@message, 'payload')
   end
   def payload_ref(key)
-    #ash!(@message, 'payload', key)
     ash_ref!(@message, 'payload', key)
   end
   def payload_copy
     unash!(@message, 'payload', true)
+  end
+  def node_payload(key=nil, copy=false)
+    pl = unash(@node, 'payload')
+    r = key ? pl[key] : pl
+    copy ? Flor.dup(r) : r
   end
 
   def lookup_tree(nid)
