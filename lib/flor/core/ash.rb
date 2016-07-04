@@ -96,9 +96,9 @@ module Flor::Ash
     end
   end
 
-  def unash(h, key)
+  def unash(h, key, copy=false)
 
-    lookup_ash(h[key])
+    lookup_ash(h[key], copy)
   end
 
   def unash!(h, key, copy=false)

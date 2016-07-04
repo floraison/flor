@@ -49,7 +49,7 @@ class Flor::Pro::Cond < Flor::Procedure
 
   def execute_child(i)
 
-    payload_copy['ret'] = node_payload('ret', true) unless tree[1][i]
+    payload_copy['ret'] = node_payload_ret unless tree[1][i]
 
     super(i)
   end

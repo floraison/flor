@@ -43,7 +43,7 @@ class Flor::Pro::Map < Flor::Procedure
     if @node['col'] == nil
 
       if Flor.is_func?(payload['ret'])
-        @node['col'] = Flor.to_coll(node_payload('ret', true))
+        @node['col'] = Flor.to_coll(node_payload_ret)
       else
         @node['col'] = Flor.to_coll(payload['ret'])
         return execute_child(1)

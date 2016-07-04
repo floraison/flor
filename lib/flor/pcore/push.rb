@@ -55,11 +55,11 @@ class Flor::Pro::Push < Flor::Procedure
     val =
       unkeyed_children.size > 1 ?
       payload['ret'] :
-      node_payload('ret', true)
+      node_payload_ret
 
     arr.push(val)
 
-    payload['ret'] = node_payload('ret', true) \
+    payload['ret'] = node_payload_ret \
       unless tree[0] == 'pushr'
 
     reply

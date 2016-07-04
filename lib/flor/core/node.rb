@@ -52,10 +52,8 @@ class Flor::Node
   def payload_copy
     unash!(@message, 'payload', true)
   end
-  def node_payload(key=nil, copy=false)
-    pl = unash(@node, 'payload')
-    r = key ? pl[key] : pl
-    copy ? Flor.dup(r) : r
+  def node_payload_ret
+    Flor.dup(unash(@node, 'payload')['ret'])
   end
 
   def lookup_tree(nid)

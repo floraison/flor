@@ -50,7 +50,7 @@ class Flor::Pro::Set < Flor::Procedure
       if tree[0] == 'setr' || @node['ref'] == 'f.ret'
         payload['ret']
       else
-        node_payload('ret', true)
+        node_payload_ret
       end
 
     reply

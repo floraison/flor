@@ -48,13 +48,11 @@ class Flor::Pro::Until < Flor::Procedure
 
       if (tru && t0 == 'until') || ( ! tru && t0 == 'while')
 
-        #reply('ret' => @node['uret'] || @node['ret'])
-        reply('ret' => @node['uret'] || node_payload('ret', true))
+        reply('ret' => @node['uret'] || node_payload_ret)
 
       else
 
-        #payload_copy['ret'] = Flor.dup(@node['ret'])
-        payload_copy['ret'] = node_payload('ret', true)
+        payload_copy['ret'] = node_payload_ret
         execute_child(@ncid, @node['count'])
       end
 
@@ -62,7 +60,7 @@ class Flor::Pro::Until < Flor::Procedure
 
       payload_copy
       @node['uret'] = payload['ret']
-      payload['ret'] = node_payload('ret', true)
+      payload['ret'] = node_payload_ret
       execute_child(first_unkeyed_child_id, @node['count'] += 1)
 
     else
