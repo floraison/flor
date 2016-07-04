@@ -96,11 +96,6 @@ module Flor::Ash
     end
   end
 
-  def ash_ref!(h, key, subkey)
-
-    "#{ash!(h, key)}:#{subkey}"
-  end
-
   def unash(h, key)
 
     lookup_ash(h[key])

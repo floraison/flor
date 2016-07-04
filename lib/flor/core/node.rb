@@ -49,9 +49,6 @@ class Flor::Node
   def payload
     unash!(@message, 'payload')
   end
-  def payload_ref(key)
-    ash_ref!(@message, 'payload', key)
-  end
   def payload_copy
     unash!(@message, 'payload', true)
   end
