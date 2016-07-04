@@ -89,7 +89,11 @@ module Flor::Ash
 
   def ash!(h, key)
 
-    h[key] = ash(h, key)
+    if h.has_key?(key)
+      h[key] = ash(h, key)
+    else
+      nil
+    end
   end
 
   def ash_ref!(h, key, subkey)
