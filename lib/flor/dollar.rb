@@ -117,9 +117,20 @@ module Flor
       JSON.dump([ s ])[1..-2]
     end
 
-    def match(fun, s)
+    def match(rex, s)
 
-      s.match(fun) ? s : false
+      s.match(rex) ? s : false
+    end
+
+    def substitute(pat, rpl, gix, s)
+
+      ops =
+        (gix.index('i') ? Regexp::IGNORECASE : 0) |
+        (gix.index('x') ? Regexp::EXTENDED : 0)
+
+      rex = Regexp.new(pat, ops)
+
+      gix.index('g') ? s.gsub(rex, rpl) : s.sub(rex, rpl)
     end
 
     def lfilter(s, cmp, len)
@@ -140,6 +151,7 @@ module Flor
     def call(fun, s)
 
       case fun
+
         when 'u' then s.upcase
         when 'd' then s.downcase
         when 'r' then s.reverse
@@ -147,7 +159,10 @@ module Flor
         when 'q' then quote(s, false)
         when 'Q' then quote(s, true)
 
-        when /\Am\/(.+)\/\z/ then match($1, s)
+        when /\Am\/(.+)\/\z/
+          match($1, s)
+        when /\As\/(.*[^\\]\/)(.+)\/([gix]*)\z/
+          substitute($1.chop, $2, $3, s)
 
         when /\A-?\d+\z/ then s[fun.to_i]
         when /\A(-?\d+), *(-?\d+)\z/ then s[$1.to_i, $2.to_i]

@@ -238,7 +238,13 @@ describe Flor::Dollar do
         expect(@d.expand("$(msg1|q)")).to eq("\"hello \\\"le monde\\\"\"")
       end
 
-      it "understands |s/xx/yy/ (substitution filter)"
+      it "understands |s/xx/yy/ (substitution filter)" do
+
+        expect(@d.expand("$(brown|s/black/blue/)")).to eq('fox')
+        expect(@d.expand("$(ba|s/a/o/)")).to eq('block adder')
+        expect(@d.expand("$(ba|s/a/o/g)")).to eq('block odder')
+        expect(@d.expand("$(ba|s/A/O/gi)")).to eq('blOck Odder')
+      end
     end
 
     context "filter pipes" do
