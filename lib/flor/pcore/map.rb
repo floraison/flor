@@ -29,7 +29,7 @@ class Flor::Pro::Map < Flor::Procedure
 
   def pre_execute
 
-    @node['ret'] = Flor.dup(payload['ret'])
+    #@node['ret'] = Flor.dup(payload['ret']) # now using @node['payload']
     @node['col'] = nil
     @node['idx'] = -1
     @node['fun'] = nil
@@ -43,7 +43,7 @@ class Flor::Pro::Map < Flor::Procedure
     if @node['col'] == nil
 
       if Flor.is_func?(payload['ret'])
-        @node['col'] = Flor.to_coll(@node['ret'])
+        @node['col'] = Flor.to_coll(node_payload('ret', true))
       else
         @node['col'] = Flor.to_coll(payload['ret'])
         return execute_child(1)
