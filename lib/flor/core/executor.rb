@@ -61,6 +61,7 @@ module Flor
       node = {
         'nid' => nid,
         'parent' => message['from'],
+        'payload' => ash(message, 'payload'),
         'ctime' => now,
         'mtime' => now }
 
