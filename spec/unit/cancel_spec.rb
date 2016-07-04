@@ -62,7 +62,7 @@ describe 'Flor unit' do
             stall _
       }
 
-      exid = @unit.launch(flon)
+      exid = @unit.launch(flon, payload: { 'x' => 'y' })
 
       sleep 0.350
 
@@ -75,7 +75,7 @@ describe 'Flor unit' do
         wait: true)
 
       expect(r['point']).to eq('terminated')
-expect(r['payload']).not_to eq(nil)
+      expect(r['payload']).to eq({ 'x' => 'y' })
 
       sleep 0.1
 

@@ -348,7 +348,7 @@ class Flor::Procedure < Flor::Node
   def cancel
 
     cancel_nodes(@node['cnodes']) +
-    reply('cause' => 'cancel')
+    reply('cause' => 'cancel', 'payload' => @node['payload'])
   end
 end
 
