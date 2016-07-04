@@ -24,6 +24,7 @@
 
 
 module Flor::Ash
+  extend self # so that methods can be used as module methods
 
   ASH_KEYS = %w[ payload ]
 

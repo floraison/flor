@@ -79,7 +79,7 @@ describe 'Flor unit' do
       expect(can['nid']).to eq('0_0')
       expect(can['from']).to eq('0_0_0')
       expect(can['flavour']).to eq('timeout')
-      expect(can['payload']).to eq({ 'ret' => '1s' }) # really?
+      expect(can['payload']).to eq(Flor::Ash.compute_ash({ 'ret' => '1s' }))
     end
 
     it 'is removed if the node ends before timing out' do
