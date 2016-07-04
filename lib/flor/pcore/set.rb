@@ -29,8 +29,6 @@ class Flor::Pro::Set < Flor::Procedure
 
   def pre_execute
 
-    @node['ret'] = payload_ref('ret')
-
     unatt_unkeyed_children
     stringify_first_child
   end
@@ -52,7 +50,7 @@ class Flor::Pro::Set < Flor::Procedure
       if tree[0] == 'setr' || @node['ref'] == 'f.ret'
         payload['ret']
       else
-        unash(@node, 'ret')
+        node_payload('ret', true)
       end
 
     reply
