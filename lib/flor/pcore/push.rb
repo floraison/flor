@@ -29,8 +29,6 @@ class Flor::Pro::Push < Flor::Procedure
 
   def pre_execute
 
-    @node['ret'] = Flor.dup(payload['ret'])
-
     unatt_unkeyed_children
     stringify_first_child
   end
@@ -57,11 +55,12 @@ class Flor::Pro::Push < Flor::Procedure
     val =
       unkeyed_children.size > 1 ?
       payload['ret'] :
-      @node['ret']
+      node_payload('ret', true)
 
     arr.push(val)
 
-    payload['ret'] = @node['ret'] unless tree[0] == 'pushr'
+    payload['ret'] = node_payload('ret', true) \
+      unless tree[0] == 'pushr'
 
     reply
   end
