@@ -47,7 +47,7 @@ class Flor::Pro::Timers < Flor::Procedure
             cc[1].is_a?(Array) &&
             cc[1][0] &&
             cc[1][0].is_a?(Array) &&
-            (cc[1][0][0] == 'after' || cc[1][0][0] == 'at')
+            %w[ after at in ].include?(cc[1][0][0])
           },
           c[2] ]
       }

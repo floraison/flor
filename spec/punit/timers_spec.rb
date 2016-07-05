@@ -66,8 +66,35 @@ describe 'Flor punit' do
       expect(r['error']['msg']).to eq('no parent node for "timers" at line 2')
     end
 
-    it 'sets timers with after: or in:'
+    it 'sets timers with after: or in:' do
+
+      flon = %{
+        sequence
+          timers
+            reminder in: '5d'
+            reminder at: '7d'
+            timeout after: '9d'
+          stall _
+      }
+
+      exid = @unit.launch(flon)
+
+      sleep 0.350
+
+      ts = @unit.timers.all
+
+      expect(ts.collect(&:nid)).to eq(%w[ 0 0 0 ])
+      expect(ts.collect(&:type)).to eq(%w[ in in in ])
+      expect(ts.collect(&:schedule)).to eq(%w[ 5d 7d 9d ])
+
+      tds = ts.collect(&:data)
+      tms = tds.collect { |td| td['message'] }
+      expect(tms.collect { |m| m['point'] }).to eq(%w[ execute ] * 3)
+      expect(tms.collect { |m| m['nid'] }).to eq(%w[ 0_0_0 0_0_1 0_0_2 ])
+    end
+
     it 'triggers for its parent node'
+    it 'triggers and understands "timeout"'
   end
 end
 

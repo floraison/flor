@@ -34,8 +34,7 @@ class Flor::Pro::UnderTimer < Flor::Procedure
 
   def receive_last
 
-    t = att('after')
-    # TODO t = att('at')
+    t = att('in') || att('after') || att('at')
 
     m = reply(
       'point' => 'execute', 'nid' => nid, 'payload' => parent_node['payload']
