@@ -106,12 +106,12 @@ module Flor
               rescue => re
 puts '=' * 80
 p re
-puts e.backtrace
+puts re.backtrace
 puts ('=' * 80) + ' .'
               rescue Exception => ex
 puts '!' * 80
 p ex
-puts e.backtrace
+puts ex.backtrace
 puts ('!' * 80) + ' .'
               end
             end
