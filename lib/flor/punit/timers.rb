@@ -27,6 +27,14 @@ class Flor::Pro::Timers < Flor::Procedure
 
   names %w[ timer timers ]
 
+  def pre_execute
+
+    fail "no parent node for #{tree[0].inspect} at line #{tree[2]}" \
+      unless parent_node
+
+    super
+  end
+
   def receive_last_att
 
     #@node['original_children'] = Flor.dup(children)

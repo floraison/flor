@@ -27,7 +27,7 @@ describe 'Flor punit' do
 
   describe 'timers' do
 
-    it 'sets timers for the parent node' do
+    it 'sets timers' do
 
       flon = %{
         sequence
@@ -52,6 +52,22 @@ describe 'Flor punit' do
       expect(tms.collect { |m| m['point'] }).to eq(%w[ execute execute ])
       expect(tms.collect { |m| m['nid'] }).to eq(%w[ 0_0_0 0_0_1 ])
     end
+
+    it 'fails if there is no parent node' do
+
+      flon = %{
+        timers
+          reminder 'first reminder' after: '5d'
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('no parent node for "timers" at line 2')
+    end
+
+    it 'sets timers with after: or in:'
+    it 'triggers for its parent node'
   end
 end
 
