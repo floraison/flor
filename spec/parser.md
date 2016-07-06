@@ -753,6 +753,18 @@ parses to
     [ 'a', [], 2 ], [ 'b', [], 3 ], [ 'c', [], 3 ]
   ], 1 ]
 ```
+---
+
+```flon
+  sequence; a | b | c
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ 'a', [], 1 ], [ 'b', [], 1 ], [ 'c', [], 1 ]
+  ], 1 ]
+```
+
 
 ## suffix if and unless
 

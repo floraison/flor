@@ -69,7 +69,7 @@ module Flor
       }x)
     end
 
-    def symbol(i); rex(:symbol, i, /[^:; \b\f\n\r\t"',()\[\]{}#\\]+/); end
+    def symbol(i); rex(:symbol, i, /[^:;| \b\f\n\r\t"',()\[\]{}#\\]+/); end
 
     def comment(i); rex(nil, i, /#[^\r\n]*/); end
 
@@ -159,7 +159,7 @@ module Flor
     def hed(i); seq(:hed, i, :exp); end
 #def hed(i); seq(:hed, i, :val_ws); end
     def grp(i); seq(:grp, i, :hed, :elts); end
-    def ind(i); rex(:ind, i, /[; \t]*/); end
+    def ind(i); rex(:ind, i, /[|; \t]*/); end
 
     def lin(i); seq(:lin, i, :ind, :grp); end
 
@@ -279,9 +279,9 @@ module Flor
 
       def append(line)
 
-        if line.indent == ';'
+        if line.indent == :east
           line.indent = self.indent + 2
-        elsif line.indent.is_a?(String)
+        elsif line.indent == :south
           line.indent = self.indent
         end
 
@@ -324,8 +324,15 @@ module Flor
       def read(tree)
 
         if it = tree.lookup(:ind)
-          semis = it.string.chars.inject(0) { |t, c| c == ';' ? t + 1 : t }
-          @indent = semis > 0 ? ';' * semis : it.length
+
+          s = it.string
+          semicount = s.count(';')
+          pipe = s.index('|')
+
+          @indent =
+            if semicount == 1 then :east
+            elsif semicount > 1 || pipe then :south
+            else s.length; end
         end
 
         gt = tree.lookup(:grp)
