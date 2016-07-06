@@ -225,7 +225,13 @@ puts ('!' * 80) + ' .'
 
       return s if s.is_a?(Array)
 
-      s.split(',').map { |s| s.strip.split(/ +/).map(&:strip) }
+      s
+        .split(',')
+        .map { |s|
+          s
+            .match(/\A *([0-9_\-]+ )?([a-z]+) *\z/)[1, 2]
+            .collect { |ss| ss ? ss.strip : nil }
+        }
     end
 
     def wait(exid, opts)

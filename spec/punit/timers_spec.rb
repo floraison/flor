@@ -103,8 +103,8 @@ describe 'Flor punit' do
           stall _
       }
 
-      r = @unit.launch(flon, wait: true)
       #r = @unit.launch(flon, wait: '0_0_0 ceased')
+      r = @unit.launch(flon, wait: 'ceased')
 
       expect(r['point']).to eq('ceased')
       expect(r['nid']).to eq(nil)
@@ -113,6 +113,14 @@ describe 'Flor punit' do
       ed = @unit.executions[exid: r['exid']].data
 
       expect(ed['nodes'].keys).to eq(%w[ 0 0_1 ])
+
+      traces = @unit.traces.all
+
+      expect(
+        traces.collect { |t| "#{t.nid}:#{t.text}" }
+      ).to eq(%w[
+        0_0_0:reminder
+      ])
     end
 
     it 'triggers and understands "timeout"'

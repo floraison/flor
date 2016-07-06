@@ -87,7 +87,7 @@ module Flor
       return false if @exid && @exid != message['exid']
 
       nid, points = @serie.first
-      return false if nid && ! nid.match(message['nid'])
+      return false if nid && message['nid'] && ! nid.match(message['nid'])
       return false if ! points.include?(message['point'])
 
       true
