@@ -38,6 +38,32 @@ module Flor
       @var = ConditionVariable.new
     end
 
+    def self.make(exid, opts)
+
+      owait = opts[:wait]
+
+      serie, timeout, repeat =
+        if owait == true
+          [ [ [ nil, %w[ failed terminated ] ] ], # serie
+            3, # timeout
+            false ] # repeat
+        elsif owait.is_a?(Numeric)
+          [ [ [ nil, %w[ failed terminated ] ] ], # serie
+            owait, # timeout
+            false ] # repeat
+        elsif owait.is_a?(String)
+          [ parse_serie(owait), # serie
+            opts[:timeout] || 3, # timeout
+            false ] # repeat
+        elsif owait.is_a?(Hash)
+          [ parse_serie(owait[:serie]),
+            owait[:timeout],
+            owait[:repeat] ]
+        end
+
+        Waiter.new(exid, serie, timeout, repeat)
+    end
+
     def notify(executor, message)
 
       @mutex.synchronize do
@@ -91,6 +117,19 @@ module Flor
       return false if ! points.include?(message['point'])
 
       true
+    end
+
+    def self.parse_serie(s)
+
+      return s if s.is_a?(Array)
+
+      s
+        .split(',')
+        .map { |s|
+          s
+            .match(/\A *([0-9_\-]+ )?([a-z]+) *\z/)[1, 2]
+            .collect { |ss| ss ? ss.strip : nil }
+        }
     end
   end
 end

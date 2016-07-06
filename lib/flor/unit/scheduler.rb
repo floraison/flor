@@ -221,50 +221,16 @@ puts ('!' * 80) + ' .'
       end
     end
 
-    def parse_serie(s)
-
-      return s if s.is_a?(Array)
-
-      s
-        .split(',')
-        .map { |s|
-          s
-            .match(/\A *([0-9_\-]+ )?([a-z]+) *\z/)[1, 2]
-            .collect { |ss| ss ? ss.strip : nil }
-        }
-    end
-
     def wait(exid, opts)
-
-      owait = opts[:wait]
-
-      w = nil
-
-      serie, timeout, repeat =
-        if owait == true
-          [ [ [ nil, %w[ failed terminated ] ] ], # serie
-            3, # timeout
-            false ] # repeat
-        elsif owait.is_a?(Numeric)
-          [ [ [ nil, %w[ failed terminated ] ] ], # serie
-            owait, # timeout
-            false ] # repeat
-        elsif owait.is_a?(String)
-          [ parse_serie(owait), # serie
-            opts[:timeout] || 3, # timeout
-            false ] # repeat
-        elsif owait.is_a?(Hash)
-          [ parse_serie(owait[:serie]),
-            owait[:timeout],
-            owait[:repeat] ]
-        end
 
       @mutex.synchronize do
 
-        @waiters << (w = Waiter.new(exid, serie, timeout, repeat))
-      end
+        w = Waiter.make(exid, opts)
+        @waiters << w
 
-      w.wait
+        w
+
+      end.wait
     end
 
     def reload
