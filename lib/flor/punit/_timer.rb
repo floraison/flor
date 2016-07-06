@@ -41,7 +41,8 @@ class Flor::Pro::UnderTimer < Flor::Procedure
     m = reply(
       'point' => 'execute',
       'nid' => nid,
-      'from' => ppnid,
+      #'from' => ppnid,
+      'from' => nil,
       'payload' => parent_node['payload']
     ).first
 

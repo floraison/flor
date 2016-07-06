@@ -80,11 +80,19 @@ module Flor
     def apply(node, message)
 
       n = Flor::Node.new(self, node, message)
+      nid = node['nid']
 
       mt = message['tree']
-      nt = n.lookup_tree(node['nid'])
+      nt = n.lookup_tree(nid)
       node['tree'] = mt if mt && (mt != nt)
       tree = node['tree'] || nt
+
+      if tree == nil && message['from'] == nil
+        #
+        # used for the "timers" procedure
+        #
+        tree = node['tree'] = n.lookup_tree_anyway(nid)
+      end
 
       t0 = tree[0]
       t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0

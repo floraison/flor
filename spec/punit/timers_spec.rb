@@ -52,7 +52,8 @@ describe 'Flor punit' do
 
       expect(tms.collect { |m| m['point'] }).to eq(%w[ execute execute ])
       expect(tms.collect { |m| m['nid'] }).to eq(%w[ 0_0_0 0_0_1 ])
-      expect(tms.collect { |m| m['from'] }).to eq(%w[ 0 0 ])
+      #expect(tms.collect { |m| m['from'] }).to eq(%w[ 0 0 ])
+      expect(tms.collect { |m| m['from'] }).to eq([ nil, nil ])
     end
 
     it 'fails if there is no parent node' do
@@ -97,16 +98,20 @@ describe 'Flor punit' do
 
     it 'triggers for its parent node' do
 
-fail "spec/impl not yet ready"
       flon = %{
         sequence; timers; trace 'reminder' after: '1s'
           stall _
       }
 
-      #r = @unit.launch(flon, wait: true)
-      exid = @unit.launch(flon)
-      sleep 0.4; p '-' * 80
-      sleep 3
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('ceased')
+      expect(r['nid']).to eq(nil)
+      expect(r['from']).to eq('0_0_0')
+
+      ed = @unit.executions[exid: r['exid']].data
+
+      expect(ed['nodes'].keys).to eq(%w[ 0 0_1 ])
     end
 
     it 'triggers and understands "timeout"'
