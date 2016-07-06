@@ -118,12 +118,10 @@ puts ('!' * 80) + ' .'
       []
     end
 
-    def ceased(message)
-
-      # nothing to do
-
-      []
-    end
+    #def ceased(message)
+    #  # nothing to do
+    #  []
+    #end
 
     def cancel(message)
 
