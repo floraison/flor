@@ -104,6 +104,7 @@ describe 'Flor punit' do
       }
 
       r = @unit.launch(flon, wait: true)
+      #r = @unit.launch(flon, wait: '0_0_0 ceased')
 
       expect(r['point']).to eq('ceased')
       expect(r['nid']).to eq(nil)

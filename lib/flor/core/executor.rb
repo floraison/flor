@@ -153,6 +153,11 @@ module Flor
       ]
     end
 
+    def termination?(message)
+
+      message['from'] == '0' || @execution['nodes'].empty?
+    end
+
     def receive(message)
 
       from = message['from']
@@ -163,9 +168,15 @@ module Flor
 
       nid = message['nid']
 
-      return messages + [
-        message.merge('point' => 'terminated', 'vars' => (fnode || {})['vars'])
-      ] unless nid
+      return (
+        messages +
+        [
+          message.merge(
+            termination?(message) ?
+            { 'point' => 'terminated', 'vars' => (fnode || {})['vars'] } :
+            { 'point' => 'ceased' })
+        ]
+      ) unless nid
 
       node = @execution['nodes'][nid]
 
