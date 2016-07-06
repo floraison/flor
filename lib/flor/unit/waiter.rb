@@ -51,7 +51,7 @@ module Flor
           [ [ [ nil, %w[ failed terminated ] ] ], # serie
             owait, # timeout
             false ] # repeat
-        elsif owait.is_a?(String)
+        elsif owait.is_a?(String) || owait.is_a?(Array)
           [ parse_serie(owait), # serie
             opts[:timeout] || 3, # timeout
             false ] # repeat
@@ -121,14 +121,13 @@ module Flor
 
     def self.parse_serie(s)
 
-      return s if s.is_a?(Array)
+      return s if s.is_a?(Array) && s.collect(&:class).uniq == [ Array ]
 
-      s
-        .split(',')
+      (s.is_a?(String) ? s.split(',') : s)
         .map { |s|
           s
             .match(/\A *([0-9_\-]+ )?([a-z]+) *\z/)[1, 2]
-            .collect { |ss| ss ? ss.strip : nil }
+            .collect { |s| s ? s.strip : nil }
         }
     end
   end

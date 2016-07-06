@@ -99,16 +99,17 @@ describe 'Flor punit' do
     it 'triggers for its parent node' do
 
       flon = %{
-        sequence; timers; trace 'reminder' after: '1s'
+        sequence
+          timers; trace 'reminder0' after: '1s' | trace 'reminder1' after: '2s'
           stall _
       }
 
       #r = @unit.launch(flon, wait: '0_0_0 ceased')
-      r = @unit.launch(flon, wait: 'ceased')
+      r = @unit.launch(flon, wait: [ 'ceased', 'ceased' ])
 
       expect(r['point']).to eq('ceased')
       expect(r['nid']).to eq(nil)
-      expect(r['from']).to eq('0_0_0')
+      expect(r['from']).to eq('0_0_1')
 
       ed = @unit.executions[exid: r['exid']].data
 
@@ -119,7 +120,8 @@ describe 'Flor punit' do
       expect(
         traces.collect { |t| "#{t.nid}:#{t.text}" }
       ).to eq(%w[
-        0_0_0:reminder
+        0_0_0:reminder0
+        0_0_1:reminder1
       ])
     end
 
