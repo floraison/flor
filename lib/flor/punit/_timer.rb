@@ -34,19 +34,43 @@ class Flor::Pro::UnderTimer < Flor::Procedure
 
   def receive_last
 
-    t = att('in') || att('after') || att('at')
+    (att('_timeout') ? schedule_timeout : schedule_execution) +
+    super
+  end
 
+  protected
+
+  def schedule_timeout
+
+    t = att('in') || att('after') || att('at')
     ppnid = parent_node['parent']
 
-    m = reply(
-      'point' => 'execute',
-      'nid' => nid,
-      #'from' => ppnid,
-      'from' => nil,
-      'payload' => parent_node['payload']
-    ).first
+    m =
+      reply(
+        'point' => 'cancel',
+        'nid' => ppnid,
+        'from' => ppnid,
+        'flavour' => 'timeout',
+        'payload' => parent_node['payload']
+      ).first
 
-    schedule('in' => t, 'message' => m, 'nid' => ppnid) + super
+    schedule('in' => t, 'nid' => ppnid, 'message' => m)
+  end
+
+  def schedule_execution
+
+    t = att('in') || att('after') || att('at')
+    ppnid = parent_node['parent']
+
+    m =
+      reply(
+        'point' => 'execute',
+        'nid' => nid,
+        'from' => nil,
+        'payload' => parent_node['payload']
+      ).first
+
+    schedule('in' => t, 'message' => m, 'nid' => ppnid)
   end
 end
 

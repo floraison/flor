@@ -39,20 +39,8 @@ class Flor::Pro::Timers < Flor::Procedure
 
     #@node['original_children'] = Flor.dup(children)
 
-    cn =
-      non_att_children.collect { |c|
-        [ '_timer',
-          c[1].select { |cc|
-            cc[0] == '_att' &&
-            cc[1].is_a?(Array) &&
-            cc[1][0] &&
-            cc[1][0].is_a?(Array) &&
-            %w[ after at in ].include?(cc[1][0][0])
-          },
-          c[2] ]
-      }
-
-    @node['tree'] = [ tree[0], cn, tree[2] ]
+    @node['tree'] =
+      [ tree[0], children.collect { |c| rewrite_child(c) }, tree[2] ]
 
     super
   end
@@ -60,6 +48,28 @@ class Flor::Pro::Timers < Flor::Procedure
   def receive_non_att
 
     super
+  end
+
+  protected
+
+  def rewrite_child(t)
+
+    timeatts =
+      t[1].select { |c|
+        c[0] == '_att' &&
+        c[1].is_a?(Array) &&
+        c[1][0] &&
+        c[1][0].is_a?(Array) &&
+        %w[ after at in ].include?(c[1][0][0])
+      }
+
+    return [ 'noop', [], t[2] ] if timeatts.empty?
+
+    timeatts.unshift(
+      [ '_att',  [ [ '_timeout', [], t[2] ], [ '_boo', true, t[2] ] ], t[2] ]
+    ) if t[0] == 'timeout'
+
+    [ '_timer', timeatts, t[2] ]
   end
 end
 

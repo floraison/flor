@@ -125,7 +125,19 @@ describe 'Flor punit' do
       ])
     end
 
-    it 'triggers and understands "timeout"'
+    it 'triggers and understands "timeout"' do
+
+      flon = %{
+        sequence; timers; timeout after: '1s'
+          stall _
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['cause']).to eq('cancel')
+      expect(r['payload']).to eq({})
+    end
   end
 end
 
