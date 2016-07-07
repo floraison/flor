@@ -52,7 +52,7 @@ describe 'Flor punit' do
 
       expect(tms.collect { |m| m['point'] }).to eq(%w[ execute cancel ])
       expect(tms.collect { |m| m['nid'] }).to eq(%w[ 0_0_0 0 ])
-      expect(tms.collect { |m| m['from'] }).to eq([ nil, '0' ])
+      expect(tms.collect { |m| m['from'] }).to eq(%w[ 0 0 ])
     end
 
     it 'fails if there is no parent node' do
@@ -100,7 +100,8 @@ describe 'Flor punit' do
 
       flon = %{
         sequence
-          timers; trace 'reminder0' after: '1s' | trace 'reminder1' after: '2s'
+          timers; trace 'reminder0' after: '1s'
+          #timers; trace 'reminder0' after: '1s' | trace 'reminder1' after: '2s'
           stall _
       }
 
@@ -108,7 +109,7 @@ describe 'Flor punit' do
       r = @unit.launch(flon, wait: [ 'ceased', 'ceased' ])
 
       expect(r['point']).to eq('ceased')
-      expect(r['nid']).to eq(nil)
+      expect(r['nid']).to eq('0')
       expect(r['from']).to eq('0_0_1')
 
       ed = @unit.executions[exid: r['exid']].data
@@ -138,6 +139,8 @@ describe 'Flor punit' do
       expect(r['cause']).to eq('cancel')
       expect(r['payload']).to eq({})
     end
+
+    it 'can call functions' # verify var lookup (lookup of functions)
   end
 end
 

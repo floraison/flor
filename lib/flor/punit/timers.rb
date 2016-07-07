@@ -37,8 +37,6 @@ class Flor::Pro::Timers < Flor::Procedure
 
   def receive_last_att
 
-    #@node['original_children'] = Flor.dup(children)
-
     @node['tree'] =
       [ tree[0], children.collect { |c| rewrite_child(c) }, tree[2] ]
 

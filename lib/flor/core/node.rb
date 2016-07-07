@@ -58,27 +58,55 @@ class Flor::Node
 
   def lookup_tree(nid)
 
+    return nil unless nid
+
     node = @execution['nodes'][nid]
-    return nil unless node
 
-    tree = node['tree']
+    tree = node && node['tree']
     return tree if tree
 
-    tree = lookup_tree(node['parent'])
-    return nil unless tree
+    par = node && node['parent']
+    cid = Flor.child_id(nid)
 
-    tree[1][Flor.child_id(nid)]
+    tree = par && lookup_tree(par)
+    return tree[1][cid] if tree
+
+    return nil if node
+
+    tree = lookup_tree(Flor.parent_nid(nid))
+    return tree[1][cid] if tree
+
+    tree = lookup_tree(Flor.parent_nid(nid, true))
+    return tree[1][cid] if tree
+
+    nil
   end
 
-  def lookup_tree_anyway(nid)
-
-    tree = lookup_tree(nid)
-    return tree if tree
-
-    tree = lookup_tree_anyway(Flor.parent_id(nid))
-
-    tree[1][Flor.child_id(nid)]
-  end
+#  def lookup_tree(nid)
+#
+#    node = @execution['nodes'][nid]
+#    return nil unless node
+#
+#    tree = node['tree']
+#    return tree if tree
+#
+#    tree = lookup_tree(node['parent'])
+#    return nil unless tree
+#
+#    tree[1][Flor.child_id(nid)]
+#    #sub_tree(tree, node['parent'], nid)
+#  end
+#
+#  def lookup_tree_anyway(nid)
+#
+#    tree = lookup_tree(nid)
+#    return tree if tree
+#
+#    tree = lookup_tree_anyway(Flor.parent_id(nid))
+#
+#    tree[1][Flor.child_id(nid)]
+#    #sub_tree(tree, node['parent'], nid)
+#  end
 
   def lookup(name)
 

@@ -65,11 +65,9 @@ module Flor
         'ctime' => now,
         'mtime' => now }
 
-      if vs = message['vars']
-        node['vars'] = vs
-      end
-      if cnid = message['cnid']
-        node['cnid'] = cnid
+      %w[ vars cnid noreply ].each do |k|
+        v = message[k]
+        node[k] = v if v
       end
 
       @execution['nodes'][nid] = node
@@ -81,18 +79,23 @@ module Flor
 
       n = Flor::Node.new(self, node, message)
       nid = node['nid']
+#if message['point'] == 'execute' && nid == '0_0_0'
+#  p [ :lt, n.lookup_tree(nid) ]
+#  p [ :lta, n.lookup_tree_anyway(nid) ]
+#end
 
       mt = message['tree']
       nt = n.lookup_tree(nid)
       node['tree'] = mt if mt && (mt != nt)
       tree = node['tree'] || nt
 
-      if tree == nil && message['from'] == nil
-        #
-        # used for the "timers" procedure
-        #
-        tree = node['tree'] = n.lookup_tree_anyway(nid)
-      end
+#      if tree == nil && message['from'] == nil
+#        #
+#        # used for the "timers" procedure
+#        #
+#        tree = node['tree'] = n.lookup_tree_anyway(nid)
+#      end
+#p [ nid, tree ]
 
       t0 = tree[0]
       t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
@@ -167,6 +170,7 @@ module Flor
       messages = leave(fnode, message)
 
       nid = message['nid']
+      nid = nil if fnode && fnode['noreply']
 
       return (
         messages +
@@ -180,9 +184,6 @@ module Flor
 
       node = @execution['nodes'][nid]
 
-      #return messages + [
-      #  message.merge('point' => 'ceased', 'nid' => from, 'from' => nil)
-      #] unless node
       return messages unless node
 
       messages + apply(node, message)
