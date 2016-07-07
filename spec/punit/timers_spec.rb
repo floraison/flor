@@ -50,10 +50,9 @@ describe 'Flor punit' do
       tds = ts.collect(&:data)
       tms = tds.collect { |td| td['message'] }
 
-      expect(tms.collect { |m| m['point'] }).to eq(%w[ execute execute ])
-      expect(tms.collect { |m| m['nid'] }).to eq(%w[ 0_0_0 0_0_1 ])
-      #expect(tms.collect { |m| m['from'] }).to eq(%w[ 0 0 ])
-      expect(tms.collect { |m| m['from'] }).to eq([ nil, nil ])
+      expect(tms.collect { |m| m['point'] }).to eq(%w[ execute cancel ])
+      expect(tms.collect { |m| m['nid'] }).to eq(%w[ 0_0_0 0 ])
+      expect(tms.collect { |m| m['from'] }).to eq([ nil, '0' ])
     end
 
     it 'fails if there is no parent node' do
@@ -92,8 +91,9 @@ describe 'Flor punit' do
 
       tds = ts.collect(&:data)
       tms = tds.collect { |td| td['message'] }
-      expect(tms.collect { |m| m['point'] }).to eq(%w[ execute ] * 3)
-      expect(tms.collect { |m| m['nid'] }).to eq(%w[ 0_0_0 0_0_1 0_0_2 ])
+
+      expect(tms.collect { |m| m['point'] }).to eq(%w[ execute execute cancel ])
+      expect(tms.collect { |m| m['nid'] }).to eq(%w[ 0_0_0 0_0_1 0 ])
     end
 
     it 'triggers for its parent node' do
