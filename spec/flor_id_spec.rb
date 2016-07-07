@@ -31,6 +31,25 @@ describe Flor do
     end
   end
 
+  describe '.parent_nid' do
+
+    it 'works' do
+
+      expect(Flor.parent_nid('0')).to eq(nil)
+      expect(Flor.parent_nid('0_1')).to eq('0')
+      expect(Flor.parent_nid('0_1_9')).to eq('0_1')
+      expect(Flor.parent_nid('0_1_9-6')).to eq('0_1-6')
+    end
+
+    it 'works when remove_subnid=true' do
+
+      expect(Flor.parent_nid('0-7', true)).to eq(nil)
+      expect(Flor.parent_nid('0_1', true)).to eq('0')
+      expect(Flor.parent_nid('0_1_9', true)).to eq('0_1')
+      expect(Flor.parent_nid('0_1_9-6', true)).to eq('0_1')
+    end
+  end
+
   describe '.child_id' do
 
     it 'works' do
@@ -81,27 +100,6 @@ describe Flor do
       ).to eq(
         '0_0_12-1'
       )
-    end
-  end
-
-  describe '.nid_distance(nid0, nid1)' do
-
-    it 'returns 0 when the nids are at the same level' do
-
-      expect(Flor.nid_distance('0_0', '0_1')).to eq(0)
-      expect(Flor.nid_distance('0_0', '0_0-1')).to eq(0)
-    end
-
-    it 'returns 1 when father and child' do
-
-      expect(Flor.nid_distance('0_0', '0_0_1')).to eq(1)
-      expect(Flor.nid_distance('0_0', '0_0_2-1')).to eq(1)
-    end
-
-    it 'returns 2 when grand-father and child' do
-
-      expect(Flor.nid_distance('0_0', '0_1_0_1')).to eq(2)
-      expect(Flor.nid_distance('0_0', '0_3_0_2-1')).to eq(2)
     end
   end
 end

@@ -283,9 +283,13 @@ module Flor
     end
   end
 
-  def self.nid_distance(nid0, nid1)
+  def self.parent_nid(nid, remove_subnid=false)
 
-    (master_nid(nid1).count('_') - master_nid(nid0).count('_')).abs
+    _, sub = nid.split('-')
+    i = nid.rindex('_')
+
+    return nil unless i
+    "#{nid[0, i]}#{remove_subnid || sub.nil? ? nil : "-#{sub}"}"
   end
 
   #
