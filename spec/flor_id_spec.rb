@@ -83,5 +83,26 @@ describe Flor do
       )
     end
   end
+
+  describe '.nid_distance(nid0, nid1)' do
+
+    it 'returns 0 when the nids are at the same level' do
+
+      expect(Flor.nid_distance('0_0', '0_1')).to eq(0)
+      expect(Flor.nid_distance('0_0', '0_0-1')).to eq(0)
+    end
+
+    it 'returns 1 when father and child' do
+
+      expect(Flor.nid_distance('0_0', '0_0_1')).to eq(1)
+      expect(Flor.nid_distance('0_0', '0_0_2-1')).to eq(1)
+    end
+
+    it 'returns 2 when grand-father and child' do
+
+      expect(Flor.nid_distance('0_0', '0_1_0_1')).to eq(2)
+      expect(Flor.nid_distance('0_0', '0_3_0_2-1')).to eq(2)
+    end
+  end
 end
 

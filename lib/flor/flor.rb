@@ -283,6 +283,11 @@ module Flor
     end
   end
 
+  def self.nid_distance(nid0, nid1)
+
+    (master_nid(nid1).count('_') - master_nid(nid0).count('_')).abs
+  end
+
   #
   # misc
   #
