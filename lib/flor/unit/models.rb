@@ -64,6 +64,18 @@ module Flor
   end
 
   class Timer < FlorModel
+
+    def to_trigger_message
+
+      {
+        'point' => 'trigger',
+        'exid' => self.exid,
+        'nid' => self.nid,
+        'type' => self.type,
+        'schedule' => self.schedule,
+        'tid' => self.id
+      }
+    end
   end
 
   class Trap < FlorModel

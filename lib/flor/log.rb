@@ -72,7 +72,10 @@ module Flor
       " #{_dg}tags:#{_gr}#{m['tags'].join(',')}" :
       nil
 
-    puts "  #{tm} #{_dg}#{ni}#{pt}#{t0}#{cn}#{fr}#{rt}#{ta}#{_rs}"
+    ti = m['tid']
+    ti = ti ? " #{_dg}tid:#{ti}" : ''
+
+    puts "  #{tm} #{_dg}#{ni}#{pt}#{t0}#{ti}#{cn}#{fr}#{rt}#{ta}#{_rs}"
   end
 
   class Colours
