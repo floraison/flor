@@ -14,7 +14,7 @@ describe 'Flor unit' do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf['unit'] = 'u'
-    @unit.conf['journal'] = true
+    @unit.hook('journal', Flor::Journal)
     @unit.storage.migrate
     @unit.start
   end

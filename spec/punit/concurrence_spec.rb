@@ -14,7 +14,7 @@ describe 'Flor punit' do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf['unit'] = 'pu_concurrence'
-    @unit.conf['journal'] = true
+    @unit.hooker.add('journal', Flor::Journal)
     @unit.storage.migrate
     @unit.start
   end

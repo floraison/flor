@@ -129,7 +129,7 @@ describe 'Flor punit' do
 
     it 'triggers for its parent node' do
 
-      @unit.conf['journal'] = true
+      @unit.hook('journal', Flor::Journal)
 
       flon = %{
         sequence

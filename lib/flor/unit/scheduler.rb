@@ -75,6 +75,11 @@ module Flor
       @tasker.shutdown
     end
 
+    def hook(*args, &block)
+
+      @hooker.add(*args, &block)
+    end
+
     def start
 
       # TODO heartbeat, every x minutes, when idle, log something
@@ -177,15 +182,18 @@ puts ('!' * 80) + ' .'
         when Hash
           @hooker.notify(executor, o)
           @logger.notify(executor, o)
-          if o['consumed']
-            notify_waiters(executor, o)
-          else
-            (@journal ||= []) << o if @conf['journal']
-          end
+          notify_waiters(executor, o)
         else
           fail ArgumentError.new(
             "don't know what to do with a #{o.class} instance")
       end
+
+    rescue => err
+      puts 'n' * 80
+      puts "error in #{self.class}#notify"
+      p err
+      puts err.backtrace
+      puts ('n' * 80) + ' .'
     end
 
     def trap(node, tra, msg)
@@ -202,14 +210,11 @@ puts ('!' * 80) + ' .'
       end
     end
 
-    def journal
-
-      @journal
-    end
-
     protected
 
     def notify_waiters(executor, message)
+
+      return unless message['consumed']
 
       @mutex.synchronize do
 

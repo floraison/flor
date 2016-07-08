@@ -22,28 +22,29 @@
 # Made in Japan.
 #++
 
-require 'sequel'
-require 'sequel/extensions/migration'
-
-require 'rufus-scheduler'
-
-require 'flor'
-require 'flor/unit/logger'
-require 'flor/unit/hooker'
-require 'flor/unit/journal'
-require 'flor/unit/storage'
-require 'flor/unit/executor'
-require 'flor/unit/waiter'
-require 'flor/unit/scheduler'
-require 'flor/unit/models'
-require 'flor/unit/loader'
-require 'flor/unit/tasker'
-
-Flor.load_procedures('punit')
-
 module Flor
 
-  Unit = Scheduler
-    # an alias
+  class Journal
+
+    attr_reader :messages
+
+    def initialize(unit)
+
+      unit.singleton_class.instance_eval do
+        define_method(:journal) do
+          @hooker['journal'].messages
+        end
+      end
+
+      @messages = []
+    end
+
+    def notify(executor, message)
+
+      return unless message['consumed']
+
+      @messages << Flor.dup(message)
+    end
+  end
 end
 
