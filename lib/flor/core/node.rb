@@ -56,19 +56,6 @@ class Flor::Node
     Flor.dup(unash(@node, 'payload')['ret'])
   end
 
-  def subtree(tree, pnid, nid)
-
-    pnid = Flor.master_nid(pnid)
-    nid = Flor.master_nid(nid)
-
-    return nil unless nid[0, pnid.length] == pnid
-      # maybe failing would be better
-
-    nid[pnid.length + 1..-1].split('_').each { |cid| tree = tree[1][cid.to_i] }
-
-    tree
-  end
-
   def lookup_tree(nid)
 
     return nil unless nid
@@ -89,11 +76,26 @@ class Flor::Node
     tree = lookup_tree(Flor.parent_nid(nid))
     return tree[1][cid] if tree
 
-    tree = lookup_tree(Flor.parent_nid(nid, true))
-    return tree[1][cid] if tree
+    #tree = lookup_tree(Flor.parent_nid(nid, true))
+    #return tree[1][cid] if tree
+      #
+      # might become necessary at some point
 
     nil
   end
+
+  #def lookup_tree(nid)
+  #  climb_down_for_tree(nid) ||
+  #  climb_up_for_tree(nid) ||
+  #end
+  #def climb_up_for_tree(nid)
+  #  # ...
+  #end
+  #def climb_down_for_tree(nid)
+  #  # ...
+  #end
+    #
+    # that might be the way...
 
   def lookup(name)
 
@@ -147,6 +149,19 @@ class Flor::Node
   end
 
   protected
+
+  def subtree(tree, pnid, nid)
+
+    pnid = Flor.master_nid(pnid)
+    nid = Flor.master_nid(nid)
+
+    return nil unless nid[0, pnid.length] == pnid
+      # maybe failing would be better
+
+    nid[pnid.length + 1..-1].split('_').each { |cid| tree = tree[1][cid.to_i] }
+
+    tree
+  end
 
   def parent_node(node=@node)
 
