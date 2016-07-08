@@ -246,10 +246,7 @@ module Flor
             .delete
         end
 
-        put_message(
-          timer.to_trigger_message)
-        put_message(
-          timer.data['message'].merge('tid' => timer.id))
+        put_message(timer.to_trigger_message)
       end
     end
 

@@ -143,9 +143,7 @@ puts ('!' * 80) + ' .'
 
     def trigger(message)
 
-      # nothing to do, simply indicative
-
-      []
+      [ message['message'] ]
     end
   end
 end

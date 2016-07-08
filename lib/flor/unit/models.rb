@@ -73,7 +73,8 @@ module Flor
         'nid' => self.nid,
         'type' => self.type,
         'schedule' => self.schedule,
-        'tid' => self.id
+        'tid' => self.id,
+        'message' => self.data['message'].merge('tid' => self.id)
       }
     end
   end
