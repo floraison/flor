@@ -98,10 +98,12 @@ describe 'Flor punit' do
 
     it 'triggers for its parent node' do
 
+      @unit.conf['journal'] = true
+
       flon = %{
         sequence
-          timers; trace 'reminder0' after: '1s'
-          #timers; trace 'reminder0' after: '1s' | trace 'reminder1' after: '2s'
+          #timers; trace 'reminder0' after: '1s'
+          timers; trace 'reminder0' after: '1s' | trace 'reminder1' after: '2s'
           stall _
       }
 
@@ -124,6 +126,12 @@ describe 'Flor punit' do
         0_0_0:reminder0
         0_0_1:reminder1
       ])
+
+      expect(
+        @unit.journal.count { |m| m['point'] == 'schedule' }
+      ).to eq(
+        2
+      )
     end
 
     it 'triggers and understands "timeout"' do
