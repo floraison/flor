@@ -71,6 +71,7 @@ module Flor
       @thread = nil
 
       @logger.shutdown
+      @hooker.shutdown
       @storage.shutdown
       @tasker.shutdown
     end
