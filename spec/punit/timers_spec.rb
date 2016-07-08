@@ -53,6 +53,7 @@ describe 'Flor punit' do
       expect(tms.collect { |m| m['point'] }).to eq(%w[ execute cancel ])
       expect(tms.collect { |m| m['nid'] }).to eq(%w[ 0_0_0 0 ])
       expect(tms.collect { |m| m['from'] }).to eq(%w[ 0 0 ])
+      expect(tms.collect { |m| m['noreply'] }).to eq([ true, nil ])
     end
 
     it 'fails if there is no parent node' do
@@ -66,6 +67,36 @@ describe 'Flor punit' do
 
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq('no parent node for "timers" at line 2')
+    end
+
+    it 'sets timers even if deep' do
+
+      flon = %{
+        sequence
+          timers
+            sequence
+              reminder 'first reminder' after: '5d'
+              timeout after: '9d'
+          stall _
+      }
+
+      exid = @unit.launch(flon)
+
+      sleep 0.350
+
+      ts = @unit.timers.all
+
+      expect(ts.collect(&:nid)).to eq(%w[ 0 0 ])
+      expect(ts.collect(&:type)).to eq(%w[ in in ])
+      expect(ts.collect(&:schedule)).to eq(%w[ 5d 9d ])
+
+      tds = ts.collect(&:data)
+      tms = tds.collect { |td| td['message'] }
+
+      expect(tms.collect { |m| m['point'] }).to eq(%w[ execute cancel ])
+      expect(tms.collect { |m| m['nid'] }).to eq(%w[ 0_0_0_0 0 ])
+      expect(tms.collect { |m| m['from'] }).to eq(%w[ 0 0 ])
+      expect(tms.collect { |m| m['noreply'] }).to eq([ true, nil ])
     end
 
     it 'sets timers with after: or in:' do
@@ -178,7 +209,8 @@ describe 'Flor punit' do
 #      }
 #    end
 
-    it 'understands every:'
+    it 'understands every:' # day at 3pm?
+    it 'understands cron:'
   end
 end
 

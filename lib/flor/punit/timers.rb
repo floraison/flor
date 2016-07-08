@@ -37,8 +37,7 @@ class Flor::Pro::Timers < Flor::Procedure
 
   def receive_last_att
 
-    @node['tree'] =
-      [ tree[0], children.collect { |c| rewrite_child(c) }, tree[2] ]
+    @node['tree'] = rewrite(tree)
 
     super
   end
@@ -50,7 +49,7 @@ class Flor::Pro::Timers < Flor::Procedure
 
   protected
 
-  def rewrite_child(t)
+  def rewrite(t)
 
     timeatts =
       t[1].select { |c|
@@ -61,7 +60,7 @@ class Flor::Pro::Timers < Flor::Procedure
         %w[ after at in ].include?(c[1][0][0])
       }
 
-    return [ 'noop', [], t[2] ] if timeatts.empty?
+    return [ t[0], t[1].collect { |c| rewrite(c) }, t[2] ] if timeatts.empty?
 
     timeatts.unshift(
       [ '_att',  [ [ '_timeout', [], t[2] ], [ '_boo', true, t[2] ] ], t[2] ]

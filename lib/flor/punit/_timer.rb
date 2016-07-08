@@ -43,7 +43,7 @@ class Flor::Pro::UnderTimer < Flor::Procedure
   def schedule_timeout
 
     t = att('in') || att('after') || att('at')
-    ppnid = parent_node['parent']
+    ppnid = determine_timer_parent_nid
 
     m =
       reply(
@@ -57,10 +57,23 @@ class Flor::Pro::UnderTimer < Flor::Procedure
     schedule('in' => t, 'nid' => ppnid, 'message' => m)
   end
 
+  def determine_timer_parent_nid
+
+    n = parent_node
+
+    loop do
+      head = lookup_tree(n['nid'])[0]
+      n = @execution['nodes'][n['parent']]
+      break if head == 'timers'
+    end
+
+    n['nid']
+  end
+
   def schedule_execution
 
     t = att('in') || att('after') || att('at')
-    ppnid = parent_node['parent']
+    ppnid = determine_timer_parent_nid
 
     m =
       reply(
