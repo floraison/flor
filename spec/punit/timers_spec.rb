@@ -196,18 +196,28 @@ describe 'Flor punit' do
       ])
     end
 
-    it 'lets on "composing"'
-#
-#      flon = %{
-#        define reminder txt
-#          trace "reminder ${txt}"
-#        sequence
-#          timers
-#            map [ 1, 2 ]
-#              def x; reminder '$(x)' after: '$(x)s'
-#          stall _
-#      }
-#    end
+    it 'lets on "composing"' do
+
+      flon = %{
+        define reminder txt
+          trace "reminder $(txt)"
+        sequence
+          timers
+            map [ 1 2 ]
+              def x; reminder "$(x)" after: "$(x)s"
+          stall _
+      }
+
+      r = @unit.launch(flon, wait: %w[ ceased ceased ])
+
+      expect(r['point']).to eq('ceased')
+
+      expect(
+        @unit.traces.collect { |t| "#{t.nid}:#{t.text}" }
+      ).to eq([
+        "0_0_2-1:reminder 1", "0_0_2-2:reminder 2"
+      ])
+    end
 
     it 'understands every:' # day at 3pm?
     it 'understands cron:'
