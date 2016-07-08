@@ -28,7 +28,7 @@ module Flor
   class Scheduler
 
     attr_reader :conf, :env
-    attr_reader :logger, :storage, :loader, :tasker
+    attr_reader :logger, :hooker, :storage, :loader, :tasker
 
     attr_reader :thread_status
 
@@ -42,6 +42,8 @@ module Flor
 
       @logger =
         (Flor::Conf.get_class(@conf, 'logger') || Flor::Logger).new(self)
+      @hooker =
+        (Flor::Conf.get_class(@conf, 'hooker') || Flor::Hooker).new(self)
       @storage =
         (Flor::Conf.get_class(@conf, 'storage') || Flor::Storage).new(self)
       @loader =
@@ -173,6 +175,7 @@ puts ('!' * 80) + ' .'
         when Timer
           @mutex.synchronize { @timers.push(o); @timers.sort_by!(&:ntime) }
         when Hash
+          @hooker.notify(executor, o)
           if o['consumed']
             notify_waiters(executor, o)
           else
