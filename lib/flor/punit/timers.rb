@@ -51,6 +51,8 @@ class Flor::Pro::Timers < Flor::Procedure
 
   def rewrite(t)
 
+    return t unless t[1].is_a?(Array)
+
     timeatts =
       t[1].select { |c|
         c[0] == '_att' &&
