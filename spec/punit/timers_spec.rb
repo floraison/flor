@@ -118,10 +118,8 @@ describe 'Flor punit' do
 
       expect(ed['nodes'].keys).to eq(%w[ 0 0_1 ])
 
-      traces = @unit.traces.all
-
       expect(
-        traces.collect { |t| "#{t.nid}:#{t.text}" }
+        @unit.traces.collect { |t| "#{t.nid}:#{t.text}" }
       ).to eq(%w[
         0_0_0:reminder0
         0_0_1:reminder1
@@ -148,7 +146,39 @@ describe 'Flor punit' do
       expect(r['payload']).to eq({})
     end
 
-    it 'can call functions' # verify var lookup (lookup of functions)
+    it 'can call functions' do # verify var lookup (lookup of functions)
+
+      flon = %{
+        define reminder txt
+          trace "reminder $(txt)"
+        sequence
+          timers; reminder '1' after: '1s' | reminder '2' after: '2s'
+          stall _
+      }
+
+      r = @unit.launch(flon, wait: %w[ ceased ceased ])
+
+      expect(
+        @unit.traces.collect { |t| "#{t.nid}:#{t.text}" }
+      ).to eq([
+        "0_0_2-1:reminder 1", "0_0_2-2:reminder 2"
+      ])
+    end
+
+    it 'lets on "composing"'
+#
+#      flon = %{
+#        define reminder txt
+#          trace "reminder ${txt}"
+#        sequence
+#          timers
+#            map [ 1, 2 ]
+#              def x; reminder '$(x)' after: '$(x)s'
+#          stall _
+#      }
+#    end
+
+    it 'understands every:'
   end
 end
 
