@@ -28,7 +28,7 @@ module Flor
   class Scheduler
 
     attr_reader :conf, :env
-    attr_reader :logger, :hooker, :storage, :loader, :tasker
+    attr_reader :hooker, :storage, :loader, :tasker
 
     attr_reader :thread_status
 
@@ -40,8 +40,6 @@ module Flor
 
       @env = @conf['env'] ||= 'dev'
 
-      @logger =
-        (Flor::Conf.get_class(@conf, 'logger') || Flor::Logger).new(self)
       @hooker =
         (Flor::Conf.get_class(@conf, 'hooker') || Flor::Hooker).new(self)
       @storage =
@@ -50,6 +48,8 @@ module Flor
         (Flor::Conf.get_class(@conf, 'loader') || Flor::Loader).new(self)
       @tasker =
         (Flor::Conf.get_class(@conf, 'tasker') || Flor::Tasker).new(self)
+
+      @hooker.add('logger', Flor::Logger)
 
       @heart_rate = @conf[:sch_heart_rate] || 0.3
       @reload_frequency = @conf[:sch_reload_frequency] || 60
@@ -70,7 +70,6 @@ module Flor
       @thread_status = :shutdown
       @thread = nil
 
-      @logger.shutdown
       @hooker.shutdown
       @storage.shutdown
       @tasker.shutdown
@@ -182,7 +181,6 @@ puts ('!' * 80) + ' .'
           @mutex.synchronize { @timers.push(o); @timers.sort_by!(&:ntime) }
         when Hash
           @hooker.notify(executor, o)
-          @logger.notify(executor, o)
           notify_waiters(executor, o)
         else
           fail ArgumentError.new(

@@ -31,6 +31,10 @@ module Flor
     def initialize(unit)
 
       @unit = unit
+
+      @unit.singleton_class.instance_eval do
+        define_method(:logger) { @hooker['logger'] }
+      end
     end
 
     def shutdown
