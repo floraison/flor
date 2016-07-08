@@ -176,11 +176,11 @@ puts ('!' * 80) + ' .'
           @mutex.synchronize { @timers.push(o); @timers.sort_by!(&:ntime) }
         when Hash
           @hooker.notify(executor, o)
+          @logger.notify(executor, o)
           if o['consumed']
             notify_waiters(executor, o)
           else
             (@journal ||= []) << o if @conf['journal']
-            @logger.notify(executor, o)
           end
         else
           fail ArgumentError.new(

@@ -43,6 +43,8 @@ module Flor
 
     def notify(executor, message)
 
+      return if message['consumed']
+
       if message['point'] == 'execute' && message['nid'] == '0'
         Flor.print_tree(message['tree']) if @unit.conf['log_tree']
       end
