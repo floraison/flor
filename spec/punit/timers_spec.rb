@@ -215,7 +215,7 @@ describe 'Flor punit' do
       expect(
         @unit.traces.collect { |t| "#{t.nid}:#{t.text}" }
       ).to eq([
-        "0_0_2-1:reminder 1", "0_0_2-2:reminder 2"
+        '0_0_2-3:reminder 1', '0_0_2-4:reminder 2'
       ])
     end
 

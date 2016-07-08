@@ -43,48 +43,57 @@ class Flor::Pro::UnderTimer < Flor::Procedure
   def schedule_timeout
 
     t = att('in') || att('after') || att('at')
-    ppnid = determine_timer_parent_nid
+
+    tnid, cnid = determine_timers_cnid_parents
 
     m =
       reply(
         'point' => 'cancel',
-        'nid' => ppnid,
-        'from' => ppnid,
+        'nid' => tnid,
+        'from' => tnid,
         'flavour' => 'timeout',
         'payload' => parent_node['payload']
       ).first
 
-    schedule('in' => t, 'nid' => ppnid, 'message' => m)
+    schedule('in' => t, 'nid' => tnid, 'message' => m)
   end
 
   def schedule_execution
 
     t = att('in') || att('after') || att('at')
-    ppnid = determine_timer_parent_nid
+
+    tnid, cnid = determine_timers_cnid_parents
 
     m =
       reply(
         'point' => 'execute',
         'nid' => nid,
-        'from' => ppnid,
+        'from' => tnid,
         'noreply' => true,
         'payload' => parent_node['payload']
       ).first
 
-    schedule('in' => t, 'message' => m, 'nid' => ppnid)
+    if cnid
+      m['cnid'] = cnid
+      (@execution['nodes'][cnid]['closures'] ||= []) << nid
+    end
+
+    schedule('in' => t, 'message' => m, 'nid' => tnid)
   end
 
-  def determine_timer_parent_nid
+  def determine_timers_cnid_parents
 
+    cnid = nil
     n = parent_node
 
     loop do
+      cnid = n['nid'] if n['cnid']
       head = lookup_tree(n['nid'])[0]
       n = @execution['nodes'][n['parent']]
       break if head == 'timers'
     end
 
-    n['nid']
+    [ n['nid'], cnid ]
   end
 end
 
