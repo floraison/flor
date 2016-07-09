@@ -79,11 +79,11 @@ module Flor
           hook.notify(executor, message)
         else # if block
           if block.arity == 1
-            block.apply(message)
+            block.call(message)
           elsif block.arity == 2
-            block.apply(message, opts)
+            block.call(message, opts)
           else
-            block.apply(executor, message, opts)
+            block.call(executor, message, opts)
           end
         end
       end
