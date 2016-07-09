@@ -43,7 +43,30 @@ describe 'Flor unit' do
       expect(msgs).to eq(@unit.journal)
     end
 
-    it 'may alter a message'
+    it 'may alter a message' do
+
+      @unit.hook do |message|
+        next if message['consumed']
+        next unless message['point'] == 'execute'
+        message['tree'][1] = 'blue' if message['tree'][0] == '_sqs'
+      end
+
+      @unit.launch(%{
+        sequence
+          trace 'red'
+      }, wait: true)
+
+      expect(
+        @unit.traces.collect { |t| "#{t.nid}:#{t.text}" }
+      ).to eq(%w[
+        0_0:blue
+      ])
+    end
+  end
+
+  describe 'Flor::Scheduler#hook' do
+
+    it 'accepts message filters'
   end
 end
 
