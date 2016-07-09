@@ -97,6 +97,25 @@ describe 'Flor unit' do
       expect(
         ms1.collect { |m| m['point'] }.uniq).to eq(%w[ execute terminated ])
     end
+
+    it 'may filter on domain:/d:' do
+
+      ms0 = []
+      @unit.hook(domain: 'test') { |m| ms0 << Flor.dup(m) }
+      ms1 = []
+      @unit.hook(d: %w[ test nada ]) { |m| ms1 << Flor.dup(m) }
+      ms2 = []
+      @unit.hook(d: 'tes') { |m| ms2 << Flor.dup(m) }
+
+      @unit.launch(%{
+        sequence
+          noop _
+      }, wait: true)
+
+      expect(ms0.size).to eq(14)
+      expect(ms1.size).to eq(14)
+      expect(ms2.size).to eq(0)
+    end
   end
 end
 

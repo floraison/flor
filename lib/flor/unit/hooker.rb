@@ -112,7 +112,16 @@ module Flor
       ps = o(opts, :point, :p, [])
       return false if ps && ! ps.include?(message['point'])
 
-      true # TODO
+      if ds = o(opts, :domain, :d, [])
+        exid = message['exid']
+        return false \
+          unless ds.find do |d|
+            dl = d.length
+            exid[0, dl] == d && %w[ - . ].include?(exid[dl, 1])
+          end
+      end
+
+      true
     end
   end
 end
