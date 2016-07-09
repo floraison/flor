@@ -22,29 +22,55 @@
 # Made in Japan.
 #++
 
-require 'sequel'
-require 'sequel/extensions/migration'
-
-require 'rufus-scheduler'
-
-require 'flor'
-require 'flor/unit/hooker'
-require 'flor/unit/wlist'
-require 'flor/unit/logger'
-require 'flor/unit/journal'
-require 'flor/unit/storage'
-require 'flor/unit/executor'
-require 'flor/unit/waiter'
-require 'flor/unit/scheduler'
-require 'flor/unit/models'
-require 'flor/unit/loader'
-require 'flor/unit/tasker'
-
-Flor.load_procedures('punit')
-
 module Flor
 
-  Unit = Scheduler
-    # an alias
+  class WaitList
+
+    def initialize(unit)
+
+      @unit = unit
+
+      @mutex = Mutex.new
+      @waiters = []
+
+      @unit.instance_eval do
+        def wait(exid, opts)
+          @hooker['wlist'].wait(exid, opts)
+        end
+      end
+    end
+
+    def shutdown
+    end
+
+    def notify(executor, message)
+
+      return unless message['consumed']
+
+      @mutex.synchronize do
+
+        to_remove = []
+
+        @waiters.each do |w|
+          remove = w.notify(executor, message)
+          to_remove << w if remove
+        end
+
+        @waiters -= to_remove
+      end
+    end
+
+    def wait(exid, opts)
+
+      @mutex.synchronize do
+
+        w = Waiter.make(exid, opts)
+        @waiters << w
+
+        w
+
+      end.wait
+    end
+  end
 end
 

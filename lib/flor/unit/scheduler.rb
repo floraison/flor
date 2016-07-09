@@ -50,6 +50,7 @@ module Flor
         (Flor::Conf.get_class(@conf, 'tasker') || Flor::Tasker).new(self)
 
       @hooker.add('logger', Flor::Logger)
+      @hooker.add('wlist', Flor::WaitList)
 
       @heart_rate = @conf[:sch_heart_rate] || 0.3
       @reload_frequency = @conf[:sch_reload_frequency] || 60
@@ -62,7 +63,6 @@ module Flor
       @exids = []
 
       @executors = []
-      @waiters = []
     end
 
     def shutdown
@@ -181,7 +181,6 @@ puts ('!' * 80) + ' .'
           @mutex.synchronize { @timers.push(o); @timers.sort_by!(&:ntime) }
         when Hash
           @hooker.notify(executor, o)
-          notify_waiters(executor, o)
         else
           fail ArgumentError.new(
             "don't know what to do with a #{o.class} instance")
@@ -210,35 +209,6 @@ puts ('!' * 80) + ' .'
     end
 
     protected
-
-    def notify_waiters(executor, message)
-
-      return unless message['consumed']
-
-      @mutex.synchronize do
-
-        to_remove = []
-
-        @waiters.each do |w|
-          remove = w.notify(executor, message)
-          to_remove << w if remove
-        end
-
-        @waiters -= to_remove
-      end
-    end
-
-    def wait(exid, opts)
-
-      @mutex.synchronize do
-
-        w = Waiter.make(exid, opts)
-        @waiters << w
-
-        w
-
-      end.wait
-    end
 
     def reload
 
