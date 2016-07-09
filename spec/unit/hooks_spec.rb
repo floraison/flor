@@ -66,7 +66,19 @@ describe 'Flor unit' do
 
   describe 'Flor::Scheduler#hook' do
 
-    it 'accepts message filters'
+    it 'may filter on consumed:' do
+
+      ncms = []; @unit.hook(consumed: false) { |m| ncms << Flor.dup(m) }
+      cms = []; @unit.hook(c: true) { |m| cms << Flor.dup(m) }
+      ms = []; @unit.hook { |m| ms << Flor.dup(m) }
+
+      @unit.launch(%{
+        sequence
+          noop _
+      }, wait: true)
+
+      expect([ ms.size, cms.size, ncms.size ]).to eq([ 14, 7, 7 ])
+    end
   end
 end
 

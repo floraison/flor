@@ -91,7 +91,16 @@ module Flor
 
     protected
 
+    def o(opts, *keys)
+
+      keys.each { |k| return opts[k] if opts.has_key?(k) }; nil
+    end
+
     def match?(message, opts)
+
+      c = o(opts, :consumed, :c)
+      return false if c == true && ! message['consumed']
+      return false if c == false && message['consumed']
 
       true # TODO
     end
