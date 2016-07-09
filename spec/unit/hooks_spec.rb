@@ -66,7 +66,7 @@ describe 'Flor unit' do
 
   describe 'Flor::Scheduler#hook' do
 
-    it 'may filter on consumed:' do
+    it 'may filter on consumed:/c:' do
 
       ncms = []; @unit.hook(consumed: false) { |m| ncms << Flor.dup(m) }
       cms = []; @unit.hook(c: true) { |m| cms << Flor.dup(m) }
@@ -78,6 +78,24 @@ describe 'Flor unit' do
       }, wait: true)
 
       expect([ ms.size, cms.size, ncms.size ]).to eq([ 14, 7, 7 ])
+    end
+
+    it 'may filter on point:/p:' do
+
+      ms0 = []
+      @unit.hook(point: 'execute') { |m| ms0 << Flor.dup(m) }
+      ms1 = []
+      @unit.hook(p: %w[ execute terminated ]) { |m| ms1 << Flor.dup(m) }
+
+      @unit.launch(%{
+        sequence
+          noop _
+      }, wait: true)
+
+      expect(
+        ms0.collect { |m| m['point'] }.uniq).to eq(%w[ execute ])
+      expect(
+        ms1.collect { |m| m['point'] }.uniq).to eq(%w[ execute terminated ])
     end
   end
 end

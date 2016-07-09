@@ -93,7 +93,14 @@ module Flor
 
     def o(opts, *keys)
 
-      keys.each { |k| return opts[k] if opts.has_key?(k) }; nil
+      array = false
+      array = keys.pop if keys.last == []
+
+      r = nil
+      keys.each { |k| break r = opts[k] if opts.has_key?(k) }
+
+      return nil if r == nil
+      array ? Array(r) : r
     end
 
     def match?(message, opts)
@@ -101,6 +108,9 @@ module Flor
       c = o(opts, :consumed, :c)
       return false if c == true && ! message['consumed']
       return false if c == false && message['consumed']
+
+      ps = o(opts, :point, :p, [])
+      return false if ps && ! ps.include?(message['point'])
 
       true # TODO
     end
