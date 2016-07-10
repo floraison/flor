@@ -25,7 +25,7 @@
 
 class Flor::Pro::Atom < Flor::Procedure
 
-  names %w[ _atom _num _boo _sqs _dqs _rxs _nul _func ]
+  names %w[ _num _boo _sqs _dqs _rxs _nul _func ]
 
   def execute
 
