@@ -77,6 +77,13 @@ module Flor
         'message' => self.data['message'].merge('tid' => self.id)
       }
     end
+
+    # countering tstamp being a String with jdbc sqlite...
+    #
+    def ntime_t
+
+      @ntime_t ||= (ntime.is_a?(String) ? Time.parse(ntime) : ntime)
+    end
   end
 
   class Trap < FlorModel

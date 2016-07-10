@@ -241,7 +241,7 @@ puts ('!' * 80) + ' .'
       loop do
 
         timer = @timers.first
-        break if timer == nil || timer.ntime > now
+        break if timer == nil || timer.ntime_t > now
 
         @storage.trigger_timer(@timers.shift)
       end
