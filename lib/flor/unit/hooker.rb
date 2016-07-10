@@ -125,6 +125,10 @@ module Flor
         return false unless hps.include?(message['heap'])
       end
 
+      if hts = o(opts, :heat, :ht, [])
+        return false unless hts.include?(message['heat0'])
+      end
+
       true
     end
   end

@@ -137,6 +137,29 @@ describe 'Flor unit' do
         ms1.collect { |m| m['point'] }
       ).to eq(%w[ execute ] * 4 + %w[ receive ] * 4)
     end
+
+    it 'may filter on heat:/ht:' do
+
+      ms0 = []
+      @unit.hook(heat: 'fun0', c: false) { |m| ms0 << Flor.dup(m) }
+      ms1 = []
+      @unit.hook(ht: %w[ fun1 ], c: false) { |m| ms1 << Flor.dup(m) }
+
+      @unit.launch(%{
+        define fun0; trace 'fun0'
+        define fun1; trace 'fun1'
+        sequence
+          fun0
+          fun1
+      }, wait: true)
+
+      expect(ms0.collect { |m| m['nid'] }).to eq(%w[ 0_2_0 0_2_0 ])
+      expect(ms0.collect { |m| m['point'] }).to eq(%w[ execute receive ])
+      expect(ms1.collect { |m| m['nid'] }).to eq(%w[ 0_2_1 0_2_1 ])
+      expect(ms1.collect { |m| m['point'] }).to eq(%w[ execute receive ])
+    end
+
+    it 'may filter on tag:/t:'
   end
 end
 
