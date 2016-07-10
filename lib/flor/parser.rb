@@ -224,9 +224,11 @@ module Flor
       es = []; while ts.any?; es << [ es.size, ts.shift, ts.shift ]; end
 
       if es.all? { |e| e[1] == nil }
-        [ '_arr',
-          es.map { |e| e[2] },
-          l ]
+        if es.size == 1
+          es.first[2]
+        else
+          [ '_arr', es.map { |e| e[2] }, l ]
+        end
       else
         [ '_obj',
           es.map { |e| [ e[1] || [ "_#{e[0]}", [], l ], e[2] ] }.flatten(1),
