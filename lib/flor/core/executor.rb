@@ -39,8 +39,8 @@ module Flor
     end
 
     def conf; @unit.conf; end
-
     def exid; @execution['exid']; end
+    def node(nid); @execution['nodes'][nid]; end
 
     def counter_next(key)
 
@@ -96,10 +96,10 @@ module Flor
       t0 = tree[0]
       t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
 
-      message['heat'] = heat = n.deref(t0)
-      message['heat0'] = tree[0]
+      node['heat'] = heat = n.deref(t0)
+      node['heat0'] = tree[0]
 
-      message['heap'] =
+      node['heap'] =
         if ! heat.is_a?(Array)
           '_val'
         elsif tree[1] == []
@@ -121,10 +121,10 @@ module Flor
     def apply(node, message)
 
       return error_reply(
-        node, message, "don't know how to apply #{message['heat0'].inspect}"
-      ) if message['heat'] == nil
+        node, message, "don't know how to apply #{node['heat0'].inspect}"
+      ) if node['heat'] == nil
 
-      head = Flor::Procedure[message['heap']].new(self, node, message)
+      head = Flor::Procedure[node['heap']].new(self, node, message)
 
       head.pre_execute if message['point'] == 'execute'
       head.send(message['point'])

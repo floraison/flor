@@ -29,7 +29,7 @@ class Flor::Pro::Val < Flor::Procedure
 
   def execute
 
-    heat = @message['heat']
+    heat = @node['heat']
     heat = nil if heat == [ '_proc', 'val', -1 ]
 
     payload_copy['ret'] = heat

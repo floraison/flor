@@ -107,10 +107,13 @@ describe 'Flor unit' do
       ms2 = []
       @unit.hook(d: 'tes') { |m| ms2 << Flor.dup(m) }
 
-      @unit.launch(%{
-        sequence
-          noop _
-      }, wait: true)
+      r =
+        @unit.launch(%{
+          sequence
+            noop _
+        }, wait: true)
+
+      expect(r['point']).to eq('terminated')
 
       expect(ms0.size).to eq(14)
       expect(ms1.size).to eq(14)
@@ -141,25 +144,49 @@ describe 'Flor unit' do
     it 'may filter on heat:/ht:' do
 
       ms0 = []
-      @unit.hook(heat: 'fun0', c: false) { |m| ms0 << Flor.dup(m) }
+      @unit.hook(heat: 'fun0', c: false) do |x, m, o|
+        #pp m
+        #pp x.node(m['nid'])
+        ms0 << Flor.dup(m)
+      end
+
       ms1 = []
-      @unit.hook(ht: %w[ fun1 ], c: false) { |m| ms1 << Flor.dup(m) }
+      @unit.hook(ht: %w[ fun1 ], c: false) do |x, m, o|
+        ms1 << Flor.dup(m)
+      end
 
-      @unit.launch(%{
-        define fun0; trace 'fun0'
-        define fun1; trace 'fun1'
-        sequence
-          fun0
-          fun1
-      }, wait: true)
+      r =
+        @unit.launch(%{
+          define fun0 x; trace "fun0:$(x)"
+          define fun1 x; trace "fun1:$(x)"
+          sequence
+            fun0 'a'
+            fun1 'b'
+        }, wait: true)
 
-      expect(ms0.collect { |m| m['nid'] }).to eq(%w[ 0_2_0 0_2_0 ])
-      expect(ms0.collect { |m| m['point'] }).to eq(%w[ execute receive ])
-      expect(ms1.collect { |m| m['nid'] }).to eq(%w[ 0_2_1 0_2_1 ])
-      expect(ms1.collect { |m| m['point'] }).to eq(%w[ execute receive ])
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @unit.traces.collect { |t| "#{t.nid}:#{t.text}" }
+      ).to eq(%w[
+        0_0_2-1:fun0:a
+        0_1_2-2:fun1:b
+      ])
+
+      expect(
+        ms0.collect { |m| m['nid'] }).to eq(%w[ 0_2_0 ] * 3)
+      expect(
+        ms0.collect { |m| m['point'] }).to eq(%w[ execute receive receive ])
+
+      expect(
+        ms1.collect { |m| m['nid'] }).to eq(%w[ 0_2_1 ] * 3)
+      expect(
+        ms1.collect { |m| m['point'] }).to eq(%w[ execute receive receive ])
     end
 
     it 'may filter on tag:/t:'
+    it 'may filter on tenter:/te:'
+    it 'may filter on tleave:/tl:'
   end
 end
 

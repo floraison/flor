@@ -73,7 +73,7 @@ module Flor
 
       @hooks.each do |n, opts, hook, block|
 
-        next unless match?(message, opts)
+        next unless match?(executor, message, opts)
 
         if hook
           hook.notify(executor, message)
@@ -103,7 +103,7 @@ module Flor
       array ? Array(r) : r
     end
 
-    def match?(message, opts)
+    def match?(executor, message, opts)
 
       c = o(opts, :consumed, :c)
       return false if c == true && ! message['consumed']
@@ -121,12 +121,17 @@ module Flor
           end
       end
 
+      node = nil
+
       if hps = o(opts, :heap, :hp, [])
-        return false unless hps.include?(message['heap'])
+        return false unless node ||= executor.node(message['nid'])
+        return false unless hps.include?(node['heap'])
       end
 
       if hts = o(opts, :heat, :ht, [])
-        return false unless hts.include?(message['heat0'])
+        return false unless node ||= executor.node(message['nid'])
+#p [ message['point'], message['nid'], hts, node['heat0'] ]
+        return false unless hts.include?(node['heat0'])
       end
 
       true

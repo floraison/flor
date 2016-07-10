@@ -29,7 +29,6 @@ class Flor::Pro::Apply < Flor::Procedure
 
   def pre_execute
 
-    @node['heat'] = @message['heat']
     @node['atts'] = []
   end
 
