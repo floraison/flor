@@ -99,7 +99,7 @@ module Flor
       message['heat'] = heat = n.deref(t0)
       message['heat0'] = tree[0]
 
-      message['heak'] =
+      message['heap'] =
         if ! heat.is_a?(Array)
           '_val'
         elsif tree[1] == []
@@ -124,7 +124,7 @@ module Flor
         node, message, "don't know how to apply #{message['heat0'].inspect}"
       ) if message['heat'] == nil
 
-      head = Flor::Procedure[message['heak']].new(self, node, message)
+      head = Flor::Procedure[message['heap']].new(self, node, message)
 
       head.pre_execute if message['point'] == 'execute'
       head.send(message['point'])

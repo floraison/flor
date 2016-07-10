@@ -116,6 +116,9 @@ describe 'Flor unit' do
       expect(ms1.size).to eq(14)
       expect(ms2.size).to eq(0)
     end
+
+    it 'may filter on heat:'
+    it 'may filter on heap:'
   end
 end
 
