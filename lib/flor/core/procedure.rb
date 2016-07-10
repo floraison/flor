@@ -35,6 +35,15 @@ class Flor::Procedure < Flor::Node
     @@inherited.find { |k| k.names && k.names.include?(name) }
   end
 
+  def self.first_name(name)
+
+    @@inherited.each do |k|
+      return k.names.first if k.names && k.names.include?(name)
+    end
+
+    nil
+  end
+
   class << self
 
     def names(*names)
