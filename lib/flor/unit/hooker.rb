@@ -121,6 +121,10 @@ module Flor
           end
       end
 
+      if hps = o(opts, :heap, :hp, [])
+        return false unless hps.include?(message['heap'])
+      end
+
       true
     end
   end

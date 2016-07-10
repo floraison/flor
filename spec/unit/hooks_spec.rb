@@ -117,8 +117,26 @@ describe 'Flor unit' do
       expect(ms2.size).to eq(0)
     end
 
-    it 'may filter on heat:'
-    it 'may filter on heap:'
+    it 'may filter on heap:/hp:' do
+
+      ms0 = []
+      @unit.hook(heap: 'sequence') { |m| ms0 << Flor.dup(m) }
+      ms1 = []
+      @unit.hook(hp: %w[ sequence noop ]) { |m| ms1 << Flor.dup(m) }
+
+      @unit.launch(%{
+        sequence
+          noop _
+      }, wait: true)
+
+      expect(
+        ms0.collect { |m| m['point'] }
+      ).to eq(%w[ execute ] * 2 + %w[ receive ] * 2)
+
+      expect(
+        ms1.collect { |m| m['point'] }
+      ).to eq(%w[ execute ] * 4 + %w[ receive ] * 4)
+    end
   end
 end
 
