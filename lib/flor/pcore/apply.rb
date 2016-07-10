@@ -27,13 +27,9 @@ class Flor::Pro::Apply < Flor::Procedure
 
   name 'apply'
 
-  def heat=(t)
-
-    @heat = t
-  end
-
   def pre_execute
 
+    @node['heat'] = @message['heat']
     @node['atts'] = []
   end
 
@@ -48,7 +44,10 @@ class Flor::Pro::Apply < Flor::Procedure
 
     args = @node['atts'].collect(&:last)
 
-    src = @heat[0, 2] == [ '_proc', 'apply' ] ?  args.shift : @heat
+    src =
+      @node['heat'][0, 2] == [ '_proc', 'apply' ] ?
+      args.shift :
+      @node['heat']
 
     ms = apply(src, args, tree[2])
 

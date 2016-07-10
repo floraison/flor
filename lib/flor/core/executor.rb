@@ -52,7 +52,7 @@ module Flor
 
     protected
 
-    def execute(message)
+    def make_node(message)
 
       nid = message['nid']
 
@@ -71,14 +71,22 @@ module Flor
       end
 
       @execution['nodes'][nid] = node
-
-      apply(node, message)
     end
 
-    def apply(node, message)
+    def determine_heat(message)
+
+      nid = message['nid']
+
+      return unless nid
+
+      node =
+        message['point'] == 'execute' ?
+        make_node(message) :
+        @execution['nodes'][nid]
+
+      return unless node
 
       n = Flor::Node.new(self, node, message)
-      nid = node['nid']
 
       mt = message['tree']
       nt = n.lookup_tree(nid)
@@ -88,16 +96,29 @@ module Flor
       t0 = tree[0]
       t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
 
-      heat = n.deref(t0)
+      message['heat'] = n.deref(t0)
+      message['heat0'] = tree[0]
+      message['heatref'] = true if tree[1] == []
+    end
+
+    def execute(message)
+
+      apply(@execution['nodes'][message['nid']], message)
+    end
+
+    def apply(node, message)
+
+      heat = message['heat']
 
       return error_reply(
-        node, message, "don't know how to apply #{tree[0].inspect}"
+        node, message, "don't know how to apply #{message['heat0'].inspect}"
       ) if heat == nil
 
       heak =
         if ! heat.is_a?(Array)
           Flor::Pro::Val
-        elsif tree[1] == []
+        #elsif tree[1] == []
+        elsif message['heatref']
           Flor::Pro::Val
         elsif heat[0] == '_proc'
           Flor::Procedure[heat[1]]
@@ -108,10 +129,8 @@ module Flor
         end
 
       head = heak.new(self, node, message)
-      head.heat = heat if head.respond_to?(:heat=)
 
       head.pre_execute if message['point'] == 'execute'
-
       head.send(message['point'])
     end
 
@@ -215,6 +234,8 @@ module Flor
       begin
 
         ash_all!(message)
+
+        determine_heat(message)
 
         @unit.notify(self, message) # pre
 

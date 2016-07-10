@@ -27,18 +27,12 @@ class Flor::Pro::Val < Flor::Procedure
 
   #name 'val'
 
-  def heat=(t)
-
-    @heat = t unless t == [ '_proc', 'val', -1 ]
-  end
-
   def execute
 
-    #v = attributes['_0'] || attributes['v'] || @heat
-    #v = Flor.de_val(v) unless Flor.is_procedure_val?(v)
-    #v = expand(v)
+    heat = @message['heat']
+    heat = nil if heat == [ '_proc', 'val', -1 ]
 
-    payload_copy['ret'] = @heat
+    payload_copy['ret'] = heat
 
     reply
   end
