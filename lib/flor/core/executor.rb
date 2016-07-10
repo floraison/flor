@@ -96,9 +96,21 @@ module Flor
       t0 = tree[0]
       t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
 
-      message['heat'] = n.deref(t0)
+      message['heat'] = heat = n.deref(t0)
       message['heat0'] = tree[0]
-      message['heatref'] = true if tree[1] == []
+
+      message['heak'] =
+        if ! heat.is_a?(Array)
+          '_val'
+        elsif tree[1] == []
+          '_val'
+        elsif heat[0] == '_proc'
+          heat[1]
+        elsif heat[0] == '_func'
+          'apply'
+        else
+          '_val'
+        end
     end
 
     def execute(message)
@@ -108,27 +120,11 @@ module Flor
 
     def apply(node, message)
 
-      heat = message['heat']
-
       return error_reply(
         node, message, "don't know how to apply #{message['heat0'].inspect}"
-      ) if heat == nil
+      ) if message['heat'] == nil
 
-      heak =
-        if ! heat.is_a?(Array)
-          Flor::Pro::Val
-        #elsif tree[1] == []
-        elsif message['heatref']
-          Flor::Pro::Val
-        elsif heat[0] == '_proc'
-          Flor::Procedure[heat[1]]
-        elsif heat[0] == '_func'
-          Flor::Pro::Apply
-        else
-          Flor::Pro::Val
-        end
-
-      head = heak.new(self, node, message)
+      head = Flor::Procedure[message['heak']].new(self, node, message)
 
       head.pre_execute if message['point'] == 'execute'
       head.send(message['point'])
