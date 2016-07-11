@@ -105,7 +105,7 @@ class RSpec::Core::ExampleGroup
       mod = :out
       flon = []
       rub = []
-      pnd = false
+      sta = :active
 
       lines.each_with_index do |line, i|
 
@@ -117,7 +117,11 @@ class RSpec::Core::ExampleGroup
 
         elsif line.match(/pending/)
 
-          pnd = true
+          sta = :pending
+
+        elsif line.match(/hidden/)
+
+          sta = :hidden
 
         elsif mod == :out && line.match(/\A```ruby\b/)
 
@@ -132,12 +136,12 @@ class RSpec::Core::ExampleGroup
 
           if mod == :ruby
 
-            current << [ lin, flon.join, rub.join, pnd ]
+            current << [ lin, flon.join, rub.join, sta ]
 
             lin = -1
             rub = []
             flon = []
-            pnd = false
+            sta = :active
           end
           mod = :out
 
@@ -153,7 +157,7 @@ class RSpec::Core::ExampleGroup
 
         context(con) do
 
-          li_ra_ru_pn_s.each do |lin, flon, rub, pnd|
+          li_ra_ru_pn_s.each do |lin, flon, rub, sta|
 
             ra = flon.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
             ra = "#{ra[0, 60]}..." if ra.length > 60
@@ -161,7 +165,9 @@ class RSpec::Core::ExampleGroup
 
             ru = Kernel.eval(rub)
 
-            if pnd
+            if sta == :hidden
+              # do nothing
+            elsif sta == :pending
               pending(title)
             else
               it(title) { expect(Flor::Lang.parse(flon)).to eqt(ru) }

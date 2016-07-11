@@ -73,7 +73,6 @@ module Flor
 
     def comment(i); rex(nil, i, /#[^\r\n]*/); end
 
-    #def ws_plus(i); rex(nil, i, /[ \t]+/); end
     def ws_star(i); rex(nil, i, /[ \t]*/); end
     def retnew(i); rex(nil, i, /[\r\n]*/); end
     def colon(i); str(nil, i, ':'); end
@@ -97,26 +96,19 @@ module Flor
     def comma_qmark_eol(i); seq(nil, i, :comma, '?', :eol); end
     def coll_sep(i); alt(nil, i, :bslash_eol, :comma_qmark_eol, :ws_star); end
 
-    def bag_sep(i); seq(nil, i, :bslash_eol, '*', :comma_eol, :bslash_eol, '*'); end
-
     def ent(i); seq(:ent, i, :key, :postval, :colon, :postval, :exp, :postval); end
     def ent_qmark(i); rep(nil, i, :ent, 0, 1); end
 
     def exp_qmark(i); rep(nil, i, :exp, 0, 1); end
 
-    #def bag_key(i); seq(nil, i, :key, :postval, :colon, :postval); end
-    #def bag_ent(i); seq(:bag_ent, i, :bag_key, '?', :exp); end
-
     def obj(i); eseq(:obj, i, :pbstart, :ent_qmark, :coll_sep, :pbend); end
     def arr(i); eseq(:arr, i, :sbstart, :exp_qmark, :coll_sep, :sbend); end
 
     def par(i); seq(:par, i, :pstart, :eol, :ws_star, :node, :eol, :pend); end
-    #def bag(i); eseq(:bag, i, :pstart, :bag_ent, :bag_sep, :pend); end
 
     def val(i)
       altg(:val, i,
-        :panode,
-        :par, #:bag,
+        :panode, :par,
         :symbol, :sqstring, :dqstring, :rxstring,
         :arr, :obj,
         :number, :boolean, :null)
