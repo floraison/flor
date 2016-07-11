@@ -854,12 +854,22 @@ parses to
 ```
 ---
 
-pending
 ```flon
-  { sto_uri: (ife; true | 10 | 11) a: 1 }
+  { sto_uri: (
+    ife
+      true
+      10
+      11) a: 1 }
 ```
 parses to
 ```ruby
-  []
+  [ '_obj', [
+    [ 'sto_uri', [], 1 ],
+    [ 'ife', [
+      [ '_boo', true, 3 ], [ '_num', 10, 4 ], [ '_num', 11, 5 ]
+    ], 2 ],
+    [ 'a', [], 5 ],
+    [ '_num', 1, 5 ]
+  ], 1 ]
 ```
 

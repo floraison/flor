@@ -113,10 +113,6 @@ module Flor
     def par(i); seq(:par, i, :pstart, :eol, :ws_star, :node, :eol, :pend); end
     #def bag(i); eseq(:bag, i, :pstart, :bag_ent, :bag_sep, :pend); end
 
-    def panode(i)
-      seq(:panode, i, :pstart, :eol, :ws_star, :node, '+', :eol, :pend)
-    end
-
     def val(i)
       altg(:val, i,
         :panode,
@@ -161,7 +157,14 @@ module Flor
     def head(i); seq(:head, i, :exp); end
     def indent(i); rex(:indent, i, /[|; \t]*/); end
     def node(i); seq(:node, i, :indent, :head, :att, '*'); end
-    def line(i); seq(:line, i, :node, '?', :eol); end
+
+    def line(i)
+      seq(:line, i, :node, '?', :eol)
+    end
+    def panode(i)
+      seq(:panode, i, :pstart, :eol, :ws_star, :line, '*', :eol, :pend)
+    end
+
     def flon(i); rep(:flon, i, :line, 0); end
 
     # rewriting
