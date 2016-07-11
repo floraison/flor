@@ -215,6 +215,7 @@ parses to
 
 ## bags
 
+pending
 ```flon
   (1, a: 2, 3)
 ```
@@ -228,6 +229,7 @@ parses to
 ```
 ---
 
+pending
 ```flon
   (1, a, 3)
 ```
@@ -239,6 +241,7 @@ parses to
 ```
 ---
 
+pending
 ```flon
   (1 a, 3)
 ```
@@ -251,6 +254,7 @@ parses to
 ```
 ---
 
+pending
 ```flon
   (1,
    a, # and comment
@@ -264,6 +268,7 @@ parses to
 ```
 ---
 
+pending
 ```flon
   (1, \ 
    a, # and comment
@@ -828,6 +833,24 @@ parses to
     ["_att", [["b", [], 2]], 2],
     ["_att", [["timeout", [], 2], ["_dqs", "3d", 2]], 2]],
    2]
+```
+
+
+## misc
+
+```flon
+  { sto_uri: (ife; true | 10 | 11) a: 1 }
+```
+parses to
+```ruby
+  [ '_obj', [
+    [ 'sto_uri', [], 1 ],
+    [ 'ife', [
+      [ '_boo', true, 1 ], [ '_num', 10, 1 ], [ '_num', 11, 1 ]
+    ], 1 ],
+    [ 'a', [], 1 ],
+    [ '_num', 1, 1 ]
+  ], 1 ]
 ```
 ---
 

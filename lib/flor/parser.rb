@@ -104,18 +104,23 @@ module Flor
 
     def exp_qmark(i); rep(nil, i, :exp, 0, 1); end
 
-    def bag_key(i); seq(nil, i, :key, :postval, :colon, :postval); end
-    def bag_ent(i); seq(:bag_ent, i, :bag_key, '?', :exp); end
+    #def bag_key(i); seq(nil, i, :key, :postval, :colon, :postval); end
+    #def bag_ent(i); seq(:bag_ent, i, :bag_key, '?', :exp); end
 
     def obj(i); eseq(:obj, i, :pbstart, :ent_qmark, :coll_sep, :pbend); end
     def arr(i); eseq(:arr, i, :sbstart, :exp_qmark, :coll_sep, :sbend); end
 
-    def par(i); seq(:par, i, :pstart, :eol, :ws_star, :grp, :eol, :pend); end
-    def bag(i); eseq(:bag, i, :pstart, :bag_ent, :bag_sep, :pend); end
+    def par(i); seq(:par, i, :pstart, :eol, :ws_star, :node, :eol, :pend); end
+    #def bag(i); eseq(:bag, i, :pstart, :bag_ent, :bag_sep, :pend); end
+
+    def panode(i)
+      seq(:panode, i, :pstart, :eol, :ws_star, :node, '+', :eol, :pend)
+    end
 
     def val(i)
       altg(:val, i,
-        :par, :bag,
+        :panode,
+        :par, #:bag,
         :symbol, :sqstring, :dqstring, :rxstring,
         :arr, :obj,
         :number, :boolean, :null)
@@ -149,21 +154,14 @@ module Flor
 
     alias exp eor
 
-    def key(i); alt(:key, i, :dqstring, :sqstring, :symbol); end
-      # TODO eventually, accept anything and stringify...
+    def key(i); seq(:key, i, :exp); end
+    def keycol(i); seq(nil, i, :key, :ws_star, :colon, :eol); end
 
-    def kcol(i); seq(nil, i, :key, :ws_star, :colon, :eol); end
-    def elt(i); seq(:elt, i, :kcol, '?', :exp); end
-    def el(i); seq(nil, i, :sep, :elt); end
-    def elts(i); rep(:elts, i, :el, 0); end
-    def hed(i); seq(:hed, i, :exp); end
-#def hed(i); seq(:hed, i, :val_ws); end
-    def grp(i); seq(:grp, i, :hed, :elts); end
-    def ind(i); rex(:ind, i, /[|; \t]*/); end
-
-    def lin(i); seq(:lin, i, :ind, :grp); end
-
-    def line(i); seq(nil, i, :lin, '?', :eol); end
+    def att(i); seq(:att, i, :sep, :keycol, '?', :exp); end
+    def head(i); seq(:head, i, :exp); end
+    def indent(i); rex(:indent, i, /[|; \t]*/); end
+    def node(i); seq(:node, i, :indent, :head, :att, '*'); end
+    def line(i); seq(:line, i, :node, '?', :eol); end
     def flon(i); rep(:flon, i, :line, 0); end
 
     # rewriting
@@ -174,29 +172,23 @@ module Flor
     end
     alias ln line_number
 
+    def rewrite_par(t)
+
+      Nod.new(t.lookup(:node)).to_a
+    end
+
     def rewrite_symbol(t); [ t.string, [], ln(t) ]; end
-    alias rewrite_symbolk rewrite_symbol
 
     def rewrite_sqstring(t); [ '_sqs', t.string[1..-2], ln(t) ]; end
     def rewrite_dqstring(t); [ '_dqs', t.string[1..-2], ln(t) ]; end
     def rewrite_rxstring(t); [ '_rxs', t.string, ln(t) ]; end
 
-    def rewrite_number(t)
-
-      s = t.string; [ '_num', s.index('.') ? s.to_f : s.to_i, ln(t) ]
-    end
-
     def rewrite_boolean(t); [ '_boo', t.string == 'true', line_number(t) ]; end
     def rewrite_null(t); [ '_nul', nil, line_number(t) ]; end
 
-    def rewrite_val(t); rewrite(t.c0); end
+    def rewrite_number(t)
 
-    def rewrite_arr(t)
-
-      cn = t.subgather(nil).collect { |n| rewrite(n) }
-      cn = 0 if cn.empty?
-
-      [ '_arr', cn, ln(t) ]
+      s = t.string; [ '_num', s.index('.') ? s.to_f : s.to_i, ln(t) ]
     end
 
     def rewrite_obj(t)
@@ -211,34 +203,17 @@ module Flor
       [ '_obj', cn, ln(t) ]
     end
 
-    def rewrite_bag(t)
+    def rewrite_arr(t)
 
-      l = ln(t)
+      cn = t.subgather(nil).collect { |n| rewrite(n) }
+      cn = 0 if cn.empty?
 
-      ts =
-        t.subgather(nil).inject([]) do |a, tt|
-          k = tt.lookup(:key)
-          a.push(k ? rewrite(k.c0) : nil, rewrite(tt.clast))
-        end
-
-      es = []; while ts.any?; es << [ es.size, ts.shift, ts.shift ]; end
-
-      if es.all? { |e| e[1] == nil }
-        if es.size == 1
-          es.first[2]
-        else
-          [ '_arr', es.map { |e| e[2] }, l ]
-        end
-      else
-        [ '_obj',
-          es.map { |e| [ e[1] || [ "_#{e[0]}", [], l ], e[2] ] }.flatten(1),
-          l ]
-      end
+      [ '_arr', cn, ln(t) ]
     end
 
-    def rewrite_par(t)
+    def rewrite_val(t)
 
-      Line.new(t).to_a
+      rewrite(t.c0)
     end
 
     def rewrite_exp(t)
@@ -263,7 +238,7 @@ module Flor
       [ op, cn, cn.first[2] ]
     end
 
-    class Line
+    class Nod
 
       attr_accessor :parent, :indent
       attr_reader :children
@@ -279,19 +254,19 @@ module Flor
         read(tree) if tree
       end
 
-      def append(line)
+      def append(node)
 
-        if line.indent == :east
-          line.indent = self.indent + 2
-        elsif line.indent == :south
-          line.indent = self.indent
+        if node.indent == :east
+          node.indent = self.indent + 2
+        elsif node.indent == :south
+          node.indent = self.indent
         end
 
-        if line.indent > self.indent
-          @children << line
-          line.parent = self
+        if node.indent > self.indent
+          @children << node
+          node.parent = self
         else
-          @parent.append(line)
+          @parent.append(node)
         end
       end
 
@@ -310,6 +285,7 @@ module Flor
             c.size == 1 && %w[ if unless ].include?(c[0][0]) && c[0][1] == []
           }
 
+        #return cn.first if @head == 'sequence' && @line == 0 && cn.size == 1
         return [ @head, cn, @line ] unless i
 
         # rewrite if/unless suffix
@@ -325,7 +301,7 @@ module Flor
 
       def read(tree)
 
-        if it = tree.lookup(:ind)
+        if it = tree.lookup(:indent)
 
           s = it.string
           semicount = s.count(';')
@@ -337,20 +313,19 @@ module Flor
             else s.length; end
         end
 
-        gt = tree.lookup(:grp)
-        @line = Lang.line_number(gt)
-
-        ht = gt.lookup(:hed)
+        ht = tree.lookup(:head)
+        @line = Lang.line_number(ht)
 
         @head = Flor::Lang.rewrite(ht.c0)
         @head = @head[0] if @head[0].is_a?(String) && @head[1] == []
 
         @children.concat(
-          gt.c1.gather(:elt).collect do |et|
 
-            v = Flor::Lang.rewrite(et.lookup(:exp))
+          tree.children[2..-1].collect do |ct|
 
-            if kt = et.lookup(:key)
+            v = Flor::Lang.rewrite(ct.clast)
+
+            if kt = ct.lookup(:key)
               k = Flor::Lang.rewrite(kt.c0)
               [ '_att', [ k, v ], k[2] ]
             else
@@ -362,24 +337,23 @@ module Flor
 
     def rewrite_flon(t)
 
-      root = Line.new(nil)
-      prev = root
+      prev = root = Nod.new(nil)
 
-      t.gather(:lin).each do |lt|
-        l = Line.new(lt)
-        prev.append(l)
-        prev = l
+      t.gather(:node).each do |nt|
+        n = Nod.new(nt)
+        prev.append(n)
+        prev = n
       end
 
-      return root.children.first.to_a if root.children.count == 1
-
-      root.to_a
+      root.children.count == 1 ? root.children.first.to_a : root.to_a
     end
+    alias rewrite_panode rewrite_flon
 
     def parse(input, fname=nil, opts={})
 
       opts = fname if fname.is_a?(Hash) && opts.empty?
 
+      #Raabro.pp(super(input, debug: 2))
       #Raabro.pp(super(input, debug: 3))
 
       r = super(input, opts)
