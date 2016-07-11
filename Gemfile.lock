@@ -13,7 +13,7 @@ GEM
     diff-lcs (1.2.5)
     jdbc-sqlite3 (3.8.11.2)
     munemo (1.0.1)
-    raabro (1.1.2)
+    raabro (1.1.3)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
