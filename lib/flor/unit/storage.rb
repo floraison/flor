@@ -317,8 +317,8 @@ module Flor
 
       uri = @unit.conf['sto_uri']
 
-      uri = "jdbc:#{uri}" \
-        if RUBY_PLATFORM.match(/java/) && uri.match(/\Asqlite:/)
+      #uri = "jdbc:#{uri}" \
+      #  if RUBY_PLATFORM.match(/java/) && uri.match(/\Asqlite:/)
 
       @db = Sequel.connect(uri)
 

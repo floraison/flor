@@ -124,6 +124,9 @@ module Flor
         def has_key?(k); ! Flor::Procedure[k]; end
       end
 
+      vs['ruby_version'] = RUBY_VERSION
+      vs['ruby_platform'] = RUBY_PLATFORM
+
       r = (self.new('conf' => true)).launch(s, vars: vs)
 
       fail ArgumentError.new(

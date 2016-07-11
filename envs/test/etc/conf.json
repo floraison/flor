@@ -1,6 +1,8 @@
 
 env: test
 domain: test
-#sto_uri: "sqlite://tmp/test.db" # jdbc...
-sto_uri: "sqlite::memory:"
+sto_uri: (ife
+  == ruby_platform 'java'
+  "jdbc:sqlite://tmp/test.db"
+  "sqlite::memory:")
 
