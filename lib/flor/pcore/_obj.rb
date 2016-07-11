@@ -46,7 +46,10 @@ class Flor::Pro::Obj < Flor::Procedure
 
   def receive_last
 
-    payload_copy['ret'] = Hash[*@node['rets']]
+    payload_copy['ret'] =
+      @node['rets']
+        .each_slice(2)
+        .inject({}) { |h, (k, v)| h[k.to_s] = v; h }
 
     reply
   end
