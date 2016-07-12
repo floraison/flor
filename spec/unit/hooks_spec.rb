@@ -184,9 +184,73 @@ describe 'Flor unit' do
         ms1.collect { |m| m['point'] }).to eq(%w[ execute receive receive ])
     end
 
-    it 'may filter on tag:/t:'
-    it 'may filter on tenter:/te:'
-    it 'may filter on tleave:/tl:'
+    it 'may filter on tag:/t:' do
+
+      ms0 = []
+      @unit.hook(tag: 'blue', c: false) { |x, m, o| ms0 << Flor.dup(m) }
+      ms1 = []
+      @unit.hook(tag: 'yellow', c: false) { |x, m, o| ms1 << Flor.dup(m) }
+
+      r =
+        @unit.launch(%{
+          sequence tag: 'blue'
+            trace 'blue'
+          sequence tag: 'yellow'
+            trace 'yellow'
+        }, wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @unit.traces.collect { |t| "#{t.nid}:#{t.text}" }
+      ).to eq(%w[
+        0_0_1:blue
+        0_1_1:yellow
+      ])
+
+      expect(
+        ms0.collect { |m| "#{m['point']}:#{m['nid']}" }
+      ).to eq(%w[ entered:0_0 left:0_0 ])
+      expect(
+        ms1.collect { |m| "#{m['point']}:#{m['nid']}" }
+      ).to eq(%w[ entered:0_1 left:0_1 ])
+    end
+
+    it 'may filter on t: and p:' do
+
+      ms0 = []
+      @unit.hook(tag: 'blue', c: false, p: 'entered') { |x, m, o|
+        ms0 << Flor.dup(m)
+      }
+      ms1 = []
+      @unit.hook(t: %w[ blue yellow ], c: false, p: %w[ entered left ]) { |x, m, o|
+        ms1 << Flor.dup(m)
+      }
+
+      r =
+        @unit.launch(%{
+          sequence tag: 'blue'
+            trace 'blue'
+          sequence tag: 'yellow'
+            trace 'yellow'
+        }, wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @unit.traces.collect { |t| "#{t.nid}:#{t.text}" }
+      ).to eq(%w[
+        0_0_1:blue
+        0_1_1:yellow
+      ])
+
+      expect(
+        ms0.collect { |m| "#{m['point']}:#{m['nid']}" }
+      ).to eq(%w[ entered:0_0 ])
+      expect(
+        ms1.collect { |m| "#{m['point']}:#{m['nid']}" }
+      ).to eq(%w[ entered:0_0 left:0_0 entered:0_1 left:0_1 ])
+    end
   end
 end
 

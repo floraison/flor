@@ -134,6 +134,11 @@ module Flor
         return false unless hts.include?(node['heat0'])
       end
 
+      if ts = o(opts, :tag, :t, [])
+        return false unless %w[ entered left ].include?(message['point'])
+        return false unless (message['tags'] & ts).any?
+      end
+
       true
     end
   end
