@@ -25,7 +25,7 @@
 
 class Flor::Pro::Match < Flor::Procedure
 
-  names %w[ match ]
+  names %w[ match match? ]
 
   def pre_execute
 
@@ -36,11 +36,13 @@ class Flor::Pro::Match < Flor::Procedure
 
     rex, str = arguments
 
+    m = rex.match(str)
+
     payload_copy['ret'] =
-      if m = rex.match(str)
-        m.to_a
+      if @node['heap'] == 'match?'
+        !! m
       else
-        []
+        m ? m.to_a : []
       end
 
     reply

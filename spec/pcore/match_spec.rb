@@ -59,6 +59,35 @@ describe 'Flor procedures' do
     end
   end
 
+  describe 'match?' do
+
+    it 'works alongside "ife"' do
+
+      flon = %{
+        push f.l
+          ife
+            match? "stuff", "^stuf*$"
+            'a'
+            'b'
+        push f.l
+          ife
+            match? "staff", "^stuf*$"
+            'c'
+            'd'
+        push f.l
+          ife
+            match? "$(nothing)", "^stuf*$"
+            'e'
+            'f'
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ a d f ])
+    end
+  end
+
   #describe 'starts_with' do
   #  it 'works'
   #end

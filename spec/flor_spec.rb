@@ -78,5 +78,35 @@ describe Flor do
       expect(Flor.tstamp(t)).to eq(ts)
     end
   end
+
+  describe '.true?' do
+
+    it 'returns true when the argument is true for Flor' do
+
+      expect(Flor.true?(1)).to eq(true)
+      expect(Flor.true?(true)).to eq(true)
+    end
+
+    it 'returns false when the argument else' do
+
+      expect(Flor.true?(nil)).to eq(false)
+      expect(Flor.true?(false)).to eq(false)
+    end
+  end
+
+  describe '.false?' do
+
+    it 'returns true when the argument is false for Flor' do
+
+      expect(Flor.false?(nil)).to eq(true)
+      expect(Flor.false?(false)).to eq(true)
+    end
+
+    it 'returns false when the argument else' do
+
+      expect(Flor.false?(1)).to eq(false)
+      expect(Flor.false?(true)).to eq(false)
+    end
+  end
 end
 
