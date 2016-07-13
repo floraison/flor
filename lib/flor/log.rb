@@ -25,13 +25,11 @@
 
 module Flor
 
-  LOGM_NOCACHE = %w[ _timer ]
-
   def self.log_message(executor, m, opts={})
 
-    @tree_cache ||= Rufus::Lru::Hash.new(1024)
-
     _rs, _dg, _yl, _bl, _lg, _gr = colours(opts)
+
+    nid = m['nid']
 
     n =
       Time.now
@@ -43,21 +41,20 @@ module Flor
       end
 
     pt = "#{_bl}#{m['point'][0, 3]}#{_dg}"
-    ni = m['nid'] ? "#{m['nid']} " : ''
+    ni = nid ? "#{nid} " : ''
     fr = m['from'] ? " from #{m['from']}" : ''
 
     rt = ret_to_s(executor, m)
     rt = rt.length > 0 ? " #{_lg}f.ret #{rt}" : ''
 
-    t =
-      m['tree']
+    t = m['tree']
+    nt = t || Node.new(executor, executor.node(nid), m).lookup_tree(nid)
+
     t0 =
       if t
-        @tree_cache["#{m['exid']}|#{ni}"] = [ t[0], t[2] ] \
-          unless LOGM_NOCACHE.include?(t[0])
         " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} L#{t[2]}]"
-      elsif ct = @tree_cache["#{m['exid']}|#{ni}"]
-        " [#{_dg}#{Flor.s_to_d(ct[0], compact: true)}#{_dg} L#{ct[1]}]"
+      elsif nt
+        " [#{_dg}#{Flor.s_to_d(nt[0], compact: true)}#{_dg} L#{nt[2]}]"
       else
         ''
       end

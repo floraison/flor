@@ -30,7 +30,6 @@ require 'digest'
 
 require 'munemo'
 require 'raabro'
-require 'rufus-lru'
 
 
 module Flor

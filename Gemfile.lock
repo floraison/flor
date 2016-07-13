@@ -4,7 +4,6 @@ PATH
     flor (0.4.0)
       munemo (>= 1.0.1)
       raabro (>= 1.1.2)
-      rufus-lru (>= 1.1.0)
       rufus-scheduler (~> 3)
 
 GEM
@@ -27,7 +26,6 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
-    rufus-lru (1.1.0)
     rufus-scheduler (3.2.1)
     sequel (4.34.0)
     sqlite3 (1.3.11)
