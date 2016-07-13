@@ -29,9 +29,10 @@ class Flor::Pro::Map < Flor::Procedure
 
   def pre_execute
 
+    #@node['ret'] = Flor.dup(payload['ret']) # now using @node['payload']
+
     @node['vars'] = {}
 
-    #@node['ret'] = Flor.dup(payload['ret']) # now using @node['payload']
     @node['col'] = nil
     @node['idx'] = -1
     @node['fun'] = nil
@@ -64,6 +65,8 @@ class Flor::Pro::Map < Flor::Procedure
 
     return reply('ret' => @node['res']) \
       if @node['idx'] == @node['col'].size
+
+    @node['vars']['idx'] = @node['idx']
 
     apply(@node['fun'], @node['col'][@node['idx'], 1], tree[2])
   end

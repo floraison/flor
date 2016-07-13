@@ -92,7 +92,18 @@ describe 'Flor procedures' do
       expect(r['vars']).to eq({})
     end
 
-    it 'shows the index (and more) via vars'
+    it 'shows the index via vars' do
+
+      flon = %{
+        map [ 'a', 'b' ]
+          def x; idx
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 0, 1 ])
+    end
   end
 end
 
