@@ -29,6 +29,8 @@ class Flor::Pro::Map < Flor::Procedure
 
   def pre_execute
 
+    @node['vars'] = {}
+
     #@node['ret'] = Flor.dup(payload['ret']) # now using @node['payload']
     @node['col'] = nil
     @node['idx'] = -1
