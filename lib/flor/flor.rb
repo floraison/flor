@@ -292,6 +292,11 @@ module Flor
     "#{nid[0, i]}#{remove_subnid || sub.nil? ? nil : "-#{sub}"}"
   end
 
+  def self.is_nid?(s)
+
+    !! (s.is_a?(String) && s.match(/\A[0-9]+(?:_[0-9]+)*(?:-[0-9]+)?\z/))
+  end
+
   #
   # misc
   #

@@ -102,5 +102,21 @@ describe Flor do
       )
     end
   end
+
+  describe '.is_nid?(s)' do
+
+    it 'returns true when given a flor nid' do
+
+      expect(Flor.is_nid?('0_0')).to eq(true)
+      expect(Flor.is_nid?('0_0-1')).to eq(true)
+      expect(Flor.is_nid?('0_95-1')).to eq(true)
+    end
+
+    it 'returns false else' do
+
+      expect(Flor.is_nid?('')).to eq(false)
+      expect(Flor.is_nid?('a0_0')).to eq(false)
+    end
+  end
 end
 
