@@ -27,7 +27,7 @@ module Flor
 
   def self.log_message(executor, m, opts={})
 
-    _rs, _dg, _yl, _bl, _lg, _gr = colours(opts)
+    _rs, _dg, _yl, _bl, _lg, _gr, _lr = colours(opts)
 
     nid = m['nid']
 
@@ -47,8 +47,15 @@ module Flor
     rt = ret_to_s(executor, m)
     rt = rt.length > 0 ? " #{_lg}f.ret #{rt}" : ''
 
+    nd = executor.node(nid)
+
+    vs =
+      (nd && nd['vars']) ?
+      " #{_dg}vs:#{_gr}#{nd['vars'].keys.join("#{_dg},#{_gr}")}" :
+      ''
+
     t = m['tree']
-    nt = t || Node.new(executor, executor.node(nid), m).lookup_tree(nid)
+    nt = t || Node.new(executor, nd, m).lookup_tree(nid)
 
     t0 =
       if t
@@ -72,7 +79,7 @@ module Flor
     ti = m['tid']
     ti = ti ? " #{_dg}tid:#{ti}" : ''
 
-    puts "  #{tm} #{_dg}#{ni}#{pt}#{t0}#{ti}#{cn}#{fr}#{rt}#{ta}#{_rs}"
+    puts "  #{tm} #{_dg}#{ni}#{pt}#{t0}#{ti}#{cn}#{fr}#{rt}#{ta}#{vs}#{_rs}"
   end
 
   class Colours
@@ -171,8 +178,6 @@ module Flor
   ])
   NO_COLSET = [ '' ] * COLSET.length
 
-  # return reset, dark grey, yellow, blue, light grey, light green
-  #
   def self.colours(opts={})
 
     opts[:colour] = true unless opts.has_key?(:color) || opts.has_key?(:colour)
