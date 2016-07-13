@@ -40,15 +40,16 @@ class Flor::Pro::Map < Flor::Procedure
 
   def receive_non_att
 
-    if @node['col'] == nil
+    @node['col'] ||=
+      Flor.to_coll(
+        if Flor.is_func?(payload['ret'])
+          node_payload_ret
+        else
+          payload['ret']
+        end)
 
-      if Flor.is_func?(payload['ret'])
-        @node['col'] = Flor.to_coll(node_payload_ret)
-      else
-        @node['col'] = Flor.to_coll(payload['ret'])
-        return execute_child(@ncid)
-      end
-    end
+    return execute_child(@ncid) \
+      if @node['fun'] == nil && children[@ncid] != nil
 
     if @node['idx'] < 0
       @node['fun'] = payload['ret']
@@ -56,7 +57,8 @@ class Flor::Pro::Map < Flor::Procedure
       @node['res'] << payload['ret']
     end
 
-    @node['idx'] += 1; @node['mtime'] = Flor.tstamp
+    @node['idx'] += 1
+    @node['mtime'] = Flor.tstamp
 
     return reply('ret' => @node['res']) \
       if @node['idx'] == @node['col'].size

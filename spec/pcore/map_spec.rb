@@ -72,6 +72,23 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 3, 4, 5 ])
     end
+
+    it 'acts like a lisp let' do
+
+      flon = %{
+        map [ 0, 1, 2 ]
+          set a 1
+          def x
+            set a
+              + a 1
+            + x a
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 2, 4, 6 ])
+    end
   end
 end
 
