@@ -73,7 +73,7 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([ 3, 4, 5 ])
     end
 
-    it 'acts like a lisp let' do
+    it 'has its own vars' do
 
       flon = %{
         sequence
