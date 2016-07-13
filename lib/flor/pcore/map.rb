@@ -46,7 +46,7 @@ class Flor::Pro::Map < Flor::Procedure
         @node['col'] = Flor.to_coll(node_payload_ret)
       else
         @node['col'] = Flor.to_coll(payload['ret'])
-        return execute_child(1)
+        return execute_child(@ncid)
       end
     end
 

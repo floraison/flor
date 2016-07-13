@@ -59,6 +59,19 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 3, 4 ])
     end
+
+    it 'does not let att get in the way of col and fun' do
+
+      flon = %{
+        map [ 0, 1, 2 ], tag: 'y'
+          def x; + x 3
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 3, 4, 5 ])
+    end
   end
 end
 
