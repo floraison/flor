@@ -25,7 +25,7 @@
 
 class Flor::Pro::Define < Flor::Procedure
 
-  names %w[ def define ]
+  names %w[ def fun define ]
 
   def execute
 

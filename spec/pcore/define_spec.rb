@@ -62,5 +62,29 @@ describe 'Flor procedures' do
       )
     end
   end
+
+  describe 'fun' do
+
+    it 'is an alias for "def"' do
+
+      flon = %{
+        fun a, b
+          +
+            a
+            b
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']).to eq({})
+
+      expect(
+        r['payload']['ret']
+      ).to eq(
+        [ '_func', { 'nid' => '0', 'cnid' => '0', 'fun' => 0 }, 2 ]
+      )
+    end
+  end
 end
 
