@@ -35,30 +35,28 @@ class Flor::Pro::Cancel < Flor::Procedure
 
   def receive_last
 
-    target = att(nil)
-    ntarget = att('nid')
-    rtarget = att('ref')
-
-    if Flor.is_nid?(target)
-      ntarget = target
-    else
-      rtarget = target
-    end unless ntarget || rtarget
-
-    tags = Array(rtarget)
-
-    nids =
-      ntarget ||
-      @execution['nodes']
-        .inject([]) { |a, (nid, n)|
-          a << nid if ((n['tags'] || []) & tags).any?
+    targets =
+      @node['atts']
+        .select { |k, v| k == nil }
+        .inject([]) { |a, (k, v)|
+          v = Array(v)
+          a.concat(v) if v.all? { |e| e.is_a?(String) }
           a
-        }
+        } +
+      att_a('nid') +
+      att_a('ref')
 
-    Array(nids)
-      .collect { |nid|
-        reply('point' => 'cancel', 'nid' => nid, 'flavour' => 'punit').first
-      } +
+    nids, tags = targets.partition { |t| Flor.is_nid?(t) }
+
+    nids +=
+      @execution['nodes'].inject([]) { |a, (nid, n)|
+        a << nid if ((n['tags'] || []) & tags).any?
+        a
+      } if tags.any?
+
+    nids.uniq.collect { |nid|
+      reply('point' => 'cancel', 'nid' => nid, 'flavour' => 'punit').first
+    } +
     reply
   end
 end

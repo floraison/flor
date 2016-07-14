@@ -91,6 +91,11 @@ class Flor::Procedure < Flor::Node
     nil
   end
 
+  def att_a(*keys)
+
+    Array(att(*keys))
+  end
+
   def execute_child(index=0, sub=0, duplicate_payload=false)
 
     return reply \
