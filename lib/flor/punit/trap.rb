@@ -51,13 +51,32 @@ class Flor::Pro::Trap < Flor::Procedure
     points = Flor.to_a(payload['ret']) unless points || tags || nids
     points = [ 'entered' ] if tags && ! nids && ! points
 
-    reply(
-      'point' => 'trap', 'nid' => nid,
-      'trap' => {
-        'points' => points, 'tags' => tags, 'nids' => nids,
-        'tree' => children[1], 'nid' => "#{nid}_1"
-      }
-    ) +
+    #exe = {
+    #  'point' => 'execute',
+    #  'from' => nid, # FIXME (OK only if same exid)
+    #  'exid' => exid,
+    #  'nid' => Flor.sub_nid(self.data['nid'], executor.counter_next('sub')),
+    #  'cnid' => '0',
+    #  'tree' => self.data['tree'],
+    #  'payload' => pld
+    #}
+      #
+      # old style
+
+    msg = {
+      'point' => 'execute',
+      'tree' => children[1],
+      'nid' => "#{nid}_1", # FIXME what if it triggers multiple times!!!
+      'exid' => exid,
+      'payload' => @message['payload'],
+      'from' => nid
+    }
+    tra = {
+      'points' => points, 'tags' => tags, 'nids' => nids,
+      'msg' => msg
+    }
+
+    reply('point' => 'trap','nid' => nid, 'trap' => tra) +
     reply
   end
 end

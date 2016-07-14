@@ -275,7 +275,7 @@ module Flor
       #end
     end
 
-    def put_trap(node, tra, msg)
+    def put_trap(node, tra)
 
       @db.transaction do
 
@@ -286,7 +286,7 @@ module Flor
           tnids: tra['nids'],
           tpoints: tra['points'],
           ttags: tra['tags'],
-          content: to_blob(msg),
+          content: to_blob(tra['msg']),
           status: 'active')
 
         traps[id]

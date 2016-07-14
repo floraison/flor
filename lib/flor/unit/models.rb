@@ -94,33 +94,14 @@ module Flor
 
       return [ false, [] ] unless match?(executor, message)
 
-#puts(
-#  "*** trapped: #{message['point']}\n" +
-#  "* data: #{self.data.inspect}\n" +
-#  "* values: #{self.values.select { |k, v| k != :content }.inspect}")
+      m = self.data
+      pld = executor.lookup_ash(m['payload'], true)
+      pld['msg'] = Flor.dup(message)
 
-      msg = Flor.dup(message)
+      m['payload'] = pld
+      executor.ash!(m, 'payload')
 
-      #pld = msg.delete('payload')
-        #
-      pld = msg['payload']
-        #
-        # the payload is merely a code, no need to delete it
-
-      pld = executor.lookup_ash(pld, true)
-      pld['msg'] = msg
-
-      exe = {
-        'point' => 'execute',
-        'from' => nid, # FIXME (OK only if same exid)
-        'exid' => exid,
-        'nid' => Flor.sub_nid(self.data['nid'], executor.counter_next('sub')),
-        'cnid' => '0',
-        'tree' => self.data['tree'],
-        'payload' => pld
-      }
-
-      [ false, [ exe ] ]
+      [ false, [ m ] ]
     end
 
     protected

@@ -194,9 +194,9 @@ puts ('!' * 80) + ' .'
       puts ('n' * 80) + ' .'
     end
 
-    def trap(node, tra, msg)
+    def trap(node, tra)
 
-      @storage.put_trap(node, tra, msg)
+      @storage.put_trap(node, tra)
     end
 
     def remove_node(exid, n)
