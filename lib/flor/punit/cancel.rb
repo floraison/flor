@@ -37,10 +37,28 @@ class Flor::Pro::Cancel < Flor::Procedure
 
     target = att(nil)
     ntarget = att('nid')
+    rtarget = att('ref')
 
-    ntarget ||= target if Flor.is_nid?(target)
+    if Flor.is_nid?(target)
+      ntarget = target
+    else
+      rtarget = target
+    end unless ntarget || rtarget
 
-    reply('point' => 'cancel', 'nid' => ntarget, 'flavour' => 'punit') +
+    tags = Array(rtarget)
+
+    nids =
+      ntarget ||
+      @execution['nodes']
+        .inject([]) { |a, (nid, n)|
+          a << nid if ((n['tags'] || []) & tags).any?
+          a
+        }
+
+    Array(nids)
+      .collect { |nid|
+        reply('point' => 'cancel', 'nid' => nid, 'flavour' => 'punit').first
+      } +
     reply
   end
 end
