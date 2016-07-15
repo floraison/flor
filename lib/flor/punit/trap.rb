@@ -55,7 +55,7 @@ class Flor::Pro::Trap < Flor::Procedure
     #  'point' => 'execute',
     #  'from' => nid, # FIXME (OK only if same exid)
     #  'exid' => exid,
-    #  'nid' => Flor.sub_nid(self.data['nid'], executor.counter_next('sub')),
+    #  'nid' => Flor.sub_nid(self.data['nid'], executor.counter_next('subs')),
     #  'cnid' => '0',
     #  'tree' => self.data['tree'],
     #  'payload' => pld
@@ -73,7 +73,7 @@ class Flor::Pro::Trap < Flor::Procedure
     }
     tra = {
       'points' => points, 'tags' => tags, 'nids' => nids,
-      'msg' => msg
+      'message' => msg
     }
 
     reply('point' => 'trap','nid' => nid, 'trap' => tra) +

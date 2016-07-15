@@ -286,7 +286,7 @@ module Flor
           tnids: tra['nids'],
           tpoints: tra['points'],
           ttags: tra['tags'],
-          content: to_blob(tra['msg']),
+          content: to_blob(tra['message']),
           status: 'active')
 
         traps[id]

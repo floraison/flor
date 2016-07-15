@@ -83,7 +83,28 @@ describe 'Flor punit' do
       expect(
         @unit.traces.collect(&:text).join(' ')
       ).to eq(
-        'a entered c'
+        'a c entered'
+      )
+    end
+
+    it 'traps multiple times' do
+
+      flon = %{
+        trap point: 'receive'
+          trace 'r'
+        sequence
+          sequence
+            trace '_'
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'r _ r r ??'
       )
     end
   end

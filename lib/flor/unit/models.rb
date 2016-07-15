@@ -73,8 +73,8 @@ module Flor
         'nid' => self.nid,
         'type' => self.type,
         'schedule' => self.schedule,
-        'tid' => self.id,
-        'message' => self.data['message'].merge('tid' => self.id)
+        'timer_id' => self.id,
+        'message' => self.data['message'].merge('timer_id' => self.id)
       }
     end
 
@@ -92,19 +92,38 @@ module Flor
     #
     def notify(executor, message)
 
-      return [ false, [] ] unless match?(executor, message)
+      if match?(executor, message)
+        [ false, [ to_trigger_message(executor, message) ] ]
+      else
+        [ false, [] ]
+      end
 
-      m = self.data
-      pld = executor.lookup_ash(m['payload'], true)
-      pld['msg'] = Flor.dup(message)
-
-      m['payload'] = pld
-      executor.ash!(m, 'payload')
-
-      [ false, [ m ] ]
+      # false => remove? false
     end
 
     protected
+
+    def to_trigger_message(executor, message)
+
+      msg = self.data
+
+      msg['trap_id'] = self.id
+
+      pld = executor.lookup_ash(msg['payload'], true)
+      pld['msg'] = Flor.dup(message)
+      msg['payload'] = pld
+      executor.ash!(msg, 'payload')
+
+      {
+        'point' => 'trigger',
+        'exid' => self.exid,
+        'nid' => self.nid,
+        'type' => 'trap',
+        'trap' => self.values.reject { |k, v| k == :content },
+        'trap_id' => self.id,
+        'message' => msg
+      }
+    end
 
     def match?(executor, message)
 
