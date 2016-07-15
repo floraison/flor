@@ -55,6 +55,8 @@ module Flor
 
     def do_run
 
+      counter_next('runs')
+
       t0 = Time.now
 
       (@unit.conf['exe_max_messages'] || 77).times do |i|
@@ -78,9 +80,6 @@ module Flor
       @unit.storage.consume(@consumed)
 
       @alive = false
-
-      @execution['counters']['runs'] ||= 0
-      @execution['counters']['runs'] += 1
 
       p [
         self.class, self.hash, @exid,

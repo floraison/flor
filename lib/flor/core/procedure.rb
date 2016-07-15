@@ -322,7 +322,7 @@ class Flor::Procedure < Flor::Node
 
     fni = fun[1]['nid'] # fun nid
     cni = fun[1]['cnid'] # closure nid
-    ani = Flor.sub_nid(fni, @executor.counter_next('sub')) # applied nid
+    ani = Flor.sub_nid(fni, @executor.counter_next('subs')) # applied nid
 
     #t = lookup_tree_anyway(fni)
     t = lookup_tree(fni)

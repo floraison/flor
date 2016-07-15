@@ -27,7 +27,7 @@ module Flor
 
   def self.log_message(executor, m, opts={})
 
-    _rs, _dg, _yl, _bl, _lg, _gr, _lr = colours(opts)
+    _rs, _dg, _yl, _bl, _lg, _gr, _lr, _rd = colours(opts)
 
     nid = m['nid']
 
@@ -40,8 +40,11 @@ module Flor
         n.strftime('%H:%M:%S') + sprintf('.%06d', n.usec)[0, 4]
       end
 
-    pt = "#{_bl}#{m['point'][0, 3]}#{_dg}"
+    pt = m['point'][0, 3]
+    pt = "#{pt == 'tri' ? _gr : _bl}#{pt}#{_dg}"
+
     ni = nid ? "#{nid} " : ''
+    mr = " m#{m['m']}r#{executor.counter('runs')}"
     fr = m['from'] ? " from #{m['from']}" : ''
 
     rt = ret_to_s(executor, m)
@@ -76,10 +79,10 @@ module Flor
       " #{_dg}tags:#{_gr}#{m['tags'].join(',')}" :
       nil
 
-    ti = m['tid']
+    ti = m['trap_id'] || m['timer_id']
     ti = ti ? " #{_dg}tid:#{ti}" : ''
 
-    puts "  #{tm} #{_dg}#{ni}#{pt}#{t0}#{ti}#{cn}#{fr}#{rt}#{ta}#{vs}#{_rs}"
+    puts "  #{tm} #{_dg}#{ni}#{pt}#{t0}#{ti}#{cn}#{mr}#{fr}#{rt}#{ta}#{vs}#{_rs}"
   end
 
   class Colours
@@ -174,7 +177,7 @@ module Flor
   end
 
   COLSET = Colours.set(%w[
-    reset dark_grey light_yellow blue light_grey light_green light_red
+    reset dark_grey light_yellow blue light_grey light_green light_red red
   ])
   NO_COLSET = [ '' ] * COLSET.length
 

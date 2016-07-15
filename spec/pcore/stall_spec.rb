@@ -32,7 +32,7 @@ describe 'Flor procedures' do
 
       expect(ex['nodes'].keys).to eq(%w[ 0 0_0 ])
       expect(ex['errors']).to eq([])
-      expect(ex['counters']).to eq({})
+      expect(ex['counters']).to eq({ 'msgs' => 4 })
     end
   end
 end

@@ -42,6 +42,11 @@ module Flor
     def exid; @execution['exid']; end
     def node(nid); @execution['nodes'][nid]; end
 
+    def counter(key)
+
+      @execution['counters'][key.to_s] || -1
+    end
+
     def counter_next(key)
 
       k = key.to_s
@@ -228,6 +233,8 @@ module Flor
     def process(message)
 
       begin
+
+        message['m'] = counter_next('msgs') # number messages
 
         ash_all!(message)
 
