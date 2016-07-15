@@ -44,14 +44,17 @@ module Flor
 
   class FlorModel < Sequel::Model(DummySequelAdapter::DB)
 
-    def data
+    def _data
 
-      @data ||=
-        begin
-         d = Flor::Storage.from_blob(content)
-         d['id'] = id
-         d
-        end
+      d = Flor::Storage.from_blob(content)
+      d['id'] = id
+
+      d
+    end
+
+    def data(cache=true)
+
+      cache ? (@data = _data) : _data
     end
   end
 
@@ -67,6 +70,9 @@ module Flor
 
     def to_trigger_message
 
+      m = self.data(false)['message']
+      m['timer_id'] = self.id
+
       {
         'point' => 'trigger',
         'exid' => self.exid,
@@ -74,7 +80,7 @@ module Flor
         'type' => self.type,
         'schedule' => self.schedule,
         'timer_id' => self.id,
-        'message' => self.data['message'].merge('timer_id' => self.id)
+        'message' => m
       }
     end
 
@@ -105,7 +111,7 @@ module Flor
 
     def to_trigger_message(executor, message)
 
-      msg = self.data
+      msg = self.data(false)['message']
 
       msg['trap_id'] = self.id
 
@@ -119,10 +125,15 @@ module Flor
         'exid' => self.exid,
         'nid' => self.nid,
         'type' => 'trap',
-        'trap' => self.values.reject { |k, v| k == :content },
+        'trap' => to_hash,
         'trap_id' => self.id,
         'message' => msg
       }
+    end
+
+    def to_hash
+
+      values.inject({}) { |h, (k, v)| h[k.to_s ] = v if k != :content; h }
     end
 
     def match?(executor, message)

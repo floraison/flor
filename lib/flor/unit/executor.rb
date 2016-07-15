@@ -97,6 +97,7 @@ p er
 puts e.backtrace
 puts ('=' * 80) + ' .'
     rescue Exception => ex
+# TODO
 puts '!' * 80
 p ex
 puts e.backtrace
@@ -142,7 +143,12 @@ puts ('!' * 80) + ' .'
 
     def trigger(message)
 
-      [ message['message'] ]
+      m = message['message']
+
+      m['nid'] = Flor.sub_nid(m['nid'], counter_next('subs')) \
+        if m['point'] == 'execute'
+
+      [ m ]
     end
   end
 end
