@@ -132,7 +132,7 @@ msg['dbg'] = xx
         'trap_id' => self.id,
         'message' => msg,
 'dbg' => xx
-      }.tap { |m| p m }
+      }#.tap { |m| p m }
     end
 
     def to_hash

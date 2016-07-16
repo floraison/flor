@@ -114,20 +114,6 @@ puts e.backtrace
 puts ('!' * 80) + ' .'
     end
 
-    def terminated(message)
-
-      # nothing to do
-
-      []
-    end
-
-    def ceased(message)
-
-      # nothing to do
-
-      []
-    end
-
     def cancel(message)
 
       if n = @execution['nodes'][message['nid']]

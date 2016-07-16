@@ -310,6 +310,9 @@ module Flor
     def entered(message); []; end
     def left(message); []; end
 
+    def terminated(message); []; end
+    def ceased(message); []; end
+
     def failed(message)
 
       Flor.detail_msg(self, message) if @unit.conf['log_err']

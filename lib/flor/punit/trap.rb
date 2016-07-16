@@ -65,8 +65,8 @@ class Flor::Pro::Trap < Flor::Procedure
 
     msg = {
       'point' => 'execute',
-      'tree' => children[1],
-      'nid' => "#{nid}_1", # FIXME what if it triggers multiple times!!!
+      'tree' => children[1],  # FIXME might not be child 1
+      'nid' => "#{nid}_1",    # FIXME might not be child 1
       'exid' => exid,
       'payload' => @message['payload'],
       'from' => nid
