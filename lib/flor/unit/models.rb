@@ -120,6 +120,9 @@ module Flor
       msg['payload'] = pld
       executor.ash!(msg, 'payload')
 
+xx = executor.counter_next('xx')
+msg['dbg'] = xx
+
       {
         'point' => 'trigger',
         'exid' => self.exid,
@@ -127,8 +130,9 @@ module Flor
         'type' => 'trap',
         'trap' => to_hash,
         'trap_id' => self.id,
-        'message' => msg
-      }
+        'message' => msg,
+'dbg' => xx
+      }.tap { |m| p m }
     end
 
     def to_hash

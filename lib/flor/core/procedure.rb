@@ -228,6 +228,8 @@ class Flor::Procedure < Flor::Node
     m['nid'] = parent
     m['from'] = nid
 
+    m['sm'] = @message['m']
+
     ret = :no
     ret = h.delete('ret') if h.has_key?('ret')
 

@@ -56,8 +56,8 @@ module Flor
       Flor::ConfExecutor.interpret(s)
     end
 
-    LOG_DBG_KEYS = %w[ dbg msg err src tree ]
-    LOG_ALL_KEYS = %w[ all log sto run ] + LOG_DBG_KEYS
+    LOG_DBG_KEYS = %w[ dbg msg err src tree run ]
+    LOG_ALL_KEYS = %w[ all log sto ] + LOG_DBG_KEYS
 
     def self.read_env
 

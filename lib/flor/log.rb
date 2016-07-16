@@ -30,6 +30,9 @@ module Flor
     _rs, _dg, _yl, _bl, _lg, _gr, _lr, _rd = colours(opts)
 
     nid = m['nid']
+    nd = executor.node(nid)
+
+    a = [ '  ' ]
 
     n =
       Time.now
@@ -39,27 +42,21 @@ module Flor
       else
         n.strftime('%H:%M:%S') + sprintf('.%06d', n.usec)[0, 4]
       end
+    a << tm
+    a << ' '
+    a << _dg
+
+    ni = nid ? "#{nid} " : ''
+    a << ni
 
     pt = m['point'][0, 3]
     pt = "#{pt == 'tri' ? _gr : _bl}#{pt}#{_dg}"
+    a << pt
 
-    ni = nid ? "#{nid} " : ''
-    mr = " m#{m['m']}r#{executor.counter('runs')}"
-    fr = m['from'] ? " from #{m['from']}" : ''
-
-    rt = ret_to_s(executor, m)
-    rt = rt.length > 0 ? " #{_lg}f.ret #{rt}" : ''
-
-    nd = executor.node(nid)
-
-    vs =
-      (nd && nd['vars']) ?
-      " #{_dg}vs:#{_gr}#{nd['vars'].keys.join("#{_dg},#{_gr}")}" :
-      ''
-
-    t = m['tree']
-    nt = t || Node.new(executor, nd, m).lookup_tree(nid)
-
+    t =
+      m['tree']
+    nt =
+      t || Node.new(executor, nd, m).lookup_tree(nid)
     t0 =
       if t
         " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} L#{t[2]}]"
@@ -68,21 +65,45 @@ module Flor
       else
         ''
       end
+    a << t0
+
+    ti = m['trap_id'] || m['timer_id']
+    ti = ti ? " #{_dg}tid:#{ti}" : ''
+    a << ti
 
     cn = t ? ' ' + Flor.to_d(t[1], compact: true, inner: true) : ''
     cn = cn.length > 49 ? "#{cn[0, 49]}..." : cn
+    a << cn
 
-    #ind = '  ' * ni.split('_').size
+    msr = " m#{m['m']}s#{m['sm'] || '_'}r#{executor.counter('runs')}"
+    a << msr
+
+    fr = m['from'] ? " from #{m['from']}" : ''
+    a << fr
+
+    rt = ret_to_s(executor, m)
+    rt = rt.length > 0 ? " #{_lg}f.ret #{rt}" : ''
+    a << rt
 
     ta =
       m['point'] == 'entered' || m['point'] == 'left' ?
       " #{_dg}tags:#{_gr}#{m['tags'].join(',')}" :
       nil
+    a << ta
 
-    ti = m['trap_id'] || m['timer_id']
-    ti = ti ? " #{_dg}tid:#{ti}" : ''
+    vs =
+      (nd && nd['vars']) ?
+      " #{_dg}vs:#{_gr}#{nd['vars'].keys.join("#{_dg},#{_gr}")}" :
+      ''
+    a << vs
 
-    puts "  #{tm} #{_dg}#{ni}#{pt}#{t0}#{ti}#{cn}#{mr}#{fr}#{rt}#{ta}#{vs}#{_rs}"
+    %w[ fpoint dbg ].each do |k|
+      a << " #{k}:#{m[k]}" if m.has_key?(k)
+    end
+
+    a << _rs
+
+    puts a.join
   end
 
   class Colours
@@ -227,6 +248,24 @@ module Flor
     l < 35 ? s : "#{s[0, 35]}(...L#{l})"
   end
 
+  def self.node_to_s(i, n)
+
+    t = n['tree']
+    t = Flor.to_d(t, compact: true) if t
+    t = t[0, 35] + '...' if t && t.length > 35
+
+    h = {}
+    %w[ parent cnid noreply dbg ].each do |k|
+      h[k] = n[k] if n.has_key?(k)
+    end
+
+    dbg = n['dbg'] ? "dbg:#{n['dbg']}" : nil
+    nr = n.has_key?('noreply') ? "nr:#{n['noreply']}" : nil
+    h = h.collect { |k, v| "#{k}:#{v}" }.join(' ')
+
+    [ i, n['nid'], t, h ].compact.join(' ')
+  end
+
   def self.detail_msg(executor, m, opts={})
 
     #_rs, _dg, _yl, _bl, _gy, _gn, _rd = colours(opts)
@@ -237,6 +276,10 @@ module Flor
     pp m
     puts "#{_dg}payload:#{_yl}"
     pp executor.unash(m, 'payload')
+    puts "#{_dg}nodes:#{_yl}"
+    executor.execution['nodes'].values.each_with_index do |n, i|
+      puts node_to_s(i, n)
+    end
     print "#{_rs}"
     puts "#{_dg}</Flor.detail_msg>#{_rs}"
   end

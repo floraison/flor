@@ -91,23 +91,39 @@ describe 'Flor punit' do
 
       flon = %{
         trap point: 'receive'
-          trace 'r'
+          trace "($(nid))=$(f.msg.from)->$(f.msg.nid)"
         sequence
           sequence
-            trace '_'
+            trace '*'
       }
 
       r = @unit.launch(flon, wait: true)
 
       expect(r['point']).to eq('terminated')
 
+puts "-" * 80
       sleep 0.100
+      sleep 0.100
+      sleep 0.100
+      sleep 0.100
+      sleep 1
+puts "-" * 80
 
       expect(
-        @unit.traces.collect(&:text).join(' ')
-      ).to eq(
-        'r _ r r ??'
-      )
+        #@unit.traces.collect(&:text).join(' | ')
+        @unit.traces
+          .each_with_index
+          .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+      ).to eq(%w{
+        0:(0_0_1_0_0-1)=0_0->0
+        1:*
+        2:(0_0_1_0_0-2)=
+        3:(0_0_1_0_0-3)=
+        4:(0_0_1_0_0-4)=
+        5:(0_0_1_0_0-5)=0_1_0->0_1
+        6:(0_0_1_0_0-6)=0_1->0
+        7:(0_0_1_0_0-7)=0->
+      }.collect(&:strip).join("\n"))
     end
   end
 end

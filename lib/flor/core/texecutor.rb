@@ -94,14 +94,9 @@ module Flor
 
         break unless message
 
-        point = message['point']
-
-        Flor.detail_msg(self, message) \
-          if point == 'failed' && conf['log_err']
-
         msgs = process(message)
 
-        break if %w[ failed terminated ].include?(point)
+        break if %w[ failed terminated ].include?(message['point'])
 
         messages.concat(msgs)
       end
@@ -127,7 +122,8 @@ module Flor
       vs['ruby_version'] = RUBY_VERSION
       vs['ruby_platform'] = RUBY_PLATFORM
 
-      r = (self.new('conf' => true)).launch(s, vars: vs)
+      c = (ENV['FLOR_DEBUG'] || '').match(/conf/) ? false : true
+      r = (self.new('conf' => c)).launch(s, vars: vs)
 
       fail ArgumentError.new(
         "error while reading conf: #{r['error']['msg']}"

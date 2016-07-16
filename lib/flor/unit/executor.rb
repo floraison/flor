@@ -62,6 +62,7 @@ module Flor
       (@unit.conf['exe_max_messages'] || 77).times do |i|
 
         m = @messages.shift
+#pp [ i, m ] if counter('runs') > 1
         break unless m
 
         point = m['point']
@@ -73,6 +74,9 @@ module Flor
         ims, oms = ms.partition { |m| m['exid'] == @exid }
           # qui est "in", qui est "out"?
 
+        counter_add('omsgs', oms.size)
+          # keep track of "out" messages, messages to other executions
+
         @messages.concat(ims)
         @unit.storage.put_messages(oms)
       end
@@ -81,14 +85,20 @@ module Flor
 
       @alive = false
 
-      p [
-        self.class, self.hash, @exid,
-        { took: Time.now - t0, consumed: @consumed.size,
-          counters: @execution['counters'] }
-      ] if @unit.conf['log_run']
+      puts(
+        Flor::Colours.dark_grey + '---' +
+        [
+          self.class, self.hash, @exid,
+          { took: Time.now - t0, consumed: @consumed.size,
+            counters: @execution['counters'] }
+        ].inspect +
+        '---.' + Flor::Colours.reset
+      ) if @unit.conf['log_run']
 
       @unit.storage.put_execution(@execution)
       @unit.storage.put_messages(@messages)
+
+      @consumed.clear
 
     rescue => er
 # TODO
@@ -102,13 +112,6 @@ puts '!' * 80
 p ex
 puts e.backtrace
 puts ('!' * 80) + ' .'
-    end
-
-    def failed(message)
-
-      Flor.detail_msg(self, message) if @unit.conf['log_err']
-
-      []
     end
 
     def terminated(message)

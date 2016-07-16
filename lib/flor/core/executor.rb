@@ -47,12 +47,17 @@ module Flor
       @execution['counters'][key.to_s] || -1
     end
 
-    def counter_next(key)
+    def counter_add(key, count)
 
       k = key.to_s
 
       @execution['counters'][k] ||= 0
-      @execution['counters'][k] += 1
+      @execution['counters'][k] += count
+    end
+
+    def counter_next(key)
+
+      counter_add(key, 1)
     end
 
     protected
@@ -70,10 +75,15 @@ module Flor
         'ctime' => now,
         'mtime' => now }
 
-      %w[ vars cnid noreply ].each do |k|
+      %w[ vars cnid noreply dbg ].each do |k|
         v = message[k]
         node[k] = v if v
       end
+        #
+        # vars: variables
+        # cnid: closure nid
+        # noreply: this new node has a parent but shouldn't reply to it
+        # dbg: used to debug messages (useful @node['dbg'] when 'receive')
 
       @execution['nodes'][nid] = node
     end
@@ -91,6 +101,8 @@ module Flor
 
       return unless node
 
+      return if node['heat']
+
       n = Flor::Node.new(self, node, message)
 
       mt = message['tree']
@@ -107,7 +119,7 @@ module Flor
       node['heap'] =
         if ! heat.is_a?(Array)
           '_val'
-        elsif tree[1] == []
+        elsif tree && tree[1] == []
           '_val'
         elsif heat[0] == '_proc'
           heat[1]
@@ -200,16 +212,24 @@ module Flor
     def error_reply(node, message, err)
 
       # TODO: use node (which may be nil)
+#if message['point'] == 'failed'
+#  Flor.detail_msg(self, message)
+#  #puts "*" * 77
+#  #pp message
+#  #puts ". . ."
+#  #puts caller
+#  #puts("*" * 77 + ' .')
+#  #exit 1
+#end
 
-      m = { 'point' => 'failed' }
+      m = message
+        .select { |k, v| %w[ sm exid nid from payload tree ].include?(k) }
+
+      m['point'] = 'failed'
       m['fpoint'] = message['point']
-      m['exid'] = message['exid']
-      m['nid'] = message['nid']
-      m['from'] = message['from']
-      m['payload'] = message['payload']
-      m['tree'] = message['tree']
       m['error'] = Flor.to_error(err)
 
+#Flor.detail_msg(self, m)
       [ m ]
     end
 
@@ -289,6 +309,13 @@ module Flor
 
     def entered(message); []; end
     def left(message); []; end
+
+    def failed(message)
+
+      Flor.detail_msg(self, message) if @unit.conf['log_err']
+
+      []
+    end
   end
 end
 
