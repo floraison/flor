@@ -151,7 +151,7 @@ module Flor
 
       return unless n
 
-      n['deleted'] = true # or should I use "status" => "deleted" ?
+      n['removed'] = true # or should I use "status" => "removed" ?
 
       @unit.remove_node(exid, n)
         # remove timers/waiters for this node, if any
@@ -159,7 +159,12 @@ module Flor
       return if (n['closures'] || []).any?
         # don't remove the node if it's a closure for some other nodes
 
-      @execution['nodes'].delete(n['nid'])
+      nid = n['nid']
+
+      return if nid == '0'
+        # don't remove if it's the "root" node
+
+      @execution['nodes'].delete(nid)
     end
 
     def leave(node, message)

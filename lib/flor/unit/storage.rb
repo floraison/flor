@@ -104,7 +104,7 @@ module Flor
       if i = ex['id']
 
         status =
-          if ex['nodes'].empty?
+          if ex['nodes']['0']['removed']
             'terminated'
           else
             'active'
