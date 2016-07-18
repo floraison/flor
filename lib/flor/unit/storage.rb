@@ -78,7 +78,7 @@ module Flor
 
       e = @db[:flon_executions]
         .select(:id, :content)
-        .where(status: 'active', exid: exid)
+        .where(exid: exid) # status active or terminated doesn't matter
         .first
 
       ex =

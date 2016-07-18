@@ -263,7 +263,7 @@ module Flor
     nr = n.has_key?('noreply') ? "nr:#{n['noreply']}" : nil
     h = h.collect { |k, v| "#{k}:#{v}" }.join(' ')
 
-    [ i, n['nid'], t, h ].compact.join(' ')
+    [ "#{i}.", n['nid'], t, h ].compact.join(' ')
   end
 
   def self.detail_msg(executor, m, opts={})
@@ -280,6 +280,7 @@ module Flor
     executor.execution['nodes'].values.each_with_index do |n, i|
       puts node_to_s(i, n)
     end
+    puts "#{executor.execution['nodes'].size} nodes."
     print "#{_rs}"
     puts "#{_dg}</Flor.detail_msg>#{_rs}"
   end

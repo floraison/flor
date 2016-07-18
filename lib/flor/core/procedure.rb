@@ -325,11 +325,13 @@ class Flor::Procedure < Flor::Node
     end
   end
 
-  def apply(fun, args, line)
+  def apply(fun, args, line, anid=true)
 
     fni = fun[1]['nid'] # fun nid
+    ani = anid ? Flor.sub_nid(fni, @executor.counter_next('subs')) : fni
+      # the "trap" apply doesn't want a subid generated before it triggers...
+
     cni = fun[1]['cnid'] # closure nid
-    ani = Flor.sub_nid(fni, @executor.counter_next('subs')) # applied nid
 
     #t = lookup_tree_anyway(fni)
     t = lookup_tree(fni)

@@ -71,7 +71,7 @@ class Flor::Pro::Trap < Flor::Procedure
 #      'payload' => @message['payload'],
 #      'from' => nid
 #    }
-    msg = apply(fun, [], tree[2]).first
+    msg = apply(fun, [], tree[2], false).first
     msg['noreply'] = true
 
     tra = { 'points' => points, 'tags' => tags, 'nids' => nids }
