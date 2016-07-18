@@ -36,7 +36,7 @@ describe 'Flor punit' do
       r = @unit.launch(flon, wait: true)
 
       expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq('trap requires at least one child node')
+      expect(r['error']['msg']).to eq('trap requires a function')
     end
 
     it 'traps messages' do

@@ -41,6 +41,7 @@ class Flor::Pro::Trap < Flor::Procedure
 
     @node['vars'] = {}
     @node['atts'] = []
+    @node['fun'] = nil
 
     #unatt_unkeyed_children
   end
@@ -73,12 +74,16 @@ class Flor::Pro::Trap < Flor::Procedure
     msg = apply(fun, [], tree[2]).first
     msg['noreply'] = true
 
-    tra = {
-      'points' => points, 'tags' => tags, 'nids' => nids, 'message' => msg
-    }
+    tra = { 'points' => points, 'tags' => tags, 'nids' => nids }
+    tra['message'] = msg
 
     reply('point' => 'trap','nid' => nid, 'trap' => tra) +
     reply
+  end
+
+  def receive_last
+
+    fail ArgumentError.new('trap requires a function')
   end
 end
 
