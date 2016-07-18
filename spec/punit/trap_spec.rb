@@ -43,11 +43,9 @@ describe 'Flor punit' do
 
       flon = %{
         sequence
-          #trap 'execute'
-          #  trace 'x'
           trap 'terminated'
-            trace 't'
-          trace 's'
+            def msg; trace "t:$(msg.from)"
+          trace "s:$(nid)"
       }
 
       r = @unit.launch(flon, wait: true)
@@ -59,7 +57,7 @@ describe 'Flor punit' do
       expect(
         @unit.traces.collect(&:text).join(' ')
       ).to eq(
-        's t'
+        's:0_1_0_0 t:0'
       )
     end
 

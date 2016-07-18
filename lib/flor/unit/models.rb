@@ -115,13 +115,11 @@ module Flor
 
       msg['trap_id'] = self.id
 
-      pld = executor.lookup_ash(msg['payload'], true)
-      pld['msg'] = Flor.dup(message)
-      msg['payload'] = pld
-      executor.ash!(msg, 'payload')
+      k = msg['vars'].keys.find { |k| k != 'arguments' }
+      msg['vars'][k] = message
 
-xx = executor.counter_next('xx')
-msg['dbg'] = xx
+      #xx = executor.counter_next('xx')
+      #msg['dbg'] = xx
 
       {
         'point' => 'trigger',
@@ -131,7 +129,7 @@ msg['dbg'] = xx
         'trap' => to_hash,
         'trap_id' => self.id,
         'message' => msg,
-'dbg' => xx
+        #'dbg' => xx
       }#.tap { |m| p m }
     end
 

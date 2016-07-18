@@ -142,7 +142,7 @@ puts ('!' * 80) + ' .'
       m = message['message']
 
       m['nid'] = Flor.sub_nid(m['nid'], counter_next('subs')) \
-        if m['point'] == 'execute'
+        if m['point'] == 'execute' && m['tree'] && m['tree'][0] != '_apply'
 
       [ m ]
     end

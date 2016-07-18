@@ -93,7 +93,12 @@ class Flor::Procedure < Flor::Node
 
   def att_a(*keys)
 
-    Array(att(*keys))
+    if keys.last == nil
+      keys.pop
+      Flor.to_a(att(*keys))
+    else
+      Array(att(*keys))
+    end
   end
 
   def execute_child(index=0, sub=0, duplicate_payload=false)

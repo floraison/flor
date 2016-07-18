@@ -29,51 +29,52 @@ class Flor::Pro::Trap < Flor::Procedure
 
   def pre_execute
 
-    fail ArgumentError.new(
-      "trap requires at least one 'point' attribute"
-    ) if att_children.size < 1
-    fail ArgumentError.new(
-      "trap requires at least one child node"
-    ) if non_att_children.size < 1
+#    fail ArgumentError.new(
+#      "trap requires at least one 'point' attribute"
+#    ) if att_children.size < 1
+#    fail ArgumentError.new(
+#      "trap requires at least one child node"
+#    ) if non_att_children.size < 1
+#
+#    @node['atts'] = []
+#      # so that atts get collected
 
+    @node['vars'] = {}
     @node['atts'] = []
-      # so that atts get collected
+
+    #unatt_unkeyed_children
   end
 
-  def receive
+  def receive_non_att
 
-    return execute_child(0) if point == 'execute'
+    return execute_child(@ncid) if children[@ncid]
 
-    points = Flor.to_a(att('point', 'points'))
-    tags = Flor.to_a(att('tag', 'tags'))
-    nids = Flor.to_a(att('nid', 'nids'))
+    fun = payload['ret']
 
-    points = Flor.to_a(payload['ret']) unless points || tags || nids
+    fail ArgumentError.new(
+      'trap requires a function'
+    ) unless Flor.is_func?(fun)
+
+    points = att_a('point', 'points', nil)
+    tags = att_a('tag', 'tags', nil)
+    nids = att_a('nid', 'nids', nil)
+
+    points = att_a(nil, nil) unless points || tags || nids
     points = [ 'entered' ] if tags && ! nids && ! points
 
-    #exe = {
-    #  'point' => 'execute',
-    #  'from' => nid, # FIXME (OK only if same exid)
-    #  'exid' => exid,
-    #  'nid' => Flor.sub_nid(self.data['nid'], executor.counter_next('subs')),
-    #  'cnid' => '0',
-    #  'tree' => self.data['tree'],
-    #  'payload' => pld
-    #}
-      #
-      # old style
+#    msg = {
+#      'point' => 'execute',
+#      'tree' => children[1],  # FIXME might not be child 1
+#      'nid' => "#{nid}_1",    # FIXME might not be child 1
+#      'exid' => exid,
+#      'payload' => @message['payload'],
+#      'from' => nid
+#    }
+    msg = apply(fun, [], tree[2]).first
+    msg['noreply'] = true
 
-    msg = {
-      'point' => 'execute',
-      'tree' => children[1],  # FIXME might not be child 1
-      'nid' => "#{nid}_1",    # FIXME might not be child 1
-      'exid' => exid,
-      'payload' => @message['payload'],
-      'from' => nid
-    }
     tra = {
-      'points' => points, 'tags' => tags, 'nids' => nids,
-      'message' => msg
+      'points' => points, 'tags' => tags, 'nids' => nids, 'message' => msg
     }
 
     reply('point' => 'trap','nid' => nid, 'trap' => tra) +
