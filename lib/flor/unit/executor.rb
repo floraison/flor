@@ -62,8 +62,15 @@ module Flor
       (@unit.conf['exe_max_messages'] || 77).times do |i|
 
         m = @messages.shift
-#pp [ i, m ] if counter('runs') > 1
         break unless m
+
+        if m['point'] == 'terminated' && @messages.any?
+          #
+          # try to handle 'terminated' last
+          #
+          @messages << m
+          m = @messages.shift
+        end
 
         point = m['point']
 

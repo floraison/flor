@@ -91,8 +91,15 @@ module Flor
       loop do
 
         message = messages.shift
-
         break unless message
+
+        if message['point'] == 'terminated' && messages.any?
+          #
+          # try to handle 'terminated' last
+          #
+          messages << message
+          message = messages.shift
+        end
 
         msgs = process(message)
 
