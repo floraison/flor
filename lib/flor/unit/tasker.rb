@@ -36,6 +36,13 @@ module Flor
     def shutdown
     end
 
+    def has_tasker?(exid, name)
+
+      domain = exid.split('-', 2).first
+
+      !! @unit.loader.tasker(domain, name)
+    end
+
     def task(message)
 
       domain = message['exid'].split('-', 2).first
@@ -43,7 +50,7 @@ module Flor
 
       tconf =
         @unit.loader.tasker(domain, 'tasker') ||
-        @unit.loader.tasker(domain, message['tasker'])
+        @unit.loader.tasker(domain, tname)
           #
           # FIXME tasker tasker tasker lookup loop?
 

@@ -181,7 +181,15 @@ class Flor::Node
 
     return nil if mod == 'd' # FIXME
 
-    Flor::Procedure[key] ? [ '_proc', key, -1 ] : nil
+    #Flor::Procedure[key] ? [ '_proc', key, -1 ] : nil
+
+    return [ '_proc', key, -1 ] if Flor::Procedure[key]
+
+    return [ 'task', [
+      [ '_att', [ [ '_sqs', key, -1 ] ], -1 ]
+    ], -1 ] if @executor.unit.tasker && @executor.unit.tasker.has_tasker?(@executor.exid, key)
+
+    nil
   end
 
   def lookup_var(node, mod, key)

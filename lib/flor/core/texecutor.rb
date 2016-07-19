@@ -39,6 +39,8 @@ module Flor
         @journal = []
       end
 
+      def tasker; nil; end
+
       def notify(executor, o)
 
         return unless o.is_a?(Hash)
