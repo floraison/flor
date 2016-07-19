@@ -280,7 +280,7 @@ module Flor
     executor.execution['nodes'].values.each_with_index do |n, i|
       puts node_to_s(i, n)
     end
-    puts "#{executor.execution['nodes'].size} nodes."
+    z = executor.execution['nodes'].size; puts "#{z} node#{z == 1 ? '' : 's'}."
     print "#{_rs}"
     puts "#{_dg}</Flor.detail_msg>#{_rs}"
   end
