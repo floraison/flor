@@ -75,7 +75,11 @@ module Flor
     cn = cn.length > 49 ? "#{cn[0, 49]}..." : cn
     a << cn
 
-    msr = " m#{m['m']}s#{m['sm'] || '_'}r#{executor.counter('runs')}"
+    hp = nd && nd['heap']
+    hp = hp && (hp != (t || [])[0]) ? " #{_dg}hp:#{nd['heap']}" : ''
+    a << hp
+
+    msr = " #{_dg}m#{m['m']}s#{m['sm'] || '_'}r#{executor.counter('runs')}"
     a << msr
 
     fr = m['from'] ? " from #{m['from']}" : ''
