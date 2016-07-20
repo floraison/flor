@@ -116,7 +116,7 @@ module Flor
       node['heat'] = heat = n.deref(t0)
       node['heat0'] = tree[0]
 
-      node['heap'] =
+      node['heap'] = heap =
         if ! heat.is_a?(Array)
           '_val'
         elsif tree && tree[1] == []
@@ -125,9 +125,18 @@ module Flor
           heat[1]
         elsif heat[0] == '_func'
           'apply'
+        elsif heat[0] == '_task'
+          'task'
         else
           '_val'
         end
+
+      if heap == 'task' && heat[0] == '_task'
+        l = message['tree'][2]
+        message['otree'] = Flor.dup(message['tree'])
+        message['tree'][0] = 'task'
+        message['tree'][1].unshift([ '_att', [ [ '_sqs', heat[1], l ] ], l ])
+      end
     end
 
     def execute(message)
