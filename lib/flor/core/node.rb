@@ -187,7 +187,7 @@ class Flor::Node
 
     return [ 'task', [
       [ '_att', [ [ '_sqs', key, -1 ] ], -1 ]
-    ], -1 ] if @executor.unit.tasker && @executor.unit.tasker.has_tasker?(@executor.exid, key)
+    ], -1 ] if @executor.unit.tasker.has_tasker?(@executor.exid, key)
 
     nil
   end

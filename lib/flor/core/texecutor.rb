@@ -27,19 +27,23 @@ module Flor
 
   class TransientExecutor < Executor
 
+    class TransientTasker
+
+      def has_tasker?(exid, tname); false; end
+    end
+
     class TransientUnit
 
       attr_accessor :conf, :opts
-      attr_reader :journal
+      attr_reader :journal, :tasker
 
       def initialize(conf)
 
         @conf = conf
         @opts = {}
         @journal = []
+        @tasker = TransientTasker.new
       end
-
-      def tasker; nil; end
 
       def notify(executor, o)
 

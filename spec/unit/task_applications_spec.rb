@@ -36,7 +36,12 @@ describe 'Flor unit' do
       r = @unit.launch(flon, wait: true)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ 'task', [], -1 ]) # FIXME
+
+      expect(
+        r['payload']['ret']
+      ).to eq(
+        [ 'task', [ [ '_att', [ [ '_sqs', 'alpha', -1 ] ], -1 ] ], -1 ]
+      )
     end
 
     it 'can be "applied" directly' do
