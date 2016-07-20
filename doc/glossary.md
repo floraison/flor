@@ -1,11 +1,15 @@
 
 # glossary.md
 
+## core
 ## execution
-
-TODO
-
+## loader
 ## node
-
-TODO
+## payload
+## procedure
+## run
+## task
+## tasker
+## unit
+## variable
 
