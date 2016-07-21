@@ -367,9 +367,14 @@ class Flor::Procedure < Flor::Node
       'payload' => @message['payload'] || @node['payload'])
   end
 
+  def cancel_children
+
+    cancel_nodes(@node['cnodes'])
+  end
+
   def cancel
 
-    cancel_nodes(@node['cnodes']) + cancel_reply
+    cancel_children + cancel_reply
   end
 end
 
