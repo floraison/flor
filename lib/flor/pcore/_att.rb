@@ -110,5 +110,12 @@ class Flor::Pro::Att < Flor::Procedure
     schedule('in' => t, 'nid' => n, 'message' => m) +
     reply
   end
+
+  def receive_on_error
+
+    (parent_node['on_error'] ||= []) << payload['ret']
+
+    reply
+  end
 end
 

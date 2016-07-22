@@ -109,7 +109,8 @@ module Flor
 
         msgs = process(message)
 
-        break if %w[ failed terminated ].include?(message['point'])
+        break if message['point'] == 'terminated'
+        break if message['point'] == 'failed' && message['on_error'] == nil
 
         messages.concat(msgs)
       end

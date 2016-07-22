@@ -35,7 +35,9 @@ class Flor::Node
         else [ executor, executor.execution ] # vanilla case
       end
 
-    @node = node
+    @node =
+      node ? node : @execution['nodes'][message['nid']]
+
     @message = message
   end
 
@@ -146,6 +148,22 @@ class Flor::Node
   def fei
 
     "#{exid}-#{nid}"
+  end
+
+  def on_error_parent
+
+    oe = @node['on_error']
+    return self if oe && oe.any?
+
+    pn = parent_node
+    return Flor::Node.new(@executor, pn, @message).on_error_parent if pn
+
+    nil
+  end
+
+  def to_procedure
+
+    Flor::Procedure.new(@executor, @node, @message)
   end
 
   protected

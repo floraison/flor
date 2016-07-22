@@ -53,6 +53,14 @@ class Flor::Procedure < Flor::Node
     # empty default implementation
   end
 
+  def trigger_on_error(message)
+
+    message['on_error'] = @node['on_error'].shift
+
+    cancel_children +
+    apply(message['on_error'], message, tree[2])
+  end
+
   protected
 
   def children
@@ -81,6 +89,8 @@ class Flor::Procedure < Flor::Node
   end
 
   def att(*keys)
+
+    return nil unless @node['atts']
 
     keys.each do |k|
       k = k.to_s unless k == nil

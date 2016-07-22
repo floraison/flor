@@ -121,15 +121,6 @@ puts e.backtrace
 puts ('!' * 80) + ' .'
     end
 
-    def cancel(message)
-
-      if n = @execution['nodes'][message['nid']]
-        apply(n, message)
-      else
-        [] # nothing, node gone
-      end
-    end
-
     def schedule(message)
 
       @unit.storage.put_timer(message)

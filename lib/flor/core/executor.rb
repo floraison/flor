@@ -243,7 +243,8 @@ module Flor
       m['fpoint'] = message['point']
       m['error'] = Flor.to_error(err)
 
-#Flor.detail_msg(self, m)
+      Flor.detail_msg(self, m) if @unit.conf['log_err']
+
       [ m ]
     end
 
@@ -262,6 +263,15 @@ module Flor
           'payload' => message['payload'],
           'tasker' => message['tasker'] }
       ]
+    end
+
+    def cancel(message)
+
+      if n = @execution['nodes'][message['nid']]
+        apply(n, message)
+      else
+        [] # nothing, node gone
+      end
     end
 
     def process(message)
@@ -329,9 +339,18 @@ module Flor
 
     def failed(message)
 
+      if nd = lookup_on_error_parent(message)
+        return nd.to_procedure.trigger_on_error(message) # FIXME to_procedure...
+      end
+
       Flor.detail_msg(self, message) if @unit.conf['log_err']
 
       []
+    end
+
+    def lookup_on_error_parent(message)
+
+      Flor::Node.new(self, nil, message).on_error_parent
     end
   end
 end
