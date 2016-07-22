@@ -252,7 +252,9 @@ module Flor
     l < 35 ? s : "#{s[0, 35]}(...L#{l})"
   end
 
-  def self.node_to_s(i, n)
+  def self.node_to_s(i, n, opts, here=false)
+
+    _rs, _dg, _yl = colours(opts)
 
     t = n['tree']
     t = Flor.to_d(t, compact: true) if t
@@ -267,7 +269,11 @@ module Flor
     nr = n.has_key?('noreply') ? "nr:#{n['noreply']}" : nil
     h = h.collect { |k, v| "#{k}:#{v}" }.join(' ')
 
-    [ "#{i}.", n['nid'], t, h ].compact.join(' ')
+    vs = n['vars']
+    vs = 'vars:' + vs.keys.join(',') if vs
+    here = here ? "#{_dg}<---msg['nid']" : nil
+
+    [ "#{i}.", n['nid'], t, h, vs, here ].compact.join(' ')
   end
 
   def self.detail_msg(executor, m, opts={})
@@ -280,12 +286,13 @@ module Flor
     pp m
     puts "#{_dg}payload:#{_yl}"
     pp executor.unash(m, 'payload')
-    puts "#{_dg}nodes:#{_yl}"
+    puts "#{_dg}nodes:"
     executor.execution['nodes'].values.each_with_index do |n, i|
-      puts node_to_s(i, n)
+      print _yl
+      puts node_to_s(i, n, opts, n['nid'] == m['nid'])
     end
-    z = executor.execution['nodes'].size; puts "#{z} node#{z == 1 ? '' : 's'}."
-    print "#{_rs}"
+    z = executor.execution['nodes'].size
+    puts "#{_yl}#{z} node#{z == 1 ? '' : 's'}."
     puts "#{_dg}</Flor.detail_msg>#{_rs}"
   end
 end
