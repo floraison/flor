@@ -67,11 +67,14 @@ module Flor
       end
     a << t0
 
+    oe = m['on_error'] ? " #{_rd}on_error" : ''
+    a << oe
+
     ti = m['trap_id'] || m['timer_id']
     ti = ti ? " #{_dg}tid:#{ti}" : ''
     a << ti
 
-    cn = t ? ' ' + Flor.to_d(t[1], compact: true, inner: true) : ''
+    cn = t ? " #{_dg}#{Flor.to_d(t[1], compact: true, inner: true)}" : ''
     cn = cn.length > 49 ? "#{cn[0, 49]}..." : cn
     a << cn
 
@@ -102,7 +105,7 @@ module Flor
     a << vs
 
     %w[ fpoint dbg ].each do |k|
-      a << " #{k}:#{m[k]}" if m.has_key?(k)
+      a << " #{_dg}#{k}:#{m[k]}" if m.has_key?(k)
     end
 
     a << _rs

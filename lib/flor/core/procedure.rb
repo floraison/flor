@@ -58,7 +58,7 @@ class Flor::Procedure < Flor::Node
     message['on_error'] = @node['on_error'].shift
 
     cancel_children +
-    apply(message['on_error'], message, tree[2])
+    apply(message['on_error'], [ message ], tree[2])
   end
 
   protected
@@ -355,12 +355,18 @@ class Flor::Procedure < Flor::Node
       vars[key] = args[i]
     end
 
-    reply(
+    ms = reply(
       'point' => 'execute',
       'nid' => ani,
       'tree' => [ '_apply', t[1], line ],
       'vars' => vars,
       'cnid' => cni)
+
+    if oe = fun[1]['on_error']
+      ms.first['on_error'] = oe
+    end
+
+    ms
   end
 
   def cancel_nodes(nids)
