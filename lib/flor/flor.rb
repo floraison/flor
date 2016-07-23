@@ -332,13 +332,13 @@ module Flor
 
     h = {}
     h['kla'] = o.class.to_s
+    t = nil
 
     if o.is_a?(Exception)
 
       h['msg'] = o.message
 
       t = o.backtrace
-      h['trc'] = t[0..(t.rindex { |l| l.match(/\/lib\/flor\//) }) + 1]
 
       if n = o.respond_to?(:node) && o.node
         h['lin'] = n.tree[2]
@@ -348,7 +348,11 @@ module Flor
     else
 
       h['msg'] = o.to_s
+
+      t = caller[1..-1]
     end
+
+    h['trc'] = t[0..(t.rindex { |l| l.match(/\/lib\/flor\//) }) + 1]
 
     h
   end

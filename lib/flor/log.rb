@@ -254,7 +254,7 @@ module Flor
 
   def self.node_to_s(i, n, opts, here=false)
 
-    _rs, _dg, _yl = colours(opts)
+    _rs, _dg, _yl, _bl, _gy, _gn, _rd = colours(opts)
 
     t = n['tree']
     t = Flor.to_d(t, compact: true) if t
@@ -271,14 +271,16 @@ module Flor
 
     vs = n['vars']
     vs = 'vars:' + vs.keys.join(',') if vs
+
+    flr = n['failure'] ? "#{_rd}flre" : ''
+
     here = here ? "#{_dg}<---msg['nid']" : nil
 
-    [ "#{i}.", n['nid'], t, h, vs, here ].compact.join(' ')
+    [ "#{i}.", n['nid'], t, h, vs, flr, here ].compact.join(' ')
   end
 
   def self.detail_msg(executor, m, opts={})
 
-    #_rs, _dg, _yl, _bl, _gy, _gn, _rd = colours(opts)
     _rs, _dg, _yl = colours(opts)
 
     puts "#{_dg}<Flor.detail_msg>#{_rs}"

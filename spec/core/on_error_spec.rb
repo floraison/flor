@@ -46,7 +46,7 @@ describe 'Flor core' do
     it 'triggers when a child has an error' do
 
       flon = %{
-        sequence on_error: (def err; push f.l f.err.msg)
+        sequence on_error: (def err; push f.l err)
           push f.l 0
           push f.l x
           push f.l 1

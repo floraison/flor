@@ -146,11 +146,18 @@ module Flor
 
     def apply(node, message)
 
+      heap =
+        if node['heat']
+          node['heap']
+        else
+          node['failure'] ? '_err' : nil
+        end
+
       return error_reply(
         node, message, "don't know how to apply #{node['heat0'].inspect}"
-      ) if node['heat'] == nil
+      ) if heap == nil
 
-      head = Flor::Procedure[node['heap']].new(self, node, message)
+      head = Flor::Procedure[heap].new(self, node, message)
 
       head.pre_execute if message['point'] == 'execute'
       head.send(message['point'])
@@ -338,6 +345,8 @@ module Flor
     def ceased(message); []; end
 
     def failed(message)
+
+      node(message['nid'])['failure'] = message
 
       if nd = lookup_on_error_parent(message)
         return nd.to_procedure.trigger_on_error(message) # FIXME to_procedure...
