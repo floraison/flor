@@ -75,8 +75,9 @@ module Flor
         'ctime' => now,
         'mtime' => now }
 
-      %w[ vars cnid noreply dbg ].each do |k|
+      %w[ vars cnid noreply dbg on_error ].each do |k|
         v = message[k]
+        k = 'on_error_branch' if k == 'on_error'
         node[k] = v if v
       end
         #

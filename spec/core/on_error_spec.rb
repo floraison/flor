@@ -46,7 +46,7 @@ describe 'Flor core' do
     it 'triggers when a child has an error' do
 
       flon = %{
-        sequence on_error: (def err; push f.l err)
+        sequence on_error: (def err; push f.l err.error.msg)
           push f.l 0
           push f.l x
           push f.l 1
@@ -55,7 +55,7 @@ describe 'Flor core' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ -999 ])
+      expect(r['payload']['l']).to eq([ 0, "don't know how to apply \"x\"" ])
     end
   end
 end

@@ -188,6 +188,8 @@ class Flor::Procedure < Flor::Node
 
   def receive
 
+    return reply if @message['on_error_branch']
+
     cnode = @node['cnodes'] ? @node['cnodes'].delete(from) : false
 
     @fcid = point == 'receive' ? Flor.child_id(from) : nil
@@ -252,6 +254,10 @@ class Flor::Procedure < Flor::Node
     unash!(m, 'payload', ret != :no)
 
     m.merge!(h)
+
+    if oeb = m['point'] == 'receive' && @node['on_error_branch']
+      m['on_error_branch'] = oeb
+    end
 
     m['payload']['ret'] = ret if ret != :no
 
