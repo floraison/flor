@@ -36,7 +36,13 @@ class Flor::Node
       end
 
     @node =
-      node ? node : @execution['nodes'][message['nid']]
+      if node
+        node
+      elsif message
+        @execution['nodes'][message['nid']]
+      else
+        nil
+      end
 
     @message = message
   end
