@@ -188,7 +188,7 @@ class Flor::Procedure < Flor::Node
 
   def receive
 
-    return reply if @message['from_on_error_branch']
+    return reply if @message['from_on_branch']
 
     cnode = @node['cnodes'] ? @node['cnodes'].delete(from) : false
 
@@ -256,7 +256,7 @@ class Flor::Procedure < Flor::Node
     m.merge!(h)
 
     oeb = @node['on_error_branch']
-    m['from_on_error_branch'] = oeb if oeb && m['point'] == 'receive'
+    m['from_on_branch'] = oeb if oeb && m['point'] == 'receive'
 
     m['payload']['ret'] = ret if ret != :no
 
