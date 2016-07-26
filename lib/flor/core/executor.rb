@@ -160,8 +160,11 @@ module Flor
 
       head = Flor::Procedure[heap].new(self, node, message)
 
-      head.pre_execute if message['point'] == 'execute'
-      head.send(message['point'])
+      pt = message['point']
+      pt = 'do_receive' if pt == 'receive'
+
+      head.pre_execute if pt == 'execute'
+      head.send(pt)
     end
 
     def remove_node(n)

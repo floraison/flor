@@ -186,9 +186,14 @@ class Flor::Procedure < Flor::Node
     receive
   end
 
-  def receive
+  def do_receive
 
     return reply if @message['from_on_branch']
+
+    receive
+  end
+
+  def receive
 
     cnode = @node['cnodes'] ? @node['cnodes'].delete(from) : false
 
