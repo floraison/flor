@@ -27,7 +27,7 @@ describe 'Flor unit' do
 
   describe 'a tasker' do
 
-    it 'can be "applied" directly' do
+    it 'can be "referred" directly' do
 
       flon = %{
         alpha
