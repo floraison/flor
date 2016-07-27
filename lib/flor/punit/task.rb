@@ -30,11 +30,14 @@ class Flor::Pro::Task < Flor::Procedure
   def pre_execute
 
     @node['atts'] = []
+
+    @node['patts'] = payload['atts'] if payload.has_key?('atts')
   end
 
   def receive
 
-    return reply if point == 'receive' && from == nil
+    return reply('payload' => determine_reply_payload) \
+      if point == 'receive' && from == nil
 
     super
   end
@@ -45,7 +48,7 @@ class Flor::Pro::Task < Flor::Procedure
       'point' => 'task',
       'exid' => exid, 'nid' => nid,
       'tasker' => att(nil),
-      'payload' => payload)
+      'payload' => determine_payload)
   end
 
   def cancel
@@ -54,7 +57,28 @@ class Flor::Pro::Task < Flor::Procedure
       'point' => 'detask',
       'exid' => exid, 'nid' => nid,
       'tasker' => att(nil),
-      'payload' => payload)
+      'payload' => determine_payload)
+  end
+
+  protected
+
+  def determine_payload
+
+    payload.merge(
+      'atts' => @node['atts'].inject({}) { |h, (k, v)| h[k] = v if k; h })
+  end
+
+  def determine_reply_payload
+
+    pl = payload_copy
+
+    if @node.has_key?('patts')
+      pl['atts'] = Flor.dup(@node['patts'])
+    else
+      pl.delete('atts')
+    end
+
+    pl
   end
 end
 

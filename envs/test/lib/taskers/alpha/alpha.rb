@@ -12,7 +12,7 @@ class AlphaTasker
   def task(message)
 
     message['payload']['seen'] =
-      [ message['tasker'], self.class, Time.now ]
+      [ message['tasker'], self.class, Time.now, Flor.dup(message['payload']) ]
 
     @tasker.reply(message)
   end

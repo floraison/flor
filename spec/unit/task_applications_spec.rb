@@ -58,7 +58,34 @@ describe 'Flor unit' do
       expect(r['payload']['seen'][1]).to eq('AlphaTasker')
     end
 
-    it 'passes attributes'
+    it 'passes attributes' do
+
+      flon = %{
+        alpha a: 0, b: 1
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload'].keys).to eq(%w[ ret seen ])
+      expect(r['payload']['seen'][3]['atts']).to eq({ 'a' => 0, 'b' => 1 })
+    end
+
+    it 'preserves "atts"' do
+
+      flon = %{
+        #set f.atts { a: 0, b: -1 }
+        set f.atts (-999)
+        alpha a: 0, b: 1
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload'].keys).to eq(%w[ ret atts seen ])
+      expect(r['payload']['atts']).to eq(-999)
+      expect(r['payload']['seen'][3]['atts']).to eq({ 'a' => 0, 'b' => 1 })
+    end
   end
 end
 
