@@ -271,7 +271,7 @@ module Flor
 
         cn = @children.collect(&:to_a)
 
-        # detect if/unles suffix
+        # detect if/unless suffix
 
         atts =
           cn.inject([]) { |a, c| a << c[1] if c[0] == '_att'; a }
@@ -327,6 +327,7 @@ module Flor
               [ '_att', [ v ], v[2] ]
             end
           end)
+        end
       end
     end
 
