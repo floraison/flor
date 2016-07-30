@@ -230,6 +230,11 @@ module Flor
         op = o
       end
 
+      if op == '-' && cn.all? { |c| c[0] == '_num' }
+        op = '+'
+        cn[1..-1].each { |c| c[1] = -c[1] }
+      end
+
       [ op, cn, cn.first[2] ]
     end
 
@@ -314,19 +319,22 @@ module Flor
         @head = Flor::Lang.rewrite(ht.c0)
         @head = @head[0] if @head[0].is_a?(String) && @head[1] == []
 
-        @children.concat(
-
-          tree.children[2..-1].collect do |ct|
+        atts =
+          tree.children[2..-1].inject([]) do |as, ct|
 
             v = Flor::Lang.rewrite(ct.clast)
 
             if kt = ct.lookup(:key)
               k = Flor::Lang.rewrite(kt.c0)
-              [ '_att', [ k, v ], k[2] ]
+              as << [ '_att', [ k, v ], k[2] ]
             else
-              [ '_att', [ v ], v[2] ]
+              as << [ '_att', [ v ], v[2] ]
             end
-          end)
+
+            as
+          end
+
+        @children.concat(atts)
       end
     end
 
