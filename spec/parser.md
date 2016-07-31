@@ -325,6 +325,18 @@ parses to
 ---
 
 ```flon
+  + 10 5
+```
+parses to
+```ruby
+  [ '+', [
+    [ '_num', 10, 1 ],
+    [ '_num', -5, 1 ],
+  ], 1 ]
+```
+---
+
+```flon
   - 10 -5
 ```
 parses to
