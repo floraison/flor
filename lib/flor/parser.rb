@@ -322,11 +322,14 @@ module Flor
         atts =
           tree.children[2..-1].inject([]) do |as, ct|
 
+            kt = ct.lookup(:key)
             v = Flor::Lang.rewrite(ct.clast)
 
-            if kt = ct.lookup(:key)
+            if kt
               k = Flor::Lang.rewrite(kt.c0)
               as << [ '_att', [ k, v ], k[2] ]
+            elsif %w[ - + / * ].include?(@head)
+              as << v
             else
               as << [ '_att', [ v ], v[2] ]
             end
