@@ -328,8 +328,12 @@ module Flor
             if kt
               k = Flor::Lang.rewrite(kt.c0)
               as << [ '_att', [ k, v ], k[2] ]
-            elsif %w[ - + / * ].include?(@head)
-              as << v
+            elsif %w[ - + ].include?(@head) && v[0, 2] != [ '_', [] ]
+              if v[0] == '+'
+                as.concat(v[1])
+              else
+                as << v
+              end
             else
               as << [ '_att', [ v ], v[2] ]
             end
