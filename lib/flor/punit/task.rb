@@ -64,7 +64,7 @@ class Flor::Pro::Task < Flor::Procedure
 
   def determine_payload
 
-    payload.merge(
+    (payload || node_payload_copy).merge(
       'atts' => @node['atts'].inject({}) { |h, (k, v)| h[k] = v if k; h })
   end
 

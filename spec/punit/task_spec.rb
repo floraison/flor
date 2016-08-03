@@ -63,7 +63,7 @@ describe 'Flor punit' do
 
       expect(HoleTasker.message).to eq(nil)
       expect(r['point']).to eq('terminated')
-      expect(r['payload'].keys).to eq(%w[ holed ])
+      expect(r['payload'].keys).to eq(%w[ song holed ])
     end
   end
 end
