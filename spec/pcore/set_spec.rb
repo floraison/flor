@@ -299,6 +299,36 @@ describe 'Flor procedures' do
     end
   end
 
+  describe 'set f.a' do
+
+    it 'sets a field' do
+
+      flon = %{
+        sequence
+          set f.a
+            0
+          set f.b 1
+          set f.c (-2)
+          set f.d { a: 0, b: 1 }
+          set f.e
+            { c: 2, d: 3 }
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']
+      ).to eq({
+        'a' => 0, 'b' => 1, 'c' => -2,
+        'd' => { 'a' => 0, 'b' => 1 },
+        'e' => { 'c' => 2, 'd' => 3 },
+        'ret' => nil
+      })
+    end
+  end
+
   describe 'setr' do
 
     it 'sets and return the just set value' do
