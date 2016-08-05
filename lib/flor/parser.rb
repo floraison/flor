@@ -322,7 +322,7 @@ module Flor
         atts =
           tree.children[2..-1].inject([]) do |as, ct|
 
-            kt = ct.lookup(:key)
+            kt = ct.children.size == 3 ? ct.children[1].lookup(:key) : nil
             v = Flor::Lang.rewrite(ct.clast)
 
             if kt
