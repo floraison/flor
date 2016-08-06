@@ -74,17 +74,19 @@ describe 'Flor unit' do
     it 'preserves "atts"' do
 
       flon = %{
-        #set f.atts { a: 0, b: -1 }
-        set f.atts (-999)
-        alpha a: 0, b: 1
+        set f.atts { a: 0, b: -1, c: 2 }
+        alpha a: 0, b: 1, d: 3
       }
 
       r = @unit.launch(flon, wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload'].keys).to eq(%w[ ret atts seen ])
-      expect(r['payload']['atts']).to eq(-999)
-      expect(r['payload']['seen'][3]['atts']).to eq({ 'a' => 0, 'b' => 1 })
+
+      expect(r['payload']['atts']
+        ).to eq({ 'a' => 0, 'b' => -1, 'c' => 2 })
+      expect(r['payload']['seen'][3]['atts']
+        ).to eq({ 'a' => 0, 'b' => 1, 'd' => 3 })
     end
   end
 end
