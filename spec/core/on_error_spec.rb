@@ -57,6 +57,20 @@ describe 'Flor core' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 0, "don't know how to apply \"x\"" ])
     end
+
+    it 'accepts the name of a function' do
+
+      flon = %{
+        define mute err; noop
+        sequence on_error: mute
+          push f.l 0
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']).to eq({ 'ret' => 0 })
+    end
   end
 end
 
