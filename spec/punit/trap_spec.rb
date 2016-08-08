@@ -117,6 +117,43 @@ describe 'Flor punit' do
         7:(0_0_1_1_0_0-7)=0->
       }.collect(&:strip).join("\n"))
     end
+
+    context 'without function' do
+
+      it 'blocks once' do
+
+        flon = %{
+          concurrence
+            sequence
+              trap tag: "b"
+              trace 'A>$(nid)'
+            sequence
+              sleep 1
+              noop tag: "b"
+              trace 'B>$(nid)'
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.350
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          xxx
+        }.collect(&:strip).join("\n"))
+      end
+    end
+
+    context 'multiple criteria' do
+
+      it 'traps messages matching all the criteria'
+        # TODO trap tag: y, point: enter
+    end
   end
 end
 
