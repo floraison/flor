@@ -151,8 +151,29 @@ describe 'Flor punit' do
 
     context 'multiple criteria' do
 
-      it 'traps messages matching all the criteria'
-        # TODO trap tag: y, point: enter
+      it 'traps messages matching all the criteria' do
+
+        flon = %{
+          sequence
+            trace 'a'
+            trap tag: 'x', point: 'left'
+              def msg; trace msg.point
+            sequence tag: 'x'
+              trace 'c'
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.100
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          a c left
+        ])
+      end
     end
   end
 end
