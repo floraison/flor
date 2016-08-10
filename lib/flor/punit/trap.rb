@@ -52,6 +52,7 @@ class Flor::Pro::Trap < Flor::Procedure
 
     fun = payload['ret']
 
+p fun
     fail ArgumentError.new(
       'trap requires a function'
     ) unless Flor.is_func?(fun)
@@ -83,7 +84,8 @@ class Flor::Pro::Trap < Flor::Procedure
 
   def receive_last
 
-    fail ArgumentError.new('trap requires a function')
+    #fail ArgumentError.new('trap requires a function')
+    receive_non_att
   end
 end
 
