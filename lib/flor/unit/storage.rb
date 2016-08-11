@@ -159,7 +159,8 @@ module Flor
     def fetch_traps(exid)
 
       traps
-        .where(status: 'active', texid: [ nil, exid ])
+        .where(status: 'active')
+        .where(Sequel.|({ texid: nil }, { texid: exid }))
         .all
     end
 

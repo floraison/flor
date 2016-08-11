@@ -29,16 +29,6 @@ class Flor::Pro::Trap < Flor::Procedure
 
   def pre_execute
 
-#    fail ArgumentError.new(
-#      "trap requires at least one 'point' attribute"
-#    ) if att_children.size < 1
-#    fail ArgumentError.new(
-#      "trap requires at least one child node"
-#    ) if non_att_children.size < 1
-#
-#    @node['atts'] = []
-#      # so that atts get collected
-
     @node['vars'] = {}
     @node['atts'] = []
     @node['fun'] = nil
@@ -50,12 +40,7 @@ class Flor::Pro::Trap < Flor::Procedure
 
     return execute_child(@ncid) if children[@ncid]
 
-    fun = payload['ret']
-
-p fun
-    fail ArgumentError.new(
-      'trap requires a function'
-    ) unless Flor.is_func?(fun)
+    fun = @fcid > 0 ? payload['ret'] : nil
 
     points = att_a('point', 'points', nil)
     tags = att_a('tag', 'tags', nil)
@@ -64,22 +49,19 @@ p fun
     points = att_a(nil, nil) unless points || tags || nids
     points = [ 'entered' ] if tags && ! nids && ! points
 
-#    msg = {
-#      'point' => 'execute',
-#      'tree' => children[1],  # FIXME might not be child 1
-#      'nid' => "#{nid}_1",    # FIXME might not be child 1
-#      'exid' => exid,
-#      'payload' => @message['payload'],
-#      'from' => nid
-#    }
-    msg = apply(fun, [], tree[2], false).first
-    msg['noreply'] = true
+    msg =
+      if fun
+        apply(fun, [], tree[2], false).first.merge('noreply' => true)
+      else
+        reply.first
+      end
 
     tra = { 'points' => points, 'tags' => tags, 'nids' => nids }
     tra['message'] = msg
+    tra['count'] = 1 if fun == nil
 
     reply('point' => 'trap','nid' => nid, 'trap' => tra) +
-    reply
+    (fun ? reply : [])
   end
 
   def receive_last

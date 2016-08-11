@@ -115,8 +115,10 @@ module Flor
 
       msg['trap_id'] = self.id
 
-      k = msg['vars'].keys.find { |k| k != 'arguments' }
-      msg['vars'][k] = message
+      if vs = msg['vars']
+        k = vs.keys.find { |k| k != 'arguments' }
+        vs[k] = message
+      end
 
       #xx = executor.counter_next('xx')
       #msg['dbg'] = xx

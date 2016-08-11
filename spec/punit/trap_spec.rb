@@ -27,18 +27,6 @@ describe 'Flor punit' do
 
   describe 'trap' do
 
-    it 'fails when children count < 2' do
-
-      flon = %{
-        trap 'execute'
-      }
-
-      r = @unit.launch(flon, wait: true)
-
-      expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq('trap requires a function')
-    end
-
     it 'traps messages' do
 
       flon = %{
@@ -125,12 +113,17 @@ describe 'Flor punit' do
         flon = %{
           concurrence
             sequence
-              trap tag: "b"
-              trace 'A>$(nid)'
+              trap tag: 'b'
+              trace "A>$(nid)"
             sequence
-              sleep 1
-              noop tag: "b"
-              trace 'B>$(nid)'
+              sleep 0.8
+              noop tag: 'b'
+              trace "B>$(nid)"
+            #sequence
+            #  sleep 1.2
+            #  noop tag: 'b'
+            #  trace "C>$(nid)"
+# TODO verify that it triggers only once
         }
 
         r = @unit.launch(flon, wait: true)
@@ -144,7 +137,8 @@ describe 'Flor punit' do
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
-          xxx
+          0:B>0_1_2_0_0
+          1:A>0_0_1_0_0
         }.collect(&:strip).join("\n"))
       end
     end
