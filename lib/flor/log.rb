@@ -100,7 +100,7 @@ module Flor
 
     vs =
       (nd && nd['vars']) ?
-      " #{_dg}vs:#{_gr}#{nd['vars'].keys.join("#{_dg},#{_gr}")}" :
+      " #{_dg}vars:#{_gr}#{nd['vars'].keys.join("#{_dg},#{_gr}")}" :
       ''
     a << vs
 
