@@ -58,7 +58,10 @@ class Flor::Pro::Trap < Flor::Procedure
 
     tra = { 'points' => points, 'tags' => tags, 'nids' => nids }
     tra['message'] = msg
-    tra['count'] = 1 if fun == nil
+
+    count = att('count')
+    count = 1 if fun == nil # blocking mode implies count: 1
+    tra['count'] = count if count
 
     reply('point' => 'trap','nid' => nid, 'trap' => tra) +
     (fun ? reply : [])
