@@ -94,12 +94,12 @@ module Flor
 
   class Trap < FlorModel
 
-    # returns [ remove, [ messages ] ]
+    # returns [ remove?, [ messages ] ]
     #
     def notify(executor, message)
 
       if match?(executor, message)
-        [ false, [ to_trigger_message(executor, message) ] ]
+        [ decrement, [ to_trigger_message(executor, message) ] ]
       else
         [ false, [] ]
       end
@@ -108,6 +108,23 @@ module Flor
     end
 
     protected
+
+    # returns true if the trap should be removed from the execution's list
+    # of traps
+    #
+    def decrement
+
+      c = data['count']
+      return false unless c
+
+      c = c - 1
+      data['count'] = c
+      self[:status] = c > 0 ? 'active' : 'consumed'
+
+      self.update(content: Flor::Storage.to_blob(@data), status: self[:status])
+
+      c < 1
+    end
 
     def to_trigger_message(executor, message)
 
@@ -141,6 +158,10 @@ module Flor
     end
 
     def match?(executor, message)
+
+      #return false if status != 'active' # or...
+      #fail if status != 'active'
+        # shouldn't happen
 
       return false if in_trap_itself?(executor, message)
 

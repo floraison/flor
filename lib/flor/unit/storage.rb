@@ -327,7 +327,7 @@ module Flor
       @db.loggers << @db_logger
     end
 
-    def to_blob(h)
+    def self.to_blob(h)
 
       Sequel.blob(Zlib::Deflate.deflate(JSON.dump(h)))
     end
@@ -337,10 +337,8 @@ module Flor
       JSON.parse(Zlib::Inflate.inflate(content))
     end
 
-    def from_blob(content)
-
-      self.class.from_blob(content)
-    end
+    def to_blob(h); self.class.to_blob(h); end
+    def from_blob(content); self.class.from_blob(content); end
   end
 end
 

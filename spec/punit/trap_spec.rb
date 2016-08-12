@@ -118,12 +118,8 @@ describe 'Flor punit' do
             sequence
               sleep 0.8
               noop tag: 'b'
+              noop tag: 'b'
               trace "B>$(nid)"
-            #sequence
-            #  sleep 1.2
-            #  noop tag: 'b'
-            #  trace "C>$(nid)"
-# TODO verify that it triggers only once
         }
 
         r = @unit.launch(flon, wait: true)
@@ -137,8 +133,8 @@ describe 'Flor punit' do
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
-          0:B>0_1_2_0_0
-          1:A>0_0_1_0_0
+          0:A>0_0_1_0_0
+          1:B>0_1_3_0_0
         }.collect(&:strip).join("\n"))
       end
     end
