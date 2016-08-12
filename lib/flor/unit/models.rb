@@ -222,7 +222,14 @@ module Flor
 
     def heat_match?(executor, message)
 
-      true # TODO
+      return true if theats.empty?
+
+      node ||= executor.execution['nodes'][message['nid']]
+
+      return false unless node
+      return false if node['removed']
+
+      theats.include?(node['heat0'])
     end
 
     def tpoints

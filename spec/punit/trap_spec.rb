@@ -142,7 +142,32 @@ describe 'Flor punit' do
 
     context 'heat:' do
 
-      it 'traps given functions'
+      it 'traps given head of trees' do
+
+        flon = %{
+          trap heat: 'fun0'; def msg; trace "$(msg.tree.0)-$(msg.nid)"
+          define fun0; trace "fun0-$(nid)"
+          sequence
+            fun0
+            fun0
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.350
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:fun0-0_2_0
+          1:fun0-0_2_1
+        }.collect(&:strip).join("\n"))
+      end
+
       it 'traps given procedures'
     end
 

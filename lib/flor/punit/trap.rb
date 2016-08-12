@@ -45,6 +45,7 @@ class Flor::Pro::Trap < Flor::Procedure
     points = att_a('point', 'points', nil)
     tags = att_a('tag', 'tags', nil)
     nids = att_a('nid', 'nids', nil)
+    heats = att_a('heat', 'heats', nil)
     heaps = att_a('heap', 'heaps', nil)
 
     points = att_a(nil, nil) unless points || tags || nids
@@ -59,7 +60,7 @@ class Flor::Pro::Trap < Flor::Procedure
 
     tra = {
       'points' => points, 'tags' => tags, 'nids' => nids,
-      'heaps' => heaps
+      'heaps' => heaps, 'heats' => heats
     }
     tra['message'] = msg
 
