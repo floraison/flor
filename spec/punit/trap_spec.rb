@@ -106,6 +106,41 @@ describe 'Flor punit' do
       }.collect(&:strip).join("\n"))
     end
 
+    it 'traps in the current execution only' do
+
+
+      exid0 = @unit.launch(%{
+        trap tag: 't0'; def msg; trace "t0_$(msg.exid)"
+        trace "stalling_$(exid)"
+        stall _
+      })
+
+      sleep 0.5
+
+      r = @unit.launch(%{
+        noop tag: 't0'
+      }, wait: true)
+
+      exid1 = r['exid']
+
+      expect(r['point']).to eq('terminated')
+
+      sleep 0.5
+
+      expect(
+        (
+          [ exid0, exid1 ] +
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }
+        ).join("\n")
+      ).to eq([
+        exid0,
+        exid1,
+        "0:stalling_#{exid0}"
+      ].join("\n"))
+    end
+
     context 'without function' do
 
       it 'blocks once' do
