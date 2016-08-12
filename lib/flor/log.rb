@@ -46,6 +46,11 @@ module Flor
     a << ' '
     a << _dg
 
+    if ex = (m['exid'] || '').split('.').last
+      a << ex[-4..-1]
+      a << ' '
+    end
+
     ni = nid ? "#{nid} " : ''
     a << ni
 
