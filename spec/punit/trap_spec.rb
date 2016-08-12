@@ -108,7 +108,6 @@ describe 'Flor punit' do
 
     it 'traps in the current execution only' do
 
-
       exid0 = @unit.launch(%{
         trap tag: 't0'; def msg; trace "t0_$(msg.exid)"
         trace "stalling_$(exid)"
@@ -237,6 +236,45 @@ describe 'Flor punit' do
           3:A>0_0_0_2_1_0_0-2
           4:B>0_1_6_0_0
         }.collect(&:strip).join("\n"))
+      end
+    end
+
+    context 'exid: any' do
+
+      it 'lets trap trigger for any execution' do
+
+        exid0 = @unit.launch(%{
+          trap tag: 't0', exid: 'any'
+            def msg; trace "t0_$(msg.exid)"
+          trace "stalling_$(exid)"
+          stall _
+        })
+
+        sleep 0.5
+
+        r = @unit.launch(%{
+          noop tag: 't0'
+        }, wait: true)
+
+        exid1 = r['exid']
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.5
+
+        expect(
+          (
+            [ exid0, exid1 ] +
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }
+          ).join("\n")
+        ).to eq([
+          exid0,
+          exid1,
+          "0:stalling_#{exid0}",
+          "1:t0_#{exid1}"
+        ].join("\n"))
       end
     end
   end
