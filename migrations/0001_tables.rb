@@ -55,6 +55,8 @@ Sequel.migration do
       String :tnids, null: true
       String :tpoints, null: true
       String :ttags, null: true
+      String :theats, null: true
+      String :theaps, null: true
       #
       File :content # JSON msg to trigger
       #

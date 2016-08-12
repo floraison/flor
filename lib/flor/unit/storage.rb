@@ -287,6 +287,8 @@ module Flor
           tnids: tra['nids'],
           tpoints: tra['points'],
           ttags: tra['tags'],
+          theats: tra['heats'],
+          theaps: tra['heaps'],
           content: to_blob(tra),
           status: 'active')
 

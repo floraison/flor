@@ -140,6 +140,42 @@ describe 'Flor punit' do
       ].join("\n"))
     end
 
+    context 'heat:' do
+
+      it 'traps given functions'
+      it 'traps given procedures'
+    end
+
+    context 'heap:' do
+
+      it 'traps given procedures' do
+
+        flon = %{
+          trap heap: 'sequence'
+            def msg; trace "$(msg.tree.0)-$(msg.nid)"
+          sequence
+            noop _
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.350
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:-0
+          1:sequence-0_1
+          2:-0_1
+          3:-0
+        }.collect(&:strip).join("\n"))
+      end
+    end
+
     context 'without function' do
 
       it 'blocks once' do

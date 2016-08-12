@@ -169,6 +169,10 @@ module Flor
       return false unless nid_match?(message)
       return false unless point_match?(message)
       return false unless tag_match?(message)
+
+      return false unless heap_match?(executor, message)
+      return false unless heat_match?(executor, message)
+
       true
     end
 
@@ -204,6 +208,23 @@ module Flor
       ttags.find { |t| (message['tags'] || []).find { |tag| tag.match(t) } }
     end
 
+    def heap_match?(executor, message)
+
+      return true if theaps.empty?
+
+      node ||= executor.execution['nodes'][message['nid']]
+
+      return false unless node
+      return false if node['removed']
+
+      theaps.include?(node['heap'])
+    end
+
+    def heat_match?(executor, message)
+
+      true # TODO
+    end
+
     def tpoints
 
       @atpoints ||= (@values[:tpoints] || '').split(',').collect(&:strip)
@@ -217,6 +238,16 @@ module Flor
     def tnids
 
       @atnids ||= (@values[:tnids] || '').split(',').collect(&:strip)
+    end
+
+    def theaps
+
+      @atheaps ||= (@values[:theaps] || '').split(',').collect(&:strip)
+    end
+
+    def theats
+
+      @atheats ||= (@values[:theats] || '').split(',').collect(&:strip)
     end
   end
 

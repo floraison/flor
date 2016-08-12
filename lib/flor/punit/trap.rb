@@ -45,6 +45,7 @@ class Flor::Pro::Trap < Flor::Procedure
     points = att_a('point', 'points', nil)
     tags = att_a('tag', 'tags', nil)
     nids = att_a('nid', 'nids', nil)
+    heaps = att_a('heap', 'heaps', nil)
 
     points = att_a(nil, nil) unless points || tags || nids
     points = [ 'entered' ] if tags && ! nids && ! points
@@ -56,7 +57,10 @@ class Flor::Pro::Trap < Flor::Procedure
         reply.first
       end
 
-    tra = { 'points' => points, 'tags' => tags, 'nids' => nids }
+    tra = {
+      'points' => points, 'tags' => tags, 'nids' => nids,
+      'heaps' => heaps
+    }
     tra['message'] = msg
 
     count = att('count')
