@@ -96,7 +96,10 @@ module Flor
         Flor::Colours.dark_grey + '---' +
         [
           self.class, self.hash, @exid,
-          { took: Time.now - t0, consumed: @consumed.size,
+          { took: Time.now - t0,
+            consumed: @consumed.size,
+            traps: @traps.size,
+            own_traps: @traps.reject { |t| t.texid == nil }.size,
             counters: @execution['counters'] }
         ].inspect +
         '---.' + Flor::Colours.reset
