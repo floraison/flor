@@ -171,7 +171,7 @@ describe 'Flor punit' do
       it 'traps given procedures' do
 
         flon = %{
-          trap heat: '_apply'; def msg; trace "t-$(node.heat.0)-$(msg.nid)"
+          trap heat: '_apply'; def msg; trace "t-heat-$(msg.nid)"
           define fun0; trace "c-fun0-$(nid)"
           sequence
             fun0 _
@@ -190,13 +190,13 @@ describe 'Flor punit' do
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
           0:c-fun0-0_1_1_0_0-1
-          1:t-_proc-0_1-1
-          2:t-_proc-0_1-1
-          3:t-_proc-0_1-1
+          1:t-heat-0_1-1
+          2:t-heat-0_1-1
+          3:t-heat-0_1-1
           4:c-fun0-0_1_1_0_0-5
-          5:t-_proc-0_1-5
-          6:t-_proc-0_1-5
-          7:t-_proc-0_1-5
+          5:t-heat-0_1-5
+          6:t-heat-0_1-5
+          7:t-heat-0_1-5
         }.collect(&:strip).join("\n"))
       end
     end
