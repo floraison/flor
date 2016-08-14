@@ -190,13 +190,13 @@ describe 'Flor punit' do
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
           0:c-fun0-0_1_1_0_0-1
-          1:t-xxx-0_1-1
-          2:t-xxx-0_1-1
-          3:t-xxx-0_1-1
+          1:t-_proc-0_1-1
+          2:t-_proc-0_1-1
+          3:t-_proc-0_1-1
           4:c-fun0-0_1_1_0_0-5
-          5:t-xxx-0_1-5
-          6:t-xxx-0_1-5
-          7:t-xxx-0_1-5
+          5:t-_proc-0_1-5
+          6:t-_proc-0_1-5
+          7:t-_proc-0_1-5
         }.collect(&:strip).join("\n"))
       end
     end

@@ -117,7 +117,15 @@ class Flor::Node
     cat, mod, key = key_split(name)
     key, pth = key.split('.', 2)
 
-    val = cat == 'v' ? lookup_var(@node, mod, key) : lookup_field(mod, key)
+    val =
+      if [ cat, mod, key ] == [ 'v', '', 'node' ]
+        @node
+      elsif cat == 'v'
+        lookup_var(@node, mod, key)
+      else
+        lookup_field(mod, key)
+      end
+
     pth ? Flor.deep_get(val, pth)[1] : val
   end
 
