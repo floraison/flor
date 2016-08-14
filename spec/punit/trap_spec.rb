@@ -145,11 +145,37 @@ describe 'Flor punit' do
       it 'traps given head of trees' do
 
         flon = %{
-          trap heat: 'fun0'; def msg; trace "$(msg.tree.0)-$(msg.nid)"
-          define fun0; trace "fun0-$(nid)"
+          trap heat: 'fun0'; def msg; trace "t-$(msg.tree.0)-$(msg.nid)"
+          define fun0; trace "c-fun0-$(nid)"
           sequence
-            fun0
-            fun0
+            fun0 # not a call
+            fun0 # not a call
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.350
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:t-fun0-0_2_0
+          1:t-fun0-0_2_1
+        }.collect(&:strip).join("\n"))
+      end
+
+      it 'traps given procedures' do
+
+        flon = %{
+          trap heat: 'call'; def msg; trace "t-$(node.heat.0)-$(msg.nid)"
+          define fun0; trace "c-fun0-$(nid)"
+          sequence
+            fun0 _
+            fun0 _
         }
 
         r = @unit.launch(flon, wait: true)
@@ -167,8 +193,6 @@ describe 'Flor punit' do
           1:fun0-0_2_1
         }.collect(&:strip).join("\n"))
       end
-
-      it 'traps given procedures'
     end
 
     context 'heap:' do
