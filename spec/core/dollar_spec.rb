@@ -48,6 +48,19 @@ describe 'Flor core' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ %w[ car ], %w[ car ] ])
     end
+
+    it "substitutes $(node)" do
+
+      flon = %{
+        push f.l "$(node.nid)"
+        push f.l "$(node.heat0)"
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ 0_0_1 _dqs ])
+    end
   end
 end
 
