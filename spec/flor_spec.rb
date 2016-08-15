@@ -108,5 +108,33 @@ describe Flor do
       expect(Flor.false?(true)).to eq(false)
     end
   end
+
+  describe '.is_sub_domain?(d, s)' do
+
+    it 'fails if d is not a domain' do
+
+      expect {
+        Flor.is_sub_domain?('.test.x', 'y')
+      }.to raise_error(ArgumentError, "not a domain \".test.x\"")
+    end
+
+    it 'fails if s is not a domain' do
+
+      expect {
+        Flor.is_sub_domain?('test.x', '.test.x.y')
+      }.to raise_error(ArgumentError, "not a sub domain \".test.x.y\"")
+    end
+
+    it 'returns false if s is not a sub domain of d' do
+
+      expect(Flor.is_sub_domain?('test.x', 'test.y')).to eq(false)
+    end
+
+    it 'returns true if it is' do
+
+      expect(Flor.is_sub_domain?('test.x', 'test.x')).to eq(true)
+      expect(Flor.is_sub_domain?('test.x', 'test.x.y')).to eq(true)
+    end
+  end
 end
 

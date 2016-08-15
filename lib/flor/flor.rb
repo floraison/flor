@@ -393,5 +393,23 @@ module Flor
     return Time.utc(*m[1, 7].collect(&:to_i)) if m[8].length > 0
     Time.local(*m[1, 7].collect(&:to_i))
   end
+
+  #
+  # functions about domains
+
+  DOMAIN_REGEX = /\A[a-z]+(\.[a-z]+)*\z/
+
+  def self.is_sub_domain?(dom, sub)
+
+    fail ArgumentError.new(
+      "not a domain #{dom.inspect}"
+    ) unless DOMAIN_REGEX.match(dom)
+
+    fail ArgumentError.new(
+      "not a sub domain #{sub.inspect}"
+    ) unless DOMAIN_REGEX.match(sub)
+
+    sub == dom || sub[0, dom.length + 1] == dom + '.'
+  end
 end
 
