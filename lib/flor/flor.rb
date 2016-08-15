@@ -397,17 +397,22 @@ module Flor
   #
   # functions about domains
 
-  DOMAIN_REGEX = /\A[a-z]+(\.[a-z]+)*\z/
+  DOMAIN_REX = /\A[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\z/
+
+  def self.domainable?(s)
+
+    s.is_a?(String) && s.match(DOMAIN_REX)
+  end
 
   def self.is_sub_domain?(dom, sub)
 
     fail ArgumentError.new(
       "not a domain #{dom.inspect}"
-    ) unless DOMAIN_REGEX.match(dom)
+    ) unless domainable?(dom)
 
     fail ArgumentError.new(
       "not a sub domain #{sub.inspect}"
-    ) unless DOMAIN_REGEX.match(sub)
+    ) unless domainable?(sub)
 
     sub == dom || sub[0, dom.length + 1] == dom + '.'
   end
