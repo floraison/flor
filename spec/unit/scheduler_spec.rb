@@ -109,6 +109,24 @@ describe 'Flor unit' do
           'funs' => 1, 'msgs' => 29, 'omsgs' => 0, 'subs' => 1, 'runs' => 1
         })
       end
+
+      it 'rejects invalid domain names' do
+
+        expect {
+          @unit.launch('', domain: 'blah-blah blah')
+        }.to raise_error(
+          ArgumentError, "invalid domain name \"blah-blah blah\""
+        )
+      end
+
+      it 'rejects invalid domains' do
+
+        expect {
+          @unit.launch('', domain: 'not_test.x.y.z')
+        }.to raise_error(
+          ArgumentError, "invalid [sub] domain \"not_test.x.y.z\""
+        )
+      end
     end
 
     describe '#queue' do

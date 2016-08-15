@@ -38,6 +38,10 @@ module Flor
       @conf.merge!(Flor::Conf.read_env)
       @conf.merge!(over_conf)
 
+      fail ArgumentError.new(
+        "invalid domain name #{@conf['domain']}"
+      ) unless Flor.potential_domain_name?(@conf['domain'])
+
       @env = @conf['env'] ||= 'dev'
 
       @hooker =
@@ -145,9 +149,22 @@ puts ('!' * 80) + ' .'
 
       Flor.print_src(tree, opts) if @conf['log_src']
 
-      exid = Flor.generate_exid(
-        opts[:domain] || @conf['domain'] || 'domain0',
-        opts[:unit] || @conf['unit'] || 'u0')
+      dom = opts[:domain] || @conf['domain']
+      uni = opts[:unit] || @conf['unit'] || 'u0'
+
+      fail ArgumentError.new(
+        "invalid domain name #{dom.inspect}"
+      ) unless Flor.potential_domain_name?(dom)
+
+      fail ArgumentError.new(
+        "invalid [sub] domain #{dom.inspect}"
+      ) unless Flor.is_sub_domain?(@conf['domain'], dom)
+
+      fail ArgumentError.new(
+        "invalid unit name #{uni.inspect}"
+      ) unless Flor.potential_unit_name?(uni)
+
+      exid = Flor.generate_exid(dom, uni)
 
       queue(Flor.make_launch_msg(exid, tree, opts), opts)
     end

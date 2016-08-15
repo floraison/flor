@@ -397,22 +397,31 @@ module Flor
   #
   # functions about domains
 
-  DOMAIN_REX = /\A[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\z/
+  NAME_REX = '[a-zA-Z0-9_]+'
 
-  def self.domainable?(s)
+  UNIT_NAME_REX = /\A#{NAME_REX}\z/
 
-    s.is_a?(String) && s.match(DOMAIN_REX)
+  def self.potential_unit_name?(s)
+
+    s.is_a?(String) && s.match(UNIT_NAME_REX)
+  end
+
+  DOMAIN_NAME_REX = /\A#{NAME_REX}(\.#{NAME_REX})*\z/
+
+  def self.potential_domain_name?(s)
+
+    s.is_a?(String) && s.match(DOMAIN_NAME_REX)
   end
 
   def self.is_sub_domain?(dom, sub)
 
     fail ArgumentError.new(
       "not a domain #{dom.inspect}"
-    ) unless domainable?(dom)
+    ) unless potential_domain_name?(dom)
 
     fail ArgumentError.new(
       "not a sub domain #{sub.inspect}"
-    ) unless domainable?(sub)
+    ) unless potential_domain_name?(sub)
 
     sub == dom || sub[0, dom.length + 1] == dom + '.'
   end
