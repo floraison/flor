@@ -7,7 +7,7 @@
 
 A domain is a dot separated list of names `[a-zA-Z0-9]+`.
 
-An [#execution](execution) lives in a domain. An execution may only affect itself and other executions in the samed [#domain_branch](domain branch).
+An [execution](#execution) lives in a domain. An execution may only affect itself and other executions in the samed [domain branch](#domain_branch).
 
 ## domain branch
 
