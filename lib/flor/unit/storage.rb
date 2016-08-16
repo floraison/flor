@@ -126,6 +126,7 @@ module Flor
         ex['id'] =
           @db[:flon_executions]
             .insert(
+              domain: Flor.domain(ex['exid']),
               exid: ex['exid'],
               content: to_blob(ex),
               status: 'active',

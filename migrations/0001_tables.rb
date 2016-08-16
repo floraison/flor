@@ -6,6 +6,7 @@ Sequel.migration do
     create_table :flon_messages do
 
       primary_key :id, type: Bignum
+      String :domain, null: false
       String :exid, null: false
       String :point, null: false # 'execute', 'task', 'receive', 'schedule', ...
       File :content # JSON
@@ -19,6 +20,7 @@ Sequel.migration do
     create_table :flon_executions do
 
       primary_key :id, type: Bignum
+      String :domain, null: false
       String :exid, null: false
       File :content # JSON
       String :status, null: false # 'active' or something else like 'archived'
@@ -31,6 +33,7 @@ Sequel.migration do
     create_table :flon_timers do
 
       primary_key :id, type: Bignum
+      String :domain, null: false
       String :exid, null: false
       String :nid, null: false
       String :type, null: false # 'at' or 'cron'
@@ -48,9 +51,11 @@ Sequel.migration do
     create_table :flon_traps do
 
       primary_key :id, type: Bignum
+      String :domain, null: false
       String :exid, null: false
       String :nid, null: false
       #
+      String :tdomain, null: false
       String :texid, null: true
       String :tnids, null: true
       String :tpoints, null: true
@@ -71,6 +76,7 @@ Sequel.migration do
     create_table :flon_traces do
 
       primary_key :id, type: Bignum
+      String :domain, null: false
       String :exid, null: false
       String :nid, null: true
       String :tracer, null: false # 'executor', 'trace'
