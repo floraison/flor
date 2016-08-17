@@ -194,8 +194,12 @@ module Flor
 
       @db[:flon_messages]
         .import(
-          [ :exid, :point, :content, :status, :ctime, :mtime ],
-          ms.map { |m| [ m['exid'], m['point'], to_blob(m), 'created', n, n ] })
+          [ :domain, :exid, :point, :content,
+            :status, :ctime, :mtime ],
+          ms.map { |m|
+            [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
+              'created', n, n ]
+          })
 
       @unit.notify(nil, ms.collect { |m| m['exid'] }.uniq)
     end
@@ -221,6 +225,7 @@ module Flor
         end
 
       id = @db[:flon_timers].insert(
+        domain: Flor.domain(message['exid']),
         exid: message['exid'],
         nid: message['nid'],
         type: t,
@@ -281,9 +286,14 @@ module Flor
 
       @db.transaction do
 
+        exid = node['exid']
+        dom = Flor.domain(exid)
+
         id = @db[:flon_traps].insert(
-          exid: node['exid'],
+          domain: dom,
+          exid: exid,
           nid: node['nid'],
+          tdomain: dom,
           texid: tra['exid'],
           tnids: tra['nids'],
           tpoints: tra['points'],
@@ -300,6 +310,7 @@ module Flor
     def trace(exid, nid, tracer, text)
 
       @db[:flon_traces].insert(
+        domain: Flor.domain(exid),
         exid: exid,
         nid: nid,
         tracer: tracer,
