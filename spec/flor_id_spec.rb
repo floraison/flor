@@ -118,5 +118,61 @@ describe Flor do
       expect(Flor.is_nid?('a0_0')).to eq(false)
     end
   end
+
+  describe '.domain(s)' do
+
+    it 'returns the domain for exid s' do
+
+      exid = "domain0.xx.yy.z_z-unit0-20160816.0627.kizarofeba"
+
+      expect(Flor.domain(exid)).to eq('domain0.xx.yy.z_z')
+    end
+
+    it 'returns the domain for nid s' do
+
+      nid = "domain0.xx.yy.z_z-unit0-20160816.0627.kizarofeba-0_0"
+
+      expect(Flor.domain(nid)).to eq('domain0.xx.yy.z_z')
+
+      nid = "domain0.xx.yy.z_z-unit0-20160816.0627.kizarofeba-0_0_0-12"
+
+      expect(Flor.domain(nid)).to eq('domain0.xx.yy.z_z')
+    end
+
+    it 'returns nil when it cannot find the domain' do
+
+      s = "unit0-domain0 .xx.yy.z_z-20160816.0627.kizarofeba-0_0_0-12"
+
+      expect(Flor.domain(s)).to eq(nil)
+    end
+  end
+
+  describe '.unit(s)' do
+
+    it 'returns the unit for exid s' do
+
+      exid = "domain0.xx.yy.z_z-unit0-20160816.0627.kizarofeba"
+
+      expect(Flor.unit(exid)).to eq('unit0')
+    end
+
+    it 'returns the unit for nid s' do
+
+      nid = "domain0.xx.yy.z_z-unit0-20160816.0627.kizarofeba-0_0"
+
+      expect(Flor.unit(nid)).to eq('unit0')
+
+      nid = "domain0.xx.yy.z_z-unit0-20160816.0627.kizarofeba-0_0_0-12"
+
+      expect(Flor.unit(nid)).to eq('unit0')
+    end
+
+    it 'returns nil when it cannot find the unit' do
+
+      s = "unit0-domain0 .xx.yy.z_z-20160816.0627.kizarofeba-0_0_0-12"
+
+      expect(Flor.unit(s)).to eq(nil)
+    end
+  end
 end
 

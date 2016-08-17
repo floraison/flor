@@ -395,7 +395,7 @@ module Flor
   end
 
   #
-  # functions about domains
+  # functions about domains and units
 
   NAME_REX = '[a-zA-Z0-9_]+'
 
@@ -424,6 +424,27 @@ module Flor
     ) unless potential_domain_name?(sub)
 
     sub == dom || sub[0, dom.length + 1] == dom + '.'
+  end
+
+  DOMAIN_UNIT_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)-(#{NAME_REX})[-\z]/
+
+  def self.split_domain_unit(s)
+
+    if m = DOMAIN_UNIT_REX.match(s)
+      [ m[1], m[2] ]
+    else
+      []
+    end
+  end
+
+  def self.domain(s)
+
+    split_domain_unit(s).first
+  end
+
+  def self.unit(s)
+
+    split_domain_unit(s).last
   end
 end
 
