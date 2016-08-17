@@ -52,6 +52,7 @@ module Flor
     #def procedures(path)
     #
     #  # TODO
+    #  # TODO work with Flor.load_procedures
     #end
 
     def library(domain, name)
