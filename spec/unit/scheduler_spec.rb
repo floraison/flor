@@ -118,15 +118,6 @@ describe 'Flor unit' do
           ArgumentError, "invalid domain name \"blah-blah blah\""
         )
       end
-
-      it 'rejects invalid domains' do
-
-        expect {
-          @unit.launch('', domain: 'not_test.x.y.z')
-        }.to raise_error(
-          ArgumentError, "invalid [sub] domain \"not_test.x.y.z\""
-        )
-      end
     end
 
     describe '#queue' do

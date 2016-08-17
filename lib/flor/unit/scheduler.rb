@@ -157,10 +157,6 @@ puts ('!' * 80) + ' .'
       ) unless Flor.potential_domain_name?(dom)
 
       fail ArgumentError.new(
-        "invalid [sub] domain #{dom.inspect}"
-      ) unless Flor.is_sub_domain?(@conf['domain'], dom)
-
-      fail ArgumentError.new(
         "invalid unit name #{uni.inspect}"
       ) unless Flor.potential_unit_name?(uni)
 
