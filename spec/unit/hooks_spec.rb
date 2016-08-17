@@ -100,6 +100,7 @@ describe 'Flor unit' do
 
     it 'may filter on domain:/d:' do
 
+fail "subdomains!"
       ms0 = []
       @unit.hook(domain: 'test') { |m| ms0 << Flor.dup(m) }
       ms1 = []
