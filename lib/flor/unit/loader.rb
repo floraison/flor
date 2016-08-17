@@ -57,7 +57,7 @@ module Flor
     def library(domain, name)
 
       path =
-        (Dir[File.join(root, '**/*.flon')] + Dir[File.join(root, '**/*.flor')])
+        (Dir[File.join(root, '**/*.{flon,flor}')])
           .sort
           .sort_by(&:length)
           .select { |f| f.index('/lib/') }
