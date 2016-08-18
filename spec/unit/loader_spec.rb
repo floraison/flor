@@ -99,7 +99,7 @@ describe Flor::Loader do
         task 'alice'
       }.strip)
 
-      f = @loader.library('org.example', 'flow1')
+      f = @loader.library('org.example.flow1')
 
       expect(
         f.strip
@@ -138,6 +138,11 @@ describe Flor::Loader do
       expect(t.keys).to eq(%w[ description ubn _path ])
 
       t = @loader.tasker('org.example', 'bob')
+
+      expect(t['description']).to eq('org.example bob')
+      expect(t.keys).to eq(%w[ description bo _path ])
+
+      t = @loader.tasker('org.example.bob')
 
       expect(t['description']).to eq('org.example bob')
       expect(t.keys).to eq(%w[ description bo _path ])
