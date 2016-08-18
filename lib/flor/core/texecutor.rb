@@ -89,7 +89,7 @@ module Flor
 
       @unit.opts = opts
 
-      Flor.print_src(opts[:domain], tree, opts) if conf['log_src']
+      Flor.print_src(tree, opts) if conf['log_src']
 
       messages = [ Flor.make_launch_msg(@execution['exid'], tree, opts) ]
       message = nil

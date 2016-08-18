@@ -145,39 +145,43 @@ puts ('!' * 80) + ' .'
       @thread.join
     end
 
-    def launch(domain, tree=nil, opts=nil)
+    def launch(source_or_path, opts={})
 
-      domain, tree, opts =
-        if tree == nil
-          [ *extract_domain_and_tree(domain, {}), {} ]
-        elsif opts == nil && tree.is_a?(Hash)
-          [ *extract_domain_and_tree(domain, tree), tree ]
-        elsif opts == nil
-          [ domain, tree, {} ]
-        else
-          [ domain, tree, opts ]
-        end
-
-      Flor.print_src(domain, tree, opts) if @conf['log_src']
-
-      dom = domain || @conf['domain']
-      uni = opts[:unit] || @conf['unit'] || 'u0'
-
-      fail ArgumentError.new(
-        "invalid domain name #{dom.inspect}"
-      ) unless Flor.potential_domain_name?(dom)
-
-      fail ArgumentError.new(
-        "invalid unit name #{uni.inspect}"
-      ) unless Flor.potential_unit_name?(uni)
-
-      exid = Flor.generate_exid(dom, uni)
-      msg = Flor.make_launch_msg(exid, tree, opts)
-
-      return [ msg, opts ] if opts[:nolaunch]
-        # for testing purposes
-
-      queue(msg, opts)
+#      domain, flow, tree =
+#        if Flor.potential_domain_name?(tree_or_path)
+#          es = tree_or_path.split('.')
+#          t = @loader.library(tree_or_path)
+#          [ es[0..-2].join('.'), es[-1], t ]
+#        else
+#          [ nil, nil, tree_or_path ]
+#        end
+#
+#      opts[:vars] ;;fail
+#
+#      fail ArgumentError.new(
+#        "tree not found from #{Flor.truncate(tree_or_path, 56).inspect}"
+#      ) unless tree
+#
+#      Flor.print_src(tree, opts) if @conf['log_src']
+#
+#      dom = opts[:domain] || domain || @conf['domain']
+#      uni = opts[:unit] || @conf['unit'] || 'u0'
+#
+#      fail ArgumentError.new(
+#        "invalid domain name #{dom.inspect}"
+#      ) unless Flor.potential_domain_name?(dom)
+#
+#      fail ArgumentError.new(
+#        "invalid unit name #{uni.inspect}"
+#      ) unless Flor.potential_unit_name?(uni)
+#
+#      exid = Flor.generate_exid(domain, unit)
+#      msg = Flor.make_launch_msg(exid, tree, opts)
+#
+#      return [ msg, opts ] if opts[:nolaunch]
+#        # for testing purposes
+#
+#      queue(msg, opts)
     end
 
     def queue(message, opts={})
@@ -238,27 +242,27 @@ puts ('!' * 80) + ' .'
 
     protected
 
-    # return [ domain, tree ]
-    #
-    def extract_domain_and_tree(s, opts)
-
-      if Flor.potential_domain_name?(s)
-
-        path = [ opts[:domain], s ].compact.join('.')
-        elts = path.split('.')
-        flow = @loader.library(path)
-
-        fail ArgumentError.new(
-          "flow not found at #{path.inspect}"
-        ) unless flow
-
-        [ elts[0..-2].join('.'), flow ]
-
-      else
-
-        [ opts[:domain], s ]
-      end
-    end
+#    # return [ domain, tree ]
+#    #
+#    def extract_domain_and_tree(s, opts)
+#
+#      if Flor.potential_domain_name?(s)
+#
+#        path = [ opts[:domain], s ].compact.join('.')
+#        elts = path.split('.')
+#        flow = @loader.library(path)
+#
+#        fail ArgumentError.new(
+#          "flow not found at #{path.inspect}"
+#        ) unless flow
+#
+#        [ elts[0..-2].join('.'), flow ]
+#
+#      else
+#
+#        [ opts[:domain], s ]
+#      end
+#    end
 
     def reload
 

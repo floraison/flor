@@ -131,24 +131,50 @@ describe 'Flor unit' do
           expect(
             msg['tree']
           ).to eq(
-            [ 'sequence', [
-              [ 'alice', [], 2 ],
-              [ 'bob', [], 3 ]
-            ], 1 ]
+            [ 'sequence', [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ], 1 ]
           )
         end
 
         it 'fails if it cannot find the flow'
       end
 
-      describe '(path, domain: "d")' do
+      describe '(flow, domain: d)' do
 
-        it 'looks up a flow'
+        it 'looks up a flow' do
+
+          msg, _ = @unit.launch('flow0', domain: 'com.acme', nolaunch: true)
+
+          expect(msg['point']).to eq('execute')
+          expect(msg['exid']).to match(/\Acom\.acme-u-2/)
+
+          expect(
+            msg['tree']
+          ).to eq(
+            [ 'sequence', [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ], 1 ]
+          )
+        end
+      end
+
+      describe '(path, domain: d)' do
+
+        it 'looks up from path but launches in d' do
+
+          msg, _ = @unit.launch('com.acme.flow0', domain: 'x.y', nolaunch: true)
+
+          expect(msg['point']).to eq('execute')
+          expect(msg['exid']).to match(/\Ax\.y-u-2/)
+
+          expect(
+            msg['tree']
+          ).to eq(
+            [ 'sequence', [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ], 1 ]
+          )
+        end
       end
 
       describe '(domain, tree)' do
 
-        it 'launches in the given domain'
+        it 'flips burgers'
       end
     end
 

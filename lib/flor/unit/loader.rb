@@ -70,6 +70,38 @@ module Flor
       path ? File.read(path) : nil
     end
 
+#    class FlowEnv
+#
+#      attr_accessor :path, :domain, :flow_name, :source, :variables, :payload
+#      alias :flow :flow_name
+#
+#      def initialize(loader, path)
+#
+#        @path = path
+#
+#        es = path.split('.')
+#        @domain, @flow_name = [ es[0..-2].join('.'), es[-1] ]
+#
+#        @source = loader.library(@domain, @flow_name)
+#        @variables = loader.variables(@domain)
+#        #@payload = ... # TODO at some point, if necessary...
+#
+#        fail ArgumentError.new(
+#          "could not find flow at #{@path.inspect}"
+#        ) unless @source
+#      end
+#
+#      def to_a
+#
+#        [ path, domain, flow, source, variables, payload ]
+#      end
+#    end
+#
+#    def flow_environment(path)
+#
+#      FlowEnv.new(self, path)
+#    end
+
     def tasker(domain, name=nil)
 
       domain, name = split_dn(domain, name)

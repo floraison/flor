@@ -372,6 +372,11 @@ module Flor
     Array(o)
   end
 
+  def self.truncate(s, l)
+
+    s.length < l ? s : s[0, l] + '...'
+  end
+
   #
   # functions about time
 
