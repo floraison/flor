@@ -55,7 +55,9 @@ module Flor
     #  # TODO work with Flor.load_procedures
     #end
 
-    def library(domain, name)
+    def library(domain, name=nil)
+
+      domain, name = split_dn(domain, name)
 
       path =
         (Dir[File.join(root, '**/*.{flon,flor}')])
@@ -65,10 +67,12 @@ module Flor
           .select { |f| path_name_matches?(domain, name, f) }
           .first
 
-      File.read(path)
+      path ? File.read(path) : nil
     end
 
-    def tasker(domain, name)
+    def tasker(domain, name=nil)
+
+      domain, name = split_dn(domain, name)
 
       path = Dir[File.join(root, '**/*.json')]
         .select { |f| f.index('/lib/taskers/') }
@@ -81,6 +85,16 @@ module Flor
     end
 
     protected
+
+    def split_dn(domain, name)
+
+      if name
+        [ domain, name ]
+      else
+        elts = domain.split('.')
+        [ elts[0..-2].join('.'), elts[-1] ]
+      end
+    end
 
     def root
 

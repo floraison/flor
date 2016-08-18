@@ -145,11 +145,22 @@ puts ('!' * 80) + ' .'
       @thread.join
     end
 
-    def launch(tree, opts={})
+    def launch(domain, tree=nil, opts=nil)
 
-      Flor.print_src(tree, opts) if @conf['log_src']
+      domain, tree, opts =
+        if tree == nil
+          [ *extract_domain_and_tree(domain, {}), {} ]
+        elsif opts == nil && tree.is_a?(Hash)
+          [ *extract_domain_and_tree(domain, tree), tree ]
+        elsif opts == nil
+          [ domain, tree, {} ]
+        else
+          [ domain, tree, opts ]
+        end
 
-      dom = opts[:domain] || @conf['domain']
+      Flor.print_src(domain, tree, opts) if @conf['log_src']
+
+      dom = domain || @conf['domain']
       uni = opts[:unit] || @conf['unit'] || 'u0'
 
       fail ArgumentError.new(
@@ -161,8 +172,12 @@ puts ('!' * 80) + ' .'
       ) unless Flor.potential_unit_name?(uni)
 
       exid = Flor.generate_exid(dom, uni)
+      msg = Flor.make_launch_msg(exid, tree, opts)
 
-      queue(Flor.make_launch_msg(exid, tree, opts), opts)
+      return [ msg, opts ] if opts[:nolaunch]
+        # for testing purposes
+
+      queue(msg, opts)
     end
 
     def queue(message, opts={})
@@ -222,6 +237,28 @@ puts ('!' * 80) + ' .'
     end
 
     protected
+
+    # return [ domain, tree ]
+    #
+    def extract_domain_and_tree(s, opts)
+
+      if Flor.potential_domain_name?(s)
+
+        path = [ opts[:domain], s ].compact.join('.')
+        elts = path.split('.')
+        flow = @loader.library(path)
+
+        fail ArgumentError.new(
+          "flow not found at #{path.inspect}"
+        ) unless flow
+
+        [ elts[0..-2].join('.'), flow ]
+
+      else
+
+        [ opts[:domain], s ]
+      end
+    end
 
     def reload
 

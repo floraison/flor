@@ -221,11 +221,11 @@ module Flor
     (opts[:color] || opts[:colour]) && $stdout.tty? ? COLSET : NO_COLSET
   end
 
-  def self.print_src(src, opts={})
+  def self.print_src(dom, src, opts={})
 
     _rs, _dg, _yl = colours(opts)
 
-    puts "#{_dg}+---#{_rs}"
+    puts "#{_dg}+--- domain:#{dom}#{_rs}"
 
     puts "#{_dg}| #{opts.inspect}#{_rs}" if opts.any?
 

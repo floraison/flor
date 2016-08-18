@@ -118,6 +118,38 @@ describe 'Flor unit' do
           ArgumentError, "invalid domain name \"blah-blah blah\""
         )
       end
+
+      describe '(path)' do
+
+        it 'looks up a flow' do
+
+          msg, _ = @unit.launch('com.acme.flow0', nolaunch: true)
+
+          expect(msg['point']).to eq('execute')
+          expect(msg['exid']).to match(/\Acom\.acme-u-2/)
+
+          expect(
+            msg['tree']
+          ).to eq(
+            [ 'sequence', [
+              [ 'alice', [], 2 ],
+              [ 'bob', [], 3 ]
+            ], 1 ]
+          )
+        end
+
+        it 'fails if it cannot find the flow'
+      end
+
+      describe '(path, domain: "d")' do
+
+        it 'looks up a flow'
+      end
+
+      describe '(domain, tree)' do
+
+        it 'launches in the given domain'
+      end
     end
 
     describe '#queue' do
