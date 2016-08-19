@@ -149,13 +149,23 @@ puts ('!' * 80) + ' .'
 
       source, domain, flow_name =
         if df = Flor.split_flow_name(source_or_path)
-          [ source_or_path, df[0], df[1] ]
+          [ source_or_path,
+            opts[:domain] || df[0],
+            df[1] ]
         else
-          [ source_or_path, @conf['domain'] || 'domain0', nil ]
+          [ source_or_path,
+            opts[:domain] || @conf['domain'] || 'domain0',
+            nil ]
         end
 
+      fail ArgumentError.new(
+        "invalid domain name #{domain.inspect}"
+      ) unless Flor.potential_domain_name?(domain)
+
       if flow_name
+
         source = @loader.library(source_or_path)
+
         # TODO variables
         # TODO payload
       end

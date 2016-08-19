@@ -150,17 +150,16 @@ describe 'Flor unit' do
 
       describe '(flow, domain: d)' do
 
-it 'rejects invalid domain names'
+        it 'rejects invalid domain names' do
+
+          expect {
+            @unit.launch('', domain: 'blah-blah blah')
+          }.to raise_error(
+            ArgumentError, "invalid domain name \"blah-blah blah\""
+          )
+        end
+
 it 'looks up a flow'
-#        it 'rejects invalid domain names' do
-#
-#          expect {
-#            @unit.launch('', domain: 'blah-blah blah')
-#          }.to raise_error(
-#            ArgumentError, "invalid domain name \"blah-blah blah\""
-#          )
-#        end
-#
 #        it 'looks up a flow' do
 #
 #          msg, _ = @unit.launch('flow0', domain: 'com.acme', nolaunch: true)
