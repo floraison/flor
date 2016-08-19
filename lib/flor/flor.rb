@@ -403,19 +403,29 @@ module Flor
   # functions about domains and units
 
   NAME_REX = '[a-zA-Z0-9_]+'
-
   UNIT_NAME_REX = /\A#{NAME_REX}\z/
+  DOMAIN_NAME_REX = /\A#{NAME_REX}(\.#{NAME_REX})*\z/
+  FLOW_NAME_REX = /\A[a-zA-Z0-9_-]+\z/
 
   def self.potential_unit_name?(s)
 
     s.is_a?(String) && s.match(UNIT_NAME_REX)
   end
 
-  DOMAIN_NAME_REX = /\A#{NAME_REX}(\.#{NAME_REX})*\z/
 
   def self.potential_domain_name?(s)
 
     s.is_a?(String) && s.match(DOMAIN_NAME_REX)
+  end
+
+  def self.potential_flow_name?(s)
+
+    i = s.rindex('.')
+    d = i ? s[0, i] : nil
+    f = i ? s[i + 1..-1] : s
+
+    return false unless potential_domain_name?(d)
+    !! f.match(FLOW_NAME_REX)
   end
 
   def self.is_sub_domain?(dom, sub)
