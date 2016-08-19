@@ -160,6 +160,10 @@ puts ('!' * 80) + ' .'
         # TODO payload
       end
 
+      fail ArgumentError.new(
+        "flow not found in #{Flor.truncate(source_or_path, 35).inspect}"
+      ) unless source
+
       unit = opts[:unit] || @conf['unit'] || 'u0'
 
       Flor.print_src(source, opts) if @conf['log_src']

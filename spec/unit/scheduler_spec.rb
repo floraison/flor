@@ -111,6 +111,15 @@ describe 'Flor unit' do
             'funs' => 1, 'msgs' => 29, 'omsgs' => 0, 'subs' => 1, 'runs' => 1
           })
         end
+
+        it 'rejects unparseable flows' do
+
+          expect {
+            @unit.launch('sequence,,,,')
+          }.to raise_error(
+            ArgumentError, 'flon parse failure'
+          )
+        end
       end
 
       describe '(path)' do
@@ -129,7 +138,14 @@ describe 'Flor unit' do
           )
         end
 
-        it 'fails if it cannot find the flow'
+        it 'fails if it cannot find the flow' do
+
+          expect {
+            @unit.launch('com.acme.flow-999')
+          }.to raise_error(
+            ArgumentError, 'flow not found in "com.acme.flow-999"'
+          )
+        end
       end
 
       describe '(flow, domain: d)' do
