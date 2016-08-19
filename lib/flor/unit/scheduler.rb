@@ -185,42 +185,6 @@ puts ('!' * 80) + ' .'
         # for testing purposes
 
       queue(msg, opts)
-
-#      domain, flow, tree =
-#        if Flor.potential_domain_name?(tree_or_path)
-#          es = tree_or_path.split('.')
-#          t = @loader.library(tree_or_path)
-#          [ es[0..-2].join('.'), es[-1], t ]
-#        else
-#          [ nil, nil, tree_or_path ]
-#        end
-#
-#      opts[:vars] ;;fail
-#
-#      fail ArgumentError.new(
-#        "tree not found from #{Flor.truncate(tree_or_path, 56).inspect}"
-#      ) unless tree
-#
-#      Flor.print_src(tree, opts) if @conf['log_src']
-#
-#      dom = opts[:domain] || domain || @conf['domain']
-#      uni = opts[:unit] || @conf['unit'] || 'u0'
-#
-#      fail ArgumentError.new(
-#        "invalid domain name #{dom.inspect}"
-#      ) unless Flor.potential_domain_name?(dom)
-#
-#      fail ArgumentError.new(
-#        "invalid unit name #{uni.inspect}"
-#      ) unless Flor.potential_unit_name?(uni)
-#
-#      exid = Flor.generate_exid(domain, unit)
-#      msg = Flor.make_launch_msg(exid, tree, opts)
-#
-#      return [ msg, opts ] if opts[:nolaunch]
-#        # for testing purposes
-#
-#      queue(msg, opts)
     end
 
     def queue(message, opts={})

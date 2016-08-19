@@ -159,10 +159,12 @@ describe 'Flor unit' do
           )
         end
 
-        it 'looks up a flow' do
+        it 'launches in domain d' do
 
           msg, _ =
-            @unit.launch('com.acme.flow0', domain: 'org.acme', nolaunch: true)
+            @unit.launch(
+              'sequence; bob | charly',
+              domain: 'org.acme', nolaunch: true)
 
           expect(msg['point']).to eq('execute')
           expect(msg['exid']).to match(/\Aorg\.acme-u-2/)
@@ -170,27 +172,26 @@ describe 'Flor unit' do
           expect(
             msg['tree']
           ).to eq(
-            [ 'sequence', [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ], 1 ]
+            [ 'sequence', [ [ 'bob', [], 1 ], [ 'charly', [], 1 ] ], 1 ]
           )
         end
       end
 
       describe '(path, domain: d)' do
 
-it 'looks up from path but launches in d'
-#        it 'looks up from path but launches in d' do
-#
-#          msg, _ = @unit.launch('com.acme.flow0', domain: 'x.y', nolaunch: true)
-#
-#          expect(msg['point']).to eq('execute')
-#          expect(msg['exid']).to match(/\Ax\.y-u-2/)
-#
-#          expect(
-#            msg['tree']
-#          ).to eq(
-#            [ 'sequence', [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ], 1 ]
-#          )
-#        end
+        it 'looks up from path but launches in d' do
+
+          msg, _ = @unit.launch('com.acme.flow0', domain: 'x.y', nolaunch: true)
+
+          expect(msg['point']).to eq('execute')
+          expect(msg['exid']).to match(/\Ax\.y-u-2/)
+
+          expect(
+            msg['tree']
+          ).to eq(
+            [ 'sequence', [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ], 1 ]
+          )
+        end
       end
     end
 
