@@ -147,14 +147,18 @@ puts ('!' * 80) + ' .'
 
     def launch(source_or_path, opts={})
 
-      #source = source_or_path
-      #domain = @conf['domain'] || 'domain0'
-      source, domain =
-        if Flor.potential_flow_name?(source_or_path)
-          [ source_or_path, Flor.domain(source_or_path) ]
+      source, domain, flow_name =
+        if df = Flor.split_flow_name(source_or_path)
+          [ source_or_path, df[0], df[1] ]
         else
-          [ source_or_path, @conf['domain'] || 'domain0' ]
+          [ source_or_path, @conf['domain'] || 'domain0', nil ]
         end
+
+      if flow_name
+        source = @loader.library(source_or_path)
+        # TODO variables
+        # TODO payload
+      end
 
       unit = opts[:unit] || @conf['unit'] || 'u0'
 
