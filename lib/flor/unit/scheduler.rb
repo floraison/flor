@@ -147,6 +147,20 @@ puts ('!' * 80) + ' .'
 
     def launch(source_or_path, opts={})
 
+      source = source_or_path
+      domain = @conf['domain'] || 'domain0'
+      unit = opts[:unit] || @conf['unit'] || 'u0'
+
+      Flor.print_src(source, opts) if @conf['log_src']
+
+      exid = Flor.generate_exid(domain, unit)
+      msg = Flor.make_launch_msg(exid, source, opts)
+
+      return [ msg, opts ] if opts[:nolaunch]
+        # for testing purposes
+
+      queue(msg, opts)
+
 #      domain, flow, tree =
 #        if Flor.potential_domain_name?(tree_or_path)
 #          es = tree_or_path.split('.')

@@ -76,47 +76,41 @@ describe 'Flor unit' do
         expect(@unit.storage.db[:flon_executions].count).to eq(0)
       end
 
-      it 'runs a simple flow' do
+      describe '(flow)' do
 
-        flon = %{
-          sequence
-            define sum a, b
-              +
-                a
-                b
-            sum 1 2
-        }
+        it 'launches' do
 
-        msg = @unit.launch(flon, wait: true)
+          flon = %{
+            sequence
+              define sum a, b
+                +
+                  a
+                  b
+              sum 1 2
+          }
 
-        expect(msg.class).to eq(Hash)
-        expect(msg['point']).to eq('terminated')
-        expect(msg['payload']['ret']).to eq(3)
+          msg = @unit.launch(flon, wait: true)
 
-        es = @unit.storage.db[:flon_executions].all
-        e = es.first
+          expect(msg.class).to eq(Hash)
+          expect(msg['point']).to eq('terminated')
+          expect(msg['payload']['ret']).to eq(3)
 
-        expect(es.size).to eq(1)
-        expect(e[:exid]).to eq(msg['exid'])
+          es = @unit.storage.db[:flon_executions].all
+          e = es.first
 
-        sleep 0.3
+          expect(es.size).to eq(1)
+          expect(e[:exid]).to eq(msg['exid'])
 
-        d = @unit.executions.first.data
+          sleep 0.3
 
-        expect(
-          d['counters']
-        ).to eq({
-          'funs' => 1, 'msgs' => 29, 'omsgs' => 0, 'subs' => 1, 'runs' => 1
-        })
-      end
+          d = @unit.executions.first.data
 
-      it 'rejects invalid domain names' do
-
-        expect {
-          @unit.launch('', domain: 'blah-blah blah')
-        }.to raise_error(
-          ArgumentError, "invalid domain name \"blah-blah blah\""
-        )
+          expect(
+            d['counters']
+          ).to eq({
+            'funs' => 1, 'msgs' => 29, 'omsgs' => 0, 'subs' => 1, 'runs' => 1
+          })
+        end
       end
 
       describe '(path)' do
@@ -139,6 +133,15 @@ describe 'Flor unit' do
       end
 
       describe '(flow, domain: d)' do
+
+        it 'rejects invalid domain names' do
+
+          expect {
+            @unit.launch('', domain: 'blah-blah blah')
+          }.to raise_error(
+            ArgumentError, "invalid domain name \"blah-blah blah\""
+          )
+        end
 
         it 'looks up a flow' do
 
@@ -170,11 +173,6 @@ describe 'Flor unit' do
             [ 'sequence', [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ], 1 ]
           )
         end
-      end
-
-      describe '(domain, tree)' do
-
-        it 'flips burgers'
       end
     end
 
