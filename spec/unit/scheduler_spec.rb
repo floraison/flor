@@ -159,20 +159,20 @@ describe 'Flor unit' do
           )
         end
 
-it 'looks up a flow'
-#        it 'looks up a flow' do
-#
-#          msg, _ = @unit.launch('flow0', domain: 'com.acme', nolaunch: true)
-#
-#          expect(msg['point']).to eq('execute')
-#          expect(msg['exid']).to match(/\Acom\.acme-u-2/)
-#
-#          expect(
-#            msg['tree']
-#          ).to eq(
-#            [ 'sequence', [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ], 1 ]
-#          )
-#        end
+        it 'looks up a flow' do
+
+          msg, _ =
+            @unit.launch('com.acme.flow0', domain: 'org.acme', nolaunch: true)
+
+          expect(msg['point']).to eq('execute')
+          expect(msg['exid']).to match(/\Aorg\.acme-u-2/)
+
+          expect(
+            msg['tree']
+          ).to eq(
+            [ 'sequence', [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ], 1 ]
+          )
+        end
       end
 
       describe '(path, domain: d)' do
