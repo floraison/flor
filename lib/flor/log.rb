@@ -289,6 +289,9 @@ module Flor
 
   def self.detail_msg(executor, m, opts={})
 
+    return if m['_detail_msg_flag']
+    m['_detail_msg_flag'] = true if opts[:flag]
+
     _rs, _dg, _yl = colours(opts)
 
     puts "#{_dg}<Flor.detail_msg>#{_rs}"

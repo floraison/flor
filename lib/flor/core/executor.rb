@@ -254,7 +254,7 @@ module Flor
       m['fpoint'] = message['point']
       m['error'] = Flor.to_error(err)
 
-      Flor.detail_msg(self, m) if @unit.conf['log_err']
+      Flor.detail_msg(self, m, flag: true) if @unit.conf['log_err']
 
       [ m ]
     end
