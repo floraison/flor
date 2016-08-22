@@ -33,10 +33,10 @@ describe 'Flor unit' do
       r =
         @unit.launch(%{
           company
-        }, wait: true)
+        }, domain: 'com.acme', wait: true)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']).to eq({ 'ret' => 'y' })
+      expect(r['payload']).to eq({ 'ret' => 'ACME' })
     end
 
     context 'dvariables: false' do

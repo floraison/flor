@@ -51,6 +51,8 @@ class Flor::Node
   def nid; @node['nid']; end
   def parent; @node['parent']; end
 
+  def domain; Flor.domain(@execution['exid']); end
+
   def point; @message['point']; end
   def from; @message['from']; end
 
@@ -218,13 +220,17 @@ class Flor::Node
 
   def lookup_dvar(mod, key)
 
-    return nil if mod == 'd' # FIXME
+    if mod != 'd' && Flor::Procedure[key]
+      return [ '_proc', key, -1 ]
+    end
 
-    return [ '_proc', key, -1 ] \
-      if Flor::Procedure[key]
+    if mod != 'd' && @executor.unit.tasker.has_tasker?(@executor.exid, key)
+      return [ '_task', key, -1 ]
+    end
 
-    return [ '_task', key, -1 ] \
-      if @executor.unit.tasker.has_tasker?(@executor.exid, key)
+    if l = @executor.unit.loader
+      return l.variables(domain)[key]
+    end
 
     nil
   end

@@ -35,7 +35,7 @@ module Flor
     class TransientUnit
 
       attr_accessor :conf, :opts
-      attr_reader :journal, :tasker
+      attr_reader :journal, :tasker, :loader
 
       def initialize(conf)
 
