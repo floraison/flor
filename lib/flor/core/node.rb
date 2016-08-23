@@ -228,7 +228,6 @@ class Flor::Node
       return [ '_task', key, -1 ]
     end
 
-p @node
     l = @executor.unit.loader
     dvars = @node['dvars']
       #
