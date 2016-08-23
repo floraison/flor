@@ -228,8 +228,12 @@ class Flor::Node
       return [ '_task', key, -1 ]
     end
 
-    if l = @executor.unit.loader
-      return l.variables(domain)[key]
+p @node
+    l = @executor.unit.loader
+    dvars = @node['dvars']
+      #
+    if l && dvars != false
+      return l.variables(dvars || domain)[key]
     end
 
     nil

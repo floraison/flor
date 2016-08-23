@@ -36,17 +36,37 @@ describe 'Flor unit' do
         }, domain: 'com.acme', wait: true)
 
       expect(r['point']).to eq('terminated')
+      expect(Flor.domain(r['exid'])).to eq('com.acme')
       expect(r['payload']).to eq({ 'ret' => 'ACME' })
     end
 
     context 'dvariables: false' do
 
-      it 'prevents domain variables lookup'
+      it 'prevents domain variables lookup' do
+
+        r =
+          @unit.launch(%{
+            company
+          }, dvariables: false, domain: 'com.acme', wait: true)
+
+        expect(r['point']).to eq('failed')
+        expect(r['error']['msg']).to eq("don't know how to apply \"company\"")
+      end
     end
 
     context 'dvariables: "org.dom"' do
 
-      it 'reconnects the domain variables lookup to another domain'
+      it 'reconnects the domain variables lookup to another domain' do
+
+        r =
+          @unit.launch(%{
+            company
+          }, domain: 'org.acme', dvariables: 'com.acme', wait: true)
+
+        expect(r['point']).to eq('terminated')
+        expect(Flor.domain(r['exid'])).to eq('org.acme')
+        expect(r['payload']).to eq({ 'ret' => 'ACME' })
+      end
     end
   end
 end

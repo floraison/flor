@@ -75,10 +75,10 @@ module Flor
         'ctime' => now,
         'mtime' => now }
 
-      %w[ vars cnid noreply dbg on_error ].each do |k|
+      %w[ vars dvars cnid noreply dbg on_error ].each do |k|
         v = message[k]
         k = 'on_error_branch' if k == 'on_error'
-        node[k] = v if v
+        node[k] = v if v != nil
       end
         #
         # vars: variables

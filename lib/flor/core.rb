@@ -64,12 +64,18 @@ module Flor
     pl = opts[:payload] || opts[:fields] || {}
     vs = opts[:variables] || opts[:vars] || {}
 
-    { 'point' => 'execute',
-      'exid' => exid,
-      'nid' => '0',
-      'tree' => t,
-      'payload' => pl,
-      'vars' => vs }
+    msg =
+      { 'point' => 'execute',
+        'exid' => exid,
+        'nid' => '0',
+        'tree' => t,
+        'payload' => pl,
+        'vars' => vs }
+
+    msg['dvars'] = opts[:dvariables] \
+      if opts.has_key?(:dvariables)
+
+    msg
   end
 
   def self.load_procedures(dir)
