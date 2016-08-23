@@ -116,8 +116,12 @@ module Flor
         exid = message['exid']
         return false \
           unless ds.find do |d|
-            dl = d.length
-            exid[0, dl] == d && %w[ - . ].include?(exid[dl, 1])
+            if d.is_a?(Regexp)
+              !! Flor.domain(exid).match(d)
+            else # d.is_a?(String)
+              dl = d.length
+              exid[0, dl] == d && %w[ - . ].include?(exid[dl, 1])
+            end
           end
       end
 
