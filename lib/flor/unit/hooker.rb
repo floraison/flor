@@ -119,8 +119,7 @@ module Flor
             if d.is_a?(Regexp)
               !! Flor.domain(exid).match(d)
             else # d.is_a?(String)
-              dl = d.length
-              exid[0, dl] == d && %w[ - . ].include?(exid[dl, 1])
+              Flor.domain(exid) == d
             end
           end
       end

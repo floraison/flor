@@ -113,16 +113,30 @@ describe 'Flor unit' do
       rs << @unit.launch(%{ sequence _ }, wait: true, domain: 'com.acme')
       rs << @unit.launch(%{ sequence _ }, wait: true, domain: 'org.acme')
       rs << @unit.launch(%{ sequence _ }, wait: true, domain: 'za.co.acme')
+      rs << @unit.launch(%{ sequence _ }, wait: true, domain: 'org.acme.sub0')
 
       expect(rs.collect { |r| r['point'] }.uniq).to eq(%w[ terminated ])
 
       expect(ms0.size).to eq(10)
       expect(ms1.size).to eq(20)
-      expect(ms2.size).to eq(20)
+      expect(ms2.size).to eq(30)
       expect(ms3.size).to eq(0)
     end
 
-    it 'may filter on subdomains:/sds: (domain and its subdomains)'
+    it 'may filter on subdomain:/sd: (domain and its subdomains)'
+#
+#      ms0 = []
+#      @unit.hook(subdomain: 'com.acme') { |m| ms0 << Flor.dup(m) }
+#
+#      rs = []
+#      rs << @unit.launch(%{ sequence _ }, wait: true, domain: 'com.acme')
+#      rs << @unit.launch(%{ sequence _ }, wait: true, domain: 'com.acme.sub0')
+#      rs << @unit.launch(%{ sequence _ }, wait: true, domain: 'org.acme.sub0')
+#
+#      expect(rs.collect { |r| r['point'] }.uniq).to eq(%w[ terminated ])
+#
+#      expect(ms0.size).to eq(20)
+#    end
 
     it 'may filter on heap:/hp:' do
 
