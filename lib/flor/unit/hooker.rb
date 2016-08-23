@@ -112,15 +112,17 @@ module Flor
       ps = o(opts, :point, :p, [])
       return false if ps && ! ps.include?(message['point'])
 
-      if ds = o(opts, :domain, :d, [])
-        exid = message['exid']
+      dm = Flor.domain(message['exid'])
+
+      if dm && ds = o(opts, :domain, :d, [])
         return false \
-          unless ds.find do |d|
-            if d.is_a?(Regexp)
-              !! Flor.domain(exid).match(d)
-            else # d.is_a?(String)
-              Flor.domain(exid) == d
-            end
+          unless ds.find { |d| d.is_a?(Regexp) ? (!! d.match(dm)) : (d == dm) }
+      end
+
+      if dm && sds = o(opts, :subdomain, :sd, [])
+        return false \
+          unless sds.find do |sd|
+            dm[0, sd.length] == sd
           end
       end
 
