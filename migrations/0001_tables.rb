@@ -56,7 +56,7 @@ Sequel.migration do
       String :nid, null: false
       #
       String :tdomain, null: false
-      String :texid, null: true
+      String :texid, null: true ###### TODO keep me?
       String :tnids, null: true
       String :tpoints, null: true
       String :ttags, null: true

@@ -68,8 +68,8 @@ class Flor::Pro::Trap < Flor::Procedure
     count = 1 if fun == nil # blocking mode implies count: 1
     tra['count'] = count if count
 
-    exi = att('exid') || att('execution') || exid
-    tra['exid'] = exi if exi != 'any'
+#    exi = att('exid') || att('execution') || exid
+#    tra['exid'] = exi if exi != 'any'
 
     reply('point' => 'trap','nid' => nid, 'trap' => tra) +
     (fun ? reply : [])
