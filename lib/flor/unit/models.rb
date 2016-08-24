@@ -165,7 +165,7 @@ module Flor
 
       return false if in_trap_itself?(executor, message)
 
-#      return false if texid && texid != message['exid']
+      return false if texid && texid != message['exid']
       return false unless nid_match?(message)
       return false unless point_match?(message)
       return false unless tag_match?(message)
