@@ -161,7 +161,7 @@ module Flor
 
       traps
         .where(status: 'active')
-        .where(Sequel.|({ texid: nil }, { texid: exid }))
+        .where(domain: split_domain(exid))
         .all
     end
 
@@ -293,8 +293,7 @@ module Flor
           domain: dom,
           exid: exid,
           nid: node['nid'],
-          tdomain: dom,
-          texid: tra['exid'],
+          texe: tra['exe'],
           tnids: tra['nids'],
           tpoints: tra['points'],
           ttags: tra['tags'],
@@ -319,6 +318,13 @@ module Flor
     end
 
     protected
+
+    def split_domain(exid)
+
+      Flor.domain(exid)
+        .split('.')
+        .inject([]) { |a, elt| a << [ a.last, elt ].compact.join('.'); a }
+    end
 
     class DbLogger
 

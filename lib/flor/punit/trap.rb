@@ -70,7 +70,7 @@ class Flor::Pro::Trap < Flor::Procedure
 
     #exi = att('exid') || att('execution') || exid
     #tra['exid'] = exi if exi != 'any'
-    tra['exid'] = exid
+    tra['exe'] = att('exe') || att('execution') || 'self'
 
     reply('point' => 'trap','nid' => nid, 'trap' => tra) +
     (fun ? reply : [])

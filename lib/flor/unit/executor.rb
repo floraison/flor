@@ -99,7 +99,7 @@ module Flor
           { took: Time.now - t0,
             consumed: @consumed.size,
             traps: @traps.size,
-            own_traps: @traps.reject { |t| t.texid == nil }.size,
+            #own_traps: @traps.reject { |t| t.texid == nil }.size, # FIXME
             counters: @execution['counters'] }
         ].inspect +
         '---.' + Flor::Colours.reset

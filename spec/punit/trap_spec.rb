@@ -110,6 +110,7 @@ describe 'Flor punit' do
 
       exid0 = @unit.launch(%{
         trap tag: 't0'; def msg; trace "t0_$(msg.exid)"
+        noop tag: 't0'
         trace "stalling_$(exid)"
         stall _
       })
@@ -128,15 +129,13 @@ describe 'Flor punit' do
 
       expect(
         (
-          [ exid0, exid1 ] +
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }
         ).join("\n")
       ).to eq([
-        exid0,
-        exid1,
-        "0:stalling_#{exid0}"
+        "0:stalling_#{exid0}",
+        "1:t0_#{exid0}"
       ].join("\n"))
     end
 
@@ -328,6 +327,50 @@ describe 'Flor punit' do
           4:B>0_1_6_0_0
         }.collect(&:strip).join("\n"))
       end
+    end
+
+    context 'execution: domain' do
+
+      it 'traps the events in execution domain' do
+
+        exid0 = @unit.launch(%{
+          trap tag: 't0' execution: 'domain'; def msg; trace "t0_$(msg.exid)"
+          trace "stalling_$(exid)"
+          stall _
+        }, domain: 'net.acme')
+
+        sleep 0.5
+
+        r = @unit.launch(%{ noop tag: 't0' }, domain: 'org.acme', wait: true)
+        exid1 = r['exid']
+        expect(r['point']).to eq('terminated')
+
+        r = @unit.launch(%{ noop tag: 't0' }, domain: 'net.acme', wait: true)
+        exid2 = r['exid']
+        expect(r['point']).to eq('terminated')
+
+        r = @unit.launch(%{ noop tag: 't0' }, domain: 'net.acme.s0', wait: true)
+        exid3 = r['exid']
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.5
+
+        expect(
+          (
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }
+          ).join("\n")
+        ).to eq([
+          "0:stalling_#{exid0}",
+          "1:t0_#{exid2}"
+        ].join("\n"))
+      end
+    end
+
+    context 'execution: subdomain' do
+
+      it 'traps the events in execution domain and its subdomains'
     end
 
 #    context 'exid: any' do
