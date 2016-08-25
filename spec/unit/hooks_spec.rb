@@ -117,6 +117,8 @@ describe 'Flor unit' do
 
       expect(rs.collect { |r| r['point'] }.uniq).to eq(%w[ terminated ])
 
+      sleep 0.4
+
       expect(ms0.size).to eq(10)
       expect(ms1.size).to eq(20)
       expect(ms2.size).to eq(30)
@@ -138,6 +140,8 @@ describe 'Flor unit' do
       rs << @unit.launch(%{ noop _ }, wait: true, domain: 'org.acme.sub0')
 
       expect(rs.collect { |r| r['point'] }.uniq).to eq(%w[ terminated ])
+
+      sleep 0.4
 
       expect(ms0.size).to eq(20)
       expect(ms1.size).to eq(30)
