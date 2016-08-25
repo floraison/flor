@@ -165,14 +165,7 @@ module Flor
 
       return false if in_trap_itself?(executor, message)
 
-      #if e = texe
-      #  dom = Flor.domain(message['exid'])
-      #  #return false if e == 'domain' &&  FIXME
-      #else
-      #  #return false if texid != message['exid'] # FIXME
-      #end
       return false unless domain_match?(message)
-
       return false unless nid_match?(message)
       return false unless point_match?(message)
       return false unless tag_match?(message)
@@ -185,11 +178,10 @@ module Flor
 
     def domain_match?(message)
 
-# TODO if execution: domain, then only return true if exact domain match!!!
       case texe
-        when 'domain' then true
-        when 'subdomain' then true
-        else message['exid'] == exid
+        when 'domain' then Flor.domain(message['exid']) == domain
+        when 'subdomain' then true # TODO
+        else message['exid'] == exid # 'self'
       end
     end
 
