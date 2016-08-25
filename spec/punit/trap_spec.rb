@@ -370,7 +370,42 @@ describe 'Flor punit' do
 
     context 'execution: subdomain' do
 
-      it 'traps the events in execution domain and its subdomains'
+      it 'traps the events in execution domain and its subdomains' do
+
+        exid0 = @unit.launch(%{
+          trap tag: 't0' execution: 'subdomain'; def msg; trace "t0_$(msg.exid)"
+          trace "stalling_$(exid)"
+          stall _
+        }, domain: 'net.acme')
+
+        sleep 0.5
+
+        r = @unit.launch(%{ noop tag: 't0' }, domain: 'org.acme', wait: true)
+        exid1 = r['exid']
+        expect(r['point']).to eq('terminated')
+
+        r = @unit.launch(%{ noop tag: 't0' }, domain: 'net.acme', wait: true)
+        exid2 = r['exid']
+        expect(r['point']).to eq('terminated')
+
+        r = @unit.launch(%{ noop tag: 't0' }, domain: 'net.acme.s0', wait: true)
+        exid3 = r['exid']
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.5
+
+        expect(
+          (
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }
+          ).join("\n")
+        ).to eq([
+          "0:stalling_#{exid0}",
+          "1:t0_#{exid2}",
+          "2:t0_#{exid3}"
+        ].join("\n"))
+      end
     end
 
 #    context 'exid: any' do
