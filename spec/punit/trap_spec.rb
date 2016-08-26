@@ -139,6 +139,21 @@ describe 'Flor punit' do
       ].join("\n"))
     end
 
+    it 'is removed at the end of the execution' do
+
+      expect(@unit.traps.count).to eq(0)
+
+      r = @unit.launch(%{
+        trap tag: 't0'; def msg; trace "t0_$(msg.exid)"
+      }, wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      sleep 0.4
+
+      expect(@unit.traps.count).to eq(0)
+    end
+
     context 'heat:' do
 
       it 'traps given head of trees' do
