@@ -25,68 +25,29 @@
 
 module Flor
 
-  class DummySequelAdapter < Sequel::Dataset
+  class Timer < FlorModel
 
-    class Db
-      def supports_schema_parsing?; false; end
-      def transaction(opts={}); yield; end
+    def to_trigger_message
+
+      m = self.data(false)['message']
+      m['timer_id'] = self.id
+
+      {
+        'point' => 'trigger',
+        'exid' => self.exid,
+        'nid' => self.nid,
+        'type' => self.type,
+        'schedule' => self.schedule,
+        'timer_id' => self.id,
+        'message' => m
+      }
     end
 
-    def initialize(opts)
-      @opts = opts
-      @db = Db.new
-    end
+    # countering tstamp being a String with jdbc sqlite...
+    #
+    def ntime_t
 
-    def fetch_rows(sql); yield([]); end
-
-    DB = Sequel.connect(:adapter => Flor::DummySequelAdapter)
-  end
-
-  class FlorModel < Sequel::Model(DummySequelAdapter::DB)
-
-    def _data
-
-      d = Flor::Storage.from_blob(content)
-      d['id'] = id
-
-      d
-    end
-
-    def data(cache=true)
-
-      cache ? (@data = _data) : _data
-    end
-  end
-
-  paths = Dir[File.join(File.dirname(__FILE__), 'models/*.rb')]
-  MODELS = paths.collect { |pa| (File.basename(pa, '.rb') + 's').to_sym }
-
-  paths.each { |pa| require(pa) }
-
-  class Storage
-
-    MODELS.each do |k|
-
-      define_method(k) do
-
-        s = self
-        c = k.to_s[0..-2].capitalize
-
-        @models[k] ||=
-          Flor.const_set(
-            "#{c}#{@db.hash.to_s.gsub('-', 'M')}",
-            Class.new(Flor.const_get(c)) do
-              self.dataset = s.db["flon_#{k}".to_sym]
-            end)
-      end
-    end
-  end
-
-  class Scheduler
-
-    MODELS.each do |k|
-
-      define_method(k) { @storage.send(k) }
+      @ntime_t ||= (ntime.is_a?(String) ? Time.parse(ntime) : ntime)
     end
   end
 end

@@ -58,18 +58,18 @@ class Flor::Pro::Trap < Flor::Procedure
         reply.first
       end
 
-    tra = {
-      'points' => points, 'tags' => tags, 'nids' => nids,
-      'heaps' => heaps, 'heats' => heats
-    }
+    tra = {}
+    tra['points'] = points
+    tra['tags'] = tags
+    tra['nids'] = nids
+    tra['heaps'] = heaps
+    tra['heats'] = heats
     tra['message'] = msg
 
     count = att('count')
     count = 1 if fun == nil # blocking mode implies count: 1
     tra['count'] = count if count
 
-    #exi = att('exid') || att('execution') || exid
-    #tra['exid'] = exi if exi != 'any'
     tra['exe'] = att('exe') || att('execution') || 'self'
 
     reply('point' => 'trap','nid' => nid, 'trap' => tra) +
