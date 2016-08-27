@@ -49,30 +49,6 @@ describe 'Flor punit' do
       )
     end
 
-    it 'traps tags' do
-
-      flon = %{
-        sequence
-          trace 'a'
-          trap tag: 'x'
-            def msg; trace msg.point
-          sequence tag: 'x'
-            trace 'c'
-      }
-
-      r = @unit.launch(flon, wait: true)
-
-      expect(r['point']).to eq('terminated')
-
-      sleep 0.100
-
-      expect(
-        @unit.traces.collect(&:text).join(' ')
-      ).to eq(
-        'a c entered'
-      )
-    end
-
     it 'traps multiple times' do
 
       flon = %{
@@ -154,6 +130,75 @@ describe 'Flor punit' do
       expect(@unit.traps.count).to eq(0)
     end
 
+    context 'count:' do
+
+      it 'determines how many times a trap triggers at max' do
+
+        flon = %{
+          concurrence
+            sequence
+              trap tag: 'b', count: 2
+                def msg; trace "A>$(nid)"
+            sequence
+              sleep 0.8
+              noop tag: 'b'
+              trace "B>$(nid)"
+              noop tag: 'b'
+              trace "B>$(nid)"
+              noop tag: 'b'
+              trace "B>$(nid)"
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.350
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:B>0_1_2_0_0
+          1:A>0_0_0_2_1_0_0-1
+          2:B>0_1_4_0_0
+          3:A>0_0_0_2_1_0_0-2
+          4:B>0_1_6_0_0
+        }.collect(&:strip).join("\n"))
+      end
+    end
+
+    context 'heap:' do
+
+      it 'traps given procedures' do
+
+        flon = %{
+          trap heap: 'sequence'
+            def msg; trace "$(msg.tree.0)-$(msg.nid)"
+          sequence
+            noop _
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.350
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:-0
+          1:sequence-0_1
+          2:-0_1
+          3:-0
+        }.collect(&:strip).join("\n"))
+      end
+    end
+
     context 'heat:' do
 
       it 'traps given head of trees' do
@@ -211,135 +256,6 @@ describe 'Flor punit' do
           5:t-heat-0_1-5
           6:t-heat-0_1-5
           7:t-heat-0_1-5
-        }.collect(&:strip).join("\n"))
-      end
-    end
-
-    context 'heap:' do
-
-      it 'traps given procedures' do
-
-        flon = %{
-          trap heap: 'sequence'
-            def msg; trace "$(msg.tree.0)-$(msg.nid)"
-          sequence
-            noop _
-        }
-
-        r = @unit.launch(flon, wait: true)
-
-        expect(r['point']).to eq('terminated')
-
-        sleep 0.350
-
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
-          0:-0
-          1:sequence-0_1
-          2:-0_1
-          3:-0
-        }.collect(&:strip).join("\n"))
-      end
-    end
-
-    context 'without function' do
-
-      it 'blocks once' do
-
-        flon = %{
-          concurrence
-            sequence
-              trap tag: 'b'
-              trace "A>$(nid)"
-            sequence
-              sleep 0.8
-              noop tag: 'b'
-              noop tag: 'b'
-              trace "B>$(nid)"
-        }
-
-        r = @unit.launch(flon, wait: true)
-
-        expect(r['point']).to eq('terminated')
-
-        sleep 0.350
-
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
-          0:A>0_0_1_0_0
-          1:B>0_1_3_0_0
-        }.collect(&:strip).join("\n"))
-      end
-    end
-
-    context 'multiple criteria' do
-
-      it 'traps messages matching all the criteria' do
-
-        flon = %{
-          sequence
-            trace 'a'
-            trap tag: 'x', point: 'left'
-              def msg; trace msg.point
-            sequence tag: 'x'
-              trace 'c'
-        }
-
-        r = @unit.launch(flon, wait: true)
-
-        expect(r['point']).to eq('terminated')
-
-        sleep 0.100
-
-        expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
-          a c left
-        ])
-      end
-    end
-
-    context 'count:' do
-
-      it 'determines how many times a trap triggers at max' do
-
-        flon = %{
-          concurrence
-            sequence
-              trap tag: 'b', count: 2
-                def msg; trace "A>$(nid)"
-            sequence
-              sleep 0.8
-              noop tag: 'b'
-              trace "B>$(nid)"
-              noop tag: 'b'
-              trace "B>$(nid)"
-              noop tag: 'b'
-              trace "B>$(nid)"
-        }
-
-        r = @unit.launch(flon, wait: true)
-
-        expect(r['point']).to eq('terminated')
-
-        sleep 0.350
-
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
-          0:B>0_1_2_0_0
-          1:A>0_0_0_2_1_0_0-1
-          2:B>0_1_4_0_0
-          3:A>0_0_0_2_1_0_0-2
-          4:B>0_1_6_0_0
         }.collect(&:strip).join("\n"))
       end
     end
@@ -423,44 +339,92 @@ describe 'Flor punit' do
       end
     end
 
-#    context 'exid: any' do
-#
-#      it 'lets trap trigger for any execution' do
-#
-#        exid0 = @unit.launch(%{
-#          trap tag: 't0', exid: 'any'
-#            def msg; trace "t0_$(msg.exid)"
-#          trace "stalling_$(exid)"
-#          stall _
-#        })
-#
-#        sleep 0.5
-#
-#        r = @unit.launch(%{
-#          noop tag: 't0'
-#        }, wait: true)
-#
-#        exid1 = r['exid']
-#
-#        expect(r['point']).to eq('terminated')
-#
-#        sleep 0.5
-#
-#        expect(
-#          (
-#            [ exid0, exid1 ] +
-#            @unit.traces
-#              .each_with_index
-#              .collect { |t, i| "#{i}:#{t.text}" }
-#          ).join("\n")
-#        ).to eq([
-#          exid0,
-#          exid1,
-#          "0:stalling_#{exid0}",
-#          "1:t0_#{exid1}"
-#        ].join("\n"))
-#      end
-#    end
+    context 'tag:' do
+
+      it 'traps tag entered' do
+
+        flon = %{
+          sequence
+            trace 'a'
+            trap tag: 'x'
+              def msg; trace msg.point
+            sequence tag: 'x'
+              trace 'c'
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.100
+
+        expect(
+          @unit.traces.collect(&:text).join(' ')
+        ).to eq(
+          'a c entered'
+        )
+      end
+    end
+
+    context 'multiple criteria' do
+
+      it 'traps messages matching all the criteria' do
+
+        flon = %{
+          sequence
+            trace 'a'
+            trap tag: 'x', point: 'left'
+              def msg; trace msg.point
+            sequence tag: 'x'
+              trace 'c'
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.100
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          a c left
+        ])
+      end
+    end
+
+    context 'without function' do
+
+      it 'blocks once' do
+
+        flon = %{
+          concurrence
+            sequence
+              trap tag: 'b'
+              trace "A>$(nid)"
+            sequence
+              sleep 0.8
+              noop tag: 'b'
+              noop tag: 'b'
+              trace "B>$(nid)"
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.350
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:A>0_0_1_0_0
+          1:B>0_1_3_0_0
+        }.collect(&:strip).join("\n"))
+      end
+    end
   end
 end
 
