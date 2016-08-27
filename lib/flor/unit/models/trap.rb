@@ -99,7 +99,6 @@ module Flor
       return false if in_trap_itself?(executor, message)
 
       return false unless domain_match?(message)
-      return false unless nid_match?(message)
       return false unless point_match?(message)
       return false unless tag_match?(message)
 
@@ -130,12 +129,6 @@ module Flor
       end
 
       false
-    end
-
-    def nid_match?(message)
-
-      tnids.empty? ||
-      tnids.include?(message['point'])
     end
 
     def point_match?(message)
@@ -176,7 +169,6 @@ module Flor
 
     def tpoints; @atpoints ||= split_aval(:tpoints); end
     def ttags; @attags ||= split_aval(:ttags); end
-    def tnids; @atnids ||= split_aval(:tnids); end
     def theaps; @atheaps ||= split_aval(:theaps); end
     def theats; @atheats ||= split_aval(:theats); end
 

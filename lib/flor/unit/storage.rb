@@ -294,7 +294,6 @@ module Flor
           exid: exid,
           nid: node['nid'],
           texe: tra['exe'],
-          tnids: tra['nids'],
           tpoints: tra['points'],
           ttags: tra['tags'],
           theats: tra['heats'],
