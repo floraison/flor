@@ -58,10 +58,10 @@ module Flor
     end
   end
 
-  paths = Dir[File.join(File.dirname(__FILE__), 'models/*.rb')]
-  MODELS = paths.collect { |pa| (File.basename(pa, '.rb') + 's').to_sym }
+  MODELS = [ :executions, :timers, :traces, :traps ]
 
-  paths.each { |pa| require(pa) }
+  dir = File.dirname(__FILE__)
+  MODELS.each { |m| require File.join(dir, 'models', "#{m.to_s[0..-2]}.rb") }
 
   class Storage
 
