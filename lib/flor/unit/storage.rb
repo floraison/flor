@@ -293,7 +293,7 @@ module Flor
           domain: dom,
           exid: exid,
           nid: node['nid'],
-          texe: tra['exe'],
+          trange: tra['range'],
           tpoints: tra['points'],
           ttags: tra['tags'],
           theats: tra['heats'],

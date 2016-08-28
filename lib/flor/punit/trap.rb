@@ -68,7 +68,7 @@ class Flor::Pro::Trap < Flor::Procedure
     count = 1 if fun == nil # blocking mode implies count: 1
     tra['count'] = count if count
 
-    tra['exe'] = att('exe') || att('execution') || 'self'
+    tra['range'] = att('range') || att('scope') || 'self'
 
     reply('point' => 'trap','nid' => nid, 'trap' => tra) +
     (fun ? reply : [])

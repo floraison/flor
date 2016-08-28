@@ -110,7 +110,7 @@ module Flor
 
     def domain_match?(message)
 
-      case texe
+      case trange
         when 'subdomain' then true # already filtered at Storage#fetch_traps
         when 'domain' then Flor.domain(message['exid']) == domain
         else message['exid'] == exid # 'self'

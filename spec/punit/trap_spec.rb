@@ -260,12 +260,12 @@ describe 'Flor punit' do
       end
     end
 
-    context 'execution: domain' do
+    context 'range: domain' do
 
       it 'traps the events in execution domain' do
 
         exid0 = @unit.launch(%{
-          trap tag: 't0' execution: 'domain'; def msg; trace "t0_$(msg.exid)"
+          trap tag: 't0' range: 'domain'; def msg; trace "t0_$(msg.exid)"
           trace "stalling_$(exid)"
           stall _
         }, domain: 'net.acme')
@@ -299,12 +299,12 @@ describe 'Flor punit' do
       end
     end
 
-    context 'execution: subdomain' do
+    context 'range: subdomain' do
 
-      it 'traps the events in execution domain and its subdomains' do
+      it 'traps the events in range domain and its subdomains' do
 
         exid0 = @unit.launch(%{
-          trap tag: 't0' execution: 'subdomain'; def msg; trace "t0_$(msg.exid)"
+          trap tag: 't0' range: 'subdomain'; def msg; trace "t0_$(msg.exid)"
           trace "stalling_$(exid)"
           stall _
         }, domain: 'net.acme')

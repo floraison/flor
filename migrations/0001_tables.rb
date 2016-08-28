@@ -55,7 +55,7 @@ Sequel.migration do
       String :exid, null: false
       String :nid, null: false
       #
-      String :texe, null: false
+      String :trange, null: false
       String :tpoints, null: true
       String :ttags, null: true
       String :theats, null: true
