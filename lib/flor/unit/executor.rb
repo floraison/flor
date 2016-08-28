@@ -85,11 +85,6 @@ module Flor
           # keep track of "out" messages, messages to other executions
 
         @messages.concat(ims)
-          #
-        #traps, others = @messages.partition { |m| m['point'] == 'trap' }
-        #@messages = traps + others
-          # might help at some point...
-
         @unit.storage.put_messages(oms)
       end
 

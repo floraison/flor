@@ -23,18 +23,6 @@
 #++
 
 
-# # trap
-#
-# ## range:/scope:
-# * subnid (default)
-# * execution/exe
-# * domain
-# * subdomain
-#
-# ## bind:
-# * parent (default)
-# * root
-#
 class Flor::Pro::Trap < Flor::Procedure
 
   name 'trap'
@@ -70,7 +58,6 @@ class Flor::Pro::Trap < Flor::Procedure
       end
 
     tra = {}
-    tra['nid'] = parent || nid # /!\
     tra['points'] = points
     tra['tags'] = tags
     tra['heaps'] = heaps
@@ -81,7 +68,7 @@ class Flor::Pro::Trap < Flor::Procedure
     count = 1 if fun == nil # blocking mode implies count: 1
     tra['count'] = count if count
 
-    tra['range'] = att('range') || att('scope') || 'nid'
+    tra['range'] = att('range') || att('scope') || 'self'
 
     reply('point' => 'trap','nid' => nid, 'trap' => tra) +
     (fun ? reply : [])

@@ -292,8 +292,7 @@ module Flor
         id = @db[:flon_traps].insert(
           domain: dom,
           exid: exid,
-          onid: node['nid'],
-          nid: tra['nid'],
+          nid: node['nid'],
           trange: tra['range'],
           tpoints: tra['points'],
           ttags: tra['tags'],
@@ -313,7 +312,6 @@ module Flor
         exid: exid,
         nid: nid,
         tracer: tracer,
-        #text: text.is_a?(String) ? text : text.inspect,
         text: text,
         tstamp: Time.now)
     end
