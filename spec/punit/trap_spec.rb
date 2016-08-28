@@ -115,6 +115,22 @@ describe 'Flor punit' do
       ].join("\n"))
     end
 
+    it 'is bound at the parent level by default' do
+
+      m = @unit.launch(%{
+        sequence
+          trap tag: 't0'; def msg; trace "t0_$(msg.exid)"
+          stall _
+      }, wait: '0_1 receive')
+
+      expect(m['point']).to eq('receive')
+
+      tra = @unit.traps.first
+
+      expect(tra.nid).to eq('0')
+      expect(tra.onid).to eq('0_0')
+    end
+
     it 'is removed at the end of the execution' do
 
       expect(@unit.traps.count).to eq(0)
@@ -258,6 +274,39 @@ describe 'Flor punit' do
           7:t-heat-0_1-5
         }.collect(&:strip).join("\n"))
       end
+    end
+
+    context 'range: nid (default)' do
+
+      it 'traps only subnids' do
+
+        r = @unit.launch(%{
+          concurrence
+            sequence
+              trap tag: 't0'; def msg; trace "in-$(msg.nid)"
+              noop tag: 't0'
+            sequence
+              sleep '1s' # give it time to process the trap
+              noop tag: 't0'
+        }, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.350
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:in-0_0_1
+        }.collect(&:strip).join("\n"))
+      end
+    end
+
+    context 'range: execution' do
+
+      it 'traps in the same execution'
     end
 
     context 'range: domain' do
