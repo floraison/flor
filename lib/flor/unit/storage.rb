@@ -259,26 +259,19 @@ module Flor
 
     def remove_node(exid, n)
 
+      removal =
+        @archive ?
+        lambda { |u| u.update(status: 'removed') } :
+        lambda { |u| u.delete }
+
       #@db.transaction do
 
-      if @archive
-
         @db[:flon_timers]
           .where(exid: exid, nid: n['nid'])
-          .update(status: 'removed')
+          .tap { |u| removal.call(u) }
         #@db[:flon_traps]
         #  .where(exid: exid, nid: n['nid'])
-        #  .update(status: 'removed')
-
-      else
-
-        @db[:flon_timers]
-          .where(exid: exid, nid: n['nid'])
-          .delete
-        #@db[:flon_traps]
-        #  .where(exid: exid, nid: n['nid'])
-        #  .delete
-      end
+        #  .tap { |u| removal.call(u) }
       #end
     end
 
