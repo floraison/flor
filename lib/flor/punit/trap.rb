@@ -23,6 +23,18 @@
 #++
 
 
+# # trap
+#
+# ## range:/scope:
+# * subnid (default)
+# * execution/exe
+# * domain
+# * subdomain
+#
+# ## bind:
+# * parent (default)
+# * root
+#
 class Flor::Pro::Trap < Flor::Procedure
 
   name 'trap'
