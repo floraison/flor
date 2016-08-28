@@ -98,9 +98,10 @@ module Flor
 
       return false if in_trap_itself?(executor, message)
 
-      return false unless domain_match?(message)
       return false unless point_match?(message)
       return false unless tag_match?(message)
+
+      return false unless domain_match?(executor, message)
 
       return false unless heap_match?(executor, message)
       return false unless heat_match?(executor, message)
@@ -108,13 +109,29 @@ module Flor
       true
     end
 
-    def domain_match?(message)
+    def domain_match?(executor, message)
 
-      case trange
-        when 'subdomain' then true # already filtered at Storage#fetch_traps
-        when 'domain' then Flor.domain(message['exid']) == domain
-        else message['exid'] == exid # 'self'
-      end
+      return true \
+        if trange == 'subdomain'
+
+      return Flor.domain(message['exid']) == domain \
+        if trange == 'domain'
+
+      return false \
+        unless message['exid'] == exid
+
+      return true \
+        if trange == 'execution'
+
+      nid_match?(executor, message)
+    end
+
+    def nid_match?(executor, message)
+
+#puts ">" * 20
+#p message['nid']
+#puts "<" * 20
+      true
     end
 
     def in_trap_itself?(executor, message)
