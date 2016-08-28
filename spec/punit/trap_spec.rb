@@ -191,7 +191,7 @@ describe 'Flor punit' do
 
         flon = %{
           trap heap: 'sequence'
-            def msg; trace "$(msg.tree.0)-$(msg.nid)"
+            def msg; trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)"
           sequence
             noop _
         }
