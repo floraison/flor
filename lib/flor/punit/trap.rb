@@ -70,6 +70,7 @@ class Flor::Pro::Trap < Flor::Procedure
       end
 
     tra = {}
+    tra['bnid'] = parent || '0' # shouldn't it be [the real] root?
     tra['points'] = points
     tra['tags'] = tags
     tra['heaps'] = heaps

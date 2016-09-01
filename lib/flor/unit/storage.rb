@@ -264,15 +264,15 @@ module Flor
         lambda { |u| u.update(status: 'removed') } :
         lambda { |u| u.delete }
 
-      #@db.transaction do
+      @db.transaction do
 
         @db[:flon_timers]
           .where(exid: exid, nid: n['nid'])
           .tap { |u| removal.call(u) }
-        #@db[:flon_traps]
-        #  .where(exid: exid, nid: n['nid'])
-        #  .tap { |u| removal.call(u) }
-      #end
+        @db[:flon_traps]
+          .where(exid: exid, nid: n['nid'])
+          .tap { |u| removal.call(u) }
+      end
     end
 
     def put_trap(node, tra)
@@ -285,7 +285,8 @@ module Flor
         id = @db[:flon_traps].insert(
           domain: dom,
           exid: exid,
-          nid: node['nid'],
+          nid: tra['bnid'],
+          onid: node['nid'],
           trange: tra['range'],
           tpoints: tra['points'],
           ttags: tra['tags'],

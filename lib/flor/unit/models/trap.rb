@@ -96,6 +96,9 @@ module Flor
       #fail if status != 'active'
         # shouldn't happen
 
+      return false if message['point'] == 'trigger'
+        # FIXME that is a rough solution
+
       return false if in_trap_itself?(executor, message)
 
       return false unless point_match?(message)
@@ -140,7 +143,7 @@ module Flor
 
       loop do
         break unless i
-        return true if i == nid
+        return true if i == onid
         node = executor.execution['nodes'][i]
         i = (node || {})['parent']
       end
