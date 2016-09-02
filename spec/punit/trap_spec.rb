@@ -434,6 +434,11 @@ describe 'Flor punit' do
 
         sleep 0.100
 
+# FIXME
+#
+# fails because when the "left" message happens, the left node has already
+# been removed
+#
         expect(
           @unit.traces.collect(&:text)
         ).to eq(%w[
@@ -448,9 +453,7 @@ describe 'Flor punit' do
 
         flon = %{
           concurrence
-            sequence
-              trap tag: 'b'
-              trace "A>$(nid)"
+            trap tag: 'b'
             sequence
               sleep 0.8
               noop tag: 'b'
@@ -469,8 +472,7 @@ describe 'Flor punit' do
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
-          0:A>0_0_1_0_0
-          1:B>0_1_3_0_0
+          0:B>0_1_3_0_0
         }.collect(&:strip).join("\n"))
       end
     end
