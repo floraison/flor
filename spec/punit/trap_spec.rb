@@ -152,9 +152,8 @@ describe 'Flor punit' do
 
         flon = %{
           concurrence
-            sequence
-              trap tag: 'b', count: 2
-                def msg; trace "A>$(nid)"
+            trap tag: 'b', count: 2
+              def msg; trace "A>$(nid)"
             sequence
               sleep 0.8
               noop tag: 'b'
@@ -177,9 +176,9 @@ describe 'Flor punit' do
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
           0:B>0_1_2_0_0
-          1:A>0_0_0_2_1_0_0-1
+          1:A>0_0_2_1_0_0-1
           2:B>0_1_4_0_0
-          3:A>0_0_0_2_1_0_0-2
+          3:A>0_0_2_1_0_0-2
           4:B>0_1_6_0_0
         }.collect(&:strip).join("\n"))
       end
@@ -294,6 +293,7 @@ describe 'Flor punit' do
 
         sleep 0.350
 
+fail
         expect(
           @unit.traces
             .each_with_index
