@@ -75,9 +75,13 @@ module Flor
     oe = m['on_error'] ? " #{_rd}on_error" : ''
     a << oe
 
-    ti = m['trap_id'] || m['timer_id']
-    ti = ti ? " #{_dg}tid:#{ti}" : ''
-    a << ti
+    tmi = m['timer_id']
+    tmi = tmi ? " #{_dg}tmi:#{tmi}" : ''
+    a << tmi
+      #
+    tri = m['trap_id']
+    tri = tri ? " #{_dg}tri:#{tri}" : ''
+    a << tri
 
     cn = t ? " #{_dg}#{Flor.to_d(t[1], compact: true, inner: true)}" : ''
     cn = cn.length > 49 ? "#{cn[0, 49]}..." : cn
