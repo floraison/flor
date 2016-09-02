@@ -283,17 +283,16 @@ describe 'Flor punit' do
           concurrence
             sequence
               trap tag: 't0'; def msg; trace "in-$(msg.nid)"
-              noop tag: 't0'
+              stall tag: 't0'
             sequence
               sleep '1s' # give it time to process the trap
               noop tag: 't0'
-        }, wait: true)
+        }, wait: '0_1_1 receive')
 
-        expect(r['point']).to eq('terminated')
+        expect(r['point']).to eq('receive')
 
         sleep 0.350
 
-fail
         expect(
           @unit.traces
             .each_with_index

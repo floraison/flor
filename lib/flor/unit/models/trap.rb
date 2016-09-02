@@ -129,26 +129,33 @@ module Flor
       nid_match?(executor, message)
     end
 
-    def nid_match?(executor, message)
-
-#puts ">" * 20
-#p message['nid']
-#puts "<" * 20
-      true
-    end
-
-    def in_trap_itself?(executor, message)
+    def in_descendant?(executor, message, root_nid)
 
       i = message['nid']
 
       loop do
         break unless i
-        return true if i == onid
+        return true if i == root_nid
         node = executor.execution['nodes'][i]
         i = (node || {})['parent']
       end
 
       false
+    end
+
+    def nid_match?(executor, message)
+
+#puts ">" * 50
+#p [ nid, :msg, message['nid'], in_descendant?(executor, message, nid) ]
+#puts "<" * 50
+      return true if message['nid'].nil? && nid == '0'
+
+      in_descendant?(executor, message, nid)
+    end
+
+    def in_trap_itself?(executor, message)
+
+      in_descendant?(executor, message, onid)
     end
 
     def point_match?(message)
