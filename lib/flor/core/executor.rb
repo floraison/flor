@@ -40,7 +40,25 @@ module Flor
 
     def conf; @unit.conf; end
     def exid; @execution['exid']; end
-    def node(nid); @execution['nodes'][nid]; end
+
+    def node(msg_or_nid, node_instance=false)
+
+      return nil unless msg_or_nid
+
+      nid = msg_or_nid
+      msg = msg_or_nid
+      #
+      if nid.is_a?(String)
+        msg = nil
+      else
+        nid = msg['nid']
+      end
+
+      n = @execution['nodes'][nid]
+
+      return nil unless n
+      node_instance ? Flor::Node.new(self, n, msg) : n
+    end
 
     def counter(key)
 
@@ -351,11 +369,8 @@ module Flor
     def failed(message)
 
 #begin
-      node(message['nid'])['failure'] = message
-#rescue
-#  p message
-#  exit 0
-#end
+       node(message['nid'])['failure'] = message
+#rescue; p message; exit 0; end
 
       if nd = lookup_on_error_parent(message)
         return nd.to_procedure.trigger_on_error(message) # FIXME to_procedure...
