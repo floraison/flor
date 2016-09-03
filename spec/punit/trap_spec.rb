@@ -415,6 +415,16 @@ describe 'Flor punit' do
       end
     end
 
+    context 'consumed:' do
+
+      context 'false (default)' do
+        it 'traps before the message consumption'
+      end
+      context 'true' do
+        it 'traps after the message consumption'
+      end
+    end
+
     context 'multiple criteria' do
 
       it 'traps messages matching all the criteria' do

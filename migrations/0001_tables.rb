@@ -56,6 +56,7 @@ Sequel.migration do
       String :onid, null: false
       String :nid, null: false
       #
+      TrueClass :tconsumed, null: false, default: false
       String :trange, null: false
       String :tpoints, null: true
       String :ttags, null: true

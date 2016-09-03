@@ -92,12 +92,11 @@ module Flor
 
     def match?(executor, message)
 
-      #return false if status != 'active' # or...
-      #fail if status != 'active'
-        # shouldn't happen
+#      return false if message['point'] == 'trigger'
+#        # FIXME that is a rough solution
 
-      return false if message['point'] == 'trigger'
-        # FIXME that is a rough solution
+      return false if tconsumed && ! message['consumed']
+      return false if ! tconsumed && message['consumed']
 
       return false if in_trap_itself?(executor, message)
 

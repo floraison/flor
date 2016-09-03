@@ -315,10 +315,16 @@ module Flor
 
         @unit.notify(self, message) # pre
 
-        ms = self.send(message['point'].to_sym, message)
+#        ms = self.send(message['point'].to_sym, message)
+#        message['consumed'] = Flor.tstamp
+#
+#        ms += notify_traps(message)
+#
+        ms = []
+        ms += notify_traps(message) # before
+        ms += self.send(message['point'].to_sym, message)
         message['consumed'] = Flor.tstamp
-
-        ms += notify_traps(message)
+        ms += notify_traps(message) # after
 
         @unit.notify(self, message) # post
 
