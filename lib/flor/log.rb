@@ -273,7 +273,7 @@ module Flor
     t = t[0, 35] + '...' if t && t.length > 35
 
     h = {}
-    %w[ parent cnid noreply dbg ].each do |k|
+    %w[ parent cnid noreply dbg removed ].each do |k|
       h[k] = n[k] if n.has_key?(k)
     end
 
