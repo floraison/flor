@@ -189,6 +189,22 @@ class Flor::Node
     Flor::Procedure.new(@executor, @node, @message)
   end
 
+  def descendant_of?(nid)
+
+    i = self.nid
+
+    return false if i == nid
+
+    loop do
+      node = @executor.node(i)
+      break unless node
+      i = node['parent']
+      return true if i == nid
+    end
+
+    false
+  end
+
   protected
 
   def subtree(tree, pnid, nid)
