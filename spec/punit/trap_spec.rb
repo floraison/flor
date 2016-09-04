@@ -71,13 +71,12 @@ describe 'Flor punit' do
           .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
       ).to eq(%w{
         0:*
-        1:0<-0_0
-        2:0_1_0_0_0<-0_1_0_0_0_0
-        3:0_1_0_0<-0_1_0_0_0
-        4:0_1_0<-0_1_0_0
-        5:0_1<-0_1_0
-        6:0<-0_1
-        7:<-0
+        1:0_1_0_0_0<-0_1_0_0_0_0
+        2:0_1_0_0<-0_1_0_0_0
+        3:0_1_0<-0_1_0_0
+        4:0_1<-0_1_0
+        5:0<-0_1
+        6:<-0
       }.collect(&:strip).join("\n"))
     end
 
@@ -189,7 +188,7 @@ describe 'Flor punit' do
 
         flon = %{
           trap heap: 'sequence'
-            def msg; trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)"
+            def msg; trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
           sequence
             noop _
         }
@@ -205,8 +204,9 @@ describe 'Flor punit' do
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
-          0:execute-sequence-0_1
-          1:receive--0_1
+          0:execute-sequence-0_1<-0
+          1:receive--0_1<-0_1_0
+          2:receive--0<-0_1
         }.collect(&:strip).join("\n"))
       end
     end
@@ -330,7 +330,7 @@ describe 'Flor punit' do
         exid3 = r['exid']
         expect(r['point']).to eq('terminated')
 
-        sleep 0.5
+        sleep 0.350
 
         expect(
           (

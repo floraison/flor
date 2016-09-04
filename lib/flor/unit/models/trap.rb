@@ -92,6 +92,8 @@ module Flor
 
     def match?(executor, message)
 
+      return false if message['point'] == 'trigger' #&& message['trap_id']
+
       return false if tconsumed && ! message['consumed']
       return false if ! tconsumed && message['consumed']
 
@@ -129,15 +131,17 @@ module Flor
 
       n = executor.node(message['nid'], true)
 
-      return true if n == nil && nid == '0'
-      n.descendant_of?(nid)
+      return nid == '0' unless n
+      n.descendant_of?(nid, true)
     end
 
     def in_trap_itself?(executor, message)
 
-      n = executor.node(message['nid'], true)
+      return false if message['exid'] != exid
 
+      n = executor.node(message['from'] || message['nid'], true)
       return false if n == nil
+
       n.descendant_of?(onid)
     end
 
