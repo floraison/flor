@@ -193,7 +193,8 @@ class Flor::Node
 
     i = self.nid
 
-    return false if i == nid
+    #return false if i == nid
+    return true if i == nid
 
     loop do
       node = @executor.node(i)
@@ -204,6 +205,21 @@ class Flor::Node
 
     false
   end
+
+#  def ascendancy
+#
+#    a = []
+#    i = self.nid
+#
+#    loop do
+#      node = @executor.node(i)
+#      break unless node
+#      a << node['parent']
+#      i = a.last
+#    end
+#
+#    a
+#  end
 
   protected
 

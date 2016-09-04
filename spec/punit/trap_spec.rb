@@ -53,7 +53,7 @@ describe 'Flor punit' do
 
       flon = %{
         trap point: 'receive'
-          def msg; trace "($(nid))=$(msg.from)->$(msg.nid)"
+          def msg; trace "$(msg.nid)<-$(msg.from)"
         sequence
           sequence
             trace '*'
@@ -66,19 +66,18 @@ describe 'Flor punit' do
       sleep 0.350
 
       expect(
-        #@unit.traces.collect(&:text).join(' | ')
         @unit.traces
           .each_with_index
           .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
       ).to eq(%w{
         0:*
-        1:(0_0_1_1_0_0-1)=0_0->0
-        2:(0_0_1_1_0_0-2)=0_1_0_0_0_0->0_1_0_0_0
-        3:(0_0_1_1_0_0-3)=0_1_0_0_0->0_1_0_0
-        4:(0_0_1_1_0_0-4)=0_1_0_0->0_1_0
-        5:(0_0_1_1_0_0-5)=0_1_0->0_1
-        6:(0_0_1_1_0_0-6)=0_1->0
-        7:(0_0_1_1_0_0-7)=0->
+        1:0<-0_0
+        2:0_1_0_0_0<-0_1_0_0_0_0
+        3:0_1_0_0<-0_1_0_0_0
+        4:0_1_0<-0_1_0_0
+        5:0_1<-0_1_0
+        6:0<-0_1
+        7:<-0
       }.collect(&:strip).join("\n"))
     end
 
