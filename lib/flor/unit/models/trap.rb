@@ -92,9 +92,6 @@ module Flor
 
     def match?(executor, message)
 
-#      return false if message['point'] == 'trigger'
-#        # FIXME that is a rough solution
-
       return false if tconsumed && ! message['consumed']
       return false if ! tconsumed && message['consumed']
 

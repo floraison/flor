@@ -206,10 +206,8 @@ describe 'Flor punit' do
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
-          0:receive--0
-          1:execute-sequence-0_1
-          2:receive--0_1
-          3:receive--0
+          0:execute-sequence-0_1
+          1:receive--0_1
         }.collect(&:strip).join("\n"))
       end
     end
