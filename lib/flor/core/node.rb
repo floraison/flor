@@ -189,12 +189,11 @@ class Flor::Node
     Flor::Procedure.new(@executor, @node, @message)
   end
 
-  def descendant_of?(nid)
+  def descendant_of?(nid, on_self=true)
+
+    return on_self if self.nid == nid && on_self != nil
 
     i = self.nid
-
-    #return false if i == nid
-    return true if i == nid
 
     loop do
       node = @executor.node(i)
