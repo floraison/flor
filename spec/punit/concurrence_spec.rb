@@ -118,6 +118,8 @@ describe 'Flor punit' do
         expect(msg['point']).to eq('terminated')
         expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
 
+        sleep 0.350
+
         expect(
           @unit.journal
             .collect { |m| [ m['point'][0, 3], m['nid'] ].join(':') }
