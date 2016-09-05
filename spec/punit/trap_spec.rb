@@ -430,7 +430,7 @@ describe 'Flor punit' do
           sequence
             trace 'a'
             trap tag: 'x', point: 'left'
-              def msg; trace msg.point
+              def msg; trace "$(msg.point)-$(msg.nid)"
             sequence tag: 'x'
               trace 'c'
         }
@@ -441,15 +441,10 @@ describe 'Flor punit' do
 
         sleep 0.100
 
-# FIXME
-#
-# fails because when the "left" message happens, the left node has already
-# been removed
-#
         expect(
           @unit.traces.collect(&:text)
         ).to eq(%w[
-          a c left
+          a c left-0_2
         ])
       end
     end
