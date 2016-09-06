@@ -214,19 +214,14 @@ puts ('!' * 80) + ' .'
       @mutex.synchronize { @timers.push(timer).sort_by!(&:ntime) }
     end
 
+    def wake_executions(exids)
+
+      @mutex.synchronize { @exids.concat(exids).uniq! } if exids.any?
+    end
+
     def notify(executor, o)
 
-      case o
-        when Array # list of exids
-          @mutex.synchronize { @exids.concat(o).uniq! } if o.any?
-        #when Timer
-        #  @mutex.synchronize { @timers.push(o); @timers.sort_by!(&:ntime) }
-        when Hash
-          @hooker.notify(executor, o)
-        else
-          fail ArgumentError.new(
-            "don't know what to do with a #{o.class} instance")
-      end
+      @hooker.notify(executor, o)
 
     rescue => err
       puts 'n' * 80

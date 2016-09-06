@@ -201,7 +201,7 @@ module Flor
               'created', n, n ]
           })
 
-      @unit.notify(nil, ms.collect { |m| m['exid'] }.uniq)
+      @unit.wake_executions(ms.collect { |m| m['exid'] }.uniq)
     end
 
     def put_message(m)
