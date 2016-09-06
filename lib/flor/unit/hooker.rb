@@ -71,23 +71,42 @@ module Flor
 
     def notify(executor, message)
 
-      @hooks.each do |n, opts, hook, block|
+      @hooks.inject([]) do |a, (_, opts, hook, block)|
+        # name of hook is piped into "_" oblivion
 
-        next unless match?(executor, message, opts)
-
-        if hook
-          hook.notify(executor, message)
-        else # if block
-          if block.arity == 1
-            block.call(message)
-          elsif block.arity == 2
-            block.call(message, opts)
-          else
-            block.call(executor, message, opts)
-          end
-        end
+        a.concat(
+          if ! match?(executor, message, opts)
+            []
+          elsif hook
+            hook.notify(executor, message)
+          else # if block
+            r =
+              if block.arity == 1
+                block.call(message)
+              elsif block.arity == 2
+                block.call(message, opts)
+              else
+                block.call(executor, message, opts)
+              end
+            r.is_a?(Array) && r.all? { |e| e.is_a?(Hash) } ? r : []
+              # be lenient with block hooks, help them return an array
+          end)
       end
     end
+#        next unless match?(executor, message, opts)
+#        if hook
+#          hook.notify(executor, message)
+#        else # if block
+#          if block.arity == 1
+#            block.call(message)
+#          elsif block.arity == 2
+#            block.call(message, opts)
+#          else
+#            block.call(executor, message, opts)
+#          end
+#        end
+#      end
+#    end
 
     protected
 

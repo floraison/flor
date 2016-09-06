@@ -313,15 +313,15 @@ module Flor
 
         determine_heat(message)
 
-        @unit.notify(self, message) # pre
-
         ms = []
-        ms += notify_traps(message) # before
+        ms += @unit.notify(self, message) # pre
+ms += notify_traps(message) # before # FIXME
+
         ms += self.send(message['point'].to_sym, message)
         message['consumed'] = Flor.tstamp
-        ms += notify_traps(message) # after
 
-        @unit.notify(self, message) # post
+ms += notify_traps(message) # after # FIXME
+        ms += @unit.notify(self, message) # post
 
         ms.collect { |m| ash_all!(m) }
 

@@ -229,6 +229,7 @@ puts ('!' * 80) + ' .'
       p err
       puts err.backtrace
       puts ('n' * 80) + ' .'
+exit 1
     end
 
     def trap(node, tra)

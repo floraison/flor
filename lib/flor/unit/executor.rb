@@ -77,6 +77,9 @@ module Flor
         ms = process(m)
 
         @consumed << m
+          #
+        #@consumed << m unless ms.include?(m)
+          # TODO what if msg is held / pushed back?
 
         ims, oms = ms.partition { |m| m['exid'] == @exid }
           # qui est "in", qui est "out"?

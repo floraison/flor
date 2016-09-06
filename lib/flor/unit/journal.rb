@@ -41,9 +41,9 @@ module Flor
 
     def notify(executor, message)
 
-      return unless message['consumed']
+      @messages << Flor.dup(message) if message['consumed']
 
-      @messages << Flor.dup(message)
+      [] # no new messages
     end
   end
 end

@@ -45,8 +45,6 @@ module Flor
 
     def notify(executor, message)
 
-      return unless message['consumed']
-
       @mutex.synchronize do
 
         to_remove = []
@@ -57,7 +55,9 @@ module Flor
         end
 
         @waiters -= to_remove
-      end
+      end if message['consumed']
+
+      [] # no new messages
     end
 
     def wait(exid, opts)

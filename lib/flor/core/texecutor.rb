@@ -47,16 +47,17 @@ module Flor
 
       def notify(executor, o)
 
-        return unless o.is_a?(Hash)
-        return if o['consumed']
+        return [] if o['consumed']
 
-        if o['point'] == 'execute' && o['nid'] == '0'
-          Flor.print_tree(o['tree']) if conf['log_tree']
-        end
+        Flor.print_tree(o['tree']) \
+          if @conf['log_tree'] && o['point'] == 'execute' && o['nid'] == '0'
 
-        Flor.log_message(executor, o) if @conf['log_msg']
+        Flor.log_message(executor, o) \
+          if @conf['log_msg']
 
         @journal << o
+
+        []
       end
 
       def remove_node(exid, n)

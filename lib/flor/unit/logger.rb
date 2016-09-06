@@ -45,15 +45,17 @@ module Flor
     def info(*m); log(:info, *m); end
     def warn(*m); log(:warn, *m); end
 
-    def notify(executor, message)
+    def notify(executor, msg)
 
-      return if message['consumed']
+      return [] if msg['consumed']
 
-      if message['point'] == 'execute' && message['nid'] == '0'
-        Flor.print_tree(message['tree']) if @unit.conf['log_tree']
-      end
+      Flor.print_tree(msg['tree']) \
+        if @unit.conf['log_tree'] && msg['point'] == 'execute' && msg['nid'] == '0'
 
-      Flor.log_message(executor, message) if @unit.conf['log_msg']
+      Flor.log_message(executor, msg) \
+        if @unit.conf['log_msg']
+
+      []
     end
 
     DBCOLS = Flor::Colours.set(%w[ reset bg_light_gray ])
