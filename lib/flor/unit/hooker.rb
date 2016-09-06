@@ -93,20 +93,6 @@ module Flor
           end)
       end
     end
-#        next unless match?(executor, message, opts)
-#        if hook
-#          hook.notify(executor, message)
-#        else # if block
-#          if block.arity == 1
-#            block.call(message)
-#          elsif block.arity == 2
-#            block.call(message, opts)
-#          else
-#            block.call(executor, message, opts)
-#          end
-#        end
-#      end
-#    end
 
     protected
 
