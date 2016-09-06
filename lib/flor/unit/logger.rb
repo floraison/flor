@@ -37,6 +37,8 @@ module Flor
       end
     end
 
+    def opts; { consumed: true }; end
+
     def shutdown
     end
 
@@ -46,8 +48,6 @@ module Flor
     def warn(*m); log(:warn, *m); end
 
     def notify(executor, msg)
-
-      return [] if msg['consumed']
 
       Flor.print_tree(msg['tree']) \
         if @unit.conf['log_tree'] && msg['point'] == 'execute' && msg['nid'] == '0'

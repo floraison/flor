@@ -75,7 +75,7 @@ module Flor
         # name of hook is piped into "_" oblivion
 
         a.concat(
-          if ! match?(executor, message, opts)
+          if ! match?(executor, hook, opts, message)
             []
           elsif hook
             hook.notify(executor, message)
@@ -108,7 +108,9 @@ module Flor
       array ? Array(r) : r
     end
 
-    def match?(executor, message, opts)
+    def match?(executor, hook, opts, message)
+
+      opts = hook.opts if hook.respond_to?(:opts) && opts.empty?
 
       c = o(opts, :consumed, :c)
       return false if c == true && ! message['consumed']
