@@ -236,7 +236,7 @@ module Flor
         ctime: n,
         mtime: n)
 
-      @unit.notify(nil, @unit.timers[id])
+      @unit.timers[id]
     end
 
     def trigger_timer(timer)

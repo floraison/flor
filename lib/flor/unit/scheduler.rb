@@ -207,13 +207,20 @@ puts ('!' * 80) + ' .'
       queue(msg, h)
     end
 
+    def put_timer(message)
+
+      timer = @storage.put_timer(message)
+
+      @mutex.synchronize { @timers.push(timer).sort_by!(&:ntime) }
+    end
+
     def notify(executor, o)
 
       case o
         when Array # list of exids
           @mutex.synchronize { @exids.concat(o).uniq! } if o.any?
-        when Timer
-          @mutex.synchronize { @timers.push(o); @timers.sort_by!(&:ntime) }
+        #when Timer
+        #  @mutex.synchronize { @timers.push(o); @timers.sort_by!(&:ntime) }
         when Hash
           @hooker.notify(executor, o)
         else

@@ -126,7 +126,7 @@ puts ('!' * 80) + ' .'
 
     def schedule(message)
 
-      @unit.storage.put_timer(message)
+      @unit.put_timer(message)
 
       []
     end
