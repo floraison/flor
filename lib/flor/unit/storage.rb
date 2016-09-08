@@ -343,6 +343,7 @@ module Flor
     def self.to_blob(h)
 
       Sequel.blob(Zlib::Deflate.deflate(JSON.dump(h)))
+#rescue => e; pp h; raise e
     end
 
     def self.from_blob(content)
