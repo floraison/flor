@@ -115,15 +115,17 @@ module Flor
 
 # TODO FIXME
               rescue => re
-puts '=' * 80
+puts 'sch=' * 19
+puts "+ error in #{self.class}#start"
 p re
 puts re.backtrace
-puts ('=' * 80) + ' .'
+puts ('sch=' * 19) + ' .'
               rescue Exception => ex
-puts '!' * 80
+puts 'sch!' * 19
+puts "+ exception in #{self.class}#start"
 p ex
 puts ex.backtrace
-puts ('!' * 80) + ' .'
+puts ('sch!' * 19) + ' .'
               end
             end
           end
@@ -224,11 +226,11 @@ puts ('!' * 80) + ' .'
       @hooker.notify(executor, o)
 
     rescue => err
-      puts 'n' * 80
-      puts "error in #{self.class}#notify"
+      puts 'not-' * 19
+      puts "+ error in #{self.class}#notify"
       p err
       puts err.backtrace
-      puts ('n' * 80) + ' .'
+      puts ('not-' * 19) + ' .'
     end
 
     def trap(node, tra)

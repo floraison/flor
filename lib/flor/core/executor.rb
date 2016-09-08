@@ -28,14 +28,15 @@ module Flor
   class Executor
     include Flor::Ash
 
-    attr_reader :execution
     attr_reader :unit
+    attr_reader :execution
+    attr_reader :traps
 
     def initialize(unit, traps, execution)
 
       @unit = unit
-      @traps = traps
       @execution = execution
+      @traps = traps
     end
 
     def conf; @unit.conf; end
@@ -76,6 +77,19 @@ module Flor
     def counter_next(key)
 
       counter_add(key, 1)
+    end
+
+    def trigger_hook(hook, message)
+
+      hook.notify(self, message)
+    end
+
+    def trigger_trap(trap, message)
+
+      del, msgs = trap.trigger(self, message)
+      @traps.delete(trap) if del
+
+      msgs
     end
 
     protected
@@ -315,12 +329,12 @@ module Flor
 
         ms = []
         ms += @unit.notify(self, message) # pre
-ms += notify_traps(message) # before # FIXME
+#ms += notify_traps(message) # before # FIXME
 
         ms += self.send(message['point'].to_sym, message)
         message['consumed'] = Flor.tstamp
 
-ms += notify_traps(message) # after # FIXME
+#ms += notify_traps(message) # after # FIXME
         ms += @unit.notify(self, message) # post
 
         ms.collect { |m| ash_all!(m) }
@@ -332,20 +346,20 @@ ms += notify_traps(message) # after # FIXME
       end
     end
 
-    def notify_traps(message)
-
-      to_remove = []
-      messages = []
-
-      @traps.each do |t|
-        remove, messages = t.notify(self, message)
-        to_remove << t if remove
-      end
-
-      @traps -= to_remove
-
-      messages
-    end
+#    def notify_traps(message)
+#
+#      to_remove = []
+#      messages = []
+#
+#      @traps.each do |t|
+#        remove, messages = t.notify(self, message)
+#        to_remove << t if remove
+#      end
+#
+#      @traps -= to_remove
+#
+#      messages
+#    end
 
     def trap(message)
 

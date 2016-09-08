@@ -71,14 +71,18 @@ module Flor
 
     def notify(executor, message)
 
-      @hooks.inject([]) do |a, (_, opts, hook, block)|
+      hooks = @hooks + executor.traps.collect(&:to_hook)
+
+      hooks.inject([]) do |a, (_, opts, hook, block)|
         # name of hook is piped into "_" oblivion
 
         a.concat(
           if ! match?(executor, hook, opts, message)
             []
+          elsif hook.is_a?(Flor::Trap)
+            executor.trigger_trap(hook, message)
           elsif hook
-            hook.notify(executor, message)
+            executor.trigger_hook(hook, message)
           else # if block
             r =
               if block.arity == 1
@@ -110,6 +114,7 @@ module Flor
 
     def match?(executor, hook, opts, message)
 
+#p opts if hook.is_a?(Flor::Trap)
       opts = hook.opts if hook.respond_to?(:opts) && opts.empty?
 
       c = o(opts, :consumed, :c)
@@ -118,6 +123,7 @@ module Flor
 
       ps = o(opts, :point, :p, [])
       return false if ps && ! ps.include?(message['point'])
+#p :xxx if hook.is_a?(Flor::Trap)
 
       dm = Flor.domain(message['exid'])
 
@@ -139,10 +145,10 @@ module Flor
         return false unless node ||= executor.node(message['nid'])
         return false unless hps.include?(node['heap'])
       end
+#p :yyy if hook.is_a?(Flor::Trap)
 
       if hts = o(opts, :heat, :ht, [])
         return false unless node ||= executor.node(message['nid'])
-#p [ message['point'], message['nid'], hts, node['heat0'] ]
         return false unless hts.include?(node['heat0'])
       end
 

@@ -78,6 +78,8 @@ describe 'Flor unit' do
           noop _
       }, wait: true)
 
+      sleep 0.350
+
       expect([ ms.size, cms.size, ncms.size ]).to eq([ 14, 7, 7 ])
     end
 

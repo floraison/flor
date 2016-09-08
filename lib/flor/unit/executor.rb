@@ -115,16 +115,18 @@ module Flor
 
     rescue => er
 # TODO
-puts '=' * 80
+puts 'exe=' * 19
+puts "+ error in #{self.class}#do_run"
 p er
 puts e.backtrace
-puts ('=' * 80) + ' .'
+puts ('exe=' * 19) + ' .'
     rescue Exception => ex
 # TODO
-puts '!' * 80
+puts 'exe!' * 19
+puts "+ exception in #{self.class}#do_run"
 p ex
 puts e.backtrace
-puts ('!' * 80) + ' .'
+puts ('exe!' * 19) + ' .'
     end
 
     def schedule(message)

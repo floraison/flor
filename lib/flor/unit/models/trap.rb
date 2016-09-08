@@ -27,17 +27,25 @@ module Flor
 
   class Trap < FlorModel
 
-    # returns [ remove?, [ messages ] ]
-    #
-    def notify(executor, message)
+    def to_hook
 
-      if match?(executor, message)
-        [ decrement, [ to_trigger_message(executor, message) ] ]
-      else
-        [ false, [] ]
-      end
+      opts = {}
+      opts[:consumed] = tconsumed
+      opts[:point] = tpoints
+      opts[:heap] = theaps
+      opts[:heat] = theats
 
-      # false => remove? false
+      [
+        "trap#{id}",
+        opts,
+        self,
+        nil
+      ]
+    end
+
+    def trigger(executor, message)
+
+      [ decrement, [ to_trigger_message(executor, message) ] ]
     end
 
     protected
@@ -85,112 +93,113 @@ module Flor
       }#.tap { |m| p m }
     end
 
-    def to_hash
+#    def to_hash
+#
+#      values.inject({}) { |h, (k, v)| h[k.to_s ] = v if k != :content; h }
+#    end
 
-      values.inject({}) { |h, (k, v)| h[k.to_s ] = v if k != :content; h }
-    end
-
-    def match?(executor, message)
-
-      return false if message['point'] == 'trigger' #&& message['trap_id']
-
-      return false if tconsumed && ! message['consumed']
-      return false if ! tconsumed && message['consumed']
-
-      return false if in_trap_itself?(executor, message)
-
-      return false unless point_match?(message)
-      return false unless tag_match?(message)
-
-      return false unless domain_match?(executor, message)
-
-      return false unless heap_match?(executor, message)
-      return false unless heat_match?(executor, message)
-
-      true
-    end
-
-    def domain_match?(executor, message)
-
-      return true \
-        if trange == 'subdomain'
-
-      return Flor.domain(message['exid']) == domain \
-        if trange == 'domain'
-
-      return false \
-        unless message['exid'] == exid
-
-      return true \
-        if trange == 'execution'
-
-      nid_match?(executor, message)
-    end
-
-    def nid_match?(executor, message)
-
-      n = executor.node(message['nid'], true)
-
-      return nid == '0' unless n
-      n.descendant_of?(nid, true)
-    end
-
-    def in_trap_itself?(executor, message)
-
-      return false if message['exid'] != exid
-
-      n = executor.node(message['from'] || message['nid'], true)
-      return false if n == nil
-
-      n.descendant_of?(onid)
-    end
-
-    def point_match?(message)
-
-      tpoints.empty? ||
-      tpoints.include?(message['point'])
-    end
-
-    def tag_match?(message)
-
-      ttags.empty? ||
-      ttags.find { |t| (message['tags'] || []).find { |tag| tag.match(t) } }
-    end
-
-    def heap_match?(executor, message)
-
-      return true if theaps.empty?
-
-      node ||= executor.execution['nodes'][message['nid']]
-
-      return false unless node
-      return false if node['removed']
-
-      theaps.include?(node['heap'])
-    end
-
-    def heat_match?(executor, message)
-
-      return true if theats.empty?
-
-      node ||= executor.execution['nodes'][message['nid']]
-
-      return false unless node
-      return false if node['removed']
-
-      theats.include?(node['heat0'])
-    end
+#    def match?(executor, message)
+#
+#      return false if message['point'] == 'trigger' #&& message['trap_id']
+#
+#      return false if tconsumed && ! message['consumed']
+#      return false if ! tconsumed && message['consumed']
+#
+#      return false if in_trap_itself?(executor, message)
+#
+#      return false unless point_match?(message)
+#      return false unless tag_match?(message)
+#
+#      return false unless domain_match?(executor, message)
+#
+#      return false unless heap_match?(executor, message)
+#      return false unless heat_match?(executor, message)
+#
+#      true
+#    end
+#
+#    def domain_match?(executor, message)
+#
+#      return true \
+#        if trange == 'subdomain'
+#
+#      return Flor.domain(message['exid']) == domain \
+#        if trange == 'domain'
+#
+#      return false \
+#        unless message['exid'] == exid
+#
+#      return true \
+#        if trange == 'execution'
+#
+#      nid_match?(executor, message)
+#    end
+#
+#    def nid_match?(executor, message)
+#
+#      n = executor.node(message['nid'], true)
+#
+#      return nid == '0' unless n
+#      n.descendant_of?(nid, true)
+#    end
+#
+#    def in_trap_itself?(executor, message)
+#
+#      return false if message['exid'] != exid
+#
+#      n = executor.node(message['from'] || message['nid'], true)
+#      return false if n == nil
+#
+#      n.descendant_of?(onid)
+#    end
+#
+#    def point_match?(message)
+#
+#      tpoints.empty? ||
+#      tpoints.include?(message['point'])
+#    end
+#
+#    def tag_match?(message)
+#
+#      ttags.empty? ||
+#      ttags.find { |t| (message['tags'] || []).find { |tag| tag.match(t) } }
+#    end
+#
+#    def heap_match?(executor, message)
+#
+#      return true if theaps.empty?
+#
+#      node ||= executor.execution['nodes'][message['nid']]
+#
+#      return false unless node
+#      return false if node['removed']
+#
+#      theaps.include?(node['heap'])
+#    end
+#
+#    def heat_match?(executor, message)
+#
+#      return true if theats.empty?
+#
+#      node ||= executor.execution['nodes'][message['nid']]
+#
+#      return false unless node
+#      return false if node['removed']
+#
+#      theats.include?(node['heat0'])
+#    end
 
     def tpoints; @atpoints ||= split_aval(:tpoints); end
     def ttags; @attags ||= split_aval(:ttags); end
-    def theaps; @atheaps ||= split_aval(:theaps); end
-    def theats; @atheats ||= split_aval(:theats); end
+    def theaps; @atheaps ||= split_aval(:theaps, true); end
+    def theats; @atheats ||= split_aval(:theats, true); end
 
-    protected
+    def split_aval(key, return_nil_for_nil=false)
 
-    def split_aval(key)
+      v = @values[key]
+      v = '' if v == nil && return_nil_for_nil == false
 
-      (@values[key] || '').split(',').collect(&:strip)
+      v ? v.split(',').collect(&:strip) : nil
     end
   end
 end
