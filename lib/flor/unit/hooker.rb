@@ -121,6 +121,9 @@ module Flor
       return false if c == true && ! message['consumed']
       return false if c == false && message['consumed']
 
+      return false \
+        if hook.is_a?(Flor::Trap) && hook.within_itself?(executor, message)
+
       ps = o(opts, :point, :p, [])
       return false if ps && ! ps.include?(message['point'])
 #p :xxx if hook.is_a?(Flor::Trap)

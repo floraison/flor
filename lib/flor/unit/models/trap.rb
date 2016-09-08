@@ -48,6 +48,16 @@ module Flor
       [ decrement, [ to_trigger_message(executor, message) ] ]
     end
 
+    def within_itself?(executor, message)
+
+      return false if message['exid'] != exid
+
+      n = executor.node(message['from'] || message['nid'], true)
+      return false if n == nil
+
+      n.descendant_of?(onid)
+    end
+
     protected
 
     # returns true if the trap should be removed from the execution's list
@@ -93,10 +103,10 @@ module Flor
       }#.tap { |m| p m }
     end
 
-#    def to_hash
-#
-#      values.inject({}) { |h, (k, v)| h[k.to_s ] = v if k != :content; h }
-#    end
+    def to_hash
+
+      values.inject({}) { |h, (k, v)| h[k.to_s ] = v if k != :content; h }
+    end
 
 #    def match?(executor, message)
 #
@@ -141,16 +151,6 @@ module Flor
 #
 #      return nid == '0' unless n
 #      n.descendant_of?(nid, true)
-#    end
-#
-#    def in_trap_itself?(executor, message)
-#
-#      return false if message['exid'] != exid
-#
-#      n = executor.node(message['from'] || message['nid'], true)
-#      return false if n == nil
-#
-#      n.descendant_of?(onid)
 #    end
 #
 #    def point_match?(message)
