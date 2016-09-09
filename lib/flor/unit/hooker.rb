@@ -128,6 +128,11 @@ module Flor
       return false if ps && ! ps.include?(message['point'])
 #p :xxx if hook.is_a?(Flor::Trap)
 
+      if exi = o(opts, :exid)
+        return false \
+          unless message['exid'] == exi
+      end
+
       dm = Flor.domain(message['exid'])
 
       if dm && ds = o(opts, :domain, :d, [])

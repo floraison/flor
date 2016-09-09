@@ -35,6 +35,18 @@ module Flor
       opts[:heap] = theaps
       opts[:heat] = theats
 
+      case trange
+        when 'execution'
+          opts[:exid] = exid
+        when 'subdomain'
+          opts[:subdomain] = Flor.domain(exid)
+        when 'domain'
+          opts[:domain] = Flor.domain(exid)
+        else #'subnid' # default
+          opts[:exid] = exid
+          opts[:subnid] = true
+      end
+
       [
         "trap#{id}",
         opts,
@@ -151,42 +163,6 @@ module Flor
 #
 #      return nid == '0' unless n
 #      n.descendant_of?(nid, true)
-#    end
-#
-#    def point_match?(message)
-#
-#      tpoints.empty? ||
-#      tpoints.include?(message['point'])
-#    end
-#
-#    def tag_match?(message)
-#
-#      ttags.empty? ||
-#      ttags.find { |t| (message['tags'] || []).find { |tag| tag.match(t) } }
-#    end
-#
-#    def heap_match?(executor, message)
-#
-#      return true if theaps.empty?
-#
-#      node ||= executor.execution['nodes'][message['nid']]
-#
-#      return false unless node
-#      return false if node['removed']
-#
-#      theaps.include?(node['heap'])
-#    end
-#
-#    def heat_match?(executor, message)
-#
-#      return true if theats.empty?
-#
-#      node ||= executor.execution['nodes'][message['nid']]
-#
-#      return false unless node
-#      return false if node['removed']
-#
-#      theats.include?(node['heat0'])
 #    end
 
     def tpoints; @atpoints ||= split_aval(:tpoints); end
