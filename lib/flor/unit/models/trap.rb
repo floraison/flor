@@ -29,30 +29,31 @@ module Flor
 
     def to_hook
 
-      opts = {}
-      opts[:consumed] = tconsumed
-      opts[:point] = tpoints
-      opts[:heap] = theaps
-      opts[:heat] = theats
+      @hook ||=
+        begin
 
-      case trange
-        when 'execution'
-          opts[:exid] = exid
-        when 'subdomain'
-          opts[:subdomain] = Flor.domain(exid)
-        when 'domain'
-          opts[:domain] = Flor.domain(exid)
-        else #'subnid' # default
-          opts[:exid] = exid
-          opts[:subnid] = true
-      end
+          opts = {}
 
-      [
-        "trap#{id}",
-        opts,
-        self,
-        nil
-      ]
+          opts[:consumed] = tconsumed
+
+          opts[:point] = tpoints.split(',') if tpoints
+          opts[:heap] = theaps.split(',') if theaps
+          opts[:heat] = theats.split(',') if theats
+
+          case trange
+            when 'execution'
+              opts[:exid] = exid
+            when 'subdomain'
+              opts[:subdomain] = Flor.domain(exid)
+            when 'domain'
+              opts[:domain] = Flor.domain(exid)
+            else #'subnid' # default
+              opts[:exid] = exid
+              opts[:subnid] = true
+          end
+
+          [ "trap#{id}", opts, self, nil ]
+        end
     end
 
     def trigger(executor, message)
@@ -120,26 +121,6 @@ module Flor
       values.inject({}) { |h, (k, v)| h[k.to_s ] = v if k != :content; h }
     end
 
-#    def match?(executor, message)
-#
-#      return false if message['point'] == 'trigger' #&& message['trap_id']
-#
-#      return false if tconsumed && ! message['consumed']
-#      return false if ! tconsumed && message['consumed']
-#
-#      return false if in_trap_itself?(executor, message)
-#
-#      return false unless point_match?(message)
-#      return false unless tag_match?(message)
-#
-#      return false unless domain_match?(executor, message)
-#
-#      return false unless heap_match?(executor, message)
-#      return false unless heat_match?(executor, message)
-#
-#      true
-#    end
-#
 #    def domain_match?(executor, message)
 #
 #      return true \
@@ -164,19 +145,6 @@ module Flor
 #      return nid == '0' unless n
 #      n.descendant_of?(nid, true)
 #    end
-
-    def tpoints; @atpoints ||= split_aval(:tpoints); end
-    def ttags; @attags ||= split_aval(:ttags); end
-    def theaps; @atheaps ||= split_aval(:theaps, true); end
-    def theats; @atheats ||= split_aval(:theats, true); end
-
-    def split_aval(key, return_nil_for_nil=false)
-
-      v = @values[key]
-      v = '' if v == nil && return_nil_for_nil == false
-
-      v ? v.split(',').collect(&:strip) : nil
-    end
   end
 end
 
