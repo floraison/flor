@@ -76,7 +76,7 @@ module Flor
           Flor.const_set(
             "#{c}#{@db.hash.to_s.gsub('-', 'M')}",
             Class.new(Flor.const_get(c)) do
-              self.dataset = s.db["flon_#{k}".to_sym]
+              self.dataset = s.db["flor_#{k}".to_sym]
             end)
       end
     end

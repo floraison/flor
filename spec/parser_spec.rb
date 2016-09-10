@@ -12,6 +12,6 @@ require 'flor/parser'
 
 describe Flor::Lang do
 
-  compare_flon_to_ruby File.join(File.dirname(__FILE__), 'parser.md')
+  compare_flor_to_ruby File.join(File.dirname(__FILE__), 'parser.md')
 end
 

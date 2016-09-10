@@ -3,7 +3,7 @@ Sequel.migration do
 
   up do
 
-    create_table :flon_messages do
+    create_table :flor_messages do
 
       primary_key :id, type: Bignum
       String :domain, null: false
@@ -17,7 +17,7 @@ Sequel.migration do
       index :exid
     end
 
-    create_table :flon_executions do
+    create_table :flor_executions do
 
       primary_key :id, type: Bignum
       String :domain, null: false
@@ -30,7 +30,7 @@ Sequel.migration do
       index :exid
     end
 
-    create_table :flon_timers do
+    create_table :flor_timers do
 
       primary_key :id, type: Bignum
       String :domain, null: false
@@ -48,7 +48,7 @@ Sequel.migration do
       index [ :exid, :nid ]
     end
 
-    create_table :flon_traps do
+    create_table :flor_traps do
 
       primary_key :id, type: Bignum
       String :domain, null: false
@@ -73,7 +73,7 @@ Sequel.migration do
       index [ :exid, :nid ]
     end
 
-    create_table :flon_traces do
+    create_table :flor_traces do
 
       primary_key :id, type: Bignum
       String :domain, null: false
@@ -89,11 +89,11 @@ Sequel.migration do
 
   down do
 
-    drop_table :flon_messages
-    drop_table :flon_executions
-    drop_table :flon_timers
-    drop_table :flon_traps
-    drop_table :flon_traces
+    drop_table :flor_messages
+    drop_table :flor_executions
+    drop_table :flor_timers
+    drop_table :flor_traps
+    drop_table :flor_traces
   end
 end
 

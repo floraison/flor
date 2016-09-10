@@ -65,7 +65,7 @@ describe 'Flor unit' do
           /\Atest-u-#{Time.now.year}\d{4}\.\d{4}\.[a-z]+\z/
         )
 
-        ms = @unit.storage.db[:flon_messages].all
+        ms = @unit.storage.db[:flor_messages].all
         m = ms.first
 
         expect(ms.size).to eq(1)
@@ -73,7 +73,7 @@ describe 'Flor unit' do
         expect(m[:point]).to eq('execute')
         expect(Flor::Storage.from_blob(m[:content])['exid']).to eq(exid)
 
-        expect(@unit.storage.db[:flon_executions].count).to eq(0)
+        expect(@unit.storage.db[:flor_executions].count).to eq(0)
       end
 
       describe '(flow)' do
@@ -95,7 +95,7 @@ describe 'Flor unit' do
           expect(msg['point']).to eq('terminated')
           expect(msg['payload']['ret']).to eq(3)
 
-          es = @unit.storage.db[:flon_executions].all
+          es = @unit.storage.db[:flor_executions].all
           e = es.first
 
           expect(es.size).to eq(1)

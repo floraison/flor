@@ -56,8 +56,8 @@ module Flor
     def clear
 
       [
-        :flon_messages, :flon_executions, :flon_timers, :flon_traps,
-        :flon_traces
+        :flor_messages, :flor_executions, :flor_timers, :flor_traps,
+        :flor_traces
       ].each do |t|
         @db[t].delete
       end
@@ -65,7 +65,7 @@ module Flor
 
     def load_exids
 
-      @db[:flon_messages]
+      @db[:flor_messages]
         .select(:exid)
         .where(status: 'created')
         .order_by(:ctime)
@@ -76,7 +76,7 @@ module Flor
 
     def load_execution(exid)
 
-      e = @db[:flon_executions]
+      e = @db[:flor_executions]
         .select(:id, :content)
         .where(exid: exid) # status active or terminated doesn't matter
         .first
@@ -115,7 +115,7 @@ module Flor
         ex['duration'] = Flor.to_time(ex['end']) - Flor.to_time(ex['start']) \
           if ex['end']
 
-        @db[:flon_executions]
+        @db[:flor_executions]
           .where(id: i)
           .update(
             content: to_blob(ex),
@@ -124,7 +124,7 @@ module Flor
       else
 
         ex['id'] =
-          @db[:flon_executions]
+          @db[:flor_executions]
             .insert(
               domain: Flor.domain(ex['exid']),
               exid: ex['exid'],
@@ -141,13 +141,13 @@ module Flor
 
       @db.transaction do
 
-        ms = @db[:flon_messages]
+        ms = @db[:flor_messages]
           .select(:id, :content)
           .where(status: 'created', exid: exid)
           .order_by(:id)
           .map { |m| r = from_blob(m[:content]) || {}; r['mid'] = m[:id]; r }
 
-        @db[:flon_messages]
+        @db[:flor_messages]
           .where(id: ms.collect { |m| m['mid'] })
           .update(status: 'loaded')
              #
@@ -168,11 +168,11 @@ module Flor
     def consume(messages)
 
       if @archive
-        @db[:flon_messages]
+        @db[:flor_messages]
           .where(id: messages.collect { |m| m['mid'] }.compact)
           .update(status: 'consumed', mtime: Time.now)
       else
-        @db[:flon_messages]
+        @db[:flor_messages]
           .where(id: messages.collect { |m| m['mid'] }.compact)
           .delete
       end
@@ -192,7 +192,7 @@ module Flor
 
       n = Time.now
 
-      @db[:flon_messages]
+      @db[:flor_messages]
         .import(
           [ :domain, :exid, :point, :content,
             :status, :ctime, :mtime ],
@@ -224,7 +224,7 @@ module Flor
           [ 'every', n + 365 * 24 * 3600 ] # FIXME
         end
 
-      id = @db[:flon_timers].insert(
+      id = @db[:flor_timers].insert(
         domain: Flor.domain(message['exid']),
         exid: message['exid'],
         nid: message['nid'],
@@ -244,11 +244,11 @@ module Flor
       @db.transaction do
 
         if @archive
-          @db[:flon_timers]
+          @db[:flor_timers]
             .where(id: timer.id)
             .update(status: 'triggered')
         else
-          @db[:flon_timers]
+          @db[:flor_timers]
             .where(id: timer.id)
             .delete
         end
@@ -266,10 +266,10 @@ module Flor
 
       @db.transaction do
 
-        @db[:flon_timers]
+        @db[:flor_timers]
           .where(exid: exid, nid: n['nid'])
           .tap { |u| removal.call(u) }
-        @db[:flon_traps]
+        @db[:flor_traps]
           .where(exid: exid, nid: n['nid'])
           .tap { |u| removal.call(u) }
       end
@@ -282,7 +282,7 @@ module Flor
         exid = node['exid']
         dom = Flor.domain(exid)
 
-        id = @db[:flon_traps].insert(
+        id = @db[:flor_traps].insert(
           domain: dom,
           exid: exid,
           nid: tra['bnid'],
@@ -301,7 +301,7 @@ module Flor
 
     def trace(exid, nid, tracer, text)
 
-      @db[:flon_traces].insert(
+      @db[:flor_traces].insert(
         domain: Flor.domain(exid),
         exid: exid,
         nid: nid,

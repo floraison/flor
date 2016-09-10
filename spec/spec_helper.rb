@@ -93,7 +93,7 @@ class RSpec::Core::ExampleGroup
 
   class << self
 
-    def compare_flon_to_ruby(fpath)
+    def compare_flor_to_ruby(fpath)
 
       lines = File.readlines(fpath)
 
