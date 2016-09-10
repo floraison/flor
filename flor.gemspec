@@ -10,13 +10,13 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.authors = [ 'John Mettraux' ]
   s.email = [ 'jmettraux@gmail.com' ]
-  s.homepage = 'http://github.com/flon-io/flor'
+  s.homepage = 'http://github.com/floraison'
   #s.rubyforge_project = 'flor'
   s.license = 'MIT'
-  s.summary = 'flon, Ruby version'
+  s.summary = 'a workflow engine'
 
   s.description = %{
-A Ruby version of flon
+A Ruby workflow engine
   }.strip
 
   #s.files = `git ls-files`.split("\n")
