@@ -73,7 +73,7 @@ describe 'Flor unit' do
         expect(m[:point]).to eq('execute')
         expect(Flor::Storage.from_blob(m[:content])['exid']).to eq(exid)
 
-        expect(@unit.storage.db[:flor_executions].count).to eq(0)
+        expect(@unit.executions.count).to eq(0)
       end
 
       describe '(flow)' do
@@ -95,7 +95,7 @@ describe 'Flor unit' do
           expect(msg['point']).to eq('terminated')
           expect(msg['payload']['ret']).to eq(3)
 
-          es = @unit.storage.db[:flor_executions].all
+          es = @unit.executions.all
           e = es.first
 
           expect(es.size).to eq(1)

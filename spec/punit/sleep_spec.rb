@@ -101,7 +101,7 @@ describe 'Flor punit' do
       e = @unit.executions.terminated.first
       expect(e.data['duration']).to be < 0.350
 
-      expect(@unit.storage.db[:flor_timers].count).to eq(0)
+      expect(@unit.timers.count).to eq(0)
     end
 
     it 'makes an execution sleep for a while' do
@@ -114,7 +114,7 @@ describe 'Flor punit' do
 
       sleep 0.350
 
-      expect(@unit.storage.db[:flor_timers].count).to eq(1)
+      expect(@unit.timers.count).to eq(1)
 
       sleep 1.4
 
@@ -124,7 +124,7 @@ describe 'Flor punit' do
 
       expect(e.data['duration']).to be > 1.0
 
-      expect(@unit.storage.db[:flor_timers].count).to eq(0)
+      expect(@unit.timers.count).to eq(0)
     end
   end
 end
