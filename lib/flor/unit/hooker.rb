@@ -149,7 +149,21 @@ module Flor
           end
       end
 
+      if ts = o(opts, :tag, :t, [])
+        return false unless %w[ entered left ].include?(message['point'])
+        return false unless (message['tags'] & ts).any?
+      end
+
       node = nil
+
+      if hook.is_a?(Flor::Trap) && o(opts, :subnid)
+        if node = executor.node(message['nid'], true)
+          return false unless node.descendant_of?(hook.nid, true)
+          node = node.h
+        else
+          return false if hook.nid != '0'
+        end
+      end
 
       if hps = o(opts, :heap, :hp, [])
         return false unless node ||= executor.node(message['nid'])
@@ -160,11 +174,6 @@ module Flor
       if hts = o(opts, :heat, :ht, [])
         return false unless node ||= executor.node(message['nid'])
         return false unless hts.include?(node['heat0'])
-      end
-
-      if ts = o(opts, :tag, :t, [])
-        return false unless %w[ entered left ].include?(message['point'])
-        return false unless (message['tags'] & ts).any?
       end
 
       true

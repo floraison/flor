@@ -47,6 +47,8 @@ class Flor::Node
     @message = message
   end
 
+  def h; @node; end
+
   def exid; @execution['exid']; end
   def nid; @node['nid']; end
   def parent; @node['parent']; end

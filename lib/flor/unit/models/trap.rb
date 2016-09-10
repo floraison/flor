@@ -120,31 +120,6 @@ module Flor
 
       values.inject({}) { |h, (k, v)| h[k.to_s ] = v if k != :content; h }
     end
-
-#    def domain_match?(executor, message)
-#
-#      return true \
-#        if trange == 'subdomain'
-#
-#      return Flor.domain(message['exid']) == domain \
-#        if trange == 'domain'
-#
-#      return false \
-#        unless message['exid'] == exid
-#
-#      return true \
-#        if trange == 'execution'
-#
-#      nid_match?(executor, message)
-#    end
-#
-#    def nid_match?(executor, message)
-#
-#      n = executor.node(message['nid'], true)
-#
-#      return nid == '0' unless n
-#      n.descendant_of?(nid, true)
-#    end
   end
 end
 
