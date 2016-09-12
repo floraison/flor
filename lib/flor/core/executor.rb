@@ -107,16 +107,20 @@ module Flor
         'ctime' => now,
         'mtime' => now }
 
-      %w[ vars dvars cnid noreply dbg on_error ].each do |k|
+      %w[ vars dvars cnid noreply dbg ].each do |k|
         v = message[k]
-        k = 'on_error_branch' if k == 'on_error'
         node[k] = v if v != nil
       end
         #
         # vars: variables
+        # dvars: domain variables
         # cnid: closure nid
         # noreply: this new node has a parent but shouldn't reply to it
         # dbg: used to debug messages (useful @node['dbg'] when 'receive')
+
+      if (v = message['on_error']) != nil
+        node['on_error_branch'] = v
+      end
 
       @execution['nodes'][nid] = node
     end
