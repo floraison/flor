@@ -51,3 +51,8 @@ ba: backup_notes_and_todos
 t:
 	tree spec/unit/loader
 
+
+mk:
+	# testing lib/flor/tools/env.rb
+	$(RUBY) -Ilib -e "require 'flor/tools/env'; Flor::Tools::Env.make('tmp', '$(FLOR_ENV)', gitkeep: true)"
+
