@@ -32,7 +32,7 @@ A Ruby workflow engine
   s.add_runtime_dependency 'rufus-scheduler', '~> 3'
 
   s.add_development_dependency 'rspec', '3.4.0'
-  s.add_development_dependency 'sequel', '4.34.0'
+  s.add_development_dependency 'sequel', '~> 4'
 
   s.require_path = 'lib'
 end

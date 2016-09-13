@@ -27,7 +27,7 @@ GEM
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
     rufus-scheduler (3.2.1)
-    sequel (4.34.0)
+    sequel (4.38.0)
     sqlite3 (1.3.11)
 
 PLATFORMS
@@ -38,7 +38,7 @@ DEPENDENCIES
   flor!
   jdbc-sqlite3 (= 3.8.11.2)
   rspec (= 3.4.0)
-  sequel (= 4.34.0)
+  sequel (~> 4)
   sqlite3 (= 1.3.11)
 
 BUNDLED WITH
