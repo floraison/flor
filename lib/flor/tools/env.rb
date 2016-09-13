@@ -88,7 +88,8 @@ module Flor::Tools::Env
   def self.mk_var(*ps, opts)
 
     mkdir(*ps, 'var')
-    touch(*ps, 'var', '.gitkeep') if opts[:gitkeep]
+    mkdir(*ps, 'var', 'log')
+    touch(*ps, 'var', 'log', '.gitkeep') if opts[:gitkeep]
   end
 
   def self.mkdir(*ps); FileUtils.mkdir(File.join(*ps.compact)); end
