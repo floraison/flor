@@ -40,7 +40,7 @@ module Flor
 
       fail ArgumentError.new(
         "invalid domain name #{@conf['domain']}"
-      ) unless Flor.potential_domain_name?(@conf['domain'])
+      ) if @conf['domain'] && ! Flor.potential_domain_name?(@conf['domain'])
 
       @env = @conf['env'] ||= 'dev'
 
