@@ -46,6 +46,7 @@ module Flor::Tools::Env
     mk_etc(path, envname, opts)
     mk_lib(path, envname, opts)
     mk_usr(path, envname, opts)
+    mk_var(path, envname, opts)
   end
 
   # protected, somehow
@@ -82,6 +83,12 @@ module Flor::Tools::Env
       mk_etc(*ps, 'usr', 'com.acme', opts)
       mk_lib(*ps, 'usr', 'com.acme', opts)
     end
+  end
+
+  def self.mk_var(*ps, opts)
+
+    mkdir(*ps, 'var')
+    touch(*ps, 'var', '.gitkeep') if opts[:gitkeep]
   end
 
   def self.mkdir(*ps); FileUtils.mkdir(File.join(*ps.compact)); end
