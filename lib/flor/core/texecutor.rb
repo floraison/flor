@@ -134,6 +134,8 @@ module Flor
         def has_key?(k); ! Flor::Procedure[k]; end
       end
 
+      vs['root'] = determine_root(path)
+
       vs['ruby_version'] = RUBY_VERSION
       vs['ruby_platform'] = RUBY_PLATFORM
 
@@ -149,6 +151,14 @@ module Flor
       h.merge!('_path' => path) unless path.match(/[\r\n]/)
 
       h
+    end
+
+    def self.determine_root(path)
+
+      dir = File.absolute_path(File.dirname(path))
+      ps = dir.split(File::SEPARATOR)
+
+      ps.last == 'etc' ? File.absolute_path(File.join(dir, '..')) : dir
     end
   end
 end
