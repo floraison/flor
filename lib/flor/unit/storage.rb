@@ -48,7 +48,11 @@ module Flor
 
     def migrate(to=nil, from=nil)
 
-      dir = @unit.conf['db_migrations'] || 'migrations'
+      dir =
+        @unit.conf['db_migrations'] ||
+        File.absolute_path(
+          File.join(
+            File.dirname(__FILE__), '..', 'migrations'))
 
       Sequel::Migrator.apply(@db, dir, to, from)
     end
