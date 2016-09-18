@@ -81,6 +81,7 @@ Sequel.migration do
       String :nid, null: true
       String :tracer, null: false # 'executor', 'trace'
       String :text, null: false # 'blah blah blah'
+      File :content # JSON (msg if necessary)
       Time :tstamp
 
       index :exid
