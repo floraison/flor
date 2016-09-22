@@ -67,11 +67,44 @@ module Flor
 
       _rs, _co = $stdout.tty? ? DBCOLS : NO_DBCOLS
 
-      m = msg.match(/ (INSERT|UPDATE) .+ (0?[xX]'?[a-fA-F0-9]+'?)/)
-      msg = msg.sub(m[2], "#{m[2][0, 14]}(...len#{m[2].length})") if m
-        # reminder: substitutes only one blob
+      #m = msg.match(/ (INSERT|UPDATE) .+ (0?[xX]'?[a-fA-F0-9]+'?)/)
+      #msg = msg.sub(m[2], "#{m[2][0, 14]}(...len#{m[2].length})") if m
+        #
+        # with a fat blob, may lead to memory problems very quickly, hence:
+        #
+      msg = summarize_blob(msg)
 
       puts "#{_co}sto#{_rs} t#{Thread.current.hash} #{level.upcase} #{msg}"
+    end
+
+    protected
+
+    BLOB_CHARS = (('a'..'f').to_a + ('A'..'F').to_a + ('0'..'9').to_a).freeze
+
+    def summarize_blob(message)
+
+      #
+      # /!\ reminder: substitutes only one blob
+      #
+
+      i = message.index(' INSERT ') || message.index(' UPDATE ')
+      return message unless i
+
+      j = message.index(" x'") || message.index(" X'")
+      k = j || message.index(" 0x") || message.index(" 0X")
+      return message unless k
+
+      over = j ? [ "'" ] : [ ' ', nil ]
+
+      i = k + 3
+      loop do
+        c = message[i, 1]
+        break if over.include?(c)
+        return message unless BLOB_CHARS.index(c)
+        i = i + 1
+      end
+
+      message[0..k + 2 + 4] + "(...len#{i - (k + 2 + 1)})" + message[i..-1]
     end
   end
 end
