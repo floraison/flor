@@ -59,12 +59,7 @@ module Flor
 
     def clear
 
-      [
-        :flor_messages, :flor_executions, :flor_timers, :flor_traps,
-        :flor_traces
-      ].each do |t|
-        @db[t].delete
-      end
+      @db.tables.each { |t| @db[t].delete if t.to_s.match(/^flor_/) }
     end
 
     def load_exids
