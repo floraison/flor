@@ -56,6 +56,18 @@ module Flor
 
       cache ? (@data = _data) : _data
     end
+
+    def to_h
+
+      values.inject({}) do |h, (k, v)|
+        if k == :content
+          h[:data] = data
+        else
+          h[k] = v
+        end
+        h
+      end
+    end
   end
 
   MODELS = [ :executions, :timers, :traces, :traps ]
