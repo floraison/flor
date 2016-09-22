@@ -191,14 +191,17 @@ module Flor
 
       n = Time.now
 
-      @db[:flor_messages]
-        .import(
-          [ :domain, :exid, :point, :content,
-            :status, :ctime, :mtime ],
-          ms.map { |m|
-            [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
-              'created', n, n ]
-          })
+      @db.transaction do
+
+        @db[:flor_messages]
+          .import(
+            [ :domain, :exid, :point, :content,
+              :status, :ctime, :mtime ],
+            ms.map { |m|
+              [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
+                'created', n, n ]
+            })
+      end
 
       @unit.wake_executions(ms.collect { |m| m['exid'] }.uniq)
     end
