@@ -115,18 +115,24 @@ module Flor
 
     rescue => er
 # TODO
-puts '=exe' * 19
-puts "+ error in #{self.class}#do_run"
-p er
-puts er.backtrace
-puts ('=exe' * 19) + ' .'
+t = '=e' + Time.now.to_f.to_s.split('.').last
+puts '/' + t + ' ' + '=exe' * 17
+puts "|#{t} + error in #{self.class}#do_run"
+puts "|#{t} #{er.inspect}"
+puts "|#{t} db: #{@unit.storage.db.class} #{@unit.storage.db.hash}"
+puts "|#{t} thread: #{Thread.current.inspect}"
+er.backtrace.each { |l| puts "|#{t} #{l}" }
+puts '\\' + t + ' ' + ('=exe' * 17) + ' .'
     rescue Exception => ex
 # TODO
-puts '!exe' * 19
-puts "+ exception in #{self.class}#do_run"
-p ex
-puts ex.backtrace
-puts ('!exe' * 19) + ' .'
+t = '!e' + Time.now.to_f.to_s.split('.').last
+puts '/' + t + ' ' + '!exe' * 17
+puts "|#{t} + exception in #{self.class}#do_run"
+puts "|#{t} #{ex.inspect}"
+puts "|#{t} db: #{@unit.storage.db.class} #{@unit.storage.db.hash}"
+puts "|#{t} thread: #{Thread.current.inspect}"
+ex.backtrace.each { |l| puts "|#{t} #{l}" }
+puts '\\' + t + ' ' + ('!exe' * 17) + ' .'
     end
 
     def schedule(message)

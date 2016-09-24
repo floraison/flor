@@ -44,6 +44,7 @@ module Flor
     def shutdown
 
       @db.disconnect
+#p [ :disconnected, @db.hash ]
     end
 
     def migrate(to=nil, from=nil)
@@ -334,6 +335,14 @@ module Flor
       #  if RUBY_PLATFORM.match(/java/) && uri.match(/\Asqlite:/)
 
       @db = Sequel.connect(uri)
+#p [ :connected, @db.hash ]
+#class << @db
+#  alias_method :_square, :[]
+#  def [](k)
+#    p [ self.hash, k, :t, Thread.current ]
+#    _square(k)
+#  end
+#end
 
       @db_logger = DbLogger.new(@unit)
       @db.loggers << @db_logger
