@@ -47,6 +47,23 @@ module Flor
 #p [ :disconnected, @db.hash ]
     end
 
+    def ready?
+
+      si = (@db[:schema_info].first rescue nil)
+      return false unless si
+
+      version =
+        Dir[File.join(File.dirname(__FILE__), '../migrations/*.rb')]
+          .inject([]) { |a, fn|
+            m = File.basename(fn).match(/^(\d{4})_/)
+            a << m[1].to_i if m
+            a
+          }
+          .max
+
+      si[:version] == version
+    end
+
     def migrate(to=nil, from=nil)
 
       dir =

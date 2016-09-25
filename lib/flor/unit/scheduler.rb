@@ -86,9 +86,9 @@ module Flor
 
     def start
 
-#caller.each { |c| puts ":start - #{c}" }
-
       # TODO heartbeat, every x minutes, when idle, log something
+
+      fail "database not ready" unless @storage.ready?
 
       @thread_status = :running
 
