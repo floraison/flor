@@ -123,6 +123,7 @@ puts "|#{t} db: #{@unit.storage.db.class} #{@unit.storage.db.hash}"
 puts "|#{t} thread: #{Thread.current.inspect}"
 er.backtrace.each { |l| puts "|#{t} #{l}" }
 puts '\\' + t + ' ' + ('=exe' * 17) + ' .'
+
     rescue Exception => ex
 # TODO
 t = '!e' + Time.now.to_f.to_s.split('.').last

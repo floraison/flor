@@ -86,6 +86,8 @@ module Flor
 
     def start
 
+#caller.each { |c| puts ":start - #{c}" }
+
       # TODO heartbeat, every x minutes, when idle, log something
 
       @thread_status = :running
@@ -113,19 +115,27 @@ module Flor
 
                 sleep [ @heart_rate - (Time.now - t0), 0 ].max
 
-# TODO FIXME
-              rescue => re
-puts '=sch' * 19
-puts "+ error in #{self.class}#start"
-p re
-puts re.backtrace
-puts ('=sch' * 19) + ' .'
+              rescue => er
+# TODO
+t = '=s' + Time.now.to_f.to_s.split('.').last
+puts '/' + t + ' ' + '=sch' * 17
+puts "|#{t} + error in #{self.class}#start"
+puts "|#{t} #{er.inspect}"
+puts "|#{t} db: #{@storage.db.class} #{@storage.db.hash}"
+puts "|#{t} thread: #{Thread.current.inspect}"
+er.backtrace.each { |l| puts "|#{t} #{l}" }
+puts '\\' + t + ' ' + ('=sch' * 17) + ' .'
+
               rescue Exception => ex
-puts '!sch' * 19
-puts "+ exception in #{self.class}#start"
-p ex
-puts ex.backtrace
-puts ('!sch' * 19) + ' .'
+# TODO
+t = '!s' + Time.now.to_f.to_s.split('.').last
+puts '/' + t + ' ' + '!sch' * 17
+puts "|#{t} + exception in #{self.class}#start"
+puts "|#{t} #{ex.inspect}"
+puts "|#{t} db: #{@storage.db.class} #{@storage.db.hash}"
+puts "|#{t} thread: #{Thread.current.inspect}"
+ex.backtrace.each { |l| puts "|#{t} #{l}" }
+puts '\\' + t + ' ' + ('!sch' * 17) + ' .'
               end
             end
           end
