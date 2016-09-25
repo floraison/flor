@@ -47,21 +47,25 @@ module Flor
 #p [ :disconnected, @db.hash ]
     end
 
+    def db_version
+
+      (@db[:schema_info].first rescue {})[:version]
+    end
+
+    def migration_version
+
+      Dir[File.join(File.dirname(__FILE__), '../migrations/*.rb')]
+        .inject([]) { |a, fn|
+          m = File.basename(fn).match(/^(\d{4})_/)
+          a << m[1].to_i if m
+          a
+        }
+        .max
+    end
+
     def ready?
 
-      si = (@db[:schema_info].first rescue nil)
-      return false unless si
-
-      version =
-        Dir[File.join(File.dirname(__FILE__), '../migrations/*.rb')]
-          .inject([]) { |a, fn|
-            m = File.basename(fn).match(/^(\d{4})_/)
-            a << m[1].to_i if m
-            a
-          }
-          .max
-
-      si[:version] == version
+      db_version == migration_version
     end
 
     def migrate(to=nil, from=nil)
