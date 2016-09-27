@@ -37,6 +37,7 @@ module Flor
 
       @models = {}
       @archive = @unit.conf['sto_archive']
+      @mutex = @unit.conf['sto_sync'] ? Mutex.new : nil
 
       connect
     end
@@ -68,6 +69,15 @@ module Flor
       db_version == migration_version
     end
 
+    def synchronize(sync=true, &block)
+
+      if @mutex && sync
+        @mutex.synchronize(&block)
+      else
+        block.call
+      end
+    end
+
     def migrate(to=nil, from=nil)
 
       dir =
@@ -76,7 +86,9 @@ module Flor
           File.join(
             File.dirname(__FILE__), '..', 'migrations'))
 
-      Sequel::Migrator.apply(@db, dir, to, from)
+      synchronize do
+        Sequel::Migrator.apply(@db, dir, to, from)
+      end
     end
 
     def clear
@@ -136,23 +148,27 @@ module Flor
         ex['duration'] = Flor.to_time(ex['end']) - Flor.to_time(ex['start']) \
           if ex['end']
 
-        @db[:flor_executions]
-          .where(id: i)
-          .update(
-            content: to_blob(ex),
-            status: status,
-            mtime: Time.now)
+        synchronize do
+          @db[:flor_executions]
+            .where(id: i)
+            .update(
+              content: to_blob(ex),
+              status: status,
+              mtime: Time.now)
+        end
       else
 
-        ex['id'] =
-          @db[:flor_executions]
-            .insert(
-              domain: Flor.domain(ex['exid']),
-              exid: ex['exid'],
-              content: to_blob(ex),
-              status: 'active',
-              ctime: Time.now,
-              mtime: Time.now)
+        synchronize do
+          ex['id'] =
+            @db[:flor_executions]
+              .insert(
+                domain: Flor.domain(ex['exid']),
+                exid: ex['exid'],
+                content: to_blob(ex),
+                status: 'active',
+                ctime: Time.now,
+                mtime: Time.now)
+        end
       end
 
       ex
@@ -160,21 +176,23 @@ module Flor
 
     def fetch_messages(exid)
 
-      @db.transaction do
+      synchronize do
+        @db.transaction do
 
-        ms = @db[:flor_messages]
-          .select(:id, :content)
-          .where(status: 'created', exid: exid)
-          .order_by(:id)
-          .map { |m| r = from_blob(m[:content]) || {}; r['mid'] = m[:id]; r }
+          ms = @db[:flor_messages]
+            .select(:id, :content)
+            .where(status: 'created', exid: exid)
+            .order_by(:id)
+            .map { |m| r = from_blob(m[:content]) || {}; r['mid'] = m[:id]; r }
 
-        @db[:flor_messages]
-          .where(id: ms.collect { |m| m['mid'] })
-          .update(status: 'loaded')
-             #
-             # flag them as "loaded" so that other scheduler don't pick them
+          @db[:flor_messages]
+            .where(id: ms.collect { |m| m['mid'] })
+            .update(status: 'loaded')
+               #
+               # flag them as "loaded" so that other scheduler don't pick them
 
-        ms
+          ms
+        end
       end
     end
 
@@ -188,14 +206,16 @@ module Flor
 
     def consume(messages)
 
-      if @archive
-        @db[:flor_messages]
-          .where(id: messages.collect { |m| m['mid'] }.compact)
-          .update(status: 'consumed', mtime: Time.now)
-      else
-        @db[:flor_messages]
-          .where(id: messages.collect { |m| m['mid'] }.compact)
-          .delete
+      synchronize do
+        if @archive
+          @db[:flor_messages]
+            .where(id: messages.collect { |m| m['mid'] }.compact)
+            .update(status: 'consumed', mtime: Time.now)
+        else
+          @db[:flor_messages]
+            .where(id: messages.collect { |m| m['mid'] }.compact)
+            .delete
+        end
       end
     end
 
@@ -207,20 +227,22 @@ module Flor
         .order_by(:id)
     end
 
-    def put_messages(ms)
+    def put_messages(ms, syn=true)
 
       return if ms.empty?
 
       n = Time.now
 
-      @db[:flor_messages]
-        .import(
-          [ :domain, :exid, :point, :content,
-            :status, :ctime, :mtime ],
-          ms.map { |m|
-            [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
-              'created', n, n ]
-          })
+      synchronize(syn) do
+        @db[:flor_messages]
+          .import(
+            [ :domain, :exid, :point, :content,
+              :status, :ctime, :mtime ],
+            ms.map { |m|
+              [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
+                'created', n, n ]
+            })
+      end
 
       @unit.wake_executions(ms.collect { |m| m['exid'] }.uniq)
     end
@@ -245,36 +267,41 @@ module Flor
           [ 'every', n + 365 * 24 * 3600 ] # FIXME
         end
 
-      id = @db[:flor_timers].insert(
-        domain: Flor.domain(message['exid']),
-        exid: message['exid'],
-        nid: message['nid'],
-        type: t,
-        schedule: message[t],
-        ntime: nt,
-        content: to_blob(message),
-        status: 'active',
-        ctime: n,
-        mtime: n)
+      id =
+        synchronize do
+          @db[:flor_timers].insert(
+            domain: Flor.domain(message['exid']),
+            exid: message['exid'],
+            nid: message['nid'],
+            type: t,
+            schedule: message[t],
+            ntime: nt,
+            content: to_blob(message),
+            status: 'active',
+            ctime: n,
+            mtime: n)
+        end
 
       @unit.timers[id]
     end
 
     def trigger_timer(timer)
 
-      @db.transaction do
+      synchronize do
+        @db.transaction do
 
-        if @archive
-          @db[:flor_timers]
-            .where(id: timer.id)
-            .update(status: 'triggered')
-        else
-          @db[:flor_timers]
-            .where(id: timer.id)
-            .delete
+          if @archive
+            @db[:flor_timers]
+              .where(id: timer.id)
+              .update(status: 'triggered')
+          else
+            @db[:flor_timers]
+              .where(id: timer.id)
+              .delete
+          end
+
+          put_messages([ timer.to_trigger_message ], false)
         end
-
-        put_message(timer.to_trigger_message)
       end
     end
 
@@ -285,50 +312,57 @@ module Flor
         lambda { |u| u.update(status: 'removed') } :
         lambda { |u| u.delete }
 
-      @db.transaction do
+      synchronize do
+        @db.transaction do
 
-        @db[:flor_timers]
-          .where(exid: exid, nid: n['nid'])
-          .tap { |u| removal.call(u) }
-        @db[:flor_traps]
-          .where(exid: exid, nid: n['nid'])
-          .tap { |u| removal.call(u) }
+          @db[:flor_timers]
+            .where(exid: exid, nid: n['nid'])
+            .tap { |u| removal.call(u) }
+          @db[:flor_traps]
+            .where(exid: exid, nid: n['nid'])
+            .tap { |u| removal.call(u) }
+        end
       end
     end
 
     def put_trap(node, tra)
 
-      @db.transaction do
+      exid = node['exid']
+      dom = Flor.domain(exid)
 
-        exid = node['exid']
-        dom = Flor.domain(exid)
+      id =
+        synchronize do
+          @db.transaction do
 
-        id = @db[:flor_traps].insert(
-          domain: dom,
-          exid: exid,
-          nid: tra['bnid'],
-          onid: node['nid'],
-          trange: tra['range'],
-          tpoints: tra['points'],
-          ttags: tra['tags'],
-          theats: tra['heats'],
-          theaps: tra['heaps'],
-          content: to_blob(tra),
-          status: 'active')
+            @db[:flor_traps].insert(
+              domain: dom,
+              exid: exid,
+              nid: tra['bnid'],
+              onid: node['nid'],
+              trange: tra['range'],
+              tpoints: tra['points'],
+              ttags: tra['tags'],
+              theats: tra['heats'],
+              theaps: tra['heaps'],
+              content: to_blob(tra),
+              status: 'active')
+          end
+        end
 
-        traps[id]
-      end
+      traps[id]
     end
 
     def trace(exid, nid, tracer, text)
 
-      @db[:flor_traces].insert(
-        domain: Flor.domain(exid),
-        exid: exid,
-        nid: nid,
-        tracer: tracer,
-        text: text,
-        tstamp: Time.now)
+      synchronize do
+        @db[:flor_traces].insert(
+          domain: Flor.domain(exid),
+          exid: exid,
+          nid: nid,
+          tracer: tracer,
+          text: text,
+          tstamp: Time.now)
+      end
     end
 
     protected
