@@ -76,6 +76,46 @@ describe 'Flor unit' do
         expect(@unit.executions.count).to eq(0)
       end
 
+      describe '(tree)' do
+
+        it 'launches' do
+
+          tree =
+            Flor::Lang.parse(
+              %{
+                sequence
+                  define sum a, b
+                    +
+                      a
+                      b
+                  sum 1 1
+              },
+              "#{__FILE__}:#{__LINE__}")
+
+          msg = @unit.launch(tree, wait: true)
+
+          expect(msg.class).to eq(Hash)
+          expect(msg['point']).to eq('terminated')
+          expect(msg['payload']['ret']).to eq(2)
+
+          es = @unit.executions.all
+          e = es.first
+
+          expect(es.size).to eq(1)
+          expect(e[:exid]).to eq(msg['exid'])
+
+          sleep 0.3
+
+          d = @unit.executions.first.data
+
+          expect(
+            d['counters']
+          ).to eq({
+            'funs' => 1, 'msgs' => 29, 'omsgs' => 0, 'subs' => 1, 'runs' => 1
+          })
+        end
+      end
+
       describe '(flow)' do
 
         it 'launches' do

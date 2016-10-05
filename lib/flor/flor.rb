@@ -419,7 +419,7 @@ module Flor
 
   def self.split_flow_name(s)
 
-    if m = s.match(FLOW_NAME_REX)
+    if s.is_a?(String) && m = s.match(FLOW_NAME_REX)
       [ m[1], m[2] ]
     else
       nil
