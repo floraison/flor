@@ -27,6 +27,8 @@ module Flor
 
   class Execution < FlorModel
 
+    def nodes; data['nodes']; end
+
     def self.terminated
 
       self.where(status: 'terminated')
