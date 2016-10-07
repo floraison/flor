@@ -239,7 +239,7 @@ describe 'Flor unit' do
 
       it 'rejects launch messages without domain'
 
-      it 'lets queue cancel messages' do
+      it 'queues cancel messages' do
 
         flon = %{
           sequence
