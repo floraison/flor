@@ -121,6 +121,15 @@ puts "|#{t} + error in #{self.class}#do_run"
 puts "|#{t} #{er.inspect}"
 puts "|#{t} db: #{@unit.storage.db.class} #{@unit.storage.db.hash}"
 puts "|#{t} thread: #{Thread.current.inspect}"
+if @execution
+  puts "|#{t} exe:"
+  puts "|#{t}   exid: #{@execution['exid'].inspect}"
+  puts "|#{t}   counters: #{@execution['counters'].inspect}"
+end
+if @messages
+  puts "|#{t} messages:"
+  puts "|#{t}   #{@messages.collect { |m| [ m['mid'], m['point'] ] }.inspect}"
+end
 er.backtrace.each { |l| puts "|#{t} #{l}" }
 puts '\\' + t + ' ' + ('=exe' * 17) + ' .'
 
@@ -132,6 +141,15 @@ puts "|#{t} + exception in #{self.class}#do_run"
 puts "|#{t} #{ex.inspect}"
 puts "|#{t} db: #{@unit.storage.db.class} #{@unit.storage.db.hash}"
 puts "|#{t} thread: #{Thread.current.inspect}"
+if @execution
+  puts "|#{t} exe:"
+  puts "|#{t}   exid: #{@execution['exid'].inspect}"
+  puts "|#{t}   counters: #{@execution['counters'].inspect}"
+end
+if @messages
+  puts "|#{t} messages:"
+  puts "|#{t}   #{@messages.collect { |m| [ m['mid'], m['point'] ] }.inspect}"
+end
 ex.backtrace.each { |l| puts "|#{t} #{l}" }
 puts '\\' + t + ' ' + ('!exe' * 17) + ' .'
     end

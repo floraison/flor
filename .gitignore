@@ -1,6 +1,8 @@
 
 .ruby-version
-.rspec
+#.rspec
+.rspec.out
+.errors
 
 *.swp
 
