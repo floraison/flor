@@ -56,7 +56,7 @@ module Flor
     def on_do_run_exc(e)
 
       io = StringIO.new
-      head = e.is_a?(Error) ? '=exe' : '!exe'
+      head = e.is_a?(StandardError) ? '=exe' : '!exe'
 
       t = head[0, 2] + Time.now.to_f.to_s.split('.').last
       io.puts '/' + t + ' ' + head * 17
@@ -142,7 +142,7 @@ module Flor
     #rescue => er
     rescue Exception => ex
 
-      on_do_run_exc(ex)
+      puts on_do_run_exc(ex)
     end
 
     def schedule(message)

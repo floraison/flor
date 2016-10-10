@@ -84,6 +84,23 @@ module Flor
       @hooker.add(*args, &block)
     end
 
+    def on_start_exc(e)
+
+      io = StringIO.new
+      head = e.is_a?(StandardError) ? '=sch' : '!sch'
+
+      t = head[0, 2] + Time.now.to_f.to_s.split('.').last
+      io.puts '/' + t + ' ' + head * 17
+      io.puts "|#{t} + exception in #{self.class}#start"
+      io.puts "|#{t} #{e.inspect}"
+      io.puts "|#{t} db: #{@storage.db.class} #{@storage.db.hash}"
+      io.puts "|#{t} thread: #{Thread.current.inspect}"
+      e.backtrace.each { |l| io.puts "|#{t} #{l}" }
+      io.puts '\\' + t + ' ' + (head * 17) + ' .'
+
+      io.string
+    end
+
     def start
 
       # TODO heartbeat, every x minutes, when idle, log something
@@ -119,27 +136,10 @@ module Flor
 
                 sleep [ @heart_rate - (Time.now - t0), 0 ].max
 
-              rescue => er
-# TODO
-t = '=s' + Time.now.to_f.to_s.split('.').last
-puts '/' + t + ' ' + '=sch' * 17
-puts "|#{t} + error in #{self.class}#start"
-puts "|#{t} #{er.inspect}"
-puts "|#{t} db: #{@storage.db.class} #{@storage.db.hash}"
-puts "|#{t} thread: #{Thread.current.inspect}"
-er.backtrace.each { |l| puts "|#{t} #{l}" }
-puts '\\' + t + ' ' + ('=sch' * 17) + ' .'
-
+              #rescue => er
               rescue Exception => ex
-# TODO
-t = '!s' + Time.now.to_f.to_s.split('.').last
-puts '/' + t + ' ' + '!sch' * 17
-puts "|#{t} + exception in #{self.class}#start"
-puts "|#{t} #{ex.inspect}"
-puts "|#{t} db: #{@storage.db.class} #{@storage.db.hash}"
-puts "|#{t} thread: #{Thread.current.inspect}"
-ex.backtrace.each { |l| puts "|#{t} #{l}" }
-puts '\\' + t + ' ' + ('!sch' * 17) + ' .'
+
+                puts on_start_exc(ex)
               end
             end
           end
