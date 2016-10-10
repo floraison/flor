@@ -53,6 +53,32 @@ module Flor
 
     protected
 
+    def on_do_run_exc(e)
+
+      io = StringIO.new
+      head = e.is_a?(Error) ? '=exe' : '!exe'
+
+      t = head[0, 2] + Time.now.to_f.to_s.split('.').last
+      io.puts '/' + t + ' ' + head * 17
+      io.puts "|#{t} + error in #{self.class}#do_run"
+      io.puts "|#{t} #{e.inspect}"
+      io.puts "|#{t} db: #{@unit.storage.db.class} #{@unit.storage.db.hash}"
+      io.puts "|#{t} thread: #{Thread.current.inspect}"
+      if @execution
+        io.puts "|#{t} exe:"
+        io.puts "|#{t}   exid: #{@execution['exid'].inspect}"
+        io.puts "|#{t}   counters: #{@execution['counters'].inspect}"
+      end
+      if @messages
+        io.puts "|#{t} messages:"
+        io.puts "|#{t}   #{@messages.collect { |m| [ m['mid'], m['point'] ] }.inspect}"
+      end
+      e.backtrace.each { |l| io.puts "|#{t} #{l}" }
+      io.puts '\\' + t + ' ' + (head * 17) + ' .'
+
+      io.string
+    end
+
     def do_run
 
       counter_next('runs')
@@ -113,45 +139,10 @@ module Flor
 
       @consumed.clear
 
-    rescue => er
-# TODO
-t = '=e' + Time.now.to_f.to_s.split('.').last
-puts '/' + t + ' ' + '=exe' * 17
-puts "|#{t} + error in #{self.class}#do_run"
-puts "|#{t} #{er.inspect}"
-puts "|#{t} db: #{@unit.storage.db.class} #{@unit.storage.db.hash}"
-puts "|#{t} thread: #{Thread.current.inspect}"
-if @execution
-  puts "|#{t} exe:"
-  puts "|#{t}   exid: #{@execution['exid'].inspect}"
-  puts "|#{t}   counters: #{@execution['counters'].inspect}"
-end
-if @messages
-  puts "|#{t} messages:"
-  puts "|#{t}   #{@messages.collect { |m| [ m['mid'], m['point'] ] }.inspect}"
-end
-er.backtrace.each { |l| puts "|#{t} #{l}" }
-puts '\\' + t + ' ' + ('=exe' * 17) + ' .'
-
+    #rescue => er
     rescue Exception => ex
-# TODO
-t = '!e' + Time.now.to_f.to_s.split('.').last
-puts '/' + t + ' ' + '!exe' * 17
-puts "|#{t} + exception in #{self.class}#do_run"
-puts "|#{t} #{ex.inspect}"
-puts "|#{t} db: #{@unit.storage.db.class} #{@unit.storage.db.hash}"
-puts "|#{t} thread: #{Thread.current.inspect}"
-if @execution
-  puts "|#{t} exe:"
-  puts "|#{t}   exid: #{@execution['exid'].inspect}"
-  puts "|#{t}   counters: #{@execution['counters'].inspect}"
-end
-if @messages
-  puts "|#{t} messages:"
-  puts "|#{t}   #{@messages.collect { |m| [ m['mid'], m['point'] ] }.inspect}"
-end
-ex.backtrace.each { |l| puts "|#{t} #{l}" }
-puts '\\' + t + ' ' + ('!exe' * 17) + ' .'
+
+      on_do_run_exc(ex)
     end
 
     def schedule(message)
