@@ -74,8 +74,6 @@ module Flor
       @thread_status = :shutdown
       @thread = nil
 
-      wait_for_executors
-
       @hooker.shutdown
       @storage.shutdown
       @tasker.shutdown
@@ -153,8 +151,6 @@ module Flor
     def stop
 
       @thread_status = :stop
-
-      wait_for_executors
     end
 
     def running?; @thread_status == :running; end
@@ -339,18 +335,6 @@ module Flor
         next if @executors.find { |e| e.exid == exid }
 
         @executors << UnitExecutor.new(self, exid).run
-      end
-    end
-
-    def wait_for_executors(timeout=3.0)
-
-      t = Time.now
-      loop do
-        p @exids
-        p @executors.size
-        break if @executors.empty?
-        break if Time.now - t > timeout
-        sleep 0.1
       end
     end
   end
