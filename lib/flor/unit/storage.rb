@@ -91,7 +91,7 @@ module Flor
       end
     end
 
-    def clear
+    def delete_tables
 
       @db.tables.each { |t| @db[t].delete if t.to_s.match(/^flor_/) }
     end
