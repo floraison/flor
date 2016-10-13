@@ -32,6 +32,11 @@ module Flor
 
       @unit = unit
 
+      @dir = @unit.conf['log_dir'] || 'tmp'
+      @dir = '.' unless @dir.is_a?(String) && File.exist?(@dir)
+      @fname = nil
+      @file = nil
+
       @unit.singleton_class.instance_eval do
         define_method(:logger) { @hooker['logger'] }
       end
@@ -46,6 +51,27 @@ module Flor
     def error(*m); log(:error, *m); end
     def info(*m); log(:info, *m); end
     def warn(*m); log(:warn, *m); end
+
+    def log(level, *elts)
+
+      return if [ nil, 'null', false ].include?(@dir)
+
+      n = Time.now.utc
+      ns = Flor.nstamp(n)
+
+      out =
+        if @dir == 'stdout'
+          $stdout
+        elsif @dir == 'stderr'
+          $stderr
+        else
+$stderr # FIXME
+        end
+
+      txt = elts.inspect[1..-2]
+
+      out.puts("#{ns} #{level.to_s.upcase} #{txt}")
+    end
 
     def notify(executor, msg)
 

@@ -105,6 +105,11 @@ module Flor
         .distinct
         .all
         .collect { |r| r[:exid] }
+
+    rescue => err
+
+@unit.logger.warn("#{self.class}#load_exids", err)
+      []
     end
 
     def load_execution(exid)
@@ -172,6 +177,15 @@ module Flor
       end
 
       ex
+
+    rescue => err
+
+#p @unit.conf
+@unit.logger.error("#{self.class}#put_execution()", err)
+
+# TODO: dump execution!
+
+      ex
     end
 
     def fetch_messages(exid)
@@ -225,6 +239,12 @@ module Flor
         .select(:id, :content)
         .where(status: 'created')
         .order_by(:id)
+        .all
+
+    rescue => err
+
+@unit.logger.warn("#{self.class}#load_timers()", err)
+      []
     end
 
     def put_messages(ms, syn=true)

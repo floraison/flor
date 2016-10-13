@@ -380,14 +380,24 @@ module Flor
   #
   # functions about time
 
+  # hour stamp
   def self.hstamp(t=Time.now.utc)
 
     t.strftime('%H:%M:%S.') + sprintf('%06d', t.usec) + (t.utc? ? 'u' : '')
   end
 
+  # time stamp
   def self.tstamp(t=Time.now.utc)
 
     t.strftime('%Y%m%d.%H%M%S') + sprintf('%06d', t.usec) + (t.utc? ? 'u' : '')
+  end
+
+  # nice stamp
+  def self.nstamp(t=Time.now.utc)
+
+    t.strftime('%Y-%m-%d %H:%M:%S.') +
+    sprintf('%06d', t.usec) +
+    (t.utc? ? 'u' : '')
   end
 
   def self.to_time(ts)
