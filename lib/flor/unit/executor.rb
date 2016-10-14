@@ -142,6 +142,7 @@ module Flor
     #rescue => er
     rescue Exception => ex
 
+# FIXME dump execution!
       puts on_do_run_exc(ex)
     end
 

@@ -68,7 +68,7 @@ module Flor
 $stderr # FIXME
         end
 
-      txt = elts.inspect[1..-2]
+      txt = elts.collect(&:to_s).join(' ')
 
       out.puts("#{ns} #{level.to_s.upcase} #{txt}")
     end

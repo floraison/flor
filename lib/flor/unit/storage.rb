@@ -108,7 +108,8 @@ module Flor
 
     rescue => err
 
-@unit.logger.warn("#{self.class}#load_exids", err)
+      @unit.logger.warn("#{self.class}#load_exids", err, '(returning [])')
+
       []
     end
 
@@ -177,15 +178,6 @@ module Flor
       end
 
       ex
-
-    rescue => err
-
-#p @unit.conf
-@unit.logger.error("#{self.class}#put_execution()", err)
-
-# TODO: dump execution!
-
-      ex
     end
 
     def fetch_messages(exid)
@@ -243,7 +235,8 @@ module Flor
 
     rescue => err
 
-@unit.logger.warn("#{self.class}#load_timers()", err)
+      @unit.logger.warn("#{self.class}#load_timers()", err, '(returning [])')
+
       []
     end
 
