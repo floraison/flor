@@ -39,16 +39,26 @@ module Flor
       @exid = exid
       @messages = unit.storage.fetch_messages(exid)
       @consumed = []
+
       @alive = true
+      @shutdown = false
+
+      @thread = nil
     end
 
     def alive?; @alive; end
 
     def run
 
-      Thread.new { do_run }
+      @thread = Thread.new { do_run }
 
       self
+    end
+
+    def shutdown
+
+      @shutdown = true
+      @thread.join
     end
 
     protected
@@ -89,6 +99,7 @@ module Flor
 
         m = @messages.shift
         break unless m
+        break if @shutdown
 
         if m['point'] == 'terminated' && @messages.any?
           #

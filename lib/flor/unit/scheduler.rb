@@ -74,6 +74,8 @@ module Flor
       @thread_status = :shutdown
       @thread = nil
 
+      @executors.each(&:shutdown)
+
       @hooker.shutdown
       @storage.shutdown
       @tasker.shutdown

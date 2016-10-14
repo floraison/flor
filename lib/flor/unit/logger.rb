@@ -70,6 +70,8 @@ $stderr # FIXME
 
       txt = elts.collect(&:to_s).join(' ')
 
+# TODO show "interesting" part of the trace if there is an error
+
       out.puts("#{ns} #{level.to_s.upcase} #{txt}")
     end
 
