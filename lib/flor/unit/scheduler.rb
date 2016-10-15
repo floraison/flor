@@ -303,11 +303,13 @@ module Flor
 
     def load_timers
 
+      return [] if @thread_status != :running
       @storage.load_timers.sort_by(&:ntime)
     end
 
     def load_exids
 
+      return [] if @thread_status != :running
       @storage.load_exids
     end
 
