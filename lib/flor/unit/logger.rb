@@ -57,7 +57,7 @@ module Flor
       return if [ nil, 'null', false ].include?(@dir)
 
       n = Time.now.utc
-      ns = Flor.nstamp(n)
+      stp = Flor.nstamp(n)
 
       out =
         if @dir == 'stdout'
@@ -65,14 +65,23 @@ module Flor
         elsif @dir == 'stderr'
           $stderr
         else
-$stderr # FIXME
+$stderr # FIXME log to a daily file
         end
 
+      lvl = level.to_s.upcase
       txt = elts.collect(&:to_s).join(' ')
+      err = elts.find { |e| e.is_a?(Exception) }
 
-# TODO show "interesting" part of the trace if there is an error
+      line = "#{stp} #{lvl} #{txt}"
 
-      out.puts("#{ns} #{level.to_s.upcase} #{txt}")
+      if err
+        sts = ' ' * stp.length; lvs = ' ' * lvl.length
+        dig = lvl[0, 1] + Digest::MD5.hexdigest(line)[0, 4]
+        out.puts("#{stp} #{lvl} #{dig} #{txt}")
+        err.backtrace.each { |lin| out.puts("#{sts} #{lvs} #{dig} #{lin}") }
+      else
+        out.puts(line)
+      end
     end
 
     def notify(executor, msg)
