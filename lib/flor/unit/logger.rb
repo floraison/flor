@@ -37,6 +37,7 @@ module Flor
 
       @fname = nil
       @file = nil
+
       @mutex = Mutex.new
 
       @unit.singleton_class.instance_eval do
@@ -47,6 +48,8 @@ module Flor
     def opts; { consumed: true }; end
 
     def shutdown
+
+      @file.close if @file
     end
 
     def debug(*m); log(:debug, *m); end
@@ -62,12 +65,10 @@ module Flor
       stp = Flor.nstamp(n)
 
       out =
-        if @dir == 'stdout'
-          $stdout
-        elsif @dir == 'stderr'
-          $stderr
-        else
-$stderr # FIXME log to a daily file
+        case @dir
+          when 'stdout' then $stdout
+          when 'stderr' then $stderr
+          else prepare_file(n)
         end
 
       lvl = level.to_s.upcase
@@ -119,6 +120,24 @@ $stderr # FIXME log to a daily file
     end
 
     protected
+
+    def prepare_file(t)
+
+      @mutex.synchronize do
+
+        fn = File.join(
+          @dir,
+          "#{@unit.conf['env']}_#{t.strftime('%Y-%m-%d')}.log")
+
+        if fn != @fname
+          @file.close if @file
+          @file = nil
+          @fname = fn
+        end
+
+        @file ||= File.open(@fname, 'wb')
+      end
+    end
 
     BLOB_CHARS = (('a'..'f').to_a + ('A'..'F').to_a + ('0'..'9').to_a).freeze
 
