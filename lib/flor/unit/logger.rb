@@ -34,8 +34,10 @@ module Flor
 
       @dir = @unit.conf['log_dir'] || 'tmp'
       @dir = '.' unless @dir.is_a?(String) && File.exist?(@dir)
+
       @fname = nil
       @file = nil
+      @mutex = Mutex.new
 
       @unit.singleton_class.instance_eval do
         define_method(:logger) { @hooker['logger'] }
@@ -74,13 +76,15 @@ $stderr # FIXME log to a daily file
 
       line = "#{stp} #{lvl} #{txt}"
 
-      if err
-        sts = ' ' * stp.length; lvs = ' ' * lvl.length
-        dig = lvl[0, 1] + Digest::MD5.hexdigest(line)[0, 4]
-        out.puts("#{stp} #{lvl} #{dig} #{txt}")
-        err.backtrace.each { |lin| out.puts("#{sts} #{lvs} #{dig} #{lin}") }
-      else
-        out.puts(line)
+      @mutex.synchronize do
+        if err
+          sts = ' ' * stp.length; lvs = ' ' * lvl.length
+          dig = lvl[0, 1] + Digest::MD5.hexdigest(line)[0, 4]
+          out.puts("#{stp} #{lvl} #{dig} #{txt}")
+          err.backtrace.each { |lin| out.puts("#{sts} #{lvs} #{dig} #{lin}") }
+        else
+          out.puts(line)
+        end
       end
     end
 
