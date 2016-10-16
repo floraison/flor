@@ -43,6 +43,8 @@ module Flor
       @unit.singleton_class.instance_eval do
         define_method(:logger) { @hooker['logger'] }
       end
+
+      @uni = 'u' + Digest::MD5.hexdigest(@unit.hash.to_s)[0, 5]
     end
 
     def opts; { consumed: true }; end
@@ -75,13 +77,14 @@ module Flor
       txt = elts.collect(&:to_s).join(' ')
       err = elts.find { |e| e.is_a?(Exception) }
 
-      line = "#{stp} #{lvl} #{txt}"
+      line = "#{stp} #{@uni} #{lvl} #{txt}"
 
       @mutex.synchronize do
         if err
-          sts = ' ' * stp.length; lvs = ' ' * lvl.length
+          sts = ' ' * stp.length
+          lvs = ' ' * (@uni.length + 1 + lvl.length)
           dig = lvl[0, 1] + Digest::MD5.hexdigest(line)[0, 4]
-          out.puts("#{stp} #{lvl} #{dig} #{txt}")
+          out.puts("#{stp} #{@uni} #{lvl} #{dig} #{txt}")
           err.backtrace.each { |lin| out.puts("#{sts} #{lvs} #{dig} #{lin}") }
         else
           out.puts(line)
@@ -135,7 +138,7 @@ module Flor
           @fname = fn
         end
 
-        @file ||= File.open(@fname, 'wb')
+        @file ||= File.open(@fname, 'ab')
       end
     end
 

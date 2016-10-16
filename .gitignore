@@ -10,4 +10,5 @@
 .viminfo
 
 tmp/*.db
+tmp/*.log
 
