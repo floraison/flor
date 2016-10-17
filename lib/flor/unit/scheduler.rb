@@ -69,6 +69,11 @@ module Flor
       @executors = []
     end
 
+    def identifier
+
+      @identifier ||= 'u' + Digest::MD5.hexdigest(self.hash.to_s)[0, 5]
+    end
+
     def shutdown
 
       @thread_status = :shutdown

@@ -150,11 +150,36 @@ module Flor
 
       @consumed.clear
 
-    #rescue => er
-    rescue Exception => ex
+    rescue Exception => exc
 
-# FIXME dump execution!
-      puts on_do_run_exc(ex)
+# TODO eventually, have a dump dir
+      fn =
+        [
+          'flor',
+          @unit.conf['env'], @unit.identifier, @exid,
+          'r' + counter('runs').to_s
+        ].collect(&:to_s).join('_') + '.dump'
+
+      @unit.logger.error(
+        "#{self.class}#do_run()", exc, "(dumping to #{fn})")
+
+      File.open(fn, 'wb') do |f|
+        #f.puts(JSON.pretty_generate({
+        f.puts(Flor.pp({
+          execution: @execution,
+          messages: @messages,
+          consumed: @consumed,
+          traps: @traps.collect(&:to_h),
+          exid: @exid,
+          alive: @alive,
+          shutdown: @shutdown,
+          thread: @thread.to_s
+        }))
+        f.puts('-' * 80)
+        f.puts(on_do_run_exc(exc))
+      end
+
+      puts on_do_run_exc(exc)
     end
 
     def schedule(message)

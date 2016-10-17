@@ -44,7 +44,7 @@ module Flor
         define_method(:logger) { @hooker['logger'] }
       end
 
-      @uni = 'u' + Digest::MD5.hexdigest(@unit.hash.to_s)[0, 5]
+      @uni = @unit.identifier
     end
 
     def opts; { consumed: true }; end
