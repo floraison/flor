@@ -22,6 +22,7 @@ describe 'Flor punit' do
 
   after :each do
 
+    @unit.shutdown
   end
 
   describe 'cancel' do
