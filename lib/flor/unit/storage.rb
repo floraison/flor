@@ -208,6 +208,12 @@ module Flor
         .where(status: 'active')
         .where(domain: split_domain(exid))
         .all
+
+    rescue => err
+
+      @unit.logger.warn("#{self.class}#fetch_traps()", err, '(returning [])')
+
+      []
     end
 
     def consume(messages)
