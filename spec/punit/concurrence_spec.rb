@@ -48,6 +48,8 @@ describe 'Flor punit' do
 
       expect(msg['point']).to eq('terminated')
 
+      sleep 0.4 # for jruby
+
       expect(
         @unit.journal
           .collect { |m| [ m['point'][0, 3], m['nid'] ].join(':') }
