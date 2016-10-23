@@ -62,7 +62,7 @@ module Flor
 
     def wait(exid, opts)
 
-      @mutex.synchronize do
+      r = @mutex.synchronize do
 
         w = Waiter.make(exid, opts)
         @waiters << w
@@ -70,6 +70,10 @@ module Flor
         w
 
       end.wait
+
+sleep 0.210 # FIXME try
+
+      r
     end
   end
 end
