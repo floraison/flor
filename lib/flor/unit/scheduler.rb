@@ -94,14 +94,17 @@ module Flor
     def on_start_exc(e)
 
       io = StringIO.new
-      head = e.is_a?(StandardError) ? '=sch' : '!sch'
+
+      head, kind =
+        e.is_a?(StandardError) ? [ '=sch', 'error' ] : [ '!sch', 'exception' ]
 
       t = head[0, 2] + Time.now.to_f.to_s.split('.').last
       io.puts '/' + t + ' ' + head * 17
-      io.puts "|#{t} + exception in #{self.class}#start"
-      io.puts "|#{t} #{e.inspect}"
+      io.puts "|#{t} + in #{self.class}#start"
       io.puts "|#{t} db: #{@storage.db.class} #{@storage.db.hash}"
       io.puts "|#{t} thread: #{Thread.current.inspect}"
+      io.puts "|#{t} #{kind}: #{e.inspect}"
+      io.puts "|#{t} backtrace:"
       e.backtrace.each { |l| io.puts "|#{t} #{l}" }
       io.puts '\\' + t + ' ' + (head * 17) + ' .'
 
