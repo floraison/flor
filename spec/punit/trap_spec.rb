@@ -330,6 +330,8 @@ describe 'Flor punit' do
         expect(r['point']).to eq('terminated')
 
         sleep 0.350
+        #wait_until { @unit.traces.size == 2 }
+# TODO
 
         expect(
           (

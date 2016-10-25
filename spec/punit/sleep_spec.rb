@@ -98,7 +98,7 @@ describe 'Flor punit' do
       expect(@unit.executions.terminated.count).to eq(1)
 
       e = @unit.executions.terminated.first
-      expect(e.data['duration']).to be < 0.350
+      expect(e.data['duration']).to be < 0.350 + 0.100
 
       expect(@unit.timers.count).to eq(0)
     end
