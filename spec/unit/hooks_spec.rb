@@ -40,6 +40,8 @@ describe 'Flor unit' do
           noop _
       }, wait: true)
 
+      sleep 2.1 # :-( JRuby
+
       expect(msgs).to eq(@unit.journal)
     end
 
