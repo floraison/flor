@@ -31,11 +31,20 @@ module Flor
       @exid = exid
       @original_serie = repeat ? Flor.dup(serie) : nil
       @serie = serie
-      @timeout = timeout == true ? 3 : timeout
+      @timeout = timeout == true ? 4 : timeout
 
       @queue = []
       @mutex = Mutex.new
       @var = ConditionVariable.new
+    end
+
+    def to_s
+
+      "#{super[0..-2]}#{
+        { exid: @exid,
+          original_serie: @original_serie,
+          timeout: @timeout }.inspect
+      }>"
     end
 
     def self.make(exid, opts)
