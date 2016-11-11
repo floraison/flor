@@ -12,6 +12,22 @@ require 'flor'
 require 'flor/unit'
 
 
+def wait_until(timeout=14, frequency=0.1, &block)
+
+  start = Time.now
+
+  loop do
+
+    sleep(frequency)
+
+    return if block.call == true
+    break if Time.now - start > timeout
+  end
+
+  fail "timeout after #{timeout}s"
+end
+
+
 RSpec::Matchers.define :eqj do |o|
 
   match do |actual|

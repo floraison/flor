@@ -329,9 +329,7 @@ describe 'Flor punit' do
         exid3 = r['exid']
         expect(r['point']).to eq('terminated')
 
-        sleep 0.350
-        #wait_until { @unit.traces.size == 2 }
-# TODO
+        wait_until { @unit.traces.count == 2 }
 
         expect(
           (
@@ -370,7 +368,7 @@ describe 'Flor punit' do
         exid3 = r['exid']
         expect(r['point']).to eq('terminated')
 
-        sleep 0.5
+        wait_until { @unit.traces.count == 3 }
 
         expect(
           (
