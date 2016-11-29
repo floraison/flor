@@ -69,7 +69,13 @@ describe 'Flor unit' do
 
       msg = @unit.launch(flon, wait: true)
 
-      expect(Time.now - t0).to be_between(0.5, 1.6)
+      expect(msg['point']).to eq('terminated')
+
+      if jruby?
+        expect(Time.now - t0).to be_between(0.5, 1.8)
+      else
+        expect(Time.now - t0).to be_between(0.5, 1.6)
+      end
 
       expect(@unit.timers.count).to eq(0)
 
