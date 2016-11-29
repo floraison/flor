@@ -12,6 +12,11 @@ require 'flor'
 require 'flor/unit'
 
 
+def jruby?
+
+  !! RUBY_PLATFORM.match(/java/)
+end
+
 def wait_until(timeout=14, frequency=0.1, &block)
 
   start = Time.now
