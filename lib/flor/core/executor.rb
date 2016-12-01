@@ -341,7 +341,7 @@ module Flor
 #ms += notify_traps(message) # after # FIXME
         ms += @unit.notify(self, message) # post
 
-        ms.collect { |m| ash_all!(m) }
+        ms.each { |m| ash_all!(m) }
 
       rescue => e
         error_reply(nil, message, e)
