@@ -45,7 +45,7 @@ module Flor
     def shutdown
 
       @db.disconnect
-#p [ :disconnected, @db.hash ]
+#p [ :disconnected, @db.object_id ]
     end
 
     def db_version
@@ -409,11 +409,11 @@ module Flor
       #  if RUBY_PLATFORM.match(/java/) && uri.match(/\Asqlite:/)
 
       @db = Sequel.connect(uri)
-#p [ :connected, @db.hash ]
+#p [ :connected, @db.object_id ]
 #class << @db
 #  alias_method :_square, :[]
 #  def [](k)
-#    p [ self.hash, k, :t, Thread.current ]
+#    p [ self.object_id, k, :t, Thread.current ]
 #    _square(k)
 #  end
 #end

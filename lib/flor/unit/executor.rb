@@ -139,7 +139,7 @@ module Flor
       puts(
         Flor::Colours.dark_grey + '---' +
         [
-          self.class, self.hash, @exid,
+          self.class, self.object_id, @exid,
           { took: Time.now - t0,
             consumed: @consumed.size,
             traps: @traps.size,

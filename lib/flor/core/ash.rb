@@ -89,6 +89,13 @@ module Flor::Ash
 
   def ash!(h, key)
 
+#if h['point'] == 'terminated' && h['vars'] == {}
+#  puts "*** ash! ***"
+#  p h.object_id
+#  p h
+#  puts caller
+#  puts "... ash! ..."
+#end
     if h.has_key?(key)
       h[key] = ash(h, key)
     else

@@ -119,7 +119,7 @@ module Flor
         #
       msg = summarize_blob(msg)
 
-      puts "#{_co}sto#{_rs} t#{Thread.current.hash} #{level.upcase} #{msg}"
+      puts "#{_co}sto#{_rs} t#{Thread.current.object_id} #{level.upcase} #{msg}"
     end
 
     protected

@@ -86,7 +86,7 @@ module Flor
 
         @models[k] ||=
           Flor.const_set(
-            "#{c}#{@db.hash.to_s.gsub('-', 'M')}",
+            "#{c}#{@db.object_id.to_s.gsub('-', 'M')}",
             Class.new(Flor.const_get(c)) do
               self.dataset = s.db["flor_#{k}".to_sym]
             end)

@@ -31,6 +31,8 @@ describe 'Flor unit' do
 
       msgs = []
       @unit.hook do |message|
+#p [ message['point'], message['payload'] ] if message['consumed']
+#p [ :hook, message.hash, message ] if message['consumed'] && message['point'] == 'terminated'
         msgs << Flor.dup(message) if message['consumed']
         [] # make sure to return an empty list of new messages
       end
@@ -39,8 +41,6 @@ describe 'Flor unit' do
         sequence
           noop _
       }, wait: true)
-
-      sleep 4.2 # :-( JRuby
 
       expect(msgs).to eq(@unit.journal)
     end
