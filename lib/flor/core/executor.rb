@@ -253,15 +253,20 @@ module Flor
       nid = message['nid']
       nid = nil if fnode && fnode['noreply']
 
-      return (
-        messages +
-        [
-          message.merge(
-            termination?(message) ?
-            { 'point' => 'terminated', 'vars' => (fnode || {})['vars'] } :
-            { 'point' => 'ceased' })
-        ]
-      ) unless nid
+      begin
+        msg =
+          %w[ exid nid from payload ].inject({}) { |h, k|
+            h[k] = message[k] if message.has_key?(k)
+            h
+          }
+        if termination?(message)
+          msg['point'] = 'terminated'
+          msg['vars'] = (fnode || {})['vars']
+        else
+          msg['point'] = 'ceased'
+        end
+        return messages + [ msg ]
+      end unless nid
 
       node = @execution['nodes'][nid]
 

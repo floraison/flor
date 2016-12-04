@@ -33,6 +33,7 @@ describe 'Flor unit' do
       @unit.hook do |message|
 #p [ message['point'], message['payload'] ] if message['consumed']
 #p [ :hook, message.hash, message ] if message['consumed'] && message['point'] == 'terminated'
+#p :xxx if message['consumed'] && message['payload'].is_a?(Hash)
         msgs << Flor.dup(message) if message['consumed']
         [] # make sure to return an empty list of new messages
       end
@@ -42,6 +43,8 @@ describe 'Flor unit' do
           noop _
       }, wait: true)
 
+#pp msgs.last
+#pp @unit.journal.last
       expect(msgs).to eq(@unit.journal)
     end
 
