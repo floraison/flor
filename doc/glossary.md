@@ -18,7 +18,23 @@ An [execution](#execution) lives in a domain. An execution may only affect itsel
 A domain and all its sub domains.
 
 ## execution
+
+An execution is a live instance of a process or workflow (depending on your point of view). It's flagged with an [execution id](#exid) or [exid](#exid) for short.
+
 ## executor
+
+When it receives a launch message (calling for a new [execution](#execution)) or a message for a currently sleeping execution, the [scheduler](#scheduler) will create an executor and hand it the messages for the execution.
+
+An executor will stop working when there are no more messages for the execution (did it just terminate?) or if a certain number of messages has been processed (without this limit, an execution might monopolize heavily the resources available to the scheduler, well at least that's the reasoning behind the design decision).
+
+If there is already an executor processing messages for the execution, the scheduler will not create a new one, it will simply queue the message for the executor to pick it up, sooner or later.
+
+## exid
+
+A unique identifier for a flor [execution](#execution), for example "test-u-20161204.2144.kawajabachu".
+
+Its format is "{fully.qualified.domain}-{unitname}-{yyyymmdd.hhmm.mnemo}".
+
 ## hook
 ## loader
 ## message
@@ -38,8 +54,6 @@ The lifecycle of an execution might comprise one or more runs. For example a sim
 ## tasker
 ## timer
 ## trap
-
 ## unit
-
 ## variable
 
