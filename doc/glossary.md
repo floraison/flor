@@ -37,7 +37,23 @@ Its format is "{fully.qualified.domain}-{unitname}-{yyyymmdd.hhmm.mnemo}".
 
 ## hook
 ## loader
+
 ## message
+
+Flor is merely about emitting and processing messages within an execution.
+
+An initial "execute" message will launch a new execution and further "execute" message will expand it by adding new nodes to it. When a node is done it sends a "receive" message back to its parent node.
+
+### point: execute
+### point: receive
+### point: terminated
+### point: ceased
+### point: failed
+### point: entered
+### point: left
+### point: task
+### point: return
+
 ## node
 ## payload
 ## procedure
