@@ -40,6 +40,8 @@ class Flor::Pro::Until < Flor::Procedure
   end
 
   def receive_non_att
+    #
+    # receiving from a non_att child (condition or block)
 
     if @fcid == first_unkeyed_child_id
 
@@ -47,25 +49,30 @@ class Flor::Pro::Until < Flor::Procedure
       tru = Flor.true?(payload['ret'])
 
       if (tru && t0 == 'until') || ( ! tru && t0 == 'while')
+        #
+        # over
 
-p :over
         reply('ret' => @node['uret'] || node_payload_ret)
 
       else
+        #
+        # condition yield false, enter "block"
 
         payload['ret'] = node_payload_ret
         execute_child(@ncid, @node['count'])
       end
 
     elsif @ncid >= children.size
+      #
+      # block over, increment counter and head back to condition
 
-p [ @ncid, children.size ]
-p @message
       @node['uret'] = payload['ret']
       payload['ret'] = node_payload_ret
       execute_child(first_unkeyed_child_id, @node['count'] += 1)
 
     else
+      #
+      # we're in the middle of the "block", let's carry on
 
       # no need to set 'ret', we're in some kind of sequence
       execute_child(@ncid, @node['count'])
