@@ -102,12 +102,13 @@ describe 'Flor procedures' do
           f.a < 3
           set f.a
             + f.a 1
+          - f.a 1
       }
 
       r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['ret']).to eq(2)
       expect(r['payload']['a']).to eq(3)
     end
 
