@@ -38,7 +38,7 @@ class Flor::Pro::Define < Flor::Procedure
     val = [ '_func', { 'nid' => nid, 'cnid' => cnid, 'fun' => fun }, t[2] ]
 
     set_var('', t[1].first[1].first[0], val) if t[0] == 'define'
-    payload_copy['ret'] = val
+    payload['ret'] = val
 
     reply
   end

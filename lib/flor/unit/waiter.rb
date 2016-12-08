@@ -113,7 +113,7 @@ module Flor
 
         executor, message = @queue.shift
 
-        executor.unash_all!(message)
+        message
       end
     end
 

@@ -64,13 +64,13 @@ class Flor::Pro::Task < Flor::Procedure
 
   def determine_payload
 
-    (payload || node_payload_copy).merge(
+    message_or_node_payload.merge(
       'atts' => @node['atts'].inject({}) { |h, (k, v)| h[k] = v if k; h })
   end
 
   def determine_reply_payload
 
-    pl = payload_copy
+    pl = Flor.dup(payload.current)
 
     if @node.has_key?('patts')
       pl['atts'] = Flor.dup(@node['patts'])

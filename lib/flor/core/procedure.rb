@@ -255,8 +255,7 @@ class Flor::Procedure < Flor::Node
     ret = :no
     ret = h.delete('ret') if h.has_key?('ret')
 
-    m['payload'] = @message['payload']
-    unash!(m, 'payload', ret != :no)
+    m['payload'] = payload.current
 
     m.merge!(h)
 
@@ -324,7 +323,7 @@ class Flor::Procedure < Flor::Node
 
   def set_field(k, v)
 
-    success, value = Flor.deep_set(payload, k, v)
+    success, value = Flor.deep_set(payload.copy, k, v)
 
     fail IndexError.new("couldn't set field #{k}") unless success
 

@@ -26,7 +26,6 @@
 module Flor
 
   class Executor
-    include Flor::Ash
 
     attr_reader :unit
     attr_reader :execution
@@ -103,7 +102,7 @@ module Flor
       node = {
         'nid' => nid,
         'parent' => message['from'],
-        'payload' => ash(message, 'payload'),
+        'payload' => message['payload'],
         'ctime' => now,
         'mtime' => now }
 
@@ -302,7 +301,7 @@ module Flor
 
     def task(message)
 
-      @unit.tasker.task(unash_all!(message, true))
+      @unit.tasker.task(message)
     end
     alias detask task
 
@@ -332,8 +331,6 @@ module Flor
 
         message['m'] = counter_next('msgs') # number messages
 
-        ash_all!(message)
-
         determine_heat(message)
 
         ms = []
@@ -341,12 +338,14 @@ module Flor
 #ms += notify_traps(message) # before # FIXME
 
         ms += self.send(message['point'].to_sym, message)
+
+        message['payload'] = message.delete('pld') if message.has_key?('pld')
         message['consumed'] = Flor.tstamp
 
 #ms += notify_traps(message) # after # FIXME
         ms += @unit.notify(self, message) # post
 
-        ms.each { |m| ash_all!(m) }
+        ms
 
       rescue => e
         error_reply(nil, message, e)

@@ -29,7 +29,7 @@ class Flor::Pro::Atom < Flor::Procedure
 
   def execute
 
-    payload_copy['ret'] =
+    payload['ret'] =
       case tree[0]
         when '_dqs' then expand(tree[1])
         when '_rxs' then [ tree[0], expand(tree[1]), *tree[2..-1] ]

@@ -470,7 +470,7 @@ module Flor
     split_domain_unit(s).last
   end
 
-  def self.pp(o)
+  def self.to_pretty_s(o)
 
     #StringIO.open { |io| PP.pp(o, io, 79) }.string # :-(
     StringIO.new.tap { |io| PP.pp(o, io, 79) }.string

@@ -42,8 +42,6 @@ class Flor::Pro::Set < Flor::Procedure
 
   def receive_last
 
-    payload_copy
-
     set_value(@node['ref'], payload['ret'])
 
     payload['ret'] =

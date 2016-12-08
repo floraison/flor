@@ -130,7 +130,8 @@ module Flor
           ex
         else
           put_execution({
-            'exid' => exid, 'nodes' => {}, 'errors' => [], 'ashes' => {},
+            'exid' => exid, 'nodes' => {}, 'errors' => [],
+            #'ashes' => {},
             'counters' => {}, 'start' => Flor.tstamp
           })
         end

@@ -258,7 +258,7 @@ module Flor
 
   def self.ret_to_s(executor, m)
 
-    ret = (executor.unash(m, 'payload') || {})['ret']
+    ret = (m['payload'] || {})['ret']
     s = Flor.to_d(ret, compact: true)
     l = s.length
     l < 35 ? s : "#{s[0, 35]}(...L#{l})"
@@ -300,9 +300,9 @@ module Flor
 
     puts "#{_dg}<Flor.detail_msg>#{_rs}"
     print "#{_yl}"
-    pp m
+    Kernel::pp m
     puts "#{_dg}payload:#{_yl}"
-    pp executor.unash(m, 'payload')
+    Kernel::pp m['payload']
     puts "#{_dg}nodes:"
     executor.execution['nodes'].values.each_with_index do |n, i|
       print _yl

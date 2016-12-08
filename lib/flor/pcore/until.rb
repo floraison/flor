@@ -48,17 +48,19 @@ class Flor::Pro::Until < Flor::Procedure
 
       if (tru && t0 == 'until') || ( ! tru && t0 == 'while')
 
+p :over
         reply('ret' => @node['uret'] || node_payload_ret)
 
       else
 
-        payload_copy['ret'] = node_payload_ret
+        payload['ret'] = node_payload_ret
         execute_child(@ncid, @node['count'])
       end
 
     elsif @ncid >= children.size
 
-      payload_copy
+p [ @ncid, children.size ]
+p @message
       @node['uret'] = payload['ret']
       payload['ret'] = node_payload_ret
       execute_child(first_unkeyed_child_id, @node['count'] += 1)

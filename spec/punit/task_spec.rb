@@ -21,7 +21,7 @@ describe 'Flor punit' do
 
   after :each do
 
-    @unit.shutdown
+    @unit.shutdown if @unit
   end
 
   describe 'task' do

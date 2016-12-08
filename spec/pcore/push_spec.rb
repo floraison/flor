@@ -41,7 +41,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon)
 
       expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq('cannot push to given target')
+      expect(r['error']['msg']).to eq('cannot push to given target (NilClass)')
       expect(r['error']['lin']).to eq(3)
     end
 

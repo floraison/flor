@@ -69,7 +69,7 @@ class Flor::Pro::Att < Flor::Procedure
       parent_node['mtime'] = Flor.tstamp
     end
 
-    payload_copy['ret'] = @node['ret'] if key
+    payload['ret'] = @node['ret'] if key
 
     reply
   end
@@ -78,7 +78,7 @@ class Flor::Pro::Att < Flor::Procedure
   #
   def receive_vars
 
-    parent_node['vars'] = payload_copy['ret']
+    parent_node['vars'] = payload['ret']
     payload['ret'] = @node['ret']
 
     reply

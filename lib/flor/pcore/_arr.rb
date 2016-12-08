@@ -41,7 +41,7 @@ class Flor::Pro::Arr < Flor::Procedure
 
   def receive_last
 
-    payload_copy['ret'] = @node['rets']
+    payload['ret'] = @node['rets']
 
     reply
   end

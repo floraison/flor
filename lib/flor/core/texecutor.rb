@@ -76,7 +76,8 @@ module Flor
         [], # no traps
         {
           'exid' => Flor.generate_exid('eval', 'u0'),
-          'nodes' => {}, 'errors' => [], 'counters' => {}, 'ashes' => {},
+          'nodes' => {}, 'errors' => [], 'counters' => {},
+          #'ashes' => {},
           'start' => Flor.tstamp
         })
     end
@@ -116,7 +117,7 @@ module Flor
         messages.concat(msgs)
       end
 
-      message ? unash_all!(message) : nil
+      message
     end
   end
 
@@ -142,9 +143,11 @@ module Flor
       c = (ENV['FLOR_DEBUG'] || '').match(/conf/) ? false : true
       r = (self.new('conf' => c)).launch(s, vars: vs)
 
-      fail ArgumentError.new(
-        "error while reading conf: #{r['error']['msg']}"
-      ) unless r['point'] == 'terminated'
+      unless r['point'] == 'terminated'
+        ae = ArgumentError.new("error while reading conf: #{r['error']['msg']}")
+        ae.set_backtrace(r['error']['trc'])
+        fail ae
+      end
 
       h = Flor.dup(r['payload']['ret'])
 

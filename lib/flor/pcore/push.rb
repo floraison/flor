@@ -45,12 +45,13 @@ class Flor::Pro::Push < Flor::Procedure
     arr = @node['arr']
 
     if arr.is_a?(String)
-      payload_copy if arr[0, 1] == 'f'
+      payload.copy if arr[0, 1] == 'f'
       arr = lookup(arr)
     end
 
-    fail Flor::FlorError.new("cannot push to given target", self) \
-      unless arr.respond_to?(:push)
+    fail Flor::FlorError.new(
+      "cannot push to given target (#{arr.class})", self
+    ) unless arr.respond_to?(:push)
 
     val =
       unkeyed_children.size > 1 ?

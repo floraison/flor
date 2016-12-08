@@ -169,7 +169,7 @@ module Flor
 
       File.open(fn, 'wb') do |f|
         #f.puts(JSON.pretty_generate({
-        f.puts(Flor.pp({
+        f.puts(Flor.to_pretty_s({
           execution: @execution,
           messages: @messages,
           consumed: @consumed,

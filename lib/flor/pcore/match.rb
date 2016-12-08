@@ -38,7 +38,7 @@ class Flor::Pro::Match < Flor::Procedure
 
     m = rex.match(str)
 
-    payload_copy['ret'] =
+    payload['ret'] =
       if @node['heap'] == 'match?'
         !! m
       else

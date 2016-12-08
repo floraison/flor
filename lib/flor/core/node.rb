@@ -24,7 +24,43 @@
 
 
 class Flor::Node
-  include Flor::Ash
+
+  class Payload
+    def initialize(node, flavour=:node)
+      @node = node
+      @flavour = flavour
+    end
+    def has_key?(k)
+      current.has_key?(k)
+    end
+    def [](k)
+      current[k]
+    end
+    def []=(k, v)
+      copy[k] = v
+    end
+    def delete(k)
+      copy.delete(k)
+    end
+    def copy
+      container['pld'] ||= Flor.dup(original)
+    end
+    def current
+      container['pld'] || container['payload']
+    end
+    def merge(h)
+      current.merge(h)
+    end
+    protected
+    def container
+      @flavour == :node ? @node.h : @node.message
+    end
+    def original
+      container['payload']
+    end
+  end
+
+  attr_reader :message
 
   def initialize(executor, node, message)
 
@@ -59,20 +95,18 @@ class Flor::Node
   def from; @message['from']; end
 
   def payload
-    unash!(@message, 'payload')
-  end
-  def payload_copy
-    unash!(@message, 'payload', true)
+    @message_payload ||= Payload.new(self, :message)
   end
 
   def node_payload
-    unash(@node, 'payload')
-  end
-  def node_payload_copy
-    unash(@node, 'payload', true)
+    @node_payload ||= Payload.new(self)
   end
   def node_payload_ret
     Flor.dup(node_payload['ret'])
+  end
+
+  def message_or_node_payload
+    payload.current ? payload : node_payload
   end
 
   def lookup_tree(nid)
@@ -300,7 +334,7 @@ class Flor::Node
 
   def lookup_field(mod, key)
 
-    Flor.deep_get(payload, key)[1]
+    Flor.deep_get(payload.current, key)[1]
   end
 
   def key_split(key) # => category, mode, key

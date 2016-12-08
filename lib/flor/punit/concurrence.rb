@@ -113,7 +113,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
   def store_payload
 
     (@node['payloads'] ||= {})[@message['from']] =
-      compute_ash(@message['payload'])
+      @message['payload']
   end
 
   def default_receive
@@ -134,7 +134,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     @node['payloads'].values
       .reverse
-      .inject({}) { |h, pl| h.merge!(lookup_ash(pl, true)) }
+      .inject({}) { |h, pl| h.merge!(pl) }
   end
 end
 

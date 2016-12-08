@@ -34,7 +34,7 @@ class Flor::Pro::Arith < Flor::Procedure
 
   def receive_last
 
-    payload_copy['ret'] = @node['rets'].reduce(&tree.first.to_sym) || 0
+    payload['ret'] = @node['rets'].reduce(&tree.first.to_sym) || 0
 
     reply
   end
