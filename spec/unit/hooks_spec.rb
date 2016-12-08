@@ -43,8 +43,12 @@ describe 'Flor unit' do
           noop _
       }, wait: true)
 
-#pp msgs.last
-#pp @unit.journal.last
+puts "--- msgs.last:"
+pp msgs.last
+p msgs.last.object_id
+puts "--- @unit.journal.last:"
+pp @unit.journal.last
+p @unit.journal.last.object_id
       expect(msgs).to eq(@unit.journal)
     end
 
