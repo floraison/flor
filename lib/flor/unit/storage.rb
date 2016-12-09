@@ -419,6 +419,15 @@ module Flor
 #  end
 #end
 
+      if cv = @unit.conf['sto_connection_validation']
+
+        to = cv.is_a?(Numeric) || cv.is_a?(String) ? cv.to_i : -1
+
+        @db.extension(:connection_validator)
+        @db.pool.connection_validation_timeout = to
+          # NB: -1 means "check all the time"
+      end
+
       @db_logger = DbLogger.new(@unit)
       @db.loggers << @db_logger
     end

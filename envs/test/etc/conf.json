@@ -1,6 +1,7 @@
 
 env: test
 domain: test
+
 sto_uri: (ife
   == ruby_platform 'java'
   "jdbc:sqlite://tmp/test.db"
@@ -9,4 +10,8 @@ sto_uri: (ife
 #  == ruby_platform 'java'
 #  "jdbc:sqlite::memory:" # not good
 #  "sqlite::memory:")
+
+sto_connection_validation: false
+#sto_connection_validation: true # sets to -1 (validates all the time)
+#sto_connection_validation: 60 # validates after 60 seconds
 
