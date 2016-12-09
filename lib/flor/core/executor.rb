@@ -335,14 +335,12 @@ module Flor
 
         ms = []
         ms += @unit.notify(self, message) # pre
-#ms += notify_traps(message) # before # FIXME
 
         ms += self.send(message['point'].to_sym, message)
 
         message['payload'] = message.delete('pld') if message.has_key?('pld')
         message['consumed'] = Flor.tstamp
 
-#ms += notify_traps(message) # after # FIXME
         ms += @unit.notify(self, message) # post
 
         ms
@@ -353,21 +351,6 @@ module Flor
         error_reply(nil, message, se)
       end
     end
-
-#    def notify_traps(message)
-#
-#      to_remove = []
-#      messages = []
-#
-#      @traps.each do |t|
-#        remove, messages = t.notify(self, message)
-#        to_remove << t if remove
-#      end
-#
-#      @traps -= to_remove
-#
-#      messages
-#    end
 
     def trap(message)
 
