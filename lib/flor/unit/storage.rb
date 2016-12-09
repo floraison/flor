@@ -120,23 +120,21 @@ module Flor
         .where(exid: exid) # status active or terminated doesn't matter
         .first
 
-      ex =
-        if e
-          ex =
-            from_blob(e[:content]) ||
-            fail("couldn't parse execution (db id #{e[:id]})")
-          ex['id'] =
-            e[:id]
-          ex
-        else
-          put_execution({
-            'exid' => exid, 'nodes' => {}, 'errors' => [],
-            #'ashes' => {},
-            'counters' => {}, 'start' => Flor.tstamp
-          })
-        end
-
-      ex
+      if e
+        ex =
+          from_blob(e[:content]) ||
+          fail("couldn't parse execution (db id #{e[:id]})")
+        ex['id'] = e[:id]
+        ex['size'] = e[:content].length
+        ex
+      else
+        put_execution({
+          'exid' => exid, 'nodes' => {}, 'errors' => [],
+          #'ashes' => {},
+          'counters' => {}, 'start' => Flor.tstamp,
+          'size' => -1
+        })
+      end
     end
 
     def put_execution(ex)
@@ -155,15 +153,21 @@ module Flor
         ex['duration'] = Flor.to_time(ex['end']) - Flor.to_time(ex['start']) \
           if ex['end']
 
+        data = to_blob(ex)
+        ex['size'] = data.length
+
         synchronize do
           @db[:flor_executions]
             .where(id: i)
             .update(
-              content: to_blob(ex),
+              content: data,
               status: status,
               mtime: Time.now)
         end
       else
+
+        data = to_blob(ex)
+        ex['size'] = data.length
 
         synchronize do
           ex['id'] =
@@ -171,7 +175,7 @@ module Flor
               .insert(
                 domain: Flor.domain(ex['exid']),
                 exid: ex['exid'],
-                content: to_blob(ex),
+                content: data,
                 status: 'active',
                 ctime: Time.now,
                 mtime: Time.now)

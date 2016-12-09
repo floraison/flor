@@ -97,6 +97,19 @@ module Flor
 
     def do_run
 
+      puts(
+        Flor::Colours.dark_grey + '--- new run ' +
+        [
+          self.class, self.object_id, @exid,
+          { exid: @exid,
+            thread: Thread.current.object_id,
+            counters: @execution['counters'],
+            nodes: @execution['nodes'].size,
+            size: @execution['size'] }
+        ].inspect +
+        '---.' + Flor::Colours.reset
+      ) if @unit.conf['log_run']
+
       counter_next('runs')
 
       t0 = Time.now
@@ -138,21 +151,24 @@ module Flor
 
       @alive = false
 
+      x = @unit.storage.put_execution(@execution)
+      @unit.storage.put_messages(@messages)
+
       puts(
-        Flor::Colours.dark_grey + '---' +
+        Flor::Colours.dark_grey + '--- run over ' +
         [
           self.class, self.object_id, @exid,
           { took: Time.now - t0,
+            thread: Thread.current.object_id,
             consumed: @consumed.size,
             traps: @traps.size,
             #own_traps: @traps.reject { |t| t.texid == nil }.size, # FIXME
-            counters: @execution['counters'] }
+            counters: @execution['counters'],
+            nodes: @execution['nodes'].size,
+            size: x['size'] }
         ].inspect +
         '---.' + Flor::Colours.reset
       ) if @unit.conf['log_run']
-
-      @unit.storage.put_execution(@execution)
-      @unit.storage.put_messages(@messages)
 
       @consumed.clear
 
@@ -179,7 +195,7 @@ module Flor
           exid: @exid,
           alive: @alive,
           shutdown: @shutdown,
-          thread: @thread.to_s
+          thread: [ @thread.object_id, @thread.to_s ]
         }))
         f.puts('-' * 80)
         f.puts(on_do_run_exc(exc))
