@@ -36,6 +36,10 @@ class Flor::Pro::Until < Flor::Procedure
 
   def receive_first
 
+    @node['vars'] = {}
+    @node['vars']['break'] = [ '_proc', 'break', tree[-1] ]
+    @node['vars']['continue'] = [ '_proc', 'continue', tree[-1] ]
+
     execute_child(first_unkeyed_child_id || 0, @node['count'])
   end
 

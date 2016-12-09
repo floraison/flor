@@ -193,7 +193,10 @@ module Flor
         node, message, "don't know how to apply #{node['heat0'].inspect}"
       ) if heap == nil
 
-      head = Flor::Procedure[heap].new(self, node, message)
+      heac = Flor::Procedure[heap]
+      fail NameError.new("unknown procedure #{heap.inspect}") unless heac
+
+      head = heac.new(self, node, message)
 
       pt = message['point']
       pt = 'do_receive' if pt == 'receive'

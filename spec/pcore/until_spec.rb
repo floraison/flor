@@ -77,6 +77,27 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
     end
+
+    it 'stops upon meeting "break"' do
+
+      flon = %{
+        set f.a 1
+        until
+          = f.a 3
+          break _
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['a']).to eq(1)
+      expect(r['payload']['ret']).to eq(nil)
+    end
+
+    it 'stops upon meeting "break x" and returns x'
+    it 'skips upon meeting "continue"'
+    it 'respects an outer "break"'
+    it 'respects an outer "continue"'
   end
 
   describe 'while' do
@@ -142,6 +163,12 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
     end
+
+    it 'stops upon meeting "break"'
+    it 'stops upon meeting "break x" and returns x'
+    it 'skips upon meeting "continue"'
+    it 'respects an outer "break"'
+    it 'respects an outer "continue"'
   end
 end
 
