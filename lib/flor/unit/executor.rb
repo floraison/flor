@@ -51,6 +51,7 @@ module Flor
     def run
 
       @thread = Thread.new { do_run }
+#p [ :unit_executor, :thread, @thread.object_id ]
 
       self
     end
@@ -66,29 +67,30 @@ module Flor
     def on_do_run_exc(e)
 
       io = StringIO.new
+      thr = Thread.current
 
       head, kind =
         e.is_a?(StandardError) ? [ '=exe', 'error' ] : [ '!exe', 'exception' ]
 
       t = head[0, 2] + Time.now.to_f.to_s.split('.').last
-      io.puts '/' + t + ' ' + head * 17
-      io.puts "|#{t} + in #{self.class}#do_run"
-      io.puts "|#{t} #{kind}: #{e.inspect}"
-      io.puts "|#{t} db:  #{@unit.storage.db.class} #{@unit.storage.db.hash}"
-      io.puts "|#{t} thread: #{Thread.current.inspect}"
+      io.puts ' /' + t + ' ' + head * 17
+      io.puts " |#{t} + in #{self.class}#do_run"
+      io.puts " |#{t} #{kind}: #{e.inspect}"
+      io.puts " |#{t} db:  #{@unit.storage.db.class} #{@unit.storage.db.hash}"
+      io.puts " |#{t} thread: t#{thr.object_id} #{thr.inspect}"
       if @execution
-        io.puts "|#{t} exe:"
-        io.puts "|#{t}   exid: #{@execution['exid'].inspect}"
-        io.puts "|#{t}   counters: #{@execution['counters'].inspect}"
+        io.puts " |#{t} exe:"
+        io.puts " |#{t}   exid: #{@execution['exid'].inspect}"
+        io.puts " |#{t}   counters: #{@execution['counters'].inspect}"
       end
       if @messages
-        io.puts "|#{t} messages:"
-        io.puts "|#{t}   #{@messages.map { |m| [ m['mid'], m['point'] ] }.inspect}"
+        io.puts " |#{t} messages:"
+        io.puts " |#{t}   #{@messages.map { |m| [ m['mid'], m['point'] ] }.inspect}"
       end
-      io.puts "|#{t} #{kind}: #{e.inspect}"
-      io.puts "|#{t} backtrace:"
+      io.puts " |#{t} #{kind}: #{e.inspect}"
+      io.puts " |#{t} backtrace:"
       e.backtrace.each { |l| io.puts "|#{t} #{l}" }
-      io.puts '\\' + t + ' ' + (head * 17) + ' .'
+      io.puts ' \\' + t + ' ' + (head * 17) + ' .'
 
       io.string
     end

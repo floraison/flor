@@ -11,6 +11,9 @@ sto_uri: (ife
 #  "jdbc:sqlite::memory:" # not good
 #  "sqlite::memory:")
 
+sto_sync: true
+  # let's the storage sync access to DB, especially useful on JRuby + Sqlite
+
 sto_connection_validation: false
 #sto_connection_validation: true # sets to -1 (validates all the time)
 #sto_connection_validation: 60 # validates after 60 seconds

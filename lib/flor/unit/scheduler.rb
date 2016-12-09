@@ -97,16 +97,17 @@ module Flor
 
       head, kind =
         e.is_a?(StandardError) ? [ '=sch', 'error' ] : [ '!sch', 'exception' ]
+      thr = Thread.current
 
       t = head[0, 2] + Time.now.to_f.to_s.split('.').last
-      io.puts '/' + t + ' ' + head * 17
-      io.puts "|#{t} + in #{self.class}#start"
-      io.puts "|#{t} db: #{@storage.db.class} #{@storage.db.object_id}"
-      io.puts "|#{t} thread: #{Thread.current.inspect}"
-      io.puts "|#{t} #{kind}: #{e.inspect}"
-      io.puts "|#{t} backtrace:"
+      io.puts ' /' + t + ' ' + head * 17
+      io.puts " |#{t} + in #{self.class}#start"
+      io.puts " |#{t} db: #{@storage.db.class} #{@storage.db.object_id}"
+      io.puts " |#{t} thread: t#{thr.object_id} #{thr.inspect}"
+      io.puts " |#{t} #{kind}: #{e.inspect}"
+      io.puts " |#{t} backtrace:"
       e.backtrace.each { |l| io.puts "|#{t} #{l}" }
-      io.puts '\\' + t + ' ' + (head * 17) + ' .'
+      io.puts ' \\' + t + ' ' + (head * 17) + ' .'
 
       io.string
     end
@@ -131,6 +132,7 @@ module Flor
         else
 
           Thread.new do
+#p [ :unit_scheduler, :thread, Thread.current.object_id ]
             loop do
 
               begin
