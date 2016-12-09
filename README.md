@@ -6,6 +6,17 @@
 
 Flor is a "Ruby workflow engine", if that makes any sense.
 
+## Design
+
+* Strives to propose a scheming interpreter that supports long running
+  executions
+* Is written in Ruby a rather straightforward language with at least two
+  wonderful implementations (MRI and JRuby, which is enterprise-friendly)
+* Stores everything as JSON (if it breaks it's still readable)
+* Stores in any database supported by [Sequel](http://sequel.jeremyevans.net/)
+  (the JSON goes in the "content" columns, along with some index columns)
+* Favours naive/simple implementations over smart ones
+
 ## Documentation
 
 see [doc/](tree/master/doc).
