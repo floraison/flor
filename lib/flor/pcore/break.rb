@@ -32,8 +32,7 @@ class Flor::Pro::Break < Flor::Procedure
     reply(
       'point' => 'cancel',
       'nid' => @node['heat'][1]['nid'],
-      'flavour' => 'break',
-      'ret' => nil)
+      'flavour' => 'break')
   end
 end
 

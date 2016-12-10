@@ -84,17 +84,32 @@ describe 'Flor procedures' do
         set f.a 1
         until
           = f.a 3
-          break _
+          break _ # will return $(f.ret) (which is false)
       }
 
       r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['a']).to eq(1)
-      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['ret']).to eq(false)
     end
 
-    it 'stops upon meeting "break x" and returns x'
+    it 'stops upon meeting "break x" and returns x' do
+
+      flon = %{
+        set f.a 1
+        until
+          = f.a 3
+          break "over"
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['a']).to eq(1)
+      expect(r['payload']['ret']).to eq('over')
+    end
+
     it 'skips upon meeting "continue"'
     it 'respects an outer "break"'
     it 'respects an outer "continue"'

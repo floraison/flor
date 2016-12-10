@@ -40,7 +40,7 @@ class Flor::Pro::Until < Flor::Procedure
       {}
     @node['vars']['break'] =
       [ '_proc', { '_proc' => 'break', 'nid' => nid }, tree[-1] ]
-    @node['vars']['continue']
+    @node['vars']['continue'] =
       [ '_proc', { '_proc' => 'continue', 'nid' => nid }, tree[-1] ]
 
     execute_child(first_unkeyed_child_id || 0, @node['count'])
@@ -83,6 +83,22 @@ class Flor::Pro::Until < Flor::Procedure
 
       # no need to set 'ret', we're in some kind of sequence
       execute_child(@ncid, @node['count'])
+    end
+  end
+
+  def cancel
+
+    cancel_children +
+    case @message['flavour']
+      when 'break'
+        # TODO
+#p @message
+        cancel_reply
+      when 'continue'
+        # TODO
+        []
+      else
+        cancel_reply
     end
   end
 end
