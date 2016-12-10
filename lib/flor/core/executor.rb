@@ -333,6 +333,7 @@ module Flor
       begin
 
         message['m'] = counter_next('msgs') # number messages
+        message['pr'] = counter('runs') # "processing run"
 
         determine_heat(message)
 
@@ -346,7 +347,7 @@ module Flor
 
         ms += @unit.notify(self, message) # post
 
-        ms
+        ms.each { |m| m['er'] = counter('runs') } # "emitting run"
 
       rescue => e
         error_reply(nil, message, e)
