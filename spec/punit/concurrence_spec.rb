@@ -174,6 +174,8 @@ describe 'Flor punit' do
 
         expect(r['point']).to eq('terminated')
 
+        sleep 0.350
+
         expect(
           @unit.journal
             .drop_while { |m| m['point'] != 'task' }
