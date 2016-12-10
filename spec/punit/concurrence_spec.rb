@@ -179,17 +179,23 @@ describe 'Flor punit' do
         expect(
           @unit.journal
             .drop_while { |m| m['point'] != 'task' }
-            .collect { |m| "#{m['point']}-#{m['nid']}" }
+            .collect { |m| "e#{m['er']}p#{m['pr']}-#{m['point']}-#{m['nid']}" }
         ).to eq(%w[
-            task-0_0
-            task-0_1
-          cancel-0
-            cancel-0_0
-            cancel-0_1
-          receive-
-            detask-0_0
-            detask-0_1
-          terminated-
+              e1p1-task-0_0
+              e1p1-task-0_1
+            ep2-cancel-0
+              e2p2-cancel-0_0
+              e2p2-cancel-0_1
+              e2p2-detask-0_0
+              e2p2-detask-0_1
+              ep3-return-0_0
+              ep3-return-0_1
+              e3p3-receive-0_0
+              e3p3-receive-0_1
+            e3p3-receive-0
+            e3p3-receive-0
+          e3p3-receive-
+          e3p3-terminated-
         ])
       end
     end

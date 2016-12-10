@@ -399,7 +399,13 @@ class Flor::Procedure < Flor::Node
 
   def cancel
 
-    cancel_children + cancel_reply
+    nids = @node['cnodes']
+
+    if nids && nids.any?
+      cancel_children
+    else
+      cancel_reply
+    end
   end
 end
 
