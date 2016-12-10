@@ -158,7 +158,7 @@ module Flor
         elsif tree && tree[1] == []
           '_val'
         elsif heat[0] == '_proc'
-          heat[1]
+          heat[1].is_a?(String) ? heat[1] : heat[1]['_proc']
         elsif heat[0] == '_func'
           'apply'
         elsif heat[0] == '_task'
