@@ -155,6 +155,42 @@ describe 'Flor punit' do
         ])
       end
     end
+
+    context 'upon cancelling' do
+
+      it 'cancels all its children' do
+
+        flon = %{
+          concurrence
+            task 'hole'
+            task 'hole'
+        }
+
+        msg = @unit.launch(flon, wait: '0_1 task')
+
+        r = @unit.queue(
+          { 'point' => 'cancel', 'exid' => msg['exid'], 'nid' => '0' },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          @unit.journal
+            .drop_while { |m| m['point'] != 'task' }
+            .collect { |m| "#{m['point']}-#{m['nid']}" }
+        ).to eq(%w[
+            task-0_0
+            task-0_1
+          cancel-0
+            cancel-0_0
+            cancel-0_1
+          receive-
+            detask-0_0
+            detask-0_1
+          terminated-
+        ])
+      end
+    end
   end
 end
 
