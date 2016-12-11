@@ -128,7 +128,27 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq([ 0, 1, 2 ])
     end
 
-    it 'respects an outer "break"'
+    it 'respects an outer "break"' do
+
+      flon = %{
+        until
+          false
+          push f.l 0
+          set f.outer-break break
+          until false
+            push f.l 'a'
+            f.outer-break 'x'
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('x')
+      expect(r['payload']['l']).to eq([ 0, 'a' ])
+
+      expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
+    end
+
     it 'respects an outer "continue"'
   end
 

@@ -50,7 +50,11 @@ class Flor::Pro::Until < Flor::Procedure
     #
     # receiving from a non_att child (condition or block)
 
-    if @fcid == first_unkeyed_child_id
+    if @node['cflavour'] # "break" or "regular"
+
+      reply
+
+    elsif @fcid == first_unkeyed_child_id
 
       t0 = tree[0]
       tru = Flor.true?(payload['ret'])
@@ -88,13 +92,13 @@ class Flor::Pro::Until < Flor::Procedure
 
   def cancel
 
-    case @message['flavour']
-      when 'break'
-        cancel_reply
-      when 'continue'
-        execute_child(first_unkeyed_child_id, @node['count'] += 1)
-      else
-        cancel_reply
+    fla = @message['flavour'] || 'regular'
+
+    if fla == 'continue'
+      execute_child(first_unkeyed_child_id, @node['count'] += 1)
+    else
+      @node['cflavour'] = fla
+      super
     end
   end
 end
