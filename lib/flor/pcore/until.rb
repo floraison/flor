@@ -88,15 +88,11 @@ class Flor::Pro::Until < Flor::Procedure
 
   def cancel
 
-    cancel_children +
     case @message['flavour']
       when 'break'
-        # TODO
-#p @message
         cancel_reply
       when 'continue'
-        # TODO
-        []
+        execute_child(first_unkeyed_child_id, @node['count'] += 1)
       else
         cancel_reply
     end

@@ -110,7 +110,24 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq('over')
     end
 
-    it 'skips upon meeting "continue"'
+    it 'skips upon meeting "continue"' do
+
+      flon = %{
+        set f.a 0
+        until
+          = f.a 3
+          push f.l f.a
+          set f.a (+ f.a 1)
+          continue _
+          push f.l 'x'
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ 0, 1, 2 ])
+    end
+
     it 'respects an outer "break"'
     it 'respects an outer "continue"'
   end

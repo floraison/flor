@@ -25,14 +25,14 @@
 
 class Flor::Pro::Break < Flor::Procedure
 
-  name 'break'
+  name 'break', 'continue'
 
   def receive_last
 
     reply(
       'point' => 'cancel',
       'nid' => @node['heat'][1]['nid'],
-      'flavour' => 'break')
+      'flavour' => @node['heap']) # "break" or "continue"
   end
 end
 
