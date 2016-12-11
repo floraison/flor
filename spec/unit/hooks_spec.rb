@@ -40,6 +40,8 @@ describe 'Flor unit' do
           noop _
       }, wait: true)
 
+      sleep 0.770 # the wait might exit before the hook, especially on JRuby
+
       expect(
         msgs
           .collect { |m| %w[ point nid ].collect { |k| m[k].to_s }.join('-') }
