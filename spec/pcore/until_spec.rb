@@ -134,10 +134,10 @@ describe 'Flor procedures' do
         until
           false
           push f.l 0
-          set f.outer-break break
+          set outer-break break
           until false
             push f.l 'a'
-            f.outer-break 'x'
+            outer-break 'x'
       }
 
       r = @executor.launch(flon, payload: { 'l' => [] })
@@ -149,7 +149,29 @@ describe 'Flor procedures' do
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
     end
 
-    it 'respects an outer "continue"'
+    it 'respects an outer "continue"' do
+
+      flon = %{
+        set f.i 0
+        set f.j 0
+        until (= f.i 2)
+          set outer-continue continue
+          push f.l "i$(f.i)"
+          set f.i (+ f.i 1)
+          until (= f.j 2)
+            push f.l "j$(f.j)"
+            set f.j (+ f.j 1)
+            outer-continue _ if (= f.i 1)
+            push f.l "jj$(f.j)"
+          push f.l "ii$(f.i)"
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['l']).to eq(%w[ i0 j0 i1 j1 jj2 ii2 ])
+    end
   end
 
   describe 'while' do
