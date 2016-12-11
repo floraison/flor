@@ -40,7 +40,15 @@ describe 'Flor unit' do
           noop _
       }, wait: true)
 
-      expect(msgs).to eq(@unit.journal)
+      expect(
+        msgs
+          .collect { |m| %w[ point nid ].collect { |k| m[k].to_s }.join('-') }
+          .join("\n")
+      ).to eq(
+        @unit.journal
+          .collect { |m| %w[ point nid ].collect { |k| m[k].to_s }.join('-') }
+          .join("\n")
+      )
     end
 
     it 'may alter a message' do
