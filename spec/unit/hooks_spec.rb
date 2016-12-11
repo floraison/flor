@@ -40,6 +40,8 @@ describe 'Flor unit' do
           noop _
       }, wait: true)
 
+#      sleep 0.770 # ensure the hooks all fire
+
       expect(
         msgs
           .collect { |m| %w[ point nid ].collect { |k| m[k].to_s }.join('-') }

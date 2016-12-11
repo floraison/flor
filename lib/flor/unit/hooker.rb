@@ -66,14 +66,18 @@ module Flor
 
       hook = hook.new(@unit) if hook.is_a?(Class)
 
+      @rhooks = nil
+      @whooks = nil
       @hooks << [ name, opts, hook, block ]
     end
 
     def notify(executor, message)
 
-      hooks = @hooks + executor.traps.collect(&:to_hook)
-
-      hooks.inject([]) do |a, (_, opts, hook, block)|
+      (
+        regular_hooks +
+        executor.traps.collect(&:to_hook) +
+        wlist_hooks
+      ).inject([]) do |a, (n, opts, hook, block)|
         # name of hook is piped into "_" oblivion
 
         a.concat(
@@ -99,6 +103,13 @@ module Flor
     end
 
     protected
+
+    def regular_hooks
+      @rhooks ||= @hooks.reject { |h| h.is_a?(Flor::WaitList) }
+    end
+    def wlist_hooks
+      @whooks ||= @hooks.select { |h| h.is_a?(Flor::WaitList) }
+    end
 
     def o(opts, *keys)
 
