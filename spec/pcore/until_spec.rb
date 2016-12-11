@@ -302,17 +302,37 @@ describe 'Flor procedures' do
           while (< j 3)
             set j (+ j 1)
             push f.l "i$(i)j$(j)"
-            outer-break _ if j = 2
+            outer-break 'done.' if j = 2
       }
 
       r = @executor.launch(flon, :payload => { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(true)
+      expect(r['payload']['ret']).to eq('done.')
       expect(r['payload']['l']).to eq(%w[ i1 i1j1 i1j2 ])
     end
 
-    it 'respects an outer "continue"'
+    it 'respects an outer "continue"' do
+
+      flon = %{
+        set i 0
+        while (< i 3)
+          set outer-continue continue
+          set i (+ i 1)
+          push f.l "i$(i)"
+          set j 0
+          while (< j 3)
+            set j (+ j 1)
+            outer-continue _ if j = 2
+            push f.l "i$(i)j$(j)"
+      }
+
+      r = @executor.launch(flon, :payload => { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['l']).to eq(%w[ i1 i1j1 i2 i2j1 i3 i3j1 ])
+    end
   end
 end
 
