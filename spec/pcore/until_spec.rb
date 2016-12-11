@@ -272,7 +272,24 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq([ 0 ])
     end
 
-    it 'skips upon meeting "continue"'
+    it 'skips upon meeting "continue"' do
+
+      flon = %{
+        set f.i 0
+        while (< f.i 3)
+          push f.l "a$(f.i)"
+          set f.i (+ f.i 1)
+          continue _ if (= f.i 1)
+          push f.l "b$(f.i)"
+      }
+
+      r = @executor.launch(flon, :payload => { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['l']).to eq(%w[ a0 a1 b2 a2 b3 ])
+    end
+
     it 'respects an outer "break"'
     it 'respects an outer "continue"'
   end
