@@ -61,7 +61,7 @@ describe 'Flor core' do
     it 'accepts the name of a function' do
 
       flon = %{
-        define mute err; noop
+        define mute err; 'muted.'
         sequence on_error: mute
           push f.l 0
       }
@@ -69,7 +69,7 @@ describe 'Flor core' do
       r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']).to eq({ 'ret' => 0 })
+      expect(r['payload']).to eq({ 'ret' => 'muted.' })
     end
   end
 end
