@@ -379,11 +379,11 @@ module Flor
     def failed(message)
 
 #begin
-       node(message['nid'])['failure'] = message
+       node(message['nid'])['failure'] = Flor.dup(message)
 #rescue; p message; exit 0; end
 
       if nd = lookup_on_error_parent(message)
-        return nd.to_procedure.trigger_on_error(message) # FIXME to_procedure...
+        return nd.to_procedure.trigger_on_error # FIXME to_procedure...
       end
 
       Flor.detail_msg(self, message) if @unit.conf['log_err']

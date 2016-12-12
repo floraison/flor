@@ -53,12 +53,22 @@ class Flor::Procedure < Flor::Node
     # empty default implementation
   end
 
-  def trigger_on_error(message)
+  def trigger_on_error
 
-    message['on_error'] = @node['on_error'].shift
+    @message['on_error'] = true
 
-    cancel_children +
-    apply(message['on_error'], [ message ], tree[2])
+    @node['status'] =
+      'triggered-on-error'
+    @node['on_receive_last'] =
+      apply(@node['on_error'].shift, [ @message ], tree[2])
+
+    nids = @node['cnodes']
+
+    if nids && nids.any?
+      cancel_children
+    else
+      do_receive # which should trigger 'on_receive_last'
+    end
   end
 
   protected
@@ -188,7 +198,12 @@ class Flor::Procedure < Flor::Node
 
   def do_receive
 
-    return reply if @message['from_on_branch']
+    if @node['status']
+      if @node['cnodes'] == [ from ]
+        return @node.delete('on_receive_last') || reply
+      end
+      return reply
+    end
 
     receive
   end
