@@ -89,11 +89,35 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => -3 })
     end
+
+    it 'returns 0 if empty' do
+
+      flon = %{
+        - _
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']).to eq({ 'ret' => 0 })
+    end
+
+    it 'accepts 3 or more numbers' do
+
+      flon = %{
+        (- 3 4 5)
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']).to eq({ 'ret' => -6 })
+    end
   end
 
   describe '*' do
 
-    it 'returns 0 if empty' do
+    it 'returns 1 if empty' do
 
       flon = %{
         * _
@@ -102,7 +126,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']).to eq({ 'ret' => 0 })
+      expect(r['payload']).to eq({ 'ret' => 1 })
     end
 
     it 'multiplies three numbers' do
@@ -118,6 +142,57 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => -6 })
+    end
+  end
+
+  describe '/' do
+
+    it 'divides' do
+
+      flon = %{
+        set l []
+        push l
+          /
+            1
+            2
+        push l
+          /
+            1.0
+            2
+        l
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 0, 0.5 ])
+    end
+
+    it 'returns 1 when empty' do
+
+      flon = %{
+        / _
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(1)
+    end
+
+    it 'accepts 3 or more numbers' do
+
+      flon = %{
+        set l []
+        push l (/ 3 4 5)
+        push l (/ 3.0 4 5)
+        l
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 0, 0.15 ])
     end
   end
 end

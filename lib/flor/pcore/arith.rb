@@ -25,7 +25,9 @@
 
 class Flor::Pro::Arith < Flor::Procedure
 
-  names %w[ + - * ]
+  names %w[ + - * / ]
+
+  DEFAULTS = { :+ => 0, :* => 1, :- => 0, :/ => 1 }
 
   def pre_execute
 
@@ -34,7 +36,9 @@ class Flor::Pro::Arith < Flor::Procedure
 
   def receive_last
 
-    payload['ret'] = @node['rets'].reduce(&tree.first.to_sym) || 0
+    sign = tree.first.to_sym
+
+    payload['ret'] = @node['rets'].reduce(&sign) || DEFAULTS[sign]
 
     reply
   end
