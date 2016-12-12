@@ -272,9 +272,6 @@ class Flor::Procedure < Flor::Node
 
     m.merge!(h)
 
-    oeb = @node['on_error_branch']
-    m['from_on_branch'] = oeb if oeb && m['point'] == 'receive'
-
     m['payload']['ret'] = ret if ret != :no
 
     [ m ]
