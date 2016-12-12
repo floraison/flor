@@ -199,10 +199,8 @@ class Flor::Procedure < Flor::Node
   def do_receive
 
     if @node['status']
-      if @node['cnodes'] == [ from ]
-        return @node.delete('on_receive_last') || reply
-      end
-      return reply
+      orl = (@node['cnodes'] == [ from ]) && @node.delete('on_receive_last')
+      return orl || reply
     end
 
     receive
