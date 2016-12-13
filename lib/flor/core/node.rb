@@ -26,9 +26,9 @@
 class Flor::Node
 
   class Payload
-    def initialize(node, flavour=:node)
+    def initialize(node, type=:node)
       @node = node
-      @flavour = flavour
+      @type = type
     end
     def has_key?(k)
       current.has_key?(k)
@@ -53,7 +53,7 @@ class Flor::Node
     end
     protected
     def container
-      @flavour == :node ? @node.h : @node.message
+      @type == :node ? @node.h : @node.message
     end
     def original
       container['payload']
