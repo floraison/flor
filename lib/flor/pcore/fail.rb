@@ -31,7 +31,7 @@ class Flor::Pro::Fail < Flor::Procedure
 
     err =
       Flor::FlorError.new(
-        payload['ret'].to_s,
+        (payload['ret'] || 'error').to_s,
         Flor::Node.new(@executor, @node, @message))
 
     #fail err

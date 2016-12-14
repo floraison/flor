@@ -32,6 +32,22 @@ describe 'Flor procedures' do
       expect(r['error']['lin']).to eq(2)
       expect(r['error']['trc']).to eq(nil)
     end
+
+    it 'raises an error when empty too' do
+
+      flon = %{
+        fail _
+      }
+
+      r = @executor.launch(flon)
+
+      #pp r
+      expect(r['point']).to eq('failed')
+      expect(r['error']['kla']).to eq('Flor::FlorError')
+      expect(r['error']['msg']).to eq('error')
+      expect(r['error']['lin']).to eq(2)
+      expect(r['error']['trc']).to eq(nil)
+    end
   end
 
   describe 'error' do
