@@ -352,7 +352,7 @@ module Flor
       t = caller[1..-1]
     end
 
-    h['trc'] = t[0..(t.rindex { |l| l.match(/\/lib\/flor\//) }) + 1]
+    h['trc'] = t[0..(t.rindex { |l| l.match(/\/lib\/flor\//) }) + 1] if t
 
     h
   end

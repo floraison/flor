@@ -29,11 +29,17 @@ class Flor::Pro::Fail < Flor::Procedure
 
   def receive_last
 
-#puts "***"
-#pp @node
-#puts "+++"
-#pp @message
-    fail payload['ret'].to_s
+    err =
+      Flor::FlorError.new(
+        payload['ret'].to_s,
+        Flor::Node.new(@executor, @node, @message))
+
+    #fail err
+      #
+      # let's reply with the failed message directly,
+      # no need for a Ruby backtrace, it's an error at the Flor level.
+      #
+    reply('point' => 'failed', 'error' => Flor.to_error(err))
   end
 end
 

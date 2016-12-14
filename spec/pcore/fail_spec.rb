@@ -25,10 +25,12 @@ describe 'Flor procedures' do
 
       r = @executor.launch(flon)
 
+      #pp r
       expect(r['point']).to eq('failed')
-      expect(r['error']['kla']).to eq('RuntimeError')
+      expect(r['error']['kla']).to eq('Flor::FlorError')
       expect(r['error']['msg']).to eq('not enough flour')
-#pp r
+      expect(r['error']['lin']).to eq(2)
+      expect(r['error']['trc']).to eq(nil)
     end
   end
 
