@@ -375,12 +375,11 @@ module Flor
     def failed(message)
 
 #begin
-       node(message['nid'])['failure'] = Flor.dup(message)
+      node(message['nid'])['failure'] = Flor.dup(message)
 #rescue; p message; exit 0; end
 
-      if nd = lookup_on_error_parent(message)
-        return nd.to_procedure.trigger_on_error # FIXME to_procedure...
-      end
+      oep = lookup_on_error_parent(message)
+      return oep.trigger_on_error if oep
 
       Flor.detail_msg(self, message) if @unit.conf['log_err']
 
@@ -389,7 +388,8 @@ module Flor
 
     def lookup_on_error_parent(message)
 
-      Flor::Node.new(self, nil, message).on_error_parent
+      nd = Flor::Node.new(self, nil, message).on_error_parent
+      nd ? nd.to_procedure : nil
     end
   end
 end
