@@ -105,5 +105,34 @@ describe 'Flor unit' do
       expect(r['payload']).to eq({ 'x' => 1 })
     end
   end
+
+  describe 'cancelling a non-existing node' do
+
+    it 'has no effect' do
+
+      flon = %{
+        sequence
+          sequence
+            stall _
+      }
+
+      exid = @unit.launch(flon, wait: '0_0_0 receive')['exid']
+
+      expect(
+        @unit.executions.first(exid: exid).data['nodes'].keys
+      ).to eq(%w[ 0 0_0 0_0_0 ])
+
+      r = @unit.queue({
+        'point' => 'cancel',
+        'exid' => exid, 'nid' => '0_1',
+        'payload' => {} })
+
+      sleep 0.5
+
+      expect(
+        @unit.executions.first(exid: exid).data['nodes'].keys
+      ).to eq(%w[ 0 0_0 0_0_0 ])
+    end
+  end
 end
 
