@@ -91,11 +91,22 @@ class Flor::Pro::Until < Flor::Procedure
     fla = @message['flavour']
 
     if fla == 'continue'
-      execute_child(first_unkeyed_child_id, @node['count'] += 1)
+
+      @node['status'] =
+        'continued'
+      @node['on_receive_last'] = [ {
+        'point' => 'receive',
+        'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
+        'orl' => true,
+        'payload' => Flor.dup(message['payload'])
+      } ]
+
     else
+
       @node['status'] = fla == 'break' ? 'broken' : 'cancelled'
-      super
     end
+
+    super
   end
 end
 

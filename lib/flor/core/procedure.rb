@@ -199,11 +199,22 @@ class Flor::Procedure < Flor::Node
   def do_receive
 
     if @node['status']
-      orl = (@node['cnodes'] == [ from ]) && @node.delete('on_receive_last')
-      return orl || reply
+      receive_when_status
+    else
+      receive
     end
+  end
 
-    receive
+  def receive_when_status
+
+    @node.delete('status') if @node['status'] == 'continued'
+
+    ns = @node['cnodes']
+    ns.delete(from) if ns
+
+    orl = (ns == []) && @node.delete('on_receive_last')
+
+    orl || reply
   end
 
   def receive
@@ -214,7 +225,10 @@ class Flor::Procedure < Flor::Node
     @ncid = (@fcid || -1) + 1
 
     return receive_first if @fcid == nil
-    return receive_att if children[@fcid][0] == '_att'
+
+    child = children[@fcid]
+
+    return receive_att if child && child[0] == '_att'
 
     receive_non_att
   end
