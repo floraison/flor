@@ -48,11 +48,7 @@ class Flor::Pro::Cancel < Flor::Procedure
 
     nids, tags = targets.partition { |t| Flor.is_nid?(t) }
 
-    nids +=
-      @execution['nodes'].inject([]) { |a, (nid, n)|
-        a << nid if ((n['tags'] || []) & tags).any?
-        a
-      } if tags.any?
+    nids += tags_to_nids(tags)
 
     nids.uniq.collect { |nid|
       reply('point' => 'cancel', 'nid' => nid, 'flavour' => 'punit').first

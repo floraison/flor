@@ -163,6 +163,28 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq([ 0, 'a' ])
     end
 
+    it 'can do an outer break ref: x' do
+
+      flon = %{
+        until false, 'fuk', tag: 'main'
+        #until tag: 'main'
+          #false
+          fail 'fast'
+          push f.l 0
+          until false
+            push f.l 'a'
+            break 'x', ref: 'main'
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('x')
+      expect(r['payload']['l']).to eq([ 0, 'a' ])
+    end
+
     it 'respects an outer "continue"' do
 
       flon = %{
@@ -188,6 +210,8 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq(%w[ i0 j0 i1 j1 jj2 ii2 ])
     end
+
+    it 'can do an outer continue ref: x'
   end
 
   describe 'while' do

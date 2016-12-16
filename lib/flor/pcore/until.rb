@@ -31,7 +31,7 @@ class Flor::Pro::Until < Flor::Procedure
 
     @node['count'] = 1
 
-    unatt_unkeyed_children
+    unatt_first_unkeyed_child
   end
 
   def receive_first

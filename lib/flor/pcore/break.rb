@@ -27,11 +27,22 @@ class Flor::Pro::Break < Flor::Procedure
 
   name 'break', 'continue'
 
+  def pre_execute
+
+    @node['atts'] = []
+  end
+
   def receive_last
+
+    ref = att('ref')
+p ref
+p tags_to_nids(ref)
+    nid = tags_to_nids(ref).first || @node['heat'][1]['nid']
+p nid
 
     reply(
       'point' => 'cancel',
-      'nid' => @node['heat'][1]['nid'],
+      'nid' => nid,
       'flavour' => @node['heap']) # "break" or "continue"
   end
 end

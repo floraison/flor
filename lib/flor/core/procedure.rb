@@ -121,6 +121,16 @@ class Flor::Procedure < Flor::Node
     end
   end
 
+  def tags_to_nids(tags)
+
+    tags = Array(tags)
+
+    @execution['nodes'].inject([]) { |a, (nid, n)|
+      a << nid if ((n['tags'] || []) & tags).any?
+      a
+    }
+  end
+
   def execute_child(index=0, sub=0, duplicate_payload=false)
 
     return reply \
@@ -165,9 +175,20 @@ class Flor::Procedure < Flor::Node
     t[0].is_a?(String) && t[1] == []
   end
 
-  def unatt_unkeyed_children
+  def unatt_unkeyed_children(first_only=false)
 
-    unkeyed, keyed = att_children.partition { |c| c[1].size == 1 }
+    found = false
+
+    unkeyed, keyed =
+      att_children.partition { |c|
+        if found
+          false
+        else
+          is_unkeyed = c[1].size == 1
+          found = true if is_unkeyed && first_only
+          is_unkeyed
+        end
+      }
 
     unkeyed = unkeyed
       .collect { |c| c[1].first }
@@ -176,6 +197,11 @@ class Flor::Procedure < Flor::Node
     cn = keyed + unkeyed + non_att_children
 
     @node['tree'] = [ tree[0], cn, tree[2] ] if cn != children
+  end
+
+  def unatt_first_unkeyed_child
+
+    unatt_unkeyed_children(true)
   end
 
   def stringify_first_child
