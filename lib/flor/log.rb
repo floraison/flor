@@ -265,7 +265,7 @@ module Flor
     l < 35 ? s : "#{s[0, 35]}(...L#{l})"
   end
 
-  def self.node_to_s(i, n, opts, here=false)
+  def self.node_to_s(n, opts, here=false)
 
     _rs, _dg, _yl, _bl, _gy, _gn, _rd = colours(opts)
 
@@ -284,12 +284,46 @@ module Flor
 
     vs = n['vars']
     vs = 'vars:' + vs.keys.join(',') if vs
+    ts = n['tags']
+    ts = 'tags:' + ts.join(',') if ts
 
     flr = n['failure'] ? "#{_rd}flre" : ''
 
     here = here ? "#{_dg}<---msg['nid']" : nil
 
-    [ "#{i}.", n['nid'], t, h, vs, flr, here ].compact.join(' ')
+    [ _yl + n['nid'], t, h, ts, vs, flr, here ].compact.join(' ')
+  end
+
+  def self.ncns_to_s(ncn, msg, opts, sio, ind, seen)
+
+    n, cn = ncn
+    nid = n['nid']
+
+    return if seen.include?(nid)
+    seen << nid
+
+    sio.print(ind)
+    sio.print(node_to_s(n, opts, nid == msg['nid']))
+    sio.print("\n")
+    cn.each { |c| ncns_to_s(c, msg, opts, sio, ind + ' ', seen) }
+  end
+
+  def self.nodes_to_s(nodes, msg, opts)
+
+    nodes = nodes.inject({}) { |h, n| h[n['nid']] = [ n, [] ]; h }
+    nodes.values.each { |ncn|
+      pa = ncn.first['parent']; next unless pa
+      pan, pacn = nodes[pa]
+      pacn << ncn if pacn
+    }
+
+    sio = StringIO.new
+    seen = []
+    nodes.values.each do |ncn|
+      ncns_to_s(ncn, msg, opts, sio, ' ', seen)
+    end
+
+    sio.string
   end
 
   def self.detail_msg(executor, m, opts={})
@@ -305,10 +339,7 @@ module Flor
     puts "#{_dg}payload:#{_yl}"
     Kernel::pp m['payload']
     puts "#{_dg}nodes:"
-    executor.execution['nodes'].values.each_with_index do |n, i|
-      print _yl
-      puts node_to_s(i, n, opts, n['nid'] == m['nid'])
-    end
+    puts nodes_to_s(executor.execution['nodes'].values, m, opts)
     z = executor.execution['nodes'].size
     puts "#{_yl}#{z} node#{z == 1 ? '' : 's'}."
     puts "#{_dg}</Flor.detail_msg>#{_rs}"
