@@ -193,7 +193,6 @@ describe 'Flor procedures' do
       flon = %{
         until tag: 'main'
           false
-          fail 'fast'
           push f.l 0
           until false
             push f.l 'a'

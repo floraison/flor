@@ -34,11 +34,9 @@ class Flor::Pro::Break < Flor::Procedure
 
   def receive_last
 
+#debug_tree
     ref = att('ref')
-p ref
-p tags_to_nids(ref)
     nid = tags_to_nids(ref).first || @node['heat'][1]['nid']
-p nid
 
     reply(
       'point' => 'cancel',
