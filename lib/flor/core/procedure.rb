@@ -71,6 +71,16 @@ class Flor::Procedure < Flor::Node
     end
   end
 
+  def debug_tree
+
+    Flor.print_tree(tree, nid)
+  end
+
+  def debug_msg
+
+    Flor.detail_msg(@executor, message)
+  end
+
   protected
 
   def children
