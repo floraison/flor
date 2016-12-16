@@ -51,6 +51,31 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(nil)
     end
 
+    it "accepts a tag:" do
+
+      flon = %{
+        set f.a 1
+        until tag: 'xx'
+          = f.a 2
+          set f.a (+ f.a 1)
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['a']).to eq(2)
+      expect(r['payload']['ret']).to eq(nil)
+
+      expect(
+        @executor.journal \
+          .select { |m| %w[ entered left ].include?(m['point']) } \
+          .collect { |m| [ m['point'], m['nid'], m['tags'].join(',') ] } \
+          .collect { |a| a.join(':') }
+      ).to eq(%w[
+        entered:0_1:xx left:0_1:xx
+      ])
+    end
+
     it "returns the last child's f.ret" do
 
       flon = %{
@@ -166,9 +191,8 @@ describe 'Flor procedures' do
     it 'can do an outer break ref: x' do
 
       flon = %{
-        until false, 'fuk', tag: 'main'
-        #until tag: 'main'
-          #false
+        until tag: 'main'
+          false
           fail 'fast'
           push f.l 0
           until false
