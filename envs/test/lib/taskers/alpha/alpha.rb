@@ -11,8 +11,10 @@ class AlphaTasker
 
   def task(message)
 
-    message['payload']['seen'] =
-      [ message['tasker'], self.class, Time.now, Flor.dup(message['payload']) ]
+    pl = message['payload'].select { |k, v| k != 'seen' }
+
+    (message['payload']['seen'] ||= []) <<
+      [ message['tasker'], self.class, Time.now, Flor.dup(pl) ]
 
     @tasker.reply(message)
   end

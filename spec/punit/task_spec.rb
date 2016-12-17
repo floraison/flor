@@ -36,8 +36,9 @@ describe 'Flor punit' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('alpha')
-      expect(r['payload']['seen'][0]).to eq('alpha')
-      expect(r['payload']['seen'][1]).to eq('AlphaTasker')
+      expect(r['payload']['seen'].size).to eq(1)
+      expect(r['payload']['seen'].first[0]).to eq('alpha')
+      expect(r['payload']['seen'].first[1]).to eq('AlphaTasker')
     end
 
     it 'can be cancelled' do
