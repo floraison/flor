@@ -24,6 +24,8 @@
 
 
 class Flor::Pro::Break < Flor::Procedure
+  #
+  # DOC
 
   name 'break', 'continue'
 
