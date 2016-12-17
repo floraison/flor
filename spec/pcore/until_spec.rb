@@ -234,7 +234,30 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq(%w[ i0 j0 i1 j1 jj2 ii2 ])
     end
 
-    it 'can do an outer continue ref: x'
+    it 'can do an outer continue ref: x' do
+
+      flon = %{
+        set f.i 0
+        set f.j 0
+        until (= f.i 2), tag: 'out'
+          push f.l "i$(f.i)"
+          set f.i (+ f.i 1)
+          until (= f.j 2)
+            push f.l "j$(f.j)"
+            set f.j (+ f.j 1)
+            continue ref: 'out', if (= f.i 1)
+            push f.l "jj$(f.j)"
+          push f.l "ii$(f.i)"
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['l']).to eq(%w[ i0 j0 i1 j1 jj2 ii2 ])
+    end
   end
 
   describe 'while' do
