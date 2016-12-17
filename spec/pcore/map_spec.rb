@@ -104,6 +104,39 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 0, 1 ])
     end
+
+    it 'maps thanks to the last fun in the block' do
+
+      flon = %{
+        map [ 0, 1 ]
+          define sum x
+            set y (+ y 1)
+            + x y
+          set y 2
+          sum
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 3, 5 ])
+    end
+
+    it 'maps thanks to the last fun in the block' do
+
+      flon = %{
+        map [ 0, 1 ]
+          set y 1
+          def x
+            set y (+ y 1)
+            + x y
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 2, 4 ])
+    end
   end
 end
 
