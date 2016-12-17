@@ -25,7 +25,11 @@
 
 class Flor::Pro::Break < Flor::Procedure
   #
+  # SUMMARY
+  # summary line 2
+  #
   # DOC
+  # doc line 2
 
   name 'break', 'continue'
 

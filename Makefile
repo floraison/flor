@@ -57,8 +57,7 @@ mk:
 	$(RUBY) -Ilib -e "require 'flor/tools/env'; Flor::Tools::Env.make('tmp', '$(FLOR_ENV)', gitkeep: true)"
 
 doc:
-	$(RUBY) -Imak -r 'doc' -e "make_procedures_doc('core')"
-	#$(RUBY) -Imak -r 'doc' -e "make_procedures_doc('unit')"
+	$(RUBY) -Imak -r 'doc' -e "make_procedures_doc()"
 
 .PHONY: doc
 
