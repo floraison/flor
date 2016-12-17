@@ -59,5 +59,9 @@ mk:
 doc:
 	$(RUBY) -Imak -r 'doc' -e "make_procedures_doc()"
 
-.PHONY: doc
+repl:
+	$(RUBY) -Ilib -r 'flor/tools/repl' -e 'Flor::Tools::Repl.start("$(FLOR_ENV)")'
+r: repl
+
+.PHONY: doc repl
 
