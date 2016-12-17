@@ -3,7 +3,8 @@
 
 ## core
 
-* [break, continue](break.md) - SUMMARY summary line 2
+* [break, continue](break.md) - Breaks or continues a "while" or "until".
+* [sequence, begin](sequence.md) - Executes child expressions in sequence.
 
 ## unit
 
