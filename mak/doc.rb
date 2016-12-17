@@ -46,7 +46,7 @@ def make_procedures_doc
 
   procs =
     (
-      Dir["lib/flor/pcore/*.rb"] + Dir["lib/flor/punit*.rb"]
+      Dir["lib/flor/pcore/*.rb"] + Dir["lib/flor/punit/*.rb"]
     ).collect { |path| make_proc_doc(path) }.compact
   pp procs
 
@@ -65,7 +65,7 @@ def make_procedures_doc
     f.puts
     f.puts '## unit'
     f.puts
-    procs.each do |flavour, procedure, fname, summary|
+    procs.each do |flavour, names, fname, summary|
       f.puts(
         "* [#{names.join(', ')}](#{fname}) - #{summary}"
       ) if flavour == 'unit'
