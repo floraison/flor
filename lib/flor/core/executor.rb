@@ -235,9 +235,23 @@ module Flor
       ]
     end
 
-    def termination?(message)
+    def receive_toc(message, fnode)
 
-      message['from'] == '0' || @execution['nodes'].empty?
+      msg =
+        %w[
+          exid nid from payload
+        ].inject({}) { |h, k| h[k] = message[k] if message.has_key?(k); h }
+
+      msg['sm'] = message['m']
+
+      if message['from'] == '0' || @execution['nodes'].empty? # termination?
+        msg['point'] = 'terminated'
+        msg['vars'] = (fnode || {})['vars']
+      else
+        msg['point'] = 'ceased'
+      end
+
+      [ msg ]
     end
 
     def receive(message)
@@ -251,20 +265,7 @@ module Flor
       nid = message['nid']
       nid = nil if fnode && fnode['noreply']
 
-      begin
-        msg =
-          %w[ exid nid from payload ].inject({}) { |h, k|
-            h[k] = message[k] if message.has_key?(k)
-            h
-          }
-        if termination?(message)
-          msg['point'] = 'terminated'
-          msg['vars'] = (fnode || {})['vars']
-        else
-          msg['point'] = 'ceased'
-        end
-        return messages + [ msg ]
-      end unless nid
+      return messages + receive_toc(message, fnode) unless nid
 
       node = @execution['nodes'][nid]
 

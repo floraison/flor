@@ -71,6 +71,22 @@ describe 'Flor core' do
     end
   end
 
+  describe 'a "terminated" message' do
+
+    it 'has a source message "sm"' do
+
+      flon = %{
+        sequence _
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['m']).to eq(5)
+      expect(r['sm']).to eq(4)
+    end
+  end
+
   context 'common _att' do
 
     describe 'vars' do
