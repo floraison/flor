@@ -45,6 +45,32 @@ describe 'Flor core' do
     end
   end
 
+  context 'a postfix conditional' do
+
+    it 'is a call wrapped' do
+      #
+      # `break if a == 3`
+      # is equivalent to
+      # ```
+      # ife a == 3
+      #   break _
+      # ```
+      # (note the underscore)
+
+      flon = %{
+        set a 3
+        until true
+          break if a == 3
+          set a (+ a 1)
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+    end
+  end
+
   context 'common _att' do
 
     describe 'vars' do
