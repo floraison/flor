@@ -88,6 +88,13 @@ module Flor
 
     protected
 
+    def is_a_message_array?(o)
+
+      o.is_a?(Array) &&
+      o.first.is_a?(Hash) &&
+      o.first['point'].is_a?(String)
+    end
+
     def ruby_task(message, tconf)
 
       root = File.dirname(tconf['_path'])
@@ -101,13 +108,21 @@ module Flor
 
       tasker = k.new(self, tconf)
 
-      if message['point'] == 'detask'
-        tasker.cancel(message)
-      else
-        tasker.task(message)
-      end
+      r =
+        if message['point'] == 'detask'
+          tasker.cancel(message)
+        else
+          tasker.task(message)
+        end
 
-      []
+      # if the tasker returns something intelligible, use it
+      # else reply with "nothing further to do" (empty message array)
+
+      if is_a_message_array?(r)
+        r
+      else
+        []
+      end
     end
 
     def cmd_task(message, tconf)

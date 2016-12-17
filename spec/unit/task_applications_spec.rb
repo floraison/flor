@@ -112,6 +112,27 @@ describe 'Flor unit' do
         { 'ret' => 'alpha', 'atts' => { 'x' => 2 } }
       ])
     end
+
+    it 'can be cancelled' do
+
+      flon = %{
+        task 'bravo' x: 0
+      }
+
+      r = @unit.launch(flon, wait: '0 task')
+
+      expect(r['point']).to eq('task')
+      expect(r['nid']).to eq('0')
+
+      sleep 0.420
+
+      r = @unit.queue(
+        { 'point' => 'cancel', 'exid' => r['exid'], 'nid' => '0' },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('bravo cancelled')
+    end
   end
 end
 
