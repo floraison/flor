@@ -3,9 +3,9 @@ require 'flor'
 require 'flor/unit'
 
 module Flor::Tools
-  module Repl
+  class Repl
 
-    def self.start(env)
+    def initialize(env)
 
       unit = Flor::Unit.new("envs/#{env}/etc/conf.json")
 
@@ -29,7 +29,7 @@ module Flor::Tools
       $stdout.puts
     end
 
-    protected # somehow
+    protected
 
     def cmd_launch
     end
