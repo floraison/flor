@@ -36,7 +36,7 @@ describe 'Flor unit' do
 
       exid = @unit.launch(flon)
 
-      sleep 0.350
+      sleep 0.777
 
       ts = @unit.timers.all
       t = ts.first
