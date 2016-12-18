@@ -167,7 +167,10 @@ module Flor::Tools
         Readline.readline(@prompt, true)
       end
       Readline.completion_proc =
-        proc { |s| COMMANDS.grep(/^#{Regexp.escape(s)}/) }
+        proc { |s|
+          r = /^#{Regexp.escape(s)}/
+          COMMANDS.grep(r) + Dir["#{s}*"].grep(r)
+        }
       #Readline.completion_append_character =
       #  " "
     rescue LoadError => le
