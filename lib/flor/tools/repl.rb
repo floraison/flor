@@ -35,7 +35,12 @@ module Flor::Tools
         cmd = "cmd_#{line.split(/\s/).first}".to_sym
 
         if cmd.size > 4 && methods.include?(cmd)
-          send(cmd, line)
+          begin
+            send(cmd, line)
+          rescue StandardError, NotImplementedError => err
+            p err
+            err.backtrace[0, 7].each { |l| puts "  #{l}" }
+          end
         else
           @lines << line
         end
@@ -46,57 +51,84 @@ module Flor::Tools
 
     protected
 
+    def hlp_launch
+      %{ launches the current execution code }
+    end
+    alias hlp_run hlp_launch
+
     def cmd_launch(line)
 
-puts "launched..."
+      fail NotImplementedError
     end
     alias cmd_run cmd_launch
 
+    def hlp_help
+      %{ displays this help }
+    end
     def cmd_help(line)
 
-puts "help..."
+      puts
+      puts "## available commands:"
+      puts
+      COMMANDS.each do |cmd|
+        print "* #{cmd}"
+        if hlp = (send("hlp_#{cmd}") rescue nil); print " - #{hlp.strip}"; end
+        puts
+      end
+      puts
     end
 
+    def hlp_exit
+      %{ exits this repl, with the given int exit code or 0 }
+    end
     def cmd_exit(line)
 
-      exit(0)
+      exit(line.split(/\s+/)[1].to_i)
     end
 
+    def hlp_list
+      %{ lists the lines of the current execution code }
+    end
     def cmd_list(line)
 
       w = [ 2, @lines.size.to_s.length ].max
 
       @lines.each_with_index do |l, i|
-        puts "%0#{w}i  %s" % [ i, l ]
+        puts "%0#{w}i  %s" % [ i + 1, l ]
       end
     end
 
     def cmd_new(line)
-# TODO erase lines, payload and vars
+
+      fail NotImplementedError
     end
+
     def cmd_save(line)
-# TODO save lines (and payload and vars) to a file
+
+      fail NotImplementedError
     end
 
     def cmd_cont(line)
-# TODO eventually, resume the current execution
+
+      fail NotImplementedError
     end
 
     #
     # use Readline if possible
+
+    COMMANDS = self.allocate.methods \
+      .select { |m| m.to_s.match(/^cmd_/) }.collect { |m| m[4..-1] }.sort
 
     begin
       require 'readline'
       def prompt_and_read(prompt)
         Readline.readline(@prompt, true)
       end
-      COMMANDS = self.allocate.methods \
-        .select { |m| m.to_s.match(/^cmd_/) }.collect { |m| m[4..-1] }
       Readline.completion_proc =
         proc { |s| COMMANDS.grep(/^#{Regexp.escape(s)}/) }
       #Readline.completion_append_character =
       #  " "
-    rescue LoadError => e
+    rescue LoadError => le
       def prompt_and_read(prompt)
         print(prompt)
         ($stdin.readline rescue false)
