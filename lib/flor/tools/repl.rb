@@ -27,7 +27,7 @@ module Flor::Tools
 
       loop do
 
-        line = prompt_and_read(@prompt)
+        line = prompt_and_read
 
         break unless line
         next if line.strip == ''
@@ -91,10 +91,11 @@ module Flor::Tools
     end
     def cmd_list(line)
 
-      w = [ 2, @lines.size.to_s.length ].max
+      lw = [ 2, @lines.size.to_s.length ].max
+      sw = 5 - lw
 
       @lines.each_with_index do |l, i|
-        puts "%0#{w}i  %s" % [ i + 1, l ]
+        puts "% #{sw}s%0#{lw}i %s" % [ '', i + 1, l ]
       end
     end
 
@@ -121,7 +122,7 @@ module Flor::Tools
 
     begin
       require 'readline'
-      def prompt_and_read(prompt)
+      def prompt_and_read
         Readline.readline(@prompt, true)
       end
       Readline.completion_proc =
@@ -129,8 +130,8 @@ module Flor::Tools
       #Readline.completion_append_character =
       #  " "
     rescue LoadError => le
-      def prompt_and_read(prompt)
-        print(prompt)
+      def prompt_and_read
+        print(@prompt)
         ($stdin.readline rescue false)
       end
     end
