@@ -243,18 +243,20 @@ module Flor
 
   def self.print_tree(tree, nid='0', opts={})
 
+    headers = opts[:headers]; headers = true if headers.nil?
+
     _rs, _dg, _yl = colours(opts)
 
     h = "#{_yl}#{Flor.s_to_d(tree[0], compact: true)}"
     c = tree[1].is_a?(Array) ? '' : " #{_yl}#{tree[1]}"
     l = " #{_dg}L#{tree[2]}"
 
-    puts "#{_dg}+---#{_rs}" if nid == '0'
+    puts "#{_dg}+---#{_rs}" if headers && nid == '0'
     puts "#{_dg}| #{nid} #{h}#{c}#{l}#{_rs}"
     if tree[1].is_a?(Array)
       tree[1].each_with_index { |ct, i| print_tree(ct, "#{nid}_#{i}", opts) }
     end
-    puts "#{_dg}.#{_rs}" if nid == '0'
+    puts "#{_dg}.#{_rs}" if headers && nid == '0'
   end
 
   def self.ret_to_s(executor, m)

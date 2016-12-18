@@ -99,6 +99,17 @@ module Flor::Tools
       end
     end
 
+    def hlp_parse
+      %{ parses the current execution code and displays its tree }
+    end
+    def cmd_parse(line)
+
+      Flor.print_tree(
+        Flor::Lang.parse(@lines.join("\n"), nil, {}),
+        '0',
+        headers: false)
+    end
+
     def cmd_new(line)
 
       fail NotImplementedError
