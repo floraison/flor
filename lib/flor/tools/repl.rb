@@ -2,18 +2,6 @@
 require 'flor'
 require 'flor/unit'
 
-begin
-  require 'readline'
-  def prompt_and_read(prompt)
-    Readline.readline(@prompt, true)
-  end
-rescue LoadError => e
-  def prompt_and_read(prompt)
-    print(prompt)
-    ($stdin.readline rescue false)
-  end
-end
-
 
 module Flor::Tools
   class Repl
@@ -45,7 +33,8 @@ module Flor::Tools
         next if line.strip == ''
 
         cmd = "cmd_#{line.split(/\s/).first}".to_sym
-        if cmd.size > 4 && respond_to?(cmd)
+
+        if cmd.size > 4 && methods.include?(cmd)
           send(cmd, line)
         else
           @lines << line
@@ -91,6 +80,27 @@ puts "help..."
 
     def cmd_cont(line)
 # TODO eventually, resume the current execution
+    end
+
+    #
+    # use Readline if possible
+
+    begin
+      require 'readline'
+      def prompt_and_read(prompt)
+        Readline.readline(@prompt, true)
+      end
+      COMMANDS = self.allocate.methods \
+        .select { |m| m.to_s.match(/^cmd_/) }.collect { |m| m[4..-1] }
+      Readline.completion_proc =
+        proc { |s| COMMANDS.grep(/^#{Regexp.escape(s)}/) }
+      #Readline.completion_append_character =
+      #  " "
+    rescue LoadError => e
+      def prompt_and_read(prompt)
+        print(prompt)
+        ($stdin.readline rescue false)
+      end
     end
   end
 end
