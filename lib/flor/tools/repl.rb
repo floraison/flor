@@ -91,11 +91,13 @@ module Flor::Tools
     end
     def cmd_list(line)
 
+      _rs, _dg, _yl = Flor.colours({})
+
       lw = [ 2, @lines.size.to_s.length ].max
       sw = 5 - lw
 
       @lines.each_with_index do |l, i|
-        puts "% #{sw}s%0#{lw}i %s" % [ '', i + 1, l ]
+        puts "#{_dg}% #{sw}s%0#{lw}i #{_yl}%s#{_rs}" % [ '', i + 1, l ]
       end
     end
 
