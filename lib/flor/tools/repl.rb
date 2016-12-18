@@ -121,14 +121,17 @@ module Flor::Tools
       fail NotImplementedError
     end
 
+    def fname(line)
+
+      line.split(/\s+/)[1]
+    end
+
     def hlp_save
       %{ saves the current execution code to the given file }
     end
     def cmd_save(line)
 
-      fname = line.split(/\s+/)[1]
-
-      File.open(fname, 'wb') { |f| f.puts @lines }
+      File.open(fname(line), 'wb') { |f| f.puts @lines }
     end
 
     def hlp_cat
@@ -136,9 +139,15 @@ module Flor::Tools
     end
     def cmd_cat(line)
 
-      fname = line.split(/\s+/)[1]
+      do_list(File.readlines(fname(line)).collect(&:chomp))
+    end
 
-      do_list(File.readlines(fname).collect(&:chomp))
+    def hlp_load
+      %{ loads a file as execution code }
+    end
+    def cmd_load(line)
+
+      @lines = File.readlines(fname(line)).collect(&:chomp)
     end
 
     def cmd_cont(line)
