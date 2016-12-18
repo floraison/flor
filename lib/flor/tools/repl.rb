@@ -89,16 +89,20 @@ module Flor::Tools
     def hlp_list
       %{ lists the lines of the current execution code }
     end
-    def cmd_list(line)
+    def do_list(lines)
 
       _rs, _dg, _yl = Flor.colours({})
 
-      lw = [ 2, @lines.size.to_s.length ].max
+      lw = [ 2, lines.size.to_s.length ].max
       sw = 5 - lw
 
-      @lines.each_with_index do |l, i|
+      lines.each_with_index do |l, i|
         puts "#{_dg}% #{sw}s%0#{lw}i #{_yl}%s#{_rs}" % [ '', i + 1, l ]
       end
+    end
+    def cmd_list(line)
+
+      do_list(@lines)
     end
 
     def hlp_parse
@@ -117,9 +121,24 @@ module Flor::Tools
       fail NotImplementedError
     end
 
+    def hlp_save
+      %{ saves the current execution code to the given file }
+    end
     def cmd_save(line)
 
-      fail NotImplementedError
+      fname = line.split(/\s+/)[1]
+
+      File.open(fname, 'wb') { |f| f.puts @lines }
+    end
+
+    def hlp_cat
+      %{ outputs the content of the give file }
+    end
+    def cmd_cat(line)
+
+      fname = line.split(/\s+/)[1]
+
+      do_list(File.readlines(fname).collect(&:chomp))
     end
 
     def cmd_cont(line)
