@@ -2,6 +2,19 @@
 require 'flor'
 require 'flor/unit'
 
+begin
+  require 'readline'
+  def prompt_and_read(prompt)
+    Readline.readline(@prompt, true)
+  end
+rescue LoadError => e
+  def prompt_and_read(prompt)
+    print(prompt)
+    ($stdin.readline rescue false)
+  end
+end
+
+
 module Flor::Tools
   class Repl
 
@@ -22,11 +35,11 @@ module Flor::Tools
       @lines = []
       @payload = {}
       @vars = {}
+      @prompt = 'flor> '
 
       loop do
 
-        $stdout.print("flor> ")
-        line = ($stdin.readline rescue false)
+        line = prompt_and_read(@prompt)
 
         break unless line
         next if line.strip == ''
