@@ -164,7 +164,11 @@ class Flor::Node
         lookup_field(mod, key)
       end
 
-    pth ? Flor.deep_get(val, pth)[1] : val
+    if pth
+      Flor.deep_get(val, pth)[1]
+    else
+      val
+    end
   end
 
   class Expander < Flor::Dollar
@@ -192,8 +196,6 @@ class Flor::Node
 
     if o.is_a?(String)
       lookup(o)
-#    elsif Flor.is_string_val?(o)
-#      lookup(o[1]['v'])
     else
       o
     end

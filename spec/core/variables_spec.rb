@@ -51,5 +51,23 @@ describe 'Flor core' do
       expect(r['payload']['ret']).to eq('c')
     end
   end
+
+  describe 'the "node" pseudo-variable' do
+
+    it 'gives access to the node' do
+
+      flon = %{
+        push f.l node.nid
+        push f.l "$(node.nid)"
+        push f.l node.heat0
+        push f.l "$(node.heat0)"
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ 0_0_1 0_1_1 node.heat0 _dqs ])
+    end
+  end
 end
 
