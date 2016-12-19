@@ -63,7 +63,7 @@ describe 'Flor unit' do
 
       exid = @unit.launch(flon, payload: { 'x' => 'y' })
 
-      sleep 0.350
+      sleep 0.777
 
       xd = @unit.executions[exid: exid].data
 
@@ -117,6 +117,8 @@ describe 'Flor unit' do
       }
 
       exid = @unit.launch(flon, wait: '0_0_0 receive')['exid']
+
+      sleep 0.140
 
       expect(
         @unit.executions.first(exid: exid).data['nodes'].keys
