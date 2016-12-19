@@ -4,26 +4,60 @@ require 'flor/unit'
 
 
 module Flor::Tools
+
   class Repl
 
     def initialize(env)
 
-      unit = Flor::Unit.new("envs/#{env}/etc/conf.json")
+      @unit = Flor::Unit.new("envs/#{env}/etc/conf.json")
 
-      #pp unit.conf
-      unit.conf[:unit] = 'repl'
+      #pp @unit.conf
+      @unit.conf[:unit] = 'repl'
 
       #unit.hooker.add('journal', Flor::Journal)
-      if unit.conf['sto_uri'].match(/memory/)
-        unit.storage.delete_tables
-        unit.storage.migrate
+      if @unit.conf['sto_uri'].match(/memory/)
+        @unit.storage.delete_tables
+        @unit.storage.migrate
       end
-      unit.start
+      @unit.start
 
       @lines = []
       @payload = {}
       @vars = {}
-      @prompt = 'flor> '
+
+      @outcome = nil
+
+      @unit.hook do |message|
+
+        if ! message['consumed']
+          # do nothing
+        elsif %w[ terminated failed ].include?(message['point'])
+          @outcome = message
+          out = Flor.to_pretty_s(@outcome)
+          col = message['point'] == 'failed' ? _rd : _gr
+          out = out.gsub(/"point"=>"([^"]+)"/, "\"point\"=>\"#{col}\\1#{_yl}\"")
+          out = "\n" + _yl + out + _rs
+          out = out.split("\n").collect { |l| '  ' + l }.join("\n")
+          print(out)
+        end
+      end
+
+      @_rs, @_dg, @_yl, @_bl, @_lg, @_gr, @_lr, @_rd = Flor.colours({})
+
+      do_loop
+    end
+
+    # reset dark_grey light_yellow blue light_grey light_green light_red red
+    attr_reader :_rs, :_dg, :_yl, :_bl, :_lg, :_gr, :_lr, :_rd
+
+    protected
+
+    def prompt
+
+      "flor l#{@lines.size} > "
+    end
+
+    def do_loop
 
       loop do
 
@@ -49,17 +83,16 @@ module Flor::Tools
       $stdout.puts
     end
 
-    protected
-
     def hlp_launch
       %{ launches the current execution code }
     end
-    alias hlp_run hlp_launch
-
     def cmd_launch(line)
 
-      fail NotImplementedError
+      exid = @unit.launch(@lines.join("\n"), vars: @vars, payload: @payload)
+      puts "  launched #{_yl}#{exid}#{_rs}"
     end
+
+    alias hlp_run hlp_launch
     alias cmd_run cmd_launch
 
     def hlp_help
@@ -91,8 +124,6 @@ module Flor::Tools
     end
     def do_list(lines)
 
-      _rs, _dg, _yl = Flor.colours({})
-
       lw = [ 2, lines.size.to_s.length ].max
       sw = 5 - lw
 
@@ -116,9 +147,14 @@ module Flor::Tools
         headers: false)
     end
 
+    def hlp_new
+      %w{ erases current execution code, vars and payload }
+    end
     def cmd_new(line)
 
-      fail NotImplementedError
+      @lines = []
+      @vars = {}
+      @payload = {}
     end
 
     def fname(line)
@@ -164,7 +200,7 @@ module Flor::Tools
     begin
       require 'readline'
       def prompt_and_read
-        Readline.readline(@prompt, true)
+        Readline.readline(prompt, true)
       end
       Readline.completion_proc =
         proc { |s|
@@ -175,7 +211,7 @@ module Flor::Tools
       #  " "
     rescue LoadError => le
       def prompt_and_read
-        print(@prompt)
+        print(prompt)
         ($stdin.readline rescue false)
       end
     end
