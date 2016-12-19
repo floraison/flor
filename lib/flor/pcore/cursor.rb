@@ -68,7 +68,11 @@ class Flor::Pro::Cursor < Flor::Procedure
   def receive_non_att
 
     if @ncid >= children.size
-      reply
+      if @message['orl'] == 'continue'
+        execute_child(first_unkeyed_child_id, @node['count'] += 1)
+      else
+        reply
+      end
     else
       execute_child(@ncid, @node['count'])
     end
@@ -85,7 +89,7 @@ class Flor::Pro::Cursor < Flor::Procedure
       @node['on_receive_last'] = [ {
         'point' => 'receive',
         'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
-        'orl' => true,
+        'orl' => fla,
         'payload' => Flor.dup(message['payload'])
       } ]
 

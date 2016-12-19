@@ -437,6 +437,8 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq(%w[ i1 i1j1 i2 i2j1 i3 i3j1 ])
       expect(r['payload']['ret']).to eq(true)
     end
+
+    it 'takes the first att child as tag'
   end
 end
 

@@ -51,6 +51,25 @@ describe 'Flor punit' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ 0_0_0_1 0_1_1 ])
     end
+
+    it 'understands continue' do
+
+      flon = %{
+        cursor
+          push f.l "$(nid)"
+          continue _ if "$(nid)" == '0_1_0_0'
+          push f.l "$(nid)"
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ 0_0_1 0_0_1-1 0_2_1-1 ])
+    end
+
+    it 'takes the first att child as tag'
   end
 end
 
