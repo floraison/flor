@@ -39,6 +39,18 @@ describe 'Flor unit' do
       expect(r['payload']).to eq({ 'ret' => 'ACME' })
     end
 
+    it 'are prefixed optionally with dv.' do
+
+      r =
+        @unit.launch(%{
+          [ company, dv.company ]
+        }, domain: 'com.acme', vars: { 'company' => 'EMCA' }, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(Flor.domain(r['exid'])).to eq('com.acme')
+      expect(r['payload']['ret']).to eq(%w[ EMCA ACME ])
+    end
+
     context 'dvariables: false' do
 
       it 'prevents domain variables lookup' do
