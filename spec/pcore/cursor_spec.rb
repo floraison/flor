@@ -12,16 +12,7 @@ describe 'Flor punit' do
 
   before :each do
 
-    @unit = Flor::Unit.new('envs/test/etc/conf.json')
-    @unit.conf['unit'] = 'u'
-    @unit.storage.delete_tables
-    @unit.storage.migrate
-    @unit.start
-  end
-
-  after :each do
-
-    @unit.shutdown
+    @executor = Flor::TransientExecutor.new
   end
 
   describe 'cursor' do
@@ -35,7 +26,9 @@ describe 'Flor punit' do
         push f.l 2
       }
 
-      r = @unit.launch(flon, payload: { 'l' => [] }, wait: true)
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 0, 1, 2 ])
@@ -51,7 +44,9 @@ describe 'Flor punit' do
         push f.l "$(nid)"
       }
 
-      r = @unit.launch(flon, payload: { 'l' => [] }, wait: true)
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ 0_0_0_1 0_1_1 ])
