@@ -33,7 +33,68 @@ class Flor::Pro::Cursor < Flor::Procedure
   #   task 'bravo' if f.amount > 2000
   #   task 'charly'
   # ```
+  #
+  # ## break
+  #
+  # Cursor understands `break`. For example, this execution will go from
+  # "alpha" to "charly", task "bravo" will not be visited.
+  # ```
+  # cursor
+  #   task 'alpha'
+  #   break _
+  #   task 'bravo'
+  # task 'charly'
+  # ```
 
   name 'cursor'
+
+  def pre_execute
+
+    @node['count'] = 0
+  end
+
+  def receive_first
+
+    @node['vars'] =
+      {}
+    @node['vars']['break'] =
+      [ '_proc', { '_proc' => 'break', 'nid' => nid }, tree[-1] ]
+    @node['vars']['continue'] =
+      [ '_proc', { '_proc' => 'continue', 'nid' => nid }, tree[-1] ]
+
+    super
+  end
+
+  def receive_non_att
+
+    if @ncid >= children.size
+      reply
+    else
+      execute_child(@ncid, @node['count'])
+    end
+  end
+
+  def cancel
+
+    fla = @message['flavour']
+
+    if fla == 'continue'
+
+      @node['status'] =
+        'continued'
+      @node['on_receive_last'] = [ {
+        'point' => 'receive',
+        'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
+        'orl' => true,
+        'payload' => Flor.dup(message['payload'])
+      } ]
+
+    else
+
+      @node['status'] = fla == 'break' ? 'broken' : 'cancelled'
+    end
+
+    super
+  end
 end
 

@@ -40,6 +40,22 @@ describe 'Flor punit' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 0, 1, 2 ])
     end
+
+    it 'understands break' do
+
+      flon = %{
+        cursor
+          push f.l "$(nid)"
+          break _
+          push f.l "$(nid)"
+        push f.l "$(nid)"
+      }
+
+      r = @unit.launch(flon, payload: { 'l' => [] }, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ 0_0_0_1 0_1_1 ])
+    end
   end
 end
 

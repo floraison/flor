@@ -44,8 +44,6 @@ class Flor::Pro::Break < Flor::Procedure
 
   def receive_last
 
-#debug_tree
-#debug_msg
     ref = att('ref')
     nid = tags_to_nids(ref).first || @node['heat'][1]['nid']
 
