@@ -141,12 +141,12 @@ class Flor::Procedure < Flor::Node
     }
   end
 
-  def execute_child(index=0, sub=0, duplicate_payload=false)
+  def execute_child(index=0, sub=nil, duplicate_payload=false)
 
     return reply \
       if index < 0 || ! tree[1].is_a?(Array) || tree[1][index] == nil
 
-    cnid = Flor.child_nid(nid, index, sub)
+    cnid = Flor.child_nid(nid, index, sub || 0)
 
     (@node['cnodes'] ||= []) << cnid
 

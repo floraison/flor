@@ -6,7 +6,7 @@ def make_proc_doc(path)
 
   lines = File.readlines(path)
 
-  cline = lines.index { |l| l.match(/^class Flor::Pro::.* < Flor::Procedure$/) }
+  cline = lines.index { |l| l.match(/^class Flor::Pro::.* < Flor::Pro/) }
 
   return unless cline > 0
 
