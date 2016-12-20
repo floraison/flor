@@ -69,6 +69,51 @@ describe 'Flor punit' do
       expect(r['payload']['l']).to eq(%w[ 0_0_1 0_0_1-1 0_2_1-1 ])
     end
 
+    it 'goes {nid}-n for the subsequent cycles' do
+
+      flon = %{
+        cursor
+          continue _ if "$(nid)" == '0_0_0_0'
+          continue _ if "$(nid)" == '0_1_0_0-1'
+      }
+
+      r = @executor.launch(flon, journal: true)
+
+      expect(
+        @executor.journal
+          .collect { |m| m['nid'] }
+          .compact
+          .uniq
+          .join("\n")
+      ).to eq(%w[
+        0
+        0_0
+        0_0_0
+        0_0_0_0
+        0_0_0_1
+        0_0_1
+        0_0_1_0
+        0_0-1
+        0_0_0-1
+        0_0_0_0-1
+        0_0_0_1-1
+        0_1-1
+        0_1_0-1
+        0_1_0_0-1
+        0_1_0_1-1
+        0_1_1-1
+        0_1_1_0-1
+        0_0-2
+        0_0_0-2
+        0_0_0_0-2
+        0_0_0_1-2
+        0_1-2
+        0_1_0-2
+        0_1_0_0-2
+        0_1_0_1-2
+      ].join("\n"))
+    end
+
     it 'takes the first att child as tag' do
 
       flon = %{

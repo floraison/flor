@@ -305,6 +305,26 @@ class Flor::Procedure < Flor::Node
     reply
   end
 
+  # Used by 'cursor' (and 'loop') when
+  # ```
+  # cursor 'main'
+  #   # is equivalent to:
+  # cursor tag: 'main'
+  # ```
+  #
+  def receive_unkeyed_tag_att
+
+    ret = @message['payload']['ret']
+    ret = Array(ret).flatten
+    ret = nil unless ret.any? && ret.all? { |e| e.is_a?(String) }
+
+    return [] unless ret
+
+    (@node['tags'] ||= []).concat(ret)
+
+    reply('point' => 'entered', 'nid' => nid, 'tags' => ret)
+  end
+
   def reply(h={})
 
     m = {}

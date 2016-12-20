@@ -65,19 +65,9 @@ class Flor::Pro::Cursor < Flor::Procedure
     super
   end
 
-  # TODO: find a way to reuse that in while/until
-  #
   def receive_att
 
-    ret = @message['payload']['ret']
-    ret = Array(ret).flatten
-    ret = nil unless ret.any? && ret.all? { |e| e.is_a?(String) }
-
-    return super unless ret
-
-    (@node['tags'] ||= []).concat(ret)
-
-    reply('point' => 'entered', 'nid' => nid, 'tags' => ret) + super
+    receive_unkeyed_tag_att + super
   end
 
   def receive_non_att
