@@ -88,40 +88,66 @@ describe 'Flor punit' do
       ].join("\n"))
     end
 
-#    it 'takes the first att child as tag' do
-#
-#      flon = %{
-#        loop 'xyz'
-#          break _ if "$(nid)" == "0_0_0_0-2"
-#      }
-#
-#      r = @executor.launch(flon, journal: true)
-#
-#      expect(r['point']).to eq('terminated')
-#
-#      expect(
-#        @executor.journal
-#          .collect { |m|
-#            [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':') }
-#          .join("\n")
-#      ).to eq(%w[
-#        execute:0:
-#        execute:0_0:
-#        execute:0_0_0:
-#        receive:0_0:
-#        receive:0:
-#        entered:0:main
-#        execute:0_1:
-#        execute:0_1_0:
-#        receive:0_1:
-#        execute:0_1_1:
-#        receive:0_1:
-#        receive:0:
-#        receive::
-#        left:0:main
-#        terminated::
-#      ].join("\n"))
-#    end
+    it 'takes the first att child as tag' do
+
+      flon = %{
+        loop 'xyz'
+          break _ if "$(nid)" == "0_1_0_0-2"
+          #fail "hard"
+      }
+
+      r = @executor.launch(flon, journal: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @executor.journal
+          .collect { |m|
+            [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
+      ).to eq(%w[
+        execute:0:
+        execute:0_0:
+        execute:0_0_0:
+        receive:0_0:
+        receive:0:
+        entered:0:xyz
+        execute:0_1:
+        execute:0_1_0:
+        execute:0_1_0_0:
+        receive:0_1_0:
+        execute:0_1_0_1:
+        receive:0_1_0:
+        receive:0_1:
+        receive:0:
+        execute:0_1-1:
+        execute:0_1_0-1:
+        execute:0_1_0_0-1:
+        receive:0_1_0-1:
+        execute:0_1_0_1-1:
+        receive:0_1_0-1:
+        receive:0_1-1:
+        receive:0:
+        execute:0_1-2:
+        execute:0_1_0-2:
+        execute:0_1_0_0-2:
+        receive:0_1_0-2:
+        execute:0_1_0_1-2:
+        receive:0_1_0-2:
+        receive:0_1-2:
+        execute:0_1_1-2:
+        execute:0_1_1_0-2:
+        receive:0_1_1-2:
+        cancel:0:
+        cancel:0_1-2:
+        cancel:0_1_1-2:
+        receive:0_1-2:
+        receive:0:
+        receive::
+        left:0:xyz
+        terminated::
+      ].join("\n"))
+    end
   end
 end
 

@@ -108,6 +108,11 @@ class Flor::Procedure < Flor::Node
     children.index { |c| c[0] != '_att' || c[1].size == 1 }
   end
 
+  def first_non_att_child_id
+
+    children.index { |c| c[0] != '_att' }
+  end
+
   def att(*keys)
 
     return nil unless @node['atts']
@@ -160,25 +165,25 @@ class Flor::Procedure < Flor::Node
       'payload' => pl)
   end
 
-  # turns ```sleep "1y"``` into ```sleep _unkeyed: "1y"```
-  #
-  def rewrite_first_unkeyed_att
-
-    # TODO is that really necessary?
-
-    ci =
-      children.index { |c|
-        c[0] == '_att' && c[1].size == 1 && c[1].first[0] != '_'
-      }
-    return unless ci
-
-    t = tree
-    cn = Flor.dup(t[1])
-    c = cn[ci][1].first
-    cn[ci] = [ '_att', [ [ '_unkeyed', [], c[2] ], c ], c[2] ]
-
-    @node['tree'] = [ t[0], cn, t[1] ]
-  end
+#  # turns ```sleep "1y"``` into ```sleep _unkeyed: "1y"```
+#  #
+#  def rewrite_first_unkeyed_att
+#
+#    # TODO is that really necessary?
+#
+#    ci =
+#      children.index { |c|
+#        c[0] == '_att' && c[1].size == 1 && c[1].first[0] != '_'
+#      }
+#    return unless ci
+#
+#    t = tree
+#    cn = Flor.dup(t[1])
+#    c = cn[ci][1].first
+#    cn[ci] = [ '_att', [ [ '_unkeyed', [], c[2] ], c ], c[2] ]
+#
+#    @node['tree'] = [ t[0], cn, t[1] ]
+#  end
 
   def is_symbol_tree?(t)
 

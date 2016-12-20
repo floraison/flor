@@ -43,7 +43,7 @@ class Flor::Pro::Loop < Flor::Pro::Cursor
   def receive_non_att
 
     if @ncid >= children.size
-      execute_child(first_unkeyed_child_id, @node['count'] += 1)
+      execute_child(first_non_att_child_id, @node['count'] += 1)
     else
       execute_child(@ncid, @node['count'])
     end

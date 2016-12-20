@@ -74,7 +74,7 @@ class Flor::Pro::Cursor < Flor::Procedure
 
     if @ncid >= children.size
       if @message['orl'] == 'continue'
-        execute_child(first_unkeyed_child_id, @node['count'] += 1)
+        execute_child(first_non_att_child_id, @node['count'] += 1)
       else
         reply
       end
