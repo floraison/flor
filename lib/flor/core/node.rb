@@ -271,7 +271,12 @@ class Flor::Node
     return nil unless nid[0, pnid.length] == pnid
       # maybe failing would be better
 
-    nid[pnid.length + 1..-1].split('_').each { |cid| tree = tree[1][cid.to_i] }
+    cid = nid[pnid.length + 1..-1]
+
+    return nil unless cid
+      # maybe failing would be better
+
+    cid.split('_').each { |cid| tree = tree[1][cid.to_i] }
 
     tree
   end
