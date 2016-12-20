@@ -97,9 +97,24 @@ describe 'Flor procedures' do
       }
 
       r = @executor.launch(flon)
+        # TODO: journalize
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('else')
+    end
+
+    it 'can be used as a "one-liner"' do
+
+      flon = %{
+        push f.l (ife true 'then' 'else')
+        push f.l (ife false 'then' 'else')
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['l']).to eq(%w[ then else ])
     end
   end
 
