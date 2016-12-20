@@ -39,7 +39,7 @@ describe 'Flor punit' do
 
       expect(r['point']).to eq('terminated')
 
-      sleep 0.100
+      sleep 0.350
 
       expect(
         @unit.traces.collect(&:text).join(' ')
