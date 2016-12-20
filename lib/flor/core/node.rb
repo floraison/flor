@@ -48,6 +48,9 @@ class Flor::Node
     def current
       container['pld'] || container['payload']
     end
+    def copy_current
+      Flor.dup(current)
+    end
     def merge(h)
       current.merge(h)
     end

@@ -387,6 +387,8 @@ module Flor
       []
     end
 
+    def signal(message); []; end
+
     def lookup_on_error_parent(message)
 
       nd = Flor::Node.new(self, nil, message).on_error_parent
