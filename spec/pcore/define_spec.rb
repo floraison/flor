@@ -37,6 +37,25 @@ describe 'Flor procedures' do
         [ '_func', { 'nid' => '0', 'cnid' => '0', 'fun' => 0 }, 2 ]
       )
     end
+
+    it 'binds at the last moment' do
+
+      flon = %{
+        set name 'su'
+        define "$(su)m" a, b; (+ a b)
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']).to eq({ 'sum' => r['payload']['ret'] })
+
+      expect(
+        r['payload']['ret']
+      ).to eq(
+        [ '_func', { 'nid' => '0', 'cnid' => '0', 'fun' => 0 }, 2 ]
+      )
+    end
   end
 
   describe 'def' do
