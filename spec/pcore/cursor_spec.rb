@@ -81,10 +81,7 @@ describe 'Flor punit' do
 
       expect(
         @executor.journal
-          .collect { |m| m['nid'] }
-          .compact
-          .uniq
-          .join("\n")
+          .collect { |m| m['nid'] }.compact.uniq.join("\n")
       ).to eq(%w[
         0
         0_0

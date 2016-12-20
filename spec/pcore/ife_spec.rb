@@ -96,11 +96,31 @@ describe 'Flor procedures' do
           'else'
       }
 
-      r = @executor.launch(flon)
-        # TODO: journalize
+      r = @executor.launch(flon, journal: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('else')
+
+      expect(
+        @executor.journal
+          .collect { |m|
+            [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
+      ).to eq(%w[
+        execute:0:
+        execute:0_0:
+        execute:0_0_1:
+        receive:0_0:
+        entered:0:nada
+        receive:0:
+        execute:0_1:
+        receive:0:
+        execute:0_3:
+        receive:0:
+        receive::
+        left:0:nada
+        terminated::
+      ].join("\n"))
     end
 
     it 'can be used as a "one-liner"' do
