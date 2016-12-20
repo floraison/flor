@@ -27,58 +27,35 @@ class Flor::Pro::On < Flor::Procedure
 
   name 'on'
 
-#  def pre_execute
-#
-#    @node['vars'] = {}
-#    @node['atts'] = []
-#    @node['fun'] = nil
-#
-#    #unatt_unkeyed_children
-#  end
+  def receive_last_att
 
-#  def receive_non_att
-#
-#    return execute_child(@ncid) if children[@ncid]
-#
-#    fun = @fcid > 0 ? payload['ret'] : nil
-#
-#    points = att_a('point', 'points', nil)
-#    tags = att_a('tag', 'tags', nil)
-#    heats = att_a('heat', 'heats', nil)
-#    heaps = att_a('heap', 'heaps', nil)
-#
-#    points = att_a(nil, nil) unless points || tags
-#    points = [ 'entered' ] if tags && ! points
-#
-#    msg =
-#      if fun
-#        apply(fun, [], tree[2], false).first.merge('noreply' => true)
-#      else
-#        reply.first
-#      end
-#
-#    tra = {}
-#    tra['bnid'] = parent || '0' # shouldn't it be [the real] root?
-#    tra['points'] = points
-#    tra['tags'] = tags
-#    tra['heaps'] = heaps
-#    tra['heats'] = heats
-#    tra['message'] = msg
-#
-#    count = att('count')
-#    count = 1 if fun == nil # blocking mode implies count: 1
-#    tra['count'] = count if count
-#
-#    tra['range'] = att('range') || att('scope') || 'subnid'
-#
-#    reply('point' => 'trap','nid' => nid, 'trap' => tra) +
-#    (fun ? reply : [])
-#  end
+    fid = @executor.counter_next('funs') - 1
+    cid = first_non_att_child_id
 
-#  def receive_last
-#
-#    #fail ArgumentError.new('trap requires a function')
-#    receive_non_att
-#  end
+    fun =
+      [ '_func',
+        { 'nid' => nid, 'cnid' => nil, 'fun' => fid, 'cid' => cid },
+        tree[2]
+      ]
+    msg =
+      apply(fun, [], tree[2], false).first.merge('noreply' => true)
+puts "msg:"
+pp msg
+
+    tra = {}
+    tra['bnid'] = parent || '0' # shouldn't it be [the real] root?
+    tra['points'] = %w[ signal ]
+    tra['tags'] = []
+    tra['heaps'] = []
+    tra['heats'] = []
+    tra['message'] = msg
+    tra['count'] = nil       # TODO `on 'xxx' once: true` or `count: 7`
+    tra['range'] = 'subnid'  # TODO `on 'xxx' range: 'execution'`
+puts "tra:"
+pp tra
+
+    #reply('point' => 'trap','nid' => nid, 'trap' => tra) +
+    reply
+  end
 end
 

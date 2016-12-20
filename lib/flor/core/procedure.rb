@@ -439,6 +439,7 @@ class Flor::Procedure < Flor::Node
 
     #t = lookup_tree_anyway(fni)
     t = lookup_tree(fni)
+p [ :apply, t ]
     sig = t[1].select { |c| c[0] == '_att' }
     sig = sig.drop(1) if t[0] == 'define'
 

@@ -447,6 +447,12 @@ describe 'Flor punit' do
       end
     end
 
+    context 'point:' do
+
+      it 'traps "signal"'
+      it 'traps "signal" and name:'
+    end
+
     context 'multiple criteria' do
 
       it 'traps messages matching all the criteria' do

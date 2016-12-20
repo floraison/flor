@@ -40,7 +40,7 @@ describe 'Flor punit' do
       r = @unit.launch(flon, wait: true)
 
       expect(r['point']).to eq('terminated')
-pp r
+      expect(r['vars']['l']).to eq(%w[ requested approved done. ])
     end
   end
 end
