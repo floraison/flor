@@ -191,6 +191,17 @@ module Flor::Tools
       fail NotImplementedError
     end
 
+    def hlp_edit
+      %{ saves the current execution code to .tmp.flo and opens it for edition }
+    end
+    def cmd_edit(line)
+
+      cmd_save('save .tmp.flo')
+      system('$EDITOR .tmp.flo')
+      cmd_load('load .tmp.flo')
+      FileUtils.rm('.tmp.flo')
+    end
+
     #
     # use Readline if possible
 

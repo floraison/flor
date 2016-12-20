@@ -11,4 +11,5 @@
 
 tmp/*.db
 tmp/*.log
+.tmp.*
 
