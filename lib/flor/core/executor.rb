@@ -224,7 +224,7 @@ module Flor
     def leave(node, message)
 
       ts = node && node['tags']
-      return [] unless ts
+      return [] unless ts && ts.any?
 
       [
         { 'point' => 'left',

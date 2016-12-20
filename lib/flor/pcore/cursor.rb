@@ -65,6 +65,21 @@ class Flor::Pro::Cursor < Flor::Procedure
     super
   end
 
+  # TODO: find a way to reuse that in while/until
+  #
+  def receive_att
+
+    ret = @message['payload']['ret']
+    ret = Array(ret).flatten
+    ret = nil unless ret.any? && ret.all? { |e| e.is_a?(String) }
+
+    return super unless ret
+
+    (@node['tags'] ||= []).concat(ret)
+
+    reply('point' => 'entered', 'nid' => nid, 'tags' => ret) + super
+  end
+
   def receive_non_att
 
     if @ncid >= children.size

@@ -49,6 +49,8 @@ describe 'Flor punit' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ 0_1_1 0_1_1-2 ])
     end
+
+    it 'takes the first att child as tag' do
   end
 end
 
