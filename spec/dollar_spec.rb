@@ -25,7 +25,8 @@ class SpecDollar < Flor::Dollar
       'msg' => '"hello world"',
       'msg1' => 'hello "le monde"',
       'arr' => [ 1, 2, 3 ],
-      'hsh' => { 'a' => 'A', 'b' => 'B' } }
+      'hsh' => { 'a' => 'A', 'b' => 'B' },
+      'amount' => 1234 }
   end
 
   def lookup(k)
@@ -156,7 +157,10 @@ describe Flor::Dollar do
         expect(@d.expand("$(a||'$(nada||'su\\)rf))")).to eq('su)rf')
       end
 
-      it 'accepts an escaped $' # ?
+      it 'accepts lonely $s' do
+
+        expect(@d.expand("$$(amount)$")).to eq('$1234$')
+      end
     end
 
     context 'pipes' do

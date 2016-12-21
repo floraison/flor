@@ -54,9 +54,13 @@ module Flor
 #}
       def ostr(i)
         rex(:str, i, %r{
-          ( [^\$] | \$[^(] )+
+          ( [^\$] | \$(?!\() )+
         }x)
       end
+        #
+        # ( [^\$] | \$(?!\() )+
+        # one or more of (not a dollar or a dollar followed by sthing else
+        # than a parenthesis opening)
 
       def pe(i); str(nil, i, ')'); end
       def dois(i); alt(nil, i, :dollar, :istr); end
@@ -215,6 +219,7 @@ module Flor
 
       return s unless s.index('$')
 
+      #Raabro.pp(Parser.parse(s, debug: 2))
       t = Parser.parse(s)
 
       return s unless t
