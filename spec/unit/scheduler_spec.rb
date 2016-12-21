@@ -236,8 +236,6 @@ describe 'Flor unit' do
 
     describe '#queue' do
 
-      it 'rejects launch messages without domain'
-
       it 'queues cancel messages' do
 
         flon = %{
