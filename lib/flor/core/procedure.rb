@@ -444,7 +444,7 @@ class Flor::Procedure < Flor::Node
     end
 
     sig = t[1].select { |c| c[0] == '_att' }
-    sig = sig.drop(1) if t[0] == 'define' # TODO what if `def` or `fun`?
+    sig = sig.drop(1) if t[0] == 'define'
 
     vars = {}
     vars['arguments'] = args # should I dup?

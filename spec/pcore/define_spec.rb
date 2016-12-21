@@ -41,20 +41,35 @@ describe 'Flor procedures' do
     it 'binds at the last moment' do
 
       flon = %{
+        define "sum0" a, b; (+ a b)
         set name 'su'
-        define "$(su)m" a, b; (+ a b)
+        define "$(name)m1" a, b; (+ a b)
+        define 'sum2' a, b; (+ a b)
+        set f.r0 (sum0 1, 2)
+        set f.r1 (sum1 3, -1)
+        set f.r2 (sum2 4, 5)
       }
 
       r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
-      expect(r['vars']).to eq({ 'sum' => r['payload']['ret'] })
+
+      expect(
+        r['vars'].keys
+      ).to eq(%w[
+        sum0 name sum1 sum2
+      ])
 
       expect(
         r['payload']['ret']
       ).to eq(
-        [ '_func', { 'nid' => '0', 'cnid' => '0', 'fun' => 0 }, 2 ]
+        [ '_func', { 'nid' => '0_3', 'cnid' => '0', 'fun' => 2 }, 5 ]
       )
+      expect(
+        [ r['payload']['r0'], r['payload']['r1'], r['payload']['r2'] ]
+      ).to eq([
+        3, 2, 9
+      ])
     end
   end
 

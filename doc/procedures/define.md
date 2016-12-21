@@ -25,6 +25,14 @@ map [ 1, 2, 3 ]
 # yields [ 4, 5, 6 ]
 ```
 
+It's OK to generate the function name at the last moment:
+```
+sequence
+  set prefix "my"
+  define "$(prefix)-sum" a b
+    + a b
+```
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/define.rb)
 * [define spec](https://github.com/floraison/flor/tree/master/spec/pcore/define_spec.rb)

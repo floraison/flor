@@ -48,10 +48,27 @@ class Flor::Pro::Define < Flor::Procedure
   #     + x 3
   # # yields [ 4, 5, 6 ]
   # ```
+  #
+  # It's OK to generate the function name at the last moment:
+  # ```
+  # sequence
+  #   set prefix "my"
+  #   define "$(prefix)-sum" a b
+  #     + a b
+  # ```
 
   names %w[ def fun define ]
 
   def execute
+
+    if i = att_children.index { |c| %w[ _dqs _sqs ].include?(c[1].first.first) }
+      execute_child(i)
+    else
+      receive_att
+    end
+  end
+
+  def receive_att
 
     t = tree
     cnode = lookup_var_node(@node, 'l')
@@ -61,7 +78,16 @@ class Flor::Pro::Define < Flor::Procedure
 
     val = [ '_func', { 'nid' => nid, 'cnid' => cnid, 'fun' => fun }, t[2] ]
 
-    set_var('', t[1].first[1].first[0], val) if t[0] == 'define'
+    if t[0] == 'define'
+      name =
+        if @message['point'] == 'execute'
+          t[1].first[1].first[0]
+        else
+          payload['ret']
+        end
+      set_var('', name, val)
+    end
+
     payload['ret'] = val
 
     reply
