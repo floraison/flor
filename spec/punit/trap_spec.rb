@@ -451,8 +451,58 @@ describe 'Flor punit' do
 
     context 'point:' do
 
-      it 'traps "signal"'
-      it 'traps "signal" and name:'
+      it 'traps "signal"' do
+
+        flon = %{
+          sequence
+            trace 'a'
+            trap point: 'signal'
+              def msg; trace "S"
+            trace 'b'
+            signal 'S'
+            trace 'c'
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.210
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          a b c S
+        ])
+      end
+
+      it 'traps "signal" and name:' do
+
+        flon = %{
+          sequence
+            trace 'a'
+            trap point: 'signal', name: 's0'
+              def msg; trace "s0"
+            trap point: 'signal', name: 's1'
+              def msg; trace "s0"
+            signal 's0'
+            signal 's1'
+            signal 's2'
+            trace 'b'
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.210
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          a s0 s1 b
+        ])
+      end
     end
 
     context 'multiple criteria' do
@@ -472,7 +522,7 @@ describe 'Flor punit' do
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.100
+        sleep 0.140
 
         expect(
           @unit.traces.collect(&:text)

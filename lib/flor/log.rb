@@ -55,8 +55,13 @@ module Flor
     a << ni
 
     pt = m['point'][0, 3]
-    pt = "#{(pt == 'tri' || pt == 'sig') ? _gr : _bl}#{pt}#{_dg}"
-    a << pt
+    _pt =
+      case pt
+        when 'tri', 'sig' then _gr
+        when 'cea', 'ter' then _lg
+        else _bl
+      end
+    a << "#{_pt}#{pt}#{_dg}"
 
     t =
       m['tree']
