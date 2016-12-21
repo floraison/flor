@@ -71,31 +71,30 @@ module Flor
 
     def notify(executor, message)
 
-      hooks = @hooks + executor.traps.collect(&:to_hook)
+      (@hooks + executor.traps.collect(&:to_hook))
+        .inject([]) do |a, (_, opts, hook, block)|
+          # name of hook is piped into "_" oblivion
 
-      hooks.inject([]) do |a, (_, opts, hook, block)|
-        # name of hook is piped into "_" oblivion
-
-        a.concat(
-          if ! match?(executor, hook, opts, message)
-            []
-          elsif hook.is_a?(Flor::Trap)
-            executor.trigger_trap(hook, message)
-          elsif hook
-            executor.trigger_hook(hook, message)
-          else # if block
-            r =
-              if block.arity == 1
-                block.call(message)
-              elsif block.arity == 2
-                block.call(message, opts)
-              else
-                block.call(executor, message, opts)
-              end
-            r.is_a?(Array) && r.all? { |e| e.is_a?(Hash) } ? r : []
-              # be lenient with block hooks, help them return an array
-          end)
-      end
+          a.concat(
+            if ! match?(executor, hook, opts, message)
+              []
+            elsif hook.is_a?(Flor::Trap)
+              executor.trigger_trap(hook, message)
+            elsif hook
+              executor.trigger_hook(hook, message)
+            else # if block
+              r =
+                if block.arity == 1
+                  block.call(message)
+                elsif block.arity == 2
+                  block.call(message, opts)
+                else
+                  block.call(executor, message, opts)
+                end
+              r.is_a?(Array) && r.all? { |e| e.is_a?(Hash) } ? r : []
+                # be lenient with block hooks, help them return an array
+            end)
+        end
     end
 
     protected
@@ -152,6 +151,10 @@ module Flor
       if ts = o(opts, :tag, :t, [])
         return false unless %w[ entered left ].include?(message['point'])
         return false unless (message['tags'] & ts).any?
+      end
+
+      if ns = o(opts, :name, :n)
+        return false unless ns.include?(message['name'])
       end
 
       node = nil

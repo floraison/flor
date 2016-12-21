@@ -40,6 +40,8 @@ module Flor
           opts[:heap] = theaps.split(',') if theaps
           opts[:heat] = theats.split(',') if theats
 
+          opts[:name] = data['names']
+
           case trange
             when 'execution'
               opts[:exid] = exid

@@ -484,7 +484,7 @@ describe 'Flor punit' do
             trap point: 'signal', name: 's0'
               def msg; trace "s0"
             trap point: 'signal', name: 's1'
-              def msg; trace "s0"
+              def msg; trace "s1"
             signal 's0'
             signal 's1'
             signal 's2'
