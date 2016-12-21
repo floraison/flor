@@ -12,5 +12,5 @@ until false
 ```
 
 
-[source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/break.rb)
+* [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/break.rb)
 

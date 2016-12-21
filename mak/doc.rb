@@ -49,9 +49,9 @@ def make_proc_doc(path)
         a
       }
 
-    f.puts("\n[source](#{File.join(PURI, path)})")
+    f.puts("\n* [source](#{File.join(PURI, path)})")
     spec_paths.each do |name, spath|
-      f.puts("[#{name} spec](#{File.join(PURI, spath)})")
+      f.puts("* [#{name} spec](#{File.join(PURI, spath)})")
     end
     f.puts
   end

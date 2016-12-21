@@ -15,6 +15,6 @@ loop
 Accepts `break` and `continue` like `cursor` does.
 
 
-[source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/loop.rb)
-[loop spec](https://github.com/floraison/flor/tree/master/spec/pcore/loop_spec.rb)
+* [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/loop.rb)
+* [loop spec](https://github.com/floraison/flor/tree/master/spec/pcore/loop_spec.rb)
 

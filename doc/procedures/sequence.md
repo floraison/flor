@@ -11,6 +11,6 @@ sequence
 ```
 
 
-[source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/sequence.rb)
-[sequence spec](https://github.com/floraison/flor/tree/master/spec/pcore/sequence_spec.rb)
+* [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/sequence.rb)
+* [sequence spec](https://github.com/floraison/flor/tree/master/spec/pcore/sequence_spec.rb)
 
