@@ -128,6 +128,8 @@ describe 'Flor punit' do
       expect(tra.onid).to eq('0_0')
     end
 
+    it 'has access to variables in the parent node' # see `on` as well
+
     it 'is removed at the end of the execution' do
 
       expect(@unit.traps.count).to eq(0)

@@ -37,10 +37,11 @@ class Flor::Pro::On < Flor::Procedure
         { 'nid' => nid, 'cnid' => nil, 'fun' => fid, 'cid' => cid },
         tree[2]
       ]
-    msg =
-      apply(fun, [], tree[2], false).first.merge('noreply' => true)
-puts "msg:"
-pp msg
+    msg = apply(fun, [], tree[2], false)
+      .first
+      .merge('noreply' => true, 'from' => parent)
+#puts "msg:"
+#pp msg
 
     tra = {}
     tra['bnid'] = parent || '0' # shouldn't it be [the real] root?
@@ -51,10 +52,10 @@ pp msg
     tra['message'] = msg
     tra['count'] = nil       # TODO `on 'xxx' once: true` or `count: 7`
     tra['range'] = 'subnid'  # TODO `on 'xxx' range: 'execution'`
-puts "tra:"
-pp tra
+#puts "tra:"
+#pp tra
 
-    #reply('point' => 'trap','nid' => nid, 'trap' => tra) +
+    reply('point' => 'trap','nid' => nid, 'trap' => tra) +
     reply
   end
 end

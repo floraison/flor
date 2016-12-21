@@ -55,7 +55,7 @@ module Flor
     a << ni
 
     pt = m['point'][0, 3]
-    pt = "#{pt == 'tri' ? _gr : _bl}#{pt}#{_dg}"
+    pt = "#{(pt == 'tri' || pt == 'sig') ? _gr : _bl}#{pt}#{_dg}"
     a << pt
 
     t =
