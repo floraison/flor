@@ -415,37 +415,34 @@ describe 'Flor punit' do
 
     context 'consumed:' do
 
-      context 'false (default)' do
+      # It's nice and all, but by the time the msg is run through the trap
+      # it has already been consumed...
 
-        it 'traps before the message consumption'# do
-#
-#          flon = %{
-#            sequence
-#              trap 'receive', consumed: true
-#                def msg; trace "trap:$(msg.nid)-$(msg.consumedXXX)"
-#              trace "trace"
-#          }
-#
-#          r = @unit.launch(flon, wait: true)
-#
-#          expect(r['point']).to eq('terminated')
-#
-#          sleep 0.100
-#
-#          expect(
-#            @unit.traces.collect(&:text).join(' ')
-#          ).to eq(%{
-#            trace trap:0_1_0- trap:0_1- trap:0- trap:-
-#          }.strip)
-#        end
-  #
-  # It's nice and all, but by the time the msg is run through the trap
-  # it has already been consumed...
-      end
+      it 'traps after the message consumption' do
 
-      context 'true' do
+        flon = %{
+          trace 'a'
+          trap point: 'signal', consumed: true
+            def msg; trace "0con:m$(msg.m)sm$(msg.sm)"
+          trap point: 'signal', consumed: true
+            def msg; trace "1con:m$(msg.m)sm$(msg.sm)"
+          trap point: 'signal'
+            def msg; trace "0nocon:m$(msg.m)sm$(msg.sm)"
+          signal 'S'
+          trace 'b'
+        }
 
-        it 'traps after the message consumption'
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.210
+
+        expect(
+          @unit.traces.collect(&:text).join(' ')
+        ).to eq(%{
+          a b 0con:m48sm47 1con:m48sm47 0nocon:m48sm47
+        }.strip)
       end
     end
 
@@ -503,6 +500,8 @@ describe 'Flor punit' do
           a s0 s1 b
         ])
       end
+
+      it 'traps "signal" and its payload'
     end
 
     context 'multiple criteria' do
