@@ -25,3 +25,7 @@ map [ 1, 2, 3 ]
 # yields [ 4, 5, 6 ]
 ```
 
+
+[source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/define.rb)
+[define spec](https://github.com/floraison/flor/tree/master/spec/pcore/define_spec.rb)
+

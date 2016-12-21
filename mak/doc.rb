@@ -1,6 +1,8 @@
 
 require 'pp'
 
+PURI = 'https://github.com/floraison/flor/tree/master/'
+
 
 def make_proc_doc(path)
 
@@ -37,6 +39,21 @@ def make_proc_doc(path)
 
     f.print("\n# #{names.join(', ')}\n")
     lines.each { |l| f.print(l) }
+
+    cat =
+      path.match(/\/pcore\//) ? 'pcore' : 'punit'
+    spec_paths =
+      names.inject([]) { |a, name|
+        spa = "spec/#{cat}/#{name}_spec.rb"
+        a << [ name, spa ] if File.exist?(spa)
+        a
+      }
+
+    f.puts("\n[source](#{File.join(PURI, path)})")
+    spec_paths.each do |name, spath|
+      f.puts("[#{name} spec](#{File.join(PURI, spath)})")
+    end
+    f.puts
   end
 
   [ File.basename(File.dirname(path))[1..-1], names, "#{fname}.md", summary ]
