@@ -317,7 +317,34 @@ describe 'Flor punit' do
 
     context 'range: execution' do
 
-      it 'traps in the same execution'
+      it 'traps in the same execution' do
+
+        exid0 = @unit.launch(%{
+          concurrence
+            trap tag: 't1' range: 'execution'
+              def msg; trace "t1_$(msg.exid)"
+            sequence
+              sleep '1s'
+              sequence tag: 't1'
+                trace 'exe0'
+                stall _
+        })
+
+        sleep 2.1
+
+        exid1 = @unit.launch(%{
+          sequence tag: 't1'
+            trace 'exe1'
+        }, wait: true)
+
+        sleep 0.350
+
+        expect(
+          @unit.traces.collect(&:text).join("\n")
+        ).to eq([
+          "exe0", "t1_#{exid0}", "exe1"
+        ].join("\n"))
+      end
     end
 
 

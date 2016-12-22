@@ -68,6 +68,8 @@ describe 'Flor punit' do
         'a b c'
       )
     end
+
+    it "doesn't mind tag:"
   end
 end
 
