@@ -194,10 +194,16 @@ module Flor
 
       head = heac.new(self, node, message)
 
+      nid = message['nid']
       pt = message['point']
       pt = 'do_receive' if pt == 'receive'
 
-      head.pre_execute if pt == 'execute'
+      if pt == 'execute'
+        head.pre_execute
+        pnode = @execution['nodes'][node['parent']]
+        cnodes = pnode && (pnode['cnodes'] ||= [])
+        cnodes << nid if cnodes && ( ! cnodes.include?(nid))
+      end
       head.send(pt)
     end
 

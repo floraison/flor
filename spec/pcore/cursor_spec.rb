@@ -145,6 +145,27 @@ describe 'Flor punit' do
         terminated::
       ].join("\n"))
     end
+
+    it 'accepts "move"' do
+
+      flon = %{
+        cursor
+          push f.l 'a'
+          move to: 'final'
+          push f.l 'b'
+          push f.l 'c' tag: 'final'
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']['l']
+      ).to eq(%w[
+        a c
+      ])
+    end
   end
 end
 

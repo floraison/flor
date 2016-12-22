@@ -477,5 +477,18 @@ module Flor
 
     sio.string
   end
+
+
+  #
+  # tree
+
+  #def self.is_symbol_tree?(t)
+  #  t[0].is_a?(String) && t[1] == []
+  #end
+
+  def self.is_tree?(t)
+
+    t.is_a?(Array) && t.size > 2 && t[0].is_a?(String) && t[2].is_a?(Integer)
+  end
 end
 

@@ -57,10 +57,14 @@ class Flor::Pro::Cursor < Flor::Procedure
 
     @node['vars'] =
       {}
+
     @node['vars']['break'] =
       [ '_proc', { '_proc' => 'break', 'nid' => nid }, tree[-1] ]
     @node['vars']['continue'] =
       [ '_proc', { '_proc' => 'continue', 'nid' => nid }, tree[-1] ]
+
+    @node['vars']['move'] =
+      [ '_proc', { '_proc' => 'move', 'nid' => nid }, tree[-1] ]
 
     super
   end
@@ -98,12 +102,49 @@ class Flor::Pro::Cursor < Flor::Procedure
         'payload' => Flor.dup(message['payload'])
       } ]
 
+    elsif fla == 'move'
+
+      @node['status'] =
+        'moved'
+      @node['on_receive_last'] =
+        execute_child(
+          move_target_nid,
+          @node['count'] += 1,
+          false,
+          { 'orl' => 'move' })
+
     else
 
       @node['status'] = fla == 'break' ? 'broken' : 'cancelled'
     end
 
     super
+  end
+
+  protected
+
+  def move_target_nid
+
+    to = @message['to']
+
+    i = tree[1]
+      .index { |c|
+        c[1].is_a?(Array) &&
+        c[1].index { |cc|
+          Flor.is_tree?(cc) &&
+          cc[0] == '_att' &&
+          cc[1].size == 2 &&
+          cc[1][0][0] == 'tag' &&
+          %w[ _sqs _dqs ].include?(cc[1][1][0]) &&
+          cc[1][1][1] == to
+        }
+      }
+
+    fail(
+      "move target #{to.inspect} not found"
+    ) unless i
+
+    i
   end
 end
 

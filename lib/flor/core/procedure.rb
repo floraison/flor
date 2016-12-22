@@ -149,23 +149,24 @@ class Flor::Procedure < Flor::Node
     }
   end
 
-  def execute_child(index=0, sub=nil, duplicate_payload=false)
+  def execute_child(index=0, sub=nil, duplicate_payload=false, to_merge=nil)
 
     return reply \
-      if index < 0 || ! tree[1].is_a?(Array) || tree[1][index] == nil
+      if index < 0 || ( ! tree[1].is_a?(Array)) || tree[1][index] == nil
 
     cnid = Flor.child_nid(nid, index, sub || 0)
-
-    (@node['cnodes'] ||= []) << cnid
 
     pl = @message['payload']
     pl = Flor.dup(pl) if duplicate_payload
 
-    reply(
+    h = {
       'point' => 'execute',
       'nid' => cnid,
       'tree' => tree[1][index],
-      'payload' => pl)
+      'payload' => pl }
+    h.merge!(to_merge) if to_merge
+
+    reply(h)
   end
 
 #  # turns ```sleep "1y"``` into ```sleep _unkeyed: "1y"```
@@ -187,11 +188,6 @@ class Flor::Procedure < Flor::Node
 #
 #    @node['tree'] = [ t[0], cn, t[1] ]
 #  end
-
-  def is_symbol_tree?(t)
-
-    t[0].is_a?(String) && t[1] == []
-  end
 
   def unatt_unkeyed_children(first_only=false)
 
