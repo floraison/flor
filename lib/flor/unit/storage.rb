@@ -378,7 +378,10 @@ module Flor
 
     def trace(exid, nid, tracer, text)
 
+      text = text.is_a?(String) ? text : JSON.dump(text)
+
       synchronize do
+
         @db[:flor_traces].insert(
           domain: Flor.domain(exid),
           exid: exid,

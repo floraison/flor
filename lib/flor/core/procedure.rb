@@ -71,7 +71,10 @@ class Flor::Procedure < Flor::Node
     end
   end
 
-  def debug_tree
+  def debug_tree(nid=nil)
+
+    nid ||= self.nid
+    tree = lookup_tree(nid)
 
     Flor.print_tree(tree, nid)
   end

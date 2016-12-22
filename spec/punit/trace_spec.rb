@@ -69,7 +69,93 @@ describe 'Flor punit' do
       )
     end
 
-    it "doesn't mind tag:"
+    it "doesn't mind tag:" do
+
+      flon = %{
+        trap tag: 'x'
+          def msg; trace "$(msg.point):x"
+        trace 'a', tag: 'x'
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']['ret']
+      ).to eq(
+        [ '_func', { 'nid' => '0_0_1', 'cnid' => '0_0', 'fun' => 0 }, 3 ]
+      )
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'a entered:x'
+      )
+    end
+
+    it 'traces multiple times' do
+
+      @unit.hooker.add('journal', Flor::Journal)
+
+      flon = %{
+        trace 'a', 'b', tag: 'x', 'c'
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'a b c'
+      )
+
+      expect(
+        @unit.journal
+          .collect { |m|
+            tags = m['tags']; tags = tags ? tags.join(',') : nil
+            [ m['nid'], m['point'], tags ].compact.join(':') }
+          .join("\n")
+      ).to eq(%w[
+        0:execute
+        0_0:execute
+        0_0_0:execute
+        0_0:receive
+        0:receive
+        0_1:execute
+        0_1_0:execute
+        0_1:receive
+        0:receive
+        0_2:execute
+        0_2_1:execute
+        0_2:receive
+        0:entered:x
+        0:receive
+        0_3:execute
+        0_3_0:execute
+        0_3:receive
+        0:receive
+        receive
+        0:left:x
+        terminated
+      ].join("\n"))
+    end
+
+    it "doesn't touch f.ret" do
+
+      flon = %{
+        123
+        trace 'a'
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(123)
+    end
   end
 end
 
