@@ -57,7 +57,7 @@ if RUBY_PLATFORM.match(/java/)
   class Array
     alias original_collect collect
     def collect(&block)
-puts [ caller[0] + " <---" ] + caller[1, 2]
+puts caller[0] + " <---"
       original_collect(&block)
     end
   end
