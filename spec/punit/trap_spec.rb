@@ -128,7 +128,21 @@ describe 'Flor punit' do
       expect(tra.onid).to eq('0_0')
     end
 
-    it 'has access to variables in the parent node' # see `on` as well
+    it 'has access to variables in the parent node' do
+
+      flon = %{
+        set l []
+        trap point: 'signal'
+          def msg; push l "$(msg.name)"
+        signal 'hello'
+        push l 'over'
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['l']).to eq(%w[ over hello ])
+    end
 
     it 'is removed at the end of the execution' do
 
