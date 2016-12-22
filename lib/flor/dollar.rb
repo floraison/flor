@@ -152,30 +152,45 @@ module Flor
       end
     end
 
-    def call(fun, s)
+    def to_json(o)
+
+      case o
+        when Array, Hash then JSON.dump(o)
+        else JSON.dump([ o ])[1..-2]
+      end
+    end
+
+    def call(fun, o)
+
+      # NB: yes, $1..$9 are thread-safe (and local, not global)
 
       case fun
 
-        when 'u' then s.upcase
-        when 'd' then s.downcase
-        when 'r' then s.reverse
-        when 'c' then s.capitalize.gsub(/\s[a-z]/) { |c| c.upcase }
-        when 'q' then quote(s, false)
-        when 'Q' then quote(s, true)
+        when 'u' then o.to_s.upcase
+        when 'd' then o.to_s.downcase
+        when 'r' then o.reverse
+        when 'c' then o.to_s.capitalize.gsub(/\s[a-z]/) { |c| c.upcase }
+        when 'q' then quote(o, false)
+        when 'Q' then quote(o, true)
+
+        when 'json' then to_json(o)
+
+        when /^j(.+)/
+          o.respond_to?(:join) ? o.join($1) : o
 
         when /\Am\/(.+)\/\z/
-          match($1, s)
+          match($1, o.to_s)
         when /\As\/(.*[^\\]\/)(.+)\/([gix]*)\z/
-          substitute($1.chop, $2, $3, s)
+          substitute($1.chop, $2, $3, o.to_s)
 
-        when /\A-?\d+\z/ then s[fun.to_i]
-        when /\A(-?\d+), *(-?\d+)\z/ then s[$1.to_i, $2.to_i]
-        when /\A(-?\d+)\.\.(-?\d+)\z/ then s[$1.to_i..$2.to_i]
+        when /\A-?\d+\z/ then o.to_s[fun.to_i]
+        when /\A(-?\d+), *(-?\d+)\z/ then o.to_s[$1.to_i, $2.to_i]
+        when /\A(-?\d+)\.\.(-?\d+)\z/ then o.to_s[$1.to_i..$2.to_i]
 
         when /\A\s*l\s*([><=!]=?|<>)\s*(\d+)\z/
-          lfilter(s, $1, $2.to_i) ? s : nil
+          lfilter(o.to_s, $1, $2.to_i) ? o.to_s : nil
 
-        else s
+        else o
       end
     end
 

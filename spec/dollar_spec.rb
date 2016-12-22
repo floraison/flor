@@ -250,8 +250,17 @@ describe Flor::Dollar do
         expect(@d.expand("$(ba|s/A/O/gi)")).to eq('blOck Odder')
       end
 
-      it "understands |j,"
-      it "understands |json"
+      it "understands |j," do
+
+        expect(@d.expand("$(brown|j,)")).to eq('fox')
+        expect(@d.expand("$(arr|j,)")).to eq('1,2,3')
+      end
+
+      it "understands |json" do
+
+        expect(@d.expand("$(brown|json)")).to eq('"fox"')
+        expect(@d.expand("$(arr|json)")).to eq('[1,2,3]')
+      end
     end
 
     context "filter pipes" do
