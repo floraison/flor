@@ -94,7 +94,6 @@ describe 'Flor unit' do
 
     it 'may filter on point:/p:' do
 
-begin
       ms0 = []
       @unit.hook(point: 'execute') { |m| ms0 << Flor.dup(m); [] }
       ms1 = []
@@ -109,12 +108,6 @@ begin
         ms0.collect { |m| m['point'] }.uniq).to eq(%w[ execute ])
       expect(
         ms1.collect { |m| m['point'] }.uniq).to eq(%w[ execute terminated ])
-rescue (defined?(Java::JavaLang::Exception) ? Java::JavaLang::Exception : Exception) => ex
-  puts "=" * 80
-  p ex.inspect
-  puts ex.backtrace
-  puts "-" * 80
-end
     end
 
     it 'may filter on domain:/d:' do
