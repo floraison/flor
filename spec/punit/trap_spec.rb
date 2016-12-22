@@ -542,7 +542,27 @@ describe 'Flor punit' do
         ])
       end
 
-      it 'traps "signal" and its payload'
+      it 'traps "signal" and its payload' do
+
+        flon = %{
+          trap point: 'signal', name: 's0'
+            def msg; trace "s0:$(msg.payload.ret)"
+          signal 's0'
+            [ 1, 2, 3 ]
+        }
+
+        r = @unit.launch(flon, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.210
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          s0:[1,2,3]
+        ])
+      end
     end
 
     context 'multiple criteria' do

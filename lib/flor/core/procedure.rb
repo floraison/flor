@@ -79,9 +79,9 @@ class Flor::Procedure < Flor::Node
     Flor.print_tree(tree, nid)
   end
 
-  def debug_msg
+  def debug_msg(msg=message)
 
-    Flor.detail_msg(@executor, message)
+    Flor.detail_msg(@executor, msg)
   end
 
   protected

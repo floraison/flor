@@ -42,6 +42,8 @@ describe 'Flor punit' do
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq(%w[ requested done. approved ])
     end
+
+    it 'traps signals and their payload'
   end
 end
 

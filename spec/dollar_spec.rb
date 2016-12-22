@@ -249,6 +249,9 @@ describe Flor::Dollar do
         expect(@d.expand("$(ba|s/a/o/g)")).to eq('block odder')
         expect(@d.expand("$(ba|s/A/O/gi)")).to eq('blOck Odder')
       end
+
+      it "understands |j,"
+      it "understands |json"
     end
 
     context "filter pipes" do
