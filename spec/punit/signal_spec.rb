@@ -37,6 +37,8 @@ describe 'Flor punit' do
 
       expect(r['point']).to eq('terminated')
 
+      sleep 0.420
+
       expect(
         @unit.journal
           .collect { |m| [ m['point'], m['nid'], m['name'] ].join(':') }
