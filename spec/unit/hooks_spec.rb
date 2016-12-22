@@ -114,6 +114,7 @@ rescue (defined?(Java::JavaLang::Exception) ? Java::JavaLang::Exception : Except
   p ex.inspect
   puts ex.backtrace
   puts "-" * 80
+  fail "**INTERCEPTED**"
 end
     end
 
