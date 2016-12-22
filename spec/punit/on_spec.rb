@@ -43,7 +43,24 @@ describe 'Flor punit' do
       expect(r['vars']['l']).to eq(%w[ requested done. approved ])
     end
 
-    it 'traps signals and their payload'
+    it 'traps signals and their payload' do
+
+      flon = %{
+        set l []
+        push l 'a'
+        on 'approve'
+          push l
+          push l _payload.ret
+        signal 'approve'
+          'b'
+        push l 'c'
+      }
+
+      r = @unit.launch(flon, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['l']).to eq(%w[ a b c approve ])
+    end
   end
 end
 

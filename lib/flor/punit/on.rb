@@ -44,6 +44,7 @@ class Flor::Pro::On < Flor::Procedure
 #pp msg
 
     tra = {}
+    tra['flavour'] = 'punit/on'
     tra['bnid'] = parent || '0' # shouldn't it be [the real] root?
     tra['points'] = %w[ signal ]
     tra['tags'] = []

@@ -340,11 +340,19 @@ module Flor
 
     _rs, _dg, _yl = colours(opts)
 
+    nid = m['nid']
+    n = executor.execution['nodes'][nid]
+    node = n ? Flor::Node.new(executor, n, m) : nil
+
     puts "#{_dg}<Flor.detail_msg>#{_rs}"
     print "#{_yl}"
-    Kernel::pp m
+    Kernel::pp(m)
     puts "#{_dg}payload:#{_yl}"
-    Kernel::pp m['payload']
+    Kernel::pp(m['payload'])
+    puts "#{_dg}tree:"
+    print_tree(node.lookup_tree(nid), nid) if node
+    puts "#{_dg}node:#{_yl}"
+    Kernel::pp(n) if n
     puts "#{_dg}nodes:"
     puts nodes_to_s(executor.execution['nodes'].values, m, opts)
     z = executor.execution['nodes'].size

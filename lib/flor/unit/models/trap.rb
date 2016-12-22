@@ -94,17 +94,24 @@ module Flor
 
     def to_trigger_message(executor, message)
 
-      msg = self.data(false)['message']
+      dat = self.data(false)
+      msg = dat['message']
 
       msg['trap_id'] = self.id
 
       if vs = msg['vars']
-        k = vs.keys.find { |k| k != 'arguments' }
+        k = vs.keys.find { |k| k != 'arguments' } || 'msg'
         vs[k] = message
       end
 
       #xx = executor.counter_next('xx')
       #msg['dbg'] = xx
+
+      if dat['flavour'] == 'punit/on'
+        pl = msg['payload']
+        msg['payload'] = Flor.dup(message['payload'])
+        (msg['vars'] ||= {})['_payload'] = pl
+      end
 
       {
         'point' => 'trigger',
@@ -115,7 +122,7 @@ module Flor
         'trap_id' => self.id,
         'message' => msg,
         #'dbg' => xx
-      }#.tap { |m| p m }
+      }#.tap { |m| pp m }
     end
 
     def to_hash
