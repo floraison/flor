@@ -127,7 +127,18 @@ class Flor::Pro::Cursor < Flor::Procedure
 
     to = @message['to']
 
-    i = tree[1]
+    i = find_tag_target(to) || find_string_target(to) || find_name_target(to)
+
+    fail(
+      "move target #{to.inspect} not found"
+    ) unless i
+
+    i
+  end
+
+  def find_tag_target(to)
+
+    tree[1]
       .index { |c|
         c[1].is_a?(Array) &&
         c[1].index { |cc|
@@ -139,12 +150,26 @@ class Flor::Pro::Cursor < Flor::Procedure
           cc[1][1][1] == to
         }
       }
+  end
 
-    fail(
-      "move target #{to.inspect} not found"
-    ) unless i
+  def find_string_target(to)
 
-    i
+    tree[1]
+      .index { |c|
+        c[1].is_a?(Array) &&
+        c[1].index { |cc|
+          Flor.is_tree?(cc) &&
+          cc[0] == '_att' &&
+          cc[1].size == 1 &&
+          %w[ _sqs _dqs ].include?(cc[1][0][0]) &&
+          cc[1][0][1] == to
+        }
+      }
+  end
+
+  def find_name_target(to)
+
+    nil # TODO
   end
 end
 

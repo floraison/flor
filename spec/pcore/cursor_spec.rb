@@ -159,12 +159,7 @@ describe 'Flor punit' do
       r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
 
       expect(r['point']).to eq('terminated')
-
-      expect(
-        r['payload']['l']
-      ).to eq(%w[
-        a c
-      ])
+      expect(r['payload']['l']).to eq(%w[ a c ])
     end
   end
 end
