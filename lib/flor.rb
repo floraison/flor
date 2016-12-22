@@ -52,3 +52,14 @@ require 'flor/core/texecutor'
 
 Flor.load_procedures('pcore')
 
+
+if RUBY_PLATFORM.match(/java/)
+  class Array
+    alias original_collect collect
+    def collect(&block)
+puts [ caller[0] + " <---" ] + caller[1, 2]
+      original_collect(&block)
+    end
+  end
+end
+
