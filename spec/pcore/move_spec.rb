@@ -86,6 +86,48 @@ describe 'Flor punit' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a d g ])
     end
+
+    it 'moves to a name' do
+
+      flon = %{
+        define here; noop
+        define there; noop
+        cursor
+          push f.l 'a'
+          move to: 'here'
+          push f.l 'b'
+          here _
+          push f.l 'c'
+          move to: 'there'
+          push f.l 'd'
+          there
+          push f.l 'e'
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ a c e ])
+    end
+
+    it 'accepts a function as to:' #do
+#
+#      flon = %{
+#        define here; noop
+#        define there; noop
+#        cursor
+#          push f.l 'a'
+#          move to: here
+#          push f.l 'b'
+#          here
+#          push f.l 'c'
+#      }
+#
+#      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+#
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['l']).to eq(%w[ a c ])
+#    end
   end
 end
 

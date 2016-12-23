@@ -172,7 +172,7 @@ class Flor::Pro::Cursor < Flor::Procedure
 
   def find_name_target(to)
 
-    nil # TODO
+    tree[1].index { |c| c[0] == to }
   end
 end
 
