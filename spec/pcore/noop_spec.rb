@@ -30,6 +30,21 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(1)
     end
+
+    it "doesn't mind attributes and children" do
+
+      flon = %{
+        2
+        noop "hello"
+        noop
+          [ 1, 2, 3 ]
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(2)
+    end
   end
 end
 

@@ -26,5 +26,12 @@
 class Flor::Pro::Noop < Flor::Procedure
 
   name 'noop'
+
+  def receive_last
+
+    payload['ret'] = node_payload_ret
+
+    reply
+  end
 end
 
