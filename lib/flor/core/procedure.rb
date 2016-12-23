@@ -247,12 +247,12 @@ class Flor::Procedure < Flor::Node
 
   def receive_when_status
 
-    @node.delete('status') if @node['status'] == 'continued'
-
     ns = @node['cnodes']
     ns.delete(from) if ns
 
     orl = (ns == []) && @node.delete('on_receive_last')
+
+    @node.delete('status') if orl && @node['status'] != 'triggered-on-error'
 
     orl || reply
   end

@@ -50,7 +50,7 @@ describe 'Flor punit' do
       expect(r['payload']['l']).to eq(%w[ a c ])
     end
 
-    it 'moves to a string' do
+    it 'moves to a string argument' do
 
       flon = %{
         cursor
@@ -66,7 +66,26 @@ describe 'Flor punit' do
       expect(r['payload']['l']).to eq(%w[ a c ])
     end
 
-    it 'moves to a name'
+    it 'moves to a string' do
+
+      flon = %{
+        cursor
+          push f.l 'a'
+          move to: 'c'
+          push f.l 'b'
+          "c"
+          push f.l 'd'
+          move to: 'f'
+          push f.l 'e'
+          'f'
+          push f.l 'g'
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ a d g ])
+    end
   end
 end
 
