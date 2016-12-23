@@ -113,6 +113,8 @@ describe 'Flor punit' do
         'a b c'
       )
 
+      sleep 0.140
+
       expect(
         @unit.journal
           .collect { |m|
