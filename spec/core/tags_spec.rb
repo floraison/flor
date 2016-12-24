@@ -112,6 +112,41 @@ describe 'Flor core' do
 
       expect(r['point']).to eq('failed')
     end
+
+    it 'rejects procs as tags' do
+
+      flon = %{
+        sequence tag: sequence
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('cannot use proc "sequence" as tag name')
+    end
+
+    it 'accepts functions as tags' do
+
+      flon = %{
+        define x; _
+        sequence tag: x
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @executor.journal
+          .inject([]) { |a, m|
+            next a unless m['point'] == 'entered'
+            a << [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':')
+            a
+          }.join("\n")
+      ).to eq(%w[
+        entered:0_1:x
+      ].join("\n"))
+    end
   end
 end
 
