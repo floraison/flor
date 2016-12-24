@@ -23,9 +23,19 @@
 #++
 
 
-class Flor::Pro::Noop < Flor::Procedure
+class Flor::Pro::NoRet < Flor::Procedure
+  #
+  # executes its children, but doesn't alter the received f.ret
+  #
+  # ```
+  # sequence
+  #   123
+  #   noret
+  #     456
+  #   # f.ret is "back" to 123 at this point
+  # ```
 
-  name 'noop'
+  name 'noret'
 
   def receive_last
 

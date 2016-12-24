@@ -37,7 +37,7 @@ describe 'Flor unit' do
 
       @unit.launch(%{
         sequence
-          noop _
+          noret _
       }, wait: true)
 
       sleep 0.770 # the wait might exit before the hook, especially on JRuby
@@ -84,7 +84,7 @@ describe 'Flor unit' do
 
       @unit.launch(%{
         sequence
-          noop _
+          noret _
       }, wait: true)
 
       sleep 0.350
@@ -102,7 +102,7 @@ begin
 
       @unit.launch(%{
         sequence
-          noop _
+          noret _
       }, wait: true)
 
       expect(
@@ -130,10 +130,10 @@ end
       @unit.hook(d: /\Anet\.acme(\.|$)/) { |m| ms2 << Flor.dup(m); [] }
 
       rs = []
-      rs << @unit.launch(%{ noop _ }, wait: true, domain: 'com.acme')
-      rs << @unit.launch(%{ noop _ }, wait: true, domain: 'org.acme')
-      rs << @unit.launch(%{ noop _ }, wait: true, domain: 'za.co.acme')
-      rs << @unit.launch(%{ noop _ }, wait: true, domain: 'org.acme.sub0')
+      rs << @unit.launch(%{ noret _ }, wait: true, domain: 'com.acme')
+      rs << @unit.launch(%{ noret _ }, wait: true, domain: 'org.acme')
+      rs << @unit.launch(%{ noret _ }, wait: true, domain: 'za.co.acme')
+      rs << @unit.launch(%{ noret _ }, wait: true, domain: 'org.acme.sub0')
 
       expect(rs.collect { |r| r['point'] }.uniq).to eq(%w[ terminated ])
 
@@ -155,9 +155,9 @@ end
       @unit.hook(subdomain: 'net') { |m| ms2 << Flor.dup(m); [] }
 
       rs = []
-      rs << @unit.launch(%{ noop _ }, wait: true, domain: 'com.acme')
-      rs << @unit.launch(%{ noop _ }, wait: true, domain: 'com.acme.sub0')
-      rs << @unit.launch(%{ noop _ }, wait: true, domain: 'org.acme.sub0')
+      rs << @unit.launch(%{ noret _ }, wait: true, domain: 'com.acme')
+      rs << @unit.launch(%{ noret _ }, wait: true, domain: 'com.acme.sub0')
+      rs << @unit.launch(%{ noret _ }, wait: true, domain: 'org.acme.sub0')
 
       expect(rs.collect { |r| r['point'] }.uniq).to eq(%w[ terminated ])
 
@@ -173,11 +173,11 @@ end
       ms0 = []
       @unit.hook(heap: 'sequence') { |m| ms0 << Flor.dup(m); [] }
       ms1 = []
-      @unit.hook(hp: %w[ sequence noop ]) { |m| ms1 << Flor.dup(m); [] }
+      @unit.hook(hp: %w[ sequence noret ]) { |m| ms1 << Flor.dup(m); [] }
 
       @unit.launch(%{
         sequence
-          noop _
+          noret _
       }, wait: true)
 
       expect(

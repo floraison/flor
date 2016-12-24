@@ -90,8 +90,8 @@ describe 'Flor punit' do
     it 'moves to a name' do
 
       flon = %{
-        define here; noop
-        define there; noop
+        define here; noret
+        define there; noret
         cursor
           push f.l 'a'
           move to: 'here'

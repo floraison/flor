@@ -83,7 +83,7 @@ describe 'Flor punit' do
 
       exid0 = @unit.launch(%{
         trap tag: 't0'; def msg; trace "t0_$(msg.exid)"
-        noop tag: 't0'
+        noret tag: 't0'
         trace "stalling_$(exid)"
         stall _
       })
@@ -91,7 +91,7 @@ describe 'Flor punit' do
       sleep 0.5
 
       r = @unit.launch(%{
-        noop tag: 't0'
+        noret tag: 't0'
       }, wait: true)
 
       exid1 = r['exid']
@@ -169,11 +169,11 @@ describe 'Flor punit' do
               def msg; trace "A>$(nid)"
             sequence
               sleep 0.8
-              noop tag: 'b'
+              noret tag: 'b'
               trace "B>$(nid)"
-              noop tag: 'b'
+              noret tag: 'b'
               trace "B>$(nid)"
-              noop tag: 'b'
+              noret tag: 'b'
               trace "B>$(nid)"
         }
 
@@ -205,7 +205,7 @@ describe 'Flor punit' do
           trap heap: 'sequence'
             def msg; trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
           sequence
-            noop _
+            noret _
         }
 
         r = @unit.launch(flon, wait: true)
@@ -298,7 +298,7 @@ describe 'Flor punit' do
               stall tag: 't0'
             sequence
               sleep '1s' # give it time to process the trap
-              noop tag: 't0'
+              noret tag: 't0'
         }, wait: '0_1_1 receive')
 
         expect(r['point']).to eq('receive')
@@ -360,15 +360,15 @@ describe 'Flor punit' do
 
         sleep 0.5
 
-        r = @unit.launch(%{ noop tag: 't0' }, domain: 'org.acme', wait: true)
+        r = @unit.launch(%{ noret tag: 't0' }, domain: 'org.acme', wait: true)
         exid1 = r['exid']
         expect(r['point']).to eq('terminated')
 
-        r = @unit.launch(%{ noop tag: 't0' }, domain: 'net.acme', wait: true)
+        r = @unit.launch(%{ noret tag: 't0' }, domain: 'net.acme', wait: true)
         exid2 = r['exid']
         expect(r['point']).to eq('terminated')
 
-        r = @unit.launch(%{ noop tag: 't0' }, domain: 'net.acme.s0', wait: true)
+        r = @unit.launch(%{ noret tag: 't0' }, domain: 'net.acme.s0', wait: true)
         exid3 = r['exid']
         expect(r['point']).to eq('terminated')
 
@@ -399,15 +399,15 @@ describe 'Flor punit' do
 
         sleep 0.5
 
-        r = @unit.launch(%{ noop tag: 't0' }, domain: 'org.acme', wait: true)
+        r = @unit.launch(%{ noret tag: 't0' }, domain: 'org.acme', wait: true)
         exid1 = r['exid']
         expect(r['point']).to eq('terminated')
 
-        r = @unit.launch(%{ noop tag: 't0' }, domain: 'net.acme', wait: true)
+        r = @unit.launch(%{ noret tag: 't0' }, domain: 'net.acme', wait: true)
         exid2 = r['exid']
         expect(r['point']).to eq('terminated')
 
-        r = @unit.launch(%{ noop tag: 't0' }, domain: 'net.acme.s0', wait: true)
+        r = @unit.launch(%{ noret tag: 't0' }, domain: 'net.acme.s0', wait: true)
         exid3 = r['exid']
         expect(r['point']).to eq('terminated')
 
@@ -601,8 +601,8 @@ describe 'Flor punit' do
             trap tag: 'b'
             sequence
               sleep 0.8
-              noop tag: 'b'
-              noop tag: 'b'
+              noret tag: 'b'
+              noret tag: 'b'
               trace "B>$(nid)"
         }
 

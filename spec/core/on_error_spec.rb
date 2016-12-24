@@ -20,7 +20,7 @@ describe 'Flor core' do
     it 'has no effect when no error' do
 
       flon = %{
-        sequence on_error: (def err; noop)
+        sequence on_error: (def err; _)
           push f.l 0
       }
 

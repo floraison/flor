@@ -15,14 +15,14 @@ describe 'Flor procedures' do
     @executor = Flor::TransientExecutor.new
   end
 
-  describe 'noop' do
+  describe 'noret' do
 
     it 'leaves f.ret as is' do
 
       flon = %{
         sequence
           1
-          noop _
+          noret _
       }
 
       r = @executor.launch(flon)
@@ -35,8 +35,8 @@ describe 'Flor procedures' do
 
       flon = %{
         2
-        noop "hello"
-        noop
+        noret "hello"
+        noret
           [ 1, 2, 3 ]
       }
 
