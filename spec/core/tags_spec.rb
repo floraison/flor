@@ -100,6 +100,18 @@ describe 'Flor core' do
         terminated::
       ])
     end
+
+    it 'fails on non-string attributes' do
+
+      flon = %{
+        sequence tag: aa
+          1
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('failed')
+    end
   end
 end
 

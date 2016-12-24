@@ -33,6 +33,14 @@ module Flor
 
       self.where(status: 'terminated')
     end
+
+    def tags
+
+      data['nodes'].values.inject([]) do |a, n|
+        if ts = n['tags']; a.concat(ts); end
+        a
+      end
+    end
   end
 end
 
