@@ -138,7 +138,11 @@ module Flor
       n = Flor::Node.new(self, node, message)
 
       mt = message['tree']
+      mt = [ 'noeval', [ 0 ], mt[2] ] \
+        if mt[0] == '_' && Flor.is_array_of_trees?(mt[1])
+
       nt = n.lookup_tree(nid)
+
       node['tree'] = mt if mt && (mt != nt)
       tree = node['tree'] || nt
 

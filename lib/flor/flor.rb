@@ -490,5 +490,10 @@ module Flor
 
     t.is_a?(Array) && t.size > 2 && t[0].is_a?(String) && t[2].is_a?(Integer)
   end
+
+  def self.is_array_of_trees?(o)
+
+    o.is_a?(Array) && o.all? { |e| Flor.is_tree?(e) }
+  end
 end
 

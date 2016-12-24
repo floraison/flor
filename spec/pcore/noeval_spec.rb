@@ -45,5 +45,38 @@ describe 'Flor procedures' do
       expect(r['vars']['a']).to eq(1)
     end
   end
+
+  describe '_' do
+
+    it 'is equivalent to "noeval"' do
+
+      flon = %{
+        set a 1
+        _
+          set a 2
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['a']).to eq(1)
+    end
+
+    it 'stands on its own' do
+
+      flon = %{
+        set a 1
+        _
+        set a 2
+      }
+
+      r = @executor.launch(flon, journal: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['a']).to eq(2)
+
+      expect(@executor.journal.size).to eq(17)
+    end
+  end
 end
 

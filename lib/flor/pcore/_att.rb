@@ -30,6 +30,7 @@ class Flor::Pro::Att < Flor::Procedure
   def execute
 
     return reply if children == [ [ '_', [], tree[2] ] ]
+      # spares 1 message
 
     pt = parent_node['tree']
     return reply if pt && pt[0] == '_apply'
