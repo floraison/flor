@@ -437,6 +437,7 @@ class Flor::Procedure < Flor::Node
     cni = fun[1]['cnid'] # closure nid
 
     t = lookup_tree(fni)
+    t = t[0] if fun[1]['head']
 
     if cid = fun[1]['cid']
       t = [ 'define', t[1][cid..-1], t[2] ]
