@@ -27,6 +27,37 @@ class Flor::Pro::Happly < Flor::Procedure
 
   name '_happly'
 
+  def execute
+
+    queue(
+      'point' => 'execute',
+      'nid' => Flor.child_nid(nid, tree[1].size),
+      'tree' => tree[0])
+  end
+
+  def receive
+
+    cid = Flor.child_id(message['from'])
+
+    return super unless cid == tree[1].size
+
+    ret = payload['ret']
+
+    if Flor.is_func_tree?(ret)
+fail NotImplementedError
+    else
+      @node['hret'] = payload['ret']
+      execute_child(0)
+    end
+  end
+
+  def receive_last
+
+    payload['ret'] = @node['hret']
+
+    super
+  end
+
 #  def pre_execute
 #
 #    @node['atts'] = []

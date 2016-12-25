@@ -32,7 +32,7 @@ describe 'Flor core' do
     it 'returns itself' do
 
       flon = %{
-        3 tags: 'x'
+        3 tags: 'xyz'
       }
 
       r = @executor.launch(flon, journal: true)
@@ -47,7 +47,17 @@ describe 'Flor core' do
           }
           .join("\n")
       ).to eq(%w[
-        xxx
+        execute:0:
+        execute:0_1:
+        receive:0:
+        execute:0_0:
+        execute:0_0_1:
+        receive:0_0:
+        entered:0:xyz
+        receive:0:
+        receive::
+        left:0:xyz
+        terminated::
       ].join("\n"))
     end
   end
