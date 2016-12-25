@@ -92,11 +92,16 @@ class Flor::Pro::Att < Flor::Procedure
     return receive_att('tags') \
       if pt && Flor::Procedure[pt[0]].names.first == 'trap'
 
-    rt = payload['ret']
+    ret = payload['ret']
     fail(
-      "cannot use proc #{rt[1].inspect} as tag name"
-    ) if rt.is_a?(Array) && rt[0] == '_proc' && rt[1].is_a?(String)
-    tags = Array(rt)
+      "cannot use proc #{ret[1].inspect} as tag name"
+    ) if ret.is_a?(Array) && ret[0] == '_proc' && ret[1].is_a?(String)
+
+    ret = lookup_var_name(@node, ret) if Flor.is_func_tree?(ret)
+
+    tags = Array(ret)
+
+    return reply if tags.empty?
 
     (parent_node['tags'] ||= []).concat(tags)
     parent_node['tags'].uniq!

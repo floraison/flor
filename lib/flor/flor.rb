@@ -495,5 +495,14 @@ module Flor
 
     o.is_a?(Array) && o.all? { |e| Flor.is_tree?(e) }
   end
+
+  def self.is_func_tree?(o)
+
+    o.is_a?(Array) &&
+    o[0] == '_func' &&
+    o[2].is_a?(Integer) &&
+    o[1].is_a?(Hash) &&
+    (o[1].keys & %w[ nid cnid fun ]).size == 3
+  end
 end
 

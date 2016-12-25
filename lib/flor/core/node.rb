@@ -342,6 +342,17 @@ class Flor::Node
     lookup_var(pnode, mod, key)
   end
 
+  def lookup_var_name(node, val)
+
+    return nil unless node
+
+    vars = node['vars']
+    k, _ = vars && vars.find { |k, v| v == val }
+    return k if k
+
+    lookup_var_name(parent_node(node), val)
+  end
+
   def lookup_field(mod, key)
 
     Flor.deep_get(payload.current, key)[1]
