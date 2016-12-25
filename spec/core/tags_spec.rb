@@ -147,6 +147,45 @@ describe 'Flor core' do
         entered:0_1:x
       ].join("\n"))
     end
+
+    it 'accepts functions as tags (closure)' do
+
+      flon = %{
+        sequence
+          define make_adder x
+            def y
+              +
+                x
+                y
+          set add3
+            make_adder 3
+          add3 7
+      }
+      flon = %{
+        define make_tag x
+          def; sequence tag: x
+        define t1; _
+        set v; make_tag t1
+        v _
+        v _
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @executor.journal
+          .inject([]) { |a, m|
+            next a unless m['point'] == 'entered'
+            a << [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':')
+            a
+          }.join("\n")
+      ).to eq(%w[
+        entered:0_0_2_0-2:t1
+        entered:0_0_2_0-3:t1
+      ].join("\n"))
+    end
   end
 end
 
