@@ -90,7 +90,7 @@ class Flor::Pro::Att < Flor::Procedure
     pt = parent_node_tree
 
     return receive_att('tags') \
-      if pt && Flor::Procedure[pt[0]].names.first == 'trap'
+      if pt && pt[0].is_a?(String) && Flor::Procedure[pt[0]].names[0] == 'trap'
 
     ret = payload['ret']
     fail(

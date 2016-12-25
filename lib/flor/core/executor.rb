@@ -163,6 +163,8 @@ module Flor
           'apply'
         elsif heat[0] == '_task'
           'task'
+        elsif Flor.is_tree_head_tree?(tree)
+          '_happly'
         else
           '_val'
         end

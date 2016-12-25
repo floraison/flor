@@ -15,6 +15,43 @@ describe 'Flor core' do
     @executor = Flor::TransientExecutor.new
   end
 
+  describe 'a value on its own' do
+
+    it 'returns itself' do
+
+      flon = %{
+        3
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(3)
+    end
+
+    it 'returns itself' do
+
+      flon = %{
+        3 tags: 'x'
+      }
+
+      r = @executor.launch(flon, journal: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(3)
+
+      expect(
+        @executor.journal
+          .collect { |m|
+            [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':')
+          }
+          .join("\n")
+      ).to eq(%w[
+        xxx
+      ].join("\n"))
+    end
+  end
+
   describe 'a procedure reference' do
 
     it 'returns the referenced procedure' do
@@ -123,6 +160,18 @@ describe 'Flor core' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(10)
+    end
+
+    it 'works with an anonymous function (paren)' do
+
+      flon = %{
+        (def x y; (+ x y)) 7 2
+      }
+
+      r = @executor.launch(flon)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(9)
     end
   end
 

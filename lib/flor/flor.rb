@@ -488,7 +488,10 @@ module Flor
 
   def self.is_tree?(t)
 
-    t.is_a?(Array) && t.size > 2 && t[0].is_a?(String) && t[2].is_a?(Integer)
+    t.is_a?(Array) &&
+    t.size > 2 &&
+    (t[0].is_a?(String) || Flor.is_tree?(t[0])) &&
+    t[2].is_a?(Integer)
   end
 
   def self.is_array_of_trees?(o)
@@ -503,6 +506,14 @@ module Flor
     o[2].is_a?(Integer) &&
     o[1].is_a?(Hash) &&
     (o[1].keys & %w[ nid cnid fun ]).size == 3
+  end
+
+  def self.is_tree_head_tree?(o)
+
+    o.is_a?(Array) &&
+    Flor.is_tree?(o[0]) &&
+    Flor.is_array_of_trees?(o[1]) &&
+    o[2].is_a?(Integer)
   end
 end
 

@@ -23,37 +23,36 @@
 #++
 
 
-class Flor::Pro::Apply < Flor::Procedure
+class Flor::Pro::Happly < Flor::Procedure
 
-  name 'apply'
+  name '_happly'
 
-  def pre_execute
-
-    @node['atts'] = []
-  end
-
-  def receive
-
-    #return reply if from == @node['applied']
-    return reply if from && from == @node['applied']
-
-    super
-  end
-
-  def receive_last
-
-    args = @node['atts'].collect(&:last)
-
-    src =
-      @node['heat'][0, 2] == [ '_proc', 'apply' ] ?
-      args.shift :
-      @node['heat']
-
-    ms = apply(src, args, tree[2])
-
-    @node['applied'] = ms.first['nid']
-
-    ms
-  end
+#  def pre_execute
+#
+#    @node['atts'] = []
+#  end
+#
+#  def receive
+#
+#    return reply if from && from == @node['applied']
+#
+#    super
+#  end
+#
+#  def receive_last
+#
+#    args = @node['atts'].collect(&:last)
+#
+#    src =
+#      @node['heat'][0, 2] == [ '_proc', 'apply' ] ?
+#      args.shift :
+#      @node['heat']
+#
+#    ms = apply(src, args, tree[2])
+#
+#    @node['applied'] = ms.first['nid']
+#
+#    ms
+#  end
 end
 
