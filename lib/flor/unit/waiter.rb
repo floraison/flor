@@ -56,7 +56,7 @@ module Flor
       serie, timeout, repeat =
         if owait == true
           [ [ [ nil, %w[ failed terminated ] ] ], # serie
-            3, # timeout
+            DEFAULT_TIMEOUT,
             false ] # repeat
         elsif owait.is_a?(Numeric)
           [ [ [ nil, %w[ failed terminated ] ] ], # serie
