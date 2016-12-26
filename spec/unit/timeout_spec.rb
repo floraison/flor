@@ -72,7 +72,7 @@ describe 'Flor unit' do
       expect(msg['point']).to eq('terminated')
 
       if jruby?
-        expect(Time.now - t0).to be_between(0.5, 1.8)
+        expect(Time.now - t0).to be_between(0.5, 2.0)
       else
         expect(Time.now - t0).to be_between(0.5, 1.6)
       end
