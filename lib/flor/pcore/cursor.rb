@@ -95,12 +95,11 @@ class Flor::Pro::Cursor < Flor::Procedure
 
       @node['status'] =
         'continued'
-      @node['on_receive_last'] = [ {
-        'point' => 'receive',
-        'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
-        'orl' => fla,
-        'payload' => Flor.dup(message['payload'])
-      } ]
+      @node['on_receive_last'] =
+        reply(
+          'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
+          'orl' => fla,
+          'payload' => Flor.dup(message['payload']))
 
     elsif fla == 'move'
 
