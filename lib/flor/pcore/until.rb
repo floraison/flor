@@ -95,12 +95,11 @@ class Flor::Pro::Until < Flor::Procedure
 
       @node['status'] =
         'continued'
-      @node['on_receive_last'] = [ {
-        'point' => 'receive',
-        'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
-        'orl' => true,
-        'payload' => Flor.dup(message['payload'])
-      } ]
+      @node['on_receive_last'] =
+        reply(
+          'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
+          'orl' => true,
+          'payload' => Flor.dup(message['payload']))
 
     else
 
