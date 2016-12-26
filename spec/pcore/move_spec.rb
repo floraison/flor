@@ -110,16 +110,14 @@ describe 'Flor punit' do
       expect(r['payload']['l']).to eq(%w[ a c e ])
     end
 
-    it 'accepts a function as to:' #do
+#    it 'accepts a symbol as to:' do
 #
 #      flon = %{
-#        define here; noop
-#        define there; noop
 #        cursor
 #          push f.l 'a'
 #          move to: here
 #          push f.l 'b'
-#          here
+#          _ here
 #          push f.l 'c'
 #      }
 #

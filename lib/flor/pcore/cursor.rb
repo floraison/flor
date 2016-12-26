@@ -126,6 +126,8 @@ class Flor::Pro::Cursor < Flor::Procedure
 
     to = @message['to']
 
+    fail("move target #{to.inspect} is not a string") unless to.is_a?(String)
+
     find_tag_target(to) ||
     find_string_arg_target(to) ||
     find_string_target(to) ||
