@@ -106,11 +106,7 @@ class Flor::Pro::Cursor < Flor::Procedure
       @node['status'] =
         'moved'
       @node['on_receive_last'] =
-        execute_child(
-          move_target_nid,
-          @node['count'] += 1,
-          false,
-          { 'orl' => 'move' })
+        execute_child(move_target_nid, @node['count'] += 1, 'orl' => 'move')
 
     else
 

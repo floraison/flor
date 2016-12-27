@@ -37,7 +37,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
     return reply unless children[@ncid]
 
     (@ncid..children.size - 1)
-      .map { |i| execute_child(i, 0, true) }
+      .map { |i| execute_child(i, 0, 'payload' => payload.copy_current) }
       .flatten(1)
         #
         # call execute for each of the (non _att) children

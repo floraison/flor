@@ -35,10 +35,7 @@ class Flor::Pro::Att < Flor::Procedure
     pt = parent_node['tree']
     return reply if pt && pt[0] == '_apply'
 
-    h = {}
-    h['accept_symbol'] = true if children.size > 1
-
-    execute_child(0, nil, false, h)
+    execute_child(0, nil, 'accept_symbol' => children.size > 1)
   end
 
   def receive
