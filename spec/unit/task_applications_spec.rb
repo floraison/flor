@@ -108,8 +108,8 @@ describe 'Flor unit' do
       expect(
         r['payload']['seen'].collect(&:last)
       ).to eq([
-        { 'ret' => 'alpha', 'atts' => { 'x' => 1 } },
-        { 'ret' => 'alpha', 'atts' => { 'x' => 2 } }
+        { 'ret' => nil, 'atts' => { 'x' => 1 } },
+        { 'ret' => nil, 'atts' => { 'x' => 2 } }
       ])
     end
 
