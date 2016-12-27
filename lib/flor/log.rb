@@ -239,8 +239,15 @@ module Flor
 
     puts "#{_dg}| #{opts.inspect}#{_rs}" if opts.any?
 
-    src.split("\n").select { |l| l.strip.length > 0 }.each do |line|
-      puts "#{_dg}| #{_yl}#{line}#{_rs}"
+    if src.is_a?(String)
+      src.split("\n").select { |l| l.strip.length > 0 }.each do |line|
+        puts "#{_dg}| #{_yl}#{line}#{_rs}"
+      end
+    else
+      ss = Flor.to_pretty_s(src).split("\n")
+      ss.each do |line|
+        puts "#{_dg}| #{_yl}#{line}#{_rs}"
+      end
     end
 
     puts "#{_dg}.#{_rs}"

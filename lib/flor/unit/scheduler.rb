@@ -200,7 +200,7 @@ module Flor
 
       fail ArgumentError.new(
         "flow not found in #{Flor.truncate(source_or_path, 35).inspect}"
-      ) unless source
+      ) unless source # will anyway fail badly if src is a tree (array of ...)
 
       unit = opts[:unit] || @conf['unit'] || 'u0'
 
