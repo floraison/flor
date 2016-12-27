@@ -35,6 +35,7 @@ describe 'Flor procedures' do
     it 'loops until the condition evaluates to true' do
 
       flon = %{
+        123
         set f.a 1
         until
           = f.a 3
@@ -48,12 +49,13 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['a']).to eq(3)
-      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['ret']).to eq(123)
     end
 
-    it "accepts a tag:" do
+    it 'accepts a tag:' do
 
       flon = %{
+        456
         set f.a 1
         until tag: 'xx'
           = f.a 2
@@ -64,21 +66,24 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['a']).to eq(2)
-      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['ret']).to eq(456)
 
       expect(
-        @executor.journal \
-          .select { |m| %w[ entered left ].include?(m['point']) } \
-          .collect { |m| [ m['point'], m['nid'], m['tags'].join(',') ] } \
+        @executor.journal
+          .select { |m| %w[ entered left ].include?(m['point']) }
+          .collect { |m| [ m['point'], m['nid'], m['tags'].join(',') ] }
           .collect { |a| a.join(':') }
+          .join("\n")
       ).to eq(%w[
-        entered:0_1:xx left:0_1:xx
-      ])
+        entered:0_2:xx
+        left:0_2:xx
+      ].join("\n"))
     end
 
     it "returns the last child's f.ret" do
 
       flon = %{
+        789
         set f.a 1
         #until; = f.a 3
         until (= f.a 3)

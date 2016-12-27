@@ -43,7 +43,6 @@ class Flor::Pro::Until < Flor::Procedure
     @node['vars']['continue'] =
       [ '_proc', { '_proc' => 'continue', 'nid' => nid }, tree[-1] ]
 
-    #execute_child(first_unkeyed_child_id || 0, @node['count'])
     super
   end
 
@@ -60,7 +59,8 @@ class Flor::Pro::Until < Flor::Procedure
         #
         # over
 
-        reply('ret' => @node['cret'])
+        #reply('ret' => @node['cret'])
+        reply('ret' => node_payload_ret)
 
       else
         #

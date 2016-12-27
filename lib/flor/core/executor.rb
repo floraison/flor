@@ -195,7 +195,7 @@ module Flor
         'point' => 'receive',
         'nid' => message['from'], 'from' => message['nid'],
         'exid' => message['exid'],
-        'payload' => message['payload'].merge!('ret' => node['heat0'])
+        'payload' => message['payload'].merge('ret' => node['heat0'])
       }]) if heap == nil && message['accept_symbol'] == true
 
       return error_reply(

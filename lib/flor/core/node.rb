@@ -246,21 +246,6 @@ class Flor::Node
     false
   end
 
-#  def ascendancy
-#
-#    a = []
-#    i = self.nid
-#
-#    loop do
-#      node = @executor.node(i)
-#      break unless node
-#      a << node['parent']
-#      i = a.last
-#    end
-#
-#    a
-#  end
-
   protected
 
   def subtree(tree, pnid, nid)
