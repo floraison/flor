@@ -90,8 +90,10 @@ describe 'Flor punit' do
           concurrence
             stall tag: 'a'
             stall tag: 'b'
-            cancel 'a'
-            cancel ref: 'b'
+            sequence # wrap in sequence to give time to stall
+              cancel 'a'
+            sequence # wrap in sequence to give time to stall
+              cancel ref: 'b'
         }
 
         r = @unit.launch(flon, wait: true)
@@ -102,10 +104,11 @@ describe 'Flor punit' do
           @unit.journal
             .select { |m| m['point'] == 'cancel' }
             .collect { |m| [ m['from'], m['point'], m['nid'] ].join(':') }
+            .join("\n")
         ).to eq(%w[
-          0_2:cancel:0_0
-          0_3:cancel:0_1
-        ])
+          0_2_0:cancel:0_0
+          0_3_0:cancel:0_1
+        ].join("\n"))
       end
 
       it 'can cancel multiple tags' do
