@@ -52,10 +52,22 @@ describe 'Flor punit' do
 
       expect(
         @unit.journal
-          .collect { |m| [ m['point'][0, 3], m['nid'] ].join(':') }
+          .collect { |m|
+            [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
       ).to eq(%w[
-        exe:0 exe:0_0 exe:0_0_1 rec:0_0 ent:0 rec:0 rec: lef:0 ter:
-      ])
+        execute:0:
+        execute:0_0:
+        execute:0_0_0:
+        receive:0_0:
+        execute:0_0_1:
+        receive:0_0:
+        entered:0:z
+        receive:0:
+        receive::
+        left:0:z
+        terminated::
+      ].join("\n"))
     end
 
     it 'executes atts in sequence then children in concurrence' do

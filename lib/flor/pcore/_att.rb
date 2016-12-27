@@ -35,29 +35,38 @@ class Flor::Pro::Att < Flor::Procedure
     pt = parent_node['tree']
     return reply if pt && pt[0] == '_apply'
 
-    @node['ret'] = Flor.dup(payload['ret']) \
-      if key
-      #if %w[ vars ].include?(key)
+    h = {}
+    h['accept_symbol'] = true if children.size > 1
 
-    execute_child(children.size - 1)
+    execute_child(0, nil, false, h)
   end
 
   def receive
 
-    k = key
-    m = "receive_#{k}"
-
-    respond_to?(m, true) ? send(m) : receive_att(k)
-      # use `true` to include protected methods
+    if children.size < 2
+      receive_unkeyed
+    else
+      receive_keyed
+    end
   end
 
   protected
 
-  def key
+  def receive_unkeyed
 
-    return nil if children.size < 2
+    receive_att(nil)
+  end
 
-    children.first[0]
+  def receive_keyed
+
+    if Flor.child_id(@message['from']) == 0
+      @node['key'] = payload['ret']
+      execute_child(1)
+    else
+      k = @node['key']
+      m = "receive_#{k}"
+      respond_to?(m, true) ? send(m) : receive_att(k)
+    end
   end
 
   def receive_att(key)

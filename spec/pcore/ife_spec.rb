@@ -109,6 +109,8 @@ describe 'Flor procedures' do
       ).to eq(%w[
         execute:0:
         execute:0_0:
+        execute:0_0_0:
+        receive:0_0:
         execute:0_0_1:
         receive:0_0:
         entered:0:nada

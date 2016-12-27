@@ -87,6 +87,37 @@ describe 'Flor core' do
     end
   end
 
+  describe 'non-symbols att' do
+
+    it 'is accepted' do
+
+      flon = %{
+        set v0 'ag'
+        set v1 'tag'
+        sequence (+ "t" v0): 'xx'
+        sequence 'tag': 'yy'
+        sequence v1: 'zz'
+        sequence tag: 'aa'
+      }
+
+      r = @executor.launch(flon, journal: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @executor.journal
+          .select { |m| m['point'] == 'left' }
+          .map { |m| [ m['point'], m['nid'], m['tags'].join(',') ].join(':') }
+          .join("\n")
+      ).to eq(%w[
+        left:0_2:xx
+        left:0_3:yy
+        left:0_4:zz
+        left:0_5:aa
+      ].join("\n"))
+    end
+  end
+
   context 'common _att' do
 
     describe 'vars' do

@@ -482,7 +482,7 @@ describe 'Flor punit' do
         expect(
           @unit.traces.collect(&:text).join(' ')
         ).to eq(%{
-          a b 0con:m48sm47 1con:m48sm47 0nocon:m48sm47
+          a b 0con:m58sm57 1con:m58sm57 0nocon:m58sm57
         }.strip)
       end
     end

@@ -269,6 +269,10 @@ module Flor
       end
 
       @unit.wake_executions(ms.collect { |m| m['exid'] }.uniq)
+
+    rescue => err
+      Thread.current[:errored_items] = ms
+      raise err
     end
 
     def put_message(m)

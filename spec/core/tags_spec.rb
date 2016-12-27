@@ -32,15 +32,20 @@ describe 'Flor core' do
         @executor.journal
           .collect { |m|
             [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
       ).to eq(%w[
         execute:0:
         execute:0_0:
+        execute:0_0_0:
+        receive:0_0:
         execute:0_0_1:
         receive:0_0:
         entered:0:aa
         receive:0:
         execute:0_1:
         execute:0_1_0:
+        execute:0_1_0_0:
+        receive:0_1_0:
         execute:0_1_0_1:
         receive:0_1_0:
         entered:0_1:bb
@@ -50,7 +55,7 @@ describe 'Flor core' do
         receive::
         left:0:aa
         terminated::
-      ])
+      ].join("\n"))
     end
   end
 
@@ -71,20 +76,27 @@ describe 'Flor core' do
         @executor.journal
           .collect { |m|
             [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
       ).to eq(%w[
         execute:0:
         execute:0_0:
+        execute:0_0_0:
+        receive:0_0:
         execute:0_0_1:
         receive:0_0:
         entered:0:aa
         receive:0:
         execute:0_1:
+        execute:0_1_0:
+        receive:0_1:
         execute:0_1_1:
         receive:0_1:
         entered:0:bb
         receive:0:
         execute:0_2:
         execute:0_2_0:
+        execute:0_2_0_0:
+        receive:0_2_0:
         execute:0_2_0_1:
         execute:0_2_0_1_0:
         receive:0_2_0_1:
@@ -98,7 +110,7 @@ describe 'Flor core' do
         receive::
         left:0:aa,bb
         terminated::
-      ])
+      ].join("\n"))
     end
 
     it 'fails on non-string attributes' do

@@ -87,6 +87,12 @@ module Flor
         io.puts " |#{t} messages:"
         io.puts " |#{t}   #{@messages.map { |m| [ m['mid'], m['point'] ] }.inspect}"
       end
+      if is = Thread.current[:errored_items]
+        io.puts " |#{t} errored items/models:"
+        is.each do |i|
+          io.puts " |#{t}   * #{i.inspect}"
+        end
+      end
       io.puts " |#{t} #{kind}: #{e.inspect}"
       io.puts " |#{t} backtrace:"
       e.backtrace.each { |l| io.puts "|#{t} #{l}" }

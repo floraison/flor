@@ -132,6 +132,8 @@ describe 'Flor punit' do
         0_1:receive
         0:receive
         0_2:execute
+        0_2_0:execute
+        0_2:receive
         0_2_1:execute
         0_2:receive
         0:entered:x

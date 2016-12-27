@@ -60,7 +60,7 @@ class Flor::Pro::Until < Flor::Procedure
         #
         # over
 
-        reply('ret' => @node['uret'] || node_payload_ret)
+        reply('ret' => @node['cret'])
 
       else
         #
@@ -74,7 +74,7 @@ class Flor::Pro::Until < Flor::Procedure
       #
       # block over, increment counter and head back to condition
 
-      @node['uret'] = payload['ret']
+      @node['cret'] = payload['ret']
       payload['ret'] = node_payload_ret
       execute_child(first_unkeyed_child_id, @node['count'] += 1)
 

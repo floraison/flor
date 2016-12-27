@@ -191,6 +191,13 @@ module Flor
           node['failure'] ? '_err' : nil
         end
 
+      return ([{
+        'point' => 'receive',
+        'nid' => message['from'], 'from' => message['nid'],
+        'exid' => message['exid'],
+        'payload' => message['payload'].merge!('ret' => node['heat0'])
+      }]) if heap == nil && message['accept_symbol'] == true
+
       return error_reply(
         node, message, "don't know how to apply #{node['heat0'].inspect}"
       ) if heap == nil
@@ -287,17 +294,6 @@ module Flor
     end
 
     def error_reply(node, message, err)
-
-      # TODO: use node (which may be nil)
-#if message['point'] == 'failed'
-#  Flor.detail_msg(self, message)
-#  #puts "*" * 77
-#  #pp message
-#  #puts ". . ."
-#  #puts caller
-#  #puts("*" * 77 + ' .')
-#  #exit 1
-#end
 
       m = message
         .select { |k, v| %w[ sm exid nid from payload tree ].include?(k) }
