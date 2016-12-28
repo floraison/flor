@@ -96,13 +96,16 @@ class Flor::Pro::Until < Flor::Procedure
 
     if fla == 'continue'
 
+      pl = node_payload.copy_current
+      pl = pl.merge!(payload.copy_current)
+
       @node['status'] =
         'continued'
       @node['on_receive_last'] =
         reply(
           'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
           'orl' => true,
-          'payload' => Flor.dup(@message['payload']))
+          'payload' => pl)
 
     else
 

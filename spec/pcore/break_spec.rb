@@ -84,7 +84,43 @@ describe 'Flor punit' do
 
   describe 'continue' do
 
-    it 'continues an "until" from outside'
+    it 'continues an "until" from outside' do
+
+      flon = %{
+        set l []
+        concurrence
+          sequence
+            set f.i 0
+            until tag: 'x0'
+              (== f.i 1)
+              push l f.i
+              stall _
+          sequence
+            noret 0
+            noret 1 # give time to flow to reach the "until"
+            set f.i 1
+            continue ref: 'x0'
+      }
+
+      r = @executor.launch(flon, journal: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+      expect(r['vars']['l']).to eq([ 0 ])
+
+      expect(
+        @executor.journal
+          .select { |m|
+            %w[ entered left ].include?(m['point']) }
+          .collect { |m|
+            [ m['nid'], m['point'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
+      ).to eq(%w[
+        0_1_0_1:entered:x0
+        0_1_0_1:left:x0
+      ].join("\n"))
+    end
+
     it 'continues a "cursor" from outside'
   end
 end
