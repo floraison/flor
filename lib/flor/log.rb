@@ -279,11 +279,11 @@ module Flor
     l < 35 ? s : "#{s[0, 35]}(...L#{l})"
   end
 
-  def self.node_to_s(n, opts, here=false)
+  def self.node_to_s(executor, n, opts, here=false)
 
     _rs, _dg, _yl, _bl, _gy, _gn, _rd = colours(opts)
 
-    t = n['tree']
+    t = n['tree'] || Node.new(executor, n, nil).lookup_tree(n['nid'])
     t = Flor.to_d(t, compact: true) if t
     t = t[0, 35] + '...' if t && t.length > 35
 
@@ -308,7 +308,7 @@ module Flor
     [ _yl + n['nid'], t, h, ts, vs, flr, here ].compact.join(' ')
   end
 
-  def self.ncns_to_s(ncn, msg, opts, sio, ind, seen)
+  def self.ncns_to_s(executor, ncn, msg, opts, sio, ind, seen)
 
     n, cn = ncn
     nid = n['nid']
@@ -317,12 +317,14 @@ module Flor
     seen << nid
 
     sio.print(ind)
-    sio.print(node_to_s(n, opts, nid == msg['nid']))
+    sio.print(node_to_s(executor, n, opts, nid == msg['nid']))
     sio.print("\n")
-    cn.each { |c| ncns_to_s(c, msg, opts, sio, ind + ' ', seen) }
+    cn.each { |c| ncns_to_s(executor, c, msg, opts, sio, ind + ' ', seen) }
   end
 
-  def self.nodes_to_s(nodes, msg, opts)
+  def self.nodes_to_s(executor, msg, opts)
+
+    nodes = executor.execution['nodes'].values
 
     nodes = nodes.inject({}) { |h, n| h[n['nid']] = [ n, [] ]; h }
     nodes.values.each { |ncn|
@@ -334,7 +336,7 @@ module Flor
     sio = StringIO.new
     seen = []
     nodes.values.each do |ncn|
-      ncns_to_s(ncn, msg, opts, sio, ' ', seen)
+      ncns_to_s(executor, ncn, msg, opts, sio, ' ', seen)
     end
 
     sio.string
@@ -361,7 +363,7 @@ module Flor
     puts "#{_dg}node:#{_yl}"
     Kernel::pp(n) if n
     puts "#{_dg}nodes:"
-    puts nodes_to_s(executor.execution['nodes'].values, m, opts)
+    puts nodes_to_s(executor, m, opts)
     z = executor.execution['nodes'].size
     puts "#{_yl}#{z} node#{z == 1 ? '' : 's'}."
     puts "#{_dg}</Flor.detail_msg>#{_rs}"
