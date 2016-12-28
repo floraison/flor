@@ -117,23 +117,5 @@ describe 'Flor core' do
       ].join("\n"))
     end
   end
-
-  context 'common _att' do
-
-    describe 'vars' do
-
-      it 'does not set f.ret' do
-
-        flon = %{
-          sequence vars: { a: 1 }
-        }
-
-        r = @executor.launch(flon)
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(nil)
-      end
-    end
-  end
 end
 

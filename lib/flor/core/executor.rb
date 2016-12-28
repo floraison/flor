@@ -254,6 +254,8 @@ module Flor
       ]
     end
 
+    # "receive_terminated_or_ceased"
+    #
     def receive_toc(message, fnode)
 
       msg =
@@ -277,6 +279,10 @@ module Flor
 
       from = message['from']
       fnode = @execution['nodes'][from]
+
+      if fnode && fnode.has_key?('aret')
+        message['payload']['ret'] = fnode['aret']
+      end
 
       remove_node(fnode)
       messages = leave(fnode, message)

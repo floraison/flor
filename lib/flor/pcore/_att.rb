@@ -118,6 +118,15 @@ class Flor::Pro::Att < Flor::Procedure
   end
   alias receive_tags receive_tag
 
+  def receive_ret
+
+    if pn = parent_node
+      pn['aret'] = Flor.dup(payload['ret'])
+    end
+
+    reply
+  end
+
   def receive_timeout
 
     n = parent
