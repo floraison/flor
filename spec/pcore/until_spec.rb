@@ -103,9 +103,10 @@ describe 'Flor procedures' do
     it "doesn't iterate if the condition is immediately true" do
 
       flon = %{
+        123
         set f.a 1
         until; = f.a 1
-          #6
+          6
       }
 
       r = @executor.launch(flon)
@@ -113,16 +114,17 @@ describe 'Flor procedures' do
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['ret']).to eq(123)
     end
 
     it 'stops upon meeting "break"' do
 
       flon = %{
+        123
         set f.a 1
         until
           = f.a 3
-          break _ # will return $(f.ret) (which is false)
+          break _ # will return $(f.ret) (which is 123)
       }
 
       r = @executor.launch(flon)
@@ -131,7 +133,7 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['a']).to eq(1)
-      expect(r['payload']['ret']).to eq(false)
+      expect(r['payload']['ret']).to eq(123)
     end
 
     it 'stops upon meeting "break x" and returns x' do
@@ -196,6 +198,7 @@ describe 'Flor procedures' do
     it 'can do an outer break ref: x' do
 
       flon = %{
+        456
         until tag: 'main'
           false
           push f.l 0
@@ -216,6 +219,7 @@ describe 'Flor procedures' do
     it 'respects an outer "continue"' do
 
       flon = %{
+        123
         set f.i 0
         set f.j 0
         until (= f.i 2)
@@ -235,8 +239,8 @@ describe 'Flor procedures' do
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq(%w[ i0 j0 i1 j1 jj2 ii2 ])
+      expect(r['payload']['ret']).to eq(123)
     end
 
     it 'can do an outer continue ref: x' do
@@ -340,6 +344,7 @@ describe 'Flor procedures' do
     it 'stops upon meeting "break"' do
 
       flon = %{
+        456
         set f.i 0
         while (< f.i 4)
           push f.l f.i
@@ -352,8 +357,8 @@ describe 'Flor procedures' do
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(true)
       expect(r['payload']['l']).to eq([ 0 ])
+      expect(r['payload']['ret']).to eq(456)
     end
 
     it 'stops upon meeting "break x" and returns x' do
@@ -378,6 +383,7 @@ describe 'Flor procedures' do
     it 'skips upon meeting "continue"' do
 
       flon = %{
+        123
         set f.i 0
         while (< f.i 3)
           push f.l "a$(f.i)"
@@ -391,8 +397,8 @@ describe 'Flor procedures' do
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq(%w[ a0 a1 b2 a2 b3 ])
+      expect(r['payload']['ret']).to eq(123)
     end
 
     it 'respects an outer "break"' do

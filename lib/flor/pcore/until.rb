@@ -59,8 +59,11 @@ class Flor::Pro::Until < Flor::Procedure
         #
         # over
 
+
         #reply('ret' => @node['cret'])
-        reply('ret' => node_payload_ret)
+        #reply('ret' => node_payload_ret)
+        ret = @node.has_key?('cret') ? @node['cret'] : node_payload_ret
+        reply('ret' => ret)
 
       else
         #
@@ -99,7 +102,7 @@ class Flor::Pro::Until < Flor::Procedure
         reply(
           'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
           'orl' => true,
-          'payload' => Flor.dup(message['payload']))
+          'payload' => Flor.dup(@message['payload']))
 
     else
 

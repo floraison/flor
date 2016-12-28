@@ -129,6 +129,11 @@ class Flor::Procedure < Flor::Node
     nil
   end
 
+  def has_att?(k)
+
+    @node['atts'].collect(&:first).include?(k)
+  end
+
   def att_a(*keys)
 
     if keys.last == nil
