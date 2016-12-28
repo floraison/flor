@@ -21,6 +21,7 @@ describe 'Flor procedures' do
 
       flon = %{
         sequence
+          123
           push f.l 0
           ife _
           push f.l 1
@@ -29,7 +30,7 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['ret']).to eq(123)
       expect(r['payload']['l']).to eq([ 0, 1 ])
     end
 
@@ -37,6 +38,7 @@ describe 'Flor procedures' do
 
       flon = %{
         sequence
+          456
           ife
             true
           push f.l
@@ -48,8 +50,8 @@ describe 'Flor procedures' do
       r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(false)
-      expect(r['payload']['l']).to eq([ true, false ])
+      expect(r['payload']['ret']).to eq(456)
+      expect(r['payload']['l']).to eq([ 456, 456 ])
     end
 
     it 'triggers the then child when $(ret) true' do

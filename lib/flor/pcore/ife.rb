@@ -44,7 +44,13 @@ class Flor::Pro::Ife < Flor::Procedure
         Flor.true?(payload['ret']) ? 1 : 2
       end
 
-    execute_child(@fcid + off)
+    nxt = @fcid + off
+
+    if nxt >= children.size
+      reply('ret' => node_payload_ret)
+    else
+      execute_child(nxt)
+    end
   end
 end
 
