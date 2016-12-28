@@ -514,6 +514,14 @@ module Flor
     (o[1].keys & %w[ nid cnid fun ]).size == 3
   end
 
+  def self.is_task_tree?(o)
+
+    o.is_a?(Array) &&
+    o[0] == '_task' &&
+    o[1].is_a?(String) &&
+    o[2].is_a?(Integer)
+  end
+
   def self.is_tree_head_tree?(o)
 
     o.is_a?(Array) &&

@@ -104,7 +104,14 @@ class Flor::Pro::Att < Flor::Procedure
       "cannot use proc #{ret[1].inspect} as tag name"
     ) if ret.is_a?(Array) && ret[0] == '_proc' && ret[1].is_a?(String)
 
-    ret = lookup_var_name(@node, ret) if Flor.is_func_tree?(ret)
+    ret =
+      if Flor.is_func_tree?(ret)
+        lookup_var_name(@node, ret) if Flor.is_func_tree?(ret)
+      elsif Flor.is_task_tree?(ret)
+        ret[1]
+      else
+        ret
+      end
 
     tags = Array(ret)
 
