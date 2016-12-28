@@ -126,6 +126,39 @@ describe 'Flor punit' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
     end
+
+    it 'can move a cursor by its tag name' do
+
+      flon = %{
+        set l []
+        concurrence
+          cursor tag: 'x0'
+            push l 'a'
+            stall _
+            push l 'b'
+          sequence
+            push l 0
+            move 'x0' to: 'b'
+            push l 1
+      }
+
+      r = @executor.launch(flon, journal: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['l']).to eq([ 0, 'a', 1, 'b' ])
+
+      expect(
+        @executor.journal
+          .select { |m|
+            %w[ entered left ].include?(m['point']) }
+          .collect { |m|
+            [ m['nid'], m['point'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
+      ).to eq(%w[
+        0_1_0:entered:x0
+        0_1_0:left:x0
+      ].join("\n"))
+    end
   end
 end
 

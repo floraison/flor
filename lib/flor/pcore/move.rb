@@ -46,15 +46,19 @@ class Flor::Pro::Move < Flor::Procedure
 
   def receive_last
 
-    ref = att('ref')
+    ref = att('ref', nil)
     nid = tags_to_nids(ref).first || @node['heat'][1]['nid']
+
     to = att('to')
+
+    rep = is_ancestor_node?(nid) ? [] : reply
 
     reply(
       'point' => 'cancel',
       'nid' => nid,
       'flavour' => @node['heap'], # "move"
-      'to' => to)
+      'to' => to) +
+    rep
   end
 end
 

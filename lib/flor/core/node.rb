@@ -276,6 +276,14 @@ class Flor::Node
     lookup_tree(node['parent'])
   end
 
+  def is_ancestor_node?(nid, node=@node)
+
+    return false unless node
+    return true if node['nid'] == nid
+
+    is_ancestor_node?(nid, parent_node(node))
+  end
+
   #def closure_node(node=@node)
   #  @execution['nodes'][node['cnid']]
   #end

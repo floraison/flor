@@ -320,6 +320,9 @@ class Flor::Procedure < Flor::Node
   #
   def receive_unkeyed_tag_att
 
+    return [] if @node['tags']
+      # "tag:" encountered, walk away
+
     ret = @message['payload']['ret']
     ret = Array(ret).flatten
     ret = nil unless ret.any? && ret.all? { |e| e.is_a?(String) }
