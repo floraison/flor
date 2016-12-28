@@ -26,7 +26,7 @@ describe 'Flor punit' do
           push f.l 'b'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('failed')
       expect(r['payload']['l']).to eq(%w[ a ])
