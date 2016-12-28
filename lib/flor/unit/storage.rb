@@ -71,6 +71,8 @@ module Flor
 
     def synchronize(sync=true, &block)
 
+      Thread.current[:errored_items] = nil
+
       if @mutex && sync
         @mutex.synchronize(&block)
       else
@@ -183,6 +185,10 @@ module Flor
       end
 
       ex
+
+    rescue => err
+      Thread.current[:errored_items] = [ ex ]
+      raise err
     end
 
     def fetch_messages(exid)
@@ -234,6 +240,10 @@ module Flor
             .delete
         end
       end
+
+    rescue => err
+      Thread.current[:errored_items] = messages
+      raise err
     end
 
     def load_timers
@@ -311,6 +321,10 @@ module Flor
         end
 
       @unit.timers[id]
+
+    rescue => err
+      Thread.current[:errored_items] = [ message ]
+      raise err
     end
 
     def trigger_timer(timer)
@@ -331,6 +345,10 @@ module Flor
           put_messages([ timer.to_trigger_message ], false)
         end
       end
+
+    rescue => err
+      Thread.current[:errored_items] = [ timer ]
+      raise err
     end
 
     def remove_node(exid, n)
@@ -351,6 +369,10 @@ module Flor
             .tap { |u| removal.call(u) }
         end
       end
+
+    rescue => err
+      Thread.current[:errored_items] = [ exid, n ]
+      raise err
     end
 
     def put_trap(node, tra)
@@ -378,6 +400,10 @@ module Flor
         end
 
       traps[id]
+
+    rescue => err
+      Thread.current[:errored_items] = [ node, tra ]
+      raise err
     end
 
     def trace(exid, nid, tracer, text)
