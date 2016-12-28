@@ -307,6 +307,12 @@ module Flor
     Marshal.load(Marshal.dump(o))
   end
 
+  def self.dup_and_merge(h, hh)
+
+    self.dup(h).merge(hh)
+  end
+  def self.dupm(h, hh); self.dup_and_merge(h, hh); end
+
   def self.deep_freeze(o)
 
     if o.is_a?(Array)
