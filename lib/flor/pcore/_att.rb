@@ -57,8 +57,9 @@ class Flor::Pro::Att < Flor::Procedure
   def receive_keyed
 
     if Flor.child_id(@message['from']) == 0
-      @node['key'] = payload['ret']
-      execute_child(1)
+      @node['key'] = k = payload['ret']
+      as = (parent_node || {})['atts_accepting_symbols'] || []
+      execute_child(1, nil, 'accept_symbol' => as.include?(k))
     else
       k = @node['key']
       m = "receive_#{k}"

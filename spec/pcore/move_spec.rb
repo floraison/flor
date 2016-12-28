@@ -110,22 +110,22 @@ describe 'Flor punit' do
       expect(r['payload']['l']).to eq(%w[ a c e ])
     end
 
-#    it 'accepts a symbol as to:' do
-#
-#      flon = %{
-#        cursor
-#          push f.l 'a'
-#          move to: here
-#          push f.l 'b'
-#          _ here
-#          push f.l 'c'
-#      }
-#
-#      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['l']).to eq(%w[ a c ])
-#    end
+    it 'accepts a symbol as to:' do
+
+      flon = %{
+        cursor
+          push f.l 'a'
+          move to: here
+          push f.l 'b'
+          _ here
+          push f.l 'c'
+      }
+
+      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ a c ])
+    end
   end
 end
 

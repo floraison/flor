@@ -128,6 +128,7 @@ class Flor::Pro::Cursor < Flor::Procedure
     find_string_arg_target(to) ||
     find_string_target(to) ||
     find_name_target(to) ||
+    find_att_target(to) ||
     fail("move target #{to.inspect} not found")
   end
 
@@ -170,6 +171,20 @@ class Flor::Pro::Cursor < Flor::Procedure
   def find_name_target(to)
 
     tree[1].index { |c| c[0] == to }
+  end
+
+  def find_att_target(to)
+
+    tree[1]
+      .index { |c|
+        c[0] == '_' &&
+        c[1].is_a?(Array) &&
+        c[1].find { |cc|
+          cc[0] == '_att' &&
+          cc[1].is_a?(Array) &&
+          cc[1][0][0, 2] == [ 'here', [] ]
+        }
+      }
   end
 end
 

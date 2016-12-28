@@ -24,10 +24,22 @@
 
 
 class Flor::Pro::Move < Flor::Procedure
+  #
+  # Moves a cursor to a given position
+  #
+  # ```
+  # cursor
+  #   do-this
+  #   move to: 'do-that-other-thing'
+  #   do-that # got skipped
+  #   do-that-other-thing
+  # ```
 
   name 'move'
 
   def pre_execute
+
+    @node['atts_accepting_symbols'] = %w[ to ]
 
     @node['atts'] = []
   end
