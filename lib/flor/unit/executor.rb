@@ -87,8 +87,8 @@ module Flor
         io.puts " |#{t} messages:"
         io.puts " |#{t}   #{@messages.map { |m| [ m['mid'], m['point'] ] }.inspect}"
       end
-      if is = Thread.current[:errored_items]
-        io.puts " |#{t} errored items/models:"
+      if is = Thread.current[:sto_errored_items]
+        io.puts " |#{t} storage errored items/models:"
         is.each do |i|
           io.puts " |#{t}   * #{i.inspect}"
         end

@@ -71,7 +71,7 @@ module Flor
 
     def synchronize(sync=true, &block)
 
-      Thread.current[:errored_items] = nil
+      Thread.current[:sto_errored_items] = nil
 
       if @mutex && sync
         @mutex.synchronize(&block)
@@ -187,7 +187,7 @@ module Flor
       ex
 
     rescue => err
-      Thread.current[:errored_items] = [ ex ]
+      Thread.current[:sto_errored_items] = [ ex ]
       raise err
     end
 
@@ -242,7 +242,7 @@ module Flor
       end
 
     rescue => err
-      Thread.current[:errored_items] = messages
+      Thread.current[:sto_errored_items] = messages
       raise err
     end
 
@@ -281,7 +281,7 @@ module Flor
       @unit.wake_executions(ms.collect { |m| m['exid'] }.uniq)
 
     rescue => err
-      Thread.current[:errored_items] = ms
+      Thread.current[:sto_errored_items] = ms
       raise err
     end
 
@@ -323,7 +323,7 @@ module Flor
       @unit.timers[id]
 
     rescue => err
-      Thread.current[:errored_items] = [ message ]
+      Thread.current[:sto_errored_items] = [ message ]
       raise err
     end
 
@@ -347,7 +347,7 @@ module Flor
       end
 
     rescue => err
-      Thread.current[:errored_items] = [ timer ]
+      Thread.current[:sto_errored_items] = [ timer ]
       raise err
     end
 
@@ -371,7 +371,7 @@ module Flor
       end
 
     rescue => err
-      Thread.current[:errored_items] = [ exid, n ]
+      Thread.current[:sto_errored_items] = [ exid, n ]
       raise err
     end
 
@@ -402,7 +402,7 @@ module Flor
       traps[id]
 
     rescue => err
-      Thread.current[:errored_items] = [ node, tra ]
+      Thread.current[:sto_errored_items] = [ node, tra ]
       raise err
     end
 
