@@ -238,6 +238,9 @@ class Flor::Procedure < Flor::Node
     receive
   end
 
+  # The executor calls #do_receive, while procedure implementations override
+  # #receive...
+  #
   def do_receive
 
     if @node['status']
