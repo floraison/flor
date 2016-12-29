@@ -286,7 +286,7 @@ describe 'Flor procedures' do
               break 1 ref: 'x0'
         }
 
-        r = @executor.launch(flon)
+        r = @executor.launch(flon, archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(1)
@@ -296,6 +296,11 @@ describe 'Flor procedures' do
         ).to eq(
           26
         )
+
+        unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
+
+        expect(unt['status']).to eq('broken')
+        expect(unt['on_receive_last']).to eq(nil)
       end
 
       it 'accepts "break" when continuing' do
@@ -323,11 +328,16 @@ describe 'Flor procedures' do
               break 1 ref: 'x0'
         }
 
-        r = @executor.launch(flon)
+        r = @executor.launch(flon, archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(1)
         expect(r['vars']['l']).to eq(%w[ a b c ])
+
+        unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
+
+        expect(unt['status']).to eq('broken')
+        expect(unt.has_key?('on_receive_last')).to eq(false)
       end
 
       it 'rejects "continue" when breaking'
