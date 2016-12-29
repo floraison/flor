@@ -17,7 +17,7 @@ def make_proc_doc(path)
   names = lines[nline][7..-1]
   names = "[ #{names} ]" if names.index(',')
   names = Array(eval(names))
-  names = names.select { |n| n[0, 1] != '_' }
+  #names = names.select { |n| n[0, 1] != '_' }
 
   return if names.empty?
 
