@@ -15,6 +15,8 @@ describe 'Flor punit' do
     @executor = Flor::TransientExecutor.new
   end
 
+  # NOTA BENE: using "concurrence" even though it's deemed "unit" and not "core"
+
   describe 'break' do
 
     it 'breaks an "until" from outside' do

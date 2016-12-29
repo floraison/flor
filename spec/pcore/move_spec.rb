@@ -15,6 +15,8 @@ describe 'Flor punit' do
     @executor = Flor::TransientExecutor.new
   end
 
+  # NOTA BENE: using "concurrence" even though it's deemed "unit" and not "core"
+
   describe 'move' do
 
     it 'fails if the target cannot be found' do
