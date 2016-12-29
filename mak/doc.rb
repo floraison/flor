@@ -67,7 +67,7 @@ def make_procedures_doc
     ).collect { |path| make_proc_doc(path) }.compact
   pp procs
 
-  File.open('doc/procedures/index.md', 'wb') do |f|
+  File.open('doc/procedures/readme.md', 'wb') do |f|
 
     f.puts
     f.puts '# procedures'
