@@ -26,7 +26,7 @@ describe 'Flor core' do
            sequence # 0_0
              stall _
            sequence
-             _skip 7
+             _skip 1
              cancel '0_0'
        }
 
@@ -36,13 +36,15 @@ describe 'Flor core' do
 
       seq = @executor.archive['0_0']
 
-pp seq
-fail
-#      expect(
-#        @executor.journal.collect { |m| m['point'] }
-#      ).to eq(%w[
-#        execute receive terminated
-#      ])
+      expect(seq['status']).to eq('cancelled')
+
+      expect(
+        @executor.journal
+          .select { |m| m['point'] == 'cancel' }
+          .size
+      ).to eq(
+        2
+      )
      end
 
      it "doesn't over-cancel"

@@ -190,25 +190,30 @@ describe 'Flor punit' do
 
         expect(
           @unit.journal
-            .drop_while { |m| m['point'] != 'task' }
-            .collect { |m| "e#{m['er']}p#{m['pr']}-#{m['point']}-#{m['nid']}" }
+            .drop_while { |m|
+              m['point'] != 'task' }
+            .collect { |m|
+              [ "m#{m['m']}s#{m['sm']}",
+                "e#{m['er']}p#{m['pr']}",
+                m['point'], m['nid'] ].join('-') }
+            .join("\n")
         ).to eq(%w[
-              e1p1-task-0_0
-              e1p1-task-0_1
-            ep2-cancel-0
-              e2p2-cancel-0_0
-              e2p2-cancel-0_1
-              e2p2-detask-0_0
-              e2p2-detask-0_1
-              ep3-return-0_0
-              ep3-return-0_1
-              e3p3-receive-0_0
-              e3p3-receive-0_1
-            e3p3-receive-0
-            e3p3-receive-0
-          e3p3-receive-
-          e3p3-terminated-
-        ])
+              m12s10-e1p1-task-0_0
+              m13s11-e1p1-task-0_1
+            m14s-ep2-cancel-0
+              m15s14-e2p2-cancel-0_0
+              m16s14-e2p2-cancel-0_1
+              m17s15-e2p2-detask-0_0
+              m18s16-e2p2-detask-0_1
+              m19s-ep3-return-0_0
+              m20s-ep3-return-0_1
+              m21s-e3p3-receive-0_0
+              m22s-e3p3-receive-0_1
+            m23s21-e3p3-receive-0
+            m24s22-e3p3-receive-0
+          m25s24-e3p3-receive-
+          m26s25-e3p3-terminated-
+        ].join("\n"))
       end
     end
   end

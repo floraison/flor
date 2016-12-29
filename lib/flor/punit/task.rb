@@ -34,12 +34,13 @@ class Flor::Pro::Task < Flor::Procedure
     @node['patts'] = payload['atts'] if payload.has_key?('atts')
   end
 
-  def receive
+  def do_receive
 
     return reply('payload' => determine_reply_payload) \
       if point == 'receive' && from == nil
 
     super
+      # which goes to #receive or #receive_when_status
   end
 
   def receive_last_att

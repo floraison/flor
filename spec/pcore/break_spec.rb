@@ -98,8 +98,7 @@ describe 'Flor punit' do
               push l f.i
               stall _
           sequence
-            noret 0
-            noret 1 # give time to flow to reach the "until"
+            _skip 8
             set f.i 1
             continue ref: 'x0'
       }

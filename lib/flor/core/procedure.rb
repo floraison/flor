@@ -494,6 +494,16 @@ class Flor::Procedure < Flor::Node
     cancel_nodes(@node['cnodes'])
   end
 
+  def do_cancel
+
+    #return [] if @node['status'] == 'cancelled'
+    return [] if @node['status']
+
+    @node['status'] = 'cancelled'
+
+    cancel
+  end
+
   def cancel
 
     nids = @node['cnodes']

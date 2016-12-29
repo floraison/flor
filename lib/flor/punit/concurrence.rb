@@ -66,6 +66,30 @@ class Flor::Pro::Concurrence < Flor::Procedure
     reply('payload' => pld)
   end
 
+  def receive_when_status
+
+  # vanilla, Flor::Procedure, implementation
+  #
+#    ns = @node['cnodes']
+#    ns.delete(from) if ns
+#
+#    orl = (ns == []) && @node.delete('on_receive_last')
+#
+#    @node.delete('status') if orl && @node['status'] != 'triggered-on-error'
+#
+#    orl || reply
+
+    ms = receive
+
+    return [] if ms.empty? # concurrence still waiting for a child answer
+
+    orl = @node.delete('on_receive_last')
+
+    @node.delete('status') if orl && @node['status'] != 'triggered-on-error'
+
+    orl || ms
+  end
+
   protected
 
   def determine_receiver

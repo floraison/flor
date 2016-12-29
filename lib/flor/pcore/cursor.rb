@@ -87,12 +87,20 @@ class Flor::Pro::Cursor < Flor::Procedure
     end
   end
 
+  # Override #do_cancel to provide specific over-cancel rules
+  #
+  def do_cancel
+
+#p({ x: :do_cancel, point: :cancel, flavour: fla, status: @node['status'] })
+    return [] \
+      if @node['status'] && %w[ continue move ].include?(@message['flavour'])
+
+    cancel
+  end
+
   def cancel
 
-#p [ :cancel, @message['flavour'], @node['status'] ]
     fla = @message['flavour']
-
-    return [] if @node['status'] && %w[ continue move ].include?(fla)
 
     if fla == 'continue'
 

@@ -209,7 +209,7 @@ module Flor
 
       nid = message['nid']
       pt = message['point']
-      pt = 'do_receive' if pt == 'receive'
+      pt = "do_#{pt}" if pt == 'receive' || pt == 'cancel'
 
       if pt == 'execute'
         head.pre_execute
