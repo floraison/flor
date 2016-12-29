@@ -36,6 +36,7 @@ module Flor
 
       attr_accessor :conf, :opts
       attr_reader :journal, :tasker, :loader
+      attr_accessor :archive
 
       def initialize(conf)
 
@@ -43,6 +44,7 @@ module Flor
         @opts = {}
         @journal = []
         @tasker = TransientTasker.new
+        @archive = nil
       end
 
       def notify(executor, o)
@@ -62,7 +64,7 @@ module Flor
 
       def remove_node(exid, n)
 
-        # nothing to do
+        (@archive[exid] ||= {})[n['nid']] = Flor.dup(n) if @archive
       end
     end
 
@@ -82,14 +84,13 @@ module Flor
         })
     end
 
-    def journal
-
-      @unit.journal
-    end
+    def journal; @unit.journal; end
+    def archive; @unit.archive[exid]; end
 
     def launch(tree, opts={})
 
       @unit.opts = opts
+      @unit.archive = {} if opts[:archive]
 
       Flor.print_src(tree, opts) if conf['log_src']
 
