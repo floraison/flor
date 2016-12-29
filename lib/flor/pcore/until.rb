@@ -94,6 +94,7 @@ class Flor::Pro::Until < Flor::Procedure
 
     fla = @message['flavour']
 
+#p({ point: :cancel, flavour: fla, status: @node['status'] })
     return [] if @node['status'] && %w[ continue ].include?(fla)
 
     if fla == 'continue'

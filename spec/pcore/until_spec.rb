@@ -340,7 +340,42 @@ describe 'Flor procedures' do
         expect(unt.has_key?('on_receive_last')).to eq(false)
       end
 
-      it 'rejects "continue" when breaking'
+      it 'rejects "continue" when breaking' do
+
+        flon = %{
+          set l []
+          concurrence
+            until false tag: 'x0'
+              push l 'a'
+              sequence
+                sequence
+                  sequence
+                    sequence
+                      sequence
+                        sequence
+                          sequence
+                            sequence
+                              sequence
+                                stall _
+            sequence
+              _skip 3
+              push l 'b'
+              break 0 ref: 'x0'
+              push l 'c'
+              continue 1 ref: 'x0'
+        }
+
+        r = @executor.launch(flon, archive: true)
+
+        expect(r['point']).to eq('terminated')
+        #expect(r['payload']['ret']).to eq(0) # concurrence takes 1st reply
+        expect(r['vars']['l']).to eq(%w[ a b c ])
+
+        unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
+
+        expect(unt['status']).to eq('broken')
+        expect(unt.has_key?('on_receive_last')).to eq(false)
+      end
     end
   end
 
