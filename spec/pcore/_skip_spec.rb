@@ -29,7 +29,7 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(123)
 
-      expect(@executor.journal.size).to eq(18)
+      expect(@executor.journal.size).to eq(17)
     end
   end
 end

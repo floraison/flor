@@ -54,7 +54,7 @@ class Flor::Pro::Skip < Flor::Procedure
 
   def receive_last
 
-    @node['count'] = payload['ret'].to_i + 1
+    @node['count'] = payload['ret'].to_i
     payload['ret'] = node_payload_ret
 
     receive
