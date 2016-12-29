@@ -188,11 +188,16 @@ describe 'Flor punit' do
               break 1 ref: 'x1'
         }
 
-        r = @executor.launch(flon)
+        r = @executor.launch(flon, archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])
         expect(r['payload']['ret']).to eq(1)
+
+        cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
+
+        expect(cursor['status']).to eq('broken')
+        expect(cursor['on_receive_last']).to eq(nil)
       end
 
       it 'accepts "break" when continuing' do
@@ -219,15 +224,89 @@ describe 'Flor punit' do
               break 1 ref: 'x2'
         }
 
-        r = @executor.launch(flon)
+        r = @executor.launch(flon, archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])
         expect(r['payload']['ret']).to eq(1)
+
+        cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
+
+        expect(cursor['status']).to eq('broken')
+        expect(cursor.has_key?('on_receive_last')).to eq(false)
       end
 
-      it 'rejects "continue" when breaking'
-      it 'rejects "move" when breaking'
+      it 'rejects "continue" when breaking' do
+
+        flon = %{
+          set l []
+          concurrence
+            cursor tag: 'x3'
+              push l 'a'
+              sequence
+                sequence
+                  sequence
+                    sequence
+                      sequence
+                        sequence
+                          sequence
+                            sequence
+                              stall _
+            sequence
+              _skip 1
+              push l 'b'
+              break 0 ref: 'x3'
+              push l 'c'
+              continue 1 ref: 'x3'
+        }
+
+        r = @executor.launch(flon, archive: true)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']['l']).to eq(%w[ a b c ])
+        expect(r['payload']['ret']).to eq(0)
+
+        cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
+
+        expect(cursor['status']).to eq('broken')
+        expect(cursor.has_key?('on_receive_last')).to eq(false)
+      end
+
+      it 'rejects "move" when breaking' do
+
+        flon = %{
+          set l []
+          concurrence
+            cursor tag: 'x3'
+              push l 'a'
+              sequence
+                sequence
+                  sequence
+                    sequence
+                      sequence ref: 'z'
+                        sequence
+                          sequence
+                            sequence
+                              stall _
+            sequence
+              _skip 1
+              push l 'b'
+              break 0 ref: 'x3'
+              push l 'c'
+              move 'x3' to: 'z'
+        }
+
+        r = @executor.launch(flon, archive: true)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']['l']).to eq(%w[ a b c ])
+        expect(r['payload']['ret']).to eq(0)
+
+        cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
+
+        expect(cursor['status']).to eq('broken')
+        expect(cursor.has_key?('on_receive_last')).to eq(false)
+      end
     end
   end
 end

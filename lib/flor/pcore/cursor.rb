@@ -92,6 +92,8 @@ class Flor::Pro::Cursor < Flor::Procedure
 #p [ :cancel, @message['flavour'], @node['status'] ]
     fla = @message['flavour']
 
+    return [] if @node['status'] && %w[ continue move ].include?(fla)
+
     if fla == 'continue'
 
       @node['status'] =
@@ -113,6 +115,8 @@ class Flor::Pro::Cursor < Flor::Procedure
 
       @node['status'] =
         fla == 'break' ? 'broken' : 'cancelled'
+      @node['on_receive_last'] =
+        nil
     end
 
     super
