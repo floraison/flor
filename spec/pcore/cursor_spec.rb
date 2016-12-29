@@ -77,7 +77,7 @@ describe 'Flor punit' do
           continue _ if "$(nid)" == '0_1_0_0-1'
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(
         @executor.journal
@@ -118,7 +118,7 @@ describe 'Flor punit' do
           set f.done true
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
 

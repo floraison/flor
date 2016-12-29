@@ -33,7 +33,7 @@ describe 'Flor punit' do
         signal 'close'
       }
 
-      r = @unit.launch(flon, wait: true, journal: true)
+      r = @unit.launch(flon, wait: true)
 
       expect(r['point']).to eq('terminated')
 

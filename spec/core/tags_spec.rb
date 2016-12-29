@@ -24,7 +24,7 @@ describe 'Flor core' do
           sequence tag: 'bb'
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
 
@@ -68,7 +68,7 @@ describe 'Flor core' do
           sequence tags: [ 'cc', 'dd' ]
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
 

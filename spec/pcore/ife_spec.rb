@@ -98,7 +98,7 @@ describe 'Flor procedures' do
           'else'
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('else')

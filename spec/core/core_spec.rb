@@ -100,7 +100,7 @@ describe 'Flor core' do
         sequence tag: 'aa'
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
 

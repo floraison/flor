@@ -286,7 +286,7 @@ describe 'Flor procedures' do
               break 1 ref: 'x0'
         }
 
-        r = @executor.launch(flon, journal: true)
+        r = @executor.launch(flon)
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(1)
@@ -323,7 +323,7 @@ describe 'Flor procedures' do
               break 1 ref: 'x0'
         }
 
-        r = @executor.launch(flon, journal: true)
+        r = @executor.launch(flon)
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(1)

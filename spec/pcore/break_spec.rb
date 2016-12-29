@@ -30,7 +30,7 @@ describe 'Flor punit' do
             break ref: 'x0'
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -62,7 +62,7 @@ describe 'Flor punit' do
             break ref: 'x0'
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -102,7 +102,7 @@ describe 'Flor punit' do
             continue ref: 'x0'
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -138,7 +138,7 @@ describe 'Flor punit' do
             break ref: 'x'
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)

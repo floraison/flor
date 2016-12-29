@@ -23,7 +23,7 @@ describe 'Flor texecutor' do
         sequence
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
 

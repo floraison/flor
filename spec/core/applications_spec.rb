@@ -35,7 +35,7 @@ describe 'Flor core' do
         3 tags: 'xyz'
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(3)

@@ -70,7 +70,7 @@ describe 'Flor procedures' do
         set a 2
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(2)

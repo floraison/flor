@@ -24,7 +24,7 @@ describe 'Flor procedures' do
         _skip 7
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(123)

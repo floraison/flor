@@ -57,7 +57,7 @@ describe 'Flor punit' do
           break _ if "$(nid)" == "0_0_0_0-3"
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(
         @executor.journal
@@ -96,7 +96,7 @@ describe 'Flor punit' do
           #fail "hard"
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
 

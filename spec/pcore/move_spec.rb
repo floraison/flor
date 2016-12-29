@@ -44,7 +44,7 @@ describe 'Flor punit' do
           push f.l 'c' tag: 'final'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
@@ -60,7 +60,7 @@ describe 'Flor punit' do
           push f.l 'c'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
@@ -81,7 +81,7 @@ describe 'Flor punit' do
           push f.l 'g'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a d g ])
@@ -104,7 +104,7 @@ describe 'Flor punit' do
           push f.l 'e'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c e ])
@@ -121,7 +121,7 @@ describe 'Flor punit' do
           push f.l 'c'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
@@ -142,7 +142,7 @@ describe 'Flor punit' do
             push l 1
       }
 
-      r = @executor.launch(flon, journal: true)
+      r = @executor.launch(flon)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq([ 0, 'a', 1, 'b' ])
