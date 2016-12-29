@@ -89,6 +89,7 @@ class Flor::Pro::Cursor < Flor::Procedure
 
   def cancel
 
+#p [ :cancel, @message['flavour'], @node['status'] ]
     fla = @message['flavour']
 
     if fla == 'continue'

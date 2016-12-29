@@ -121,7 +121,29 @@ describe 'Flor punit' do
       ].join("\n"))
     end
 
-    it 'continues a "cursor" from outside'
+    it 'continues a "cursor" from outside' do
+
+      flon = %{
+        set l []
+        concurrence
+          cursor tag: 'x'
+            push l 'a'
+            stall _
+          sequence
+            _skip 1
+            push l 'b'
+            continue ref: 'x'
+            _skip 1
+            push l 'c'
+            break ref: 'x'
+      }
+
+      r = @executor.launch(flon, journal: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+      expect(r['vars']['l']).to eq(%w[ a b a c ])
+    end
   end
 end
 
