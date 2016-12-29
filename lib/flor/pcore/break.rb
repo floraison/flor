@@ -46,6 +46,7 @@ class Flor::Pro::Break < Flor::Procedure
 
     ref = att('ref')
     nid = tags_to_nids(ref).first || @node['heat'][1]['nid']
+#p [ :break, nid ]
 
     payload['ret'] = att(nil) if has_att?(nil)
 

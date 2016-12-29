@@ -268,42 +268,43 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq(%w[ i0 j0 i1 j1 jj2 ii2 ])
     end
 
-    it 'breaks a breaking "until"' do
+    context 're-break/continue' do
 
-      flon = %{
-        concurrence
-          until tag: 'x0'
-            sequence
+      it 'accepts "break" when breaking' do
+
+        flon = %{
+          concurrence
+            until tag: 'x0'
               sequence
                 sequence
                   sequence
                     sequence
-                      stall _
-          sequence
-            break 0 ref: 'x0'
-            break 1 ref: 'x0'
-      }
-
-      r = @executor.launch(flon, journal: true)
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(1)
-
-      expect(
-        @executor.journal.select { |m| m['point'] == 'receive' }.size
-      ).to eq(
-        26
-      )
-    end
-
-    it 'accepts "break" when continuing' do
-
-      flon = %{
-        set l []
-        concurrence
-          until false tag: 'x0'
-            push l 'a'
+                      sequence
+                        stall _
             sequence
+              break 0 ref: 'x0'
+              break 1 ref: 'x0'
+        }
+
+        r = @executor.launch(flon, journal: true)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(1)
+
+        expect(
+          @executor.journal.select { |m| m['point'] == 'receive' }.size
+        ).to eq(
+          26
+        )
+      end
+
+      it 'accepts "break" when continuing' do
+
+        flon = %{
+          set l []
+          concurrence
+            until false tag: 'x0'
+              push l 'a'
               sequence
                 sequence
                   sequence
@@ -312,20 +313,24 @@ describe 'Flor procedures' do
                         sequence
                           sequence
                             sequence
-                              stall _
-          sequence
-            _skip 7
-            push l 'b'
-            continue 0 ref: 'x0'
-            push l 'c'
-            break 1 ref: 'x0'
-      }
+                              sequence
+                                stall _
+            sequence
+              _skip 7
+              push l 'b'
+              continue 0 ref: 'x0'
+              push l 'c'
+              break 1 ref: 'x0'
+        }
 
-      r = @executor.launch(flon, journal: true)
+        r = @executor.launch(flon, journal: true)
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(1)
-      expect(r['vars']['l']).to eq(%w[ a b c ])
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(1)
+        expect(r['vars']['l']).to eq(%w[ a b c ])
+      end
+
+      it 'rejects "continue" when breaking'
     end
   end
 

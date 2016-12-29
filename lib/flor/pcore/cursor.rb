@@ -111,7 +111,8 @@ class Flor::Pro::Cursor < Flor::Procedure
 
     else
 
-      @node['status'] = fla == 'break' ? 'broken' : 'cancelled'
+      @node['status'] =
+        fla == 'break' ? 'broken' : 'cancelled'
     end
 
     super

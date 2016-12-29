@@ -156,10 +156,47 @@ describe 'Flor punit' do
           push f.l 'c' tag: 'final'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] }, journal: true)
+      r = @executor.launch(flon, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
+    end
+
+    context 're-break/continue' do
+
+      it 'accepts "break" when breaking' do
+
+        flon = %{
+          set l []
+          concurrence
+            cursor tag: 'x1'
+              push l 'a'
+              sequence
+                sequence
+                  sequence
+                    sequence
+                      sequence
+                        sequence
+                          sequence
+                            sequence
+                              stall _
+            sequence
+              _skip 1
+              push l 'b'
+              break 0 ref: 'x1'
+              push l 'c'
+              break 1 ref: 'x1'
+        }
+
+        r = @executor.launch(flon)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']['l']).to eq(%w[ a b c ])
+        expect(r['payload']['ret']).to eq(1)
+      end
+
+      it 'accepts "break" when continuing'
+      it 'rejects "continue" when breaking'
     end
   end
 end
