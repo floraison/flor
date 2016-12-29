@@ -92,9 +92,9 @@ class Flor::Pro::Until < Flor::Procedure
 
   def cancel
 
-    return [] if @node['status']
-
     fla = @message['flavour']
+
+    return [] if @node['status'] && %w[ continue ].include?(fla)
 
     if fla == 'continue'
 
@@ -111,7 +111,10 @@ class Flor::Pro::Until < Flor::Procedure
 
     else
 
-      @node['status'] = fla == 'break' ? 'broken' : 'cancelled'
+      @node['status'] =
+        fla == 'break' ? 'broken' : 'cancelled'
+      @node['on_receive_last'] =
+        nil # let's not delete, let's leave it as nil
     end
 
     super

@@ -49,13 +49,14 @@ class Flor::Pro::Break < Flor::Procedure
 
     payload['ret'] = att(nil) if has_att?(nil)
 
-    rep = is_ancestor_node?(nid) ? [] : reply
+    ms = []
 
-    reply(
-      'point' => 'cancel',
-      'nid' => nid,
-      'flavour' => @node['heap']) + # "break" or "continue"
-    rep
+    ms += reply(
+      'point' => 'cancel', 'nid' => nid, 'flavour' => @node['heap']) if nid
+    ms += reply(
+      ) unless is_ancestor_node?(nid)
+
+    ms
   end
 end
 
