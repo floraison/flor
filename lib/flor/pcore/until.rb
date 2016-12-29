@@ -92,6 +92,8 @@ class Flor::Pro::Until < Flor::Procedure
 
   def cancel
 
+    return [] if @node['status']
+
     fla = @message['flavour']
 
     if fla == 'continue'

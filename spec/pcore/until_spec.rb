@@ -267,6 +267,36 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq(%w[ i0 j0 i1 j1 jj2 ii2 ])
     end
+
+    it 'rejects "break" when already breaking or continuing' do
+
+      flon = %{
+        concurrence
+          until tag: 'x0'
+            sequence
+              sequence
+                sequence
+                  sequence
+                    sequence
+                      stall _
+          sequence
+            break 0 ref: 'x0'
+            break 1 ref: 'x0'
+      }
+
+      r = @executor.launch(flon, journal: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(0)
+
+      expect(
+        @executor.journal.select { |m| m['point'] == 'receive' }.size
+      ).to eq(
+        25
+      )
+    end
+
+    it 'rejects "continue" when already breaking or continuing'
   end
 
   describe 'while' do
