@@ -126,6 +126,8 @@ class Flor::Pro::Until < Flor::Procedure
         nil # let's not delete, let's leave it as nil
     end
 
+    @node['status_from'] = message['from']
+
     super
   end
 end

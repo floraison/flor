@@ -127,6 +127,8 @@ class Flor::Pro::Cursor < Flor::Procedure
         nil
     end
 
+    @node['status_from'] = message['from']
+
     super
   end
 

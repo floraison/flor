@@ -59,6 +59,8 @@ class Flor::Procedure < Flor::Node
 
     @node['status'] =
       'triggered-on-error'
+    @node['status_from'] =
+      message['from']
     @node['on_receive_last'] =
       apply(@node['on_error'].shift, [ @message ], tree[2])
 
@@ -243,6 +245,7 @@ class Flor::Procedure < Flor::Node
   #
   def do_receive
 
+#p [ :do_receive, nid, @node['status'] ]
     if sta = @node['status']
       m = "receive_when_#{sta}".to_sym
       return send(m) if respond_to?(m)
@@ -259,7 +262,10 @@ class Flor::Procedure < Flor::Node
 
     orl = (ns == []) && @node.delete('on_receive_last')
 
-    @node.delete('status') if orl && @node['status'] != 'triggered-on-error'
+    if orl && @node['status'] != 'triggered-on-error'
+      @node.delete('status')
+      @node.delete('status_from')
+    end
 
     orl || reply
   end
@@ -501,6 +507,7 @@ class Flor::Procedure < Flor::Node
   #
   def do_cancel
 
+#p [ :do_cancel, nid, @node['status'] ]
     if sta = @node['status']
       m = "cancel_when_#{sta}".to_sym
       return send(m) if respond_to?(m)
@@ -508,6 +515,7 @@ class Flor::Procedure < Flor::Node
     end
 
     @node['status'] = 'cancelled'
+    @node['status_from'] = @message['from']
 
     cancel
   end

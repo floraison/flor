@@ -85,7 +85,10 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     orl = @node.delete('on_receive_last')
 
-    @node.delete('status') if orl && @node['status'] != 'triggered-on-error'
+    if orl && @node['status'] != 'triggered-on-error'
+      @node.delete('status')
+      @node.delete('status_from')
+    end
 
     orl || ms
   end

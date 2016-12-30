@@ -30,24 +30,53 @@ describe 'Flor core' do
              cancel '0_0'
        }
 
-      r = @executor.launch(flon, archive: true)
+       r = @executor.launch(flon, archive: true)
 
-      expect(r['point']).to eq('terminated')
+       expect(r['point']).to eq('terminated')
 
-      seq = @executor.archive['0_0']
+       seq = @executor.archive['0_0']
 
-      expect(seq['status']).to eq('cancelled')
+       expect(seq['status']).to eq('cancelled')
+       expect(seq['status_from']).to eq('0_1_1')
 
-      expect(
-        @executor.journal
-          .select { |m| m['point'] == 'cancel' }
-          .size
-      ).to eq(
-        2
-      )
+       expect(
+         @executor.journal
+           .select { |m| m['point'] == 'cancel' }
+           .size
+       ).to eq(
+         2
+       )
      end
 
-     it "doesn't over-cancel"
+     it "doesn't over-cancel" do
+
+       flon = %{
+         concurrence
+           sequence # 0_0
+             sequence
+               sequence
+                 sequence
+                   sequence
+                     sequence
+                       sequence
+                         stall _
+           sequence
+             _skip 1
+             cancel '0_0'
+             _skip 1
+             cancel '0_0'
+       }
+
+       r = @executor.launch(flon, archive: true)
+
+       expect(r['point']).to eq('terminated')
+
+       seq = @executor.archive['0_0']
+
+       expect(seq['status']).to eq('cancelled')
+       expect(seq['status_from']).to eq('0_1_1')
+     end
+
      it 'over-cancels if flavoured'
   end
 end
