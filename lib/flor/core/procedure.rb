@@ -245,6 +245,10 @@ class Flor::Procedure < Flor::Node
   #
   def do_receive
 
+    if ns = @node['cnodes']
+      ns.delete(from)
+    end
+
 #p [ :do_receive, nid, @node['status'] ]
     if sta = @node['status']
       m = "receive_when_#{sta}".to_sym
@@ -255,24 +259,30 @@ class Flor::Procedure < Flor::Node
     receive
   end
 
-  def receive_when_status
+  def pop_on_receive_last
 
-    ns = @node['cnodes']
-    ns.delete(from) if ns
-
-    orl = (ns == []) && @node.delete('on_receive_last')
+    orl =
+      @node['cnodes'] == [] &&
+      @node.delete('on_receive_last')
 
     if orl && @node['status'] != 'triggered-on-error'
       @node.delete('status')
       @node.delete('status_from')
     end
 
-    orl || reply
+    @node['mtime'] = Flor.tstamp
+
+    orl
+  end
+
+  def receive_when_status
+
+    pop_on_receive_last || reply
   end
 
   def receive
 
-    cnode = @node['cnodes'] ? @node['cnodes'].delete(from) : false
+    #cnode = @node['cnodes'] ? @node['cnodes'].delete(from) : false
 
     @fcid = point == 'receive' ? Flor.child_id(from) : nil
     @ncid = (@fcid || -1) + 1
