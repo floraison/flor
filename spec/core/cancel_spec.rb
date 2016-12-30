@@ -36,8 +36,11 @@ describe 'Flor core' do
 
        seq = @executor.archive['0_0']
 
-       expect(seq['status']).to eq('cancelled')
-       expect(seq['status_from']).to eq('0_1_1')
+       expect(
+         seq['status'][0, 4]
+       ).to eq(
+         [ 'cancelled', 'cancel', '0_1_1', nil ]
+       )
 
        expect(
          @executor.journal
@@ -73,8 +76,11 @@ describe 'Flor core' do
 
        seq = @executor.archive['0_0']
 
-       expect(seq['status']).to eq('cancelled')
-       expect(seq['status_from']).to eq('0_1_1')
+       expect(
+         seq['status'][0, 4]
+       ).to eq(
+         [ 'cancelled', 'cancel', '0_1_1', nil ]
+       )
      end
 
      it 'over-cancels if flavoured'

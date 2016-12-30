@@ -198,8 +198,16 @@ describe 'Flor punit' do
 
         cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
 
-        expect(cursor['status']).to eq('broken')
-        expect(cursor['on_receive_last']).to eq(nil)
+        expect(
+          cursor['status'][0, 4]
+        ).to eq(
+          [ 'broken', 'break', '0_1_1_4', 'broken' ]
+        )
+        expect(
+          cursor['on_receive_last']
+        ).to eq(
+          nil
+        )
       end
 
       it 'accepts "break" when continuing' do
@@ -234,8 +242,13 @@ describe 'Flor punit' do
 
         cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
 
-        expect(cursor['status']).to eq('broken')
         expect(cursor.has_key?('on_receive_last')).to eq(false)
+
+        expect(
+          cursor['status'][0, 4]
+        ).to eq(
+          [ 'broken', 'break', '0_1_1_4', nil ]
+        )
       end
 
       it 'rejects "continue" when breaking' do
@@ -270,8 +283,13 @@ describe 'Flor punit' do
 
         cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
 
-        expect(cursor['status']).to eq('broken')
         expect(cursor.has_key?('on_receive_last')).to eq(false)
+
+        expect(
+          cursor['status'][0, 4]
+        ).to eq(
+          [ 'broken', 'break', '0_1_1_2', nil ]
+        )
       end
 
       it 'rejects "move" when breaking' do
@@ -306,8 +324,13 @@ describe 'Flor punit' do
 
         cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
 
-        expect(cursor['status']).to eq('broken')
         expect(cursor.has_key?('on_receive_last')).to eq(false)
+
+        expect(
+          cursor['status'][0, 4]
+        ).to eq(
+          [ 'broken', 'break', '0_1_1_2', nil ]
+        )
       end
     end
   end

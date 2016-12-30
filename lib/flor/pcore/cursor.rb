@@ -93,7 +93,7 @@ class Flor::Pro::Cursor < Flor::Procedure
 
 #p({ x: :do_cancel, point: :cancel, flavour: fla, status: @node['status'] })
     return [] \
-      if @node['status'] && %w[ continue move ].include?(@message['flavour'])
+      if node_status && %w[ continue move ].include?(@message['flavour'])
 
     cancel
   end
@@ -105,7 +105,7 @@ class Flor::Pro::Cursor < Flor::Procedure
     if fla == 'continue'
 
       @node['status'] =
-        'continued'
+        make_status('continued')
       @node['on_receive_last'] =
         reply(
           'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
@@ -115,19 +115,17 @@ class Flor::Pro::Cursor < Flor::Procedure
     elsif fla == 'move'
 
       @node['status'] =
-        'moved'
+        make_status('moved')
       @node['on_receive_last'] =
         execute_child(move_target_nid, @node['count'] += 1, 'orl' => 'move')
 
     else
 
       @node['status'] =
-        fla == 'break' ? 'broken' : 'cancelled'
+        make_status(fla == 'break' ? 'broken' : 'cancelled')
       @node['on_receive_last'] =
         nil
     end
-
-    @node['status_from'] = message['from']
 
     super
   end

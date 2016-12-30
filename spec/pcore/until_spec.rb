@@ -301,8 +301,13 @@ describe 'Flor procedures' do
 
         unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
 
-        expect(unt['status']).to eq('broken')
         expect(unt['on_receive_last']).to eq(nil)
+
+        expect(
+          unt['status'][0, 4]
+        ).to eq(
+          [ 'broken', 'break', '0_1_1', 'broken' ]
+        )
       end
 
       it 'accepts "break" when continuing' do
@@ -338,8 +343,13 @@ describe 'Flor procedures' do
 
         unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
 
-        expect(unt['status']).to eq('broken')
         expect(unt.has_key?('on_receive_last')).to eq(false)
+
+        expect(
+          unt['status'][0, 4]
+        ).to eq(
+          [ 'broken', 'break', '0_1_1_4', 'continued' ]
+        )
       end
 
       it 'rejects "continue" when breaking' do
@@ -375,8 +385,13 @@ describe 'Flor procedures' do
 
         unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
 
-        expect(unt['status']).to eq('broken')
         expect(unt.has_key?('on_receive_last')).to eq(false)
+
+        expect(
+          unt['status'][0, 4]
+        ).to eq(
+          [ 'broken', 'break', '0_1_1_2', nil ]
+        )
       end
     end
   end

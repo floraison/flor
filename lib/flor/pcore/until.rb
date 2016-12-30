@@ -96,7 +96,7 @@ class Flor::Pro::Until < Flor::Procedure
 
 #p({ x: :do_cancel, point: :cancel, flavour: fla, status: @node['status'] })
     return [] \
-      if @node['status'] && %w[ continue ].include?(@message['flavour'])
+      if node_status && %w[ continue ].include?(@message['flavour'])
 
     cancel
   end
@@ -111,7 +111,7 @@ class Flor::Pro::Until < Flor::Procedure
       pl = pl.merge!(payload.copy_current)
 
       @node['status'] =
-        'continued'
+        make_status('continued')
       @node['on_receive_last'] =
         reply(
           'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
@@ -121,12 +121,10 @@ class Flor::Pro::Until < Flor::Procedure
     else
 
       @node['status'] =
-        fla == 'break' ? 'broken' : 'cancelled'
+        make_status(fla == 'break' ? 'broken' : 'cancelled')
       @node['on_receive_last'] =
         nil # let's not delete, let's leave it as nil
     end
-
-    @node['status_from'] = message['from']
 
     super
   end

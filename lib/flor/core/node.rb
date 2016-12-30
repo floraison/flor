@@ -101,6 +101,10 @@ class Flor::Node
     @message_payload ||= Payload.new(self, :message)
   end
 
+  def node_status
+    s = @node['status']; s ? s.first : nil
+  end
+
   def node_payload
     @node_payload ||= Payload.new(self)
   end
