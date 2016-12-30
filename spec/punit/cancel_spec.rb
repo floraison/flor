@@ -178,7 +178,37 @@ describe 'Flor punit' do
 
   describe 'kill' do
 
-    it 'kills a branch'
+    it 'kills a branch' do
+
+      flon = %{
+        concurrence
+          sequence
+            stall _
+          sequence
+            _skip 1
+            kill '0_0'
+      }
+
+      r = @unit.launch(flon, archive: true, wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      seq = @unit.archive[r['exid']]['0_0']
+
+      expect(
+        seq['status'][0, 4]
+      ).to eq(
+        [ 'cancelled', 'kill', '0_1_1', nil ]
+      )
+
+      sta = @unit.archive[r['exid']]['0_0_0']
+
+      expect(
+        sta['status'][0, 4]
+      ).to eq(
+        [ 'cancelled', nil, '0_0', nil ]
+      )
+    end
   end
 end
 
