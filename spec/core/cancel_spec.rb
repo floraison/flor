@@ -83,7 +83,32 @@ describe 'Flor core' do
        )
      end
 
-     it 'over-cancels if flavoured'
+     it 'over-cancels if flavoured' # kill ???????????????????????????????????
+
+     it 'cancels with "cancel" flavour even if aliased' do
+
+       flon = %{
+         set fukup cancel
+         concurrence
+           sequence # 0_1_0
+             stall _
+           sequence
+             _skip 1
+             fukup '0_1_0'
+       }
+
+       r = @executor.launch(flon, archive: true)
+
+       expect(r['point']).to eq('terminated')
+
+       seq = @executor.archive['0_1_0']
+
+       expect(
+         seq['status'][0, 4]
+       ).to eq(
+         [ 'cancelled', 'cancel', '0_1_1_1', nil ]
+       )
+     end
   end
 end
 

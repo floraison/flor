@@ -59,7 +59,7 @@ class Flor::Pro::Cancel < Flor::Procedure
 
     nids += tags_to_nids(tags)
 
-    fla = @node['heat0']
+    fla = @node['heap']
 
     nids.uniq.collect { |nid|
       reply('point' => 'cancel', 'nid' => nid, 'flavour' => fla).first
