@@ -238,16 +238,18 @@ class Flor::Procedure < Flor::Node
     receive
   end
 
-  # The executor calls #do_receive, while procedure implementations override
-  # #receive...
+  # The executor calls #do_receive, while most procedure implementations
+  # override #receive...
   #
   def do_receive
 
-    if @node['status']
-      receive_when_status
-    else
-      receive
+    if sta = @node['status']
+      m = "receive_when_#{sta}".to_sym
+      return send(m) if respond_to?(m)
+      return receive_when_status
     end
+
+    receive
   end
 
   def receive_when_status
@@ -494,14 +496,25 @@ class Flor::Procedure < Flor::Node
     cancel_nodes(@node['cnodes'])
   end
 
+  # The executor calls #do_cancel, while most procedure implementations
+  # override #cancel...
+  #
   def do_cancel
 
-    #return [] if @node['status'] == 'cancelled'
-    return [] if @node['status']
+    if sta = @node['status']
+      m = "cancel_when_#{sta}".to_sym
+      return send(m) if respond_to?(m)
+      return cancel_when_status
+    end
 
     @node['status'] = 'cancelled'
 
     cancel
+  end
+
+  def cancel_when_status
+
+    [] # by default, no effect
   end
 
   def cancel
