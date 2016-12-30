@@ -32,6 +32,8 @@ module Flor
 
     attr_reader :thread_status
 
+    attr_reader :archive
+
     def initialize(conf={}, over_conf={})
 
       @conf = conf.is_a?(Hash) ? conf : Flor::Conf.read(conf)
@@ -67,6 +69,8 @@ module Flor
       @exids = []
 
       @executors = []
+
+      @archive = nil # used, so far, only for testing
     end
 
     def identifier
@@ -202,6 +206,9 @@ module Flor
         "flow not found in #{Flor.truncate(source_or_path, 35).inspect}"
       ) unless source # will anyway fail badly if src is a tree (array of ...)
 
+      @archive ||= {} if opts[:archive]
+        # all subsequent launches will be `archive: true` ...
+
       unit = opts[:unit] || @conf['unit'] || 'u0'
 
       Flor.print_src(source, opts) if @conf['log_src']
@@ -271,6 +278,8 @@ module Flor
       @mutex.synchronize do
         @timers.reject! { |t| t.exid == exid && t.nid == n['nid'] }
       end
+
+      (@archive[exid] ||= {})[n['nid']] = Flor.dup(n) if @archive
     end
 
     protected
