@@ -64,6 +64,9 @@ module Flor
       end
     a << "#{_pt}#{pt}#{_dg}"
 
+    fla = m['flavour']
+    a << " #{_lg}#{fla}#{_dg}" if fla
+
     t =
       m['tree']
     nt =
