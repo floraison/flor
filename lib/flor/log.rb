@@ -28,6 +28,7 @@ module Flor
   def self.log_message(executor, m, opts={})
 
     _rs, _dg, _yl, _bl, _lg, _gr, _lr, _rd, _ma = colours(opts)
+    _bri, _dim, _und, _, _rev, _ = colmods(opts)
 
     nid = m['nid']
     nd = executor.node(nid)
@@ -51,7 +52,7 @@ module Flor
       a << ' '
     end
 
-    ni = nid ? "#{nid} " : ''
+    ni = nid ? "#{nd ? _dg : _dim + _dg}#{nid}#{_rs}#{_dg} " : ''
     a << ni
 
     pt = m['point'][0, 3]
@@ -228,12 +229,23 @@ module Flor
     dark_grey light_yellow blue light_grey light_green light_red red magenta
   ])
   NO_COLSET = [ '' ] * COLSET.length
+  MODSET = Colours.set(%w[
+    bright dim underlined blink reverse hidden
+  ])
+  NO_MODSET = [ '' ] * MODSET.length
 
   def self.colours(opts={})
 
     opts[:colour] = true unless opts.has_key?(:color) || opts.has_key?(:colour)
 
     (opts[:color] || opts[:colour]) && $stdout.tty? ? COLSET : NO_COLSET
+  end
+
+  def self.colmods(opts={})
+
+    opts[:colour] = true unless opts.has_key?(:color) || opts.has_key?(:colour)
+
+    (opts[:color] || opts[:colour]) && $stdout.tty? ? MODSET : NO_MODSET
   end
 
   def self.print_src(src, opts={})
