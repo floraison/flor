@@ -64,43 +64,6 @@ module Flor
 
     protected
 
-    def on_do_run_exc(e)
-
-      io = StringIO.new
-      thr = Thread.current
-
-      head, kind =
-        e.is_a?(StandardError) ? [ '=exe', 'error' ] : [ '!exe', 'exception' ]
-
-      t = head[0, 2] + Time.now.to_f.to_s.split('.').last
-      io.puts ' /' + t + ' ' + head * 17
-      io.puts " |#{t} + in #{self.class}#do_run"
-      io.puts " |#{t} #{kind}: #{e.inspect}"
-      io.puts " |#{t} db:  #{@unit.storage.db.class} #{@unit.storage.db.hash}"
-      io.puts " |#{t} thread: t#{thr.object_id} #{thr.inspect}"
-      if @execution
-        io.puts " |#{t} exe:"
-        io.puts " |#{t}   exid: #{@execution['exid'].inspect}"
-        io.puts " |#{t}   counters: #{@execution['counters'].inspect}"
-      end
-      if @messages
-        io.puts " |#{t} messages:"
-        io.puts " |#{t}   #{@messages.map { |m| [ m['mid'], m['point'] ] }.inspect}"
-      end
-      if is = Thread.current[:sto_errored_items]
-        io.puts " |#{t} storage errored items/models:"
-        is.each do |i|
-          io.puts " |#{t}   * #{i.inspect}"
-        end
-      end
-      io.puts " |#{t} #{kind}: #{e.inspect}"
-      io.puts " |#{t} backtrace:"
-      e.backtrace.each { |l| io.puts "|#{t} #{l}" }
-      io.puts ' \\' + t + ' ' + (head * 17) + ' .'
-
-      io.string
-    end
-
     def do_run
 
       puts(
@@ -160,21 +123,7 @@ module Flor
       x = @unit.storage.put_execution(@execution)
       @unit.storage.put_messages(@messages)
 
-      puts(
-        Flor::Colours.dark_grey + '--- run over ' +
-        [
-          self.class, self.object_id, @exid,
-          { took: Time.now - t0,
-            thread: Thread.current.object_id,
-            consumed: @consumed.size,
-            traps: @traps.size,
-            #own_traps: @traps.reject { |t| t.texid == nil }.size, # FIXME
-            counters: @execution['counters'],
-            nodes: @execution['nodes'].size,
-            size: x['size'] }
-        ].inspect +
-        '---.' + Flor::Colours.reset
-      ) if @unit.conf['log_run']
+      log_run(t0, x.size) if @unit.conf['log_run']
 
       @consumed.clear
 
@@ -225,6 +174,69 @@ module Flor
         if m['point'] == 'execute'
 
       [ m ]
+    end
+
+    def log_run(t0, execution_size)
+
+      s = StringIO.new
+
+      s << Flor::Colours.dark_grey
+      s << "    --- run over #{self.class} #{self.object_id} #{@exid}"
+      s << "\n        "
+      s << {
+        took: Time.now - t0,
+        thread: Thread.current.object_id,
+        consumed: @consumed.size,
+        traps: @traps.size,
+        nodes: @execution['nodes'].size,
+        size: execution_size
+      }.inspect
+      s << "\n        "
+      s << {
+        #own_traps: @traps.reject { |t| t.texid == nil }.size, # FIXME
+        counters: @execution['counters'],
+      }.inspect
+      s << ' .'
+      s << Flor::Colours.reset
+
+      puts s.string
+    end
+
+    def on_do_run_exc(e)
+
+      io = StringIO.new
+      thr = Thread.current
+
+      head, kind =
+        e.is_a?(StandardError) ? [ '=exe', 'error' ] : [ '!exe', 'exception' ]
+
+      t = head[0, 2] + Time.now.to_f.to_s.split('.').last
+      io.puts ' /' + t + ' ' + head * 17
+      io.puts " |#{t} + in #{self.class}#do_run"
+      io.puts " |#{t} #{kind}: #{e.inspect}"
+      io.puts " |#{t} db:  #{@unit.storage.db.class} #{@unit.storage.db.hash}"
+      io.puts " |#{t} thread: t#{thr.object_id} #{thr.inspect}"
+      if @execution
+        io.puts " |#{t} exe:"
+        io.puts " |#{t}   exid: #{@execution['exid'].inspect}"
+        io.puts " |#{t}   counters: #{@execution['counters'].inspect}"
+      end
+      if @messages
+        io.puts " |#{t} messages:"
+        io.puts " |#{t}   #{@messages.map { |m| [ m['mid'], m['point'] ] }.inspect}"
+      end
+      if is = Thread.current[:sto_errored_items]
+        io.puts " |#{t} storage errored items/models:"
+        is.each do |i|
+          io.puts " |#{t}   * #{i.inspect}"
+        end
+      end
+      io.puts " |#{t} #{kind}: #{e.inspect}"
+      io.puts " |#{t} backtrace:"
+      e.backtrace.each { |l| io.puts "|#{t} #{l}" }
+      io.puts ' \\' + t + ' ' + (head * 17) + ' .'
+
+      io.string
     end
   end
 end
