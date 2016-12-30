@@ -198,7 +198,7 @@ describe 'Flor punit' do
       expect(
         seq['status'][0, 4]
       ).to eq(
-        [ 'cancelled', 'kill', '0_1_1', nil ]
+        [ 'killed', 'kill', '0_1_1', nil ] # well...
       )
 
       sta = @unit.archive[r['exid']]['0_0_0']
@@ -208,6 +208,39 @@ describe 'Flor punit' do
       ).to eq(
         [ 'cancelled', nil, '0_0', nil ]
       )
+
+      expect(
+        @unit.journal
+          .collect { |m|
+            [ m['nid'], m['point'], m['flavour'].to_s ].join(':') }
+          .join("\n")
+      ).to eq(%w[
+        0:execute:
+        0_0:execute:
+        0_1:execute:
+        0_0_0:execute:
+        0_1_0:execute:
+        0_0_0_0:execute:
+        0_1_0_0:execute:
+        0_0_0:receive:
+        0_1_0_0_0:execute:
+        0_1_0_0:receive:
+        0_1_0:receive:
+        0_1:receive:
+        0_1_1:execute:
+        0_1_1_0:execute:
+        0_1_1_0_0:execute:
+        0_1_1_0:receive:
+        0_1_1:receive:
+        0_0:cancel:kill
+        0_1:receive:
+        0:receive:
+        0_0_0:cancel:
+        0:receive:
+        0_0:receive:
+        :receive:
+        :terminated:
+      ].join("\n"))
     end
   end
 end

@@ -518,8 +518,10 @@ class Flor::Procedure < Flor::Node
   # override #cancel...
   #
   def do_cancel
+#p [ :do_cancel, nid, @message['flavour'], @node['status'] ]
 
-#p [ :do_cancel, nid, @node['status'] ]
+    return kill if @message['flavour'] == 'kill'
+
     if sta = node_status
       m = "cancel_when_#{sta}".to_sym
       return send(m) if respond_to?(m)
@@ -545,6 +547,13 @@ class Flor::Procedure < Flor::Node
     else
       cancel_reply
     end
+  end
+
+  def kill
+
+    @node['status'] = make_status('killed')
+
+    reply + cancel
   end
 end
 
