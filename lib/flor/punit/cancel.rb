@@ -24,9 +24,18 @@
 
 
 class Flor::Pro::Cancel < Flor::Procedure
+  #
+  # Cancels an execution branch
+  #
+  # ```
+  # concurrence
+  #   sequence tag: 'blue'
+  #   sequence
+  #     cancel ref: 'blue'
+  # ```
 
-  name 'cancel'
-    # ruote had "undo" and "kill" as well...
+  name 'cancel', 'kill'
+    # ruote had "undo" as well...
 
   def pre_execute
 
@@ -50,10 +59,11 @@ class Flor::Pro::Cancel < Flor::Procedure
 
     nids += tags_to_nids(tags)
 
+    fla = @node['heat0']
+
     nids.uniq.collect { |nid|
-      reply('point' => 'cancel', 'nid' => nid, 'flavour' => 'punit').first
-    } +
-    reply
+      reply('point' => 'cancel', 'nid' => nid, 'flavour' => fla).first
+    } + reply
   end
 end
 

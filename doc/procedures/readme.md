@@ -15,5 +15,6 @@
 
 ## unit
 
+* [cancel, kill](cancel.md) - Cancels an execution branch
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
 
