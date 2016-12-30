@@ -27,7 +27,7 @@ module Flor
 
   def self.log_message(executor, m, opts={})
 
-    _rs, _dg, _yl, _bl, _lg, _gr, _lr, _rd = colours(opts)
+    _rs, _dg, _yl, _bl, _lg, _gr, _lr, _rd, _ma = colours(opts)
 
     nid = m['nid']
     nd = executor.node(nid)
@@ -59,6 +59,7 @@ module Flor
       case pt
         when 'tri', 'sig' then _gr
         when 'cea', 'ter' then _lg
+        when 'can' then _ma
         else _bl
       end
     a << "#{_pt}#{pt}#{_dg}"
@@ -220,7 +221,8 @@ module Flor
   end
 
   COLSET = Colours.set(%w[
-    reset dark_grey light_yellow blue light_grey light_green light_red red
+    reset
+    dark_grey light_yellow blue light_grey light_green light_red red magenta
   ])
   NO_COLSET = [ '' ] * COLSET.length
 
