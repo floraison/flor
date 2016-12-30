@@ -196,6 +196,12 @@ module Flor
         #own_traps: @traps.reject { |t| t.texid == nil }.size, # FIXME
         counters: @execution['counters'],
       }.inspect
+      if @unit.archive
+        s << "\n        "
+        s << {
+          archive_size: @unit.archive[@exid].size
+        }.inspect
+      end
       s << ' .'
       s << Flor::Colours.reset
 
