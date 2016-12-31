@@ -19,14 +19,14 @@ describe 'Flor procedures' do
 
     it 'binds and returns a function' do
 
-      flon = %{
+      flor = %{
         define sum a, b
           +
             a
             b
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']).to eq({ 'sum' => r['payload']['ret'] })
@@ -40,7 +40,7 @@ describe 'Flor procedures' do
 
     it 'binds at the last moment' do
 
-      flon = %{
+      flor = %{
         define "sum0" a, b; (+ a b)
         set name 'su'
         define "$(name)m1" a, b; (+ a b)
@@ -50,7 +50,7 @@ describe 'Flor procedures' do
         set f.r2 (sum2 4, 5)
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
 
@@ -77,14 +77,14 @@ describe 'Flor procedures' do
 
     it 'returns a function' do
 
-      flon = %{
+      flor = %{
         def a, b
           +
             a
             b
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']).to eq({})
@@ -101,14 +101,14 @@ describe 'Flor procedures' do
 
     it 'is an alias for "def"' do
 
-      flon = %{
+      flor = %{
         fun a, b
           +
             a
             b
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']).to eq({})

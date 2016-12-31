@@ -28,11 +28,11 @@ describe 'Flor punit' do
 
     it 'creates a timer' do
 
-      flon = %{
+      flor = %{
         sleep '1y'
       }
 
-      exid = @unit.launch(flon)
+      exid = @unit.launch(flor)
 
       sleep 0.777
 
@@ -52,11 +52,11 @@ describe 'Flor punit' do
 
     it 'understands for:' do
 
-      flon = %{
+      flor = %{
         sleep for: '2y'
       }
 
-      exid = @unit.launch(flon)
+      exid = @unit.launch(flor)
 
       sleep 0.350
 
@@ -76,22 +76,22 @@ describe 'Flor punit' do
 
     it 'fails when missing a duration' do
 
-      flon = %{
+      flor = %{
         sleep _
       }
 
-      msg = @unit.launch(flon, wait: true)
+      msg = @unit.launch(flor, wait: true)
 
       expect(msg['point']).to eq('failed')
       expect(msg['error']['msg']).to eq('missing a sleep time duration')
     end
 
     it 'does not sleep when t <= 0' do
-      flon = %{
+      flor = %{
         sleep '0s'
       }
 
-      exid = @unit.launch(flon)
+      exid = @unit.launch(flor)
 
       sleep 0.777
 
@@ -105,11 +105,11 @@ describe 'Flor punit' do
 
     it 'makes an execution sleep for a while' do
 
-      flon = %{
+      flor = %{
         sleep '1s'
       }
 
-      exid = @unit.launch(flon)
+      exid = @unit.launch(flor)
 
       sleep 0.777
 

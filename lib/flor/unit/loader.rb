@@ -60,7 +60,7 @@ module Flor
       domain, name = split_dn(domain, name)
 
       path =
-        (Dir[File.join(root, '**/*.{flon,flor}')])
+        (Dir[File.join(root, '**/*.{flo,flor}')])
           .sort
           .sort_by(&:length)
           .select { |f| f.index('/lib/') }
@@ -146,8 +146,8 @@ module Flor
         .sub(/\/etc\/variables\//, '/')
         .sub(/\/lib\/(flows|taskers)\//, '/')
         .sub(/\/\z/, '')
-        .sub(/\/(flon|flor|dot)\.json\z/, '')
-        .sub(/\.(flon|flor|json)\z/, '')
+        .sub(/\/(flo|flor|dot)\.json\z/, '')
+        .sub(/\.(flo|flor|json)\z/, '')
         .sub(/\A\//, '')
         .gsub(/\//, '.')
 
@@ -157,8 +157,7 @@ module Flor
 
     def path_name_matches?(domain, name, f)
 
-#p [ :pnm, domain, name, f ]
-      f = f.sub(/\/(flon|flor|dot)\.json\z/, '.json')
+      f = f.sub(/\/(flo|flor|dot)\.json\z/, '.json')
 
       return false if File.basename(f).split('.').first != name
 

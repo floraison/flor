@@ -36,7 +36,7 @@ module Flor
     a = [ '  ' ]
 
     n =
-      Time.now
+      Time.now.utc
     tm =
       if opts[:date]
         n.strftime('%Y%m%d.%H:%M:%S') + sprintf('.%06d', n.usec)[0, 4]

@@ -31,7 +31,7 @@ describe 'Flor punit' do
 
       it 'cancels a given nid' do
 
-        flon = %{
+        flor = %{
           concurrence
             stall _
             stall _
@@ -39,7 +39,7 @@ describe 'Flor punit' do
             cancel nid: '0_1'
         }
 
-        r = @unit.launch(flon, wait: true)
+        r = @unit.launch(flor, wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -55,7 +55,7 @@ describe 'Flor punit' do
 
       it 'can cancel multiple nids' do
 
-        flon = %{
+        flor = %{
           concurrence
             stall _
             stall _
@@ -65,7 +65,7 @@ describe 'Flor punit' do
             cancel nid: [ '0_2', '0_3' ]
         }
 
-        r = @unit.launch(flon, wait: true)
+        r = @unit.launch(flor, wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -86,7 +86,7 @@ describe 'Flor punit' do
 
       it 'cancels a given tag' do
 
-        flon = %{
+        flor = %{
           concurrence
             stall tag: 'a'
             stall tag: 'b'
@@ -96,7 +96,7 @@ describe 'Flor punit' do
               cancel ref: 'b'
         }
 
-        r = @unit.launch(flon, wait: true)
+        r = @unit.launch(flor, wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -113,7 +113,7 @@ describe 'Flor punit' do
 
       it 'can cancel multiple tags' do
 
-        flon = %{
+        flor = %{
           concurrence
             stall tag: 'a'
             stall tag: 'b'
@@ -123,7 +123,7 @@ describe 'Flor punit' do
             cancel ref: [ 'c', 'd' ]
         }
 
-        r = @unit.launch(flon, wait: true)
+        r = @unit.launch(flor, wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -144,7 +144,7 @@ describe 'Flor punit' do
 
       it 'cancels nids or tags' do
 
-        flon = %{
+        flor = %{
           concurrence
             stall tag: 'a'
             stall tag: 'b'
@@ -156,7 +156,7 @@ describe 'Flor punit' do
             cancel '0_3', 'e', '0_5'
         }
 
-        r = @unit.launch(flon, wait: true)
+        r = @unit.launch(flor, wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -180,7 +180,7 @@ describe 'Flor punit' do
 
     it 'kills a branch' do
 
-      flon = %{
+      flor = %{
         concurrence
           sequence
             stall _
@@ -189,7 +189,7 @@ describe 'Flor punit' do
             kill '0_0'
       }
 
-      r = @unit.launch(flon, archive: true, wait: true)
+      r = @unit.launch(flor, archive: true, wait: true)
 
       expect(r['point']).to eq('terminated')
 

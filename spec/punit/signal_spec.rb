@@ -29,11 +29,11 @@ describe 'Flor punit' do
 
     it 'emits a signal' do
 
-      flon = %{
+      flor = %{
         signal 'close'
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
 

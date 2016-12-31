@@ -19,11 +19,11 @@ describe 'Flor procedures' do
 
     it 'raises an error' do
 
-      flon = %{
+      flor = %{
         fail 'not enough flour'
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       #pp r
       expect(r['point']).to eq('failed')
@@ -35,11 +35,11 @@ describe 'Flor procedures' do
 
     it 'raises an error when empty too' do
 
-      flon = %{
+      flor = %{
         fail _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       #pp r
       expect(r['point']).to eq('failed')
@@ -54,11 +54,11 @@ describe 'Flor procedures' do
 
     it 'is an alias to "fail"' do
 
-      flon = %{
+      flor = %{
         error 'not enough water'
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq('not enough water')

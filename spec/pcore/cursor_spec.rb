@@ -21,14 +21,14 @@ describe 'Flor punit' do
 
     it 'goes from a to b and exits' do
 
-      flon = %{
+      flor = %{
         cursor
           push f.l 0
           push f.l 1
         push f.l 2
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -38,7 +38,7 @@ describe 'Flor punit' do
 
     it 'understands break' do
 
-      flon = %{
+      flor = %{
         cursor
           push f.l "$(nid)"
           break _
@@ -46,7 +46,7 @@ describe 'Flor punit' do
         push f.l "$(nid)"
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -56,14 +56,14 @@ describe 'Flor punit' do
 
     it 'understands continue' do
 
-      flon = %{
+      flor = %{
         cursor
           push f.l "$(nid)"
           continue _ if "$(nid)" == '0_1_0_0'
           push f.l "$(nid)"
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -73,13 +73,13 @@ describe 'Flor punit' do
 
     it 'goes {nid}-n for the subsequent cycles' do
 
-      flon = %{
+      flor = %{
         cursor
           continue _ if "$(nid)" == '0_0_0_0'
           continue _ if "$(nid)" == '0_1_0_0-1'
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(
         @executor.journal
@@ -115,12 +115,12 @@ describe 'Flor punit' do
 
     it 'takes the first att child as tag' do
 
-      flon = %{
+      flor = %{
         cursor 'main'
           set f.done true
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
 
@@ -150,7 +150,7 @@ describe 'Flor punit' do
 
     it 'accepts "move"' do
 
-      flon = %{
+      flor = %{
         cursor
           push f.l 'a'
           move to: 'final'
@@ -158,7 +158,7 @@ describe 'Flor punit' do
           push f.l 'c' tag: 'final'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
@@ -168,7 +168,7 @@ describe 'Flor punit' do
 
       it 'accepts "break" when breaking' do
 
-        flon = %{
+        flor = %{
           set l []
           concurrence
             cursor tag: 'x1'
@@ -190,7 +190,7 @@ describe 'Flor punit' do
               break 1 ref: 'x1'
         }
 
-        r = @executor.launch(flon, archive: true)
+        r = @executor.launch(flor, archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])
@@ -212,7 +212,7 @@ describe 'Flor punit' do
 
       it 'accepts "break" when continuing' do
 
-        flon = %{
+        flor = %{
           set l []
           concurrence
             cursor tag: 'x2'
@@ -234,7 +234,7 @@ describe 'Flor punit' do
               break 1 ref: 'x2'
         }
 
-        r = @executor.launch(flon, archive: true)
+        r = @executor.launch(flor, archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])
@@ -253,7 +253,7 @@ describe 'Flor punit' do
 
       it 'rejects "continue" when breaking' do
 
-        flon = %{
+        flor = %{
           set l []
           concurrence
             cursor tag: 'x3'
@@ -275,7 +275,7 @@ describe 'Flor punit' do
               continue 1 ref: 'x3'
         }
 
-        r = @executor.launch(flon, archive: true)
+        r = @executor.launch(flor, archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])
@@ -294,7 +294,7 @@ describe 'Flor punit' do
 
       it 'rejects "move" when breaking' do
 
-        flon = %{
+        flor = %{
           set l []
           concurrence
             cursor tag: 'x3'
@@ -316,7 +316,7 @@ describe 'Flor punit' do
               move 'x3' to: 'z'
         }
 
-        r = @executor.launch(flon, archive: true)
+        r = @executor.launch(flor, archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])

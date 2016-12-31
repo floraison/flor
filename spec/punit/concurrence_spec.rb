@@ -29,22 +29,22 @@ describe 'Flor punit' do
 
     it 'has no effect when empty' do
 
-      flon = %{
+      flor = %{
         concurrence _
       }
 
-      msg = @unit.launch(flon, wait: true)
+      msg = @unit.launch(flor, wait: true)
 
       expect(msg['point']).to eq('terminated')
     end
 
     it 'has no effect when empty (2)' do
 
-      flon = %{
+      flor = %{
         concurrence tag: 'z'
       }
 
-      msg = @unit.launch(flon, wait: true)
+      msg = @unit.launch(flor, wait: true)
 
       expect(msg['point']).to eq('terminated')
 
@@ -72,13 +72,13 @@ describe 'Flor punit' do
 
     it 'executes atts in sequence then children in concurrence' do
 
-      flon = %{
+      flor = %{
         concurrence tag: 'x', nada: 'y'
           trace 'a'
           trace 'b'
       }
 
-      msg = @unit.launch(flon, wait: true)
+      msg = @unit.launch(flor, wait: true)
 
       expect(msg['point']).to eq('terminated')
 
@@ -102,14 +102,14 @@ describe 'Flor punit' do
 
       it 'merges all the payload, first reply wins' do
 
-        flon = %{
+        flor = %{
           concurrence
             set f.a 0
             set f.a 1
             set f.b 2
         }
 
-        msg = @unit.launch(flon, wait: true)
+        msg = @unit.launch(flor, wait: true)
 
         expect(msg['point']).to eq('terminated')
         expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0, 'b' => 2 })
@@ -120,13 +120,13 @@ describe 'Flor punit' do
 
       it 'accepts an integer > 0' do
 
-        flon = %{
+        flor = %{
           concurrence expect: 1
             set f.a 0
             set f.b 1
         }
 
-        msg = @unit.launch(flon, wait: true)
+        msg = @unit.launch(flor, wait: true)
 
         expect(msg['point']).to eq('terminated')
         expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
@@ -146,13 +146,13 @@ describe 'Flor punit' do
 
       it 'prevents child cancelling when "forget"' do
 
-        flon = %{
+        flor = %{
           concurrence expect: 1 rem: 'forget'
             set f.a 0
             set f.b 1
         }
 
-        msg = @unit.launch(flon, wait: true)
+        msg = @unit.launch(flor, wait: true)
 
         expect(msg['point']).to eq('terminated')
         expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
@@ -172,13 +172,13 @@ describe 'Flor punit' do
 
       it 'cancels all its children' do
 
-        flon = %{
+        flor = %{
           concurrence
             task 'hole'
             task 'hole'
         }
 
-        msg = @unit.launch(flon, wait: '0_1 task')
+        msg = @unit.launch(flor, wait: '0_1 task')
 
         r = @unit.queue(
           { 'point' => 'cancel', 'exid' => msg['exid'], 'nid' => '0' },

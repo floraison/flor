@@ -19,13 +19,13 @@ describe 'Flor procedures' do
 
     it 'has no effect it it has no children' do
 
-      flon = %{
+      flor = %{
         push f.l 0
         cond _
         push f.l 1
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -34,7 +34,7 @@ describe 'Flor procedures' do
 
     it 'triggers' do
 
-      flon = %{
+      flor = %{
         set a 4
         cond
           a < 4
@@ -45,7 +45,7 @@ describe 'Flor procedures' do
           "less than ten"
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('less than seven')
@@ -53,7 +53,7 @@ describe 'Flor procedures' do
 
     it 'has no effect when there is no match' do
 
-      flon = %{
+      flor = %{
         7
         set a 10
         cond
@@ -62,7 +62,7 @@ describe 'Flor procedures' do
           a < 10 ;; "less than ten"
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(7)
@@ -70,7 +70,7 @@ describe 'Flor procedures' do
 
     it 'defaults to the "else" if present' do
 
-      flon = %{
+      flor = %{
         set a 11
         cond
           a < 4 ;; "less than four"
@@ -78,7 +78,7 @@ describe 'Flor procedures' do
           else ;; "ten or bigger"
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('ten or bigger')
@@ -86,7 +86,7 @@ describe 'Flor procedures' do
 
     it 'does not mind an else followed by nothing' do
 
-      flon = %{
+      flor = %{
         7
         set a 11
         cond
@@ -95,7 +95,7 @@ describe 'Flor procedures' do
           else
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(7)
@@ -103,7 +103,7 @@ describe 'Flor procedures' do
 
     it 'is OK with a true instead of an "else"' do
 
-      flon = %{
+      flor = %{
         set a 12
         cond
           a < 4 ;; "less than four"
@@ -111,7 +111,7 @@ describe 'Flor procedures' do
           true ;; "ten or bigger"
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('ten or bigger')
@@ -119,7 +119,7 @@ describe 'Flor procedures' do
 
     it 'does not mind a true followed by nothing' do
 
-      flon = %{
+      flor = %{
         7
         set a 12
         cond
@@ -128,7 +128,7 @@ describe 'Flor procedures' do
           true
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(7)

@@ -47,7 +47,7 @@ describe 'Flor unit' do
 
         @unit.stop
 
-        flon = %{
+        flor = %{
           sequence
             define sum a, b
               +
@@ -56,12 +56,12 @@ describe 'Flor unit' do
             sum 1 2
         }
 
-        exid = @unit.launch(flon)
+        exid = @unit.launch(flor)
 
         expect(
           exid
         ).to match(
-          /\Atest-u-#{Time.now.year}\d{4}\.\d{4}\.[a-z]+\z/
+          /\Atest-u-#{Time.now.utc.year}\d{4}\.\d{4}\.[a-z]+\z/
         )
 
         ms = @unit.storage.db[:flor_messages].all
@@ -119,7 +119,7 @@ describe 'Flor unit' do
 
         it 'launches' do
 
-          flon = %{
+          flor = %{
             sequence
               define sum a, b
                 +
@@ -128,7 +128,7 @@ describe 'Flor unit' do
               sum 1 2
           }
 
-          msg = @unit.launch(flon, wait: true)
+          msg = @unit.launch(flor, wait: true)
 
           expect(msg.class).to eq(Hash)
           expect(msg['point']).to eq('terminated')
@@ -156,7 +156,7 @@ describe 'Flor unit' do
           expect {
             @unit.launch('sequence,,,,')
           }.to raise_error(
-            ArgumentError, 'flon parse failure'
+            ArgumentError, 'flor parse failure'
           )
         end
       end
@@ -238,13 +238,13 @@ describe 'Flor unit' do
 
       it 'queues cancel messages' do
 
-        flon = %{
+        flor = %{
           sequence
             sequence
               stall _
         }
 
-        exid = @unit.launch(flon)
+        exid = @unit.launch(flor)
 
         sleep 0.350
 
@@ -260,13 +260,13 @@ describe 'Flor unit' do
 
       it 'queues cancel messages' do
 
-        flon = %{
+        flor = %{
           sequence
             sequence
               stall _
         }
 
-        exid = @unit.launch(flon)
+        exid = @unit.launch(flor)
 
         sleep 0.777
 

@@ -28,11 +28,11 @@ describe 'Flor unit' do
 
     it 'cancels a leaf node' do
 
-      flon = %{
+      flor = %{
         stall _
       }
 
-      exid = @unit.launch(flon)
+      exid = @unit.launch(flor)
 
       sleep 0.350
 
@@ -55,13 +55,13 @@ describe 'Flor unit' do
 
     it 'cancels a node and its children' do
 
-      flon = %{
+      flor = %{
         sequence
           sequence
             stall _
       }
 
-      exid = @unit.launch(flon, payload: { 'x' => 'y' })
+      exid = @unit.launch(flor, payload: { 'x' => 'y' })
 
       sleep 0.777
 
@@ -85,13 +85,13 @@ describe 'Flor unit' do
 
     it 'can force a new payload on the cancelled node' do
 
-      flon = %{
+      flor = %{
         sequence
           sequence
             stall _
       }
 
-      exid = @unit.launch(flon, payload: { 'x' => '0' })
+      exid = @unit.launch(flor, payload: { 'x' => '0' })
 
       sleep 0.350
 
@@ -110,13 +110,13 @@ describe 'Flor unit' do
 
     it 'has no effect' do
 
-      flon = %{
+      flor = %{
         sequence
           sequence
             stall _
       }
 
-      exid = @unit.launch(flon, wait: '0_0_0 receive')['exid']
+      exid = @unit.launch(flor, wait: '0_0_0 receive')['exid']
 
       sleep 0.140
 

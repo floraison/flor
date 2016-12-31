@@ -21,7 +21,7 @@ describe 'Flor core' do
 
      it 'cancels' do
 
-       flon = %{
+       flor = %{
          concurrence
            sequence # 0_0
              stall _
@@ -30,7 +30,7 @@ describe 'Flor core' do
              cancel '0_0'
        }
 
-       r = @executor.launch(flon, archive: true)
+       r = @executor.launch(flor, archive: true)
 
        expect(r['point']).to eq('terminated')
 
@@ -53,7 +53,7 @@ describe 'Flor core' do
 
      it "doesn't over-cancel" do
 
-       flon = %{
+       flor = %{
          concurrence
            sequence # 0_0
              sequence
@@ -70,7 +70,7 @@ describe 'Flor core' do
              cancel '0_0'
        }
 
-       r = @executor.launch(flon, archive: true)
+       r = @executor.launch(flor, archive: true)
 
        expect(r['point']).to eq('terminated')
 
@@ -87,7 +87,7 @@ describe 'Flor core' do
 
      it 'cancels with "cancel" flavour even if aliased' do
 
-       flon = %{
+       flor = %{
          set fukup cancel
          concurrence
            sequence # 0_1_0
@@ -97,7 +97,7 @@ describe 'Flor core' do
              fukup '0_1_0'
        }
 
-       r = @executor.launch(flon, archive: true)
+       r = @executor.launch(flor, archive: true)
 
        expect(r['point']).to eq('terminated')
 

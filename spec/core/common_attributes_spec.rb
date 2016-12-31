@@ -21,11 +21,11 @@ describe 'Flor core' do
 
       it 'does not set f.ret' do
 
-        flon = %{
+        flor = %{
           sequence vars: { a: 1 }
         }
 
-        r = @executor.launch(flon)
+        r = @executor.launch(flor)
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(nil)
@@ -36,11 +36,11 @@ describe 'Flor core' do
 
       it 'overrides f.ret' do
 
-        flon = %{
+        flor = %{
           3 ret: 4
         }
 
-        r = @executor.launch(flon)
+        r = @executor.launch(flor)
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(4)

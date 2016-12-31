@@ -19,12 +19,12 @@ describe 'Flor procedures' do
 
     it 'stalls' do
 
-      flon = %{
+      flor = %{
         sequence
           stall _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r).to eq(nil)
 

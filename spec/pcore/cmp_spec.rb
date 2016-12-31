@@ -19,7 +19,7 @@ describe 'Flor procedures' do
 
     it 'compares strings' do
 
-      flon = %{
+      flor = %{
         sequence
           push f.l
             =
@@ -31,7 +31,7 @@ describe 'Flor procedures' do
               "bravo"
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -40,7 +40,7 @@ describe 'Flor procedures' do
 
     it 'compares integers' do
 
-      flon = %{
+      flor = %{
         sequence
           push f.l
             =
@@ -53,7 +53,7 @@ describe 'Flor procedures' do
               -1
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -62,7 +62,7 @@ describe 'Flor procedures' do
 
     it 'compares floats' do
 
-      flon = %{
+      flor = %{
         sequence
           push f.l
             =
@@ -78,7 +78,7 @@ describe 'Flor procedures' do
               1.0000001
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -87,7 +87,7 @@ describe 'Flor procedures' do
 
     it 'compares booleans' do
 
-      flon = %{
+      flor = %{
         sequence
           push f.l
             =
@@ -103,7 +103,7 @@ describe 'Flor procedures' do
               false
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -112,7 +112,7 @@ describe 'Flor procedures' do
 
     it 'compares nulls' do
 
-      flon = %{
+      flor = %{
         sequence
           push f.l
             =
@@ -124,7 +124,7 @@ describe 'Flor procedures' do
               false
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -133,7 +133,7 @@ describe 'Flor procedures' do
 
     it 'compares arrays' do
 
-      flon = %{
+      flor = %{
         sequence
           push f.l
             =
@@ -146,7 +146,7 @@ describe 'Flor procedures' do
               [ 'a' ]
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -155,7 +155,7 @@ describe 'Flor procedures' do
 
     it 'compares objects' do
 
-      flon = %{
+      flor = %{
         sequence
           push f.l
             =
@@ -167,7 +167,7 @@ describe 'Flor procedures' do
               { a: 1, b: 2, c: 3 }
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -179,7 +179,7 @@ describe 'Flor procedures' do
 
     it 'compares integers' do
 
-      flon = %{
+      flor = %{
         push f.l; < 2 3
         push f.l; < 3 2
         push f.l; > 2 3
@@ -188,7 +188,7 @@ describe 'Flor procedures' do
         push f.l; > 3 2 4
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ true, false, false, true, true, false ])
@@ -196,7 +196,7 @@ describe 'Flor procedures' do
 
     it 'compares floats' do
 
-      flon = %{
+      flor = %{
         push f.l; < 2.0 3.0
         push f.l; < 3 2.0
         push f.l; > 2.0 3.0
@@ -205,7 +205,7 @@ describe 'Flor procedures' do
         push f.l; > 3 2.0 4.1
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ true, false, false, true, true, false ])
@@ -213,7 +213,7 @@ describe 'Flor procedures' do
 
     it 'compares strings' do
 
-      flon = %{
+      flor = %{
         push f.l; < 'aa' 'bb'
         push f.l; < 'cc' 'bb'
         push f.l; > 'zz' 'cc' 'bb'
@@ -221,7 +221,7 @@ describe 'Flor procedures' do
         push f.l; > 'zz' 'aa' 'bb'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ true, false, true, false, false ])

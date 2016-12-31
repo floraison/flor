@@ -19,12 +19,12 @@ describe 'Flor procedures' do
 
     it 'takes the first child as target' do
 
-      flon = %{
+      flor = %{
         true
         push f.l
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ true ])
@@ -33,12 +33,12 @@ describe 'Flor procedures' do
 
     it 'fails if it cannot push to the first child' do
 
-      flon = %{
+      flor = %{
         1
         push f.l
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq('cannot push to given target (NilClass)')
@@ -47,12 +47,12 @@ describe 'Flor procedures' do
 
     it 'pushes f.ret by default' do
 
-      flon = %{
+      flor = %{
         "le silence"
         push f.l
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 'le silence' ])
@@ -61,7 +61,7 @@ describe 'Flor procedures' do
 
     it 'pushes the value of the last child' do
 
-      flon = %{
+      flor = %{
         0
         push f.l 1
         push f.l 1 2
@@ -72,7 +72,7 @@ describe 'Flor procedures' do
           4
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 1, 2, 3, 4 ])
@@ -81,12 +81,12 @@ describe 'Flor procedures' do
 
     it 'leaves the current f.ret intact' do
 
-      flon = %{
+      flor = %{
         'de la mer'
         push f.l 1
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 1 ])
@@ -95,7 +95,7 @@ describe 'Flor procedures' do
 
     it 'pushes' do
 
-      flon = %{
+      flor = %{
         0
         push f.l
           + 0 1
@@ -105,7 +105,7 @@ describe 'Flor procedures' do
           + 2 3
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 1, 3, 5 ])
@@ -117,12 +117,12 @@ describe 'Flor procedures' do
 
     it 'returns the pushed value' do
 
-      flon = %{
+      flor = %{
         'vercors'
         pushr f.l 2
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 2 ])

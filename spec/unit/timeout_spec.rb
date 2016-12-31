@@ -29,12 +29,12 @@ describe 'Flor unit' do
 
     it 'sets a timer' do
 
-      flon = %{
+      flor = %{
         sequence
           stall timeout: 60
       }
 
-      exid = @unit.launch(flon)
+      exid = @unit.launch(flor)
 
       sleep 0.777
 
@@ -60,14 +60,14 @@ describe 'Flor unit' do
 
     it 'triggers after the given time' do
 
-      flon = %{
+      flor = %{
         sequence
           stall timeout: "1s"
       }
 
       t0 = Time.now
 
-      msg = @unit.launch(flon, wait: true)
+      msg = @unit.launch(flor, wait: true)
 
       expect(msg['point']).to eq('terminated')
 
@@ -90,11 +90,11 @@ describe 'Flor unit' do
 
     it 'is removed if the node ends before timing out' do
 
-      flon = %{
+      flor = %{
         sleep '1s' timeout: '1.4s'
       }
 
-      exid = @unit.launch(flon)
+      exid = @unit.launch(flor)
 
       sleep 0.777
 

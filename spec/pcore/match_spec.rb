@@ -19,11 +19,11 @@ describe 'Flor procedures' do
 
     it "returns empty array when it doesn't match" do
 
-      flon = %{
+      flor = %{
         match "alpha", /bravo/
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => [] })
@@ -31,14 +31,14 @@ describe 'Flor procedures' do
 
     it "returns the array of matches" do
 
-      flon = %{
+      flor = %{
         push f.l
           match "stuff", /stuf*/
         push f.l
           match "stuff", /s(tu)(f*)/
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ %w[ stuff ], %w[ stuff tu ff ] ])
@@ -46,13 +46,13 @@ describe 'Flor procedures' do
 
     it 'turns the second argument into a regular expression' do
 
-      flon = %{
+      flor = %{
         push f.l
           #match "stuff", "^stuf*$"
           match "stuff", "stuf*"
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ %w[ stuff ] ])
@@ -63,7 +63,7 @@ describe 'Flor procedures' do
 
     it 'works alongside "ife"' do
 
-      flon = %{
+      flor = %{
         push f.l
           ife
             match? "stuff", "^stuf*$"
@@ -81,7 +81,7 @@ describe 'Flor procedures' do
             'f'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a d f ])

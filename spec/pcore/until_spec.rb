@@ -21,12 +21,12 @@ describe 'Flor procedures' do
 
     it 'has no effect when it has no children' do
 
-      flon = %{
+      flor = %{
         7
         until _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -36,7 +36,7 @@ describe 'Flor procedures' do
 
     it 'loops until the condition evaluates to true' do
 
-      flon = %{
+      flor = %{
         123
         set f.a 1
         until
@@ -45,7 +45,7 @@ describe 'Flor procedures' do
             + f.a 1
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -56,7 +56,7 @@ describe 'Flor procedures' do
 
     it 'accepts a tag:' do
 
-      flon = %{
+      flor = %{
         456
         set f.a 1
         until tag: 'xx'
@@ -64,7 +64,7 @@ describe 'Flor procedures' do
           set f.a (+ f.a 1)
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['a']).to eq(2)
@@ -84,7 +84,7 @@ describe 'Flor procedures' do
 
     it "returns the last child's f.ret" do
 
-      flon = %{
+      flor = %{
         789
         set f.a 1
         #until; = f.a 3
@@ -94,7 +94,7 @@ describe 'Flor procedures' do
           + f.a 10
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -104,14 +104,14 @@ describe 'Flor procedures' do
 
     it "doesn't iterate if the condition is immediately true" do
 
-      flon = %{
+      flor = %{
         123
         set f.a 1
         until; = f.a 1
           6
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -121,7 +121,7 @@ describe 'Flor procedures' do
 
     it 'stops upon meeting "break"' do
 
-      flon = %{
+      flor = %{
         123
         set f.a 1
         until
@@ -129,7 +129,7 @@ describe 'Flor procedures' do
           break _ # will return $(f.ret) (which is 123)
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -140,14 +140,14 @@ describe 'Flor procedures' do
 
     it 'stops upon meeting "break x" and returns x' do
 
-      flon = %{
+      flor = %{
         set f.a 1
         until
           = f.a 3
           break "over"
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -158,7 +158,7 @@ describe 'Flor procedures' do
 
     it 'skips upon meeting "continue"' do
 
-      flon = %{
+      flor = %{
         set f.a 0
         until
           = f.a 3
@@ -168,7 +168,7 @@ describe 'Flor procedures' do
           push f.l 'x'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -178,7 +178,7 @@ describe 'Flor procedures' do
 
     it 'respects an outer "break"' do
 
-      flon = %{
+      flor = %{
         until
           false
           push f.l 0
@@ -188,7 +188,7 @@ describe 'Flor procedures' do
             outer-break 'x'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -199,7 +199,7 @@ describe 'Flor procedures' do
 
     it 'can do an outer break ref: x' do
 
-      flon = %{
+      flor = %{
         456
         until tag: 'main'
           false
@@ -209,7 +209,7 @@ describe 'Flor procedures' do
             break 'x', ref: 'main'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -220,7 +220,7 @@ describe 'Flor procedures' do
 
     it 'respects an outer "continue"' do
 
-      flon = %{
+      flor = %{
         123
         set f.i 0
         set f.j 0
@@ -236,7 +236,7 @@ describe 'Flor procedures' do
           push f.l "ii$(f.i)"
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -247,7 +247,7 @@ describe 'Flor procedures' do
 
     it 'can do an outer continue ref: x' do
 
-      flon = %{
+      flor = %{
         set f.i 0
         set f.j 0
         until (= f.i 2), tag: 'out'
@@ -261,7 +261,7 @@ describe 'Flor procedures' do
           push f.l "ii$(f.i)"
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -274,7 +274,7 @@ describe 'Flor procedures' do
 
       it 'accepts "break" when breaking' do
 
-        flon = %{
+        flor = %{
           concurrence
             until tag: 'x0'
               sequence
@@ -288,7 +288,7 @@ describe 'Flor procedures' do
               break 1 ref: 'x0'
         }
 
-        r = @executor.launch(flon, archive: true)
+        r = @executor.launch(flor, archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(1)
@@ -312,7 +312,7 @@ describe 'Flor procedures' do
 
       it 'accepts "break" when continuing' do
 
-        flon = %{
+        flor = %{
           set l []
           concurrence
             until false tag: 'x0'
@@ -335,7 +335,7 @@ describe 'Flor procedures' do
               break 1 ref: 'x0'
         }
 
-        r = @executor.launch(flon, archive: true)
+        r = @executor.launch(flor, archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(1)
@@ -354,7 +354,7 @@ describe 'Flor procedures' do
 
       it 'rejects "continue" when breaking' do
 
-        flon = %{
+        flor = %{
           set l []
           concurrence
             until false tag: 'x0'
@@ -377,7 +377,7 @@ describe 'Flor procedures' do
               continue 1 ref: 'x0'
         }
 
-        r = @executor.launch(flon, archive: true)
+        r = @executor.launch(flor, archive: true)
 
         expect(r['point']).to eq('terminated')
         #expect(r['payload']['ret']).to eq(0) # concurrence takes 1st reply
@@ -400,12 +400,12 @@ describe 'Flor procedures' do
 
     it 'has no effect when it has no children' do
 
-      flon = %{
+      flor = %{
         8
         while _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -415,7 +415,7 @@ describe 'Flor procedures' do
 
     it 'loops until the condition evaluates to false' do
 
-      flon = %{
+      flor = %{
         set f.a 1
         while
           f.a < 3
@@ -424,7 +424,7 @@ describe 'Flor procedures' do
           - f.a 1
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -435,7 +435,7 @@ describe 'Flor procedures' do
 
     it "returns the last child's f.ret" do
 
-      flon = %{
+      flor = %{
         set f.a 1
         #while; < f.a 3
         while (< f.a 3)
@@ -444,7 +444,7 @@ describe 'Flor procedures' do
           + f.a 20
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -454,13 +454,13 @@ describe 'Flor procedures' do
 
     it "doesn't iterate if the condition is immediately false" do
 
-      flon = %{
+      flor = %{
         set f.a 0
         while; = f.a 1
           #6
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -470,7 +470,7 @@ describe 'Flor procedures' do
 
     it 'stops upon meeting "break"' do
 
-      flon = %{
+      flor = %{
         456
         set f.i 0
         while (< f.i 4)
@@ -479,7 +479,7 @@ describe 'Flor procedures' do
           set f.i (+ f.i 1)
       }
 
-      r = @executor.launch(flon, :payload => { 'l' => [] })
+      r = @executor.launch(flor, :payload => { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -490,7 +490,7 @@ describe 'Flor procedures' do
 
     it 'stops upon meeting "break x" and returns x' do
 
-      flon = %{
+      flor = %{
         set f.i 0
         while (< f.i 4)
           push f.l f.i
@@ -498,7 +498,7 @@ describe 'Flor procedures' do
           set f.i (+ f.i 1)
       }
 
-      r = @executor.launch(flon, :payload => { 'l' => [] })
+      r = @executor.launch(flor, :payload => { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -509,7 +509,7 @@ describe 'Flor procedures' do
 
     it 'skips upon meeting "continue"' do
 
-      flon = %{
+      flor = %{
         123
         set f.i 0
         while (< f.i 3)
@@ -519,7 +519,7 @@ describe 'Flor procedures' do
           push f.l "b$(f.i)"
       }
 
-      r = @executor.launch(flon, :payload => { 'l' => [] })
+      r = @executor.launch(flor, :payload => { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -530,7 +530,7 @@ describe 'Flor procedures' do
 
     it 'respects an outer "break"' do
 
-      flon = %{
+      flor = %{
         set i 0
         while (< i 3)
           set outer-break break
@@ -543,7 +543,7 @@ describe 'Flor procedures' do
             outer-break 'done.' if j = 2
       }
 
-      r = @executor.launch(flon, :payload => { 'l' => [] })
+      r = @executor.launch(flor, :payload => { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -554,7 +554,7 @@ describe 'Flor procedures' do
 
     it 'respects an outer "continue"' do
 
-      flon = %{
+      flor = %{
         set i 0
         while (< i 3)
           set outer-continue continue
@@ -567,7 +567,7 @@ describe 'Flor procedures' do
             push f.l "i$(i)j$(j)"
       }
 
-      r = @executor.launch(flon, :payload => { 'l' => [] })
+      r = @executor.launch(flor, :payload => { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 

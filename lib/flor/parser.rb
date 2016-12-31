@@ -157,7 +157,7 @@ module Flor
       seq(:panode, i, :pstart, :eol, :ws_star, :line, '*', :eol, :pend)
     end
 
-    def flon(i); rep(:flon, i, :line, 0); end
+    def flor(i); rep(:flor, i, :line, 0); end
 
     # rewriting
 
@@ -345,7 +345,7 @@ module Flor
       end
     end
 
-    def rewrite_flon(t)
+    def rewrite_flor(t)
 
       prev = root = Nod.new(nil)
 
@@ -357,7 +357,7 @@ module Flor
 
       root.children.count == 1 ? root.children.first.to_a : root.to_a
     end
-    alias rewrite_panode rewrite_flon
+    alias rewrite_panode rewrite_flor
 
     def parse(input, fname=nil, opts={})
 

@@ -19,7 +19,7 @@ describe 'Flor core' do
 
     it 'is derefenced upon application' do
 
-      flon = %{
+      flor = %{
         set f.a
           sequence
         #$(f.a)
@@ -28,7 +28,7 @@ describe 'Flor core' do
           2
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)
@@ -39,12 +39,12 @@ describe 'Flor core' do
 
     it 'yields the desired value' do
 
-      flon = %{
+      flor = %{
         set f.c f.a.0
         f.a.0.b
       }
 
-      r = @executor.launch(flon, payload: { 'a' => [ { 'b' => 'c' } ] })
+      r = @executor.launch(flor, payload: { 'a' => [ { 'b' => 'c' } ] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['c']).to eq({ 'b' => 'c' })
@@ -56,14 +56,14 @@ describe 'Flor core' do
 
     it 'gives access to the node' do
 
-      flon = %{
+      flor = %{
         push f.l node.nid
         push f.l "$(node.nid)"
         push f.l node.heat0
         push f.l "$(node.heat0)"
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ 0_0_1 0_1_1 node.heat0 _dqs ])

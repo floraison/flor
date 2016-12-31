@@ -21,7 +21,7 @@ describe 'Flor punit' do
 
     it 'breaks an "until" from outside' do
 
-      flon = %{
+      flor = %{
         set l []
         concurrence
           until false tag: 'x0'
@@ -32,7 +32,7 @@ describe 'Flor punit' do
             break ref: 'x0'
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -53,7 +53,7 @@ describe 'Flor punit' do
 
     it 'breaks a "cursor" from outside' do
 
-      flon = %{
+      flor = %{
         set l []
         concurrence
           cursor tag: 'x0'
@@ -64,7 +64,7 @@ describe 'Flor punit' do
             break ref: 'x0'
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -88,7 +88,7 @@ describe 'Flor punit' do
 
     it 'continues an "until" from outside' do
 
-      flon = %{
+      flor = %{
         set l []
         concurrence
           sequence
@@ -103,7 +103,7 @@ describe 'Flor punit' do
             continue ref: 'x0'
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -124,7 +124,7 @@ describe 'Flor punit' do
 
     it 'continues a "cursor" from outside' do
 
-      flon = %{
+      flor = %{
         set l []
         concurrence
           cursor tag: 'x'
@@ -139,7 +139,7 @@ describe 'Flor punit' do
             break ref: 'x'
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)

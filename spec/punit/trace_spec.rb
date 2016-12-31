@@ -28,11 +28,11 @@ describe 'Flor punit' do
 
     it 'traces' do
 
-      flon = %{
+      flor = %{
         trace 'hello'
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => nil })
@@ -48,7 +48,7 @@ describe 'Flor punit' do
 
     it 'traces in sequence' do
 
-      flon = %{
+      flor = %{
         sequence
           trace 'a'
           set x 0
@@ -57,7 +57,7 @@ describe 'Flor punit' do
           trace 'c'
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => nil })
@@ -71,13 +71,13 @@ describe 'Flor punit' do
 
     it "doesn't mind tag:" do
 
-      flon = %{
+      flor = %{
         trap tag: 'x'
           def msg; trace "$(msg.point):x"
         trace 'a', tag: 'x'
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
 
@@ -98,11 +98,11 @@ describe 'Flor punit' do
 
       @unit.hooker.add('journal', Flor::Journal)
 
-      flon = %{
+      flor = %{
         trace 'a', 'b', tag: 'x', 'c'
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -150,12 +150,12 @@ describe 'Flor punit' do
 
     it "doesn't touch f.ret" do
 
-      flon = %{
+      flor = %{
         123
         trace 'a'
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(123)

@@ -58,7 +58,7 @@ module Flor
       #h = opts.merge(prune: false, rewrite: false)
       #p Flor::Lang.parse(tree, h[:fname], h)
         # TODO re-parse and indicate what went wrong...
-      fail ArgumentError.new('flon parse failure')
+      fail ArgumentError.new('flor parse failure')
     end
 
     pl = opts[:payload] || opts[:fields] || {}

@@ -19,13 +19,13 @@ describe 'Flor punit' do
 
     it 'loops' do
 
-      flon = %{
+      flor = %{
         loop
           push f.l "$(nid)"
           break _ if "$(nid)" == "0_1_0_0-2"
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -35,14 +35,14 @@ describe 'Flor punit' do
 
     it 'understands "continue"' do
 
-      flon = %{
+      flor = %{
         loop
           continue _ if "$(nid)" == "0_0_0_0-1"
           push f.l "$(nid)"
           break _ if "$(nid)" == "0_2_0_0-2"
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -52,12 +52,12 @@ describe 'Flor punit' do
 
     it 'goes {nid}-n for the subsequent cycles' do
 
-      flon = %{
+      flor = %{
         loop
           break _ if "$(nid)" == "0_0_0_0-3"
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(
         @executor.journal
@@ -90,13 +90,13 @@ describe 'Flor punit' do
 
     it 'takes the first att child as tag' do
 
-      flon = %{
+      flor = %{
         loop 'xyz'
           break _ if "$(nid)" == "0_1_0_0-2"
           #fail "hard"
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
 

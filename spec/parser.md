@@ -7,7 +7,7 @@
 
 ## atoms
 
-```flon
+```flor
   1
 ```
 parses to
@@ -16,7 +16,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   11.01
 ```
 parses to
@@ -25,7 +25,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   true
 ```
 parses to
@@ -34,7 +34,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   false
 ```
 parses to
@@ -43,7 +43,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   null
 ```
 parses to
@@ -52,7 +52,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   abc
 ```
 parses to
@@ -61,7 +61,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   'def'
 ```
 parses to
@@ -70,7 +70,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   "ghi"
 ```
 parses to
@@ -79,7 +79,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   /jkl/
 ```
 parses to
@@ -88,7 +88,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   /jkl/i
 ```
 parses to
@@ -97,7 +97,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   /jkl\/3/i
 ```
 parses to
@@ -106,7 +106,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   /jkl/i / 1
 ```
 parses to
@@ -120,7 +120,7 @@ parses to
 
 ## arrays
 
-```flon
+```flor
   []
 ```
 parses to
@@ -129,7 +129,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   [ 1, 2, 3 ]
 ```
 parses to
@@ -140,7 +140,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   [ 1 2 3 ]
 ```
 parses to
@@ -151,7 +151,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   [1 2
   3]
 ```
@@ -164,7 +164,7 @@ parses to
 
 ## objects
 
-```flon
+```flor
   {}
 ```
 parses to
@@ -173,7 +173,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   { a: A, b: 2, c: true }
 ```
 parses to
@@ -186,7 +186,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   { a: A b: 2 c: true }
 ```
 parses to
@@ -199,7 +199,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   { a: A # ah ah ah
     b: 2 c: # oh oh oh
       true }
@@ -215,7 +215,7 @@ parses to
 
 ## operations
 
-```flon
+```flor
   10 + 11 - 5
 ```
 parses to
@@ -230,7 +230,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   1 + 1 * 2
 ```
 parses to
@@ -245,7 +245,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   + 10 11 12
 ```
 parses to
@@ -258,7 +258,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   +
     10
     11
@@ -274,7 +274,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   (+ 10 11 12)
 ```
 parses to
@@ -287,7 +287,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   (10 + 11 + 12)
 ```
 parses to
@@ -300,7 +300,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   10 -5
 ```
 parses to
@@ -312,7 +312,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   10 + -5
 ```
 parses to
@@ -324,7 +324,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   + 10 5
 ```
 parses to
@@ -336,7 +336,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   - 10 -5
 ```
 parses to
@@ -349,7 +349,7 @@ parses to
 
 ## lines
 
-```flon
+```flor
   sequence
 ```
 parses to
@@ -358,7 +358,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence
     a
     b
@@ -372,7 +372,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence a b
 ```
 parses to
@@ -384,7 +384,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence a, vars: 1, timeout: 1h, b
 ```
 parses to
@@ -398,7 +398,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence a: 1 + 1, 2
 ```
 parses to
@@ -418,7 +418,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence
     define sum a b
       +
@@ -444,7 +444,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence vars: {}
     task nada, cc: []
 ```
@@ -461,7 +461,7 @@ parses to
 
 ## lines with regexes
 
-```flon
+```flor
   match v.a /hello world/
 ```
 parses to
@@ -473,7 +473,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   match v.a, /hello world/
 ```
 parses to
@@ -486,7 +486,7 @@ parses to
 ---
 
 (pending)
-```flon
+```flor
   hello /world/
 ```
 parses to
@@ -495,7 +495,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   hello, /world/
 ```
 parses to
@@ -504,7 +504,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   /hello/ / 'world'
 ```
 parses to
@@ -517,7 +517,7 @@ parses to
 
 ## comments
 
-```flon
+```flor
   sequence # long time
     a
     b # no see
@@ -531,7 +531,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence # slash slash
     a
     b # baby
@@ -547,7 +547,7 @@ parses to
 
 ## line breaks
 
-```flon
+```flor
   [ 1, 2 # trois
     4 ]
 ```
@@ -559,7 +559,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   [ 1, 2, # trois
     4 ]
 ```
@@ -571,7 +571,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   [ 1,
   
   2,
@@ -587,7 +587,7 @@ parses to
 
 ---
 
-```flon
+```flor
   { a: "anthracite" # comment
     b: "blue-yellow" cc: "carmin"
   }
@@ -602,7 +602,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence a, b, [ 1 # in the middle
     2], c
 ```
@@ -617,7 +617,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence a, b, [ 1
     2], c
 ```
@@ -632,7 +632,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence a, b, [ 1 \
     2], c
 ```
@@ -647,7 +647,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence a, b,
     c
 ```
@@ -661,7 +661,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   map \
     [ 1, 2 ]
     fun
@@ -677,7 +677,7 @@ parses to
 
 ## parentheses
 
-```flon
+```flor
   sequence timeout: (+ 7 8 "h")
     a
     b
@@ -701,7 +701,7 @@ parses to
 
 ## dollar
 
-```flon
+```flor
   sequence
     f.a
     "$(f.a)"
@@ -723,7 +723,7 @@ parses to
 
 ## semicolon
 
-```flon
+```flor
   map [ 1, 2 ]; def x; + 1 x
 ```
 parses to
@@ -741,7 +741,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence; a;; b;; c
 ```
 parses to
@@ -752,7 +752,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence
 ;a
     b;; c
@@ -765,7 +765,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   sequence; a | b | c
 ```
 parses to
@@ -778,7 +778,7 @@ parses to
 
 ## suffix if and unless
 
-```flon
+```flor
   push 7 if a > b
 ```
 parses to
@@ -790,7 +790,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   push 8 unless a > b
 ```
 parses to
@@ -802,7 +802,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   #a > b timeout: "3d"
   > a b timeout: "3d"
 ```
@@ -818,7 +818,7 @@ parses to
 
 ## misc
 
-```flon
+```flor
   { sto_uri: (ife; true | 10 | 11) a: 1 }
 ```
 parses to
@@ -834,7 +834,7 @@ parses to
 ```
 ---
 
-```flon
+```flor
   { sto_uri: (
     ife
       true
@@ -855,7 +855,7 @@ parses to
 
 ---
 
-```flon
+```flor
   set f.d { a: 0 }
 ```
 parses to

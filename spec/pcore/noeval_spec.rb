@@ -19,13 +19,13 @@ describe 'Flor procedures' do
 
     it 'leaves f.ret as is' do
 
-      flon = %{
+      flor = %{
         sequence
           1
           noeval _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(1)
@@ -33,13 +33,13 @@ describe 'Flor procedures' do
 
     it "doesn't let its children getting evaluated" do
 
-      flon = %{
+      flor = %{
         set a 1
         noeval
           set a 2
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(1)
@@ -50,13 +50,13 @@ describe 'Flor procedures' do
 
     it 'is equivalent to "noeval"' do
 
-      flon = %{
+      flor = %{
         set a 1
         _
           set a 2
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(1)
@@ -64,13 +64,13 @@ describe 'Flor procedures' do
 
     it 'stands on its own' do
 
-      flon = %{
+      flor = %{
         set a 1
         _
         set a 2
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(2)

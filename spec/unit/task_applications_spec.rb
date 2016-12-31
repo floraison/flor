@@ -28,11 +28,11 @@ describe 'Flor unit' do
 
     it 'can be "referred" directly' do
 
-      flon = %{
+      flor = %{
         alpha
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
 
@@ -45,11 +45,11 @@ describe 'Flor unit' do
 
     it 'can be "applied" directly' do
 
-      flon = %{
+      flor = %{
         alpha _
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('alpha')
@@ -60,11 +60,11 @@ describe 'Flor unit' do
 
     it 'passes attributes' do
 
-      flon = %{
+      flor = %{
         alpha a: 0, b: 1
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload'].keys).to eq(%w[ ret seen ])
@@ -74,12 +74,12 @@ describe 'Flor unit' do
 
     it 'preserves "atts"' do
 
-      flon = %{
+      flor = %{
         set f.atts { a: 0, b: -1, c: 2 }
         alpha a: 0, b: 1, d: 3
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload'].keys).to eq(%w[ ret atts seen ])
@@ -94,14 +94,14 @@ describe 'Flor unit' do
 
     it 'respects postfix conditionals' do
 
-      flon = %{
+      flor = %{
         set i 1
         alpha x: 0 if i == 0
         alpha x: 1 if i == 1
         alpha x: 2 unless i == 2
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
 
@@ -115,11 +115,11 @@ describe 'Flor unit' do
 
     it 'can be cancelled' do
 
-      flon = %{
+      flor = %{
         task 'bravo' x: 0
       }
 
-      r = @unit.launch(flon, wait: '0 task')
+      r = @unit.launch(flor, wait: '0 task')
 
       expect(r['point']).to eq('task')
       expect(r['nid']).to eq('0')

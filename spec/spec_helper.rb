@@ -124,7 +124,7 @@ class RSpec::Core::ExampleGroup
 
       lin = -1
       mod = :out
-      flon = []
+      flor = []
       rub = []
       sta = :active
 
@@ -148,27 +148,27 @@ class RSpec::Core::ExampleGroup
 
           mod = :ruby
 
-        elsif mod == :out && line.match(/\A```flon\b/)
+        elsif mod == :out && line.match(/\A```flor\b/)
 
           lin = i + 1
-          mod = :flon
+          mod = :flor
 
         elsif line == "```\n"
 
           if mod == :ruby
 
-            current << [ lin, flon.join, rub.join, sta ]
+            current << [ lin, flor.join, rub.join, sta ]
 
             lin = -1
             rub = []
-            flon = []
+            flor = []
             sta = :active
           end
           mod = :out
 
         elsif mod != :out
 
-          (mod == :ruby ? rub : flon) << line
+          (mod == :ruby ? rub : flor) << line
         end
       end
 
@@ -178,9 +178,9 @@ class RSpec::Core::ExampleGroup
 
         context(con) do
 
-          li_ra_ru_pn_s.each do |lin, flon, rub, sta|
+          li_ra_ru_pn_s.each do |lin, flor, rub, sta|
 
-            ra = flon.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
+            ra = flor.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
             ra = "#{ra[0, 60]}..." if ra.length > 60
             title = "parses li#{lin} `#{ra}`"
 
@@ -191,7 +191,7 @@ class RSpec::Core::ExampleGroup
             elsif sta == :pending
               pending(title)
             else
-              it(title) { expect(Flor::Lang.parse(flon)).to eqt(ru) }
+              it(title) { expect(Flor::Lang.parse(flor)).to eqt(ru) }
             end
           end
         end

@@ -19,13 +19,13 @@ describe 'Flor procedures' do
 
     it 'leaves f.ret as is' do
 
-      flon = %{
+      flor = %{
         sequence
           1
           noret _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(1)
@@ -33,14 +33,14 @@ describe 'Flor procedures' do
 
     it "doesn't mind attributes and children" do
 
-      flon = %{
+      flor = %{
         2
         noret "hello"
         noret
           [ 1, 2, 3 ]
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)

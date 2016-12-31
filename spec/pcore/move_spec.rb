@@ -21,14 +21,14 @@ describe 'Flor punit' do
 
     it 'fails if the target cannot be found' do
 
-      flon = %{
+      flor = %{
         cursor
           push f.l 'a'
           move to: 'final'
           push f.l 'b'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('failed')
       expect(r['payload']['l']).to eq(%w[ a ])
@@ -38,7 +38,7 @@ describe 'Flor punit' do
 
     it 'moves to a tag' do
 
-      flon = %{
+      flor = %{
         cursor
           push f.l 'a'
           move to: 'final'
@@ -46,7 +46,7 @@ describe 'Flor punit' do
           push f.l 'c' tag: 'final'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
@@ -54,7 +54,7 @@ describe 'Flor punit' do
 
     it 'moves to a string argument' do
 
-      flon = %{
+      flor = %{
         cursor
           push f.l 'a'
           move to: 'c'
@@ -62,7 +62,7 @@ describe 'Flor punit' do
           push f.l 'c'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
@@ -70,7 +70,7 @@ describe 'Flor punit' do
 
     it 'moves to a string' do
 
-      flon = %{
+      flor = %{
         cursor
           push f.l 'a'
           move to: 'c'
@@ -83,7 +83,7 @@ describe 'Flor punit' do
           push f.l 'g'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a d g ])
@@ -91,7 +91,7 @@ describe 'Flor punit' do
 
     it 'moves to a name' do
 
-      flon = %{
+      flor = %{
         define here; noret
         define there; noret
         cursor
@@ -106,7 +106,7 @@ describe 'Flor punit' do
           push f.l 'e'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c e ])
@@ -114,7 +114,7 @@ describe 'Flor punit' do
 
     it 'accepts a symbol as to:' do
 
-      flon = %{
+      flor = %{
         cursor
           push f.l 'a'
           move to: here
@@ -123,7 +123,7 @@ describe 'Flor punit' do
           push f.l 'c'
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
@@ -131,7 +131,7 @@ describe 'Flor punit' do
 
     it 'can move a cursor by its tag name' do
 
-      flon = %{
+      flor = %{
         set l []
         concurrence
           cursor tag: 'x0'
@@ -144,7 +144,7 @@ describe 'Flor punit' do
             push l 1
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq([ 0, 'a', 1, 'b' ])

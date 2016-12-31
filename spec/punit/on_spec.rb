@@ -28,7 +28,7 @@ describe 'Flor punit' do
 
     it 'traps signals' do
 
-      flon = %{
+      flor = %{
         set l []
         on 'approve'
           push l 'approved'
@@ -37,7 +37,7 @@ describe 'Flor punit' do
         push l 'done.'
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq(%w[ requested done. approved ])
@@ -45,7 +45,7 @@ describe 'Flor punit' do
 
     it 'traps signals and their payload' do
 
-      flon = %{
+      flor = %{
         set l []
         push l 'a'
         on 'approve'
@@ -56,7 +56,7 @@ describe 'Flor punit' do
         push l 'c'
       }
 
-      r = @unit.launch(flon, wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq(%w[ a c approve b ])

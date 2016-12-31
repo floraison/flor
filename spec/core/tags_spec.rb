@@ -19,12 +19,12 @@ describe 'Flor core' do
 
     it 'induces messages to be tagged' do
 
-      flon = %{
+      flor = %{
         sequence tag: 'aa'
           sequence tag: 'bb'
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
 
@@ -63,12 +63,12 @@ describe 'Flor core' do
 
     it 'lets multiple tags be flagged at once' do
 
-      flon = %{
+      flor = %{
         sequence tag: 'aa', tag: 'bb'
           sequence tags: [ 'cc', 'dd' ]
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
 
@@ -115,23 +115,23 @@ describe 'Flor core' do
 
     it 'fails on non-string attributes' do
 
-      flon = %{
+      flor = %{
         sequence tag: aa
           1
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('failed')
     end
 
     it 'rejects procs as tags' do
 
-      flon = %{
+      flor = %{
         sequence tag: sequence
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq('cannot use proc "sequence" as tag name')
@@ -139,12 +139,12 @@ describe 'Flor core' do
 
     it 'accepts functions as tags' do
 
-      flon = %{
+      flor = %{
         define x; _
         sequence tag: x
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
 
@@ -162,7 +162,7 @@ describe 'Flor core' do
 
     it 'accepts functions as tags (closure)' do
 
-      flon = %{
+      flor = %{
         sequence
           define make_adder x
             def y
@@ -173,7 +173,7 @@ describe 'Flor core' do
             make_adder 3
           add3 7
       }
-      flon = %{
+      flor = %{
         define make_tag x
           def; sequence tag: x
         define t1; _
@@ -182,7 +182,7 @@ describe 'Flor core' do
         v _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
 

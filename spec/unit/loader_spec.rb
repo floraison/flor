@@ -28,9 +28,9 @@ describe Flor::Loader do
   # ├── lib
   # │   ├── flows
   # │   │   ├── net.example
-  # │   │   │   └── flow0.flon
+  # │   │   │   └── flow0.flor
   # │   │   └── org.example
-  # │   │       └── flow0.flon
+  # │   │       └── flow0.flor
   # │   └── taskers
   # │       ├── alice
   # │       │   └── dot.json
@@ -48,7 +48,7 @@ describe Flor::Loader do
   #     │   │       └── dot.json
   #     │   └── lib
   #     │       ├── flows
-  #     │       │   └── flow1.flon
+  #     │       │   └── flow1.flor
   #     │       └── taskers
   #     │           └── bob
   #     │               └── dot.json
@@ -58,7 +58,7 @@ describe Flor::Loader do
   #         │       └── dot.json
   #         └── lib
   #             ├── flows
-  #             │   └── flow1.flon
+  #             │   └── flow1.flor
   #             └── taskers
   #                 └── .gitkeep
 

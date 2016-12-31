@@ -19,11 +19,11 @@ describe 'Flor procedures' do
 
     it 'returns immediately if empty' do
 
-      flon = %{
+      flor = %{
         sequence _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({})
@@ -31,7 +31,7 @@ describe 'Flor procedures' do
 
     it 'chains children' do
 
-      flon = %{
+      flor = %{
         sequence
           set f.a
             0
@@ -39,7 +39,7 @@ describe 'Flor procedures' do
             1
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'a' => 0, 'b' => 1, 'ret' => nil })
@@ -47,13 +47,13 @@ describe 'Flor procedures' do
 
     it 'returns the value of last child as $(ret)' do
 
-      flon = %{
+      flor = %{
         sequence
           1
           2
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 2 })
@@ -61,13 +61,13 @@ describe 'Flor procedures' do
 
     it 'keeps track of its children' do
 
-      flon = %{
+      flor = %{
         sequence
           0
           stall _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r).to eq(nil)
 

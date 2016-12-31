@@ -19,12 +19,12 @@ describe 'Flor core' do
 
     it 'is accepted' do
 
-      flon = %{
+      flor = %{
         _dump 3: 12
         _dump []: 12
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)

@@ -19,11 +19,11 @@ describe 'Flor procedures' do
 
     it 'returns 0 if empty' do
 
-      flon = %{
+      flor = %{
         + _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 0 })
@@ -31,13 +31,13 @@ describe 'Flor procedures' do
 
     it 'adds two numbers' do
 
-      flon = %{
+      flor = %{
         +
           1
           2
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 3 })
@@ -45,14 +45,14 @@ describe 'Flor procedures' do
 
     it 'adds three numbers' do
 
-      flon = %{
+      flor = %{
         +
           3
           2
           -1
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 4 })
@@ -63,12 +63,12 @@ describe 'Flor procedures' do
 
     it 'substracts' do
 
-      flon = %{
+      flor = %{
         -
           1
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 1 })
@@ -76,7 +76,7 @@ describe 'Flor procedures' do
 
     it 'substracts' do
 
-      flon = %{
+      flor = %{
         -
           3
           2
@@ -84,7 +84,7 @@ describe 'Flor procedures' do
           5
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => -3 })
@@ -92,11 +92,11 @@ describe 'Flor procedures' do
 
     it 'returns 0 if empty' do
 
-      flon = %{
+      flor = %{
         - _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 0 })
@@ -104,11 +104,11 @@ describe 'Flor procedures' do
 
     it 'accepts 3 or more numbers' do
 
-      flon = %{
+      flor = %{
         (- 3 4 5)
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => -6 })
@@ -119,11 +119,11 @@ describe 'Flor procedures' do
 
     it 'returns 1 if empty' do
 
-      flon = %{
+      flor = %{
         * _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 1 })
@@ -131,14 +131,14 @@ describe 'Flor procedures' do
 
     it 'multiplies three numbers' do
 
-      flon = %{
+      flor = %{
         *
           3
           2
           -1
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => -6 })
@@ -149,7 +149,7 @@ describe 'Flor procedures' do
 
     it 'divides' do
 
-      flon = %{
+      flor = %{
         set l []
         push l
           /
@@ -162,7 +162,7 @@ describe 'Flor procedures' do
         l
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 0, 0.5 ])
@@ -170,11 +170,11 @@ describe 'Flor procedures' do
 
     it 'returns 1 when empty' do
 
-      flon = %{
+      flor = %{
         / _
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(1)
@@ -182,14 +182,14 @@ describe 'Flor procedures' do
 
     it 'accepts 3 or more numbers' do
 
-      flon = %{
+      flor = %{
         set l []
         push l (/ 3 4 5)
         push l (/ 3.0 4 5)
         l
       }
 
-      r = @executor.launch(flon)
+      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 0, 0.15 ])

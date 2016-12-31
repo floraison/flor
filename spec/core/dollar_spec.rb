@@ -19,7 +19,7 @@ describe 'Flor core' do
 
     it 'substitutes heads' do
 
-      flon = %{
+      flor = %{
         set f.a "sequ"
         set f.b "ence"
         "$(f.a)$(f.b)"
@@ -27,7 +27,7 @@ describe 'Flor core' do
           push f.l 2
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 1, 2 ])
@@ -36,14 +36,14 @@ describe 'Flor core' do
 
     it "doesn't get in the way of regexps" do
 
-      flon = %{
+      flor = %{
         push f.l
           match "car", /^[bct]ar$/
         push f.l
           match "car", "^[bct]ar$"
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ %w[ car ], %w[ car ] ])
@@ -51,12 +51,12 @@ describe 'Flor core' do
 
     it "substitutes $(node)" do
 
-      flon = %{
+      flor = %{
         push f.l "$(node.nid)"
         push f.l "$(node.heat0)"
       }
 
-      r = @executor.launch(flon, payload: { 'l' => [] })
+      r = @executor.launch(flor, payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ 0_0_1 _dqs ])
