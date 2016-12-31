@@ -52,8 +52,7 @@ module Flor
       a << ' '
     end
 
-    ni = nid ? "#{nd ? _dg : _dim + _dg}#{nid}#{_rs}#{_dg} " : ''
-    a << ni
+    a << "#{nd ? _dg : _dim + _dg}#{nid}#{_rs}#{_dg} " if nid
 
     pt = m['point'][0, 3]
     _pt =
@@ -67,6 +66,9 @@ module Flor
 
     fla = m['flavour']
     a << " #{_lg}#{fla}#{_dg}" if fla
+
+    sta = nd && nd['status']
+    a << " #{_dim}#{_lg}#{(sta[0] || '')[0, 3]}:#{(sta[1] || '')[0, 3]}:#{sta[2]}#{_rs}#{_dg}" if sta
 
     t =
       m['tree']
