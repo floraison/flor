@@ -66,6 +66,13 @@ describe Flor do
 
       expect(Flor.tstamp(t)).to eq('20151219.133000000000')
     end
+
+    it 'turns a UTC Time instance into a String timestamp' do
+
+      t = Time.utc(2017, 1, 1, 8, 16, 00)
+
+      expect(Flor.tstamp(t)).to eq('20170101.081600000000u')
+    end
   end
 
   describe '.to_time' do
@@ -76,6 +83,30 @@ describe Flor do
       t = Flor.to_time(ts)
 
       expect(Flor.tstamp(t)).to eq(ts)
+    end
+
+    it 'turns a Flor timestamp into a Time instance' do
+
+      t = Flor.to_time('20151219.133000000000')
+
+      expect(
+        t.strftime('%Y-%m-%d %H:%M:%S')
+      ).to eq(
+        '2015-12-19 13:30:00'
+      )
+    end
+
+    it 'turns a Flor UTC timestamp into a Time instance' do
+
+      t = Flor.to_time('20170101.081600000000u')
+
+      expect(t.utc?).to eq(true)
+
+      expect(
+        t.strftime('%Y-%m-%d %H:%M:%S %z')
+      ).to eq(
+        '2017-01-01 08:16:00 +0000'
+      )
     end
   end
 
