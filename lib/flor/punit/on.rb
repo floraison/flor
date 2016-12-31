@@ -66,7 +66,6 @@ class Flor::Pro::On < Flor::Macro
       [ '_att', [ [ 'sig', [], l ] ], l ],
       tname
     ], l ]
-      # warning: this could evaluate to something else...
 
     td = [ 'def', [], l ]
     td[1] << [ '_att', [ [ 'msg', [], l ] ], l ]
