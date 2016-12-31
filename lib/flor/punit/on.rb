@@ -23,41 +23,62 @@
 #++
 
 
-class Flor::Pro::On < Flor::Procedure
+class Flor::Pro::On < Flor::Macro
+  #
+  # Traps a signal by name
+  #
+  # Turns
+  # ```
+  # on 'approve'
+  #   task 'bob' mission: 'gather signatures'
+  # ```
+  # into
+  # ```
+  # trap point: 'signal', name: 'approve'
+  #   def msg
+  #     task 'bob' mission: 'gather signatures'
+  # ```
+  #
 
   name 'on'
 
-  def receive_last_att
+  def rewrite
 
-    fid = @executor.counter_next('funs') - 1
-    cid = first_non_att_child_id
+    atts = att_children
+    signame_i = atts.index { |at| at[1].size == 1 }
 
-    fun =
-      [ '_func',
-        { 'nid' => nid, 'cnid' => nil, 'fun' => fid, 'cid' => cid },
-        tree[2]
-      ]
-    msg = apply(fun, [], tree[2], false)
-      .first
-      .merge('noreply' => true, 'from' => parent)
-#puts "msg:"
-#pp msg
+    fail ArgumentError.new(
+      "signal name not found in #{tree.inspect}"
+    ) unless signame_i
 
-    tra = {}
-    tra['flavour'] = 'punit/on'
-    tra['bnid'] = parent || '0' # shouldn't it be [the real] root?
-    tra['points'] = %w[ signal ]
-    tra['tags'] = []
-    tra['heaps'] = []
-    tra['heats'] = []
-    tra['message'] = msg
-    tra['count'] = nil       # TODO `on 'xxx' once: true` or `count: 7`
-    tra['range'] = 'subnid'  # TODO `on 'xxx' range: 'execution'`
-#puts "tra:"
-#pp tra
+    tname = atts[signame_i]
+    tname = Flor.dup(tname[1][0])
+    atts.delete_at(signame_i)
 
-    reply('point' => 'trap','nid' => nid, 'trap' => tra) +
-    reply
+    l = tree[2]
+
+    th = [ 'trap', [], l, *tree[3] ]
+    th[1] << [ '_att', [ [ 'point', [], l ], [ '_sqs', 'signal', l ] ], l ]
+    th[1] << [ '_att', [ [ 'name', [], l ], tname ], l ]
+    atts.each { |ac| th[1] << Flor.dup(ac) }
+
+    th[1] << [ 'set', [
+      [ '_att', [ [ 'sig', [], l ] ], l ],
+      tname
+    ], l ]
+      # warning: this could evaluate to something else...
+
+    td = [ 'def', [], l ]
+    td[1] << [ '_att', [ [ 'msg', [], l ] ], l ]
+    non_att_children.each { |nac| td[1] << Flor.dup(nac) }
+
+    th[1] << td
+
+    m = @message.dup
+    m['tree'] = th
+    m['rewritten'] = true
+
+    m
   end
 end
 

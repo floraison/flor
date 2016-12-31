@@ -49,8 +49,8 @@ describe 'Flor punit' do
         set l []
         push l 'a'
         on 'approve'
-          push l
-          push l _payload.ret
+          push l sig
+          push l msg.payload.ret
         signal 'approve'
           'b'
         push l 'c'
@@ -59,7 +59,7 @@ describe 'Flor punit' do
       r = @unit.launch(flon, wait: true)
 
       expect(r['point']).to eq('terminated')
-      expect(r['vars']['l']).to eq(%w[ a b c approve ])
+      expect(r['vars']['l']).to eq(%w[ a c approve b ])
     end
   end
 end

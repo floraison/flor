@@ -274,6 +274,7 @@ module Flor
 
   def self.print_tree(tree, nid='0', opts={})
 
+#pp tree if nid == '0'
     headers = opts[:headers]; headers = true if headers.nil?
 
     _rs, _dg, _yl = colours(opts)

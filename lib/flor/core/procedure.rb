@@ -557,6 +557,10 @@ class Flor::Procedure < Flor::Node
   end
 end
 
+# For now, a marker class
+#
+class Flor::Macro < Flor::Procedure; end
+
 # A namespace for primitive procedures
 #
 module Flor::Pro; end
