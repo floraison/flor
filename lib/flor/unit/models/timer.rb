@@ -43,11 +43,9 @@ module Flor
       }
     end
 
-    # countering tstamp being a String with jdbc sqlite...
-    #
     def ntime_t
 
-      @ntime_t ||= (ntime.is_a?(String) ? Time.parse(ntime) : ntime)
+      @ntime_t ||= Flor.to_time(ntime)
     end
   end
 end

@@ -11,8 +11,8 @@ Sequel.migration do
       String :point, null: false # 'execute', 'task', 'receive', 'schedule', ...
       File :content # JSON
       String :status, null: false
-      Time :ctime
-      Time :mtime
+      String :ctime
+      String :mtime
 
       index :exid
     end
@@ -24,8 +24,8 @@ Sequel.migration do
       String :exid, null: false
       File :content # JSON
       String :status, null: false # 'active' or something else like 'archived'
-      Time :ctime
-      Time :mtime
+      String :ctime
+      String :mtime
 
       index :exid
     end
@@ -38,11 +38,11 @@ Sequel.migration do
       String :nid, null: false
       String :type, null: false # 'at' or 'cron'
       String :schedule, null: false # '20141128.103239' or '00 23 * * *'
-      Time :ntime # next time
+      String :ntime # next time
       File :content # JSON msg to trigger
       String :status, null: false
-      Time :ctime
-      Time :mtime
+      String :ctime
+      String :mtime
 
       index :exid
       index [ :exid, :nid ]
@@ -66,8 +66,8 @@ Sequel.migration do
       File :content # JSON msg to trigger
       #
       String :status, null: false
-      Time :ctime
-      Time :mtime
+      String :ctime
+      String :mtime
 
       index :exid
       index [ :exid, :nid ]
@@ -81,7 +81,7 @@ Sequel.migration do
       String :nid, null: true
       String :tracer, null: false # 'executor', 'trace'
       String :text, null: false # 'blah blah blah'
-      Time :tstamp
+      String :tstamp
 
       index :exid
     end

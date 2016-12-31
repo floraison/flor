@@ -45,7 +45,7 @@ describe 'Flor punit' do
       expect(t.exid).to eq(exid)
       expect(t.type).to eq('in')
       expect(t.schedule).to eq('1y')
-      expect(t.ntime_t.year).to eq(Time.now.year + 1)
+      expect(t.ntime_t.year).to eq(Time.now.utc.year + 1)
 
       expect(td['message']['point']).to eq('receive')
     end
@@ -69,7 +69,7 @@ describe 'Flor punit' do
       expect(t.exid).to eq(exid)
       expect(t.type).to eq('in')
       expect(t.schedule).to eq('2y')
-      expect(t.ntime_t.year).to eq(Time.now.year + 2)
+      expect(t.ntime_t.year).to eq(Time.now.utc.year + 2)
 
       expect(td['message']['point']).to eq('receive')
     end
@@ -87,6 +87,7 @@ describe 'Flor punit' do
     end
 
     it 'does not sleep when t <= 0' do
+
       flor = %{
         sleep '0s'
       }

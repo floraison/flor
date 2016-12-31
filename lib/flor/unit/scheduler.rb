@@ -334,7 +334,7 @@ module Flor
 
     def trigger_timers
 
-      now = Time.now
+      now = Time.now.utc
 
       loop do
 

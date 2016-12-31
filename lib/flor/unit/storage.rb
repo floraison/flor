@@ -159,12 +159,13 @@ module Flor
         ex['size'] = data.length
 
         synchronize do
+
           @db[:flor_executions]
             .where(id: i)
             .update(
               content: data,
               status: status,
-              mtime: Time.now)
+              mtime: Flor.tstamp)
         end
       else
 
@@ -172,6 +173,9 @@ module Flor
         ex['size'] = data.length
 
         synchronize do
+
+          n = Flor.tstamp
+
           ex['id'] =
             @db[:flor_executions]
               .insert(
@@ -179,8 +183,8 @@ module Flor
                 exid: ex['exid'],
                 content: data,
                 status: 'active',
-                ctime: Time.now,
-                mtime: Time.now)
+                ctime: n,
+                mtime: n)
         end
       end
 
@@ -233,7 +237,7 @@ module Flor
         if @archive
           @db[:flor_messages]
             .where(id: messages.collect { |m| m['mid'] }.compact)
-            .update(status: 'consumed', mtime: Time.now)
+            .update(status: 'consumed', mtime: Flor.tstamp)
         else
           @db[:flor_messages]
             .where(id: messages.collect { |m| m['mid'] }.compact)
@@ -265,9 +269,10 @@ module Flor
 
       return if ms.empty?
 
-      n = Time.now
+      n = Flor.tstamp
 
       synchronize(syn) do
+
         @db[:flor_messages]
           .import(
             [ :domain, :exid, :point, :content,
@@ -292,18 +297,19 @@ module Flor
 
     def put_timer(message)
 
-      n = Time.now
-
       t, nt =
         if a = message['at']
           [ 'at', Rufus::Scheduler.parse(a) ]
         elsif i = message['in']
-          [ 'in', n + Rufus::Scheduler.parse(i) ]
+          [ 'in', Time.now.utc + Rufus::Scheduler.parse(i) ]
         elsif message['cron']
-          [ 'cron', n + 365 * 24 * 3600 ] # FIXME
+          [ 'cron', Time.now.utc + 365 * 24 * 3600 ] # FIXME
         else
-          [ 'every', n + 365 * 24 * 3600 ] # FIXME
+          [ 'every', Time.now.utc + 365 * 24 * 3600 ] # FIXME
         end
+      nt = Flor.tstamp(nt.utc)
+
+      n = Flor.tstamp
 
       id =
         synchronize do
@@ -418,7 +424,7 @@ module Flor
           nid: nid,
           tracer: tracer,
           text: text,
-          tstamp: Time.now)
+          tstamp: Time.now.utc)
       end
     end
 
