@@ -467,10 +467,6 @@ class Flor::Procedure < Flor::Node
     t = lookup_tree(fni)
     t = t[0] if fun[1]['head']
 
-    if cid = fun[1]['cid']
-      t = [ 'define', t[1][cid..-1], t[2] ]
-    end
-
     sig = t[1].select { |c| c[0] == '_att' }
     sig = sig.drop(1) if t[0] == 'define'
 
