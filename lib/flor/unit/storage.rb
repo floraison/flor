@@ -152,7 +152,7 @@ module Flor
 
         ex['end'] ||= Flor.tstamp \
           if status == 'terminated'
-        ex['duration'] = Flor.to_time(ex['end']) - Flor.to_time(ex['start']) \
+        ex['duration'] = Time.parse(ex['end']) - Time.parse(ex['start']) \
           if ex['end']
 
         data = to_blob(ex)

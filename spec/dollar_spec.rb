@@ -316,7 +316,11 @@ describe Flor::Dollar do
 
       it 'understands $(tstamp)' do
 
-        expect(@x.expand("$(tstamp)")).to match(/\A2\d{3}\d{4}\.\d+u\z/)
+        expect(
+          @x.expand("$(tstamp)")
+        ).to match(
+          /\A2\d{3}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+Z\z/
+        )
       end
     end
 

@@ -64,7 +64,7 @@ module Flor
       return if [ nil, 'null', false ].include?(@dir)
 
       n = Time.now.utc
-      stp = Flor.nstamp(n)
+      stp = Flor.tstamp(n)
 
       out =
         case @dir

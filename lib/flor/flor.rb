@@ -386,34 +386,49 @@ module Flor
   #
   # functions about time
 
+  def self.isostamp(show_date, show_time, show_usec, time)
+
+    t = (time || Time.now).utc
+    s = StringIO.new
+
+    s << t.strftime('%Y-%m-%d') if show_date
+    s << t.strftime('T%H:%M:%S') if show_time
+    s << sprintf('.%06d', t.usec) if show_time && show_usec
+    s << 'Z' if show_time
+
+    s.string
+  end
+
+  def self.tstamp(t=Time.now)
+
+    isostamp(true, true, true, t)
+  end
+
+  def self.ststamp(t=Time.now)
+
+    isostamp(true, true, false, t)
+  end
+
+  def self.dstamp(t=Time.now)
+
+    isostamp(true, false, false, t)
+  end
+
   # hour stamp
-  def self.hstamp(t=Time.now.utc)
+  #
+  def self.hstamp(t=Time.now)
 
-    t.strftime('%H:%M:%S.') + sprintf('%06d', t.usec) + (t.utc? ? 'u' : '')
+    isostamp(false, true, true, t)
   end
 
-  # time stamp
-  def self.tstamp(t=Time.now.utc)
-
-    t.strftime('%Y%m%d.%H%M%S') + sprintf('%06d', t.usec) + (t.utc? ? 'u' : '')
-  end
-
-  # nice stamp
-  def self.nstamp(t=Time.now.utc)
-
-    t.strftime('%Y-%m-%d %H:%M:%S.') +
-    sprintf('%06d', t.usec) +
-    (t.utc? ? 'u' : '')
-  end
-
-  def self.to_time(ts)
-
-    m = ts.match(/\A(\d{4})(\d{2})(\d{2})\.(\d{2})(\d{2})(\d{2})(\d+)([uU]?)\z/)
-    fail ArgumentError.new("cannot parse timestamp #{ts.inspect}") unless m
-
-    return Time.utc(*m[1, 7].collect(&:to_i)) if m[8].length > 0
-    Time.local(*m[1, 7].collect(&:to_i))
-  end
+#  def self.to_time(ts)
+#
+#    m = ts.match(/\A(\d{4})(\d{2})(\d{2})\.(\d{2})(\d{2})(\d{2})(\d+)([uU]?)\z/)
+#    fail ArgumentError.new("cannot parse timestamp #{ts.inspect}") unless m
+#
+#    return Time.utc(*m[1, 7].collect(&:to_i)) if m[8].length > 0
+#    Time.local(*m[1, 7].collect(&:to_i))
+#  end
 
   #
   # functions about domains and units

@@ -57,56 +57,25 @@ describe Flor do
 
     it 'returns the current timestamp' do
 
-      expect(Flor.tstamp).to match(/\A#{Time.now.utc.year}\d{4}.\d{12}u\z/)
+      expect(
+        Flor.tstamp
+      ).to match(
+        /\A#{Time.now.utc.year}-\d\d-\d\dT\d\d:\d\d:\d\d.\d{6}Z\z/
+      )
     end
 
     it 'turns a Time instance into a String timestamp' do
 
-      t = Time.local(2015, 12, 19, 13, 30, 00)
+      t = Time.utc(2015, 12, 19, 13, 30, 00)
 
-      expect(Flor.tstamp(t)).to eq('20151219.133000000000')
+      expect(Flor.tstamp(t)).to eq('2015-12-19T13:30:00.000000Z')
     end
 
-    it 'turns a UTC Time instance into a String timestamp' do
+    it 'turns a Time instance into a String timestamp' do
 
       t = Time.utc(2017, 1, 1, 8, 16, 00)
 
-      expect(Flor.tstamp(t)).to eq('20170101.081600000000u')
-    end
-  end
-
-  describe '.to_time' do
-
-    it 'turns a Flor timestamp into a Time instance' do
-
-      ts = Flor.tstamp
-      t = Flor.to_time(ts)
-
-      expect(Flor.tstamp(t)).to eq(ts)
-    end
-
-    it 'turns a Flor timestamp into a Time instance' do
-
-      t = Flor.to_time('20151219.133000000000')
-
-      expect(
-        t.strftime('%Y-%m-%d %H:%M:%S')
-      ).to eq(
-        '2015-12-19 13:30:00'
-      )
-    end
-
-    it 'turns a Flor UTC timestamp into a Time instance' do
-
-      t = Flor.to_time('20170101.081600000000u')
-
-      expect(t.utc?).to eq(true)
-
-      expect(
-        t.strftime('%Y-%m-%d %H:%M:%S %z')
-      ).to eq(
-        '2017-01-01 08:16:00 +0000'
-      )
+      expect(Flor.tstamp(t)).to eq('2017-01-01T08:16:00.000000Z')
     end
   end
 

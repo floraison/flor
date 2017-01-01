@@ -45,7 +45,7 @@ module Flor
 
     def ntime_t
 
-      @ntime_t ||= Flor.to_time(ntime)
+      @ntime_t ||= Time.parse(ntime)
     end
   end
 end
