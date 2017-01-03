@@ -1,7 +1,8 @@
 
 source 'https://rubygems.org'
 
-#gem 'raabro', path: '../../raabro/' # temporarily
+#gem 'raabro', path: '../raabro/' # temporarily
+#gem 'fugit', path: '../fugit/' # temporarily
 
 group :test do
   gem 'sqlite3', '1.3.11', :platforms => [ :mri ]

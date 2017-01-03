@@ -2,14 +2,16 @@ PATH
   remote: .
   specs:
     flor (0.5.0)
+      fugit (>= 0.9.2)
       munemo (>= 1.0.1)
       raabro (>= 1.1.2)
-      rufus-scheduler (~> 3)
 
 GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.2.5)
+    fugit (0.9.2)
+      raabro (>= 1.1.3)
     jdbc-sqlite3 (3.8.11.2)
     munemo (1.0.1)
     raabro (1.1.3)
@@ -26,14 +28,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
-    rufus-scheduler (3.3.1)
-      tzinfo
     sequel (4.38.0)
     sqlite3 (1.3.11)
-    thread_safe (0.3.5)
-    thread_safe (0.3.5-java)
-    tzinfo (1.2.2)
-      thread_safe (~> 0.1)
 
 PLATFORMS
   java

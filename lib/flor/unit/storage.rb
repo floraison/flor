@@ -299,9 +299,9 @@ module Flor
 
       t, nt =
         if a = message['at']
-          [ 'at', Rufus::Scheduler.parse(a) ]
+          [ 'at', Fugit.do_parse_at(a) ]
         elsif i = message['in']
-          [ 'in', Time.now.utc + Rufus::Scheduler.parse(i) ]
+          [ 'in', Fugit.do_parse_duration(i) + Time.now.utc ]
         elsif message['cron']
           [ 'cron', Time.now.utc + 365 * 24 * 3600 ] # FIXME
         else
