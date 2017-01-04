@@ -297,16 +297,20 @@ module Flor
 
     def put_timer(message)
 
-      t, nt =
-        if a = message['at']
-          [ 'at', Fugit.do_parse_at(a) ]
-        elsif i = message['in']
-          [ 'in', Fugit.do_parse_duration(i) + Time.now.utc ]
-        elsif message['cron']
-          [ 'cron', Time.now.utc + 365 * 24 * 3600 ] # FIXME
-        else
-          [ 'every', Time.now.utc + 365 * 24 * 3600 ] # FIXME
+      t = message['type']
+      s = message['s']
+
+      f =
+        case t
+          when 'cron' then Fugit.parse_cron(s)
+          when 'at' then Fugit.parse_at(s)
+          when 'in' then Fugit.parse_duration(s)
+          #when 'every' then Fugit.parse_duration(s)
+          else Fugit.parse(s)
         end
+      nt =
+        f.is_a?(Time) ? f : f.next_time(Time.now) # local...
+
       nt = Flor.tstamp(nt.utc)
 
       n = Flor.tstamp
@@ -318,7 +322,7 @@ module Flor
             exid: message['exid'],
             nid: message['nid'],
             type: t,
-            schedule: message[t],
+            schedule: s,
             ntime: nt,
             content: to_blob(message),
             status: 'active',

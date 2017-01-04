@@ -23,30 +23,48 @@
 #++
 
 
-module Flor
+class Flor::Pro::Schedule < Flor::Procedure
+  #
+  # Schedules a function
+  #
+  # ```
+  # schedule cron: '0 0 1 jan *'  # every 1st day of the year, check systems
+  #   def msg
+  #     check_systems
+  # ```
+  #
+  # See also: cron, at, in and sleep
 
-  class Execution < FlorModel
+  name 'schedule'
 
-    def self.terminated
+  def pre_execute
 
-      self.where(status: 'terminated')
-    end
+    @node['atts'] = []
+  end
 
-    def nodes; data['nodes']; end
+  def receive_last
 
-    def tags
+    fun = @fcid > 0 ? payload['ret'] : nil
 
-      data['nodes'].values.inject([]) do |a, n|
-        if ts = n['tags']; a.concat(ts); end
-        a
-      end
-    end
+    fail ArgumentError.new(
+      "missing a function to call when the scheduler triggers"
+    ) unless fun
 
-    def failed?
+    msg = apply(fun, [], tree[2], false).first.merge('noreply' => true)
 
-      !! nodes.values
-        .find { |n| n['failure'] && n['status'] != 'triggered-on-error' }
-    end
+    tstr = att('cron', 'at', 'in', 'every', nil)
+
+    type = @node['atts']
+      .collect(&:first)
+      .find { |k| %w[ cron at in every ].include?(k) }
+
+    fail ArgumentError.new(
+      "missing a schedule"
+    ) unless tstr
+
+    #m = reply('point' => 'receive').first
+
+    schedule('type' => type, 's' => tstr, 'message' => msg)
   end
 end
 
