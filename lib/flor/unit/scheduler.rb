@@ -249,7 +249,7 @@ module Flor
       @mutex.synchronize { @timers.push(timer).sort_by!(&:ntime) }
     end
 
-    def wake_executions(exids)
+    def wake_up_executions(exids)
 
       @mutex.synchronize { @exids.concat(exids).uniq! } if exids.any?
     end

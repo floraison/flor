@@ -283,7 +283,7 @@ module Flor
             })
       end
 
-      @unit.wake_executions(ms.collect { |m| m['exid'] }.uniq)
+      @unit.wake_up_executions(ms.collect { |m| m['exid'] }.uniq)
 
     rescue => err
       Thread.current[:sto_errored_items] = ms
