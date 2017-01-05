@@ -66,18 +66,7 @@ module Flor
 
     def do_run
 
-      puts(
-        Flor::Colours.dark_grey + '--- new run ' +
-        [
-          self.class, self.object_id, @exid,
-          { exid: @exid,
-            thread: Thread.current.object_id,
-            counters: @execution['counters'],
-            nodes: @execution['nodes'].size,
-            size: @execution['size'] }
-        ].inspect +
-        '---.' + Flor::Colours.reset
-      ) if @unit.conf['log_run']
+      log_run_start if @unit.conf['log_run']
 
       counter_next('runs')
 
@@ -120,10 +109,10 @@ module Flor
 
       @alive = false
 
-      x = @unit.storage.put_execution(@execution)
+      @unit.storage.put_execution(@execution)
       @unit.storage.put_messages(@messages)
 
-      log_run(t0, x.size) if @unit.conf['log_run']
+      log_run_end(t0) if @unit.conf['log_run']
 
       @consumed.clear
 
@@ -176,33 +165,53 @@ module Flor
       [ m ]
     end
 
-    def log_run(t0, execution_size)
+    def log_run_start
+
+      _rs, _dg, _yl, _bl, _lg, _gr, _lr, _rd, _ma = Flor.colours
+
+      s = StringIO.new
+
+      s << _dg
+      s << "    /--- #{_lg}run starts#{_dg} "
+      s << "#{self.class} #{self.object_id} #{@exid}"
+      s << "\n    |   "
+      s << { thread: Thread.current.object_id }.inspect
+      s << "\n    |   "
+      s << {
+        counters: @execution['counters'],
+        nodes: @execution['nodes'].size,
+        size: @execution['size']
+      }.inspect
+      s << _rs
+
+      puts s.string
+    end
+
+    def log_run_end(t0)
 
       s = StringIO.new
 
       s << Flor::Colours.dark_grey
-      s << "    --- run over #{self.class} #{self.object_id} #{@exid}"
-      s << "\n        "
-      s << {
-        took: Time.now - t0,
+      s << "    |   run ends #{self.class} #{self.object_id} #{@exid}"
+      s << "\n    |   "; s << { took: Time.now - t0 }.inspect
+      s << "\n    |   "; s << {
         thread: Thread.current.object_id,
         consumed: @consumed.size,
         traps: @traps.size,
-        nodes: @execution['nodes'].size,
-        size: execution_size
       }.inspect
-      s << "\n        "
-      s << {
+      s << "\n    |   "; s << {
         #own_traps: @traps.reject { |t| t.texid == nil }.size, # FIXME
         counters: @execution['counters'],
+        nodes: @execution['nodes'].size,
+        size: @execution['size']
       }.inspect
       if @unit.archive
-        s << "\n        "
+        s << "\n    |   "
         s << {
           archive_size: @unit.archive[@exid].size
         }.inspect
       end
-      s << ' .'
+      s << "\n    \\--- ."
       s << Flor::Colours.reset
 
       puts s.string

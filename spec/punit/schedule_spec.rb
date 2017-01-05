@@ -58,6 +58,23 @@ describe 'Flor punit' do
       expect(td['message']['point']).to eq('execute')
       expect(td['message']['tree'][0]).to eq('_apply')
     end
+
+    context 'cron' do
+
+      it 'triggers repeatedly' do
+
+        flor = %{
+          set count 0
+          schedule cron: '* * * * *' # every minute at second 0
+            def msg
+              set count (+ count 1)
+        }
+
+        exid = @unit.launch(flor)
+
+        sleep 7
+      end
+    end
   end
 end
 
