@@ -36,10 +36,11 @@ Sequel.migration do
       String :domain, null: false
       String :exid, null: false
       String :nid, null: false
-      String :type, null: false # 'at' or 'cron'
+      String :type, null: false # 'at', 'in', 'cron', 'every', ...
       String :schedule, null: false # '20141128.103239' or '00 23 * * *'
       String :ntime # next time
       File :content # JSON msg to trigger
+      Bignum :count, null: false
       String :status, null: false
       String :ctime
       String :mtime

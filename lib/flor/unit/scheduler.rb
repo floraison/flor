@@ -335,13 +335,21 @@ module Flor
     def trigger_timers
 
       now = Time.now.utc
+      to_re_add = []
 
       loop do
 
         timer = @timers.first
         break if timer == nil || timer.ntime_t > now
 
-        @storage.trigger_timer(@timers.shift)
+        r = @storage.trigger_timer(@timers.shift)
+        to_re_add << r if r
+      end
+
+      if to_re_add.any?
+
+        @timers.concat(to_re_add)
+        @timers.sort_by! { |t| t.ntime }
       end
     end
 

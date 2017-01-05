@@ -6,12 +6,16 @@ PATH
       munemo (>= 1.0.1)
       raabro (>= 1.1.2)
 
+PATH
+  remote: ../fugit/
+  specs:
+    fugit (0.9.4)
+      raabro (>= 1.1.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.2.5)
-    fugit (0.9.3)
-      raabro (>= 1.1.3)
     jdbc-sqlite3 (3.8.11.2)
     munemo (1.0.1)
     raabro (1.1.3)
@@ -37,6 +41,7 @@ PLATFORMS
 
 DEPENDENCIES
   flor!
+  fugit!
   jdbc-sqlite3 (= 3.8.11.2)
   rspec (= 3.4.0)
   sequel (~> 4)

@@ -65,14 +65,34 @@ describe 'Flor punit' do
 
         flor = %{
           set count 0
-          schedule cron: '* * * * *' # every minute at second 0
+          schedule cron: '* * * * * *' # every second
             def msg
               set count (+ count 1)
         }
 
         exid = @unit.launch(flor)
 
-        sleep 7
+        sleep 1.9
+
+        expect(@unit.timers.count).to eq(1)
+
+        t = @unit.timers.first
+#p Flor.tstamp
+#p t.values.reject { |k, v| k == :content }
+
+        expect(t.schedule).to eq('* * * * * *')
+        expect(t.count).to be > 0
+        pc = t.count
+
+        sleep 1.4
+
+        expect(@unit.timers.count).to eq(1)
+
+        t = @unit.timers.first
+#p Flor.tstamp
+#p t.values.reject { |k, v| k == :content }
+
+        expect(t.count).to be > pc
       end
     end
   end

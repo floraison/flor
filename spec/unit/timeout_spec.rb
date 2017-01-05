@@ -49,6 +49,7 @@ describe 'Flor unit' do
       expect(t.type).to eq('in')
       expect(t.schedule).to eq('60')
       expect(t.status).to eq('active')
+      expect(t.count).to eq(0)
 
       expect(d['point']).to eq('schedule')
       expect(d['from']).to eq('0_0_0')

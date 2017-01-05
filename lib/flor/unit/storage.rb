@@ -254,7 +254,7 @@ module Flor
 
       timers
         .select(:id, :content)
-        .where(status: 'created')
+        .where(status: 'active')
         .order_by(:id)
         .all
 
@@ -297,23 +297,12 @@ module Flor
 
     def put_timer(message)
 
-      t = message['type']
-      s = message['s']
+      type = message['type']
+      string = message['s']
 
-      f =
-        case t
-          when 'cron' then Fugit.parse_cron(s)
-          when 'at' then Fugit.parse_at(s)
-          when 'in' then Fugit.parse_duration(s)
-          #when 'every' then Fugit.parse_duration(s)
-          else Fugit.parse(s)
-        end
-      nt =
-        f.is_a?(Time) ? f : f.next_time(Time.now) # local...
+      next_time = compute_next_time(type, string)
 
-      nt = Flor.tstamp(nt.utc)
-
-      n = Flor.tstamp
+      now = Flor.tstamp
 
       id =
         synchronize do
@@ -321,13 +310,14 @@ module Flor
             domain: Flor.domain(message['exid']),
             exid: message['exid'],
             nid: message['nid'],
-            type: t,
-            schedule: s,
-            ntime: nt,
+            type: type,
+            schedule: string,
+            ntime: next_time,
             content: to_blob(message),
+            count: 0,
             status: 'active',
-            ctime: n,
-            mtime: n)
+            ctime: now,
+            mtime: now)
         end
 
       @unit.timers[id]
@@ -337,16 +327,38 @@ module Flor
       raise err
     end
 
+    # Returns the timer if it is rescheduling
+    #
     def trigger_timer(timer)
+
+      r = nil
 
       synchronize do
         @db.transaction do
 
-          if @archive
+# TODO: cron/every stop conditions maybe?
+
+          if timer.type != 'at' && timer.type != 'in'
+
             @db[:flor_timers]
               .where(id: timer.id)
-              .update(status: 'triggered')
+              .update(
+                count: timer.count + 1,
+                ntime: compute_next_time(timer.type, timer.schedule),
+                mtime: Flor.tstamp)
+            r = timers[timer.id]
+
+          elsif @archive
+
+            @db[:flor_timers]
+              .where(id: timer.id)
+              .update(
+                count: timer.count + 1,
+                status: 'triggered',
+                mtime: Flor.tstamp)
+
           else
+
             @db[:flor_timers]
               .where(id: timer.id)
               .delete
@@ -355,6 +367,8 @@ module Flor
           put_messages([ timer.to_trigger_message ], false)
         end
       end
+
+      r
 
     rescue => err
       Thread.current[:sto_errored_items] = [ timer ]
@@ -433,6 +447,22 @@ module Flor
     end
 
     protected
+
+    def compute_next_time(type, string)
+
+      f =
+        case type
+          when 'cron' then Fugit.parse_cron(string)
+          when 'at' then Fugit.parse_at(string)
+          when 'in' then Fugit.parse_duration(string)
+          #when 'every' then Fugit.parse_duration(string)
+          else Fugit.parse(string)
+        end
+
+      nt = f.is_a?(Time) ? f : f.next_time(Time.now) # local...
+
+      Flor.tstamp(nt.utc)
+    end
 
     def split_domain(exid)
 
