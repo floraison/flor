@@ -13,3 +13,6 @@ tmp/*.db
 tmp/*.log
 .tmp.*
 
+.notes.md
+.todo.md
+
