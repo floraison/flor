@@ -312,6 +312,15 @@ module Flor
 
       Flor.detail_msg(self, m, flag: true) if @unit.conf['log_err']
 
+      #if m['error']['msg'].match(/\AToo many open files in system/)
+      #  puts "=" * 80 + ' ...'
+      #  system(`lsof #{Process.pid}`)
+      #  puts "=" * 80 + ' .'
+      #end
+        #
+        # can't seem to provoke that error, so keeping the trap
+        # around but commented out...
+
       [ m ]
     end
 
