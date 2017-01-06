@@ -62,6 +62,8 @@ module Flor
 
     def wait(exid, opts)
 
+      opts = { wait: opts } if opts.is_a?(String)
+
       @mutex.synchronize do
 
         w = Waiter.make(exid, opts)

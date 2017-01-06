@@ -70,29 +70,27 @@ describe 'Flor punit' do
               set count (+ count 1)
         }
 
-        exid = @unit.launch(flor)
+        seconds = []
 
-        sleep 1.9
+        exid = @unit.launch(flor)#, wait: '0_1 trigger')
 
-        expect(@unit.timers.count).to eq(1)
+        4.times do |i|
 
-        t = @unit.timers.first
-#p Flor.tstamp
-#p t.values.reject { |k, v| k == :content }
+          r = @unit.wait(exid, '0_1 trigger')
+          seconds << Time.now.sec
 
-        expect(t.schedule).to eq('* * * * * *')
-        expect(t.count).to be > 0
-        pc = t.count
+          sleep 0.3
+          expect(@unit.timers.count).to eq(1)
 
-        sleep 1.4
+          t = @unit.timers.first
+          expect(t.schedule).to eq('* * * * * *')
+          expect(t.count).to eq(1 + i)
+        end
 
-        expect(@unit.timers.count).to eq(1)
+        ss = (seconds.first..seconds.first + 3)
+          .collect { |s| s % 60 }
 
-        t = @unit.timers.first
-#p Flor.tstamp
-#p t.values.reject { |k, v| k == :content }
-
-        expect(t.count).to be > pc
+        expect(seconds).to eq(ss)
       end
     end
   end
