@@ -94,6 +94,9 @@ module Flor
 
     def notify(executor, msg)
 
+      Flor.print_tree(msg['tree'], msg['nid'], ind: 6, title: 'rewrite') \
+        if msg['rewritten'] && @unit.conf['log_tree_rw']
+
       Flor.log_message(executor, msg) \
         if @unit.conf['log_msg']
 
