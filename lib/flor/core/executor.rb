@@ -207,7 +207,8 @@ module Flor
 
       head = heac.new(self, node, message)
 
-      return process(head.rewrite) if head.is_a?(Flor::Macro)
+      #return process(head.rewrite) if head.is_a?(Flor::Macro)
+      return [ head.rewrite ] if head.is_a?(Flor::Macro)
 
       nid = message['nid']
       pt = message['point']
