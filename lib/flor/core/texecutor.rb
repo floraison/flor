@@ -51,9 +51,6 @@ module Flor
 
         return [] if o['consumed']
 
-        Flor.print_tree(o['tree']) \
-          if @conf['log_tree'] && o['point'] == 'execute' && o['nid'] == '0'
-
         Flor.log_message(executor, o) \
           if @conf['log_msg']
 
@@ -95,6 +92,9 @@ module Flor
       Flor.print_src(tree, opts) if conf['log_src']
 
       messages = [ Flor.make_launch_msg(@execution['exid'], tree, opts) ]
+
+      Flor.print_tree(messages.first['tree']) if conf['log_tree']
+
       message = nil
 
       loop do

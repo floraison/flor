@@ -216,6 +216,8 @@ module Flor
       exid = Flor.generate_exid(domain, unit)
       msg = Flor.make_launch_msg(exid, source, opts)
 
+      Flor.print_tree(msg['tree']) if @conf['log_tree']
+
       return [ msg, opts ] if opts[:nolaunch]
         # for testing purposes
 

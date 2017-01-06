@@ -72,11 +72,13 @@ module Flor
 
     t =
       m['tree']
+    rw =
+      (t && m['rewritten']) ? 'rw->' : ''
     nt =
       t || Node.new(executor, nd, m).lookup_tree(nid)
     t0 =
       if t
-        " [#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} L#{t[2]}]"
+        " [#{rw}#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} L#{t[2]}]"
       elsif nt
         " [#{_dg}#{Flor.s_to_d(nt[0], compact: true)}#{_dg} L#{nt[2]}]"
       else
