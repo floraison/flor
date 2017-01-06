@@ -42,7 +42,7 @@ class Flor::Pro::Every < Flor::Macro
 
     m = @message.dup
     m['tree'] = th
-    m['rewritten'] = true
+    m['rewritten'] = tree
 
     m
   end

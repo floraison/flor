@@ -95,12 +95,18 @@ module Flor
     def notify(executor, msg)
 
       if msg['rewritten'] && @unit.conf['log_tree_rw']
+
+        Flor.print_compact_tree(
+          msg['rewritten'], msg['nid'],
+          ind: 6, title: "rewrote #{msg['exid']} #{msg['nid']}")
         Flor.print_compact_tree(
           msg['tree'], msg['nid'],
-          ind: 6, title: "rewrite at #{msg['exid']} #{msg['nid']}")
+          ind: 6, title: "into #{msg['exid']} #{msg['nid']}",
+          close: true)
       end
 
       if @unit.conf['log_msg']
+
         Flor.log_message(executor, msg)
       end
 

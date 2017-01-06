@@ -341,6 +341,8 @@ module Flor
       print_compact_tree(ct, "#{nid}_#{i}", opts)
     end
 
+    s << "\n" << ind << _dg << '\---' if is_root && opts[:close]
+
     s << _rs
 
     puts s.string if is_root
