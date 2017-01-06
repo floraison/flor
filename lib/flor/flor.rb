@@ -503,16 +503,19 @@ module Flor
   #
   # tree
 
-  #def self.is_symbol_tree?(t)
-  #  t[0].is_a?(String) && t[1] == []
-  #end
-
   def self.is_tree?(t)
 
     t.is_a?(Array) &&
     t.size > 2 &&
     (t[0].is_a?(String) || Flor.is_tree?(t[0])) &&
     t[2].is_a?(Integer)
+  end
+
+  def self.is_att_tree?(t)
+
+    t.is_a?(Array) &&
+    t[0] == '_att' &&
+    t[1].is_a?(Array)
   end
 
   def self.is_array_of_trees?(o)

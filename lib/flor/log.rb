@@ -295,6 +295,57 @@ module Flor
     puts "#{ind}#{_dg}.#{_rs}" if headers && nid == '0'
   end
 
+  def self.print_flat_tree(tree, nid, opts)
+
+    s = opts[:s]
+    _rs, _dg, _yl = colours(opts)
+
+    s << ' ' << nid << ' ' << _yl << tree[0] << _dg
+
+    if tree[1].is_a?(Array)
+      tree[1].each_with_index do |t, i|
+        print_flat_tree(t, "#{nid}_#{i}", opts)
+      end
+    else
+      s << ' ' << tree[1]
+    end
+  end
+
+  def self.print_compact_tree(tree, nid='0', opts={})
+
+    is_root = opts[:s].nil?
+    ind = ' ' * (opts[:ind] || 0)
+
+    _rs, _dg, _yl = colours(opts)
+
+    atts, natts =
+      tree[1].is_a?(Array) ?
+      tree[1].partition { |t| Flor.is_att_tree?(t) } :
+      [ [], [] ]
+
+    s = (opts[:s] ||= StringIO.new)
+
+    if t = opts.delete(:title)
+      s << ind << _dg << '+--- ' << t << "\n"
+    end
+
+    s << ind << _dg << '| ' << nid << ' '
+    s << _yl << Flor.s_to_d(tree[0], compact: true) << _dg << ' L' << tree[2]
+
+    atts.each_with_index do |ct, i|
+      print_flat_tree(ct, "_#{i}", opts)
+    end
+
+    natts.each_with_index do |ct, i|
+      s << "\n"
+      print_compact_tree(ct, "#{nid}_#{i}", opts)
+    end
+
+    s << _rs
+
+    puts s.string if is_root
+  end
+
   def self.ret_to_s(executor, m)
 
     ret = (m['payload'] || {})['ret']
