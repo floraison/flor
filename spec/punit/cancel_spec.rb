@@ -209,6 +209,8 @@ describe 'Flor punit' do
         [ 'cancelled', nil, '0_0', nil ]
       )
 
+      sleep 0.3
+
       expect(
         @unit.journal
           .collect { |m|
