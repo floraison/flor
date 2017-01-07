@@ -52,19 +52,17 @@ class Flor::Pro::Schedule < Flor::Procedure
 
     msg = apply(fun, [], tree[2], false).first.merge('noreply' => true)
 
-    tstr = att('cron', 'at', 'in', 'every', nil)
-
-    type = @node['atts']
-      .collect(&:first)
-      .find { |k| %w[ cron at in every ].include?(k) }
+    type, string =
+      @node['atts'].find { |k, v| %w[ cron at in every ].include?(k) } ||
+      @node['atts'].find { |k, v| k == nil }
 
     fail ArgumentError.new(
       "missing a schedule"
-    ) unless tstr
+    ) unless string
 
     #m = reply('point' => 'receive').first
 
-    schedule('type' => type, 's' => tstr, 'message' => msg)
+    schedule('type' => type, 'string' => string, 'message' => msg)
   end
 end
 

@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     flor (0.5.0)
-      fugit (>= 0.9.4)
+      fugit (>= 0.9.5)
       munemo (>= 1.0.1)
       raabro (>= 1.1.2)
 
@@ -10,7 +10,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.2.5)
-    fugit (0.9.4)
+    fugit (0.9.5)
       raabro (>= 1.1.3)
     jdbc-sqlite3 (3.8.11.2)
     munemo (1.0.1)

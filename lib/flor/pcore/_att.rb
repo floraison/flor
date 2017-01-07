@@ -140,7 +140,7 @@ class Flor::Pro::Att < Flor::Procedure
     m = reply('point' => 'cancel', 'nid' => n, 'flavour' => 'timeout').first
     t = payload['ret']
 
-    schedule('type' => 'in', 's' => t, 'nid' => n, 'message' => m) +
+    schedule('type' => 'in', 'string' => t, 'nid' => n, 'message' => m) +
     reply
   end
 

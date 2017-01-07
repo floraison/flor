@@ -47,7 +47,7 @@ class Flor::Pro::Sleep < Flor::Procedure
 
     m = reply('point' => 'receive').first
 
-    schedule('type' => 'in', 's' => t, 'message' => m)
+    schedule('type' => 'in', 'string' => t, 'message' => m)
   end
 end
 

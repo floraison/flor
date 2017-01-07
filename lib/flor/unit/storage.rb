@@ -297,8 +297,7 @@ module Flor
 
     def put_timer(message)
 
-      type = message['type']
-      string = message['s']
+      type, string = determine_type_and_schedule(message)
 
       next_time = compute_next_time(type, string)
 
@@ -448,11 +447,25 @@ module Flor
 
     protected
 
+    def determine_type_and_schedule(message)
+
+      t, s = message['type'], message['string']
+      return [ t, s ] if t
+
+      t = Fugit.determine_type(s)
+      return [ t, s ] if t
+
+      s = "every #{s}"
+      return [ 'cron', s ] if Fugit.parse_nat(s)
+
+      nil
+    end
+
     def compute_next_time(type, string)
 
       f =
         case type
-          when 'cron' then Fugit.parse_cron(string)
+          when 'cron' then Fugit.parse_cron(string) || Fugit.parse_nat(string)
           when 'at' then Fugit.parse_at(string)
           when 'in' then Fugit.parse_duration(string)
           #when 'every' then Fugit.parse_duration(string)

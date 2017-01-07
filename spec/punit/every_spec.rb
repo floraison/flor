@@ -29,14 +29,27 @@ describe 'Flor punit' do
     it 'schedule crons' do
 
       flor = %{
-        every 'day at noon'
+        every 'day at midnight'
           task 'alpha'
       }
 
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(flor, wait: '0 schedule')
 
-      #expect(r['point']).to eq('terminated')
-      #expect(r['vars']['l']).to eq(%w[ requested done. approved ])
+      expect(r['point']).to eq('schedule')
+      expect(r['type']).to eq(nil)
+      expect(r['string']).to eq('day at midnight')
+
+      sleep 0.4
+
+      expect(@unit.timers.count).to eq(1)
+
+      t = @unit.timers.first
+#pp t.values.select { |k, v| k != :content }
+
+      expect(t.type).to eq('cron')
+      expect(t.schedule).to eq('every day at midnight')
+      expect(t.count).to eq(0)
+      expect(t.ntime_t.localtime.day).not_to eq(Time.now.day)
     end
   end
 end
