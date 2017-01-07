@@ -86,6 +86,11 @@ class Flor::Procedure < Flor::Node
 
   protected
 
+  def counter_next(k)
+
+    @executor.counter_next(k)
+  end
+
   def make_status(name)
 
     [ name, @message['flavour'], @message['from'], node_status, Flor.tstamp ]
@@ -459,7 +464,7 @@ class Flor::Procedure < Flor::Node
   def apply(fun, args, line, anid=true)
 
     fni = fun[1]['nid'] # fun nid
-    ani = anid ? Flor.sub_nid(fni, @executor.counter_next('subs')) : fni
+    ani = anid ? Flor.sub_nid(fni, counter_next('subs')) : fni
       # the "trap" apply doesn't want a subid generated before it triggers...
 
     cni = fun[1]['cnid'] # closure nid
