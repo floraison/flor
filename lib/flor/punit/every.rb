@@ -27,7 +27,7 @@ class Flor::Pro::Every < Flor::Macro
 
   name 'every'
 
-  def rewrite
+  def rewrite_tree
 
     l = tree[2]
 
@@ -40,11 +40,7 @@ class Flor::Pro::Every < Flor::Macro
 
     th[1] << td
 
-    m = @message.dup
-    m['tree'] = th
-    m['rewritten'] = tree
-
-    m
+    th
   end
 end
 

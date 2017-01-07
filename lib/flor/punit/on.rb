@@ -43,7 +43,7 @@ class Flor::Pro::On < Flor::Macro
 
   name 'on'
 
-  def rewrite
+  def rewrite_tree
 
     atts = att_children
     signame_i = atts.index { |at| at[1].size == 1 }
@@ -74,11 +74,7 @@ class Flor::Pro::On < Flor::Macro
 
     th[1] << td
 
-    m = @message.dup
-    m['tree'] = th
-    m['rewritten'] = tree
-
-    m
+    th
   end
 end
 

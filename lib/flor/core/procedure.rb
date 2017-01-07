@@ -553,9 +553,25 @@ class Flor::Procedure < Flor::Node
   end
 end
 
-# For now, a marker class
+
+# Not really a procedure, more like a macro, rewrites its tree and returns
+# a new message to queue (with a rewritten tree).
 #
-class Flor::Macro < Flor::Procedure; end
+class Flor::Macro < Flor::Procedure
+
+  # Called by the executor.
+  #
+  def rewrite
+
+    t = rewrite_tree
+
+    m = @message.dup
+    m['tree'] = t
+    m['rewritten'] = tree
+
+    m
+  end
+end
 
 # A namespace for primitive procedures
 #
