@@ -319,7 +319,7 @@ describe 'Flor punit' do
 
       it 'traps in the same execution' do
 
-        exid0 = @unit.launch(%{
+        r = @unit.launch(%{
           concurrence
             trap tag: 't1' range: 'execution'
               def msg; trace "t1_$(msg.exid)"
@@ -328,9 +328,11 @@ describe 'Flor punit' do
               sequence tag: 't1'
                 trace 'exe0'
                 stall _
-        })
+        }, wait: '0_0 ceased')
 
-        sleep 2.1
+        expect(r['point']).to eq('ceased')
+
+        exid0 = r['exid']
 
         exid1 = @unit.launch(%{
           sequence tag: 't1'
