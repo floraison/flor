@@ -344,14 +344,17 @@ module Flor
         timer = @timers.first
         break if timer == nil || timer.ntime_t > now
 
-        r = @storage.trigger_timer(@timers.shift)
+        t = @mutex.synchronize { @timers.shift }
+        r = @storage.trigger_timer(t)
         to_re_add << r if r
       end
 
       if to_re_add.any?
 
-        @timers.concat(to_re_add)
-        @timers.sort_by! { |t| t.ntime }
+        @mutex.synchronize do
+          @timers.concat(to_re_add)
+          @timers.sort_by! { |t| t.ntime }
+        end
       end
     end
 
