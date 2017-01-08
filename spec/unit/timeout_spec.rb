@@ -72,12 +72,6 @@ describe 'Flor unit' do
 
       expect(msg['point']).to eq('terminated')
 
-      if jruby?
-        expect(Time.now - t0).to be_between(0.5, 2.0)
-      else
-        expect(Time.now - t0).to be_between(0.5, 1.6)
-      end
-
       expect(@unit.timers.count).to eq(0)
 
       can = @unit.journal.find { |m| m['point'] == 'cancel' }
