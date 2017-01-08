@@ -32,6 +32,7 @@ class Flor::Pro::Map < Flor::Procedure
     #@node['ret'] = Flor.dup(payload['ret']) # now using @node['payload']
 
     @node['vars'] = {}
+      # just to store the local idx
 
     @node['col'] = nil
     @node['idx'] = -1

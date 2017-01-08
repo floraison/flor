@@ -22,29 +22,55 @@
 # Made in Japan.
 #++
 
-require 'flor/punit/concurrence'
-  # because "cmap" > "concurrence" and we need our parent class
 
-
-class Flor::Pro::Cmap < Flor::Pro::Concurrence
+class Flor::Pro::Cmap < Flor::Procedure
 
   name 'cmap'
 
-  def receive_last_att
+  def pre_execute
 
-    return reply unless children[@ncid]
+    @node['atts'] = []
 
-pp @node['atts']
+    @node['fun'] = nil
+    @node['col'] = []
+  end
+
+  def receive_non_att
+
+    if @node['fun']
+      receive_elt
+    else
+      receive_fun
+    end
+  end
+
+  protected
+
+  def receive_fun
+
+    fun = payload['ret']
+
+    fail ArgumentError.new(
+      "cmap expects a function"
+    ) unless Flor.is_func_tree?(fun)
+
     col = att(nil)
+    @node['fun'] = fun
 
-    col
-      .map { |i|
-        execute_child(
-          0, counter_next('subs'), 'payload' => payload.copy_current) }
-      .flatten(1)
-      .tap { |x| pp x }
-        #
-        # call execute for each of the (non _att) children
+    col.collect.with_index do |e, i|
+      apply(@node['fun'], [ e, i ], tree[2])
+    end.flatten(1)
+  end
+
+  def receive_elt
+
+    @node['col'] << payload['ret']
+
+    return [] if @node['cnodes'].any?
+
+    payload['ret'] = @node['col']
+
+    reply
   end
 end
 

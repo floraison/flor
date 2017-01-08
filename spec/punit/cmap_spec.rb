@@ -63,34 +63,28 @@ describe 'Flor punit' do
       ].join("\n"))
     end
 
-    it 'executes atts in sequence then children in concurrence'
-#    it 'executes atts in sequence then children in concurrence' do
-#
-#      flor = %{
-#        cmap [ 1 2 3 ]
-#          def x
-#            trace 'a:$(x)'
-#      }
-#
-#      msg = @unit.launch(flor, wait: true)
-#
-#      expect(msg['point']).to eq('terminated')
-#
-#      #expect(
-#      #  @unit.traces.collect(&:text).join(' ')
-#      #).to eq(
-#      #  'a b'
-#      #)
-#
-#      #expect(
-#      #  @unit.journal
-#      #    .collect { |m| [ m['point'][0, 3], m['nid'] ].join(':') }
-#      #).to comprise(%w[
-#      #  exe:0_2 exe:0_3
-#      #  exe:0_2_0 exe:0_3_0
-#      #  exe:0_2_0_0 exe:0_3_0_0
-#      #])
-#    end
+    it 'executes atts in sequence then children in concurrence' do
+
+      flor = %{
+        cmap [ 1 2 3 ]
+          def x; (* x 2)
+      }
+
+      r = @unit.launch(flor, wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['ret']).to eq([ 2, 4, 6 ])
+
+      #expect(
+      #  @unit.journal
+      #    .collect { |m| [ m['point'][0, 3], m['nid'] ].join(':') }
+      #).to comprise(%w[
+      #  exe:0_2 exe:0_3
+      #  exe:0_2_0 exe:0_3_0
+      #  exe:0_2_0_0 exe:0_3_0_0
+      #])
+    end
   end
 end
 
