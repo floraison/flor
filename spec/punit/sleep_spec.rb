@@ -14,6 +14,7 @@ describe 'Flor punit' do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf[:unit] = 'pu_sleep'
+    @unit.hooker.add('journal', Flor::Journal)
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
@@ -32,9 +33,15 @@ describe 'Flor punit' do
         sleep '1y'
       }
 
-      exid = @unit.launch(flor)
+      r = @unit.launch(flor, wait: '0 schedule')
 
-      sleep 0.777
+      expect(r['point']).to eq('schedule')
+      expect(r['type']).to eq('in')
+      expect(r['string']).to eq('1y')
+
+      exid = r['exid']
+
+      sleep 0.140
 
       ts = @unit.timers.all
       t = ts.first
@@ -56,9 +63,15 @@ describe 'Flor punit' do
         sleep for: '2y'
       }
 
-      exid = @unit.launch(flor)
+      r = @unit.launch(flor, wait: '0 schedule')
 
-      sleep 0.350
+      expect(r['point']).to eq('schedule')
+      expect(r['type']).to eq('in')
+      expect(r['string']).to eq('2y')
+
+      exid = r['exid']
+
+      sleep 0.140
 
       ts = @unit.timers.all
       t = ts.first
@@ -92,14 +105,21 @@ describe 'Flor punit' do
         sleep '0s'
       }
 
-      exid = @unit.launch(flor)
+      exid = @unit.launch(flor, wait: true)
 
-      sleep 0.777
+      sleep 0.140
+
+      expect(@unit.journal.find { |m| m['point'] == 'schedule' }).to eq(nil)
 
       expect(@unit.executions.terminated.count).to eq(1)
 
       e = @unit.executions.terminated.first
-      expect(e.data['duration']).to be < 0.777
+
+      if jruby?
+        expect(e.data['duration']).to be < 0.777 + 1.4
+      else
+        expect(e.data['duration']).to be < 0.777
+      end
 
       expect(@unit.timers.count).to eq(0)
     end
@@ -110,19 +130,26 @@ describe 'Flor punit' do
         sleep '1s'
       }
 
-      exid = @unit.launch(flor)
+      r = @unit.launch(flor, wait: '0 schedule')
 
-      sleep 0.777
+      expect(r['point']).to eq('schedule')
+
+      exid = r['exid']
+
+      sleep 0.140
 
       expect(@unit.timers.count).to eq(1)
 
-      sleep 0.777
+      @unit.wait(exid, 'terminated')
+
+      sleep 0.140
 
       expect(@unit.executions.terminated.count).to eq(1)
 
       e = @unit.executions.terminated.first
 
       expect(e.data['duration']).to be > 1.0
+      expect(e.data['counters']['runs']).to eq(2)
 
       expect(@unit.timers.count).to eq(0)
     end

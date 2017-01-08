@@ -79,7 +79,7 @@ describe 'Flor punit' do
           r = @unit.wait(exid, '0_1 trigger')
           seconds << Time.now.sec
 
-          sleep 0.3
+          sleep 0.1
           expect(@unit.timers.count).to eq(1)
 
           t = @unit.timers.first
