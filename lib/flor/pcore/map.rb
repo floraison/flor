@@ -45,7 +45,7 @@ class Flor::Pro::Map < Flor::Procedure
 
     @node['col'] ||=
       Flor.to_coll(
-        if Flor.is_func?(payload['ret'])
+        if Flor.is_func_tree?(payload['ret'])
           node_payload_ret
         else
           payload['ret']

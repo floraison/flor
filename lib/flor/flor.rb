@@ -363,15 +363,6 @@ module Flor
     h
   end
 
-  def self.is_func?(o)
-
-    o.is_a?(Array) &&
-    o[0] == '_func' &&
-    o[1].is_a?(Hash) && o[1].keys.sort == %w[ cnid fun nid ] &&
-    o[2].is_a?(Integer) &&
-    o.size < 5
-  end
-
   def self.to_coll(o)
 
     #o.respond_to?(:to_a) ? o.to_a : [ a ]
@@ -528,8 +519,7 @@ module Flor
     o.is_a?(Array) &&
     o[0] == '_func' &&
     o[2].is_a?(Integer) &&
-    o[1].is_a?(Hash) &&
-    (o[1].keys & %w[ nid cnid fun ]).size == 3
+    o[1].is_a?(Hash) && (o[1].keys & %w[ nid cnid fun ]).size == 3
   end
 
   def self.is_task_tree?(o)
