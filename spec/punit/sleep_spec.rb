@@ -99,30 +99,34 @@ describe 'Flor punit' do
       expect(msg['error']['msg']).to eq('missing a sleep time duration')
     end
 
-    it 'does not sleep when t <= 0' do
-
-      flor = %{
-        sleep '0s'
-      }
-
-      exid = @unit.launch(flor, wait: true)
-
-      sleep 0.140
-
-      expect(@unit.journal.find { |m| m['point'] == 'schedule' }).to eq(nil)
-
-      expect(@unit.executions.terminated.count).to eq(1)
-
-      e = @unit.executions.terminated.first
-
-      if jruby?
-        expect(e.data['duration']).to be < 0.777 + 1.4
-      else
-        expect(e.data['duration']).to be < 0.777
-      end
-
-      expect(@unit.timers.count).to eq(0)
-    end
+#    it 'does not sleep when t <= 0' do
+#
+#      flor = %{
+#        sleep '0s'
+#      }
+#
+#      exid = @unit.launch(flor, wait: true)
+#
+#      sleep 0.140
+#
+#      expect(@unit.journal.find { |m| m['point'] == 'schedule' }).to eq(nil)
+#
+#      expect(@unit.executions.terminated.count).to eq(1)
+#
+#      e = @unit.executions.terminated.first
+#
+#      if jruby?
+#        expect(e.data['duration']).to be < 0.777 + 1.4
+#      else
+#        expect(e.data['duration']).to be < 0.777
+#      end
+#
+#      expect(@unit.timers.count).to eq(0)
+#    end
+  #
+  # No, it must at least "skip a beat" so that
+  # a) the code is simpler, same for "sleep 0s" and "sleep 100y";
+  # b) "sleep 0s" can be used, to well, "skip a beat"...
 
     it 'makes an execution sleep for a while' do
 
