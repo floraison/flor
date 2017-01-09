@@ -29,7 +29,7 @@ class Flor::Pro::Until < Flor::Procedure
 
   def pre_execute
 
-    @node['count'] = 1
+    @node['subs'] = []
 
     unatt_first_unkeyed_child
   end
@@ -70,23 +70,25 @@ class Flor::Pro::Until < Flor::Procedure
         # condition yield false, enter "block"
 
         payload['ret'] = node_payload_ret
-        execute_child(@ncid, @node['count'])
+        execute_child(@ncid, @node['subs'].last)
       end
 
     elsif @ncid >= children.size
       #
       # block over, increment counter and head back to condition
 
+      @node['subs'] << counter_next('subs')
+
       @node['cret'] = payload['ret']
       payload['ret'] = node_payload_ret
-      execute_child(first_unkeyed_child_id, @node['count'] += 1)
+      execute_child(first_unkeyed_child_id, @node['subs'].last)
 
     else
       #
       # we're in the middle of the "block", let's carry on
 
       # no need to set 'ret', we're in some kind of sequence
-      execute_child(@ncid, @node['count'])
+      execute_child(@ncid, @node['subs'].last)
     end
   end
 
