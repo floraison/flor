@@ -267,6 +267,47 @@ describe 'Flor pcore' do
         )
       end
 
+      it 'accepts "break" when continuing (nest-1)' do
+
+        flor = %{
+          set l []
+          concurrence
+            cursor tag: 'x2'
+              push l 'a'
+              sequence
+                sequence
+                  sequence
+                    sequence
+                      sequence
+                        sequence
+                          sequence
+                              stall _
+            sequence
+              _skip 1
+              push l 'b'
+              continue 0 ref: 'x2'
+              push l 'c'
+              break 1 ref: 'x2'
+        }
+
+        r = @executor.launch(flor, archive: true)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']['l']).to eq(%w[ a b c ])
+#        expect(r['payload']['ret']).to eq(1)
+
+        cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
+
+        expect(cursor['on_receive_last']).to eq(nil)
+        expect(cursor.has_key?('on_receive_last')).to eq(true)
+
+        expect(
+          cursor['status'][0, 4]
+        ).to eq(
+          [ 'closed', 'break', '0_1_1_4', 'break' ]
+        )
+      end
+
       it 'rejects "continue" when breaking' do
 
         flor = %{
