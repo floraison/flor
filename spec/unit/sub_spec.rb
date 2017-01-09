@@ -27,7 +27,7 @@ describe 'Flor unit' do
 
   describe 'flor' do
 
-    it 'uses unique subids' do
+    it 'uses unique subids (cmap/cmap)' do
 
       r =
         @unit.launch(%{
@@ -69,6 +69,56 @@ describe 'Flor unit' do
         0_1_1_1-4:execute:L4
         0_1_1_1-5:execute:L4
         0_1_1_1-6:execute:L4
+      ].join("\n"))
+    end
+
+    it 'uses unique subids (cmap/cursor)' do
+
+      r =
+        @unit.launch(%{
+          cmap [ 1 2 ]
+            def i
+              set j 2
+              cursor
+                trace "$(nid):i$(i):j$(j)"
+                set j (j - 1)
+                continue _ if (> j 0)
+        }, wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      sleep 0.210
+
+      nids_with_subs = @unit.journal
+        .select { |m| m['point'] == 'execute' && m['nid'].index('-') }
+        .collect { |m| m['nid'] }
+        .sort
+
+      expect(
+        nids_with_subs
+          .join("\n")
+      ).to eq(
+        nids_with_subs.uniq
+          .join("\n")
+      )
+
+      expect(
+        @unit.traces
+          .collect { |t| t.text }.sort.join("\n")
+      ).to eq(%w[
+        xxx
+      ].join("\n"))
+
+      expect(
+        @unit.journal
+          .select { |m|
+            m['point'] == 'execute' && m['nid'].index('-') }
+          .collect { |m|
+            [ m['nid'], m['point'], 'L' + m['tree'][2].to_s ].join(':') }
+          .join("\n")
+          #.inject({}) { |h, m|
+          #  si = m['nid'].split('-').last; h[si] ||= m; h }.values
+      ).to eq(%w[
       ].join("\n"))
     end
   end
