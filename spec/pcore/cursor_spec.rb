@@ -164,6 +164,21 @@ describe 'Flor pcore' do
       expect(r['payload']['l']).to eq(%w[ a c ])
     end
 
+    it 'accepts "move" as final child' do
+
+      flor = %{
+        cursor
+          push f.l 'a' tag: 'a'
+          break _ if "$(nid)" == '0_1_0_0-1'
+          move to: 'a'
+      }
+
+      r = @executor.launch(flor, payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ a a ])
+    end
+
     context 're-break/continue' do
 
       it 'accepts "break" when breaking' do

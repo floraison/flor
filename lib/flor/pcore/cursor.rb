@@ -130,7 +130,7 @@ class Flor::Pro::Cursor < Flor::Procedure
         nil
     end
 
-    super
+    super#.tap { |ms| pp ms }
   end
 
   protected
