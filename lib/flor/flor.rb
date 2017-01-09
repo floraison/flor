@@ -268,10 +268,10 @@ module Flor
 
   def self.child_nid(nid, i, sub=0)
 
-    ni, d = nid.split('-')
-    d = sub if d == nil && sub > 0
+    nid, subnid = nid.split('-')
+    subnid = sub if sub > 0
 
-    "#{ni}_#{i}#{d ? "-#{d}" : ''}"
+    "#{nid}_#{i}#{subnid ? "-#{subnid}" : ''}"
   end
 
   def self.parent_id(nid)
