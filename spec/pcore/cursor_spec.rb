@@ -287,7 +287,7 @@ describe 'Flor pcore' do
               push l 'b'
               break 0 ref: 'x3'
               push l 'c'
-              continue 1 ref: 'x3'
+              continue 'x' ref: 'x3'
         }
 
         r = @executor.launch(flor, archive: true)

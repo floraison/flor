@@ -52,10 +52,18 @@ class Flor::Pro::Break < Flor::Procedure
 
     ms = []
 
-    ms += reply(
-      'point' => 'cancel', 'nid' => nid, 'flavour' => @node['heap']) if nid
-    ms += reply(
-      ) unless is_ancestor_node?(nid)
+    if nid
+
+      ms += reply('point' => 'cancel', 'nid' => nid, 'flavour' => @node['heap'])
+    end
+
+    unless is_ancestor_node?(nid)
+
+      pl = ms.any? ? payload.copy_current : payload.current
+      pl['ret'] = node_payload_ret
+
+      ms += reply('payload' => pl)
+    end
 
     ms
   end

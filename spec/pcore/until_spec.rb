@@ -338,7 +338,7 @@ describe 'Flor procedures' do
         r = @executor.launch(flor, archive: true)
 
         expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(1)
+        expect(r['payload']['ret']).to eq(nil)
         expect(r['vars']['l']).to eq(%w[ a b c ])
 
         unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
