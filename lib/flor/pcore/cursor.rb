@@ -120,7 +120,7 @@ class Flor::Pro::Cursor < Flor::Procedure
       @node['status'] =
         make_status('moved')
       @node['on_receive_last'] =
-        execute_child(move_target_nid, @node['subs'].last, 'orl' => fla)
+        execute_child(move_target_child_id, @node['subs'].last, 'orl' => fla)
 
     else
 
@@ -135,7 +135,7 @@ class Flor::Pro::Cursor < Flor::Procedure
 
   protected
 
-  def move_target_nid
+  def move_target_child_id
 
     to = @message['to']
 
