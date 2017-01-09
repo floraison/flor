@@ -8,7 +8,7 @@
 require 'spec_helper'
 
 
-describe 'Flor punit' do
+describe 'Flor pcore' do
 
   before :each do
 
