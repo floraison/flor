@@ -216,7 +216,7 @@ describe 'Flor pcore' do
         expect(
           cursor['status'][0, 4]
         ).to eq(
-          [ 'closed', 'break', '0_1_1_4', 'closed' ]
+          [ 'closed', 'break', '0_1_1_4', 'break' ]
         )
         expect(
           cursor['on_receive_last']
@@ -263,7 +263,7 @@ describe 'Flor pcore' do
         expect(
           cursor['status'][0, 4]
         ).to eq(
-          [ 'closed', 'break', '0_1_1_4', 'closed' ]
+          [ 'closed', 'break', '0_1_1_4', 'break' ]
         )
       end
 
@@ -305,7 +305,7 @@ describe 'Flor pcore' do
         expect(
           cursor['status'][0, 4]
         ).to eq(
-          [ 'closed', 'break', '0_1_1_2', 'closed' ]
+          [ 'closed', 'break', '0_1_1_2', 'break' ]
         )
       end
 
@@ -347,7 +347,7 @@ describe 'Flor pcore' do
         expect(
           cursor['status'][0, 4]
         ).to eq(
-          [ 'closed', 'break', '0_1_1_2', 'closed' ]
+          [ 'closed', 'break', '0_1_1_2', 'break' ]
         )
       end
     end

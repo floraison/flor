@@ -95,7 +95,7 @@ class Flor::Procedure < Flor::Node
 
     @node['status'] = [
       s, @message['flavour'] || fla, @message['from'],
-      @node['status'][0], Flor.tstamp ]
+      @node['status'][1], Flor.tstamp ]
   end
 
   def close_node(flavour=nil)

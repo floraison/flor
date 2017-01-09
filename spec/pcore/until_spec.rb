@@ -306,7 +306,7 @@ describe 'Flor procedures' do
         expect(
           unt['status'][0, 4]
         ).to eq(
-          [ 'closed', 'break', '0_1_1', 'closed' ]
+          [ 'closed', 'break', '0_1_1', 'break' ]
         )
       end
 
@@ -349,7 +349,7 @@ describe 'Flor procedures' do
         expect(
           unt['status'][0, 4]
         ).to eq(
-          [ 'closed', 'break', '0_1_1_4', 'closed' ]
+          [ 'closed', 'break', '0_1_1_4', 'continue' ]
         )
       end
 
@@ -392,7 +392,7 @@ describe 'Flor procedures' do
         expect(
           unt['status'][0, 4]
         ).to eq(
-          [ 'closed', 'break', '0_1_1_2', 'closed' ]
+          [ 'closed', 'break', '0_1_1_2', 'break' ]
         )
       end
     end
