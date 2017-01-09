@@ -216,7 +216,7 @@ describe 'Flor pcore' do
         expect(
           cursor['status'][0, 4]
         ).to eq(
-          [ 'broken', 'break', '0_1_1_4', 'broken' ]
+          [ 'closed', 'break', '0_1_1_4', 'closed' ]
         )
         expect(
           cursor['on_receive_last']
@@ -257,12 +257,13 @@ describe 'Flor pcore' do
 
         cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
 
-        expect(cursor.has_key?('on_receive_last')).to eq(false)
+        expect(cursor['on_receive_last']).to eq(nil)
+        expect(cursor.has_key?('on_receive_last')).to eq(true)
 
         expect(
           cursor['status'][0, 4]
         ).to eq(
-          [ 'broken', 'break', '0_1_1_4', nil ]
+          [ 'closed', 'break', '0_1_1_4', 'closed' ]
         )
       end
 
@@ -298,12 +299,13 @@ describe 'Flor pcore' do
 
         cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
 
-        expect(cursor.has_key?('on_receive_last')).to eq(false)
+        expect(cursor.has_key?('on_receive_last')).to eq(true)
+        expect(cursor['on_receive_last']).to eq(nil)
 
         expect(
           cursor['status'][0, 4]
         ).to eq(
-          [ 'broken', 'break', '0_1_1_2', nil ]
+          [ 'closed', 'break', '0_1_1_2', 'closed' ]
         )
       end
 
@@ -339,12 +341,13 @@ describe 'Flor pcore' do
 
         cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
 
-        expect(cursor.has_key?('on_receive_last')).to eq(false)
+        expect(cursor.has_key?('on_receive_last')).to eq(true)
+        expect(cursor['on_receive_last']).to eq(nil)
 
         expect(
           cursor['status'][0, 4]
         ).to eq(
-          [ 'broken', 'break', '0_1_1_2', nil ]
+          [ 'closed', 'break', '0_1_1_2', 'closed' ]
         )
       end
     end

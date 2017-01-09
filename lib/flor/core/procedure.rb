@@ -57,8 +57,8 @@ class Flor::Procedure < Flor::Node
 
     @message['on_error'] = true
 
-    @node['status'] =
-      make_status('triggered-on-error')
+    close_node('on-error')
+
     @node['on_receive_last'] =
       apply(@node['on_error'].shift, [ @message ], tree[2])
 
@@ -91,9 +91,21 @@ class Flor::Procedure < Flor::Node
     @executor.counter_next(k)
   end
 
-  def make_status(name)
+  def set_status(s, fla)
 
-    [ name, @message['flavour'], @message['from'], node_status, Flor.tstamp ]
+    @node['status'] = [
+      s, @message['flavour'] || fla, @message['from'],
+      @node['status'][0], Flor.tstamp ]
+  end
+
+  def close_node(flavour=nil)
+
+    set_status('closed', flavour)
+  end
+
+  def open_node
+
+    set_status('open', nil)
   end
 
   def children
@@ -183,26 +195,6 @@ class Flor::Procedure < Flor::Node
     reply(hh)
   end
 
-#  # turns ```sleep "1y"``` into ```sleep _unkeyed: "1y"```
-#  #
-#  def rewrite_first_unkeyed_att
-#
-#    # TODO is that really necessary?
-#
-#    ci =
-#      children.index { |c|
-#        c[0] == '_att' && c[1].size == 1 && c[1].first[0] != '_'
-#      }
-#    return unless ci
-#
-#    t = tree
-#    cn = Flor.dup(t[1])
-#    c = cn[ci][1].first
-#    cn[ci] = [ '_att', [ [ '_unkeyed', [], c[2] ], c ], c[2] ]
-#
-#    @node['tree'] = [ t[0], cn, t[1] ]
-#  end
-
   def unatt_unkeyed_children(first_only=false)
 
     found = false
@@ -255,15 +247,16 @@ class Flor::Procedure < Flor::Node
   #
   def do_receive
 
-    if ns = @node['cnodes']
-      ns.delete(from)
-    end
+    from_child =
+      if ns = @node['cnodes']
+        ns.delete(from)
+      else
+        nil
+      end
 
-#p [ :do_receive, nid, @node['status'] ]
-    if sta = node_status
-      m = "receive_when_#{sta}".to_sym
-      return send(m) if respond_to?(m)
-      return receive_when_status
+    if node_closed?
+      return receive_from_child_when_closed if from_child
+      return receive_when_closed
     end
 
     receive
@@ -271,27 +264,30 @@ class Flor::Procedure < Flor::Node
 
   def pop_on_receive_last
 
-    orl =
-      @node['cnodes'] == [] &&
-      @node.delete('on_receive_last')
+    orl = @node['on_receive_last']
 
-    if orl && node_status != 'triggered-on-error'
-      @node['status'] = make_status(nil)
-    end
+    return nil unless orl
+    return nil if orl.empty?
+
+    open_node unless @node['status'][1] == 'on-error'
+    @node['on_receive_last'] = []
 
     @node['mtime'] = Flor.tstamp
 
     orl
   end
 
-  def receive_when_status
+  def receive_from_child_when_closed
 
-    pop_on_receive_last || reply
+    (@node['cnodes'].empty? && pop_on_receive_last) || reply
+  end
+
+  def receive_when_closed
+
+    []
   end
 
   def receive
-
-    #cnode = @node['cnodes'] ? @node['cnodes'].delete(from) : false
 
     @fcid = point == 'receive' ? Flor.child_id(from) : nil
     @ncid = (@fcid || -1) + 1
@@ -521,22 +517,17 @@ class Flor::Procedure < Flor::Node
   # override #cancel...
   #
   def do_cancel
-#p [ :do_cancel, nid, @message['flavour'], @node['status'] ]
 
     return kill if @message['flavour'] == 'kill'
 
-    if sta = node_status
-      m = "cancel_when_#{sta}".to_sym
-      return send(m) if respond_to?(m)
-      return cancel_when_status
-    end
+    return cancel_when_closed if node_closed?
 
-    @node['status'] = make_status('cancelled')
+    close_node
 
     cancel
   end
 
-  def cancel_when_status
+  def cancel_when_closed
 
     [] # by default, no effect
   end
@@ -554,7 +545,7 @@ class Flor::Procedure < Flor::Node
 
   def kill
 
-    @node['status'] = make_status('killed')
+    close_node
 
     reply + cancel
   end

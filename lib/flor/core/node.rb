@@ -101,8 +101,8 @@ class Flor::Node
     @message_payload ||= Payload.new(self, :message)
   end
 
-  def node_status
-    s = @node['status']; s ? s.first : nil
+  def node_closed?
+    @node['status'][0] == 'closed'
   end
 
   def node_payload

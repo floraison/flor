@@ -88,13 +88,9 @@ class Flor::Pro::Cursor < Flor::Procedure
     end
   end
 
-  # Override #do_cancel to provide specific over-cancel rules
-  #
-  def do_cancel
+  def cancel_when_closed
 
-#p({ x: :do_cancel, point: :cancel, flavour: fla, status: @node['status'] })
-    return [] \
-      if node_status && %w[ continue move ].include?(@message['flavour'])
+    return [] unless @message['flavour'] == 'break'
 
     cancel
   end
@@ -105,8 +101,8 @@ class Flor::Pro::Cursor < Flor::Procedure
 
     if fla == 'continue'
 
-      @node['status'] =
-        make_status('continued')
+      close_node
+
       @node['on_receive_last'] =
         reply(
           'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
@@ -117,17 +113,16 @@ class Flor::Pro::Cursor < Flor::Procedure
 
       @node['subs'] << counter_next('subs')
 
-      @node['status'] =
-        make_status('moved')
+      close_node
+
       @node['on_receive_last'] =
         execute_child(move_target_child_id, @node['subs'].last, 'orl' => fla)
 
     else
 
-      @node['status'] =
-        make_status(fla == 'break' ? 'broken' : 'cancelled')
-      @node['on_receive_last'] =
-        nil
+      close_node
+
+      @node['on_receive_last'] = nil
     end
 
     super#.tap { |ms| pp ms }

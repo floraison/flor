@@ -66,11 +66,12 @@ class Flor::Pro::Concurrence < Flor::Procedure
     reply('payload' => pld)
   end
 
-  def receive_when_status
+  def receive_from_child_when_closed
 
     ms = receive
 
     return [] if ms.empty?
+
     pop_on_receive_last || ms
   end
 

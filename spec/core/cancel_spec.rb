@@ -39,7 +39,7 @@ describe 'Flor core' do
        expect(
          seq['status'][0, 4]
        ).to eq(
-         [ 'cancelled', 'cancel', '0_1_1', nil ]
+         [ 'closed', 'cancel', '0_1_1', nil ]
        )
 
        expect(
@@ -79,7 +79,7 @@ describe 'Flor core' do
        expect(
          seq['status'][0, 4]
        ).to eq(
-         [ 'cancelled', 'cancel', '0_1_1', nil ]
+         [ 'closed', 'cancel', '0_1_1', nil ]
        )
      end
 
@@ -106,7 +106,7 @@ describe 'Flor core' do
        expect(
          seq['status'][0, 4]
        ).to eq(
-         [ 'cancelled', 'cancel', '0_1_1_1', nil ]
+         [ 'closed', 'cancel', '0_1_1_1', nil ]
        )
      end
   end

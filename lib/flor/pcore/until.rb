@@ -59,9 +59,6 @@ class Flor::Pro::Until < Flor::Procedure
         #
         # over
 
-
-        #reply('ret' => @node['cret'])
-        #reply('ret' => node_payload_ret)
         ret = @node.has_key?('cret') ? @node['cret'] : node_payload_ret
         reply('ret' => ret)
 
@@ -92,13 +89,9 @@ class Flor::Pro::Until < Flor::Procedure
     end
   end
 
-  # Override #do_cancel to provide specific over-cancel rules
-  #
-  def do_cancel
+  def cancel_when_closed
 
-#p({ x: :do_cancel, point: :cancel, flavour: fla, status: @node['status'] })
-    return [] \
-      if node_status && %w[ continue ].include?(@message['flavour'])
+    return [] unless @message['flavour'] == 'break'
 
     cancel
   end
@@ -112,20 +105,19 @@ class Flor::Pro::Until < Flor::Procedure
       pl = node_payload.copy_current
       pl = pl.merge!(payload.copy_current)
 
-      @node['status'] =
-        make_status('continued')
+      close_node
+
+      @node['subs'] << counter_next('subs')
+
       @node['on_receive_last'] =
-        reply(
-          'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
-          'orl' => true,
-          'payload' => pl)
+        execute_child(
+          first_unkeyed_child_id, @node['subs'].last, 'payload' => pl)
 
     else
 
-      @node['status'] =
-        make_status(fla == 'break' ? 'broken' : 'cancelled')
-      @node['on_receive_last'] =
-        nil # let's not delete, let's leave it as nil
+      close_node
+
+      @node['on_receive_last'] = nil
     end
 
     super

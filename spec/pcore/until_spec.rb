@@ -272,7 +272,7 @@ describe 'Flor procedures' do
 
     context 're-break/continue' do
 
-      it 'accepts "break" when breaking' do
+      it 'rejects "break" when breaking' do
 
         flor = %{
           concurrence
@@ -306,7 +306,7 @@ describe 'Flor procedures' do
         expect(
           unt['status'][0, 4]
         ).to eq(
-          [ 'broken', 'break', '0_1_1', 'broken' ]
+          [ 'closed', 'break', '0_1_1', 'closed' ]
         )
       end
 
@@ -343,12 +343,13 @@ describe 'Flor procedures' do
 
         unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
 
-        expect(unt.has_key?('on_receive_last')).to eq(false)
+        expect(unt['on_receive_last']).to eq(nil)
+        expect(unt.has_key?('on_receive_last')).to eq(true)
 
         expect(
           unt['status'][0, 4]
         ).to eq(
-          [ 'broken', 'break', '0_1_1_4', 'continued' ]
+          [ 'closed', 'break', '0_1_1_4', 'closed' ]
         )
       end
 
@@ -385,12 +386,13 @@ describe 'Flor procedures' do
 
         unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
 
-        expect(unt.has_key?('on_receive_last')).to eq(false)
+        expect(unt['on_receive_last']).to eq(nil)
+        expect(unt.has_key?('on_receive_last')).to eq(true)
 
         expect(
           unt['status'][0, 4]
         ).to eq(
-          [ 'broken', 'break', '0_1_1_2', nil ]
+          [ 'closed', 'break', '0_1_1_2', 'closed' ]
         )
       end
     end
@@ -573,7 +575,7 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ i1 i1j1 i2 i2j1 i3 i3j1 ])
-      expect(r['payload']['ret']).to eq(true)
+      expect(r['payload']['ret']).to eq(nil)
     end
   end
 end

@@ -198,7 +198,7 @@ describe 'Flor punit' do
       expect(
         seq['status'][0, 4]
       ).to eq(
-        [ 'killed', 'kill', '0_1_1', nil ] # well...
+        [ 'closed', 'kill', '0_1_1', nil ] # well...
       )
 
       sta = @unit.archive[r['exid']]['0_0_0']
@@ -206,7 +206,7 @@ describe 'Flor punit' do
       expect(
         sta['status'][0, 4]
       ).to eq(
-        [ 'cancelled', nil, '0_0', nil ]
+        [ 'closed', nil, '0_0', nil ]
       )
 
       sleep 0.3
