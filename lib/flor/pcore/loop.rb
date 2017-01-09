@@ -43,9 +43,10 @@ class Flor::Pro::Loop < Flor::Pro::Cursor
   def receive_non_att
 
     if @ncid >= children.size
-      execute_child(first_non_att_child_id, @node['count'] += 1)
+      @node['subs'] << counter_next('subs')
+      execute_child(first_non_att_child_id, @node['subs'].last)
     else
-      execute_child(@ncid, @node['count'])
+      execute_child(@ncid, @node['subs'].last)
     end
   end
 end

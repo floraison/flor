@@ -106,20 +106,23 @@ describe 'Flor unit' do
         @unit.traces
           .collect { |t| t.text }.sort.join("\n")
       ).to eq(%w[
-        xxx
+        0_1_2_0_0_0-1:i1:j2
+        0_1_2_0_0_0-2:i2:j2
+        0_1_2_0_0_0-3:i1:j1
+        0_1_2_0_0_0-4:i2:j1
       ].join("\n"))
 
-      expect(
-        @unit.journal
-          .select { |m|
-            m['point'] == 'execute' && m['nid'].index('-') }
-          .collect { |m|
-            [ m['nid'], m['point'], 'L' + m['tree'][2].to_s ].join(':') }
-          .join("\n")
-          #.inject({}) { |h, m|
-          #  si = m['nid'].split('-').last; h[si] ||= m; h }.values
-      ).to eq(%w[
-      ].join("\n"))
+      #expect(
+      #  @unit.journal
+      #    .select { |m|
+      #      m['point'] == 'execute' && m['nid'].index('-') }
+      #    .collect { |m|
+      #      [ m['nid'], m['point'], 'L' + m['tree'][2].to_s ].join(':') }
+      #    .join("\n")
+      #    #.inject({}) { |h, m|
+      #    #  si = m['nid'].split('-').last; h[si] ||= m; h }.values
+      #).to eq(%w[
+      #].join("\n"))
     end
   end
 end

@@ -50,7 +50,7 @@ class Flor::Pro::Cursor < Flor::Procedure
 
   def pre_execute
 
-    @node['count'] = 0
+    @node['subs'] = []
   end
 
   def receive_first
@@ -78,12 +78,13 @@ class Flor::Pro::Cursor < Flor::Procedure
 
     if @ncid >= children.size
       if @message['orl'] == 'continue'
-        execute_child(first_non_att_child_id, @node['count'] += 1)
+        @node['subs'] << counter_next('subs')
+        execute_child(first_non_att_child_id, @node['subs'].last)
       else
         reply
       end
     else
-      execute_child(@ncid, @node['count'])
+      execute_child(@ncid, @node['subs'].last)
     end
   end
 
@@ -114,10 +115,12 @@ class Flor::Pro::Cursor < Flor::Procedure
 
     elsif fla == 'move'
 
+      @node['subs'] << counter_next('subs')
+
       @node['status'] =
         make_status('moved')
       @node['on_receive_last'] =
-        execute_child(move_target_nid, @node['count'] += 1, 'orl' => 'move')
+        execute_child(move_target_nid, @node['subs'].last, 'orl' => fla)
 
     else
 

@@ -169,7 +169,9 @@ class Flor::Procedure < Flor::Node
     return reply \
       if index < 0 || ( ! tree[1].is_a?(Array)) || tree[1][index] == nil
 
-    cnid = Flor.child_nid(nid, index, sub || 0)
+    sub = counter_next('subs') if sub == true
+
+    cnid = Flor.child_nid(nid, index, sub)
 
     hh = {
       'point' => 'execute',
