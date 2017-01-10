@@ -89,7 +89,14 @@ module Flor
             File.dirname(__FILE__), '..', 'migrations'))
 
       synchronize do
-        Sequel::Migrator.apply(@db, dir, to, from)
+
+        Sequel::Migrator.run(
+          @db, dir,
+          :target => to, :current => from)
+
+        # defaults for the migration version table:
+        #:table => :schema_info
+        #:column => :version
       end
     end
 
