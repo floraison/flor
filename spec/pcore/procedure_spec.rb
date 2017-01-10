@@ -62,6 +62,20 @@ describe Flor::Procedure do
         { 'point' => 'receive', 'nid' => '0', 'from' => '0_0' }
       )
     end
+
+    it 'responds immediately if it has no children' do
+
+      flon = %{
+        sequence
+          sequence
+      }
+
+      ms = @executor.launch(flon, until: '0_0 execute')
+
+      expect(to_s(ms.first)).to eq('(msg 0_0 execute from:0)')
+
+      #ms = @executor.step # TODO
+    end
   end
 
   describe '#receive' do

@@ -112,13 +112,27 @@ module Flor
 
         msgs = process(message)
 
+        messages.concat(msgs)
+
+        return messages \
+          if messages.find { |m| message_match?(m, opts[:until]) }
+
         break if message['point'] == 'terminated'
         break if message['point'] == 'failed' && message['on_error'] == nil
-
-        messages.concat(msgs)
       end
 
       message
+    end
+
+    protected
+
+    # TODO eventually merge with Waiter.parse_serie
+    #
+    def message_match?(msg, ountil)
+
+      nid, point = ountil.split(' ')
+
+      msg['nid'] == nid && msg['point'] == point
     end
   end
 
