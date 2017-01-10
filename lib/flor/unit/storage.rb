@@ -496,8 +496,9 @@ module Flor
 
       uri = @unit.conf['sto_uri']
 
-      #uri = "jdbc:#{uri}" \
-      #  if RUBY_PLATFORM.match(/java/) && uri.match(/\Asqlite:/)
+      #uri = DB.uri if uri == 'DB' && defined?(DB)
+      uri = (Kernel.const_get(uri).uri rescue uri) if uri.match(/\A[A-Z]+\z/)
+        # for cases where `sto_uri: "DB"`
 
       @db = Sequel.connect(uri)
 #p [ :connected, @db.object_id ]

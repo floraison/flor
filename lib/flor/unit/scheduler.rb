@@ -46,6 +46,9 @@ module Flor
 
       @env = @conf['env'] ||= 'dev'
 
+      @env = (Kernel.const_get(@env) rescue @env) if @env.match(/\A[A-Z]+\z/)
+        # when env is "RAILS_ENV" for example...
+
       @hooker =
         (Flor::Conf.get_class(@conf, 'hooker') || Flor::Hooker).new(self)
       @storage =
