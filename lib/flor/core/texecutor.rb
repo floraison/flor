@@ -95,12 +95,15 @@ module Flor
 
       Flor.print_tree(messages.first['tree']) if conf['log_tree']
 
-      message = nil
+      walk(messages, opts)
+    end
+
+    def walk(messages, opts={})
 
       loop do
 
         message = messages.shift
-        break unless message
+        return nil unless message
 
         if message['point'] == 'terminated' && messages.any?
           #
@@ -117,11 +120,16 @@ module Flor
         return messages \
           if messages.find { |m| message_match?(m, opts[:until]) }
 
-        break if message['point'] == 'terminated'
-        break if message['point'] == 'failed' && message['on_error'] == nil
+        return message \
+          if message['point'] == 'terminated'
+        return message \
+          if message['point'] == 'failed' && message['on_error'] == nil
       end
+    end
 
-      message
+    def step(message)
+
+      process(message)
     end
 
     protected

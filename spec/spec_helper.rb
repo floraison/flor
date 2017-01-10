@@ -34,14 +34,22 @@ end
 
 def to_s(o)
 
-  if o['point'].is_a?(String)
+  if o.is_a?(Array)
+
+    o.collect { |e| to_s(e) }.join("\n")
+
+  elsif o['point'].is_a?(String)
+
     s = StringIO.new
     s << "(msg #{o['nid']} #{o['point']}"
     %w[ from flavour ].each { |k|
       s << ' ' << k << ':' << o[k].to_s if o.has_key?(k) }
     s << ")"
+
     s.string
+
   else
+
     o.inspect
   end
 end
