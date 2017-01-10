@@ -27,7 +27,7 @@ A Ruby workflow engine
   ]
 
   s.add_runtime_dependency 'munemo', '>= 1.0.1'
-  s.add_runtime_dependency 'raabro', '>= 1.1.2'
+  s.add_runtime_dependency 'raabro', '>= 1.1.3'
   #s.add_runtime_dependency 'rufus-lru', '>= 1.1.0'
   s.add_runtime_dependency 'fugit', '>= 0.9.5'
 
