@@ -127,7 +127,7 @@ module Flor
         "database not ready, " +
         "db ver: #{@storage.db_version.inspect}, " +
         "mig ver: #{@storage.migration_version}"
-      ) unless @storage.ready?
+      ) if !! @conf['sto_migration_check'] && @storage.ready?
 
       @thread_status = :running
 
