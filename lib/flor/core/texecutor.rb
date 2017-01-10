@@ -130,6 +130,8 @@ module Flor
     #
     def message_match?(msg, ountil)
 
+      return false unless ountil
+
       nid, point = ountil.split(' ')
 
       msg['nid'] == nid && msg['point'] == point
