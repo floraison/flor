@@ -35,6 +35,7 @@ module Flor
     def initialize(opts)
       @opts = opts
       @db = Db.new
+      @cache = {} # necessary for Sequel >= 4.42.0
     end
 
     def fetch_rows(sql); yield([]); end
