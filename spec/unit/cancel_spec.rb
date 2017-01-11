@@ -32,7 +32,8 @@ describe 'Flor unit' do
         stall _
       }
 
-      exid = @unit.launch(flor)
+      r = @unit.launch(flor, wait: '0 receive')
+      exid = r['exid']
 
       sleep 0.350
 

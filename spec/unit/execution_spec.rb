@@ -36,7 +36,7 @@ describe 'Flor unit' do
               stall _
             sequence tag: [ 'bb', 'cc' ]
               stall _
-        }, wait: '0_1_1_0_0 execute')
+        }, wait: '0_1_1 execute')
 
       expect(r['point']).to eq('execute')
 

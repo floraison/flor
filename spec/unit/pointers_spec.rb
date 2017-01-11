@@ -74,7 +74,7 @@ describe 'Flor unit' do
             set item_id 1234
             set role_name 'boss'
             stall _
-        }, wait: '0_3 execute')
+        }, wait: '0_2 execute')
       i1 = r['exid']
 
       sleep 0.350
@@ -102,8 +102,8 @@ describe 'Flor unit' do
         }, wait: '0_1 execute')
       exid = r['exid']
 
-#      expect(r['point']).to eq('execute')
-#      expect(r['nid']).to eq('0_1')
+      expect(r['point']).to eq('execute')
+      expect(r['nid']).to eq('0_1')
 
       sleep 0.350
 

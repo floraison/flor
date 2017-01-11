@@ -54,25 +54,25 @@ module Flor
       owait = opts[:wait]
 
       serie, timeout, repeat =
-        if owait == true
+        case owait; when true
           [ [ [ nil, %w[ failed terminated ] ] ], # serie
             DEFAULT_TIMEOUT,
             false ] # repeat
-        elsif owait.is_a?(Numeric)
+        when Numeric
           [ [ [ nil, %w[ failed terminated ] ] ], # serie
             owait, # timeout
             false ] # repeat
-        elsif owait.is_a?(String) || owait.is_a?(Array)
+        when String, Array
           [ parse_serie(owait), # serie
             opts[:timeout] || DEFAULT_TIMEOUT,
             false ] # repeat
-        elsif owait.is_a?(Hash)
+        when Hash
           [ parse_serie(owait[:serie]),
             owait[:timeout],
             owait[:repeat] ]
         end
 
-        Waiter.new(exid, serie, timeout, repeat)
+      Waiter.new(exid, serie, timeout, repeat)
     end
 
     def notify(executor, message)
@@ -124,7 +124,7 @@ module Flor
       return false if @exid && @exid != message['exid']
 
       nid, points = @serie.first
-      return false if nid && message['nid'] && ! nid.match(message['nid'])
+      return false if nid && message['nid'] && nid != message['nid']
       return false if ! points.include?(message['point'])
 
       true
@@ -136,9 +136,8 @@ module Flor
 
       (s.is_a?(String) ? s.split(',') : s)
         .map { |s|
-          s
-            .match(/\A *([0-9_\-]+ )?([a-z]+) *\z/)[1, 2]
-            .collect { |s| s ? s.strip : nil }
+          ni, pt = s.strip.match(/\A([0-9_\-]+)? *([a-z]+)\z/)[1, 2]
+          [ ni, [ pt ] ]
         }
     end
   end
