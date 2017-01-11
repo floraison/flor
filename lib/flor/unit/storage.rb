@@ -469,15 +469,25 @@ module Flor
     def update_pointers(exe, status, now)
 
       exid = exe['exid']
-
-      return @db[:flor_pointers].where(exid: exid).delete \
-        if status == 'terminated'
-
       dom = Flor.domain(exid)
+
+      @db[:flor_pointers].where(exid: exid).delete
+        # tabula rasa
+
+      return if status == 'terminated'
 
       pointers =
         Flor::Execution.tags(exe).collect { |t|
           [ dom, exid, 'tag', t, nil, now ] }
+
+      pointers +=
+        (exe['nodes']['0'] || { 'vars' => {} })['vars'].collect { |k, v|
+          case v; when Fixnum, String
+            [ dom, exid, 'var', k, v.to_s, now ]
+          else
+            nil
+          end
+        }.compact
 
       @db[:flor_pointers]
         .import(

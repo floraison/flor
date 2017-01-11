@@ -58,6 +58,19 @@ module Flor
       self.where(status: 'active', exid: exids)
     end
 
+    def self.by_var(name, value=:no)
+
+      w = { type: 'var', name: name }
+      w[:value] = value.to_s if value != :no # nil is OK
+
+      exids = self.db[:flor_pointers]
+        .where(w)
+        .select(:exid)
+        .distinct
+
+      self.where(status: 'active', exid: exids)
+    end
+
     def self.tags(data)
 
       data['nodes'].values.inject([]) do |a, n|

@@ -56,8 +56,41 @@ describe 'Flor unit' do
 
     it 'points to executions by task name'
     it 'points to executions by tasked name'
-    it 'points to executions by var name'
-    it 'points to executions by var name and value'
+
+    it 'points to executions by var name (and value)' do
+
+      r =
+        @unit.launch(%{
+          sequence
+            set item_id 1234
+            set role_name 'procrastinator'
+            stall _
+        }, wait: '0 execute')
+      i0 = r['exid']
+
+      r =
+        @unit.launch(%{
+          sequence
+            set item_id 1234
+            set role_name 'boss'
+            stall _
+        }, wait: '0_3 execute')
+      i1 = r['exid']
+
+      sleep 0.350
+
+      exes = @unit.executions.by_var('item_id')
+
+      expect(exes.collect(&:exid).sort).to eq([ i0, i1 ].sort)
+
+      exes = @unit.executions.by_var('role_name', 'boss')
+
+      expect(exes.collect(&:exid)).to eq([ i1 ])
+
+      exes = @unit.executions.by_var('role_name', 'chief of staff')
+
+      expect(exes.collect(&:exid)).to eq([])
+    end
 
     it 'removes pointers to terminated executions' do
 
