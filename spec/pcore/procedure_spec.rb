@@ -26,7 +26,7 @@ describe Flor::Procedure do
 
       ms = @executor.launch(flon, until: '0_0 execute')
 
-      expect(to_s(ms)).to eq('(msg 0_0 execute from:0)')
+      expect(summarize(ms)).to eq('(msg 0_0 execute from:0)')
 
       ms = @executor.step(ms.first)
       m = ms.first

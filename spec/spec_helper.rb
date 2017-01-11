@@ -36,7 +36,7 @@ def summarize(o)
 
   if o.is_a?(Array)
 
-    o.collect { |e| to_s(e) }.join("\n")
+    o.collect { |e| summarize(e) }.join("\n")
 
   elsif o['point'].is_a?(String)
 
