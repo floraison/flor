@@ -71,7 +71,7 @@ module Flor
     end
   end
 
-  MODELS = [ :executions, :timers, :traces, :traps ]
+  MODELS = [ :executions, :timers, :traces, :traps, :pointers ]
 
   dir = File.dirname(__FILE__)
   MODELS.each { |m| require File.join(dir, 'models', "#{m.to_s[0..-2]}.rb") }

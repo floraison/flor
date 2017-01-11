@@ -167,12 +167,19 @@ module Flor
 
         synchronize do
 
-          @db[:flor_executions]
-            .where(id: i)
-            .update(
-              content: data,
-              status: status,
-              mtime: Flor.tstamp)
+          @db.transaction do
+
+            now = Flor.tstamp
+
+            @db[:flor_executions]
+              .where(id: i)
+              .update(
+                content: data,
+                status: status,
+                mtime: now)
+
+            insert_pointers(ex, now)
+          end
         end
       else
 
@@ -181,17 +188,22 @@ module Flor
 
         synchronize do
 
-          n = Flor.tstamp
+          @db.transaction do
 
-          ex['id'] =
-            @db[:flor_executions]
-              .insert(
-                domain: Flor.domain(ex['exid']),
-                exid: ex['exid'],
-                content: data,
-                status: 'active',
-                ctime: n,
-                mtime: n)
+            now = Flor.tstamp
+
+            ex['id'] =
+              @db[:flor_executions]
+                .insert(
+                  domain: Flor.domain(ex['exid']),
+                  exid: ex['exid'],
+                  content: data,
+                  status: 'active',
+                  ctime: now,
+                  mtime: now)
+
+            insert_pointers(ex, now)
+          end
         end
       end
 
@@ -454,6 +466,21 @@ module Flor
 
     protected
 
+    def insert_pointers(exe, now)
+
+      exid = exe['exid']
+      dom = Flor.domain(exid)
+
+      pointers =
+        Flor::Execution.tags(exe).collect { |t|
+          [ dom, exid, 'tag', t, nil, now ] }
+
+      @db[:flor_pointers]
+        .import(
+          [ :domain, :exid, :type, :name, :value, :ctime ],
+          pointers)
+    end
+
     def determine_type_and_schedule(message)
 
       t, s = message['type'], message['string']
@@ -508,14 +535,9 @@ module Flor
         # for cases where `sto_uri: "DB"`
 
       @db = Sequel.connect(uri)
-#p [ :connected, @db.object_id ]
-#class << @db
-#  alias_method :_square, :[]
-#  def [](k)
-#    p [ self.object_id, k, :t, Thread.current ]
-#    _square(k)
-#  end
-#end
+
+      class << @db; attr_accessor :flor_unit; end
+      @db.flor_unit = @unit
 
       if cv = @unit.conf['sto_connection_validation']
 

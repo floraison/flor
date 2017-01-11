@@ -86,6 +86,24 @@ Sequel.migration do
 
       index :exid
     end
+
+    create_table :flor_pointers do
+
+      primary_key :id, type: :Bignum
+      String :domain, null: false
+      String :exid, null: false
+      String :type, null: false  # task, tasked, tag, var
+      String :name, null: false # task name, tasked name, tag name, var name
+      String :value
+      String :ctime
+
+      # no :status, no :mtime
+
+      index [ :type, :name, :value ]
+
+      #unique [ :exid, :type, :name, :value ]
+        # we don't care, pointers are cleaned anyway when the flow dies
+    end
   end
 
   down do
@@ -95,6 +113,7 @@ Sequel.migration do
     drop_table :flor_timers
     drop_table :flor_traps
     drop_table :flor_traces
+    drop_table :flor_pointers
   end
 end
 

@@ -25,46 +25,7 @@
 
 module Flor
 
-  class Execution < FlorModel
-
-    def nodes; data['nodes']; end
-    def tags; self.class.tags(data); end
-
-    def failed?
-
-      !! nodes.values
-        .find { |n| n['failure'] && n['status'] != 'triggered-on-error' }
-    end
-
-    # class methods
-
-    def self.by_status(s)
-
-      self.where(status: s)
-    end
-
-    def self.terminated
-
-      by_status('terminated')
-    end
-
-    def self.by_tag(name)
-
-      exids = self.db[:flor_pointers]
-        .where(type: 'tag', name: name, value: nil)
-        .select(:exid)
-        .distinct
-
-      self.where(status: 'active', exid: exids)
-    end
-
-    def self.tags(data)
-
-      data['nodes'].values.inject([]) do |a, n|
-        if ts = n['tags']; a.concat(ts); end
-        a
-      end
-    end
+  class Pointer < FlorModel
   end
 end
 

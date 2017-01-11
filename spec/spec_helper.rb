@@ -32,7 +32,7 @@ def wait_until(timeout=14, frequency=0.1, &block)
   fail "timeout after #{timeout}s"
 end
 
-def to_s(o)
+def summarize(o)
 
   if o.is_a?(Array)
 
