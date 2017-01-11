@@ -49,6 +49,7 @@ class Flor::Pro::Task < Flor::Procedure
       'point' => 'task',
       'exid' => exid, 'nid' => nid,
       'tasker' => att(nil),
+      'taskname' => nil, # TODO determine me
       'payload' => determine_payload)
   end
 

@@ -328,11 +328,16 @@ module Flor
 
     def task(message)
 
+      @execution['tasks'][message['nid']] =
+        { 'tasker' => message['tasker'], 'name' => message['taskname'] }
+
       @unit.tasker.task(message)
     end
     alias detask task
 
     def return(message)
+
+      @execution['tasks'].delete(message['nid'])
 
       [
         { 'point' => 'receive',

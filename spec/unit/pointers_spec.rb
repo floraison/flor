@@ -78,6 +78,21 @@ describe 'Flor unit' do
 
       r =
         @unit.launch(%{
+          sequence
+            alpha task: 'wipe table'
+            stall _
+        }, wait: '0_1 receive')
+      exid = r['exid']
+
+      expect(r['point']).to eq('receive')
+
+      expect(@unit.pointers.count).to eq(0)
+    end
+
+    it 'removes pointers to taskers when terminated' do
+
+      r =
+        @unit.launch(%{
           alpha task: 'wipe table'
         }, wait: true)
       exid = r['exid']

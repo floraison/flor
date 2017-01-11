@@ -279,12 +279,19 @@ module Flor
     def remove_node(exid, n)
 
       #@storage.remove_node(exid, n)
+        # done in Storage#put_execution
 
       @mutex.synchronize do
         @timers.reject! { |t| t.exid == exid && t.nid == n['nid'] }
       end
 
       (@archive[exid] ||= {})[n['nid']] = Flor.dup(n) if @archive
+    end
+
+    def execution(exid)
+
+      ex = @executors.find { |x| x.exid == exid }
+      ex ? ex.execution : nil
     end
 
     protected

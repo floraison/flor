@@ -138,7 +138,7 @@ module Flor
         ex
       else
         put_execution({
-          'exid' => exid, 'nodes' => {}, 'errors' => [],
+          'exid' => exid, 'nodes' => {}, 'errors' => [], 'tasks' => {},
           #'ashes' => {},
           'counters' => {}, 'start' => Flor.tstamp,
           'size' => -1
@@ -480,20 +480,19 @@ module Flor
         @db[:flor_traps].where(exid: exid).exclude(x).delete
       end
 
-      @db[:flor_pointers].where(exid: exid).exclude(x).delete
+      #@db[:flor_pointers].where(exid: exid).exclude(x).delete
+        # done in update_pointers
     end
 
     def update_pointers(exe, status, now)
 
       exid = exe['exid']
-      dom = Flor.domain(exid)
 
-      @db[:flor_pointers]
-        .where(exid: exid).exclude(type: %w[ task tasker ])
-        .delete
-          # tabula quasi rasa
+      @db[:flor_pointers].where(exid: exid).delete
 
       return if status == 'terminated'
+
+      dom = Flor.domain(exid)
 
       pointers =
         exe['nodes'].inject([]) { |a, (nid, node)|
@@ -512,6 +511,11 @@ module Flor
             nil
           end
         }.compact
+
+      pointers +=
+        exe['tasks'].collect { |nid, v|
+          [ dom, exid, nid, 'tasker', v['tasker'], v['name'], now ]
+        }
 
       @db[:flor_pointers]
         .import(
