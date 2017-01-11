@@ -178,7 +178,7 @@ module Flor
                 status: status,
                 mtime: now)
 
-            insert_pointers(ex, now)
+            update_pointers(ex, status, now)
           end
         end
       else
@@ -202,7 +202,7 @@ module Flor
                   ctime: now,
                   mtime: now)
 
-            insert_pointers(ex, now)
+            update_pointers(ex, status, now)
           end
         end
       end
@@ -466,9 +466,13 @@ module Flor
 
     protected
 
-    def insert_pointers(exe, now)
+    def update_pointers(exe, status, now)
 
       exid = exe['exid']
+
+      return @db[:flor_pointers].where(exid: exid).delete \
+        if status == 'terminated'
+
       dom = Flor.domain(exid)
 
       pointers =

@@ -99,6 +99,7 @@ Sequel.migration do
 
       # no :status, no :mtime
 
+      index :exid
       index [ :type, :name, :value ]
 
       #unique [ :exid, :type, :name, :value ]

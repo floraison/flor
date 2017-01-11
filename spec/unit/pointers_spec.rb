@@ -51,7 +51,7 @@ describe 'Flor unit' do
 
       exes = @unit.executions.by_tag('a')
 
-      expect(exes.collect(&:exid)).to eq([ i0, i1 ])
+      expect(exes.collect(&:exid).sort).to eq([ i0, i1 ].sort)
     end
 
     it 'points to executions by task name'
@@ -59,27 +59,18 @@ describe 'Flor unit' do
     it 'points to executions by var name'
     it 'points to executions by var name and value'
 
-    it 'removes pointers to terminated executions'
+    it 'removes pointers to terminated executions' do
 
-#    it 'lists the current tags' do
-#
-#      r =
-#        @unit.launch(%{
-#          concurrence
-#            sequence tag: 'aa'
-#              stall _
-#            sequence tag: [ 'bb', 'cc' ]
-#              stall _
-#        }, wait: '0_1_1_0_0 execute')
-#
-#      expect(r['point']).to eq('execute')
-#
-#      sleep 0.490
-#
-#      exe = @unit.executions[exid: r['exid']]
-#
-#      expect(exe.tags).to eq(%w[ aa bb cc ])
-#    end
+      r =
+        @unit.launch(%{
+          sequence tag: 'a'
+        }, wait: true)
+      exid = r['exid']
+
+      expect(r['point']).to eq('terminated')
+
+      expect(@unit.pointers.count).to eq(0)
+    end
   end
 end
 
