@@ -482,8 +482,10 @@ module Flor
 
       pointers +=
         (exe['nodes']['0'] || { 'vars' => {} })['vars'].collect { |k, v|
-          case v; when Fixnum, String
+          case v; when Fixnum, String, TrueClass, FalseClass
             [ dom, exid, 'var', k, v.to_s, now ]
+          when NilClass
+            [ dom, exid, 'var', k, nil, now ]
           else
             nil
           end

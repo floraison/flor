@@ -61,7 +61,14 @@ module Flor
     def self.by_var(name, value=:no)
 
       w = { type: 'var', name: name }
-      w[:value] = value.to_s if value != :no # nil is OK
+
+      case value; when nil
+        w[:value] = nil
+      when :no
+        # no w[:value] "constraining"
+      else
+        w[:value] = value.to_s
+      end
 
       exids = self.db[:flor_pointers]
         .where(w)

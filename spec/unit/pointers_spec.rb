@@ -92,6 +92,34 @@ describe 'Flor unit' do
       expect(exes.collect(&:exid)).to eq([])
     end
 
+    it 'points to executions by var name and nil value' do
+
+      r =
+        @unit.launch(%{
+          sequence
+            set item_id null
+            stall _
+        }, wait: '0_1 execute')
+      exid = r['exid']
+
+#      expect(r['point']).to eq('execute')
+#      expect(r['nid']).to eq('0_1')
+
+      sleep 0.350
+
+      exes = @unit.executions.by_var('item_id')
+
+      expect(exes.collect(&:exid)).to eq([ exid ])
+
+      exes = @unit.executions.by_var('item_id', nil)
+
+      expect(exes.collect(&:exid)).to eq([ exid ])
+
+      exes = @unit.executions.by_var('item_id', 1)
+
+      expect(exes.collect(&:exid)).to eq([])
+    end
+
     it 'removes pointers to terminated executions' do
 
       r =
