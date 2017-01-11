@@ -177,6 +177,27 @@ describe 'Flor unit' do
 
       expect(@unit.pointers.count).to eq(0)
     end
+
+    it 'does not insert too many pointers' do
+
+      r =
+        @unit.launch(%{
+          concurrence
+            hole task: 'a'
+            alpha task: 'b'
+            sequence
+              sleep 1
+              alpha task: 'c'
+        }, wait: '0_2_1 task')
+      exid = r['exid']
+
+      expect(r['point']).to eq('task')
+
+      sleep 0.350
+
+      # use this one alone with `FLOR_DEBUG=db,dbg` and observe how
+      # it avoids deleting and re-inserting pointers
+    end
   end
 end
 

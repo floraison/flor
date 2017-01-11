@@ -488,9 +488,19 @@ module Flor
 
       exid = exe['exid']
 
-      @db[:flor_pointers].where(exid: exid).delete
+      if status == 'terminated'
+        @db[:flor_pointers].where(exid: exid).delete
+        return
+      end
 
-      return if status == 'terminated'
+      @db[:flor_pointers]
+        .where(exid: exid)
+        .where(Sequel.|({ type: %w[ var ] }, Sequel.~(nid: exe['nodes'].keys)))
+        .delete
+          #
+          # Delete all pointer to vars, their value might have changed,
+          # let's reinsert them.
+          # Delete pointers to gone nodes.
 
       dom = Flor.domain(exid)
 
@@ -516,6 +526,15 @@ module Flor
         exe['tasks'].collect { |nid, v|
           [ dom, exid, nid, 'tasker', v['tasker'], v['name'], now ]
         }
+
+      cps = @db[:flor_pointers] # current pointers
+        .where(exid: exid)
+        .select(:nid, :type, :name)
+        .all
+      pointers.reject! { |_, _, ni, ty, na, _, _|
+        cps.find { |cp| cp[:nid] == ni && cp[:type] == ty && cp[:name] == na } }
+          #
+          # don't insert when already inserted
 
       @db[:flor_pointers]
         .import(
