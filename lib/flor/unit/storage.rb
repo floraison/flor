@@ -395,6 +395,8 @@ module Flor
 
     def remove_node(exid, n)
 
+      nid = n['nid']
+
       removal =
         @archive ?
         lambda { |u| u.update(status: 'removed') } :
@@ -404,11 +406,15 @@ module Flor
         @db.transaction do
 
           @db[:flor_timers]
-            .where(exid: exid, nid: n['nid'])
+            .where(exid: exid, nid: nid)
             .tap { |u| removal.call(u) }
           @db[:flor_traps]
-            .where(exid: exid, nid: n['nid'])
+            .where(exid: exid, nid: nid)
             .tap { |u| removal.call(u) }
+
+          @db[:flor_pointers]
+            .where(exid: exid, nid: nid)
+            .delete
         end
       end
 
@@ -467,6 +473,24 @@ module Flor
       end
     end
 
+    def put_task_pointer(msg, tname, tconf)
+
+      exid = msg['exid']
+      dom = Flor.domain(exid)
+
+      synchronize do
+
+        @db[:flor_pointers]
+          .insert(
+            domain: dom,
+            exid: exid,
+            nid: msg['nid'],
+            type: 'tasker',
+            name: tname,
+            ctime: Flor.tstamp)
+      end
+    end
+
     protected
 
     def update_pointers(exe, status, now)
@@ -474,21 +498,26 @@ module Flor
       exid = exe['exid']
       dom = Flor.domain(exid)
 
-      @db[:flor_pointers].where(exid: exid).delete
-        # tabula rasa
+      @db[:flor_pointers]
+        .where(exid: exid).exclude(type: %w[ task tasker ])
+        .delete
+          # tabula quasi rasa
 
       return if status == 'terminated'
 
       pointers =
-        Flor::Execution.tags(exe).collect { |t|
-          [ dom, exid, 'tag', t, nil, now ] }
+        exe['nodes'].inject([]) { |a, (nid, node)|
+          ts = node['tags']
+          ts.each { |t| a << [ dom, exid, nid, 'tag', t, nil, now ] } if ts
+          a
+        }
 
       pointers +=
         (exe['nodes']['0'] || { 'vars' => {} })['vars'].collect { |k, v|
           case v; when Fixnum, String, TrueClass, FalseClass
-            [ dom, exid, 'var', k, v.to_s, now ]
+            [ dom, exid, '0', 'var', k, v.to_s, now ]
           when NilClass
-            [ dom, exid, 'var', k, nil, now ]
+            [ dom, exid, '0', 'var', k, nil, now ]
           else
             nil
           end
@@ -496,7 +525,7 @@ module Flor
 
       @db[:flor_pointers]
         .import(
-          [ :domain, :exid, :type, :name, :value, :ctime ],
+          [ :domain, :exid, :nid, :type, :name, :value, :ctime ],
           pointers)
     end
 

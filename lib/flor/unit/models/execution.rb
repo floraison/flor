@@ -28,7 +28,14 @@ module Flor
   class Execution < FlorModel
 
     def nodes; data['nodes']; end
-    def tags; self.class.tags(data); end
+
+    def tags
+
+      data['nodes'].values.inject([]) do |a, n|
+        if ts = n['tags']; a.concat(ts); end
+        a
+      end
+    end
 
     def failed?
 
@@ -78,13 +85,21 @@ module Flor
       self.where(status: 'active', exid: exids)
     end
 
-    def self.tags(data)
+    def self.by_tasker(name, taskname=:no)
 
-      data['nodes'].values.inject([]) do |a, n|
-        if ts = n['tags']; a.concat(ts); end
-        a
-      end
+      w = { type: 'tasker', name: name }
+      w[:value] = taskname if taskname != :no
+
+      exids = self.db[:flor_pointers]
+        .where(w)
+        .select(:exid)
+        .distinct
+
+      self.where(status: 'active', exid: exids)
     end
+
+#    def self.by_task(name)
+#    end
   end
 end
 

@@ -55,7 +55,37 @@ describe 'Flor unit' do
     end
 
     it 'points to executions by task name'
-    it 'points to executions by tasked name'
+
+    it 'points to executions by tasker name' do
+
+      r =
+        @unit.launch(%{
+          sequence
+            hole task: 'cleanup'
+        }, wait: '0_0 task')
+      exid = r['exid']
+
+      expect(r['point']).to eq('task')
+
+      sleep 0.350
+
+      exes = @unit.executions.by_tasker('hole')
+
+      expect(exes.collect(&:exid)).to eq([ exid ])
+    end
+
+    it 'removes pointers to taskers when done' do
+
+      r =
+        @unit.launch(%{
+          alpha task: 'wipe table'
+        }, wait: true)
+      exid = r['exid']
+
+      expect(r['point']).to eq('terminated')
+
+      expect(@unit.pointers.count).to eq(0)
+    end
 
     it 'points to executions by var name (and value)' do
 

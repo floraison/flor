@@ -61,6 +61,8 @@ module Flor
       message['tconf'] = tconf \
         unless tconf['on_task']['include_tconf'] == false
 
+      @unit.storage.put_task_pointer(message, tname, tconf)
+
       return ruby_task(message, tconf) if tconf['on_task']['require']
       return cmd_task(message, tconf) if tconf['on_task']['cmd']
 
