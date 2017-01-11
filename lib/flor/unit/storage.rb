@@ -178,6 +178,7 @@ module Flor
                 status: status,
                 mtime: now)
 
+            remove_nodes(ex, status, now)
             update_pointers(ex, status, now)
           end
         end
@@ -202,6 +203,7 @@ module Flor
                   ctime: now,
                   mtime: now)
 
+            remove_nodes(ex, status, now)
             update_pointers(ex, status, now)
           end
         end
@@ -393,36 +395,6 @@ module Flor
       raise err
     end
 
-    def remove_node(exid, n)
-
-      nid = n['nid']
-
-      removal =
-        @archive ?
-        lambda { |u| u.update(status: 'removed') } :
-        lambda { |u| u.delete }
-
-      synchronize do
-        @db.transaction do
-
-          @db[:flor_timers]
-            .where(exid: exid, nid: nid)
-            .tap { |u| removal.call(u) }
-          @db[:flor_traps]
-            .where(exid: exid, nid: nid)
-            .tap { |u| removal.call(u) }
-
-          @db[:flor_pointers]
-            .where(exid: exid, nid: nid)
-            .delete
-        end
-      end
-
-    rescue => err
-      Thread.current[:sto_errored_items] = [ exid, n ]
-      raise err
-    end
-
     def put_trap(node, tra)
 
       exid = node['exid']
@@ -492,6 +464,24 @@ module Flor
     end
 
     protected
+
+    def remove_nodes(exe, status, now)
+
+      exid = exe['exid']
+
+      x = status == 'terminated' ? {} : { nid: exe['nodes'].keys }
+        # if 'terminated' include all nodes
+
+      if @archive
+        @db[:flor_timers].where(exid: exid).exclude(x).update(status: 'removed')
+        @db[:flor_traps].where(exid: exid).exclude(x).update(status: 'removed')
+      else
+        @db[:flor_timers].where(exid: exid).exclude(x).delete
+        @db[:flor_traps].where(exid: exid).exclude(x).delete
+      end
+
+      @db[:flor_pointers].where(exid: exid).exclude(x).delete
+    end
 
     def update_pointers(exe, status, now)
 

@@ -278,7 +278,7 @@ module Flor
 
     def remove_node(exid, n)
 
-      @storage.remove_node(exid, n)
+      #@storage.remove_node(exid, n)
 
       @mutex.synchronize do
         @timers.reject! { |t| t.exid == exid && t.nid == n['nid'] }

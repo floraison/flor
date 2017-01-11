@@ -79,7 +79,7 @@ Sequel.migration do
       primary_key :id, type: :Bignum
       String :domain, null: false
       String :exid, null: false
-      String :nid
+      String :nid, null: false
       String :type, null: false  # task, tasked, tag, var
       String :name, null: false # task name, tasked name, tag name, var name
       String :value
