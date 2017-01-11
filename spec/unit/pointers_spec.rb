@@ -86,6 +86,8 @@ describe 'Flor unit' do
 
       expect(r['point']).to eq('receive')
 
+      sleep 0.350
+
       expect(@unit.pointers.count).to eq(0)
     end
 
@@ -98,6 +100,8 @@ describe 'Flor unit' do
       exid = r['exid']
 
       expect(r['point']).to eq('terminated')
+
+      sleep 0.350
 
       expect(@unit.pointers.count).to eq(0)
     end
@@ -174,6 +178,8 @@ describe 'Flor unit' do
       exid = r['exid']
 
       expect(r['point']).to eq('terminated')
+
+      sleep 0.350
 
       expect(@unit.pointers.count).to eq(0)
     end
