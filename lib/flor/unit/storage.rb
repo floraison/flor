@@ -421,6 +421,7 @@ module Flor
 
       exid = node['exid']
       dom = Flor.domain(exid)
+      now = Flor.tstamp
 
       id =
         synchronize do
@@ -437,7 +438,9 @@ module Flor
               theats: tra['heats'],
               theaps: tra['heaps'],
               content: to_blob(tra),
-              status: 'active')
+              status: 'active',
+              ctime: now,
+              mtime: now)
           end
         end
 
@@ -460,7 +463,7 @@ module Flor
           nid: nid,
           tracer: tracer,
           text: text,
-          tstamp: Time.now.utc)
+          ctime: Flor.tstamp)
       end
     end
 
