@@ -288,11 +288,13 @@ module Flor
       (@archive[exid] ||= {})[n['nid']] = Flor.dup(n) if @archive
     end
 
-    def execution(exid)
-
-      ex = @executors.find { |x| x.exid == exid }
-      ex ? ex.execution : nil
-    end
+#    # Given an exid, returns the execution, if currently executing.
+#    #
+#    def execution(exid)
+#
+#      ex = @executors.find { |x| x.exid == exid }
+#      ex ? ex.execution : nil
+#    end
 
     protected
 
