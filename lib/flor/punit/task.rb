@@ -45,12 +45,32 @@ class Flor::Pro::Task < Flor::Procedure
 
   def receive_last_att
 
+    # task 'clean up' by: 'alan'
+    # task 'clean up' for: 'alan'
+    # task 'clean up' assign: 'alan'
+    # task 'alan' with: 'clean up'
+    # clean_up assign: 'alan'
+    # "clean up" assign: 'alan'
+    # alan task: 'clean up'
+
+    #@executor.unit.tasker.has_tasker?(@executor.exid, key)
+
+    ni = att(nil)
+    ta = att('by', 'for', 'assign')
+    tn = att('with', 'task')
+
+    tasker = ta || ni
+
+    taskname = tn || ni
+    taskname = nil if ta == nil && tasker == ni
+
     queue(
       'point' => 'task',
       'exid' => exid, 'nid' => nid,
-      'tasker' => att(nil),
-      'taskname' => nil, # TODO determine me
+      'tasker' => tasker,
+      'taskname' => taskname,
       'payload' => determine_payload)
+#.tap { |x| pp x.first }
   end
 
   def cancel
