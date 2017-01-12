@@ -117,8 +117,8 @@ module Flor
 
         messages.concat(msgs)
 
-        return messages \
-          if messages.find { |m| message_match?(m, opts[:until]) }
+        return messages if message_match?(message, opts[:until_after])
+        return messages if message_match?(messages, opts[:until])
 
         return message \
           if message['point'] == 'terminated'
@@ -136,13 +136,15 @@ module Flor
 
     # TODO eventually merge with Waiter.parse_serie
     #
-    def message_match?(msg, ountil)
+    def message_match?(msg_s, ountil)
 
       return false unless ountil
 
+      ms = msg_s; ms = [ ms ] if ms.is_a?(Hash)
+
       nid, point = ountil.split(' ')
 
-      msg['nid'] == nid && msg['point'] == point
+      ms.find { |m| m['nid'] == nid && m['point'] == point }
     end
   end
 

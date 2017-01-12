@@ -17,16 +17,20 @@ describe Flor::Procedure do
 
   describe '#execute' do
 
-    it 'responds immediately if it has no children' do
+    it 'replies to its parent if it has no children' do
+
+      # preparation
 
       flon = %{
-        sequence
-          sequence
+        sequence    # 0
+          sequence  # 0_0 <-- our test point
       }
 
       ms = @executor.launch(flon, until: '0_0 execute')
 
       expect(summarize(ms)).to eq('(msg 0_0 execute from:0)')
+
+      # test
 
       ms = @executor.step(ms.first)
       m = ms.first
@@ -49,7 +53,26 @@ describe Flor::Procedure do
 
   describe '#receive' do
   end
+
   describe '#cancel' do
+
+    it 'replies to its parent it if has no children' do
+
+      # preparation
+
+      flon = %{
+        sequence   # 0
+          stall _  # 0_0 <-- our test point
+      }
+
+      ms = @executor.launch(flon, until_after: '0_0 receive')
+
+      expect(ms).to eq([])
+
+      # test
+
+      # TODO
+    end
   end
 end
 
