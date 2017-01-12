@@ -32,7 +32,7 @@ describe Flor::Procedure do
 
       # test
 
-      ms = @executor.step(ms.first)
+      ms = @executor.step(ms.first) # <-- feed execute message to 0_0
       m = ms.first
 
       n = @executor.node('0_0')
@@ -56,7 +56,7 @@ describe Flor::Procedure do
 
   describe '#cancel' do
 
-    it 'replies to its parent it if has no children' do
+    it 'replies to its parent it if it has no children' do
 
       # preparation
 
@@ -71,7 +71,23 @@ describe Flor::Procedure do
 
       # test
 
-      # TODO
+      m = { 'point' => 'cancel', 'nid' => '0_0', 'exid' => @executor.exid }
+
+      ms = @executor.step(m) # <-- feed cancel message to node 0_0
+
+      n = @executor.node('0_0')
+
+      expect(n['nid']).to eq('0_0')
+      expect(n['parent']).to eq('0')
+      expect(n['heat0']).to eq('stall')
+      expect(n['status'][0, 4]).to eq([ 'closed', 'cancel', nil, nil ])
+
+      expect(ms.size).to eq(1)
+
+      expect(ms.first['point']).to eq('receive')
+      expect(ms.first['nid']).to eq('0')
+      expect(ms.first['from']).to eq('0_0')
+      expect(ms.first['sm']).to eq(5)
     end
   end
 end

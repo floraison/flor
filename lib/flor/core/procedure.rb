@@ -522,7 +522,7 @@ class Flor::Procedure < Flor::Node
 
     return cancel_when_closed if node_closed?
 
-    close_node
+    close_node(@message['flavour'] || 'cancel')
 
     cancel
   end

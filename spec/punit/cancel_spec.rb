@@ -206,7 +206,7 @@ describe 'Flor punit' do
       expect(
         sta['status'][0, 4]
       ).to eq(
-        [ 'closed', nil, '0_0', nil ]
+        [ 'closed', 'cancel', '0_0', nil ]
       )
 
       sleep 0.3
