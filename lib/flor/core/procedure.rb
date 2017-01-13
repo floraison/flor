@@ -91,21 +91,26 @@ class Flor::Procedure < Flor::Node
     @executor.counter_next(k)
   end
 
-  def set_status(s, fla)
+  def stack_status(point, flavour, from, status)
 
-    @node['status'] = [
-      s, @message['flavour'] || fla, @message['from'],
-      @node['status'][1], Flor.tstamp ]
+    h = { 'point' => point, 'status' => status, 'ctime' => Flor.tstamp }
+    h['flavour'] = flavour if flavour
+    h['from'] = from if from
+
+    @node['status'] << h
   end
 
-  def close_node(flavour=nil)
-
-    set_status('closed', flavour)
+  def close_node(flavour=@message['flavour'])
+    stack_status(
+      @message['point'], flavour, @message['from'], 'closed')
   end
-
   def open_node
-
-    set_status('open', nil)
+    stack_status(
+      @message['point'], @message['flavour'], @message['from'], nil)
+  end
+  def end_node
+    stack_status(
+      @message['point'], @message['flavour'], @message['from'], 'ended')
   end
 
   def children
@@ -269,7 +274,7 @@ class Flor::Procedure < Flor::Node
     return nil unless orl
     return nil if orl.empty?
 
-    open_node unless @node['status'][1] == 'on-error'
+    open_node unless node_status['flavour'] == 'on-error'
     @node['on_receive_last'] = []
 
     @node['mtime'] = Flor.tstamp
@@ -522,7 +527,7 @@ class Flor::Procedure < Flor::Node
 
     return cancel_when_closed if node_closed?
 
-    close_node(@message['flavour'] || 'cancel')
+    close_node
 
     cancel
   end

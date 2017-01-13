@@ -37,10 +37,11 @@ describe 'Flor core' do
        seq = @executor.archive['0_0']
 
        expect(
-         seq['status'][0, 4]
-       ).to eq(
-         [ 'closed', 'cancel', '0_1_1', nil ]
-       )
+         F.to_s(seq, :status)
+       ).to eq(%{
+         (status closed pt:cancel fla:cancel fro:0_1_1)
+         (status o pt:execute)
+       }.ftrim)
 
        expect(
          @executor.journal
@@ -77,10 +78,11 @@ describe 'Flor core' do
        seq = @executor.archive['0_0']
 
        expect(
-         seq['status'][0, 4]
-       ).to eq(
-         [ 'closed', 'cancel', '0_1_1', nil ]
-       )
+         F.to_s(seq, :status)
+       ).to eq(%{
+         (status closed pt:cancel fla:cancel fro:0_1_1)
+         (status o pt:execute)
+       }.ftrim)
      end
 
      it 'over-cancels if flavoured' # kill ???????????????????????????????????
@@ -104,10 +106,11 @@ describe 'Flor core' do
        seq = @executor.archive['0_1_0']
 
        expect(
-         seq['status'][0, 4]
-       ).to eq(
-         [ 'closed', 'cancel', '0_1_1_1', nil ]
-       )
+         F.to_s(seq, :status)
+       ).to eq(%{
+         (status closed pt:cancel fla:cancel fro:0_1_1_1)
+         (status o pt:execute)
+       }.ftrim)
      end
   end
 end

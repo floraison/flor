@@ -214,10 +214,13 @@ describe 'Flor pcore' do
         cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
 
         expect(
-          cursor['status'][0, 4]
-        ).to eq(
-          [ 'closed', 'break', '0_1_1_4', 'break' ]
-        )
+          F.to_s(cursor, :status)
+        ).to eq(%{
+          (status closed pt:cancel fla:break fro:0_1_1_4)
+          (status closed pt:cancel fla:break fro:0_1_1_2) # TODO why the double?
+          (status closed pt:cancel fla:break fro:0_1_1_2)
+          (status o pt:execute)
+        }.ftrim)
         expect(
           cursor['on_receive_last']
         ).to eq(
@@ -261,9 +264,20 @@ describe 'Flor pcore' do
         expect(cursor.has_key?('on_receive_last')).to eq(true)
 
         expect(
-          cursor['status'][0, 4]
+          F.to_s(cursor, :status)
+        ).to eq(%{
+          (status closed pt:cancel fla:break fro:0_1_1_4) # double?
+          (status closed pt:cancel fla:break fro:0_1_1_4)
+          (status o pt:receive fro:0_1_0_2)
+          (status closed pt:cancel fla:continue fro:0_1_1_2) # double?
+          (status closed pt:cancel fla:continue fro:0_1_1_2)
+          (status o pt:execute)
+        }.ftrim)
+
+        expect(
+          cursor['on_receive_last']
         ).to eq(
-          [ 'closed', 'break', '0_1_1_4', 'break' ]
+          nil
         )
       end
 
@@ -302,10 +316,15 @@ describe 'Flor pcore' do
         expect(cursor.has_key?('on_receive_last')).to eq(true)
 
         expect(
-          cursor['status'][0, 4]
-        ).to eq(
-          [ 'closed', 'break', '0_1_1_4', 'break' ]
-        )
+          F.to_s(cursor, :status)
+        ).to eq(%{
+          (status closed pt:cancel fla:break fro:0_1_1_4) # double?
+          (status closed pt:cancel fla:break fro:0_1_1_4)
+          (status o pt:receive fro:0_1_0_2)
+          (status closed pt:cancel fla:continue fro:0_1_1_2) # double?
+          (status closed pt:cancel fla:continue fro:0_1_1_2)
+          (status o pt:execute)
+        }.ftrim)
       end
 
       it 'rejects "continue" when breaking' do
@@ -344,10 +363,12 @@ describe 'Flor pcore' do
         expect(cursor['on_receive_last']).to eq(nil)
 
         expect(
-          cursor['status'][0, 4]
-        ).to eq(
-          [ 'closed', 'break', '0_1_1_2', 'break' ]
-        )
+          F.to_s(cursor, :status)
+        ).to eq(%{
+          (status closed pt:cancel fla:break fro:0_1_1_2) # double?
+          (status closed pt:cancel fla:break fro:0_1_1_2)
+          (status o pt:execute)
+        }.ftrim)
       end
 
       it 'rejects "move" when breaking' do
@@ -386,10 +407,12 @@ describe 'Flor pcore' do
         expect(cursor['on_receive_last']).to eq(nil)
 
         expect(
-          cursor['status'][0, 4]
-        ).to eq(
-          [ 'closed', 'break', '0_1_1_2', 'break' ]
-        )
+          F.to_s(cursor, :status)
+        ).to eq(%{
+          (status closed pt:cancel fla:break fro:0_1_1_2) # double?
+          (status closed pt:cancel fla:break fro:0_1_1_2)
+          (status o pt:execute)
+        }.ftrim)
       end
     end
   end

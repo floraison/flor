@@ -304,10 +304,13 @@ describe 'Flor procedures' do
         expect(unt['on_receive_last']).to eq(nil)
 
         expect(
-          unt['status'][0, 4]
-        ).to eq(
-          [ 'closed', 'break', '0_1_1', 'break' ]
-        )
+          F.to_s(unt, :status)
+        ).to eq(%{
+          (status closed pt:cancel fla:break fro:0_1_1)
+          (status closed pt:cancel fla:break fro:0_1_0) # double?
+          (status closed pt:cancel fla:break fro:0_1_0)
+          (status o pt:execute)
+        }.ftrim)
       end
 
       it 'accepts "break" when continuing' do
@@ -347,10 +350,13 @@ describe 'Flor procedures' do
         expect(unt.has_key?('on_receive_last')).to eq(true)
 
         expect(
-          unt['status'][0, 4]
-        ).to eq(
-          [ 'closed', 'break', '0_1_1_4', 'continue' ]
-        )
+          F.to_s(unt, :status)
+        ).to eq(%{
+          (status closed pt:cancel fla:break fro:0_1_1_4)
+          (status closed pt:cancel fla:continue fro:0_1_1_2) # double?
+          (status closed pt:cancel fla:continue fro:0_1_1_2)
+          (status o pt:execute)
+        }.ftrim)
       end
 
       it 'rejects "continue" when breaking' do
@@ -390,10 +396,12 @@ describe 'Flor procedures' do
         expect(unt.has_key?('on_receive_last')).to eq(true)
 
         expect(
-          unt['status'][0, 4]
-        ).to eq(
-          [ 'closed', 'break', '0_1_1_2', 'break' ]
-        )
+          F.to_s(unt, :status)
+        ).to eq(%{
+          (status closed pt:cancel fla:break fro:0_1_1_2)
+          (status closed pt:cancel fla:break fro:0_1_1_2)
+          (status o pt:execute)
+        }.ftrim)
       end
     end
   end

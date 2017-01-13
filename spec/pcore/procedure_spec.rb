@@ -40,7 +40,12 @@ describe Flor::Procedure do
       expect(n['nid']).to eq('0_0')
       expect(n['parent']).to eq('0')
       expect(n['heat0']).to eq('sequence')
-      expect(n['status'][0, 4]).to eq([ nil, nil, nil, nil ])
+
+      expect(
+        F.to_s(n, :status)
+      ).to eq(%{
+        (status o pt:execute)
+      }.ftrim)
 
       expect(ms.size).to eq(1)
 
@@ -75,7 +80,12 @@ describe Flor::Procedure do
       expect(n['nid']).to eq('0_0')
       expect(n['parent']).to eq('0')
       expect(n['heat0']).to eq('sequence')
-      expect(n['status'][0, 4]).to eq([ nil, nil, nil, nil ])
+
+      expect(
+        F.to_s(n, :status)
+      ).to eq(%{
+        (status o pt:execute)
+      }.ftrim)
 
       expect(ms.size).to eq(1)
 
@@ -112,7 +122,13 @@ describe Flor::Procedure do
       expect(n['nid']).to eq('0_0')
       expect(n['parent']).to eq('0')
       expect(n['heat0']).to eq('stall')
-      expect(n['status'][0, 4]).to eq([ 'closed', 'cancel', nil, nil ])
+
+      expect(
+        F.to_s(n, :status)
+      ).to eq(%{
+        (status closed pt:cancel)
+        (status o pt:execute)
+      }.ftrim)
 
       expect(ms.size).to eq(1)
 

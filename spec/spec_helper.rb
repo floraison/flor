@@ -204,3 +204,16 @@ class RSpec::Core::ExampleGroup
   end
 end
 
+class String
+
+  def ftrim
+
+    self.split("\n")
+      .inject([]) { |a, l|
+        l = l.match(/\A\s*([^#]*)/)[1].rstrip
+        a << l unless l.empty?
+        a }
+      .join("\n")
+  end
+end
+

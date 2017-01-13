@@ -67,8 +67,9 @@ module Flor
     fla = m['flavour']
     a << " #{_lg}#{fla}#{_dg}" if fla
 
-    sta = nd && nd['status']
-    a << " #{_dim}#{_lg}#{(sta[0] || '')[0, 3]}:#{(sta[1] || '')[0, 3]}:#{sta[2]}#{_rs}#{_dg}" if sta && sta[0]
+    sta = nd && nd['status'].last
+    a << " #{_dim}#{_lg}#{sta['status']}:#{sta['flavour']}#{_rs}#{_dg}" \
+      if sta && sta['status']
 
     t =
       m['tree']

@@ -103,7 +103,7 @@ module Flor
         'nid' => nid,
         'parent' => message['from'],
         'payload' => message['payload'],
-        'status' => [ nil, nil, nil, nil, now ],
+        'status' => [ { 'status' => nil, 'point' => 'execute', 'ctime' => now } ],
         'ctime' => now,
         'mtime' => now }
 

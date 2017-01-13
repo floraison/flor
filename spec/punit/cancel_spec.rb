@@ -196,18 +196,20 @@ describe 'Flor punit' do
       seq = @unit.archive[r['exid']]['0_0']
 
       expect(
-        seq['status'][0, 4]
-      ).to eq(
-        [ 'closed', 'kill', '0_1_1', nil ] # well...
-      )
+        F.to_s(seq, :status)
+      ).to eq(%{
+        (status closed pt:cancel fla:kill fro:0_1_1)
+        (status o pt:execute)
+      }.ftrim)
 
       sta = @unit.archive[r['exid']]['0_0_0']
 
       expect(
-        sta['status'][0, 4]
-      ).to eq(
-        [ 'closed', 'cancel', '0_0', nil ]
-      )
+        F.to_s(sta, :status)
+      ).to eq(%{
+        (status closed pt:cancel fro:0_0)
+        (status o pt:execute)
+      }.ftrim)
 
       sleep 0.3
 

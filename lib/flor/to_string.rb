@@ -25,30 +25,56 @@
 
 module Flor
 
-  def self.to_s(o=nil, key=nil)
+  def self.to_s(o=nil, k=nil)
 
-    if o == nil
+    return 'FlorModule' if o == nil && k == nil
+      # should it emerge somewhere...
 
-      'FlorModule' # should it emerge somewhere...
+    return o.collect { |e| Flor.to_s(e, k) }.join("\n") if o.is_a?(Array)
 
-    elsif o.is_a?(Array)
+    if o.is_a?(Hash)
 
-      o.collect { |e| Flor.to_s(e) }.join("\n")
+      return send("message_#{k}_to_s", o) if k && o['point'].is_a?(String)
+      return message_to_s(o) if o['point'].is_a?(String)
 
-    elsif o['point'].is_a?(String)
-
-      s = StringIO.new
-      s << "(msg #{o['nid']} #{o['point']}"
-      %w[ from flavour ].each { |k|
-        s << ' ' << k << ':' << o[k].to_s if o.has_key?(k) }
-      s << ")"
-
-      s.string
-
-    else
-
-      o.inspect
+      return send("node_#{k}_to_s", o) if k && o.has_key?('parent')
+      return nod_to_s(o) if o['parent'].is_a?(String)
     end
+
+    return [ o, k ].inspect if k
+    o.inspect
+  end
+
+  def self.message_to_s(m)
+
+    s = StringIO.new
+    s << '(msg ' << m['nid'] << ' ' << m['point']
+    %w[ from flavour ].each { |k|
+      s << ' ' << k << ':' << m[k].to_s if m.has_key?(k) }
+    s << ')'
+
+    s.string
+  end
+
+  def self.node_status_to_s(n)
+
+    s = StringIO.new
+    stas = n['status'].reverse
+    while sta = stas.shift
+      s << '(status ' << (sta['status'] || 'o') # o for open
+      s << ' pt:' << sta['point']
+      s << ' fla:' << sta['flavour'] if sta['flavour']
+      s << ' fro:' << sta['from'] if sta['from']
+      s << ')'
+      s << "\n" if stas.any?
+    end
+
+    s.string
+  end
+
+  def self.nod_to_s(n) # there is already a .node_to_s in log.rb
+
+    n.inspect
   end
 end
 
