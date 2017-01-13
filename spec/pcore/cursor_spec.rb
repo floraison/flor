@@ -217,7 +217,6 @@ describe 'Flor pcore' do
           F.to_s(cursor, :status)
         ).to eq(%{
           (status closed pt:cancel fla:break fro:0_1_1_4)
-          (status closed pt:cancel fla:break fro:0_1_1_2) # TODO why the double?
           (status closed pt:cancel fla:break fro:0_1_1_2)
           (status o pt:execute)
         }.ftrim)
@@ -266,10 +265,8 @@ describe 'Flor pcore' do
         expect(
           F.to_s(cursor, :status)
         ).to eq(%{
-          (status closed pt:cancel fla:break fro:0_1_1_4) # double?
           (status closed pt:cancel fla:break fro:0_1_1_4)
           (status o pt:receive fro:0_1_0_2)
-          (status closed pt:cancel fla:continue fro:0_1_1_2) # double?
           (status closed pt:cancel fla:continue fro:0_1_1_2)
           (status o pt:execute)
         }.ftrim)
@@ -318,10 +315,8 @@ describe 'Flor pcore' do
         expect(
           F.to_s(cursor, :status)
         ).to eq(%{
-          (status closed pt:cancel fla:break fro:0_1_1_4) # double?
           (status closed pt:cancel fla:break fro:0_1_1_4)
           (status o pt:receive fro:0_1_0_2)
-          (status closed pt:cancel fla:continue fro:0_1_1_2) # double?
           (status closed pt:cancel fla:continue fro:0_1_1_2)
           (status o pt:execute)
         }.ftrim)
@@ -365,7 +360,6 @@ describe 'Flor pcore' do
         expect(
           F.to_s(cursor, :status)
         ).to eq(%{
-          (status closed pt:cancel fla:break fro:0_1_1_2) # double?
           (status closed pt:cancel fla:break fro:0_1_1_2)
           (status o pt:execute)
         }.ftrim)
@@ -409,7 +403,6 @@ describe 'Flor pcore' do
         expect(
           F.to_s(cursor, :status)
         ).to eq(%{
-          (status closed pt:cancel fla:break fro:0_1_1_2) # double?
           (status closed pt:cancel fla:break fro:0_1_1_2)
           (status o pt:execute)
         }.ftrim)

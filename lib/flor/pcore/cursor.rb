@@ -121,9 +121,12 @@ class Flor::Pro::Cursor < Flor::Procedure
 #
 #    super.tap { |ms| pp ms }
 
-    if fla == 'continue'
+#if nid == '0_1_0'
+#  puts "\\" * 80
+#  puts caller[0, 7]
+#end
 
-      close_node
+    if fla == 'continue'
 
       @node['on_receive_last'] =
         reply(
@@ -135,14 +138,10 @@ class Flor::Pro::Cursor < Flor::Procedure
 
       @node['subs'] << counter_next('subs')
 
-      close_node
-
       @node['on_receive_last'] =
         execute_child(move_target_child_id, @node['subs'].last, 'orl' => fla)
 
     else
-
-      close_node
 
       @node['on_receive_last'] = nil
     end

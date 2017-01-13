@@ -527,8 +527,6 @@ class Flor::Procedure < Flor::Node
 
     return cancel_when_closed if node_closed?
 
-    close_node
-
     cancel
   end
 
@@ -538,6 +536,8 @@ class Flor::Procedure < Flor::Node
   end
 
   def cancel
+
+    close_node
 
     nids = @node['cnodes']
 
@@ -549,8 +549,6 @@ class Flor::Procedure < Flor::Node
   end
 
   def kill
-
-    close_node
 
     reply + cancel
   end

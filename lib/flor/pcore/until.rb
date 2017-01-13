@@ -105,8 +105,6 @@ class Flor::Pro::Until < Flor::Procedure
       pl = node_payload.copy_current
       pl = pl.merge!(payload.copy_current)
 
-      close_node
-
       @node['subs'] << counter_next('subs')
 
       @node['on_receive_last'] =
@@ -114,8 +112,6 @@ class Flor::Pro::Until < Flor::Procedure
           first_unkeyed_child_id, @node['subs'].last, 'payload' => pl)
 
     else
-
-      close_node
 
       @node['on_receive_last'] = nil
     end
