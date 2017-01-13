@@ -22,45 +22,33 @@
 # Made in Japan.
 #++
 
-require 'pp'
-require 'json'
-require 'logger'
-require 'thread'
-require 'digest'
-
-require 'munemo'
-require 'raabro'
-
 
 module Flor
 
-  VERSION = '0.5.0'
+  def self.to_s(o=nil, key=nil)
+
+    if o == nil
+
+      'FlorModule' # should it emerge somewhere...
+
+    elsif o.is_a?(Array)
+
+      o.collect { |e| Flor.to_s(e) }.join("\n")
+
+    elsif o['point'].is_a?(String)
+
+      s = StringIO.new
+      s << "(msg #{o['nid']} #{o['point']}"
+      %w[ from flavour ].each { |k|
+        s << ' ' << k << ':' << o[k].to_s if o.has_key?(k) }
+      s << ")"
+
+      s.string
+
+    else
+
+      o.inspect
+    end
+  end
 end
-
-require 'flor/log'
-require 'flor/flor'
-require 'flor/dollar'
-require 'flor/errors'
-require 'flor/parser'
-require 'flor/conf'
-require 'flor/to_string'
-
-require 'flor/core'
-require 'flor/core/node'
-require 'flor/core/procedure'
-require 'flor/core/executor'
-require 'flor/core/texecutor'
-
-Flor.load_procedures('pcore')
-
-
-#if RUBY_PLATFORM.match(/java/)
-#  class Array
-#    alias original_collect collect
-#    def collect(&block)
-#puts caller[0] + " <---"
-#      original_collect(&block)
-#    end
-#  end
-#end
 

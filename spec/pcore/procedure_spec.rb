@@ -28,7 +28,7 @@ describe Flor::Procedure do
 
       ms = @executor.launch(flon, until: '0_0 execute')
 
-      expect(summarize(ms)).to eq('(msg 0_0 execute from:0)')
+      expect(F.to_s(ms)).to eq('(msg 0_0 execute from:0)')
 
       # test
 
@@ -52,6 +52,38 @@ describe Flor::Procedure do
   end
 
   describe '#receive' do
+
+    it 'replies to its parent' do
+
+      # preparation
+
+      flon = %{
+        sequence      # 0
+          sequence _  # 0_0 <-- our test point
+      }
+
+      ms = @executor.launch(flon, until: '0_0 receive')
+
+      expect(F.to_s(ms)).to eq('(msg 0_0 receive from:0_0_0)')
+
+      # test
+
+      ms = @executor.step(ms.first) # <-- feed the receive to 0_0
+
+      n = @executor.node('0_0')
+
+      expect(n['nid']).to eq('0_0')
+      expect(n['parent']).to eq('0')
+      expect(n['heat0']).to eq('sequence')
+      expect(n['status'][0, 4]).to eq([ nil, nil, nil, nil ])
+
+      expect(ms.size).to eq(1)
+
+      expect(ms.first['point']).to eq('receive')
+      expect(ms.first['nid']).to eq('0')
+      expect(ms.first['from']).to eq('0_0')
+      expect(ms.first['sm']).to eq(4)
+    end
   end
 
   describe '#cancel' do
