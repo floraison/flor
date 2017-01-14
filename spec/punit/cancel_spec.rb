@@ -209,7 +209,6 @@ describe 'Flor punit' do
         F.to_s(sta, :status)
       ).to eq(%{
         (status ended pt:cancel fro:0_0 m:21)
-        (status closed pt:cancel fro:0_0 m:21)
         (status o pt:execute)
       }.ftrim)
 

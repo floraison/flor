@@ -96,8 +96,12 @@ class Flor::Procedure < Flor::Node
     h = {
       'point' => @message['point'], 'status' => status, 'ctime' => Flor.tstamp }
     h['flavour'] = flavour if flavour
-    if mm = @message['m']; h['m'] = mm; end
-    if mf = @message['from']; h['from'] = mf; end
+    mm = @message['m']; h['m'] = mm if mm
+    mf = @message['from']; h['from'] = mf if mf
+
+    s = node_status
+    @node['status'].pop if s['m'] == h['m'] && s['status'] != 'ended'
+      # only keep the latest effect of a message (probably "ended")
 
     @node['status'] << h
   end

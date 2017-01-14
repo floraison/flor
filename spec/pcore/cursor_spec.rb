@@ -266,7 +266,6 @@ describe 'Flor pcore' do
           F.to_s(cursor, :status)
         ).to eq(%{
           (status ended pt:cancel fla:break fro:0_1_1_4 m:95)
-          (status closed pt:cancel fla:break fro:0_1_1_4 m:95)
           (status o pt:receive fro:0_1_0_2 m:94)
           (status closed pt:cancel fla:continue fro:0_1_1_2 m:58)
           (status o pt:execute)

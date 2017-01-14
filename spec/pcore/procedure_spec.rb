@@ -129,7 +129,6 @@ describe Flor::Procedure do
         F.to_s(n, :status)
       ).to eq(%{
         (status ended pt:cancel m:5)
-        (status closed pt:cancel m:5)
         (status o pt:execute)
       }.ftrim)
 
