@@ -570,6 +570,8 @@ class Flor::Procedure < Flor::Node
 
   def kill
 
+    return [] if node_ended?
+
     reply + cancel
   end
 end
