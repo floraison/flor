@@ -407,9 +407,15 @@ module Flor
 
     def failed(message)
 
+      n = node(message['nid'])
+
+      fail RuntimeError.new(
+        "node #{message['nid']} is gone, cannot flag it as failed"
+      ) unless n
+
 #begin
-      node(message['nid'])['failure'] = Flor.dup(message)
-#rescue; p message; exit 0; end
+      n['failure'] = Flor.dup(message)
+#rescue; pp message; exit 0; end
 
       oep = lookup_on_error_parent(message)
       return oep.trigger_on_error if oep

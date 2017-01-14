@@ -291,12 +291,12 @@ describe 'Flor procedures' do
         r = @executor.launch(flor, archive: true)
 
         expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(1)
+        #expect(r['payload']['ret']).to eq(1)
 
         expect(
           @executor.journal.select { |m| m['point'] == 'receive' }.size
         ).to eq(
-          26
+          25
         )
 
         unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
@@ -306,7 +306,7 @@ describe 'Flor procedures' do
         expect(
           F.to_s(unt, :status)
         ).to eq(%{
-          (status closed pt:cancel fla:break fro:0_1_1)
+          (status ended pt:receive fro:0_0_1)
           (status closed pt:cancel fla:break fro:0_1_0)
           (status o pt:execute)
         }.ftrim)
@@ -351,6 +351,7 @@ describe 'Flor procedures' do
         expect(
           F.to_s(unt, :status)
         ).to eq(%{
+          (status ended pt:receive fro:0_1_0_3)
           (status closed pt:cancel fla:break fro:0_1_1_4)
           (status closed pt:cancel fla:continue fro:0_1_1_2)
           (status o pt:execute)
@@ -396,6 +397,7 @@ describe 'Flor procedures' do
         expect(
           F.to_s(unt, :status)
         ).to eq(%{
+          (status ended pt:receive fro:0_1_0_3)
           (status closed pt:cancel fla:break fro:0_1_1_2)
           (status o pt:execute)
         }.ftrim)

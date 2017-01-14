@@ -262,6 +262,8 @@ class Flor::Procedure < Flor::Node
     if node_closed?
       return receive_from_child_when_closed if from_child
       return receive_when_closed
+    elsif node_ended?
+      return receive_when_ended
     end
 
     receive
@@ -288,6 +290,11 @@ class Flor::Procedure < Flor::Node
   end
 
   def receive_when_closed
+
+    []
+  end
+
+  def receive_when_ended
 
     []
   end
@@ -383,6 +390,8 @@ class Flor::Procedure < Flor::Node
     m.merge!(h)
 
     m['payload']['ret'] = ret if ret != :no
+
+    end_node if m['nid'] == parent && m['point'] == 'receive'
 
     [ m ]
   end
@@ -525,9 +534,17 @@ class Flor::Procedure < Flor::Node
 
     return kill if @message['flavour'] == 'kill'
 
+    return cancel_when_ended if node_ended?
     return cancel_when_closed if node_closed?
 
     cancel
+  end
+
+  def cancel_when_ended
+
+    # node has already emitted reply to parent, ignore any later request
+
+    []
   end
 
   def cancel_when_closed
