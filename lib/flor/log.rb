@@ -357,7 +357,7 @@ module Flor
     l < 35 ? s : "#{s[0, 35]}(...L#{l})"
   end
 
-  def self.node_to_s(executor, n, opts, here=false)
+  def self.nod_to_s(executor, n, opts, here=false)
 
     _rs, _dg, _yl, _bl, _gy, _gn, _rd = colours(opts)
 
@@ -395,12 +395,12 @@ module Flor
     seen << nid
 
     sio.print(ind)
-    sio.print(node_to_s(executor, n, opts, nid == msg['nid']))
+    sio.print(nod_to_s(executor, n, opts, nid == msg['nid']))
     sio.print("\n")
     cn.each { |c| ncns_to_s(executor, c, msg, opts, sio, ind + ' ', seen) }
   end
 
-  def self.nodes_to_s(executor, msg, opts)
+  def self.nods_to_s(executor, msg, opts)
 
     nodes = executor.execution['nodes'].values
 
@@ -441,7 +441,7 @@ module Flor
     puts "#{_dg}node:#{_yl}"
     Kernel::pp(n) if n
     puts "#{_dg}nodes:"
-    puts nodes_to_s(executor, m, opts)
+    puts nods_to_s(executor, m, opts)
     z = executor.execution['nodes'].size
     puts "#{_yl}#{z} node#{z == 1 ? '' : 's'}."
     puts "#{_dg}</Flor.detail_msg>#{_rs}"

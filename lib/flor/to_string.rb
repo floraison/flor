@@ -38,7 +38,7 @@ module Flor
       return message_to_s(o) if o['point'].is_a?(String)
 
       return send("node_#{k}_to_s", o) if k && o.has_key?('parent')
-      return nod_to_s(o) if o['parent'].is_a?(String)
+      return node_to_s(o) if o['parent'].is_a?(String)
     end
 
     return [ o, k ].inspect if k
@@ -72,7 +72,7 @@ module Flor
     s.string
   end
 
-  def self.nod_to_s(n) # there is already a .node_to_s in log.rb
+  def self.node_to_s(n) # there is already a .node_to_s in log.rb
 
     n.inspect
   end
