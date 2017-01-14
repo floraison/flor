@@ -63,8 +63,9 @@ module Flor
     while sta = stas.shift
       s << '(status ' << (sta['status'] || 'o') # o for open
       s << ' pt:' << sta['point']
-      s << ' fla:' << sta['flavour'] if sta['flavour']
-      s << ' fro:' << sta['from'] if sta['from']
+      if f = sta['flavour']; s << ' fla:' << f; end
+      if f = sta['from']; s << ' fro:' << f; end
+      if m = sta['m']; s << ' m:' << m; end
       s << ')'
       s << "\n" if stas.any?
     end

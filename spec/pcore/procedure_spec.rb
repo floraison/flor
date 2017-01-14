@@ -44,7 +44,7 @@ describe Flor::Procedure do
       expect(
         F.to_s(n, :status)
       ).to eq(%{
-        (status ended pt:execute fro:0)
+        (status ended pt:execute fro:0 m:2)
         (status o pt:execute)
       }.ftrim)
 
@@ -85,7 +85,7 @@ describe Flor::Procedure do
       expect(
         F.to_s(n, :status)
       ).to eq(%{
-        (status ended pt:receive fro:0_0_0)
+        (status ended pt:receive fro:0_0_0 m:4)
         (status o pt:execute)
       }.ftrim)
 
@@ -128,8 +128,8 @@ describe Flor::Procedure do
       expect(
         F.to_s(n, :status)
       ).to eq(%{
-        (status ended pt:cancel)
-        (status closed pt:cancel)
+        (status ended pt:cancel m:5)
+        (status closed pt:cancel m:5)
         (status o pt:execute)
       }.ftrim)
 

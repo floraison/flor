@@ -306,8 +306,8 @@ describe 'Flor procedures' do
         expect(
           F.to_s(unt, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_0_1)
-          (status closed pt:cancel fla:break fro:0_1_0)
+          (status ended pt:receive fro:0_0_1 m:54)
+          (status closed pt:cancel fla:break fro:0_1_0 m:28)
           (status o pt:execute)
         }.ftrim)
       end
@@ -351,9 +351,9 @@ describe 'Flor procedures' do
         expect(
           F.to_s(unt, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_1_0_3)
-          (status closed pt:cancel fla:break fro:0_1_1_4)
-          (status closed pt:cancel fla:continue fro:0_1_1_2)
+          (status ended pt:receive fro:0_1_0_3 m:109)
+          (status closed pt:cancel fla:break fro:0_1_1_4 m:104)
+          (status closed pt:cancel fla:continue fro:0_1_1_2 m:67)
           (status o pt:execute)
         }.ftrim)
       end
@@ -397,8 +397,8 @@ describe 'Flor procedures' do
         expect(
           F.to_s(unt, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_1_0_3)
-          (status closed pt:cancel fla:break fro:0_1_1_2)
+          (status ended pt:receive fro:0_1_0_3 m:104)
+          (status closed pt:cancel fla:break fro:0_1_1_2 m:63)
           (status o pt:execute)
         }.ftrim)
       end

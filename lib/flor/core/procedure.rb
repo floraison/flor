@@ -91,26 +91,25 @@ class Flor::Procedure < Flor::Node
     @executor.counter_next(k)
   end
 
-  def stack_status(point, flavour, from, status)
+  def stack_status(flavour, status)
 
-    h = { 'point' => point, 'status' => status, 'ctime' => Flor.tstamp }
+    h = {
+      'point' => @message['point'], 'status' => status, 'ctime' => Flor.tstamp }
     h['flavour'] = flavour if flavour
-    h['from'] = from if from
+    if mm = @message['m']; h['m'] = mm; end
+    if mf = @message['from']; h['from'] = mf; end
 
     @node['status'] << h
   end
 
   def close_node(flavour=@message['flavour'])
-    stack_status(
-      @message['point'], flavour, @message['from'], 'closed')
+    stack_status(flavour, 'closed')
   end
   def open_node
-    stack_status(
-      @message['point'], @message['flavour'], @message['from'], nil)
+    stack_status(@message['flavour'], nil)
   end
   def end_node
-    stack_status(
-      @message['point'], @message['flavour'], @message['from'], 'ended')
+    stack_status(@message['flavour'], 'ended')
   end
 
   def children
