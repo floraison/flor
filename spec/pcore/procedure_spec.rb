@@ -163,7 +163,62 @@ describe Flor::Procedure do
 
     describe '#kill' do
 
-      it 'works'
+      it 'works' do
+
+        # preparation
+
+        flon = %{
+          sequence      # 0
+            sequence    # 0_0 <-- our test point
+              sequence  # 0_0_0
+        }
+
+        ms = @executor.launch(flon, until_after: '0_0_0 execute')
+
+        expect(F.to_s(ms)).to eq('(msg 0_0 receive from:0_0_0)')
+
+        n = @executor.node('0_0')
+
+        ms0 = @executor.step({
+          'point' => 'cancel', 'nid' => '0_0', 'from' => '0' });
+
+        n = @executor.node('0_0')
+
+        expect(n['status'].last['status']).to eq('closed')
+
+        # test
+
+        ms = @executor.step({
+          'point' => 'cancel', 'flavour' => 'kill',
+          'nid' => '0_0', 'from' => '0' });
+
+        expect(F.to_s(ms)).to eq(%{
+          (msg 0 receive from:0_0)
+          (msg 0_0_0 cancel from:0_0)
+        }.ftrim)
+
+        cx = @executor.clone
+          # fun part, clone the executor to test 2 scenarii
+
+        child_then_kill_ms = Flor.dup(ms0) + Flor.dup(ms)
+        kill_then_child_ms = Flor.dup(ms) + Flor.dup(ms0)
+
+        # scenario 0
+
+        puts "  \\\\\\ child ms before kill ms" if @executor.conf['log_msg']
+
+        ms = @executor.walk(child_then_kill_ms)
+
+        expect(F.to_s(ms)).to eq('(msg  terminated from:0)')
+
+        # scenario 1
+
+        puts "  \\\\\\ kill ms before child ms" if @executor.conf['log_msg']
+
+        ms = cx.walk(kill_then_child_ms)
+
+        expect(F.to_s(ms)).to eq('(msg  terminated from:0)')
+      end
     end
   end
 
@@ -278,6 +333,24 @@ describe Flor::Procedure do
 
         expect(ms).to eq([])
       end
+    end
+  end
+
+  context 'status )gone("' do
+
+    describe '#receive' do
+
+      it 'has no effect'
+    end
+
+    describe '#cancel' do
+
+      it 'has no effect'
+    end
+
+    describe '#kill' do
+
+      it 'has no effect'
     end
   end
 end

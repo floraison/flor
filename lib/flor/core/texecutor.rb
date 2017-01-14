@@ -132,6 +132,20 @@ module Flor
       process(message)
     end
 
+    # Used in specs when testing multiple message arrival order on
+    # a "suite" of transient executors
+    #
+    def clone
+
+      c = TransientExecutor.allocate
+
+      c.instance_variable_set(:@unit, @unit)
+      c.instance_variable_set(:@traps, []) # not useful for a TransientEx clone
+      c.instance_variable_set(:@execution, Flor.dup(@execution))
+
+      c
+    end
+
     protected
 
     # TODO eventually merge with Waiter.parse_serie
