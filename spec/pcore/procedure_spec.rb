@@ -100,6 +100,11 @@ describe Flor::Procedure do
       end
     end
 
+    describe '#receive from non-child' do
+
+      it 'is not rejected'
+    end
+
     describe '#cancel' do
 
       it 'replies to its parent it if it has no children' do
@@ -238,6 +243,74 @@ describe Flor::Procedure do
         puts "  \\\\\\ kill ms before child ms" if @executor.conf['log_msg']
 
         ms = cx.walk(kill_then_child_ms)
+
+        expect(F.to_s(ms)).to eq('(msg  terminated from:0)')
+      end
+    end
+
+    describe '#receive from child' do
+
+      it 'works'
+    end
+
+    describe '#cancel from child' do
+
+      it 'works'
+    end
+
+    describe '#cancel from child' do
+
+      it 'works'
+    end
+  end
+
+  context 'status "closed" on-error' do
+
+    describe '#receive' do
+
+      it 'does not open the node' do
+
+        # preparation
+
+        flon = %{
+          sequence on_error: (def err; stall _)
+            push l 1
+        }
+
+        ms = @executor.launch(flon)
+
+        expect(ms).to eq(nil)
+
+        seq = @executor.node('0')
+
+        expect(
+          F.to_s(seq, :status)
+        ).to eq(%{
+          (status closed pt:failed fla:on-error fro:0_1_1 m:13)
+          (status o pt:execute)
+        }.ftrim)
+
+        expect(seq['cnodes']).to eq(%w[ 0_0_1-1 ])
+
+        # test
+
+        ms = @executor.step({
+          'point' => 'receive', 'nid' => '0', 'from' => '0_0_1-1',
+          'payload' => {} })
+
+        expect(F.to_s(ms)).to eq('(msg  receive from:0)')
+
+        seq = @executor.node('0')
+
+        expect(
+          F.to_s(seq, :status)
+        ).to eq(%{
+          (status ended pt:receive fro:0_0_1-1 m:22)
+          (status closed pt:failed fla:on-error fro:0_1_1 m:13)
+          (status o pt:execute)
+        }.ftrim)
+
+        ms = @executor.step(ms.first)
 
         expect(F.to_s(ms)).to eq('(msg  terminated from:0)')
       end

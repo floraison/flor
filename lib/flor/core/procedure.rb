@@ -545,9 +545,7 @@ class Flor::Procedure < Flor::Node
 
   def cancel_when_ended
 
-    # node has already emitted reply to parent, ignore any later request
-
-    []
+    [] # node has already emitted reply to parent, ignore any later request
   end
 
   def cancel_when_closed
