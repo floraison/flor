@@ -198,7 +198,6 @@ describe 'Flor punit' do
       expect(
         F.to_s(seq, :status)
       ).to eq(%{
-        (status closed pt:cancel fla:kill fro:0_1_1 m:18)
         (status ended pt:cancel fla:kill fro:0_1_1 m:18)
         (status o pt:execute)
       }.ftrim)

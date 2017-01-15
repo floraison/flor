@@ -572,7 +572,7 @@ class Flor::Procedure < Flor::Node
 
     return [] if node_ended?
 
-    reply + cancel
+    reply + cancel_children
   end
 end
 

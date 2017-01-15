@@ -145,7 +145,29 @@ describe Flor::Procedure do
 
     describe '#kill' do
 
-      it 'works'
+      it 'works' do
+
+        # preparation
+
+        flon = %{
+          sequence   # 0
+            stall _  # 0_0 <-- our test point
+        }
+
+        ms = @executor.launch(flon, until_after: '0_0 receive')
+
+        expect(ms).to eq([])
+
+        # test
+
+        m = {
+          'point' => 'cancel', 'flavour' => 'kill',
+          'nid' => '0_0', 'exid' => @executor.exid }
+
+        ms = @executor.step(m) # <-- feed cancel message to node 0_0
+
+        expect(F.to_s(ms)).to eq('(msg 0 receive from:0_0)')
+      end
     end
   end
 
