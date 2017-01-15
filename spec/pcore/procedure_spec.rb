@@ -362,12 +362,48 @@ describe Flor::Procedure do
 
     describe '#cancel' do
 
-      it 'has no effect'
+      it 'has no effect' do
+
+        # preparation
+
+        ms = @executor.launch('sequence;; stall _', until: '0_0 execute')
+
+        expect(F.to_s(ms)).to eq('(msg 0_0 execute from:0)')
+
+        exid = ms.first['exid']
+
+        # test
+
+        ms = @executor.step({
+          'point' => 'cancel', 'flavour' => 'cancel',
+          'nid' => '0_1', 'from' => '0', 'exid' => exid,
+          'payload' => {} })
+
+        expect(ms).to eq([])
+      end
     end
 
     describe '#kill' do
 
-      it 'has no effect'
+      it 'has no effect' do
+
+        # preparation
+
+        ms = @executor.launch('sequence;; stall _', until: '0_0 execute')
+
+        expect(F.to_s(ms)).to eq('(msg 0_0 execute from:0)')
+
+        exid = ms.first['exid']
+
+        # test
+
+        ms = @executor.step({
+          'point' => 'cancel', 'flavour' => 'kill',
+          'nid' => '0_1', 'from' => '0', 'exid' => exid,
+          'payload' => {} })
+
+        expect(ms).to eq([])
+      end
     end
   end
 end
