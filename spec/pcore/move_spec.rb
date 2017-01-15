@@ -36,6 +36,10 @@ describe 'Flor pcore' do
       expect(r['error']['msg']).to eq('move target "final" not found')
     end
 
+    it 'fails if the external target cannot be found'
+      # OR
+    it 'is ignored if the external target cannot be found'
+
     it 'moves to a tag' do
 
       flor = %{
