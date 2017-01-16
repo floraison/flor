@@ -299,6 +299,11 @@ module Flor
 #      ex ? ex.execution : nil
 #    end
 
+    def executor(exid)
+
+      @executors.find { |x| x.exid == exid }
+    end
+
     protected
 
 #    # return [ domain, tree ]

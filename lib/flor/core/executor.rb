@@ -91,6 +91,21 @@ module Flor
       msgs
     end
 
+    # Given a nid, returns a copy of all the var the node sees
+    #
+    def vars(nid, vs={})
+
+      n = node(nid); return vs unless n
+
+      (n['vars'] || {})
+        .each { |k, v| vs[k] = Flor.dup(v) unless vs.has_key?(k) }
+
+      if cn = n['cnid']; vars(cn, vs); end
+      if pa = n['parent']; vars(pa, vs); end
+
+      vs
+    end
+
     protected
 
     def make_node(message)

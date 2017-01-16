@@ -43,6 +43,18 @@ module Flor
       !! @unit.loader.tasker(domain, name)
     end
 
+    def gather_vars(tconf, message)
+
+      iv = tconf['on_task']['include_vars']
+
+      return nil unless iv == true || iv.is_a?(Array)
+
+      vars = @unit.executor(message['exid']).vars(message['nid'])
+      vars = vars.select { |k, v| iv.include?(k) } if iv.is_a?(Array)
+
+      vars
+    end
+
     def task(message)
 
       domain = message['exid'].split('-', 2).first
@@ -60,6 +72,8 @@ module Flor
 
       message['tconf'] = tconf \
         unless tconf['on_task']['include_tconf'] == false
+
+      message['vars'] = gather_vars(tconf, message)
 
       cot = tconf['on_task']
 
