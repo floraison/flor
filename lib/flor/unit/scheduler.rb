@@ -74,6 +74,9 @@ module Flor
       @executors = []
 
       @archive = nil # used, so far, only for testing
+
+      c = @conf['constant']
+      Kernel.const_set(c, self) if c
     end
 
     def identifier
