@@ -61,14 +61,13 @@ module Flor
       message['tconf'] = tconf \
         unless tconf['on_task']['include_tconf'] == false
 
-      #exe = @unit.execution(message['exid'])
-      #exe['tasks'][message['nid']] = { 'tname' => tname, 'name' => nil }
+      cot = tconf['on_task']
 
-      return ruby_task(message, tconf) if tconf['on_task']['require']
-      return cmd_task(message, tconf) if tconf['on_task']['cmd']
+      return ruby_task(message, tconf) if cot['require'] || cot['class']
+      return cmd_task(message, tconf) if cot['cmd']
 
       fail ArgumentError.new(
-        "don't know how to user tasker at #{tconf['_path']}"
+        "don't know how to use tasker at #{tconf['_path']}"
       )
     end
 
@@ -104,10 +103,11 @@ module Flor
 
       Array(tconf['on_task']['require'])
         .each { |pa| require(File.join(root, pa)) }
-# TODO 'load' too
+      Array(tconf['on_task']['load'])
+        .each { |pa| load(File.join(root, pa)) }
 
       k = tconf['on_task']['class']
-      k = Kernel.const_get(k)
+      k = Flor.const_lookup(k)
 
       tasker = k.new(self, tconf)
 

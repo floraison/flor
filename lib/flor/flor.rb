@@ -363,6 +363,11 @@ module Flor
     h
   end
 
+  def self.const_lookup(s)
+
+    s.split('::').inject(Kernel) { |k, sk| k.const_get(sk) }
+  end
+
   def self.to_coll(o)
 
     #o.respond_to?(:to_a) ? o.to_a : [ a ]
