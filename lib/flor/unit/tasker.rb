@@ -43,18 +43,6 @@ module Flor
       !! @unit.loader.tasker(domain, name)
     end
 
-    def gather_vars(tconf, message)
-
-      iv = tconf['on_task']['include_vars']
-
-      return nil unless iv == true || iv.is_a?(Array)
-
-      vars = @unit.executor(message['exid']).vars(message['nid'])
-      vars = vars.select { |k, v| iv.include?(k) } if iv.is_a?(Array)
-
-      vars
-    end
-
     def task(message)
 
       domain = message['exid'].split('-', 2).first
@@ -147,6 +135,52 @@ module Flor
       fail NotImplementedError
 
       []
+    end
+
+    def var_match(k, filter)
+
+      filter.each { |f| return true if (f.is_a?(String) ? k == f : f.match(k)) }
+      false
+    end
+
+    def expand_filter(f)
+
+      return f unless f.is_a?(Array)
+
+      f.collect { |e|
+        if e.is_a?(String)
+          e
+        elsif e.is_a?(Array) && e[0] == '_rxs' && e[1].is_a?(String)
+
+          s = e[1]
+          li, ri = s.index('/'), s.rindex('/')
+          tail = s[ri + 1..-1]
+          ops =
+            (tail.index('i') ? Regexp::IGNORECASE : 0) |
+            (tail.index('x') ? Regexp::EXTENDED : 0)
+          Regexp.new(s[li + 1..ri - 1], ops)
+        else
+          nil
+        end
+      }.compact
+    end
+
+    def gather_vars(tconf, message)
+
+      iv = expand_filter(tconf['on_task']['include_vars'])
+      ev = expand_filter(tconf['on_task']['exclude_vars'])
+
+      return nil unless iv || ev
+
+      vars = @unit.executor(message['exid']).vars(message['nid'])
+
+      return vars if iv == true
+      return {} if ev == true
+
+      vars = vars.select { |k, v| var_match(k, iv) } if iv
+      vars = vars.reject { |k, v| var_match(k, ev) } if ev
+
+      vars
     end
   end
 end

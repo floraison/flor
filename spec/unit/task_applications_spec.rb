@@ -173,7 +173,7 @@ describe 'Flor unit' do
         expect(r['payload']['charly']['vars']).to eq(nil)
       end
 
-      it 'passes all vars if vars: true' do
+      it 'passes all vars if include_vars: true' do
 
         File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
           f.puts(%{
@@ -204,7 +204,7 @@ describe 'Flor unit' do
         })
       end
 
-      it 'passes some vars if vars: [ a, b ]' do
+      it 'passes some vars if include_vars: [ a, b ]' do
 
         File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
           f.puts(%{
@@ -232,6 +232,68 @@ describe 'Flor unit' do
           r['payload']['charly']['vars']
         ).to eq({
           'b' => 3, 'd' => 'five'
+        })
+      end
+
+      it 'passes some vars if include_vars: [ /reg/, /ex/ ]' do
+
+        File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
+          f.puts(%{
+            on_task: {
+              require: 'charly.rb'
+              class: CharlyTasker
+              include_vars: [ /^flow_/, 'd' ]
+            }
+          }.ftrim)
+        end
+
+        flor = %{
+          set flow_name 1
+          set flow_x 2
+          sequence vars: { 'flow_x': 3 'c': 4, 'd': 'five' }
+            task 'charly'
+        }
+
+        r = @unit.launch(flor, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        #pp r['payload']['charly']
+        expect(
+          r['payload']['charly']['vars']
+        ).to eq({
+          'flow_name' => 1, 'flow_x' => 3, 'd' => 'five'
+        })
+      end
+
+      it 'rejects some vars if exclude_vars: [ /reg/, /ex/ ]' do
+
+        File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
+          f.puts(%{
+            on_task: {
+              require: 'charly.rb'
+              class: CharlyTasker
+              exclude_vars: [ /^flow_/, 'd' ]
+            }
+          }.ftrim)
+        end
+
+        flor = %{
+          set flow_name 1
+          set flow_x 2
+          sequence vars: { 'flow_x': 3 'c': 4, 'd': 'five' }
+            task 'charly'
+        }
+
+        r = @unit.launch(flor, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        #pp r['payload']['charly']
+        expect(
+          r['payload']['charly']['vars']
+        ).to eq({
+          'c' => 4
         })
       end
     end
