@@ -69,27 +69,55 @@ describe 'Flor unit' do
       expect(r['point']).to eq('terminated')
       expect(r['payload'].keys).to eq(%w[ ret seen ])
       expect(r['payload']['seen'].size).to eq(1)
-      expect(r['payload']['seen'].first[3]['atts']).to eq({ 'a' => 0, 'b' => 1 })
+      expect(r['payload']['seen'].first[3]['attd']).to eq({ 'a' => 0, 'b' => 1 })
     end
 
-    it 'preserves "atts"' do
+    it 'preserves "attd" and "attl"' do
 
       flor = %{
-        set f.atts { a: 0, b: -1, c: 2 }
+        set f.attd { a: 0, b: -1, c: 2 }
+        set f.attl [ 'al', 'bob' ]
         alpha a: 0, b: 1, d: 3
       }
 
       r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload'].keys).to eq(%w[ ret atts seen ])
+      expect(r['payload'].keys).to eq(%w[ ret attd attl seen ])
 
-      expect(r['payload']['atts']
+      expect(r['payload']['attd']
         ).to eq({ 'a' => 0, 'b' => -1, 'c' => 2 })
+      expect(r['payload']['attl']
+        ).to eq(%w[ al bob ])
       expect(r['payload']['seen'].size
         ).to eq(1)
-      expect(r['payload']['seen'].first[3]['atts']
+      expect(r['payload']['seen'].first[3]['attd']
         ).to eq({ 'a' => 0, 'b' => 1, 'd' => 3 })
+      expect(r['payload']['seen'].first[3]['attl']
+        ).to eq(%w[ alpha ])
+    end
+
+    it 'preservers non-keyed atts' do
+
+      flor = %{
+        alpha 'bravo' 'charly' 1 count: 2
+      }
+
+      r = @unit.launch(flor, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload'].keys).to eq(%w[ ret seen ])
+
+      expect(
+        r['payload']['seen'].last.last['attl']
+      ).to eq([
+        'alpha', 'bravo', 'charly', 1
+      ])
+      expect(
+        r['payload']['seen'].last.last['attd']
+      ).to eq({
+        'count' => 2
+      })
     end
 
     it 'respects postfix conditionals' do
@@ -108,8 +136,8 @@ describe 'Flor unit' do
       expect(
         r['payload']['seen'].collect(&:last)
       ).to eq([
-        { 'ret' => nil, 'atts' => { 'x' => 1 } },
-        { 'ret' => nil, 'atts' => { 'x' => 2 } }
+        { 'ret' => nil, 'attl' => %w[ alpha ], 'attd' => { 'x' => 1 } },
+        { 'ret' => nil, 'attl' => %w[ alpha ], 'attd' => { 'x' => 2 } }
       ])
     end
 

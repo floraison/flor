@@ -31,7 +31,8 @@ class Flor::Pro::Task < Flor::Procedure
 
     @node['atts'] = []
 
-    @node['patts'] = payload['atts'] if payload.has_key?('atts')
+    @node['pattl'] = payload['attl'] if payload.has_key?('attl')
+    @node['pattd'] = payload['attd'] if payload.has_key?('attd')
   end
 
   def do_receive
@@ -86,18 +87,25 @@ class Flor::Pro::Task < Flor::Procedure
 
   def determine_payload
 
-    message_or_node_payload.merge(
-      'atts' => @node['atts'].inject({}) { |h, (k, v)| h[k] = v if k; h })
+    attl = []
+    attd = {}
+
+    @node['atts'].each { |k, v| if k.nil?; attl << v; else; attd[k] = v; end }
+
+    message_or_node_payload.merge('attl' => attl, 'attd' => attd)
   end
 
   def determine_reply_payload
 
     pl = Flor.dup(payload.current)
 
-    if @node.has_key?('patts')
-      pl['atts'] = Flor.dup(@node['patts'])
-    else
-      pl.delete('atts')
+    %w[ attl attd ].each do |k|
+
+      if @node.has_key?('p' + k)
+        pl[k] = Flor.dup(@node['p' + k])
+      else
+        pl.delete(k)
+      end
     end
 
     pl
