@@ -14,7 +14,16 @@ class AlphaTasker
     pl = message['payload'].select { |k, v| k != 'seen' }
 
     (message['payload']['seen'] ||= []) <<
-      [ message['tasker'], self.class, Time.now, Flor.dup(pl) ]
+      [
+        message['tasker'],
+        message['taskname'],
+        self.class,
+        Time.now,
+        {
+          'payload' => Flor.dup(pl),
+          'attl' => message['attl'], 'attd' => message['attd']
+        }
+      ]
 
     @tasker.reply(message)
   end

@@ -55,7 +55,8 @@ describe 'Flor unit' do
       expect(r['payload']['ret']).to eq('alpha')
       expect(r['payload']['seen'].size).to eq(1)
       expect(r['payload']['seen'].first[0]).to eq('alpha')
-      expect(r['payload']['seen'].first[1]).to eq('AlphaTasker')
+      expect(r['payload']['seen'].first[1]).to eq(nil)
+      expect(r['payload']['seen'].first[2]).to eq('AlphaTasker')
     end
 
     it 'passes attributes' do
@@ -69,7 +70,7 @@ describe 'Flor unit' do
       expect(r['point']).to eq('terminated')
       expect(r['payload'].keys).to eq(%w[ ret seen ])
       expect(r['payload']['seen'].size).to eq(1)
-      expect(r['payload']['seen'].first[3]['attd']).to eq({ 'a' => 0, 'b' => 1 })
+      expect(r['payload']['seen'][0][4]['attd']).to eq({ 'a' => 0, 'b' => 1 })
     end
 
     it 'preserves "attd" and "attl"' do
@@ -91,9 +92,9 @@ describe 'Flor unit' do
         ).to eq(%w[ al bob ])
       expect(r['payload']['seen'].size
         ).to eq(1)
-      expect(r['payload']['seen'].first[3]['attd']
+      expect(r['payload']['seen'].first[4]['attd']
         ).to eq({ 'a' => 0, 'b' => 1, 'd' => 3 })
-      expect(r['payload']['seen'].first[3]['attl']
+      expect(r['payload']['seen'].first[4]['attl']
         ).to eq(%w[ alpha ])
     end
 
@@ -136,8 +137,10 @@ describe 'Flor unit' do
       expect(
         r['payload']['seen'].collect(&:last)
       ).to eq([
-        { 'ret' => nil, 'attl' => %w[ alpha ], 'attd' => { 'x' => 1 } },
-        { 'ret' => nil, 'attl' => %w[ alpha ], 'attd' => { 'x' => 2 } }
+        { 'payload' => { 'ret' => nil },
+          'attl' => %w[ alpha ], 'attd' => { 'x' => 1 } },
+        { 'payload' => { 'ret' => nil },
+          'attl' => %w[ alpha ], 'attd' => { 'x' => 2 } }
       ])
     end
 

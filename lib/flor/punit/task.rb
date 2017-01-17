@@ -30,9 +30,6 @@ class Flor::Pro::Task < Flor::Procedure
   def pre_execute
 
     @node['atts'] = []
-
-    @node['pattl'] = payload['attl'] if payload.has_key?('attl')
-    @node['pattd'] = payload['attd'] if payload.has_key?('attd')
   end
 
   def do_receive
@@ -65,50 +62,48 @@ class Flor::Pro::Task < Flor::Procedure
     taskname = tn || ni
     taskname = nil if ta == nil && tasker == ni
 
+    attl, attd = determine_atts
+
     queue(
       'point' => 'task',
       'exid' => exid, 'nid' => nid,
       'tasker' => tasker,
       'taskname' => taskname,
+      'attl' => attl, 'attd' => attd,
       'payload' => determine_payload)
 #.tap { |x| pp x.first }
   end
 
   def cancel
 
+    attl, attd = determine_atts
+
     queue(
       'point' => 'detask',
       'exid' => exid, 'nid' => nid,
       'tasker' => att(nil),
+      'attl' => attl, 'attd' => attd,
       'payload' => determine_payload)
   end
 
   protected
 
-  def determine_payload
+  def determine_atts
 
-    attl = []
-    attd = {}
-
+    attl, attd = [], {}
     @node['atts'].each { |k, v| if k.nil?; attl << v; else; attd[k] = v; end }
 
-    message_or_node_payload.merge('attl' => attl, 'attd' => attd)
+    [ attl, attd ]
+  end
+
+  def determine_payload
+
+    message_or_node_payload.copy_current
   end
 
   def determine_reply_payload
 
-    pl = Flor.dup(payload.current)
-
-    %w[ attl attd ].each do |k|
-
-      if @node.has_key?('p' + k)
-        pl[k] = Flor.dup(@node['p' + k])
-      else
-        pl.delete(k)
-      end
-    end
-
-    pl
+    payload.copy_current
   end
 end
 
