@@ -104,9 +104,13 @@ module Flor
       root = File.dirname(tconf['_path'])
 
       Array(tconf['on_task']['require'])
-        .each { |pa| require(File.join(root, pa)) }
+        .each { |pa|
+          fail ArgumentError.new('".." not allowed in paths') if pa =~ /\.\./
+          require(File.join(root, pa)) }
       Array(tconf['on_task']['load'])
-        .each { |pa| load(File.join(root, pa)) }
+        .each { |pa|
+          fail ArgumentError.new('".." not allowed in paths') if pa =~ /\.\./
+          load(File.join(root, pa)) }
 
       k = tconf['on_task']['class']
       k = Flor.const_lookup(k)
