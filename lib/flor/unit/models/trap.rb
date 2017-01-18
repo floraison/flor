@@ -104,15 +104,6 @@ module Flor
         vs[k] = message
       end
 
-      #xx = executor.counter_next('xx')
-      #msg['dbg'] = xx
-
-      if dat['flavour'] == 'punit/on'
-        pl = msg['payload']
-        msg['payload'] = Flor.dup(message['payload'])
-        (msg['vars'] ||= {})['_payload'] = pl
-      end
-
       {
         'point' => 'trigger',
         'exid' => self.exid,

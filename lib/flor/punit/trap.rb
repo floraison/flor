@@ -71,7 +71,6 @@ class Flor::Pro::Trap < Flor::Procedure
       end
 
     tra = {}
-    tra['flavour'] = 'punit/trap'
     tra['bnid'] = parent || '0' # shouldn't it be [the real] root?
     tra['points'] = points
     tra['tags'] = tags
