@@ -51,6 +51,8 @@ describe 'Flor punit' do
         on 'approve'
           push l sig
           push l msg.payload.ret
+          push l f.color
+        set f.color 'blue'
         signal 'approve'
           'b'
         push l 'c'

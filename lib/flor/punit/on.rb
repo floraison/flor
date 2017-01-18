@@ -61,6 +61,7 @@ class Flor::Pro::On < Flor::Macro
     th = [ 'trap', [], l, *tree[3] ]
     th[1] << [ '_att', [ [ 'point', [], l ], [ '_sqs', 'signal', l ] ], l ]
     th[1] << [ '_att', [ [ 'name', [], l ], tname ], l ]
+    th[1] << [ '_att', [ [ 'payload', [], l ], [ '_sqs', 'event', l ] ], l ]
     atts.each { |ac| th[1] << Flor.dup(ac) }
 
     th[1] << [ 'set', [
