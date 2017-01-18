@@ -557,12 +557,62 @@ describe 'Flor punit' do
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.210
+        wait_until { @unit.traces.count > 0 }
 
         expect(
           @unit.traces.collect(&:text)
         ).to eq(%w[
           s0:[1,2,3]
+        ])
+      end
+    end
+
+    context 'payload:' do
+
+      it 'uses the trap payload if "trap" (default)' do
+
+        flor = %{
+          trap point: 'signal' name: 's0' payload: 'trap'
+            def msg; trace "s0:$(f.ret):$(msg.payload.ret)"
+          signal 's0'
+            [ 1, 2, 3 ]
+        }
+
+        r = @unit.launch(flor, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 0 }
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          s0:["_func",{"nid":"0_0_3","cnid":"0_0","fun":0},3]:[1,2,3]
+        ])
+      end
+
+      it 'uses the event payload if "event"' do
+
+        flor = %{
+          trap point: 'signal' name: 's0' payload: 'event'
+            def msg
+              trace "s0:$(f.ret):$(msg.payload.ret)"
+              trace "s0:$(payload.ret)"
+          signal 's0'
+            [ 1, 2, 3 ]
+        }
+
+        r = @unit.launch(flor, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 0 }
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          s0:[1,2,3]:[1,2,3]
+          s0:["_func",{"nid":"0_0_3","cnid":"0_0","fun":0},3]
         ])
       end
     end

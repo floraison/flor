@@ -59,6 +59,7 @@ class Flor::Pro::Trap < Flor::Procedure
     heats = att_a('heat', 'heats', nil)
     heaps = att_a('heap', 'heaps', nil)
     names = att_a('name', 'names', nil)
+    pl = att('payload', 'pl') || 'trap'
 
     points = att_a(nil, nil) unless points || tags
     points = [ 'entered' ] if tags && ! points
@@ -78,6 +79,7 @@ class Flor::Pro::Trap < Flor::Procedure
     tra['heats'] = heats
     tra['names'] = names
     tra['message'] = msg
+    tra['pl'] = pl
 
     count = att('count')
     count = 1 if fun == nil # blocking mode implies count: 1

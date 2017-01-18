@@ -104,6 +104,11 @@ module Flor
         vs[k] = message
       end
 
+      if dat['pl'] == 'event'
+        (msg['vars'] ||= {})['payload'] = msg['payload']
+        msg['payload'] = Flor.dup(message['payload'])
+      end
+
       {
         'point' => 'trigger',
         'exid' => self.exid,
