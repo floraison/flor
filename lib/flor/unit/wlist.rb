@@ -34,7 +34,7 @@ module Flor
       @waiters = []
 
       @unit.instance_eval do
-        def wait(exid, opts)
+        def wait(exid, opts=true)
           @hooker['wlist'].wait(exid, opts)
         end
       end
@@ -62,7 +62,7 @@ module Flor
 
     def wait(exid, opts)
 
-      opts = { wait: opts } if opts.is_a?(String)
+      opts = { wait: opts } if opts.is_a?(String) || opts == true
 
       @mutex.synchronize do
 
