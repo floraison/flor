@@ -417,8 +417,13 @@ module Flor
     def entered(message); []; end
     def left(message); []; end
 
-    def terminated(message); []; end
     def ceased(message); []; end
+
+    def terminated(message)
+
+      []
+    end
+
 
     def failed(message)
 
@@ -428,9 +433,9 @@ module Flor
         "node #{message['nid']} is gone, cannot flag it as failed"
       ) unless n
 
-begin
+#begin
       n['failure'] = Flor.dup(message)
-rescue; pp message; exit 0; end
+#rescue; pp message; exit 0; end
 
       oep = lookup_on_error_parent(message)
       return oep.trigger_on_error if oep

@@ -130,9 +130,8 @@ module Flor
         .first
 
       if e
-        ex =
-          from_blob(e[:content]) ||
-          fail("couldn't parse execution (db id #{e[:id]})")
+        ex = from_blob(e[:content])
+        fail("couldn't parse execution (db id #{e[:id]})") unless ex
         ex['id'] = e[:id]
         ex['size'] = e[:content].length
         ex
