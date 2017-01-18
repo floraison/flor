@@ -338,6 +338,7 @@ module Flor
     end
 
     natts.each_with_index do |ct, i|
+      i = atts.size + i
       s << "\n"
       print_compact_tree(ct, "#{nid}_#{i}", opts)
     end
