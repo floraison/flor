@@ -241,13 +241,28 @@ module Flor
       end
     end
 
+    def prepare_message(point, h)
+
+      msg = { 'point' => point }
+      [ :exid, :name, :nid, :payload ].each { |k| msg[k.to_s] = h[k] }
+
+      fail ArgumentError.new('missing :exid key') \
+        unless msg['exid'].is_a?(String)
+      fail ArgumentError.new('missing :name string key') \
+        if point == 'signal' && ! msg['name'].is_a?(String)
+
+      msg
+    end
+
     def cancel(h)
 
-      msg = { 'point' => 'cancel' }
-      msg['exid'] = h[:exid] || fail(ArgumentError.new('missing :exid key'))
-      if nid = h[:nid]; msg['nid'] = nid; end
+      queue(prepare_message('cancel', h), h)
+    end
 
-      queue(msg, h)
+    def signal(name, h={})
+
+      h.merge!({ name: name })
+      queue(prepare_message('signal', h), h)
     end
 
     def put_timer(message)

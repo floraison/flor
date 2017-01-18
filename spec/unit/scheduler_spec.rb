@@ -285,6 +285,34 @@ describe 'Flor unit' do
         ).to eq(0)
       end
     end
+
+    describe '#signal' do
+
+      it 'queues signal messages' do
+
+        flo = %{
+          on 'blue'
+            trace 'blue'
+
+          stall _
+        }
+
+        r = @unit.launch(flo, wait: '0_1 receive')
+        expect(r['point']).to eq('receive')
+
+        exid = r['exid']
+
+        @unit.signal('blue', exid: exid)
+
+        @unit.wait(exid, '0_0 ceased')
+
+        ts = @unit.traces.all
+        t = ts.first
+
+        expect(ts.size).to eq(1)
+        expect(t.text).to eq('blue')
+      end
+    end
   end
 end
 
