@@ -29,12 +29,16 @@ def wait_until(timeout=14, frequency=0.1, &block)
 
     sleep(frequency)
 
-    return if block.call == true
+    #return if block.call == true
+    r = block.call
+    return r if r
+
     break if Time.now - start > timeout
   end
 
   fail "timeout after #{timeout}s"
 end
+alias :wait_for :wait_until
 
 
 RSpec::Matchers.define :eqj do |o|
