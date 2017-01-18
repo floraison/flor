@@ -284,12 +284,12 @@ module Flor
 
       msg['sm'] = message['m']
 
-      if message['from'] == '0' || @execution['nodes'].empty? # termination?
-        msg['point'] = 'terminated'
-        msg['vars'] = (fnode || {})['vars']
-      else
-        msg['point'] = 'ceased'
-      end
+      msg['point'] =
+        if message['from'] == '0' || @execution['nodes'].empty? # termination?
+          'terminated'
+        else
+          'ceased'
+        end
 
       [ msg ]
     end
@@ -420,6 +420,9 @@ module Flor
     def ceased(message); []; end
 
     def terminated(message)
+
+      message['vars'] = @execution['nodes']['0']['vars']
+        # especially useful for debugging
 
       []
     end

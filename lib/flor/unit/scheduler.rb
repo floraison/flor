@@ -261,7 +261,8 @@ module Flor
 
     def signal(name, h={})
 
-      h.merge!({ name: name })
+      h[:payload] ||= {}
+      h[:name] ||= name
       queue(prepare_message('signal', h), h)
     end
 

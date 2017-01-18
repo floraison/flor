@@ -312,6 +312,29 @@ describe 'Flor unit' do
         expect(ts.size).to eq(1)
         expect(t.text).to eq('blue')
       end
+
+      it 'emits an empty payload by default' do
+
+        flor = %{
+          trap point: 'signal', name: 's0', payload: 'event'
+            def msg; trace "s0:$(msg.payload.ret)"
+          stall _
+        }
+
+        r = @unit.launch(flor, wait: '0_1 receive')
+
+        expect(r['point']).to eq('receive')
+
+        @unit.signal('s0', exid: r['exid'])
+
+        wait_until { @unit.traces.count > 0 }
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          s0:
+        ])
+      end
     end
   end
 end

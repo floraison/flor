@@ -61,7 +61,7 @@ describe 'Flor punit' do
       r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
-      expect(r['vars']['l']).to eq(%w[ a c approve b ])
+      expect(r['vars']['l']).to eq(%w[ a c approve b blue ])
     end
   end
 end
