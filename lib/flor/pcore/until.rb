@@ -39,9 +39,9 @@ class Flor::Pro::Until < Flor::Procedure
     @node['vars'] =
       {}
     @node['vars']['break'] =
-      [ '_proc', { '_proc' => 'break', 'nid' => nid }, tree[-1] ]
+      [ '_proc', { 'proc' => 'break', 'nid' => nid }, tree[-1] ]
     @node['vars']['continue'] =
-      [ '_proc', { '_proc' => 'continue', 'nid' => nid }, tree[-1] ]
+      [ '_proc', { 'proc' => 'continue', 'nid' => nid }, tree[-1] ]
 
     super
   end

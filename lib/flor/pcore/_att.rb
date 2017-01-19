@@ -69,7 +69,7 @@ class Flor::Pro::Att < Flor::Procedure
 
   def rekey(k)
 
-    return k[1] if Flor.is_proc_tree?(k)
+    return k[1]['proc'] if Flor.is_proc_tree?(k)
     return k[1] if Flor.is_task_tree?(k)
     return lookup_var_name(@node, k) if Flor.is_func_tree?(k)
 

@@ -79,7 +79,7 @@ describe 'Flor core' do
       expect(
         r['payload']['ret']
       ).to eq(
-        [ '_proc', 'sequence', -1 ]
+        [ '_proc', { 'proc' => 'sequence' }, -1 ]
       )
     end
   end

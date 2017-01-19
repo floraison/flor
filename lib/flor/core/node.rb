@@ -304,7 +304,7 @@ class Flor::Node
   def lookup_dvar(mod, key)
 
     if mod != 'd' && Flor::Procedure[key]
-      return [ '_proc', key, -1 ]
+      return [ '_proc', { 'proc' => key }, -1 ]
     end
 
     if mod != 'd' && @executor.unit.tasker.has_tasker?(@executor.exid, key)

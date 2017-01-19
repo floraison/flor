@@ -34,7 +34,6 @@ class Flor::Pro::Apply < Flor::Procedure
 
   def receive
 
-    #return reply if from == @node['applied']
     return reply if from && from == @node['applied']
 
     super
@@ -44,10 +43,12 @@ class Flor::Pro::Apply < Flor::Procedure
 
     args = @node['atts'].collect(&:last)
 
+    nht = @node['heat']
+
     src =
-      @node['heat'][0, 2] == [ '_proc', 'apply' ] ?
+      Flor.is_proc_tree?(nht) && nht[1]['proc'] == 'apply' ?
       args.shift :
-      @node['heat']
+      nht
 
     ms = apply(src, args, tree[2])
 

@@ -59,12 +59,12 @@ class Flor::Pro::Cursor < Flor::Procedure
       {}
 
     @node['vars']['break'] =
-      [ '_proc', { '_proc' => 'break', 'nid' => nid }, tree[-1] ]
+      [ '_proc', { 'proc' => 'break', 'nid' => nid }, tree[-1] ]
     @node['vars']['continue'] =
-      [ '_proc', { '_proc' => 'continue', 'nid' => nid }, tree[-1] ]
+      [ '_proc', { 'proc' => 'continue', 'nid' => nid }, tree[-1] ]
 
     @node['vars']['move'] =
-      [ '_proc', { '_proc' => 'move', 'nid' => nid }, tree[-1] ]
+      [ '_proc', { 'proc' => 'move', 'nid' => nid }, tree[-1] ]
 
     super
   end

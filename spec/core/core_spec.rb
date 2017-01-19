@@ -25,8 +25,12 @@ describe 'Flor core' do
 
       r = @executor.launch(flor)
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ '_proc', 'sequence', -1 ])
+      expect(
+        r['point']
+      ).to eq('terminated')
+      expect(
+        r['payload']['ret']
+      ).to eq([ '_proc', { 'proc' => 'sequence' }, -1 ])
     end
   end
 
