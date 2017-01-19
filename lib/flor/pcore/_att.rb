@@ -114,7 +114,7 @@ class Flor::Pro::Att < Flor::Procedure
     ret = payload['ret']
     fail(
       "cannot use proc #{ret[1].inspect} as tag name"
-    ) if ret.is_a?(Array) && ret[0] == '_proc' && ret[1].is_a?(String)
+    ) if Flor.is_proc_tree?(ret)
 
     ret = rekey(ret)
     tags = Array(ret)

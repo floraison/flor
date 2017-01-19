@@ -519,6 +519,14 @@ module Flor
     o.is_a?(Array) && o.all? { |e| Flor.is_tree?(e) }
   end
 
+  def self.is_proc_tree?(o)
+
+    o.is_a?(Array) &&
+    o[0] == '_proc' &&
+    o[1].is_a?(String) &&
+    o[2].is_a?(Integer)
+  end
+
   def self.is_func_tree?(o)
 
     o.is_a?(Array) &&
