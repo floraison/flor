@@ -41,7 +41,7 @@ describe 'Flor core' do
 
   describe 'an attribute key referencing a var' do
 
-    it 'is accepted' do
+    it 'it keys on the var value' do
 
       flor = %{
         set k 'K'
@@ -59,10 +59,8 @@ describe 'Flor core' do
   end
 
   describe 'an attribute key referencing a function' do
-    #
-    # should it take the fun name???
 
-    it 'is accepted' do
+    it 'is keys on the function name' do
 
       flor = %{
         define k; stall _
@@ -75,11 +73,25 @@ describe 'Flor core' do
 
       dump = r['vars']['dumps'][0]
 
-      expect(dump['node']['atts'][0][0]).to eq(
-        [ '_func', { 'nid' => '0_0', 'cnid' => '0', 'fun' => 0 }, 2 ])
-      expect(dump['node']['atts'][0][1]).to eq(
-        'V')
+      expect(dump['node']['atts']).to eq([ %w[ k V ] ])
     end
+
+#    it 'is keys on the referenced function name' do
+#
+#      flor = %{
+#        define k; stall _
+#        set kk k
+#        _dump kk: 'V'
+#      }
+#
+#      r = @executor.launch(flor)
+#
+#      expect(r['point']).to eq('terminated')
+#
+#      dump = r['vars']['dumps'][0]
+#
+#      expect(dump['node']['atts']).to eq([ %w[ kk V ] ])
+#    end
   end
 
   describe 'an attribute key calling a function' do

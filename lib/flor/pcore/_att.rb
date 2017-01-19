@@ -70,7 +70,7 @@ class Flor::Pro::Att < Flor::Procedure
   def receive_att(key)
 
     if parent_node['atts']
-      parent_node['atts'] << [ key, payload['ret'] ]
+      parent_node['atts'] << [ rekey(key), payload['ret'] ]
       parent_node['mtime'] = Flor.tstamp
     elsif key == nil && parent_node['rets']
       parent_node['rets'] << payload['ret']
@@ -80,6 +80,18 @@ class Flor::Pro::Att < Flor::Procedure
     payload['ret'] = @node['ret'] if key
 
     reply
+  end
+
+  # Returns the task name if the key points to a task,
+  # the function name if the key points to a function,
+  # returns as is else.
+  #
+  def rekey(k)
+
+    return k[1] if Flor.is_task_tree?(k)
+    return lookup_var_name(@node, k) if Flor.is_func_tree?(k)
+
+    k
   end
 
   # vars: { ... }, inits a scope for the parent node
@@ -104,15 +116,7 @@ class Flor::Pro::Att < Flor::Procedure
       "cannot use proc #{ret[1].inspect} as tag name"
     ) if ret.is_a?(Array) && ret[0] == '_proc' && ret[1].is_a?(String)
 
-    ret =
-      if Flor.is_func_tree?(ret)
-        lookup_var_name(@node, ret) if Flor.is_func_tree?(ret)
-      elsif Flor.is_task_tree?(ret)
-        ret[1]
-      else
-        ret
-      end
-
+    ret = rekey(ret)
     tags = Array(ret)
 
     return reply if tags.empty?

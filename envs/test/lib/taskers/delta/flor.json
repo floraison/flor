@@ -1,0 +1,6 @@
+
+on_task: {
+  require: 'delta.rb'
+  class: DeltaTasker
+}
+
