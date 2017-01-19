@@ -38,5 +38,67 @@ describe 'Flor core' do
       expect(dump['node']['atts']).to eq([ [ [], 12 ] ])
     end
   end
+
+  describe 'an attribute key referencing a var' do
+
+    it 'is accepted' do
+
+      flor = %{
+        set k 'K'
+        _dump k: 'V'
+      }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+
+      dump = r['vars']['dumps'][0]
+
+      expect(dump['node']['atts']).to eq([ %w[ K V ] ])
+    end
+  end
+
+  describe 'an attribute key referencing a function' do
+    #
+    # should it take the fun name???
+
+    it 'is accepted' do
+
+      flor = %{
+        define k; stall _
+        _dump k: 'V'
+      }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+
+      dump = r['vars']['dumps'][0]
+
+      expect(dump['node']['atts'][0][0]).to eq(
+        [ '_func', { 'nid' => '0_0', 'cnid' => '0', 'fun' => 0 }, 2 ])
+      expect(dump['node']['atts'][0][1]).to eq(
+        'V')
+    end
+  end
+
+  describe 'an attribute key calling a function' do
+
+    it 'keys on the return value' do
+
+      flor = %{
+        define k; 'K'
+        _dump (k _): 'V'
+      }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+
+      dump = r['vars']['dumps'][0]
+
+      expect(dump['node']['atts']).to eq([ %w[ K V ] ])
+    end
+  end
 end
 
