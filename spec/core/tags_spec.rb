@@ -125,7 +125,7 @@ describe 'Flor core' do
       expect(r['point']).to eq('failed')
     end
 
-    it 'rejects procs as tags' do
+    it 'accepts procs as tags' do
 
       flor = %{
         sequence tag: sequence
@@ -133,8 +133,18 @@ describe 'Flor core' do
 
       r = @executor.launch(flor)
 
-      expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq('cannot use proc "sequence" as tag name')
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @executor.journal
+          .inject([]) { |a, m|
+            next a unless m['point'] == 'entered'
+            a << [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':')
+            a
+          }.join("\n")
+      ).to eq(%w[
+        entered:0:sequence
+      ].join("\n"))
     end
 
     it 'accepts functions as tags' do
