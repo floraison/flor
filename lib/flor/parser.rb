@@ -64,7 +64,7 @@ module Flor
         /(
           \\[\/bfnrt] |
           \\u[0-9a-fA-F]{4} |
-          [^/\\\b\f\n\r\t]
+          [^/\b\f\n\r\t]
         )*/[a-z]*
       }x)
     end

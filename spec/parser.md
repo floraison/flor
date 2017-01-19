@@ -118,6 +118,15 @@ parses to
 ```
 ---
 
+```flor
+  /^$\A\Z\z\G\b\Bmno/
+```
+parses to
+```ruby
+  [ '_rxs', '/^$\A\Z\z\G\b\Bmno/', 1 ]
+```
+---
+
 ## arrays
 
 ```flor
