@@ -186,10 +186,17 @@ module Flor
         end
 
       if heap == 'task' && heat[0] == '_task'
+        #
+        # rewrite `alpha` into `task alpha`
+
         l = message['tree'][2]
+
         message['otree'] = Flor.dup(message['tree'])
-        message['tree'][0] = 'task'
-        message['tree'][1].unshift([ '_att', [ [ '_sqs', heat[1], l ] ], l ])
+
+        message['tree'][0] =
+          'task'
+        message['tree'][1].unshift(
+          [ '_att', [ [ '_sqs', heat[1]['task'], l ] ], l ])
       end
     end
 

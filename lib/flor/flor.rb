@@ -540,8 +540,9 @@ module Flor
 
     o.is_a?(Array) &&
     o[0] == '_task' &&
-    o[1].is_a?(String) &&
-    o[2].is_a?(Integer)
+    o[2].is_a?(Integer) &&
+    o[1].is_a?(Hash) &&
+    o[1]['task'].is_a?(String)
   end
 
   def self.is_tree_head_tree?(o)

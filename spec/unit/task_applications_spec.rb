@@ -39,7 +39,7 @@ describe 'Flor unit' do
       expect(
         r['payload']['ret']
       ).to eq(
-        [ '_task', 'alpha', -1 ]
+        [ '_task', { 'task' => 'alpha' }, -1 ]
       )
     end
 
@@ -95,7 +95,7 @@ describe 'Flor unit' do
       expect(r['payload']['seen'].first[4]['attd']
         ).to eq({ 'a' => 0, 'b' => 1, 'd' => 3 })
       expect(r['payload']['seen'].first[4]['attl']
-        ).to eq(%w[ alpha ])
+        ).to eq([ 'alpha' ])
     end
 
     it 'preservers non-keyed atts' do

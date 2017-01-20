@@ -308,7 +308,7 @@ class Flor::Node
     end
 
     if mod != 'd' && @executor.unit.tasker.has_tasker?(@executor.exid, key)
-      return [ '_task', key, -1 ]
+      return [ '_task', { 'task' => key }, -1 ]
     end
 
     l = @executor.unit.loader
