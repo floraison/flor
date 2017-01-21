@@ -173,17 +173,6 @@ describe 'Flor core' do
     it 'accepts functions as tags (closure)' do
 
       flor = %{
-        sequence
-          define make_adder x
-            def y
-              +
-                x
-                y
-          set add3
-            make_adder 3
-          add3 7
-      }
-      flor = %{
         define make_tag x
           def; sequence tag: x
         define t1; _

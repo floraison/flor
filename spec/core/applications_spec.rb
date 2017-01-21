@@ -102,7 +102,9 @@ describe 'Flor core' do
       expect(
         r['payload']['ret']
       ).to eq(
-        [ '_func', { 'nid' => '0_0', 'cnid' => '0', 'fun' => 0 }, 3 ]
+        [ '_func',
+          { 'nid' => '0_0', 'cnid' => '0', 'fun' => 0, 'ref' => 'sum' },
+          3 ]
       )
     end
   end
@@ -210,10 +212,14 @@ describe 'Flor core' do
       expect(r['vars'].keys.sort).to eq(%w[ add3 make_adder ])
       #
       expect(r['vars']['make_adder']).to eq(
-        [ '_func', { 'nid' => '0_0', 'cnid' => '0', 'fun' => 0 }, 3 ]
+        [ '_func',
+          { 'nid' => '0_0', 'cnid' => '0', 'fun' => 0, 'ref' => 'make_adder' },
+          3 ]
       )
       expect(r['vars']['add3']).to eq(
-        [ '_func', { 'nid' => '0_0_2-1', 'cnid' => '0_0-1', 'fun' => 1 }, 4 ]
+        [ '_func',
+          { 'nid' => '0_0_2-1', 'cnid' => '0_0-1', 'fun' => 1, 'ref' => 'add3' },
+          4 ]
       )
 
       expect(r['payload']['ret']).to eq(10)

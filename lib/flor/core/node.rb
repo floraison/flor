@@ -210,11 +210,27 @@ class Flor::Node
 
   def deref(o)
 
-    if o.is_a?(String)
-      lookup(o)
-    else
-      o
-    end
+    return o unless o.is_a?(String)
+
+    v = lookup(o)
+
+    return v unless Flor.is_tree?(v)
+    return v unless v[1].is_a?(Hash)
+
+    return v unless %w[ _proc _task _func ].include?(v[0])
+
+    ref =
+      case v[0]
+        when '_func' then true
+        when '_proc' then v[1]['proc'] != o
+        when '_task' then v[1]['task'] != o
+        else false
+      end
+
+    v[1]['oref'] ||= v[1]['ref'] if ref && v[1]['ref']
+    v[1]['ref'] = o if ref
+
+    v
   end
 
   def tree

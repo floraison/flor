@@ -76,22 +76,22 @@ describe 'Flor core' do
       expect(dump['node']['atts']).to eq([ %w[ k V ] ])
     end
 
-#    it 'is keys on the referenced function name' do
-#
-#      flor = %{
-#        define k; stall _
-#        set kk k
-#        _dump kk: 'V'
-#      }
-#
-#      r = @executor.launch(flor)
-#
-#      expect(r['point']).to eq('terminated')
-#
-#      dump = r['vars']['dumps'][0]
-#
-#      expect(dump['node']['atts']).to eq([ %w[ kk V ] ])
-#    end
+    it 'is keys on the referenced function name' do
+
+      flor = %{
+        define k; stall _
+        set kk k
+        _dump kk: 'V'
+      }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+
+      dump = r['vars']['dumps'][0]
+
+      expect(dump['node']['atts']).to eq([ %w[ kk V ] ])
+    end
   end
 
   describe 'an attribute key calling a function' do

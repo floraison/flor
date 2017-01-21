@@ -67,19 +67,24 @@ class Flor::Pro::Att < Flor::Procedure
     end
   end
 
-  def rekey(k)
+  def unref(k, flavour=:key)
 
-    return k[1]['proc'] if Flor.is_proc_tree?(k)
-    return k[1]['task'] if Flor.is_task_tree?(k)
-    return lookup_var_name(@node, k) if Flor.is_func_tree?(k)
+    #return lookup_var_name(@node, k) if Flor.is_func_tree?(k)
+      # old style
 
-    k
+    return k unless Flor.is_tree?(k)
+    return k unless k[1].is_a?(Hash)
+    return k unless %w[ _proc _task _func ].include?(k[0])
+
+    (flavour == :key ? nil : k[1]['oref']) ||
+    k[1]['ref'] ||
+    k[1]['proc'] || k[1]['task']
   end
 
   def receive_att(key)
 
     if parent_node['atts']
-      parent_node['atts'] << [ rekey(key), payload['ret'] ]
+      parent_node['atts'] << [ unref(key), payload['ret'] ]
       parent_node['mtime'] = Flor.tstamp
     elsif key == nil && parent_node['rets']
       parent_node['rets'] << payload['ret']
@@ -109,7 +114,7 @@ class Flor::Pro::Att < Flor::Procedure
       if pt && pt[0].is_a?(String) && Flor::Procedure[pt[0]].names[0] == 'trap'
 
     ret = payload['ret']
-    ret = rekey(ret)
+    ret = unref(ret, :att)
 
     tags = Array(ret)
 
