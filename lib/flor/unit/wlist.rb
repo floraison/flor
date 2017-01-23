@@ -55,6 +55,7 @@ module Flor
         end
 
         @waiters -= to_remove
+
       end if message['consumed']
 
       [] # no new messages
@@ -66,10 +67,7 @@ module Flor
 
       @mutex.synchronize do
 
-        w = Waiter.make(exid, opts)
-        @waiters << w
-
-        w
+        (@waiters << Waiter.new(exid, opts)).last
 
       end.wait
         # returns the response message

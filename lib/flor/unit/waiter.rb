@@ -28,7 +28,9 @@ module Flor
 
     DEFAULT_TIMEOUT = 4 # seconds
 
-    def initialize(exid, serie, timeout, repeat)
+    def initialize(exid, opts)
+
+      serie, timeout, repeat = expand_args(opts)
 
       @exid = exid
       @original_serie = repeat ? Flor.dup(serie) : nil
@@ -47,32 +49,6 @@ module Flor
           original_serie: @original_serie,
           timeout: @timeout }.inspect
       }>"
-    end
-
-    def self.make(exid, opts)
-
-      owait = opts[:wait]
-
-      serie, timeout, repeat =
-        case owait; when true
-          [ [ [ nil, %w[ failed terminated ] ] ], # serie
-            DEFAULT_TIMEOUT,
-            false ] # repeat
-        when Numeric
-          [ [ [ nil, %w[ failed terminated ] ] ], # serie
-            owait, # timeout
-            false ] # repeat
-        when String, Array
-          [ parse_serie(owait), # serie
-            opts[:timeout] || DEFAULT_TIMEOUT,
-            false ] # repeat
-        when Hash
-          [ parse_serie(owait[:serie]),
-            owait[:timeout],
-            owait[:repeat] ]
-        end
-
-      Waiter.new(exid, serie, timeout, repeat)
     end
 
     def notify(executor, message)
@@ -130,7 +106,30 @@ module Flor
       true
     end
 
-    def self.parse_serie(s)
+    def expand_args(opts)
+
+      case (owait = opts[:wait])
+      #
+      when true
+        [ [ [ nil, %w[ failed terminated ] ] ], # serie
+          DEFAULT_TIMEOUT,
+          false ] # repeat
+      when Numeric
+        [ [ [ nil, %w[ failed terminated ] ] ], # serie
+          owait, # timeout
+          false ] # repeat
+      when String, Array
+        [ parse_serie(owait), # serie
+          opts[:timeout] || DEFAULT_TIMEOUT,
+          false ] # repeat
+      when Hash
+        [ parse_serie(owait[:serie]),
+          owait[:timeout],
+          owait[:repeat] ]
+      end
+    end
+
+    def parse_serie(s)
 
       return s if s.is_a?(Array) && s.collect(&:class).uniq == [ Array ]
 
