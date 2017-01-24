@@ -45,11 +45,39 @@ describe Flor::Waiter do
     it 'expands multiple points' do
 
       expect(
-        @waiter.expand_args(wait: '0_0 task, terminated')
+        @waiter.expand_args(wait: '0_0 task; terminated')
       ).to eq([
         [
           [ '0_0', [ 'task' ] ],
           [ nil, [ 'terminated' ] ]
+        ],
+        4,
+        false
+      ])
+    end
+
+    it 'expands multiple points for a nid' do
+
+      expect(
+        @waiter.expand_args(wait: '0_0 task|cancel; terminated')
+      ).to eq([
+        [
+          [ '0_0', [ 'task', 'cancel' ] ],
+          [ nil, [ 'terminated' ] ]
+        ],
+        4,
+        false
+      ])
+    end
+
+    it 'accepts comma or pipe to "or" points' do
+
+      expect(
+        @waiter.expand_args(wait: '0_0 task,cancel; 0_1 task|cancel')
+      ).to eq([
+        [
+          [ '0_0', [ 'task', 'cancel' ] ],
+          [ '0_1', [ 'task', 'cancel' ] ]
         ],
         4,
         false

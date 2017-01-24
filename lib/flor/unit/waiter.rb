@@ -135,10 +135,10 @@ module Flor
 
       return s if s.is_a?(Array) && s.collect(&:class).uniq == [ Array ]
 
-      (s.is_a?(String) ? s.split(',') : s)
+      (s.is_a?(String) ? s.split(';') : s)
         .collect { |s|
-          ni, pt = s.strip.match(/\A([0-9_\-]+)? *([a-z]+)\z/)[1, 2]
-          [ ni, [ pt ] ]
+          ni, pt = s.strip.match(/\A([0-9_\-]+)? *([a-z|, ]+)\z/)[1, 2]
+          [ ni, pt.split(/[|,]/).collect(&:strip) ]
         }
     end
   end
