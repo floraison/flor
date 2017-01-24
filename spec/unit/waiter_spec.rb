@@ -67,16 +67,16 @@ describe Flor::Waiter do
       ])
     end
 
-    it 'accepts a repeat:' #do
-#
-#      expect(
-#        @waiter.expand_args(wait: '0_0 task', repeat: 3)
-#      ).to eq([
-#        [ [ '0_0', [ 'task' ] ] ],
-#        4,
-#        3
-#      ])
-#    end
+    it 'accepts a repeat:' do
+
+      expect(
+        @waiter.expand_args(wait: '0_0 task', repeat: 3)
+      ).to eq([
+        [ [ '0_0', [ 'task' ] ] ],
+        4,
+        3
+      ])
+    end
   end
 end
 

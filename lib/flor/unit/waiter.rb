@@ -108,24 +108,26 @@ module Flor
 
     def expand_args(opts)
 
-      case (owait = opts[:wait])
-      #
+      owait = opts[:wait]
+      orepeat = opts[:repeat] || false
+      otimeout = opts[:timeout] || DEFAULT_TIMEOUT
+
+      case owait
       when true
         [ [ [ nil, %w[ failed terminated ] ] ], # serie
-          DEFAULT_TIMEOUT,
-          false ] # repeat
+          otimeout,
+          orepeat ]
       when Numeric
         [ [ [ nil, %w[ failed terminated ] ] ], # serie
           owait, # timeout
-          false ] # repeat
+          orepeat ]
       when String, Array
         [ parse_serie(owait), # serie
-          opts[:timeout] || DEFAULT_TIMEOUT,
-          false ] # repeat
-      when Hash
-        [ parse_serie(owait[:serie]),
-          owait[:timeout],
-          owait[:repeat] ]
+          otimeout,
+          orepeat ]
+      else
+        fail ArgumentError.new(
+          "don't know how to deal with #{owait.inspect} (#{owait.class})")
       end
     end
 
@@ -134,7 +136,7 @@ module Flor
       return s if s.is_a?(Array) && s.collect(&:class).uniq == [ Array ]
 
       (s.is_a?(String) ? s.split(',') : s)
-        .map { |s|
+        .collect { |s|
           ni, pt = s.strip.match(/\A([0-9_\-]+)? *([a-z]+)\z/)[1, 2]
           [ ni, [ pt ] ]
         }
