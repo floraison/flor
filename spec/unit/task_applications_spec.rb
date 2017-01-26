@@ -330,33 +330,34 @@ describe 'Flor unit' do
 
       it 'passes domain vars' do
 
-fail
         File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
           f.puts(%{
             on_task: {
               require: 'charly.rb'
               class: CharlyTasker
-              exclude_vars: [ /^flow_/, 'd' ]
+              include_vars: true
             }
           }.ftrim)
         end
 
         flor = %{
-          set flow_name 1
-          set flow_x 2
-          sequence vars: { 'flow_x': 3 'c': 4, 'd': 'five' }
+          set flow_name 'test_dvariables'
+          set flow_x 0
+          sequence vars: { 'flow_x': 1 'flow_y': 2 }
             task 'charly'
         }
 
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(flor, vdomain: 'com.acme', wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        #pp r['payload']['charly']
         expect(
           r['payload']['charly']['vars']
+            .reject { |k, v| k[0, 1] == '_' }
         ).to eq({
-          'c' => 4
+          'flow_name' => 'test_dvariables',
+          'flow_x' => 1, 'flow_y' => 2,
+          'company' => 'ACME'
         })
       end
     end

@@ -100,10 +100,11 @@ module Flor
       (n['vars'] || {})
         .each { |k, v| vs[k] = Flor.dup(v) unless vs.has_key?(k) }
 
-#      if @unit.loader && n['parent'] == nil && n['vdomain'] != false
-#        @unit.loader.variables(n['vdomain'] || Flor.domain(@exid))
-#          .each { |k, v| vs[k] = Flor.dup(v) unless vs.has_key?(k) }
-#      end
+      if @unit.loader && n['parent'] == nil && n['vdomain'] != false
+
+        @unit.loader.variables(n['vdomain'] || Flor.domain(@exid))
+          .each { |k, v| vs[k] = Flor.dup(v) unless vs.has_key?(k) }
+      end
 
       if cn = n['cnid']; vars(cn, vs); end
       if pa = n['parent']; vars(pa, vs); end
