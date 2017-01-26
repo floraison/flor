@@ -327,6 +327,38 @@ describe 'Flor unit' do
           'c' => 4
         })
       end
+
+      it 'passes domain vars' do
+
+fail
+        File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
+          f.puts(%{
+            on_task: {
+              require: 'charly.rb'
+              class: CharlyTasker
+              exclude_vars: [ /^flow_/, 'd' ]
+            }
+          }.ftrim)
+        end
+
+        flor = %{
+          set flow_name 1
+          set flow_x 2
+          sequence vars: { 'flow_x': 3 'c': 4, 'd': 'five' }
+            task 'charly'
+        }
+
+        r = @unit.launch(flor, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        #pp r['payload']['charly']
+        expect(
+          r['payload']['charly']['vars']
+        ).to eq({
+          'c' => 4
+        })
+      end
     end
   end
 end

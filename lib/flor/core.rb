@@ -72,8 +72,8 @@ module Flor
         'payload' => pl,
         'vars' => vs }
 
-    msg['dvars'] = opts[:dvariables] \
-      if opts.has_key?(:dvariables)
+    msg['vdomain'] = opts[:vdomain] \
+      if opts.has_key?(:vdomain)
 
     msg
   end

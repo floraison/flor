@@ -51,28 +51,28 @@ describe 'Flor unit' do
       expect(r['payload']['ret']).to eq(%w[ EMCA ACME ])
     end
 
-    context 'dvariables: false' do
+    context 'vdomain: false' do
 
       it 'prevents domain variables lookup' do
 
         r =
           @unit.launch(%{
             company
-          }, dvariables: false, domain: 'com.acme', wait: true)
+          }, vdomain: false, domain: 'com.acme', wait: true)
 
         expect(r['point']).to eq('failed')
         expect(r['error']['msg']).to eq("don't know how to apply \"company\"")
       end
     end
 
-    context 'dvariables: "org.dom"' do
+    context 'vdomain: "org.dom"' do
 
       it 'reconnects the domain variables lookup to another domain' do
 
         r =
           @unit.launch(%{
             company
-          }, domain: 'org.acme', dvariables: 'com.acme', wait: true)
+          }, domain: 'org.acme', vdomain: 'com.acme', wait: true)
 
         expect(r['point']).to eq('terminated')
         expect(Flor.domain(r['exid'])).to eq('org.acme')

@@ -100,6 +100,11 @@ module Flor
       (n['vars'] || {})
         .each { |k, v| vs[k] = Flor.dup(v) unless vs.has_key?(k) }
 
+#      if @unit.loader && n['parent'] == nil && n['vdomain'] != false
+#        @unit.loader.variables(n['vdomain'] || Flor.domain(@exid))
+#          .each { |k, v| vs[k] = Flor.dup(v) unless vs.has_key?(k) }
+#      end
+
       if cn = n['cnid']; vars(cn, vs); end
       if pa = n['parent']; vars(pa, vs); end
 
@@ -122,13 +127,13 @@ module Flor
         'ctime' => now,
         'mtime' => now }
 
-      %w[ vars dvars cnid noreply dbg ].each do |k|
+      %w[ vars vdomain cnid noreply dbg ].each do |k|
         v = message[k]
         node[k] = v if v != nil
       end
         #
         # vars: variables
-        # dvars: domain variables
+        # vdomain: variable domain (used in conjuction with the loader)
         # cnid: closure nid
         # noreply: this new node has a parent but shouldn't reply to it
         # dbg: used to debug messages (useful @node['dbg'] when 'receive')

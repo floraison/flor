@@ -328,10 +328,10 @@ class Flor::Node
     end
 
     l = @executor.unit.loader
-    dvars = @node['dvars']
+    vdomain = @node['vdomain']
       #
-    if l && dvars != false
-      return l.variables(dvars || domain)[key]
+    if l && vdomain != false
+      return l.variables(vdomain || domain)[key]
     end
 
     nil
