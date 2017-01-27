@@ -189,9 +189,11 @@ module Flor
 
     def log_run_end(t0)
 
+      _rs, _dg, _yl, _bl, _gy, _gn, _rd = Flor.colours
+
       s = StringIO.new
 
-      s << Flor::Colours.dark_grey
+      s << _dg
       s << "    |   run ends #{self.class} #{self.object_id} #{@exid}"
       s << "\n    |   "; s << { took: Time.now - t0 }.inspect
       s << "\n    |   "; s << {
@@ -212,7 +214,7 @@ module Flor
         }.inspect
       end
       s << "\n    \\--- ."
-      s << Flor::Colours.reset
+      s << _rs
 
       puts s.string
     end
