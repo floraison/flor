@@ -41,6 +41,20 @@ describe 'Flor unit' do
 
       expect(dump['node']['atts']).to eq([ %w[ alpha V ] ])
     end
+
+    it 'keys on the tasker name 2' do
+
+      flo = %{
+        alpha alpha: 'a'
+      }
+
+      r = @unit.launch(flo, wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['seen'][0][4]['attl']).to eq(%w[ alpha ])
+      expect(r['payload']['seen'][0][4]['attd']).to eq({ 'alpha' => 'a' })
+    end
   end
 
   describe 'a tasker invocation as key' do
