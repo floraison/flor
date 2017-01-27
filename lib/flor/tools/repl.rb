@@ -42,7 +42,7 @@ module Flor::Tools
         end
       end
 
-      @_rs, @_dg, @_yl, @_bl, @_lg, @_gr, @_lr, @_rd = Flor.colours({})
+      @_c, @_dg, @_yl, @_bl, @_lg, @_gr, @_lr, @_rd = Flor.colours({})
 
       do_loop
     end

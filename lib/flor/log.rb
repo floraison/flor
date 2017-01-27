@@ -27,8 +27,7 @@ module Flor
 
   def self.log_message(executor, m, opts={})
 
-    _rs, _dg, _yl, _bl, _lg, _gr, _lr, _rd, _ma = colours(opts)
-    _bri, _dim, _und, _, _rev, _ = colmods(opts)
+    _c = colours(opts)
 
     nid = m['nid']
     nd = executor.node(nid)
@@ -45,31 +44,31 @@ module Flor
       end
     a << tm
     a << ' '
-    a << _dg
+    a << _c.dg
 
     if ex = (m['exid'] || '').split('.').last
       a << ex[-2..-1]
       a << ' '
     end
 
-    a << "#{nd ? _dg : _dim + _dg}#{nid}#{_rs}#{_dg} " if nid
+    a << "#{nd ? _c.dg : _c.dim + _c.dg}#{nid}#{_c.rs}#{_c.dg} " if nid
 
     pt = m['point'][0, 3]
     _pt =
       case pt
-        when 'tri', 'sig' then _gr
-        when 'cea', 'ter' then _lg
-        when 'can' then _ma
-        else _bl
+        when 'tri', 'sig' then _c.gr
+        when 'cea', 'ter' then _c.lg
+        when 'can' then _c.ma
+        else _c.bl
       end
-    a << "#{_pt}#{pt}#{_dg}"
+    a << "#{_pt}#{pt}#{_c.dg}"
 
     fla = m['flavour']
-    a << " #{_lg}#{fla}#{_dg}" if fla
+    a << " #{_c.lg}#{fla}#{_c.dg}" if fla
 
-    sta = nd && nd['status'].last
-    a << " #{_dim}#{_lg}#{sta['status']}:#{sta['flavour']}#{_rs}#{_dg}" \
-      if sta && sta['status']
+    st = nd && nd['status'].last
+    a << " #{_c.dim}#{_c.lg}#{st['status']}:#{st['flavour']}#{_c.rs}#{_c.dg}" \
+      if st && st['status']
 
     t =
       m['tree']
@@ -79,34 +78,34 @@ module Flor
       t || Node.new(executor, nd, m).lookup_tree(nid)
     t0 =
       if t
-        " [#{rw}#{_yl}#{Flor.s_to_d(t[0], compact: true)}#{_dg} L#{t[2]}]"
+        " [#{rw}#{_c.yl}#{Flor.s_to_d(t[0], compact: true)}#{_c.dg} L#{t[2]}]"
       elsif nt
-        " [#{_dg}#{Flor.s_to_d(nt[0], compact: true)}#{_dg} L#{nt[2]}]"
+        " [#{_c.dg}#{Flor.s_to_d(nt[0], compact: true)}#{_c.dg} L#{nt[2]}]"
       else
         ''
       end
     a << t0
 
-    oe = m['on_error'] ? " #{_rd}on_error" : ''
+    oe = m['on_error'] ? " #{_c.rd}on_error" : ''
     a << oe
 
     tmi = m['timer_id']
-    tmi = tmi ? " #{_dg}tmi:#{tmi}" : ''
+    tmi = tmi ? " #{_c.dg}tmi:#{tmi}" : ''
     a << tmi
       #
     tri = m['trap_id']
-    tri = tri ? " #{_dg}tri:#{tri}" : ''
+    tri = tri ? " #{_c.dg}tri:#{tri}" : ''
     a << tri
 
-    cn = t ? " #{_dg}#{Flor.to_d(t[1], compact: true, inner: true)}" : ''
+    cn = t ? " #{_c.dg}#{Flor.to_d(t[1], compact: true, inner: true)}" : ''
     cn = cn.length > 49 ? "#{cn[0, 49]}..." : cn
     a << cn
 
     hp = nd && nd['heap']
-    hp = hp && (hp != (t || [])[0]) ? " #{_dg}hp:#{nd['heap']}" : ''
+    hp = hp && (hp != (t || [])[0]) ? " #{_c.dg}hp:#{nd['heap']}" : ''
     a << hp
 
-    msr = " #{_dg}m#{m['m']}s#{m['sm'] || '_'}"
+    msr = " #{_c.dg}m#{m['m']}s#{m['sm'] || '_'}"
     msr << "r#{m['er']}>#{m['pr']}" if m['er'] && m['er'] > -1
     a << msr
 
@@ -114,79 +113,80 @@ module Flor
     a << fr
 
     rt = ret_to_s(executor, m)
-    rt = rt.length > 0 ? " #{_lg}f.ret #{rt}" : ''
+    rt = rt.length > 0 ? " #{_c.lg}f.ret #{rt}" : ''
     a << rt
 
     ta =
       m['point'] == 'entered' || m['point'] == 'left' ?
-      " #{_dg}tags:#{_gr}#{m['tags'].join(',')}" :
+      " #{_c.dg}tags:#{_c.gr}#{m['tags'].join(',')}" :
       nil
     a << ta
 
     vs =
       (nd && nd['vars']) ?
-      " #{_dg}vars:#{_gr}#{nd['vars'].keys.join("#{_dg},#{_gr}")}" :
+      " #{_c.dg}vars:#{_c.gr}#{nd['vars'].keys.join("#{_c.dg},#{_c.gr}")}" :
       ''
     a << vs
 
     %w[ fpoint dbg ].each do |k|
-      a << " #{_dg}#{k}:#{m[k]}" if m.has_key?(k)
+      a << " #{_c.dg}#{k}:#{m[k]}" if m.has_key?(k)
     end
 
-    a << _rs
+    a << _c.rs
 
     puts a.join
   end
 
   def self.print_src(src, opts={})
 
-    _rs, _dg, _yl = colours(opts)
+    _c = colours(opts)
 
-    puts "#{_dg}+---#{_rs}"
+    puts "#{_c.dg}+---#{_c.rs}"
 
-    puts "#{_dg}| #{opts.inspect}#{_rs}" if opts.any?
+    puts "#{_c.dg}| #{opts.inspect}#{_c.rs}" if opts.any?
 
     if src.is_a?(String)
       src.split("\n").select { |l| l.strip.length > 0 }.each do |line|
-        puts "#{_dg}| #{_yl}#{line}#{_rs}"
+        puts "#{_c.dg}| #{_c.yl}#{line}#{_c.rs}"
       end
     else
       ss = Flor.to_pretty_s(src).split("\n")
       ss.each do |line|
-        puts "#{_dg}| #{_yl}#{line}#{_rs}"
+        puts "#{_c.dg}| #{_c.yl}#{line}#{_c.rs}"
       end
     end
 
-    puts "#{_dg}.#{_rs}"
+    puts "#{_c.dg}.#{_c.rs}"
   end
 
   def self.print_tree(tree, nid='0', opts={})
+
+    _c = colours(opts)
 
     ind = ' ' * (opts[:ind] || 0)
 
     headers = opts[:headers]; headers = true if headers.nil?
     headers = true if opts[:title]
 
-    _rs, _dg, _yl = colours(opts)
+    h = "#{_c.yl}#{Flor.s_to_d(tree[0], compact: true)}"
+    c = tree[1].is_a?(Array) ? '' : " #{_c.yl}#{tree[1]}"
+    l = " #{_c.dg}L#{tree[2]}"
 
-    h = "#{_yl}#{Flor.s_to_d(tree[0], compact: true)}"
-    c = tree[1].is_a?(Array) ? '' : " #{_yl}#{tree[1]}"
-    l = " #{_dg}L#{tree[2]}"
-
-    puts "#{ind}#{_dg}+--- #{opts[:title]}#{_rs}" if headers && nid == '0'
-    puts "#{ind}#{_dg}| #{nid} #{h}#{c}#{l}#{_rs}"
+    puts "#{ind}#{_c.dg}+--- #{opts[:title]}#{_c.rs}" if headers && nid == '0'
+    puts "#{ind}#{_c.dg}| #{nid} #{h}#{c}#{l}#{_c.rs}"
     if tree[1].is_a?(Array)
       tree[1].each_with_index { |ct, i| print_tree(ct, "#{nid}_#{i}", opts) }
     end
-    puts "#{ind}#{_dg}.#{_rs}" if headers && nid == '0'
+    puts "#{ind}#{_c.dg}.#{_c.rs}" if headers && nid == '0'
   end
 
   def self.print_flat_tree(tree, nid, opts)
 
-    s = opts[:s]
-    _rs, _dg, _yl = colours(opts)
+    _c = colours(opts)
 
-    s << ' ' << nid << ' ' << _yl << tree[0] << _dg
+    s = opts[:s]
+
+    s << ' ' << nid << ' ' << _c.yl << tree[0] << _c.dg
 
     if tree[1].is_a?(Array)
       tree[1].each_with_index do |t, i|
@@ -199,10 +199,10 @@ module Flor
 
   def self.print_compact_tree(tree, nid='0', opts={})
 
+    _c = colours(opts)
+
     is_root = opts[:s].nil?
     ind = ' ' * (opts[:ind] || 0)
-
-    _rs, _dg, _yl = colours(opts)
 
     atts, natts =
       tree[1].is_a?(Array) ?
@@ -212,11 +212,11 @@ module Flor
     s = (opts[:s] ||= StringIO.new)
 
     if t = opts.delete(:title)
-      s << ind << _dg << '+--- ' << t << "\n"
+      s << ind << _c.dg << '+--- ' << t << "\n"
     end
 
-    s << ind << _dg << '| ' << nid << ' '
-    s << _yl << Flor.s_to_d(tree[0], compact: true) << _dg << ' L' << tree[2]
+    s << ind << _c.dg << '| ' << nid << ' '
+    s << _c.yl << Flor.s_to_d(tree[0], compact: true) << _c.dg << ' L' << tree[2]
 
     atts.each_with_index do |ct, i|
       print_flat_tree(ct, "_#{i}", opts)
@@ -228,9 +228,9 @@ module Flor
       print_compact_tree(ct, "#{nid}_#{i}", opts)
     end
 
-    s << "\n" << ind << _dg << '\---' if is_root && opts[:close]
+    s << "\n" << ind << _c.dg << '\---' if is_root && opts[:close]
 
-    s << _rs
+    s << _c.rs
 
     puts s.string if is_root
   end
@@ -245,7 +245,7 @@ module Flor
 
   def self.nod_to_s(executor, n, opts, here=false)
 
-    _rs, _dg, _yl, _bl, _gy, _gn, _rd = colours(opts)
+    _c = colours(opts)
 
     t = n['tree'] || Node.new(executor, n, nil).lookup_tree(n['nid'])
     t = Flor.to_d(t, compact: true) if t
@@ -265,11 +265,11 @@ module Flor
     ts = n['tags']
     ts = 'tags:' + ts.join(',') if ts
 
-    flr = n['failure'] ? "#{_rd}flre" : ''
+    flr = n['failure'] ? "#{_c.rd}flre" : ''
 
-    here = here ? "#{_dg}<---msg['nid']" : nil
+    here = here ? "#{_c.dg}<---msg['nid']" : nil
 
-    [ _yl + n['nid'], t, h, ts, vs, flr, here ].compact.join(' ')
+    [ _c.yl + n['nid'], t, h, ts, vs, flr, here ].compact.join(' ')
   end
 
   def self.ncns_to_s(executor, ncn, msg, opts, sio, ind, seen)
@@ -311,26 +311,26 @@ module Flor
     return if m['_detail_msg_flag']
     m['_detail_msg_flag'] = true if opts[:flag]
 
-    _rs, _dg, _yl = colours(opts)
+    _c = colours(opts)
 
     nid = m['nid']
     n = executor.execution['nodes'][nid]
     node = n ? Flor::Node.new(executor, n, m) : nil
 
-    puts "#{_dg}<Flor.detail_msg>#{_rs}"
-    print "#{_yl}"
+    puts "#{_c.dg}<Flor.detail_msg>#{_c.rs}"
+    print "#{_c.yl}"
     Kernel::pp(m)
-    puts "#{_dg}payload:#{_yl}"
+    puts "#{_c.dg}payload:#{_c.yl}"
     Kernel::pp(m['payload'])
-    puts "#{_dg}tree:"
+    puts "#{_c.dg}tree:"
     print_tree(node.lookup_tree(nid), nid) if node
-    puts "#{_dg}node:#{_yl}"
+    puts "#{_c.dg}node:#{_c.yl}"
     Kernel::pp(n) if n
-    puts "#{_dg}nodes:"
+    puts "#{_c.dg}nodes:"
     puts nods_to_s(executor, m, opts)
     z = executor.execution['nodes'].size
-    puts "#{_yl}#{z} node#{z == 1 ? '' : 's'}."
-    puts "#{_dg}</Flor.detail_msg>#{_rs}"
+    puts "#{_c.yl}#{z} node#{z == 1 ? '' : 's'}."
+    puts "#{_c.dg}</Flor.detail_msg>#{_c.rs}"
   end
 end
 

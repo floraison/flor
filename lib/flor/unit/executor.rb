@@ -167,12 +167,12 @@ module Flor
 
     def log_run_start
 
-      _rs, _dg, _yl, _bl, _lg, _gr, _lr, _rd, _ma = Flor.colours
+      _c = Flor.colours
 
       s = StringIO.new
 
-      s << _dg
-      s << "    /--- #{_lg}run starts#{_dg} "
+      s << _c.dg
+      s << "    /--- #{_c.lg}run starts#{_c.dg} "
       s << "#{self.class} #{self.object_id} #{@exid}"
       s << "\n    |   "
       s << { thread: Thread.current.object_id }.inspect
@@ -182,18 +182,18 @@ module Flor
         nodes: @execution['nodes'].size,
         size: @execution['size']
       }.inspect
-      s << _rs
+      s << _c.rs
 
       puts s.string
     end
 
     def log_run_end(t0)
 
-      _rs, _dg, _yl, _bl, _gy, _gn, _rd = Flor.colours
+      _c = Flor.colours
 
       s = StringIO.new
 
-      s << _dg
+      s << _c.dg
       s << "    |   run ends #{self.class} #{self.object_id} #{@exid}"
       s << "\n    |   "; s << { took: Time.now - t0 }.inspect
       s << "\n    |   "; s << {
@@ -214,7 +214,7 @@ module Flor
         }.inspect
       end
       s << "\n    \\--- ."
-      s << _rs
+      s << _c.rs
 
       puts s.string
     end

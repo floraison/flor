@@ -113,14 +113,11 @@ module Flor
       []
     end
 
-    DBCOLS = Flor::Colours.set(%w[ reset bg_light_gray ])
-    NO_DBCOLS = [ '' ] * DBCOLS.length
-
     def db_log(level, msg)
 
       return unless @unit.conf['log_sto']
 
-      _rs, _co = $stdout.tty? ? DBCOLS : NO_DBCOLS
+      _c = Flor.colours
 
       #m = msg.match(/ (INSERT|UPDATE) .+ (0?[xX]'?[a-fA-F0-9]+'?)/)
       #msg = msg.sub(m[2], "#{m[2][0, 14]}(...len#{m[2].length})") if m
@@ -129,7 +126,7 @@ module Flor
         #
       msg = summarize_blob(msg)
 
-      puts "#{_co}sto#{_rs} t#{Thread.current.object_id} #{level.upcase} #{msg}"
+      puts "#{_c.blg}sto#{_c.rs} t#{Thread.current.object_id} #{level.upcase} #{msg}"
     end
 
     protected
