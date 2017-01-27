@@ -31,6 +31,9 @@ module Flor
 
     attr_reader :unit, :db, :models
 
+    attr_reader :mutex
+      # might be useful for some implementations
+
     def initialize(unit)
 
       @unit = unit

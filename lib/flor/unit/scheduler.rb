@@ -79,6 +79,11 @@ module Flor
       Kernel.const_set(c, self) if c
     end
 
+    def storage_mutex
+
+      @storage.mutex
+    end
+
     def identifier
 
       @identifier ||= 's' + Digest::MD5.hexdigest(self.object_id.to_s)[0, 5]
