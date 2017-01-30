@@ -13,10 +13,10 @@ Gem::Specification.new do |s|
   s.homepage = 'http://github.com/floraison'
   #s.rubyforge_project = 'flor'
   s.license = 'MIT'
-  s.summary = 'a workflow engine'
+  s.summary = 'A Ruby workflow engine'
 
   s.description = %{
-A Ruby workflow engine
+A Ruby workflow engine (ruote next generation)
   }.strip
 
   #s.files = `git ls-files`.split("\n")
