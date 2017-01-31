@@ -2,12 +2,17 @@
 # flor CHANGELOG.md
 
 
+## flor 0.9.1  released 2017-01-31
+
+- Fix dropped exids problem
+
+
 ## flor 0.9.0  released 2017-01-30
 
-- initial release
+- Initial release
 
 
 ## flor 0.0.1  released 2015-11-04
 
-- initial, empty, release (Juan's verandah)
+- Initial, empty, release (Juan's verandah)
 
