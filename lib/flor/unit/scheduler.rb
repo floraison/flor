@@ -207,10 +207,14 @@ module Flor
 
       if flow_name
 
-        source = @loader.library(source_or_path)
+        source_path, source = @loader.library(source_or_path)
+
+        opts[:fname] = source_path
 
         # TODO variables
+        #        loaded as needed, via the loader
         # TODO payload
+        #        yes, still has to be done
       end
 
       fail ArgumentError.new(

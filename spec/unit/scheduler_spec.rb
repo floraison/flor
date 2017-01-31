@@ -173,7 +173,12 @@ describe 'Flor unit' do
           expect(
             msg['tree']
           ).to eq(
-            [ 'sequence', [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ], 1 ]
+            [
+              'sequence',
+              [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ],
+              1,
+              'envs/test/lib/flows/com.acme/flow0.flor'
+            ]
           )
         end
 
@@ -183,6 +188,21 @@ describe 'Flor unit' do
             @unit.launch('com.acme.flow-999')
           }.to raise_error(
             ArgumentError, 'flow not found in "com.acme.flow-999"'
+          )
+        end
+
+        it 'sets the flow path in the launch tree' do
+
+          r = @unit.launch('com.acme.flow1', wait: true)
+
+          sleep 0.4 # give it time to save its state
+
+          exe = @unit.executions.first.data
+
+          expect(
+            exe['nodes']['0']['tree'][3]
+          ).to eq(
+            'envs/test/lib/flows/com.acme/flow1.flor'
           )
         end
       end
@@ -228,7 +248,12 @@ describe 'Flor unit' do
           expect(
             msg['tree']
           ).to eq(
-            [ 'sequence', [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ], 1 ]
+            [
+              'sequence',
+              [ [ 'alice', [], 2 ], [ 'bob', [], 3 ] ],
+              1,
+              'envs/test/lib/flows/com.acme/flow0.flor'
+            ]
           )
         end
       end

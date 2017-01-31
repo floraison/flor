@@ -90,18 +90,24 @@ describe Flor::Loader do
 
     it 'loads a lib' do
 
-      f = @loader.library('net.example', 'flow1')
+      pa, fn = @loader.library('net.example', 'flow1')
 
       expect(
-        f.strip
+        pa
+      ).to eq(
+        '_spec/unit/loader/usr/net.example/lib/flows/flow1.flo'
+      )
+
+      expect(
+        fn.strip
       ).to eq(%{
         task 'alice'
       }.strip)
 
-      f = @loader.library('org.example.flow1')
+      pa, fn = @loader.library('org.example.flow1')
 
       expect(
-        f.strip
+        fn.strip
       ).to eq(%{
         task 'oskar'
       }.strip)

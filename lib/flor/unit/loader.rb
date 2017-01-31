@@ -55,6 +55,8 @@ module Flor
     #  # TODO work with Flor.load_procedures
     #end
 
+    # If found, returns [ source_path, path ]
+    #
     def library(domain, name=nil)
 
       domain, name = split_dn(domain, name)
@@ -67,7 +69,7 @@ module Flor
           .select { |f| path_name_matches?(domain, name, f) }
           .first
 
-      path ? File.read(path) : nil
+      path ? [ Flor.relativize_path(path), File.read(path) ] : nil
     end
 
 #    class FlowEnv
