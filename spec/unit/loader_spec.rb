@@ -12,10 +12,9 @@ describe Flor::Loader do
 
   before :each do
 
-    unit =
-      OpenStruct.new(conf: {
-        'lod_path' => File.dirname(__FILE__) + '/loader/'
-      })
+    unit = OpenStruct.new(conf: { 'lod_path' => '_spec/unit/loader/' })
+      # force a specific file hieararchy root on the loader via 'lod_path'
+
     @loader = Flor::Loader.new(unit)
   end
 
