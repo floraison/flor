@@ -403,6 +403,8 @@ module Flor
 
       return if @exids.empty?
 
+      exid = nil
+
       while exid = @mutex.synchronize { @exids.shift }
 
         @executors = @executors.select { |e| e.alive? }
@@ -412,7 +414,11 @@ module Flor
         next if @executors.find { |e| e.exid == exid }
 
         @executors << UnitExecutor.new(self, exid).run
+
+        exid = nil
       end
+
+      @mutex.synchronize { @exids.unshift(exid) } if exid
     end
   end
 end
