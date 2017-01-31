@@ -2,6 +2,11 @@
 # flor CHANGELOG.md
 
 
+## flor 0.9.1.1  released 2017-01-31
+
+- Fix Gemfile.lock not updated...
+
+
 ## flor 0.9.1  released 2017-01-31
 
 - Fix dropped exids problem
