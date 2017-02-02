@@ -98,7 +98,7 @@ describe 'Flor unit' do
         ).to eq([ 'alpha' ])
     end
 
-    it 'preservers non-keyed atts' do
+    it 'preserves non-keyed atts' do
 
       flor = %{
         alpha 'bravo' 'charly' 1 count: 2
