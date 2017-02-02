@@ -368,6 +368,7 @@ describe 'Flor unit' do
     it 'reroutes to specific taskers' do
 
       flor = %{
+        #acme_alpha # <-- won't work, the domain taskers won't recognize it
         task 'acme_alpha'
       }
 

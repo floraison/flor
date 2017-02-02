@@ -323,15 +323,16 @@ class Flor::Node
       return [ '_proc', { 'proc' => key }, -1 ]
     end
 
-    if mod != 'd' && @executor.unit.tasker.has_tasker?(@executor.exid, key)
-      return [ '_task', { 'task' => key }, -1 ]
-    end
-
     l = @executor.unit.loader
     vdomain = @node['vdomain']
       #
     if l && vdomain != false
-      return l.variables(vdomain || domain)[key]
+      v = l.variables(vdomain || domain).fetch(key) { :no }
+      return v unless v == :no
+    end
+
+    if mod != 'd' && @executor.unit.tasker.has_tasker?(@executor.exid, key)
+      return [ '_task', { 'task' => key }, -1 ]
     end
 
     nil
