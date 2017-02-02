@@ -31,8 +31,12 @@ A Ruby workflow engine (ruote next generation)
   #s.add_runtime_dependency 'rufus-lru', '>= 1.1.0'
   s.add_runtime_dependency 'fugit', '>= 0.9.5'
 
-  s.add_development_dependency 'rspec', '3.4.0'
   s.add_development_dependency 'sequel', '~> 4'
+    #
+    # flor in transient mode doesn't need a storage,
+    # so Sequel is not a runtime dependency
+
+  s.add_development_dependency 'rspec', '3.4.0'
 
   s.require_path = 'lib'
 end
