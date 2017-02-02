@@ -12,7 +12,7 @@ describe Flor::Loader do
 
   before :each do
 
-    unit = OpenStruct.new(conf: { 'lod_path' => '_spec/unit/loader/' })
+    unit = OpenStruct.new(conf: { 'lod_path' => 'envs/uspec_loader' })
       # force a specific file hieararchy root on the loader via 'lod_path'
 
     @loader = Flor::Loader.new(unit)
@@ -95,7 +95,7 @@ describe Flor::Loader do
       expect(
         pa
       ).to eq(
-        '_spec/unit/loader/usr/net.example/lib/flows/flow1.flo'
+        'envs/uspec_loader/usr/net.example/lib/flows/flow1.flo'
       )
 
       expect(
