@@ -156,7 +156,7 @@ describe 'Flor unit' do
           expect {
             @unit.launch('sequence,,,,')
           }.to raise_error(
-            ArgumentError, 'flor parse failure'
+            ArgumentError, 'flor parse failure: "sequence,,,,"...'
           )
         end
       end

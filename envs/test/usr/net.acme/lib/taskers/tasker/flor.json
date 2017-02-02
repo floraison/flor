@@ -1,0 +1,6 @@
+
+on_task: {
+  require: 'tasker.rb'
+  class: NetAcmeTasker
+}
+

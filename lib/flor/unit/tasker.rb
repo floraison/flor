@@ -49,10 +49,8 @@ module Flor
       tname = message['tasker']
 
       tconf =
-        @unit.loader.tasker(domain, 'tasker') ||
+        ( ! message['routed'] && @unit.loader.tasker(domain, 'tasker')) ||
         @unit.loader.tasker(domain, tname)
-          #
-          # FIXME tasker tasker tasker lookup loop?
 
       fail ArgumentError.new(
         "tasker #{tname.inspect} not found"
@@ -88,6 +86,8 @@ module Flor
         'nid' => message['nid'],
         'payload' => message['payload'],
         'tasker' => message['tasker'] })
+
+      nil
     end
 
     protected

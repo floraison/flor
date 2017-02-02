@@ -362,5 +362,37 @@ describe 'Flor unit' do
       end
     end
   end
+
+  describe 'a domain tasker' do
+
+    it 'reroutes to specific taskers' do
+
+      flor = %{
+        task 'acme_alpha'
+      }
+
+      r = @unit.launch(
+        flor,
+        domain: 'net.acme', wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['ret']).to eq('acme_alpha')
+      expect(r['payload']['seen'].size).to eq(1)
+
+      expect(
+        r['payload']['seen'][0][0, 3]
+      ).to eq([
+        'alpha', nil, 'AlphaTasker'
+      ])
+      expect(
+        r['payload']['seen'][0][4]
+      ).to eq({
+        'payload' => { 'ret' => 'acme_alpha' },
+        'attl' => %w[ acme_alpha ],
+        'attd' => {}
+      })
+    end
+  end
 end
 

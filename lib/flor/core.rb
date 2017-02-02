@@ -55,10 +55,13 @@ module Flor
       tree
 
     unless t
-      #h = opts.merge(prune: false, rewrite: false)
-      #p Flor::Lang.parse(tree, h[:fname], h)
+
+      #h = opts.merge(prune: false, rewrite: false, debug: 0)
+      #Raabro.pp(Flor::Lang.parse(tree, h[:fname], h))
         # TODO re-parse and indicate what went wrong...
-      fail ArgumentError.new('flor parse failure')
+
+      fail ArgumentError.new(
+        "flor parse failure: " + tree.inspect[0, 35] + '...')
     end
 
     pl = opts[:payload] || opts[:fields] || {}
