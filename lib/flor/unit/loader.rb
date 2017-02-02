@@ -107,11 +107,11 @@ module Flor
     def tasker(domain, name=nil)
 
       domain, name = split_dn(domain, name)
+#p [ domain, name ]
 
       path = Dir[File.join(root, '**/*.json')]
         .select { |f| f.index('/lib/taskers/') }
         .sort # just to be sure
-        .sort_by(&:length)
         .select { |f| path_name_matches?(domain, name, f) }
         .last
 
@@ -161,6 +161,7 @@ module Flor
 
       f = f.sub(/\/(flo|flor|dot)\.json\z/, '.json')
 
+#p [ domain, name, f ]
       return false if File.basename(f).split('.').first != name
 
       path_matches?(domain, File.dirname(f) + '/')

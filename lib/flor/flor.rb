@@ -379,12 +379,11 @@ module Flor
     s.length < l ? s : s[0, l] + '...'
   end
 
-  def self.relativize_path(path)
+  def self.relativize_path(path, from=Dir.getwd)
 
-    wd = Dir.getwd
     path = File.absolute_path(path)
 
-    path = path[wd.length + 1..-1] if path[0, wd.length] == wd
+    path = path[from.length + 1..-1] if path[0, from.length] == from
 
     path
   end

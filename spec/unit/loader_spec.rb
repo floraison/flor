@@ -152,6 +152,27 @@ describe Flor::Loader do
       expect(t['description']).to eq('org.example bob')
       expect(t.keys).to eq(%w[ description bo _path ])
     end
+
+    it 'loads a domain tasker configuration' do
+
+      tc = @loader.tasker('com.example.tasker')
+      expect(tc['description']).to eq('/cet/dot.json')
+
+      tc = @loader.tasker('com.example', 'tasker')
+      expect(tc['description']).to eq('/cet/dot.json')
+
+      tc = @loader.tasker('com.example.alpha.tasker')
+      expect(tc['description']).to eq('usr/ceat/dot.json')
+
+      tc = @loader.tasker('com.example.alpha', 'tasker')
+      expect(tc['description']).to eq('usr/ceat/dot.json')
+
+      tc = @loader.tasker('com.example.bravo.tasker')
+      expect(tc['description']).to eq('usr/cebt/flor.json')
+
+      tc = @loader.tasker('com.example.bravo', 'tasker')
+      expect(tc['description']).to eq('usr/cebt/flor.json')
+    end
   end
 end
 

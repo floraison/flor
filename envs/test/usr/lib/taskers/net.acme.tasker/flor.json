@@ -1,0 +1,8 @@
+
+# AcmeTasker routing tasks...
+
+on_task: {
+  require: 'tasker.rb'
+  class: AcmeTasker
+}
+
