@@ -18,8 +18,8 @@ gemspec_validate:
 name: gemspec_validate
 	@echo "$(NAME) $(VERSION)"
 
-incver:
-	sed -E -i '' "s/VERSION = ['0-9.]+/VERSION = $(shell ruby -e "vs = '$(VERSION)'.split('.'); vs[2] = (vs[2].to_i + 1).to_s; puts '\'' + vs.join('.') + '\''")/" lib/$(NAME).rb
+syncver:
+	sed -E -i '' "s/VERSION = ['0-9.]+/VERSION = '$(shell grep -E "$(NAME) ([0-9.]+)" CHANGELOG.md | head -1 | sed -E 's/[^0-9\.]//g')'/" lib/$(NAME).rb
 	bundle install
 
 build: gemspec_validate
