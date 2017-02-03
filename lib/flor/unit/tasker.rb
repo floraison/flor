@@ -115,13 +115,18 @@ module Flor
       k = tconf['on_task']['class']
       k = Flor.const_lookup(k)
 
-      tasker = k.new(self, tconf)
+      ka = k.instance_method(:initialize).arity
+
+      m =
+        message['point'] == 'detask' ?
+        :cancel :
+        :task
 
       r =
-        if message['point'] == 'detask'
-          tasker.cancel(message)
-        else
-          tasker.task(message)
+        if ka == 2
+          k.new(self, tconf).send(m, message)
+        else # ka == 3
+          k.new(self, tconf, message).send(m)
         end
 
       # if the tasker returns something intelligible, use it

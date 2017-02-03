@@ -395,5 +395,21 @@ describe 'Flor unit' do
       })
     end
   end
+
+  describe 'a ruby tasker' do
+
+    it 'accepts taskers which initializer with tasker, conf, message' do
+
+      flor = %{
+        set f.a 1
+        emil _
+      }
+
+      r = @unit.launch(flor, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['emil']).to eq('was here')
+    end
+  end
 end
 

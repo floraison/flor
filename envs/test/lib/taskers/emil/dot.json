@@ -1,0 +1,8 @@
+
+# emil tasker
+
+on_task: {
+  require: 'emil.rb'
+  class: EmilTasker
+}
+
