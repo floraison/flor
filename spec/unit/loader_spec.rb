@@ -134,7 +134,7 @@ describe Flor::Loader do
     it 'load a tasker configuration {name}.json' do
 
       tc = @loader.tasker('org.example', 'charly')
-      expect(tc['description']).to eq('org.example charly')u
+      expect(tc['description']).to eq('org.example charly')
     end
   end
 end
