@@ -22,30 +22,25 @@
 # Made in Japan.
 #++
 
-require 'sequel'
-require 'sequel/extensions/migration'
-
-require 'fugit'
-
-require 'flor'
-require 'flor/unit/hooker'
-require 'flor/unit/wlist'
-require 'flor/unit/logger'
-require 'flor/unit/journal'
-require 'flor/unit/storage'
-require 'flor/unit/executor'
-require 'flor/unit/waiter'
-require 'flor/unit/scheduler'
-require 'flor/unit/models'
-require 'flor/unit/loader'
-require 'flor/unit/tasker'
-require 'flor/unit/basic_tasker'
-
-Flor.load_procedures('punit')
-
 module Flor
 
-  Unit = Scheduler
-    # an alias
+  class BasicTasker
+
+    attr_reader :tasker, :conf, :message
+
+    def initialize(tasker, conf, message)
+
+      @tasker = tasker
+      @conf = conf
+      @message = message
+    end
+
+    protected
+
+    def reply(force=false)
+
+      @tasker.reply(@message) if force || @tasker
+    end
+  end
 end
 
