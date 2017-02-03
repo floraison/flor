@@ -331,7 +331,7 @@ class Flor::Node
       return v unless v == :no
     end
 
-    if mod != 'd' && @executor.unit.tasker.has_tasker?(@executor.exid, key)
+    if mod != 'd' && @executor.unit.has_tasker?(@executor.exid, key)
       return [ '_task', { 'task' => key }, -1 ]
     end
 

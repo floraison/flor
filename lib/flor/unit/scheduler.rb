@@ -28,7 +28,7 @@ module Flor
   class Scheduler
 
     attr_reader :conf, :env
-    attr_reader :hooker, :storage, :loader, :tasker
+    attr_reader :hooker, :storage, :loader, :ganger
 
     attr_reader :thread_status
 
@@ -55,8 +55,8 @@ module Flor
         (Flor::Conf.get_class(@conf, 'storage') || Flor::Storage).new(self)
       @loader =
         (Flor::Conf.get_class(@conf, 'loader') || Flor::Loader).new(self)
-      @tasker =
-        (Flor::Conf.get_class(@conf, 'tasker') || Flor::Tasker).new(self)
+      @ganger =
+        (Flor::Conf.get_class(@conf, 'ganger') || Flor::Ganger).new(self)
 
       @hooker.add('logger', Flor::Logger)
       @hooker.add('wlist', Flor::WaitList)
@@ -89,6 +89,11 @@ module Flor
       @identifier ||= 's' + Digest::MD5.hexdigest(self.object_id.to_s)[0, 5]
     end
 
+    def has_tasker?(exid, tname)
+
+      @ganger.has_tasker?(exid, tname)
+    end
+
     def shutdown
 
       @thread_status = :shutdown
@@ -98,7 +103,7 @@ module Flor
 
       @hooker.shutdown
       @storage.shutdown
-      @tasker.shutdown
+      @ganger.shutdown
     end
 
     def hook(*args, &block)

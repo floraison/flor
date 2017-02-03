@@ -36,7 +36,13 @@ A unique identifier for a flor [execution](#execution), for example "test-u-2016
 Its format is "{fully.qualified.domain}-{unitname}-{yyyymmdd.hhmm.mnemo}".
 
 ## expression
+
+## ganger
+
+The ganger is a component of the [scheduler](#scheduler). It's the middleman between flor and the taskers. British definition of the word: "the foreman of a gang of labourers."
+
 ## hook
+## hooker
 ## loader
 
 ## message

@@ -4,6 +4,7 @@
 
 ## flor 0.9.3  not yet released
 
+- Rename the head 'tasker' as 'ganger'
 - Allow for (tasker, conf, message) ruby taskers
 
 

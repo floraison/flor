@@ -26,11 +26,11 @@ module Flor
 
   class BasicTasker
 
-    attr_reader :tasker, :conf, :message
+    attr_reader :ganger, :conf, :message
 
-    def initialize(tasker, conf, message)
+    def initialize(ganger, conf, message)
 
-      @tasker = tasker
+      @ganger = ganger
       @conf = conf
       @message = message
     end
@@ -39,7 +39,7 @@ module Flor
 
     def reply(force=false)
 
-      @tasker.reply(@message) if force || @tasker
+      @ganger.reply(@message) if force || @ganger
     end
   end
 end

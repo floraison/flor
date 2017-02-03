@@ -24,9 +24,9 @@
 
 module Flor
 
-  class Tasker
+  class Ganger
 
-    # NB: tasker configuration entries start with "tsk_"
+    # NB: tasker configuration entries start with "gan_"
 
     def initialize(unit)
 
@@ -51,6 +51,8 @@ module Flor
       tconf =
         ( ! message['routed'] && @unit.loader.tasker(domain, 'tasker')) ||
         @unit.loader.tasker(domain, tname)
+          #
+          # TODO `.tasker(domain, 'ganger')`
 
       fail ArgumentError.new(
         "tasker #{tname.inspect} not found"

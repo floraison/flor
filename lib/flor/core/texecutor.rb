@@ -27,15 +27,10 @@ module Flor
 
   class TransientExecutor < Executor
 
-    class TransientTasker
-
-      def has_tasker?(exid, tname); false; end
-    end
-
     class TransientUnit
 
       attr_accessor :conf, :opts
-      attr_reader :journal, :tasker, :loader
+      attr_reader :journal, :ganger, :loader
       attr_accessor :archive
 
       def initialize(conf)
@@ -43,7 +38,6 @@ module Flor
         @conf = conf
         @opts = {}
         @journal = []
-        @tasker = TransientTasker.new
         @archive = nil
       end
 
@@ -62,6 +56,11 @@ module Flor
       def remove_node(exid, n)
 
         (@archive[exid] ||= {})[n['nid']] = Flor.dup(n) if @archive
+      end
+
+      def has_tasker?(exid, tname)
+
+        false
       end
     end
 

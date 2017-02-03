@@ -38,8 +38,8 @@ require 'flor/unit/waiter'
 require 'flor/unit/scheduler'
 require 'flor/unit/models'
 require 'flor/unit/loader'
-require 'flor/unit/tasker'
-require 'flor/unit/basic_tasker'
+require 'flor/unit/ganger'
+require 'flor/unit/taskers'
 
 Flor.load_procedures('punit')
 

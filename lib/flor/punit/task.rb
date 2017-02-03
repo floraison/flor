@@ -51,7 +51,7 @@ class Flor::Pro::Task < Flor::Procedure
     # "clean up" assign: 'alan'
     # alan task: 'clean up'
 
-    #@executor.unit.tasker.has_tasker?(@executor.exid, key)
+    #@executor.unit.has_tasker?(@executor.exid, key)
 
     ni = att(nil)
     ta = att('by', 'for', 'assign')
