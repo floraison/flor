@@ -2,6 +2,11 @@
 # flor CHANGELOG.md
 
 
+## flor 0.9.3  not yet released
+
+- Allow for (tasker, conf, message) ruby taskers
+
+
 ## flor 0.9.2  released 2017-02-03
 
 - Allow for domain taskers (retasking)

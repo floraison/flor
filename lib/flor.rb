@@ -34,7 +34,7 @@ require 'raabro'
 
 module Flor
 
-  VERSION = '0.9.2'
+  VERSION = '0.9.3'
 end
 
 require 'flor/colours'
