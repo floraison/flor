@@ -18,49 +18,6 @@ describe Flor::Loader do
     @loader = Flor::Loader.new(unit)
   end
 
-  # spec/unit/loader
-  # ├── etc
-  # │   └── variables
-  # │       ├── dot.json
-  # │       ├── net.example.json
-  # │       └── net.json
-  # ├── lib
-  # │   ├── flows
-  # │   │   ├── net.example
-  # │   │   │   └── flow0.flor
-  # │   │   └── org.example
-  # │   │       └── flow0.flor
-  # │   └── taskers
-  # │       ├── alice
-  # │       │   └── dot.json
-  # │       ├── net.example
-  # │       │   └── .gitkeep
-  # │       └── org.example
-  # │           ├── alice
-  # │           │   └── dot.json
-  # │           └── bob
-  # │               └── dot.json
-  # └── usr
-  #     ├── net.example
-  #     │   ├── etc
-  #     │   │   └── variables
-  #     │   │       └── dot.json
-  #     │   └── lib
-  #     │       ├── flows
-  #     │       │   └── flow1.flor
-  #     │       └── taskers
-  #     │           └── bob
-  #     │               └── dot.json
-  #     └── org.example
-  #         ├── etc
-  #         │   └── variables
-  #         │       └── dot.json
-  #         └── lib
-  #             ├── flows
-  #             │   └── flow1.flor
-  #             └── taskers
-  #                 └── .gitkeep
-
   describe '#variables' do
 
     it 'loads variables' do
@@ -172,6 +129,12 @@ describe Flor::Loader do
 
       tc = @loader.tasker('com.example.bravo', 'tasker')
       expect(tc['description']).to eq('usr/cebt/flor.json')
+    end
+
+    it 'load a tasker configuration {name}.json' do
+
+      tc = @loader.tasker('org.example', 'charly')
+      expect(tc['description']).to eq('org.example charly')u
     end
   end
 end
