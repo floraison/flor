@@ -41,6 +41,14 @@ module Flor
 
       @ganger.reply(@message) if force || @ganger
     end
+
+    def exid; @message['exid']; end
+    def nid; @message['nid']; end
+
+    def execution
+
+      @ganger.unit.execution(exid)
+    end
   end
 end
 

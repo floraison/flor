@@ -28,6 +28,8 @@ module Flor
 
     # NB: tasker configuration entries start with "gan_"
 
+    attr_reader :unit
+
     def initialize(unit)
 
       @unit = unit
