@@ -74,7 +74,7 @@ module Flor
 
     def synchronize(on=true, &block)
 
-      Thread.current[:sto_errored_items] = nil
+      Thread.current[:sto_errored_items] = nil if on
 
       if @mutex && on
         @mutex.synchronize(&block)
@@ -85,7 +85,7 @@ module Flor
 
     def transync(on=true, &block)
 
-      Thread.current[:sto_errored_items] = nil
+      Thread.current[:sto_errored_items] = nil if on
 
       if @mutex && on
         @mutex.synchronize { @db.transaction(&block) }
@@ -141,7 +141,7 @@ module Flor
 
     def load_execution(exid)
 
-      #synchronize do
+      transync do
 
         e = @db[:flor_executions]
           .select(:id, :content)
@@ -160,12 +160,13 @@ module Flor
             #'ashes' => {},
             'counters' => {}, 'start' => Flor.tstamp,
             'size' => -1
-          })
+          },
+          false)
         end
-      #end
+      end
     end
 
-    def put_execution(ex)
+    def put_execution(ex, syn=true)
 
       if i = ex['id']
 
@@ -184,7 +185,7 @@ module Flor
         data = to_blob(ex)
         ex['size'] = data.length
 
-        transync do
+        transync(syn) do
 
           now = Flor.tstamp
 
@@ -203,7 +204,7 @@ module Flor
         data = to_blob(ex)
         ex['size'] = data.length
 
-        transync do
+        transync(syn) do
 
           now = Flor.tstamp
 
