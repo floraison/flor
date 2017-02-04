@@ -72,12 +72,23 @@ module Flor
       db_version == migration_version
     end
 
-    def synchronize(sync=true, &block)
+    def synchronize(on=true, &block)
 
       Thread.current[:sto_errored_items] = nil
 
-      if @mutex && sync
+      if @mutex && on
         @mutex.synchronize(&block)
+      else
+        block.call
+      end
+    end
+
+    def transync(on=true, &block)
+
+      Thread.current[:sto_errored_items] = nil
+
+      if @mutex && on
+        @mutex.synchronize { @db.transaction(&block) }
       else
         block.call
       end
@@ -173,47 +184,41 @@ module Flor
         data = to_blob(ex)
         ex['size'] = data.length
 
-        synchronize do
+        transync do
 
-          @db.transaction do
+          now = Flor.tstamp
 
-            now = Flor.tstamp
+          @db[:flor_executions]
+            .where(id: i)
+            .update(
+              content: data,
+              status: status,
+              mtime: now)
 
-            @db[:flor_executions]
-              .where(id: i)
-              .update(
-                content: data,
-                status: status,
-                mtime: now)
-
-            remove_nodes(ex, status, now)
-            update_pointers(ex, status, now)
-          end
+          remove_nodes(ex, status, now)
+          update_pointers(ex, status, now)
         end
       else
 
         data = to_blob(ex)
         ex['size'] = data.length
 
-        synchronize do
+        transync do
 
-          @db.transaction do
+          now = Flor.tstamp
 
-            now = Flor.tstamp
+          ex['id'] =
+            @db[:flor_executions]
+              .insert(
+                domain: Flor.domain(ex['exid']),
+                exid: ex['exid'],
+                content: data,
+                status: 'active',
+                ctime: now,
+                mtime: now)
 
-            ex['id'] =
-              @db[:flor_executions]
-                .insert(
-                  domain: Flor.domain(ex['exid']),
-                  exid: ex['exid'],
-                  content: data,
-                  status: 'active',
-                  ctime: now,
-                  mtime: now)
-
-            remove_nodes(ex, status, now)
-            update_pointers(ex, status, now)
-          end
+          remove_nodes(ex, status, now)
+          update_pointers(ex, status, now)
         end
       end
 
@@ -227,24 +232,21 @@ module Flor
 
     def fetch_messages(exid)
 
-      synchronize do
+      transync do
 
-        @db.transaction do
+        ms = @db[:flor_messages]
+          .select(:id, :content)
+          .where(status: 'created', exid: exid)
+          .order_by(:id)
+          .map { |m| r = from_blob(m[:content]) || {}; r['mid'] = m[:id]; r }
 
-          ms = @db[:flor_messages]
-            .select(:id, :content)
-            .where(status: 'created', exid: exid)
-            .order_by(:id)
-            .map { |m| r = from_blob(m[:content]) || {}; r['mid'] = m[:id]; r }
+        @db[:flor_messages]
+          .where(id: ms.collect { |m| m['mid'] })
+          .update(status: 'loaded')
+             #
+             # flag them as "loaded" so that other scheduler don't pick them
 
-          @db[:flor_messages]
-            .where(id: ms.collect { |m| m['mid'] })
-            .update(status: 'loaded')
-               #
-               # flag them as "loaded" so that other scheduler don't pick them
-
-          ms
-        end
+        ms
       end
     end
 
@@ -372,40 +374,37 @@ module Flor
 
       r = nil
 
-      synchronize do
-
-        @db.transaction do
+      transync do
 
 # TODO: cron/every stop conditions maybe?
 
-          if timer.type != 'at' && timer.type != 'in'
+        if timer.type != 'at' && timer.type != 'in'
 
-            @db[:flor_timers]
-              .where(id: timer.id)
-              .update(
-                count: timer.count + 1,
-                ntime: compute_next_time(timer.type, timer.schedule),
-                mtime: Flor.tstamp)
-            r = timers[timer.id]
+          @db[:flor_timers]
+            .where(id: timer.id)
+            .update(
+              count: timer.count + 1,
+              ntime: compute_next_time(timer.type, timer.schedule),
+              mtime: Flor.tstamp)
+          r = timers[timer.id]
 
-          elsif @archive
+        elsif @archive
 
-            @db[:flor_timers]
-              .where(id: timer.id)
-              .update(
-                count: timer.count + 1,
-                status: 'triggered',
-                mtime: Flor.tstamp)
+          @db[:flor_timers]
+            .where(id: timer.id)
+            .update(
+              count: timer.count + 1,
+              status: 'triggered',
+              mtime: Flor.tstamp)
 
-          else
+        else
 
-            @db[:flor_timers]
-              .where(id: timer.id)
-              .delete
-          end
-
-          put_messages([ timer.to_trigger_message ], false)
+          @db[:flor_timers]
+            .where(id: timer.id)
+            .delete
         end
+
+        put_messages([ timer.to_trigger_message ], false)
       end
 
       r
@@ -423,29 +422,28 @@ module Flor
       now = Flor.tstamp
 
       id =
-        synchronize do
-          @db.transaction do
+        transync do
 
-            @db[:flor_traps].insert(
-              domain: dom,
-              exid: exid,
-              nid: tra['bnid'],
-              onid: node['nid'],
-              trange: tra['range'],
-              tpoints: tra['points'],
-              ttags: tra['tags'],
-              theats: tra['heats'],
-              theaps: tra['heaps'],
-              content: to_blob(tra),
-              status: 'active',
-              ctime: now,
-              mtime: now)
-          end
+          @db[:flor_traps].insert(
+            domain: dom,
+            exid: exid,
+            nid: tra['bnid'],
+            onid: node['nid'],
+            trange: tra['range'],
+            tpoints: tra['points'],
+            ttags: tra['tags'],
+            theats: tra['heats'],
+            theaps: tra['heaps'],
+            content: to_blob(tra),
+            status: 'active',
+            ctime: now,
+            mtime: now)
         end
 
       traps[id]
 
     rescue => err
+
       Thread.current[:sto_errored_items] = [ node, tra ]
       raise err
     end
