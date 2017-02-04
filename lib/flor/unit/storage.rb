@@ -110,13 +110,16 @@ module Flor
 
     def load_exids
 
-      @db[:flor_messages]
-        .select(:exid)
-        .where(status: 'created')
-        .order_by(:ctime)
-        .distinct
-        .all
-        .collect { |r| r[:exid] }
+      synchronize do
+
+        @db[:flor_messages]
+          .select(:exid)
+          .where(status: 'created')
+          .order_by(:ctime)
+          .distinct
+          .all
+          .collect { |r| r[:exid] }
+      end
 
     rescue => err
 
@@ -127,25 +130,28 @@ module Flor
 
     def load_execution(exid)
 
-      e = @db[:flor_executions]
-        .select(:id, :content)
-        .where(exid: exid) # status active or terminated doesn't matter
-        .first
+      #synchronize do
 
-      if e
-        ex = from_blob(e[:content])
-        fail("couldn't parse execution (db id #{e[:id]})") unless ex
-        ex['id'] = e[:id]
-        ex['size'] = e[:content].length
-        ex
-      else
-        put_execution({
-          'exid' => exid, 'nodes' => {}, 'errors' => [], 'tasks' => {},
-          #'ashes' => {},
-          'counters' => {}, 'start' => Flor.tstamp,
-          'size' => -1
-        })
-      end
+        e = @db[:flor_executions]
+          .select(:id, :content)
+          .where(exid: exid) # status active or terminated doesn't matter
+          .first
+
+        if e
+          ex = from_blob(e[:content])
+          fail("couldn't parse execution (db id #{e[:id]})") unless ex
+          ex['id'] = e[:id]
+          ex['size'] = e[:content].length
+          ex
+        else
+          put_execution({
+            'exid' => exid, 'nodes' => {}, 'errors' => [], 'tasks' => {},
+            #'ashes' => {},
+            'counters' => {}, 'start' => Flor.tstamp,
+            'size' => -1
+          })
+        end
+      #end
     end
 
     def put_execution(ex)
@@ -214,6 +220,7 @@ module Flor
       ex
 
     rescue => err
+
       Thread.current[:sto_errored_items] = [ ex ]
       raise err
     end
@@ -221,6 +228,7 @@ module Flor
     def fetch_messages(exid)
 
       synchronize do
+
         @db.transaction do
 
           ms = @db[:flor_messages]
@@ -242,10 +250,13 @@ module Flor
 
     def fetch_traps(exid)
 
-      traps
-        .where(status: 'active')
-        .where(domain: split_domain(exid))
-        .all
+      synchronize do
+
+        traps
+          .where(status: 'active')
+          .where(domain: split_domain(exid))
+          .all
+      end
 
     rescue => err
 
@@ -257,6 +268,7 @@ module Flor
     def consume(messages)
 
       synchronize do
+
         if @archive
           @db[:flor_messages]
             .where(id: messages.collect { |m| m['mid'] }.compact)
@@ -269,17 +281,21 @@ module Flor
       end
 
     rescue => err
+
       Thread.current[:sto_errored_items] = messages
       raise err
     end
 
     def load_timers
 
-      timers
-        .select(:id, :content)
-        .where(status: 'active')
-        .order_by(:id)
-        .all
+      synchronize do
+
+        timers
+          .select(:id, :content)
+          .where(status: 'active')
+          .order_by(:id)
+          .all
+      end
 
     rescue => err
 
@@ -345,6 +361,7 @@ module Flor
       @unit.timers[id]
 
     rescue => err
+
       Thread.current[:sto_errored_items] = [ message ]
       raise err
     end
@@ -356,6 +373,7 @@ module Flor
       r = nil
 
       synchronize do
+
         @db.transaction do
 
 # TODO: cron/every stop conditions maybe?
@@ -393,6 +411,7 @@ module Flor
       r
 
     rescue => err
+
       Thread.current[:sto_errored_items] = [ timer ]
       raise err
     end
