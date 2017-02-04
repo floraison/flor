@@ -57,12 +57,12 @@ module Flor
 
     def self.by_tag(name)
 
-      exids = self.db[:flor_pointers]
+      _exids = self.db[:flor_pointers]
         .where(type: 'tag', name: name, value: nil)
         .select(:exid)
         .distinct
 
-      self.where(status: 'active', exid: exids)
+      self.where(status: 'active', exid: _exids)
     end
 
     def self.by_var(name, value=:no)
@@ -77,12 +77,12 @@ module Flor
         w[:value] = value.to_s
       end
 
-      exids = self.db[:flor_pointers]
+      _exids = self.db[:flor_pointers]
         .where(w)
         .select(:exid)
         .distinct
 
-      self.where(status: 'active', exid: exids)
+      self.where(status: 'active', exid: _exids)
     end
 
     def self.by_tasker(name, taskname=:no)
@@ -90,12 +90,12 @@ module Flor
       w = { type: 'tasker', name: name }
       w[:value] = taskname if taskname != :no
 
-      exids = self.db[:flor_pointers]
+      _exids = self.db[:flor_pointers]
         .where(w)
         .select(:exid)
         .distinct
 
-      self.where(status: 'active', exid: exids)
+      self.where(status: 'active', exid: _exids)
     end
 
 #    def self.by_task(name)
