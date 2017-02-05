@@ -243,6 +243,12 @@ module Flor
 
         ms
       end
+
+    rescue => err
+
+      @unit.logger.warn("#{self.class}#fetch_messages()", err, '(returning [])')
+
+      []
     end
 
     def fetch_traps(exid)
