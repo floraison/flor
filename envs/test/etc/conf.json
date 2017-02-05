@@ -2,6 +2,8 @@
 env: test
 domain: test
 
+log_dir: stdout
+
 sto_uri: (ife
   == ruby_platform 'java'
   "jdbc:sqlite://tmp/test.db"
