@@ -40,10 +40,6 @@ module Flor
 
       @mutex = Mutex.new
 
-      @unit.singleton_class.instance_eval do
-        define_method(:logger) { @hooker['logger'] }
-      end
-
       @uni = @unit.identifier
     end
 
@@ -85,7 +81,7 @@ module Flor
           lvs = ' ' * (@uni.length + 1 + lvl.length)
           dig = lvl[0, 1] + Digest::MD5.hexdigest(line)[0, 4]
           out.puts("#{stp} #{@uni} #{lvl} #{dig} #{txt}")
-          err.backtrace.each { |lin| out.puts("#{sts} #{lvs} #{dig} #{lin}") }
+          err.backtrace.each { |lin| out.puts("  #{dig} #{@uni} #{lin}") }
         else
           out.puts(line)
         end
@@ -94,6 +90,7 @@ module Flor
 
     def notify(executor, msg)
 
+# TODO log to outfile
       if msg['rewritten'] && @unit.conf['log_tree_rw']
 
         Flor.print_compact_tree(
@@ -126,7 +123,8 @@ module Flor
         #
       msg = summarize_blob(msg)
 
-      puts "#{_c.blg}sto#{_c.rs} t#{Thread.current.object_id} #{level.upcase} #{msg}"
+# TODO log to outfile
+      out.puts "#{_c.blg}sto#{_c.rs} t#{Thread.current.object_id} #{level.upcase} #{msg}"
     end
 
     protected

@@ -28,7 +28,9 @@ module Flor
   class Scheduler
 
     attr_reader :conf, :env
+
     attr_reader :hooker, :storage, :loader, :ganger
+    attr_reader :logger
 
     attr_reader :thread_status
 
@@ -58,7 +60,10 @@ module Flor
       @ganger =
         (Flor::Conf.get_class(@conf, 'ganger') || Flor::Ganger).new(self)
 
-      @hooker.add('logger', Flor::Logger)
+      @logger =
+        (Flor::Conf.get_class(@conf, 'logger') || Flor::Logger).new(self)
+
+      @hooker.add('logger', @logger)
       @hooker.add('wlist', Flor::WaitList)
 
       @heart_rate = @conf[:sch_heart_rate] || 0.3
