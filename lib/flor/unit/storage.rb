@@ -199,6 +199,7 @@ module Flor
           remove_nodes(ex, status, now)
           update_pointers(ex, status, now)
         end
+
       else
 
         data = to_blob(ex)
