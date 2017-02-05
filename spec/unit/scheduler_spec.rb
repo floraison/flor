@@ -97,6 +97,8 @@ describe 'Flor unit' do
           expect(msg['point']).to eq('terminated')
           expect(msg['payload']['ret']).to eq(2)
 
+          sleep 0.350 # let it flush
+
           es = @unit.executions.all
           e = es.first
 
