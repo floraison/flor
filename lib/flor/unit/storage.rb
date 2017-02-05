@@ -141,73 +141,66 @@ module Flor
 
     def load_execution(exid)
 
-      transync do
+      synchronize do
 
         e = @db[:flor_executions]
           .select(:id, :content)
           .where(exid: exid) # status active or terminated doesn't matter
           .first
 
-        if e
-          ex = from_blob(e[:content])
-          fail("couldn't parse execution (db id #{e[:id]})") unless ex
-          ex['id'] = e[:id]
-          ex['size'] = e[:content].length
-          ex
-        else
-          put_execution({
-            'exid' => exid, 'nodes' => {}, 'errors' => [], 'tasks' => {},
-            #'ashes' => {},
-            'counters' => {}, 'start' => Flor.tstamp,
-            'size' => -1
-          },
-          false)
-        end
+        return {
+          'exid' => exid, 'nodes' => {}, 'errors' => [], 'tasks' => {},
+          'counters' => {}, 'start' => Flor.tstamp,
+          'size' => -1
+        } unless e
+
+        ex = from_blob(e[:content])
+
+        fail("couldn't parse execution (db id #{e[:id]})") unless ex
+
+        ex['id'] = e[:id]
+        ex['size'] = e[:content].length
+
+        ex
       end
     end
 
-    def put_execution(ex, syn=true)
+    def put_execution(ex)
 
-      if i = ex['id']
+      status =
+        if ex['nodes']['0'] && ex['nodes']['0']['removed']
+          'terminated'
+        else
+          'active'
+        end
 
-        status =
-          if ex['nodes']['0']['removed']
-            'terminated'
-          else
-            'active'
-          end
+      id = ex['id']
+
+      if id
 
         ex['end'] ||= Flor.tstamp \
           if status == 'terminated'
         ex['duration'] = Time.parse(ex['end']) - Time.parse(ex['start']) \
           if ex['end']
+      end
 
-        data = to_blob(ex)
-        ex['size'] = data.length
+      data = to_blob(ex)
+      ex['size'] = data.length
 
-        transync(syn) do
+      transync do
 
-          now = Flor.tstamp
+        now = Flor.tstamp
+
+        if id
 
           @db[:flor_executions]
-            .where(id: i)
+            .where(id: id)
             .update(
               content: data,
               status: status,
               mtime: now)
 
-          remove_nodes(ex, status, now)
-          update_pointers(ex, status, now)
-        end
-
-      else
-
-        data = to_blob(ex)
-        ex['size'] = data.length
-
-        transync(syn) do
-
-          now = Flor.tstamp
+        else
 
           ex['id'] =
             @db[:flor_executions]
@@ -218,10 +211,10 @@ module Flor
                 status: 'active',
                 ctime: now,
                 mtime: now)
-
-          remove_nodes(ex, status, now)
-          update_pointers(ex, status, now)
         end
+
+        remove_nodes(ex, status, now)
+        update_pointers(ex, status, now)
       end
 
       ex
