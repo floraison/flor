@@ -78,6 +78,12 @@ module Flor
         if a.include?('colours') || a.include?('colors')
           # LOG_DEBUG=colours forces colors
 
+      if a.include?('stdout')
+        h['log_out'] = 'stdout'
+      elsif a.include?('stderr')
+        h['log_out'] = 'stderr'
+      end
+
       h
     end
 
