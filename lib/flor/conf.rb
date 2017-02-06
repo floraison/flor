@@ -61,8 +61,10 @@ module Flor
 
     def self.read_env
 
+      a =
+        (ENV['FLOR_DEBUG'] || '').split(',')
       h =
-        (ENV['FLOR_DEBUG'] || '').split(',').inject({}) { |h, kv|
+        a.inject({}) { |h, kv|
           k, v = kv.split(':')
           k = 'sto' if k == 'db'
           k = "log_#{k}" if LOG_ALL_KEYS.include?(k)
@@ -71,6 +73,10 @@ module Flor
         }
       LOG_ALL_KEYS.each { |k| h["log_#{k}"] = 1 } if h['log_all']
       LOG_DBG_KEYS.each { |k| h["log_#{k}"] = 1 } if h['log_dbg']
+
+      h['log_colours'] = true \
+        if a.include?('colours') || a.include?('colors')
+          # LOG_DEBUG=colours forces colors
 
       h
     end

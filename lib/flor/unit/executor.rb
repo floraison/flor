@@ -28,6 +28,7 @@ module Flor
   class UnitExecutor < Flor::Executor
 
     attr_reader :exid
+    attr_reader :consumed
 
     def initialize(unit, exid)
 
@@ -66,7 +67,7 @@ module Flor
 
     def do_run
 
-      log_run_start if @unit.conf['log_run']
+      @unit.logger.log_run_start(self)
 
       counter_next('runs')
 
@@ -109,7 +110,7 @@ module Flor
       @unit.storage.put_execution(@execution)
       @unit.storage.put_messages(@messages)
 
-      log_run_end(t0) if @unit.conf['log_run']
+      @unit.logger.log_run_end(self, t0)
 
       @consumed.clear
 
@@ -141,7 +142,8 @@ module Flor
         f.puts(on_do_run_exc(exc))
       end
 
-      puts on_do_run_exc(exc)
+      #puts on_do_run_exc(exc)
+        # dump notification above
     end
 
     def schedule(message)
@@ -159,60 +161,6 @@ module Flor
         if m['point'] == 'execute'
 
       [ m ]
-    end
-
-    def log_run_start
-
-      _c = Flor.colours
-
-      s = StringIO.new
-
-      s << _c.dg
-      s << "    /--- #{_c.lg}run starts#{_c.dg} "
-      s << "#{self.class} #{self.object_id} #{@exid}"
-      s << "\n    |   "
-      s << { thread: Thread.current.object_id }.inspect
-      s << "\n    |   "
-      s << {
-        counters: @execution['counters'],
-        nodes: @execution['nodes'].size,
-        size: @execution['size']
-      }.inspect
-      s << _c.rs
-
-      puts s.string
-    end
-
-    def log_run_end(t0)
-
-      _c = Flor.colours
-
-      s = StringIO.new
-
-      s << _c.dg
-      s << "    |   run ends #{self.class} #{self.object_id} #{@exid}"
-      s << "\n    |   "; s << { took: Time.now - t0 }.inspect
-      s << "\n    |   "; s << {
-        thread: Thread.current.object_id,
-        consumed: @consumed.size,
-        traps: @traps.size,
-      }.inspect
-      s << "\n    |   "; s << {
-        #own_traps: @traps.reject { |t| t.texid == nil }.size, # FIXME
-        counters: @execution['counters'],
-        nodes: @execution['nodes'].size,
-        size: @execution['size']
-      }.inspect
-      if @unit.archive
-        s << "\n    |   "
-        s << {
-          archive_size: @unit.archive[@exid].size
-        }.inspect
-      end
-      s << "\n    \\--- ."
-      s << _c.rs
-
-      puts s.string
     end
 
     def on_do_run_exc(e)

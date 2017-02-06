@@ -30,13 +30,15 @@ module Flor
     class TransientUnit
 
       attr_accessor :conf, :opts
-      attr_reader :journal, :ganger, :loader
+      attr_reader :loader, :logger
+      attr_reader :journal
       attr_accessor :archive
 
       def initialize(conf)
 
         @conf = conf
         @opts = {}
+        @logger = TransientLogger.new(self)
         @journal = []
         @archive = nil
       end
@@ -61,6 +63,21 @@ module Flor
       def has_tasker?(exid, tname)
 
         false
+      end
+    end
+
+    class TransientLogger
+
+      def initialize(unit)
+
+        @unit = unit
+      end
+
+      def log_err(executor, message, opts={})
+
+        return unless @unit.conf['log_err']
+
+        Flor.print_detail_msg(executor, message, flag: true)
       end
     end
 

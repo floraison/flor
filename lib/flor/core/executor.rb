@@ -340,7 +340,8 @@ module Flor
       m['fpoint'] = message['point']
       m['error'] = Flor.to_error(err)
 
-      Flor.detail_msg(self, m, flag: true) if @unit.conf['log_err']
+      @unit.logger.log_err(self, m, flag: true)
+      #Flor.print_detail_msg(self, m, flag: true) if @unit.conf['log_err']
 
       #if m['error']['msg'].match(/\AToo many open files in system/)
       #  puts "=" * 80 + ' ...'
@@ -456,7 +457,7 @@ module Flor
       oep = lookup_on_error_parent(message)
       return oep.trigger_on_error if oep
 
-      Flor.detail_msg(self, message) if @unit.conf['log_err']
+      @unit.logger.log_err(self, message)
 
       []
     end

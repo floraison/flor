@@ -25,98 +25,47 @@
 
 module Flor
 
+  COLS = Hash[*%w[
+
+    reset 0;0
+    bright 1 dim 2 underlined 4 blink 5 reverse 7 hidden 8 default 39
+    black 30 red 31 green 32 yellow 33 blue 34 magenta 35 cyan 36
+    light_gray 37 dark_gray 90 light_red 91 light_green 92
+    light_yellow 93 light_blue 94 light_magenta 95 light_cyan 96 white 97
+    bg_default 49 bg_black 40 bg_red 41 bg_green 42 bg_yellow 43 bg_blue 44
+    bg_magenta 45 bg_cyan 46 bg_light_gray 47 bg_dark_gray 100
+    bg_light_red 101 bg_light_green 102 bg_light_yellow 103
+    bg_light_blue 104 bg_light_magenta 105 bg_light_cyan 106
+    bg_white 107
+
+    brown yellow purple magenta dark_grey dark_gray light_grey light_gray
+
+    rd red bl blue bu blue ba black bk black gn green gr green dg dark_gray
+    gy light_gray lg light_gray yl yellow ma magenta rs reset br bright
+    un underlined rv reverse bn blink blg bg_light_gray bri bright
+    und underlined rev reverse
+  ]]
+
   class Colours
 
-    def reset; "[0;0m"; end
-
-    def bright;      "[1m"; end
-    def dim;         "[2m"; end
-    def underlined;  "[4m"; end
-    def blink;       "[5m"; end
-    def reverse;     "[7m"; end
-    def hidden;      "[8m"; end
-
-    def default;        "[39m"; end
-    def black;          "[30m"; end
-    def red;            "[31m"; end
-    def green;          "[32m"; end
-    def yellow;         "[33m"; end
-    def blue;           "[34m"; end
-    def magenta;        "[35m"; end
-    def cyan;           "[36m"; end
-    def light_gray;     "[37m"; end
-
-    def dark_gray;      "[90m"; end
-    def light_red;      "[91m"; end
-    def light_green;    "[92m"; end
-    def light_yellow;   "[93m"; end
-    def light_blue;     "[94m"; end
-    def light_magenta;  "[95m"; end
-    def light_cyan;     "[96m"; end
-    def white;          "[97m"; end
-
-    def bg_default;        "[49m"; end
-    def bg_black;          "[40m"; end
-    def bg_red;            "[41m"; end
-    def bg_green;          "[42m"; end
-    def bg_yellow;         "[43m"; end
-    def bg_blue;           "[44m"; end
-    def bg_magenta;        "[45m"; end
-    def bg_cyan;           "[46m"; end
-    def bg_light_gray;     "[47m"; end
-
-    def bg_dark_gray;      "[100m"; end
-    def bg_light_red;      "[101m"; end
-    def bg_light_green;    "[102m"; end
-    def bg_light_yellow;   "[103m"; end
-    def bg_light_blue;     "[104m"; end
-    def bg_light_magenta;  "[105m"; end
-    def bg_light_cyan;     "[106m"; end
-    def bg_white;          "[107m"; end
-
-    alias brown yellow
-    alias purple magenta
-    alias dark_grey dark_gray
-    alias light_grey light_gray
-
-    alias rd red
-    alias bl blue
-    alias bu blue
-    alias ba black
-    alias bk black
-    alias gn green
-    alias gr green
-    alias dg dark_gray
-    alias gy light_gray
-    alias lg light_gray
-    alias yl yellow
-    alias ma magenta
-
-    alias rs reset
-    alias br bright
-    alias un underlined
-    alias rv reverse
-    alias bn blink
-
-    alias blg bg_light_gray
-    alias bri bright
-    alias und underlined
-    alias rev reverse
+    Flor::COLS.each do |k, v|
+      if v.match(/\A\d/)
+        class_eval("def #{k}; \"[#{v}m\"; end")
+      else
+        class_eval("alias #{k} #{v}")
+      end
+    end
   end
 
-  class NoColours < Colours
+  class NoColours
 
-    %w[
-      reset
-      bright dim underlined blink reverse hidden
-      default black red green yellow blue magenta cyan light_gray
-      dark_gray light_red light_green light_yellow light_blue light_magenta
-      light_cyan white
-      bg_default bg_black bg_red bg_green bg_yellow bg_blue bg_magenta bg_cyan
-      bg_light_gray
-      bg_dark_gray bg_light_red bg_light_green bg_light_yellow bg_light_blue
-      bg_light_magenta bg_light_cyan bg_white
-    ].each { |m| define_method(m) { '' } }
+    Flor::COLS.each do |k, v|
+      if v.match(/\A\d/)
+        class_eval("def #{k}; ''; end")
+      else
+        class_eval("alias #{k} #{v}")
+      end
+    end
   end
 
   @colours = Colours.new
@@ -129,12 +78,14 @@ module Flor
 
   def self.colours(opts={})
 
-    return @no_colours unless $stdout.tty?
+    return @colours if opts[:color] == true || opts[:colour] == true
+    return @no_colours if opts[:color] == false || opts[:colour] == false
 
-    opts[:colour] = true unless opts.has_key?(:color) || opts.has_key?(:colour)
+    o = opts[:out] || $stdout
 
-    return @colours if opts[:color] || opts[:colour]
-    @no_colours
+    (o.respond_to?(:log_colours?) ? o.log_colours? : o.tty?) ?
+      @colours :
+      @no_colours
   end
 end
 

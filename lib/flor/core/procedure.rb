@@ -81,7 +81,7 @@ class Flor::Procedure < Flor::Node
 
   def debug_msg(msg=message)
 
-    Flor.detail_msg(@executor, msg)
+    puts Flor.detail_msg(@executor, msg)
   end
 
   protected

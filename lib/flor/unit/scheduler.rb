@@ -236,12 +236,12 @@ module Flor
 
       unit = opts[:unit] || @conf['unit'] || 'u0'
 
-      Flor.print_src(source, opts) if @conf['log_src']
+      @logger.log_src(source, opts)
 
       exid = Flor.generate_exid(domain, unit)
       msg = Flor.make_launch_msg(exid, source, opts)
 
-      Flor.print_tree(msg['tree']) if @conf['log_tree']
+      @logger.log_tree(msg['tree'])
 
       return [ msg, opts ] if opts[:nolaunch]
         # for testing purposes

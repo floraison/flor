@@ -2,7 +2,9 @@
 env: test
 domain: test
 
-log_dir: stdout
+#log_out: stdout
+log_out: tmp
+#log_colours: true
 
 sto_uri: (ife
   == ruby_platform 'java'
