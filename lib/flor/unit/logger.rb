@@ -227,7 +227,7 @@ module Flor
         when false, 'null' then NoOut.new(@unit)
         when true, 'stdout' then StdOut.new(@unit, $stdout)
         when 'stderr' then StdOut.new(@unit, $stderr)
-        when /::/ then Flor.const_lookup(o).new(@unitf)
+        when /::/ then Flor.const_lookup(o).new(@unit)
         else FileOut.new(@unit, o)
       end
     end
