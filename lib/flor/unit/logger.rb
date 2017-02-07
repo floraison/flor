@@ -24,6 +24,12 @@
 
 module Flor
 
+  # TODO I need levels, ::Logger has them
+  # TODO I need log rotation, ::Logger has then
+  # TODO I need line heads, ::Logger has them (and @progname)
+  # TODO ::Logger has a formatting callback
+  # TODO I need simply @out.puts...
+
   class Logger
 
     # NB: logger configuration entries start with "log_"
@@ -63,7 +69,6 @@ module Flor
 
       if err
         sts = ' ' * stp.length
-        lvs = ' ' * (@uni.length + 1 + lvl.length)
         dig = lvl[0, 1] + Digest::MD5.hexdigest(line)[0, 4]
         @out.puts("#{stp} #{@uni} #{lvl} #{dig} #{txt}")
         err.backtrace.each { |lin| @out.puts("  #{dig} #{@uni} #{lin}") }
@@ -74,7 +79,6 @@ module Flor
 
     def notify(executor, msg)
 
-# TODO log to outfile
       if msg['rewritten'] && @unit.conf['log_tree_rw']
 
         Flor.print_compact_tree(
