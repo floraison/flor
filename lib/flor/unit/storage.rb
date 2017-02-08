@@ -126,7 +126,7 @@ module Flor
         @db[:flor_messages]
           .select(:exid)
           .where(status: 'created')
-          .order_by(:ctime)
+          .order(:ctime)
           .distinct
           .all
           .collect { |r| r[:exid] }
@@ -232,7 +232,7 @@ module Flor
         ms = @db[:flor_messages]
           .select(:id, :content)
           .where(status: 'created', exid: exid)
-          .order_by(:id)
+          .order(:id)
           .map { |m| r = from_blob(m[:content]) || {}; r['mid'] = m[:id]; r }
 
         @db[:flor_messages]
@@ -296,7 +296,7 @@ module Flor
         timers
           .select(:id, :content)
           .where(status: 'active')
-          .order_by(:id)
+          .order(:id)
           .all
       end
 
