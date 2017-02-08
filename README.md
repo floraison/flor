@@ -20,7 +20,7 @@ Flor is a "Ruby workflow engine", if that makes any sense.
 
 ## Documentation
 
-see [doc/](tree/master/doc).
+see [doc/](doc/).
 
 ## Running the specs
 
