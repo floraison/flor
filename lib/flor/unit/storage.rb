@@ -125,11 +125,9 @@ module Flor
 
         @db[:flor_messages]
           .select(:exid)
-          .where(status: 'created')
-          .order(:ctime)
-          .all
+          .group(:exid)
+          .order { min(:ctime) }
           .collect { |r| r[:exid] }
-          .uniq
       end
 
     rescue => err

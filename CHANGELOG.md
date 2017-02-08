@@ -4,6 +4,8 @@
 
 ## flor 0.9.4  not yet released
 
+- Revise Storage#load_exids (distinct/order by problem on MS-SQL)
+
 
 ## flor 0.9.3  released 2017-02-07
 
