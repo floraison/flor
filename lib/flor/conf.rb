@@ -51,18 +51,15 @@ module Flor
     #   (before quitting and passing the hand)
     #
 
-    def self.read(s)
-
-      Flor::ConfExecutor.interpret(s)
-    end
-
     LOG_DBG_KEYS = %w[ dbg msg err src tree tree_rw run ]
     LOG_ALL_KEYS = %w[ all log sto ] + LOG_DBG_KEYS
 
-    def self.read_env
+    def self.interpret_flor_debug(v)
 
-      a =
-        (ENV['FLOR_DEBUG'] || '').split(',')
+      a = v || ''
+      a = a.split(',') if a.is_a?(String)
+      a = a.collect(&:strip)
+
       h =
         a.inject({}) { |h, kv|
           k, v = kv.split(':')
@@ -85,6 +82,18 @@ module Flor
       end
 
       h
+    end
+
+    def self.read(s)
+
+      h = Flor::ConfExecutor.interpret(s)
+
+      h.merge!(interpret_flor_debug(h['flor_debug']))
+    end
+
+    def self.read_env
+
+      interpret_flor_debug(ENV['FLOR_DEBUG'])
     end
 
     def self.get_class(conf, key)

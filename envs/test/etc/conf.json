@@ -5,6 +5,8 @@ domain: test
 #log_out: stdout
 log_out: tmp
 #log_colours: true
+#flor_debug: 'stdout,dbg'
+#flor_debug: [ stdout dbg ]
 
 sto_uri: (ife
   == ruby_platform 'java'
