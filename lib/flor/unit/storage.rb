@@ -121,6 +121,8 @@ module Flor
 
     def load_exids
 
+# TODO eventually, exclude exids for which there are "loaded" messages
+
       synchronize do
 
         @db[:flor_messages]
@@ -228,15 +230,20 @@ module Flor
 
       transync do
 
+        mids = []
+
         ms = @db[:flor_messages]
           .select(:id, :content)
           .where(status: 'created', exid: exid)
           .order(:id)
-          .map { |m| r = from_blob(m[:content]) || {}; r['mid'] = m[:id]; r }
+          .collect { |m|
+            r = from_blob(m[:content]) || {}
+            mid = m[:id]; r['mid'] = mid; mids << mid;
+            r }
 
         @db[:flor_messages]
-          .where(id: ms.collect { |m| m['mid'] })
-          .update(status: 'loaded')
+          .where(id: mids)
+          .update(status: 'loaded', mtime: Time.now)
              #
              # flag them as "loaded" so that other scheduler don't pick them
 
