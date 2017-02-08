@@ -2,8 +2,9 @@
 # flor CHANGELOG.md
 
 
-## flor 0.9.4  not yet released
+## flor 0.9.4  released 2017-02-09
 
+- Allow setting of flor_debug in ENV (FLOR_DEBUG) and in conf
 - Revise Storage#load_exids (distinct/order by problem on MS-SQL)
 
 
