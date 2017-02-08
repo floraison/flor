@@ -127,9 +127,9 @@ module Flor
           .select(:exid)
           .where(status: 'created')
           .order(:ctime)
-          .distinct
           .all
           .collect { |r| r[:exid] }
+          .uniq
       end
 
     rescue => err
