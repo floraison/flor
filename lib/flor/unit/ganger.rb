@@ -180,15 +180,22 @@ module Flor
 
     def gather_vars(executor, tconf, message)
 
-      iv = expand_filter(tconf['on_task']['include_vars'])
-      ev = expand_filter(tconf['on_task']['exclude_vars'])
+      ot = tconf['on_task']
 
-      return nil unless iv || ev
+      # try to return before calling executor.vars(nid) which my be costly...
+
+      return nil if (ot.keys & %w[ include_vars exclude_vars ]).empty?
+        # default behaviour, don't pass variables to taskers
+
+      iv = expand_filter(ot['include_vars'])
+      return nil if iv == false
+
+      ev = expand_filter(ot['exclude_vars'])
+      return {} if ev == true
 
       vars = executor.vars(message['nid'])
 
       return vars if iv == true
-      return {} if ev == true
 
       vars = vars.select { |k, v| var_match(k, iv) } if iv
       vars = vars.reject { |k, v| var_match(k, ev) } if ev
