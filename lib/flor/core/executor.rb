@@ -360,7 +360,7 @@ module Flor
       @execution['tasks'][message['nid']] =
         { 'tasker' => message['tasker'], 'name' => message['taskname'] }
 
-      @unit.ganger.task(message)
+      @unit.ganger.task(self, message)
     end
     alias detask task
 
