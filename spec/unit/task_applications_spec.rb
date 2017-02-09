@@ -165,6 +165,8 @@ describe 'Flor unit' do
       expect(r['payload']['ret']).to eq('bravo cancelled')
     end
 
+    it 'can postpone a task'
+
     context 'vars' do
 
       after :all do
