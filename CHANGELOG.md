@@ -4,6 +4,7 @@
 
 ## flor 0.9.5  not yet released
 
+- Don't load exids for which there are "loaded" messages
 - Use Flor.tstamp for flor_messages :mtime
 
 

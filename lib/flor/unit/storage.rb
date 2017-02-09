@@ -121,15 +121,21 @@ module Flor
 
     def load_exids
 
-# TODO eventually, exclude exids for which there are "loaded" messages
-
       synchronize do
+
+        # only take messages that are 'created' and for whose exid
+        # there are no loaded messages
+
+        # TODO update status to 'created' for messages that have been
+        #      'loaded' for too long
 
         @db[:flor_messages]
           .select(:exid)
-          .group(:exid)
-          .where(status: 'created')
-          .order { min(:ctime) }
+          .where(exid:
+            @db[:flor_messages].select(:exid).where(status: 'created'))
+          .exclude(exid:
+            @db[:flor_messages].select(:exid).where(status: 'loaded'))
+          .order(:mtime)
           .collect { |r| r[:exid] }
       end
 
@@ -229,6 +235,8 @@ module Flor
     def fetch_messages(exid)
 
       transync do
+
+        # TODO weave in [some] optimistic locking here
 
         mids = []
 
