@@ -1,12 +1,13 @@
 
 # flor
 
-[![Join the chat at https://gitter.im/floraison/flor](https://badges.gitter.im/floraison/flor.svg)](https://gitter.im/floraison/flor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 [![Build Status](https://secure.travis-ci.org/floraison/flor.svg)](http://travis-ci.org/floraison/flor)
 [![Gem Version](https://badge.fury.io/rb/flor.svg)](http://badge.fury.io/rb/flor)
 
 Flor is a "Ruby workflow engine", if that makes any sense.
+
+* [![Join the chat at https://gitter.im/floraison/flor](https://badges.gitter.im/floraison/flor.svg)](https://gitter.im/floraison/flor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+* [floraison mailing list](https://groups.google.com/forum/#!forum/floraison)
 
 ## Design
 
