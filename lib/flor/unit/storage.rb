@@ -243,7 +243,7 @@ module Flor
 
         @db[:flor_messages]
           .where(id: mids)
-          .update(status: 'loaded', mtime: Time.now)
+          .update(status: 'loaded', mtime: Flor.tstamp)
              #
              # flag them as "loaded" so that other scheduler don't pick them
 

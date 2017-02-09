@@ -4,6 +4,8 @@
 
 ## flor 0.9.5  not yet released
 
+- Use Flor.tstamp for flor_messages :mtime
+
 
 ## flor 0.9.4  released 2017-02-09
 
