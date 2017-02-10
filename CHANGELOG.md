@@ -2,6 +2,9 @@
 # flor CHANGELOG.md
 
 
+## flor 0.10.0  not yet released
+
+
 ## flor 0.9.5  released 2017-02-10
 
 - Don't load exids for which there are "loaded" messages
