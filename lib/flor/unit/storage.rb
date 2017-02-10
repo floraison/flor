@@ -310,7 +310,7 @@ module Flor
         timers
           .select(:id, :content)
           .where(status: 'active')
-          .order(:id)
+          .order(:ntime)
           .all
       end
 
@@ -342,6 +342,7 @@ module Flor
       @unit.wake_up_executions(ms.collect { |m| m['exid'] }.uniq)
 
     rescue => err
+
       Thread.current[:sto_errored_items] = ms
       raise err
     end

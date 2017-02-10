@@ -365,6 +365,8 @@ module Flor
 
     def reload
 
+      return unload if @thread_status != :running
+
       now = Time.now
 
       return if @reloaded_at && (now - @reloaded_at < @reload_frequency)
@@ -372,21 +374,19 @@ module Flor
       @mutex.synchronize do
 
         @reloaded_at = now
-        @timers = load_timers
-        @exids = load_exids
+
+        @timers = @storage.load_timers
+        @exids = @storage.load_exids
       end
     end
 
-    def load_timers
+    def unload
 
-      return [] if @thread_status != :running
-      @storage.load_timers.sort_by(&:ntime)
-    end
+      @mutex.synchronize do
 
-    def load_exids
-
-      return [] if @thread_status != :running
-      @storage.load_exids
+        @timers = []
+        @exids = []
+      end
     end
 
     def trigger_timers
