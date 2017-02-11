@@ -364,25 +364,6 @@ module Flor
       raise err
     end
 
-    # TODO protected
-    def load_timers
-
-      now = Flor.tstamp
-      no = now[0, now.rindex('.')]
-
-      timers
-        .where(status: 'active')
-        .where { ntime <= no }
-        .order(:ntime)
-        .all
-
-    rescue => err
-
-      @unit.logger.warn("#{self.class}#load_timers()", err, '(returning [])')
-
-      []
-    end
-
     def trigger_timers
 
       synchronize do
@@ -396,44 +377,6 @@ module Flor
             trigger_timer(t)
           end
         end
-      end
-    end
-
-    # TODO protected
-    def trigger_timer(t)
-
-      put_messages([ t.to_trigger_message ], false)
-    end
-
-    # TODO protected
-    def reschedule_timer(t)
-
-      w = { id: t.id, status: 'active', mtime: t.mtime }
-
-      if t.type != 'at' && t.type != 'in'
-
-        @db[:flor_timers]
-          .where(w)
-          .update(
-            count: t.count + 1,
-            status: 'active',
-            ntime: compute_next_time(t.type, t.schedule, t.ntime_t),
-            mtime: Flor.tstamp)
-
-      elsif @archive
-
-        @db[:flor_timers]
-          .where(w)
-          .update(
-            count: t.count + 1,
-            status: 'triggered',
-            mtime: Flor.tstamp)
-
-      else
-
-        @db[:flor_timers]
-          .where(w)
-          .delete
       end
     end
 
@@ -505,6 +448,60 @@ module Flor
     end
 
     protected
+
+    def load_timers
+
+      now = Flor.tstamp
+      no = now[0, now.rindex('.')]
+
+      timers
+        .where(status: 'active')
+        .where { ntime <= no }
+        .order(:ntime)
+        .all
+
+    rescue => err
+
+      @unit.logger.warn("#{self.class}#load_timers()", err, '(returning [])')
+
+      []
+    end
+
+    def trigger_timer(t)
+
+      put_messages([ t.to_trigger_message ], false)
+    end
+
+    def reschedule_timer(t)
+
+      w = { id: t.id, status: 'active', mtime: t.mtime }
+
+      if t.type != 'at' && t.type != 'in'
+
+        @db[:flor_timers]
+          .where(w)
+          .update(
+            count: t.count + 1,
+            status: 'active',
+            ntime: compute_next_time(t.type, t.schedule, t.ntime_t),
+            mtime: Flor.tstamp)
+
+      elsif @archive
+
+        @db[:flor_timers]
+          .where(w)
+          .update(
+            count: t.count + 1,
+            status: 'triggered',
+            mtime: Flor.tstamp)
+
+      else
+
+        @db[:flor_timers]
+          .where(w)
+          .delete
+      end
+    end
 
     def remove_nodes(exe, status, now)
 
