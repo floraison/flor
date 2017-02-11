@@ -67,21 +67,21 @@ module Flor
       @hooker.add('wlist', Flor::WaitList)
 
       @heart_rate = @conf[:sch_heart_rate] || 0.3
-      #@reload_frequency = @conf[:sch_reload_frequency] || 60
-
+      @reload_after = @conf[:sch_reload_after] || 60
+        #
       @wake_up = true
       @next_time = nil
+      @reloaded_at = Time.now
 
       @max_executors = @conf[:sch_max_executors] || 1
-
-      #@reloaded_at = nil
-
+        #
       @executors = []
 
-      @archive = nil # used, so far, only for testing
-
       c = @conf['constant']
+        #
       Kernel.const_set(c, self) if c
+
+      @archive = nil # used, so far, only for testing
     end
 
     def storage_mutex
@@ -174,6 +174,7 @@ module Flor
 
                   reload_next_time
                   reload_wake_up
+                  @reloaded_at = Time.now
                 end
 
                 sleep [ @heart_rate - (Time.now - t0), 0 ].max #\
@@ -369,6 +370,8 @@ module Flor
 #    end
 
     def should_wake_up?
+
+      return true if Time.now - @reloaded_at >= @reload_after
 
       return true if @wake_up
       return false unless @next_time
