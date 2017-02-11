@@ -30,15 +30,19 @@ module Flor
     attr_reader :exid
     attr_reader :consumed
 
-    def initialize(unit, exid)
+    def initialize(unit, messages)
+
+      @exid = messages.first[:exid]
 
       super(
         unit,
-        unit.storage.fetch_traps(exid),
-        unit.storage.load_execution(exid))
+        unit.storage.fetch_traps(@exid),
+        unit.storage.load_execution(@exid))
 
-      @exid = exid
-      @messages = unit.storage.fetch_messages(exid)
+      @messages =
+        messages.collect { |m|
+          Flor::Storage.from_blob(m[:content]).tap { |mm| mm['mid'] = m[:id] }
+        }
       @consumed = []
 
       @alive = true

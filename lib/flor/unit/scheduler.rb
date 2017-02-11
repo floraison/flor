@@ -66,18 +66,15 @@ module Flor
       @hooker.add('logger', @logger)
       @hooker.add('wlist', Flor::WaitList)
 
-# TODO philosophy:
-#   * load at least once per minute
-#   * process at least thrice per minute (what is loaded)
       @heart_rate = @conf[:sch_heart_rate] || 0.3
-      @reload_frequency = @conf[:sch_reload_frequency] || 60
+      #@reload_frequency = @conf[:sch_reload_frequency] || 60
+
+      @wake_up = true
+      @next_time = nil
+
       @max_executors = @conf[:sch_max_executors] || 1
 
-      @mutex = Mutex.new
-
-      @reloaded_at = nil
-      #@timers = []
-      @exids = []
+      #@reloaded_at = nil
 
       @executors = []
 
@@ -160,23 +157,28 @@ module Flor
         else
 
           Thread.new do
-#p [ :unit_scheduler, :thread, Thread.current.object_id ]
+
             loop do
 
               begin
 
-                t0 = Time.now
-
                 Thread.stop if @thread_status == :stop
                 break if @thread_status == :shutdown
 
-                reload
-                @storage.trigger_timers
-                trigger_executions
+                t0 = Time.now
 
-                sleep [ @heart_rate - (Time.now - t0), 0 ].max
+                if should_wake_up?
 
-              #rescue => er
+                  trigger_timers
+                  trigger_executions
+
+                  reload_next_time
+                  reload_wake_up
+                end
+
+                sleep [ @heart_rate - (Time.now - t0), 0 ].max #\
+                  #unless should_wake_up?
+
               rescue Exception => ex
 
                 puts on_start_exc(ex)
@@ -295,9 +297,9 @@ module Flor
       @storage.put_timer(message)
     end
 
-    def wake_up_executions(exids)
+    def wake_up
 
-      @mutex.synchronize { @exids.concat(exids).uniq! } if exids.any?
+      @wake_up = true
     end
 
     def notify(executor, o)
@@ -366,52 +368,46 @@ module Flor
 #      end
 #    end
 
-    def reload
+    def should_wake_up?
 
-      return unload if @thread_status != :running
+      return true if @wake_up
+      return false unless @next_time
 
-      now = Time.now
-
-      return if @reloaded_at && (now - @reloaded_at < @reload_frequency)
-
-      @mutex.synchronize do
-
-        @reloaded_at = now
-
-        #@timers = @storage.load_timers
-        @exids = @storage.load_exids
-      end
+      @next_time <= Flor.tstamp.split('.').first
     end
 
-    def unload
+    def trigger_timers
 
-      @mutex.synchronize do
-
-        #@timers = []
-        @exids = []
-      end
+      @storage.trigger_timers
     end
 
     def trigger_executions
 
-      return if @exids.empty?
+      @executors = @executors.select { |e| e.alive? }
+        # drop done executors
 
-      exid = nil
+      free_executor_count = @max_executors - @executors.size
 
-      while exid = @mutex.synchronize { @exids.shift }
+      return if free_executor_count < 1
 
-        @executors = @executors.select { |e| e.alive? }
-          # drop done executors
+      messages = @storage.load_messages(free_executor_count)
 
-        break if @executors.size > @max_executors
-        next if @executors.find { |e| e.exid == exid }
+      messages.each do |exid, ms|
 
-        @executors << UnitExecutor.new(self, exid).run
+        next unless @storage.reserve_all_messages(ms)
 
-        exid = nil
+        @executors << UnitExecutor.new(self, ms).run
       end
+    end
 
-      @mutex.synchronize { @exids.unshift(exid) } if exid
+    def reload_next_time
+
+      @next_time = @storage.fetch_next_time
+    end
+
+    def reload_wake_up
+
+      @wake_up = @storage.any_message?
     end
   end
 end

@@ -119,41 +119,13 @@ module Flor
       @db.tables.each { |t| @db[t].delete if t.to_s.match(/^flor_/) }
     end
 
-    def load_exids
-
-      synchronize do
-
-        # only take messages that are 'created' and for whose exid
-        # there are no loaded messages
-
-        # TODO update status to 'created' for messages that have been
-        #      'loaded' for too long
-
-        @db[:flor_messages]
-          .select(:exid)
-          .where(exid:
-            @db[:flor_messages].select(:exid).where(status: 'created'))
-          .exclude(exid:
-            @db[:flor_messages].select(:exid).where(status: 'loaded'))
-          .order(:mtime)
-          .collect { |r| r[:exid] }
-      end
-
-    rescue => err
-
-      @unit.logger.warn("#{self.class}#load_exids", err, '(returning [])')
-
-      []
-    end
-
     def load_execution(exid)
 
       synchronize do
 
         e = @db[:flor_executions]
           .select(:id, :content)
-          .where(exid: exid) # status active or terminated doesn't matter
-          .first
+          .first(exid: exid) # status active or terminated doesn't matter
 
         return {
           'exid' => exid, 'nodes' => {}, 'errors' => [], 'tasks' => {},
@@ -232,37 +204,77 @@ module Flor
       raise err
     end
 
-    def fetch_messages(exid)
+    def load_messages(exid_count)
 
-      transync do
+      exid_count += 2
+        # load two more, could prove useful if they vanish like "petits pains"
 
-        # TODO weave in [some] optimistic locking here
+      synchronize do
 
-        mids = []
-
-        ms = @db[:flor_messages]
-          .select(:id, :content)
-          .where(status: 'created', exid: exid)
-          .order(:id)
-          .collect { |m|
-            r = from_blob(m[:content]) || {}
-            mid = m[:id]; r['mid'] = mid; mids << mid;
-            r }
-
+        _exids_being_processed =
+          @db[:flor_messages]
+            .select(:exid)
+            .exclude(status: %w[ created consumed ])
+        _exids =
+          @db[:flor_messages]
+            .select(:exid)
+            .exclude(exid: _exids_being_processed)
+            .limit(exid_count)
         @db[:flor_messages]
-          .where(id: mids)
-          .update(status: 'loaded', mtime: Flor.tstamp)
-             #
-             # flag them as "loaded" so that other scheduler don't pick them
-
-        ms
+          .where(exid: _exids, status: 'created')
+          .inject({}) { |h, m| (h[m[:exid]] ||= []) << m; h }
       end
 
     rescue => err
 
-      @unit.logger.warn("#{self.class}#fetch_messages()", err, '(returning [])')
+      @unit.logger.warn(
+        "#{self.class}#load_messages()", err, '(returning {})')
 
-      []
+      {}
+    end
+
+    def reserve_all_messages(messages)
+
+      now = Flor.tstamp
+      count = 0
+
+      transync do
+
+        messages.each do |m|
+
+          c = @db[:flor_messages]
+            .where(id: m[:id], status: 'created', mtime: m[:mtime])
+            .update(status: "reserved-#{@unit.identifier}", mtime: now)
+
+          raise Sequel::Rollback if c != 1
+
+          count += 1
+        end
+      end
+
+      count == messages.size
+
+    rescue => err
+
+      @unit.logger.warn(
+        "#{self.class}#reserve_all_messages()", err, '(returning false)')
+
+      false
+    end
+
+    def any_message?
+
+      synchronize do
+
+        @db[:flor_messages].count(status: 'created') > 0
+      end
+
+    rescue => err
+
+      @unit.logger.warn(
+        "#{self.class}#any_message?()", err, '(returning false)')
+
+      false
     end
 
     def fetch_traps(exid)
@@ -277,7 +289,8 @@ module Flor
 
     rescue => err
 
-      @unit.logger.warn("#{self.class}#fetch_traps()", err, '(returning [])')
+      @unit.logger.warn(
+        "#{self.class}#fetch_traps()", err, '(returning [])')
 
       []
     end
@@ -321,7 +334,7 @@ module Flor
             })
       end
 
-      @unit.wake_up_executions(ms.collect { |m| m['exid'] }.uniq)
+      @unit.wake_up
 
     rescue => err
 
@@ -358,6 +371,8 @@ module Flor
           mtime: now)
       end
 
+      @unit.wake_up
+
     rescue => err
 
       Thread.current[:sto_errored_items] = [ message ]
@@ -387,7 +402,7 @@ module Flor
       now = Flor.tstamp
 
       id =
-        transync do # Why a transaction? There's a single row involved...
+        synchronize do
 
           @db[:flor_traps].insert(
             domain: dom,
@@ -445,6 +460,26 @@ module Flor
             name: tname,
             ctime: Flor.tstamp)
       end
+    end
+
+    def fetch_next_time
+
+      t =
+        synchronize do
+          @db[:flor_timers]
+            .select(:ntime)
+            .order(:ntime)
+            .first(status: 'active')
+        end
+
+      t ? t[:ntime].split('.').first : nil
+
+    rescue => err
+
+      @unit.logger.warn(
+        "#{self.class}#fetch_next_time()", err, '(returning nil)')
+
+      nil
     end
 
     protected
