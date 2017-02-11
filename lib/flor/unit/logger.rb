@@ -103,6 +103,8 @@ module Flor
     def db_log(level, msg)
 
       return unless @unit.conf['log_sto']
+#return unless msg.match(/flor_timers/)
+#p Time.now
 
       _c = Flor.colours(out: @out)
 

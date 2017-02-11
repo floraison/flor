@@ -303,24 +303,6 @@ module Flor
       raise err
     end
 
-    def load_timers
-
-      synchronize do
-
-        timers
-          .select(:id, :content)
-          .where(status: 'active')
-          .order(:ntime)
-          .all
-      end
-
-    rescue => err
-
-      @unit.logger.warn("#{self.class}#load_timers()", err, '(returning [])')
-
-      []
-    end
-
     def put_messages(ms, syn=true)
 
       return if ms.empty?
@@ -360,23 +342,21 @@ module Flor
 
       now = Flor.tstamp
 
-      id =
-        synchronize do
-          @db[:flor_timers].insert(
-            domain: Flor.domain(message['exid']),
-            exid: message['exid'],
-            nid: message['nid'],
-            type: type,
-            schedule: string,
-            ntime: next_time,
-            content: to_blob(message),
-            count: 0,
-            status: 'active',
-            ctime: now,
-            mtime: now)
-        end
+      synchronize do
 
-      @unit.timers[id]
+        @db[:flor_timers].insert(
+          domain: Flor.domain(message['exid']),
+          exid: message['exid'],
+          nid: message['nid'],
+          type: type,
+          schedule: string,
+          ntime: next_time,
+          content: to_blob(message),
+          count: 0,
+          status: 'active',
+          ctime: now,
+          mtime: now)
+      end
 
     rescue => err
 
@@ -384,51 +364,87 @@ module Flor
       raise err
     end
 
-    # Returns the timer if it is rescheduling
-    #
-    def trigger_timer(timer)
+    # TODO protected
+    def load_timers
 
-      r = nil
+      now = Flor.tstamp
+      no = now[0, now.rindex('.')]
 
-      transync do
-
-# TODO: cron/every stop conditions maybe?
-
-        if timer.type != 'at' && timer.type != 'in'
-
-          @db[:flor_timers]
-            .where(id: timer.id)
-            .update(
-              count: timer.count + 1,
-              ntime: compute_next_time(timer.type, timer.schedule),
-              mtime: Flor.tstamp)
-          r = timers[timer.id]
-
-        elsif @archive
-
-          @db[:flor_timers]
-            .where(id: timer.id)
-            .update(
-              count: timer.count + 1,
-              status: 'triggered',
-              mtime: Flor.tstamp)
-
-        else
-
-          @db[:flor_timers]
-            .where(id: timer.id)
-            .delete
-        end
-
-        put_messages([ timer.to_trigger_message ], false)
-      end
-
-      r
+      timers
+        .where(status: 'active')
+        .where { ntime <= no }
+        .order(:ntime)
+        .all
 
     rescue => err
 
-      Thread.current[:sto_errored_items] = [ timer ]
-      raise err
+      @unit.logger.warn("#{self.class}#load_timers()", err, '(returning [])')
+
+      []
+    end
+
+    def trigger_timers
+
+      synchronize do
+
+        load_timers.each do |t|
+
+          @db.transaction do
+
+#puts "trigger_timers:"
+#p [ :n, Flor.tstamp ]
+#p [ :t, t.ntime ]
+            next unless reserve_timer(t)
+            trigger_timer(t)
+            reschedule_timer(t)
+          end
+        end
+      end
+    end
+
+    # TODO protected
+    def reserve_timer(t)
+
+      1 ==
+        @db[:flor_timers]
+          .where(id: t.id, status: 'active', mtime: t.mtime)
+          .update(status: "reserved-#{@unit.identifier}", mtime: Flor.tstamp)
+    end
+
+    # TODO protected
+    def trigger_timer(t)
+
+      put_messages([ t.to_trigger_message ], false)
+    end
+
+    # TODO protected
+    def reschedule_timer(t)
+
+      if t.type != 'at' && t.type != 'in'
+
+        @db[:flor_timers]
+          .where(id: t.id)
+          .update(
+            count: t.count + 1,
+            status: 'active',
+            ntime: compute_next_time(t.type, t.schedule, t.ntime_t),
+            mtime: Flor.tstamp)
+
+      elsif @archive
+
+        @db[:flor_timers]
+          .where(id: t.id)
+          .update(
+            count: t.count + 1,
+            status: 'triggered',
+            mtime: Flor.tstamp)
+
+      else
+
+        @db[:flor_timers]
+          .where(id: t.id)
+          .delete
+      end
     end
 
     def put_trap(node, tra)
@@ -438,7 +454,7 @@ module Flor
       now = Flor.tstamp
 
       id =
-        transync do
+        transync do # Why a transaction? There's a single row involved...
 
           @db[:flor_traps].insert(
             domain: dom,
@@ -591,7 +607,7 @@ module Flor
       nil
     end
 
-    def compute_next_time(type, string)
+    def compute_next_time(type, string, from=nil)
 
       f =
         case type
@@ -602,7 +618,7 @@ module Flor
           else Fugit.parse(string)
         end
 
-      nt = f.is_a?(Time) ? f : f.next_time(Time.now) # local...
+      nt = f.is_a?(Time) ? f : f.next_time(from || Time.now) # local...
 
       Flor.tstamp(nt.utc)
     end

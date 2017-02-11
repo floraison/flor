@@ -66,6 +66,9 @@ module Flor
       @hooker.add('logger', @logger)
       @hooker.add('wlist', Flor::WaitList)
 
+# TODO philosophy:
+#   * load at least once per minute
+#   * process at least thrice per minute (what is loaded)
       @heart_rate = @conf[:sch_heart_rate] || 0.3
       @reload_frequency = @conf[:sch_reload_frequency] || 60
       @max_executors = @conf[:sch_max_executors] || 1
@@ -73,7 +76,7 @@ module Flor
       @mutex = Mutex.new
 
       @reloaded_at = nil
-      @timers = []
+      #@timers = []
       @exids = []
 
       @executors = []
@@ -168,7 +171,7 @@ module Flor
                 break if @thread_status == :shutdown
 
                 reload
-                trigger_timers
+                @storage.trigger_timers
                 trigger_executions
 
                 sleep [ @heart_rate - (Time.now - t0), 0 ].max
@@ -287,9 +290,9 @@ module Flor
 
     def put_timer(message)
 
-      timer = @storage.put_timer(message)
-
-      @mutex.synchronize { @timers.push(timer).sort_by!(&:ntime) }
+      #timer = @storage.put_timer(message)
+      #@mutex.synchronize { @timers.push(timer).sort_by!(&:ntime) }
+      @storage.put_timer(message)
     end
 
     def wake_up_executions(exids)
@@ -319,9 +322,9 @@ module Flor
       #@storage.remove_node(exid, n)
         # done in Storage#put_execution
 
-      @mutex.synchronize do
-        @timers.reject! { |t| t.exid == exid && t.nid == n['nid'] }
-      end
+      #@mutex.synchronize do
+      #  @timers.reject! { |t| t.exid == exid && t.nid == n['nid'] }
+      #end
 
       (@archive[exid] ||= {})[n['nid']] = Flor.dup(n) if @archive
     end
@@ -375,7 +378,7 @@ module Flor
 
         @reloaded_at = now
 
-        @timers = @storage.load_timers
+        #@timers = @storage.load_timers
         @exids = @storage.load_exids
       end
     end
@@ -384,32 +387,8 @@ module Flor
 
       @mutex.synchronize do
 
-        @timers = []
+        #@timers = []
         @exids = []
-      end
-    end
-
-    def trigger_timers
-
-      now = Time.now.utc
-      to_re_add = []
-
-      loop do
-
-        timer = @timers.first
-        break if timer == nil || timer.ntime_t > now
-
-        t = @mutex.synchronize { @timers.shift }
-        r = @storage.trigger_timer(t)
-        to_re_add << r if r
-      end
-
-      if to_re_add.any?
-
-        @mutex.synchronize do
-          @timers.concat(to_re_add)
-          @timers.sort_by! { |t| t.ntime }
-        end
       end
     end
 

@@ -86,12 +86,12 @@ describe 'Flor unit' do
     it 'is removed if the node ends before timing out' do
 
       flor = %{
-        sleep '1s' timeout: '1.4s'
+        sleep '1s' timeout: '2.8s'
       }
 
       exid = @unit.launch(flor)
 
-      sleep 0.777
+      sleep 0.490
 
       expect(
         @unit.timers.collect { |t|
@@ -101,7 +101,8 @@ describe 'Flor unit' do
         %w[ 0/cancel 0/receive ]
       )
 
-      sleep 2.1
+      @unit.wait(exid, 'terminated')
+      sleep 0.280
 
       expect(@unit.timers.count).to eq(0)
 
