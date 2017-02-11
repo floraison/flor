@@ -391,24 +391,12 @@ module Flor
 
           @db.transaction do
 
-#puts "trigger_timers:"
-#p [ :n, Flor.tstamp ]
-#p [ :t, t.ntime ]
-            next unless reserve_timer(t)
+            next unless reschedule_timer(t) == 1
+
             trigger_timer(t)
-            reschedule_timer(t)
           end
         end
       end
-    end
-
-    # TODO protected
-    def reserve_timer(t)
-
-      1 ==
-        @db[:flor_timers]
-          .where(id: t.id, status: 'active', mtime: t.mtime)
-          .update(status: "reserved-#{@unit.identifier}", mtime: Flor.tstamp)
     end
 
     # TODO protected
@@ -420,10 +408,12 @@ module Flor
     # TODO protected
     def reschedule_timer(t)
 
+      w = { id: t.id, status: 'active', mtime: t.mtime }
+
       if t.type != 'at' && t.type != 'in'
 
         @db[:flor_timers]
-          .where(id: t.id)
+          .where(w)
           .update(
             count: t.count + 1,
             status: 'active',
@@ -433,7 +423,7 @@ module Flor
       elsif @archive
 
         @db[:flor_timers]
-          .where(id: t.id)
+          .where(w)
           .update(
             count: t.count + 1,
             status: 'triggered',
@@ -442,7 +432,7 @@ module Flor
       else
 
         @db[:flor_timers]
-          .where(id: t.id)
+          .where(w)
           .delete
       end
     end
