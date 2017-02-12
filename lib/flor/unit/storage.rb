@@ -204,9 +204,9 @@ module Flor
       raise err
     end
 
-    def load_messages(exid_count)
+    def load_messages(exe_count)
 
-      exid_count += 2
+      exe_count += 2
         # load two more, could prove useful if they vanish like "petits pains"
 
       synchronize do
@@ -219,7 +219,7 @@ module Flor
           @db[:flor_messages]
             .select(:exid)
             .exclude(exid: _exids_being_processed)
-            .limit(exid_count)
+            .limit(exe_count)
         @db[:flor_messages]
           .where(exid: _exids, status: 'created')
           .inject({}) { |h, m| (h[m[:exid]] ||= []) << m; h }
