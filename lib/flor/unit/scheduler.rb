@@ -91,7 +91,17 @@ module Flor
 
     def identifier
 
-      @identifier ||= 's' + Digest::MD5.hexdigest(self.object_id.to_s)[0, 5]
+      @identifier ||=
+        begin
+          ai =
+            Socket.ip_address_list.find { |a| a.ipv4_private? } ||
+            Socket.ip_address_list.find { |a| a.ip_address != '::1' }
+          ip =
+            ai.ip_address
+          [
+            'sch', 'i' + ip, 'p' + Process.pid.to_s, 'o' + self.object_id.to_s
+          ].join('_')
+        end
     end
 
     def has_tasker?(exid, tname)

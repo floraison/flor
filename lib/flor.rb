@@ -27,6 +27,7 @@ require 'json'
 require 'logger'
 require 'thread'
 require 'digest'
+require 'socket'
 
 require 'munemo'
 require 'raabro'
