@@ -97,7 +97,7 @@ module Flor
             Socket.ip_address_list.find { |a| a.ipv4_private? } ||
             Socket.ip_address_list.find { |a| a.ip_address != '::1' }
           ip =
-            ai.ip_address
+            ai ? ai.ip_address : '::1'
           [
             'sch', 'i' + ip, 'p' + Process.pid.to_s, 'o' + self.object_id.to_s
           ].join('_')
