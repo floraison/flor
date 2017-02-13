@@ -165,6 +165,7 @@ module Flor
 
       data = to_blob(ex)
       ex['size'] = data.length
+      u = @unit.identifier
 
       transync do
 
@@ -177,7 +178,8 @@ module Flor
             .update(
               content: data,
               status: status,
-              mtime: now)
+              mtime: now,
+              munit: u)
 
         else
 
@@ -189,7 +191,9 @@ module Flor
                 content: data,
                 status: 'active',
                 ctime: now,
-                mtime: now)
+                mtime: now,
+                cunit: u,
+                munit: u)
               .to_i
         end
 
@@ -244,8 +248,10 @@ module Flor
         messages.each do |m|
 
           c = @db[:flor_messages]
-            .where(id: m[:id].to_i, status: 'created', mtime: m[:mtime])
-            .update(status: "reserved-#{@unit.identifier}", mtime: now)
+            .where(
+              id: m[:id].to_i, status: 'created', mtime: m[:mtime])
+            .update(
+              status: 'reserved', mtime: now, munit: @unit.identifier)
 
           raise Sequel::Rollback if c != 1
 
@@ -302,11 +308,14 @@ module Flor
 
         if @archive
           @db[:flor_messages]
-            .where(id: messages.collect { |m| m['mid'] }.compact)
-            .update(status: 'consumed', mtime: Flor.tstamp)
+            .where(
+              id: messages.collect { |m| m['mid'] }.compact)
+            .update(
+              status: 'consumed', mtime: Flor.tstamp, munit: @unit.identifier)
         else
           @db[:flor_messages]
-            .where(id: messages.collect { |m| m['mid'] }.compact)
+            .where(
+              id: messages.collect { |m| m['mid'] }.compact)
             .delete
         end
       end
@@ -322,16 +331,17 @@ module Flor
       return if ms.empty?
 
       n = Flor.tstamp
+      u = @unit.identifier
 
       synchronize(syn) do
 
         @db[:flor_messages]
           .import(
             [ :domain, :exid, :point, :content,
-              :status, :ctime, :mtime ],
+              :status, :ctime, :mtime, :cunit, :munit ],
             ms.map { |m|
               [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
-                'created', n, n ]
+                'created', n, n, u, u ]
             })
       end
 
@@ -355,6 +365,7 @@ module Flor
       next_time = compute_next_time(type, string)
 
       now = Flor.tstamp
+      u = @unit.identifier
 
       synchronize do
 
@@ -369,7 +380,9 @@ module Flor
           count: 0,
           status: 'active',
           ctime: now,
-          mtime: now)
+          mtime: now,
+          cunit: u,
+          munit: u)
       end
 
       @unit.wake_up
@@ -401,6 +414,7 @@ module Flor
       exid = node['exid']
       dom = Flor.domain(exid)
       now = Flor.tstamp
+      u = @unit.identifier
 
       id =
         synchronize do
@@ -418,7 +432,9 @@ module Flor
             content: to_blob(tra),
             status: 'active',
             ctime: now,
-            mtime: now)
+            mtime: now,
+            cunit: u,
+            munit: u)
         end
 
       traps[id]
@@ -441,7 +457,8 @@ module Flor
           nid: nid,
           tracer: tracer,
           text: text,
-          ctime: Flor.tstamp)
+          ctime: Flor.tstamp,
+          cunit: @unit.identifier)
       end
     end
 
@@ -459,7 +476,8 @@ module Flor
             nid: msg['nid'],
             type: 'tasker',
             name: tname,
-            ctime: Flor.tstamp)
+            ctime: Flor.tstamp,
+            cunit: @unit.identifier)
       end
     end
 
@@ -520,7 +538,8 @@ module Flor
             count: t.count.to_i + 1,
             status: 'active',
             ntime: compute_next_time(t.type, t.schedule, t.ntime_t),
-            mtime: Flor.tstamp)
+            mtime: Flor.tstamp,
+            munit: @unit.identifier)
 
       elsif @archive
 
@@ -529,7 +548,8 @@ module Flor
           .update(
             count: t.count.to_i + 1,
             status: 'triggered',
-            mtime: Flor.tstamp)
+            mtime: Flor.tstamp,
+            munit: @unit.identifier)
 
       else
 
@@ -560,6 +580,7 @@ module Flor
 
     def update_pointers(exe, status, now)
 
+# TODO archive old pointers???
       exid = exe['exid']
 
       if status == 'terminated'
@@ -577,20 +598,21 @@ module Flor
           # Delete pointers to gone nodes.
 
       dom = Flor.domain(exid)
+      u = @unit.identifier
 
       pointers =
         exe['nodes'].inject([]) { |a, (nid, node)|
           ts = node['tags']
-          ts.each { |t| a << [ dom, exid, nid, 'tag', t, nil, now ] } if ts
+          ts.each { |t| a << [ dom, exid, nid, 'tag', t, nil, now, u ] } if ts
           a
         }
 
       pointers +=
         (exe['nodes']['0'] || { 'vars' => {} })['vars'].collect { |k, v|
           case v; when Integer, String, TrueClass, FalseClass
-            [ dom, exid, '0', 'var', k, v.to_s, now ]
+            [ dom, exid, '0', 'var', k, v.to_s, now, u ]
           when NilClass
-            [ dom, exid, '0', 'var', k, nil, now ]
+            [ dom, exid, '0', 'var', k, nil, now, u ]
           else
             nil
           end
@@ -598,21 +620,21 @@ module Flor
 
       pointers +=
         exe['tasks'].collect { |nid, v|
-          [ dom, exid, nid, 'tasker', v['tasker'], v['name'], now ]
+          [ dom, exid, nid, 'tasker', v['tasker'], v['name'], now, u ]
         }
 
       cps = @db[:flor_pointers] # current pointers
         .where(exid: exid)
         .select(:nid, :type, :name)
         .all
-      pointers.reject! { |_, _, ni, ty, na, _, _|
+      pointers.reject! { |_, _, ni, ty, na, _, _, _|
         cps.find { |cp| cp[:nid] == ni && cp[:type] == ty && cp[:name] == na } }
           #
           # don't insert when already inserted
 
       @db[:flor_pointers]
         .import(
-          [ :domain, :exid, :nid, :type, :name, :value, :ctime ],
+          [ :domain, :exid, :nid, :type, :name, :value, :ctime, :cunit ],
           pointers)
     end
 
