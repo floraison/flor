@@ -250,7 +250,11 @@ module Flor
       @archive ||= {} if opts[:archive]
         # all subsequent launches will be `archive: true` ...
 
-      unit = opts[:unit] || @conf['unit'] || 'u0'
+      unit =
+        opts[:unit] ||
+        @conf['unit'] ||
+        @conf['uni_name'] ||
+        'u0'
 
       @logger.log_src(source, opts)
 

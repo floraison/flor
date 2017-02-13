@@ -51,6 +51,35 @@ module Flor
     #   (before quitting and passing the hand)
     #
 
+    def self.read(s)
+
+      h = {}
+      h.merge!(Flor::ConfExecutor.interpret(s))
+      h.merge!(interpret_flor_debug(h['flor_debug']))
+
+      h
+    end
+
+    def self.read_env
+
+      h = {}
+      h.merge!(interpret_env)
+      h.merge!(interpret_flor_debug(ENV['FLOR_DEBUG']))
+
+      h
+    end
+
+    def self.get_class(conf, key)
+
+      if v = conf[key]
+        Kernel.const_get(v)
+      else
+        nil
+      end
+    end
+
+    protected # somehow
+
     LOG_DBG_KEYS = %w[ dbg msg err src tree tree_rw run ]
     LOG_ALL_KEYS = %w[ all log sto ] + LOG_DBG_KEYS
 
@@ -84,25 +113,13 @@ module Flor
       h
     end
 
-    def self.read(s)
+    def self.interpret_env
 
-      h = Flor::ConfExecutor.interpret(s)
+      h = {}
+      u = ENV['FLOR_UNIT']
+      h['unit'] = u if u
 
-      h.merge!(interpret_flor_debug(h['flor_debug']))
-    end
-
-    def self.read_env
-
-      interpret_flor_debug(ENV['FLOR_DEBUG'])
-    end
-
-    def self.get_class(conf, key)
-
-      if v = conf[key]
-        Kernel.const_get(v)
-      else
-        nil
-      end
+      h
     end
   end
 end
