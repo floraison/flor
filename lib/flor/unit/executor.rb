@@ -41,7 +41,9 @@ module Flor
 
       @messages =
         messages.collect { |m|
-          Flor::Storage.from_blob(m[:content]).tap { |mm| mm['mid'] = m[:id] }
+          Flor::Storage
+            .from_blob(m[:content])
+            .tap { |mm| mm['mid'] = m[:id].to_i }
         }
       @consumed = []
 

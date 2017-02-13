@@ -135,9 +135,9 @@ module Flor
 
         ex = from_blob(e[:content])
 
-        fail("couldn't parse execution (db id #{e[:id]})") unless ex
+        fail("couldn't parse execution (db id #{e[:id].to_i})") unless ex
 
-        ex['id'] = e[:id]
+        ex['id'] = e[:id].to_i
         ex['size'] = e[:content].length
 
         ex
@@ -173,7 +173,7 @@ module Flor
         if id
 
           @db[:flor_executions]
-            .where(id: id)
+            .where(id: id.to_i)
             .update(
               content: data,
               status: status,
@@ -190,6 +190,7 @@ module Flor
                 status: 'active',
                 ctime: now,
                 mtime: now)
+              .to_i
         end
 
         remove_nodes(ex, status, now)
@@ -243,7 +244,7 @@ module Flor
         messages.each do |m|
 
           c = @db[:flor_messages]
-            .where(id: m[:id], status: 'created', mtime: m[:mtime])
+            .where(id: m[:id].to_i, status: 'created', mtime: m[:mtime])
             .update(status: "reserved-#{@unit.identifier}", mtime: now)
 
           raise Sequel::Rollback if c != 1
@@ -509,14 +510,14 @@ module Flor
 
     def reschedule_timer(t)
 
-      w = { id: t.id, status: 'active', mtime: t.mtime }
+      w = { id: t.id.to_i, status: 'active', mtime: t.mtime }
 
       if t.type != 'at' && t.type != 'in'
 
         @db[:flor_timers]
           .where(w)
           .update(
-            count: t.count + 1,
+            count: t.count.to_i + 1,
             status: 'active',
             ntime: compute_next_time(t.type, t.schedule, t.ntime_t),
             mtime: Flor.tstamp)
@@ -526,7 +527,7 @@ module Flor
         @db[:flor_timers]
           .where(w)
           .update(
-            count: t.count + 1,
+            count: t.count.to_i + 1,
             status: 'triggered',
             mtime: Flor.tstamp)
 
