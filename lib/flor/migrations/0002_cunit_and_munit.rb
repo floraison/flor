@@ -30,6 +30,11 @@ Sequel.migration do
     alter_table :flor_pointers do
 
       add_column :cunit, String
+
+      add_column :mtime, String
+      add_column :munit, String
+        #
+        # those 2 could prove useful later on
     end
 
     alter_table :flor_traces do
@@ -67,6 +72,9 @@ Sequel.migration do
     alter_table :flor_pointers do
 
       drop_column :cunit
+
+      drop_column :mtime
+      drop_column :munit
     end
 
     alter_table :flor_traces do
