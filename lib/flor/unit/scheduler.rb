@@ -84,6 +84,11 @@ module Flor
       @archive = nil # used, so far, only for testing
     end
 
+    def name
+
+      @conf['unit'] || @conf['uni_name'] || 'u0'
+    end
+
     def storage_mutex
 
       @storage.mutex
@@ -99,8 +104,9 @@ module Flor
           ip =
             ai ? ai.ip_address : '::1'
           [
-            'sch', 'i' + ip, 'p' + Process.pid.to_s, 'o' + self.object_id.to_s
-          ].join('_')
+            'sch', self.name,
+            'i' + ip, 'p' + Process.pid.to_s, 'o' + self.object_id.to_s
+          ].join('-')
         end
     end
 
@@ -250,13 +256,9 @@ module Flor
       @archive ||= {} if opts[:archive]
         # all subsequent launches will be `archive: true` ...
 
-      unit =
-        opts[:unit] ||
-        @conf['unit'] ||
-        @conf['uni_name'] ||
-        'u0'
-
       @logger.log_src(source, opts)
+
+      unit = opts[:unit] || self.name
 
       exid = Flor.generate_exid(domain, unit)
       msg = Flor.make_launch_msg(exid, source, opts)
