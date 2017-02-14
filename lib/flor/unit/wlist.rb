@@ -63,7 +63,14 @@ module Flor
 
     def wait(exid, opts)
 
-      opts = { wait: opts } if opts.is_a?(String) || opts == true
+      exid, opts =
+        if opts == true && exid == 'idle'
+          [ nil, { wait: exid } ]
+        elsif opts == true || opts.is_a?(String)
+          [ exid, { wait: opts } ]
+        else
+          [ exid, opts ]
+        end
 
       @mutex.synchronize do
 

@@ -148,5 +148,38 @@ describe Flor::Waiter do
         point exid start duration consumed counters nodes size er pr ])
     end
   end
+
+  context 'when called via unit#wait' do
+
+    before :each do
+
+      @unit = Flor::Unit.new('envs/test/etc/conf.json')
+      @unit.conf['unit'] = 'unitwaittest'
+      @unit.storage.delete_tables
+      @unit.storage.migrate
+      @unit.start
+    end
+
+    after :each do
+
+      @unit.shutdown
+    end
+
+    it 'lets wait until the scheduler gets idle' do
+
+      @unit.launch(%{ sleep 10 })
+
+      #r = @unit.wait(nil, 'idle')
+      r = @unit.wait('idle')
+
+      expect(r['point']).to eq('idle')
+      expect(r['exid']).to eq(nil)
+
+      expect(r.keys).to eq(%w[
+        point idle_count consumed ])
+
+      expect(r['idle_count']).to eq(1)
+    end
+  end
 end
 
