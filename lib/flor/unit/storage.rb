@@ -249,7 +249,8 @@ module Flor
 
           c = @db[:flor_messages]
             .where(
-              id: m[:id].to_i, status: 'created', mtime: m[:mtime])
+              id: m[:id].to_i, status: 'created',
+              mtime: m[:mtime], munit: m[:munit])
             .update(
               status: 'reserved', mtime: now, munit: @unit.identifier)
 
@@ -528,7 +529,7 @@ module Flor
 
     def reschedule_timer(t)
 
-      w = { id: t.id.to_i, status: 'active', mtime: t.mtime }
+      w = { id: t.id.to_i, status: 'active', mtime: t.mtime, munit: t.munit }
 
       if t.type != 'at' && t.type != 'in'
 
