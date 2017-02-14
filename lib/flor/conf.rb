@@ -27,7 +27,6 @@ module Flor
 
   module Conf
 
-    #
     # * uni_ unit prefix (or no prefix like for :env)
     # * sch_ scheduler prefix
     # * sto_ storage prefix
@@ -35,27 +34,56 @@ module Flor
     # * log_ logger prefix
     #
     #
-    # * :sch_heart_rate
-    #   defaults to 0.3s, checks for exids to run and timers to triggers
-    #   at least every 0.3s
+    # * :uni_name
+    #   The name for the unit (Scheduler+Storage) pair.
+    #   The name must match the following regex: `/\A[a-zA-Z0-9_]+\z/`
+    #   Can also be set via the FLOR_UNIT environment variable.
     #
-    # * :sch_reload_frequency
-    #   resync (reload) with db after how much time? (defaults to 60 (seconds))
+    # * :sch_heart_rate
+    #   Defaults to 0.3s, every 0.3s the scheduler checks its @wake_up and
+    #   @next_time fields to determine if it has to run (no db query)
+    #   @wake_up is set to true when there are incoming messages give to
+    #   this unit, @next_time simply holds the timestamp for the next timer
+    #   that has to trigger
+    #
+    # * :sch_reload_after
+    #   reload/resync with db after how much time? (defaults to 60 (seconds))
+    #   minimizes communication with db in idle periods
     #
     # * :sch_max_executors
-    #   how many executor thread at most? (defaults to 7, 1 is OK in certain
+    #   How many executor thread at most? (defaults to 7, 1 is OK in certain
     #   environments)
     #
     # * :exe_max_messages
-    #   how many messages will an executor run in a single session
-    #   (before quitting and passing the hand)
+    #   How many messages will an executor run in a single session
+    #   (before quitting and passing the hand) Defaults to 77
+    #   An executor will not run indefinitely as long as they are messages.
+    #   The goal is to prevent an execution from monopolizing an executor.
     #
+    # And finally:
+    #
+    # * :flor_debug or :debug
+    #
+    #   Usually set via the FLOR_DEBUG environment variable.
+    #   * `msg` displays the flor messages in a summary, colored format
+    #   * `err` displays errors with details, when and if they happen
+    #   * `src` displays the source before it gets parsed and launched
+    #   * `tree` displays the syntax tree as parsed from the source, right
+    #     before launch
+    #   * `run` shows info about each [run](doc/glossary.md#run) that just ended
+    #   * `sto` displays debug information about the
+    #           [storage](doc/glossary.md#storage), it's mostly SQL statements
+    #
+    #   * `stdout` states that the debug messages must go to STDOUT
+    #   * `stderr` states that the debug messages must go to STDERR
+    #
+    #   For example `debug: 'msg,stdout'`
 
     def self.read(s)
 
       h = {}
       h.merge!(Flor::ConfExecutor.interpret(s))
-      h.merge!(interpret_flor_debug(h['flor_debug']))
+      h.merge!(interpret_flor_debug(h['flor_debug'] || h['debug']))
 
       h
     end
