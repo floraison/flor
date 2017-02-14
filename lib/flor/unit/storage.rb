@@ -261,6 +261,8 @@ module Flor
       end
 
       count == messages.size
+        # true means success: all the messages could be reserved,
+        # executor is clear to work on the execution
 
     rescue => err
 
@@ -268,6 +270,7 @@ module Flor
         "#{self.class}#reserve_all_messages()", err, '(returning false)')
 
       false
+        # failure
     end
 
     def any_message?
