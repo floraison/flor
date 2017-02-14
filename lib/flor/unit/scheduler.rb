@@ -73,6 +73,8 @@ module Flor
       @next_time = nil
       @reloaded_at = Time.now
 
+      @idle_count = 0
+
       @max_executors = @conf[:sch_max_executors] || 1
         #
       @executors = []
@@ -191,6 +193,11 @@ module Flor
                   reload_next_time
                   reload_wake_up
                   @reloaded_at = Time.now
+
+                elsif @executors.empty?
+
+                  @idle_count += 1
+                  notify(nil, make_idle_message)
                 end
 
                 sleep [ @heart_rate - (Time.now - t0), 0 ].max #\
@@ -321,7 +328,11 @@ module Flor
 
     def notify(executor, o)
 
-      @hooker.notify(executor, o)
+      if executor
+        @hooker.notify(executor, o)
+      else
+        @hooker.wlist.notify(nil, o)
+      end
 
     rescue => err
       puts '-sch' * 19
@@ -363,6 +374,16 @@ module Flor
 
     protected
 
+    def make_idle_message
+
+      m = {}
+      m['point'] = 'idle'
+      m['idle_count'] = @idle_count
+      m['consumed'] = true
+
+      m
+    end
+
 #    # return [ domain, tree ]
 #    #
 #    def extract_domain_and_tree(s, opts)
@@ -402,7 +423,7 @@ module Flor
 
     def trigger_executions
 
-      @executors = @executors.select { |e| e.alive? }
+      @executors.select! { |e| e.alive? }
         # drop done executors
 
       free_executor_count = @max_executors - @executors.size
@@ -414,6 +435,8 @@ module Flor
       messages.each do |exid, ms|
 
         next unless @storage.reserve_all_messages(ms)
+
+        @idle_count = 0
 
         @executors << UnitExecutor.new(self, ms).run
       end

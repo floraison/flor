@@ -97,11 +97,15 @@ module Flor
 
     def match?(message)
 
-      return false if @exid && @exid != message['exid']
+      mpoint = message['point']
+
+      return false if @exid && @exid != message['exid'] && mpoint != 'idle'
 
       nid, points = @serie.first
-      return false if nid && message['nid'] && nid != message['nid']
-      return false if ! points.include?(message['point'])
+      mnid = message['nid']
+
+      return false if nid && mnid && nid != mnid
+      return false if ! points.include?(mpoint)
 
       true
     end

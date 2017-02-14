@@ -124,7 +124,18 @@ describe Flor::Waiter do
       @unit.shutdown
     end
 
-    it 'lets wait until the scheduler gets idle'
+    it 'lets wait until the scheduler gets idle' do
+
+      r = @unit.launch(%{ sleep 10 }, wait: %w[ idle ] * 4)
+
+      expect(r['point']).to eq('idle')
+      expect(r['exid']).to eq(nil)
+
+      expect(r.keys).to eq(%w[
+        point idle_count consumed ])
+
+      expect(r['idle_count']).to eq(4)
+    end
 
     it 'lets wait until the executor run ends' do
 

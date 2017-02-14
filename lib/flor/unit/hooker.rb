@@ -50,6 +50,11 @@ module Flor
       h ? h[2] || h[3] : nil
     end
 
+    def wlist
+
+      @wlist ||= self['wlist']
+    end
+
     def add(*args, &block)
 
       name = nil
