@@ -52,6 +52,7 @@ describe 'Flor punit' do
         signal:0:close
         receive::
         terminated::
+        end::
       ].join("\n"))
     end
   end

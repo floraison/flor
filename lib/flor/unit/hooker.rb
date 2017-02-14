@@ -113,7 +113,6 @@ module Flor
 
     def match?(executor, hook, opts, message)
 
-#p opts if hook.is_a?(Flor::Trap)
       opts = hook.opts if hook.respond_to?(:opts) && opts.empty?
 
       c = o(opts, :consumed, :c)
@@ -125,7 +124,6 @@ module Flor
         return false if hook.within_itself?(executor, message)
       end
 
-#p :xxx if hook.is_a?(Flor::Trap)
       ps = o(opts, :point, :p, [])
       return false if ps && ! ps.include?(message['point'])
 

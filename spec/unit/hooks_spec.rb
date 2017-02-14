@@ -89,7 +89,7 @@ describe 'Flor unit' do
 
       sleep 0.350
 
-      expect([ ms.size, cms.size, ncms.size ]).to eq([ 14, 7, 7 ])
+      expect([ ms.size, cms.size, ncms.size ]).to eq([ 15, 8, 7 ])
     end
 
     it 'may filter on point:/p:' do
@@ -139,9 +139,9 @@ end
 
       sleep 0.4
 
-      expect(ms0.size).to eq(10)
-      expect(ms1.size).to eq(20)
-      expect(ms2.size).to eq(30)
+      expect(ms0.size).to eq(11)
+      expect(ms1.size).to eq(22)
+      expect(ms2.size).to eq(33)
       expect(ms3.size).to eq(0)
     end
 
@@ -163,8 +163,8 @@ end
 
       sleep 0.4
 
-      expect(ms0.size).to eq(20)
-      expect(ms1.size).to eq(30)
+      expect(ms0.size).to eq(22)
+      expect(ms1.size).to eq(33)
       expect(ms2.size).to eq(0)
     end
 

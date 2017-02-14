@@ -67,6 +67,7 @@ describe 'Flor punit' do
         receive::
         left:0:z
         terminated::
+        end::
       ].join("\n"))
     end
 
@@ -200,11 +201,13 @@ describe 'Flor punit' do
         ).to eq(%w[
               m12s10-e1p1-task-0_0
               m13s11-e1p1-task-0_1
+ms-e1p1-end-
             m14s-ep2-cancel-0
               m15s14-e2p2-cancel-0_0
               m16s14-e2p2-cancel-0_1
               m17s15-e2p2-detask-0_0
               m18s16-e2p2-detask-0_1
+ms-e2p2-end-
               m19s-ep3-return-0_0
               m20s-ep3-return-0_1
               m21s-e3p3-receive-0_0
@@ -213,6 +216,7 @@ describe 'Flor punit' do
             m24s22-e3p3-receive-0
           m25s24-e3p3-receive-
           m26s25-e3p3-terminated-
+ms-e3p3-end-
         ].join("\n"))
       end
     end

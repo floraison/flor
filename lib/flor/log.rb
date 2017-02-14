@@ -27,6 +27,8 @@ module Flor
 
   def self.log_message(executor, m, opts={})
 
+    return if m['point'] == 'end'
+
     _c = colours(opts)
 
     nid = m['nid']

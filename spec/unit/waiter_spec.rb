@@ -106,5 +106,36 @@ describe Flor::Waiter do
       ])
     end
   end
+
+  context 'as a launch option' do
+
+    before :each do
+
+      @unit = Flor::Unit.new('envs/test/etc/conf.json')
+      @unit.conf['unit'] = 'waitertest'
+      #@unit.hook('journal', Flor::Journal)
+      @unit.storage.delete_tables
+      @unit.storage.migrate
+      @unit.start
+    end
+
+    after :each do
+
+      @unit.shutdown
+    end
+
+    it 'lets wait until the scheduler gets idle'
+
+    it 'lets wait until the executor run ends' do
+
+      r = @unit.launch(%{ sleep 10 }, wait: 'end')
+
+      expect(r['point']).to eq('end')
+      expect(r['exid']).not_to eq(nil)
+
+      expect(r.keys).to eq(%w[
+        point exid start duration consumed counters nodes size er pr ])
+    end
+  end
 end
 

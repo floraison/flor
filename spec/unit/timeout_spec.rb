@@ -106,7 +106,7 @@ describe 'Flor unit' do
 
       expect(@unit.timers.count).to eq(0)
 
-      expect(@unit.journal.last['point']).to eq('terminated')
+      expect(@unit.journal.last['point']).to eq('end')
       expect(@unit.journal.select { |m| m['point'] == 'cancel' }.size).to eq(0)
     end
   end

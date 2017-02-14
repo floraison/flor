@@ -145,6 +145,7 @@ describe 'Flor punit' do
         receive
         0:left:x
         terminated
+        end
       ].join("\n"))
     end
 

@@ -116,7 +116,11 @@ module Flor
       @unit.storage.put_execution(@execution)
       @unit.storage.put_messages(@messages)
 
-      @unit.logger.log_run_end(self, t0)
+      du = Time.now - t0
+      t0 = Flor.tstamp(t0)
+
+      @unit.logger.log_run_end(self, t0, du)
+      @unit.hooker.notify(self, make_end_message(t0, du))
 
       @consumed.clear
 
@@ -204,6 +208,24 @@ module Flor
       io.puts ' \\' + t + ' ' + (head * 17) + ' .'
 
       io.string
+    end
+
+    def make_end_message(start, duration)
+
+      m = {}
+      m['point'] = 'end'
+      m['exid'] = @exid
+      m['start'] = start
+      m['duration'] = "#{duration}s"
+      m['consumed'] = @consumed.size
+      m['counters'] = Flor.dup(@execution['counters'])
+      m['nodes'] = @execution['nodes'].size
+      m['size'] = @execution['size']
+      m['archive_size'] = @unit.archive[@exid].size if @unit.archive
+      m['er'] = @execution['counters']['runs'] # "emitting run"
+      m['pr'] = m['er'] # "processing run"
+
+      m
     end
   end
 end

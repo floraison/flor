@@ -142,7 +142,7 @@ module Flor
       @out.puts(s.string)
     end
 
-    def log_run_end(executor, t0)
+    def log_run_end(executor, tstamp, duration)
 
       return unless @unit.conf['log_run']
 
@@ -152,7 +152,7 @@ module Flor
 
       s << _c.dg
       s << "    |   run ends #{self.class} #{self.object_id} #{@exid}"
-      s << "\n    |   "; s << { took: Time.now - t0 }.inspect
+      s << "\n    |   "; s << { started: tstamp, took: duration }.inspect
       s << "\n    |   "; s << {
         thread: Thread.current.object_id,
         consumed: executor.consumed.count,
