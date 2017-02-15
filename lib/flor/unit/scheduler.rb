@@ -111,7 +111,7 @@ module Flor
             'sch', self.name,
             'i' + ip,
             'p' + Process.pid.to_s,
-            'o' + self.object_id.to_s(16)[-5..-1]
+            'o' + (self.object_id % 100_000).to_s(32)
           ].join('-')
         end
     end
