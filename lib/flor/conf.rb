@@ -60,6 +60,15 @@ module Flor
     #   An executor will not run indefinitely as long as they are messages.
     #   The goal is to prevent an execution from monopolizing an executor.
     #
+    # * :sch_msg_max_res_time
+    #   Should an executor fail, its reserved messages may stay put.
+    #   Each time the scheduler goes to the database to trigger messages,
+    #   it first updates messages that have been "reserved" for too long
+    #   and sets them back as "created" so that they may be picked again.
+    #   This values defaults to 10 * 60 seconds. After 10 minutes in the
+    #   "reserved" state, messages are put back in the "created" state
+    #   (by a running unit (scheduler) if any).
+    #
     # And finally:
     #
     # * :flor_debug or :debug

@@ -362,6 +362,20 @@ module Flor
       put_messages([ m ])
     end
 
+    def unreserve_messages(max_sec)
+
+      tstamp = Flor.tstamp(Time.now - max_sec)
+      tstamp = tstamp[0..tstamp.rindex('.')]
+
+      synchronize do
+
+        @db[:flor_messages]
+          .where(status: 'reserved')
+          .where { mtime < tstamp }
+          .update(status: 'created')
+      end
+    end
+
     def put_timer(message)
 
       type, string = determine_type_and_schedule(message)

@@ -73,6 +73,8 @@ module Flor
       @next_time = nil
       @reloaded_at = Time.now
 
+      @msg_max_res_time = @conf[:sch_msg_max_res_time] || 10 * 60
+
       @idle_count = 0
 
       @max_executors = @conf[:sch_max_executors] || 1
@@ -107,7 +109,9 @@ module Flor
             ai ? ai.ip_address : '::1'
           [
             'sch', self.name,
-            'i' + ip, 'p' + Process.pid.to_s, 'o' + self.object_id.to_s
+            'i' + ip,
+            'p' + Process.pid.to_s,
+            'o' + self.object_id.to_s(16)[-5..-1]
           ].join('-')
         end
     end
@@ -186,6 +190,8 @@ module Flor
                 t0 = Time.now
 
                 if should_wake_up?
+
+                  unreserve_messages
 
                   trigger_timers
                   trigger_executions
@@ -414,6 +420,15 @@ module Flor
       return false unless @next_time
 
       @next_time <= Flor.tstamp.split('.').first
+    end
+
+    def unreserve_messages
+
+      c = @storage.unreserve_messages(@msg_max_res_time)
+
+      @logger.info(
+        "#{self.class}#unreserve_messages", "#{c} message#{c > 1 ? 's' : ''}"
+      ) if c > 0
     end
 
     def trigger_timers

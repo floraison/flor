@@ -365,6 +365,35 @@ describe 'Flor unit' do
         ])
       end
     end
+
+    context 'sch_msg_max_res_time' do
+
+      it 'flags as "active" messages that have been reserved for too long' do
+
+        dom = 'dom0'
+        exid = Flor.generate_exid(dom, @unit.name)
+        msg = Flor.make_launch_msg(exid, %{ sequence }, {})
+
+        ctime = Flor.tstamp(Time.now - 15 * 60)
+        mtime = Flor.tstamp(Time.now - 14 * 60)
+
+        @unit.storage.db[:flor_messages].insert(
+          domain: dom,
+          exid: exid,
+          point: 'execute',
+          content: Flor::Storage.to_blob(msg),
+          status: 'reserved',
+          ctime: ctime,
+          cunit: 'some-unit',
+          mtime: mtime,
+          munit: 'some-unit')
+
+        r = @unit.wait(exid, 'terminated')
+
+        expect(r['point']).to eq('terminated')
+        expect(r['exid']).to eq(exid)
+      end
+    end
   end
 end
 
