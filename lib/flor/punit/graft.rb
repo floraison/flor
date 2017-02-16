@@ -35,10 +35,16 @@ class Flor::Pro::Graft < Flor::Procedure
 
   def receive_last
 
-    subflow =
-      att('flow', 'subflow', nil)
+    # look up subtree
+
+    sub =
+      att('tree', 'subtree', 'flow', 'subflow', nil)
     source_path, source =
-      @executor.unit.loader.library(domain, subflow, subflows: true)
+      @executor.unit.loader.library(domain, sub, subflows: true)
+
+    fail ArgumentError.new(
+      "no subtree #{sub.inspect} found (domain #{domain.inspect})"
+    ) unless source
 
     tree = Flor::Lang.parse(source, source_path, {})
 

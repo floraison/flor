@@ -27,7 +27,19 @@ describe 'Flor punit' do
 
   describe 'graft' do
 
-    it 'fails if it cannot find the subtree'
+    it 'fails if it cannot find the subtree' do
+
+      flor = %{
+        graft 'sub99'
+      }
+
+      r = @unit.launch(flor, wait: true)
+
+      expect(r['point']).to eq(
+        'failed')
+      expect(r['error']['msg']).to eq(
+        'no subtree "sub99" found (domain "test")')
+    end
 
     it 'grafts a subtree in the current tree' do
 
@@ -53,7 +65,7 @@ describe 'Flor punit' do
         stack 2
       }
 
-      r = @unit.launch(flor, domain: 'com.acme.alpha', wait: true)
+      r = @unit.launch(flor, wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq([ 1, 2 ])
