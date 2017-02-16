@@ -485,6 +485,8 @@ class Flor::Procedure < Flor::Node
     cni = fun[1]['cnid'] # closure nid
 
     t = lookup_tree(fni)
+    fail ArgumentError.new("couldn't find function at #{fni}") unless t
+
     t = t[0] if fun[1]['head']
 
     sig = t[1].select { |c| c[0] == '_att' }
