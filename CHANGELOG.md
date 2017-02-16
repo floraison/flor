@@ -4,6 +4,7 @@
 
 ## flor 0.10.0  not yet released
 
+- Implement "graft"
 - Link unit name and unit identifier
 - Scheduler rework, emphasis on optimistic locking for messages and timers
 

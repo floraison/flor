@@ -45,7 +45,7 @@ module Flor
         .select { |f| f.index('/etc/variables/') }
         .sort # just to be sure
         .sort_by(&:length)
-        .select { |f| path_matches?(domain, f) }
+        .select { |f| path_matches?(domain, f, {}) }
         .inject({}) { |vars, f| vars.merge!(interpret(f)) }
     end
 
@@ -57,8 +57,9 @@ module Flor
 
     # If found, returns [ source_path, path ]
     #
-    def library(domain, name=nil)
+    def library(domain, name=nil, opts={})
 
+      domain, name, opts = [ domain, nil, name ] if name.is_a?(Hash)
       domain, name = split_dn(domain, name)
 
       path =
@@ -66,7 +67,7 @@ module Flor
           .sort
           .sort_by(&:length)
           .select { |f| f.index('/lib/') }
-          .select { |f| path_name_matches?(domain, name, f) }
+          .select { |f| path_name_matches?(domain, name, f, opts) }
           .first
 
       path ? [ Flor.relativize_path(path), File.read(path) ] : nil
@@ -112,7 +113,7 @@ module Flor
       path = Dir[File.join(root, '**/*.json')]
         .select { |f| f.index('/lib/taskers/') }
         .sort # just to be sure
-        .select { |f| path_name_matches?(domain, name, f) }
+        .select { |f| path_name_matches?(domain, name, f, {}) }
         .last
 
       path ? interpret(path) : nil
@@ -139,14 +140,19 @@ module Flor
       end
     end
 
-    def path_matches?(domain, f)
+    def path_matches?(domain, f, opts)
 
       f = f[root.length..-1]
       f = f[5..-1] if f[0, 5] == '/usr/'
 
+      libregex =
+        opts[:subflows] ?
+        /\/lib\/(subflows|flows|taskers)\// :
+        /\/lib\/(flows|taskers)\//
+
       f = f
         .sub(/\/etc\/variables\//, '/')
-        .sub(/\/lib\/(flows|taskers)\//, '/')
+        .sub(libregex, '/')
         .sub(/\/\z/, '')
         .sub(/\/(flo|flor|dot)\.json\z/, '')
         .sub(/\.(flo|flor|json)\z/, '')
@@ -157,14 +163,14 @@ module Flor
       domain[0, f.length] == f
     end
 
-    def path_name_matches?(domain, name, f)
+    def path_name_matches?(domain, name, f, opts)
 
       f = f.sub(/\/(flo|flor|dot)\.json\z/, '.json')
 
-#p [ domain, name, f ]
       return false if File.basename(f).split('.').first != name
+#p [ domain, name, f ]
 
-      path_matches?(domain, File.dirname(f) + '/')
+      path_matches?(domain, File.dirname(f) + '/', opts)
     end
 
     def interpret(path)
