@@ -4,6 +4,9 @@
 
 ## flor 0.10.0  not yet released
 
+- Link unit name and unit identifier
+- Scheduler rework, emphasis on optimistic locking for messages and timers
+
 
 ## flor 0.9.5  released 2017-02-10
 
