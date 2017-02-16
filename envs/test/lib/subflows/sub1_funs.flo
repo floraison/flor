@@ -1,0 +1,6 @@
+
+# sub1_funs
+
+define stack x
+  push a x
+
