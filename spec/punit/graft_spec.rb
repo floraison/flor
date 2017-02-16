@@ -27,6 +27,8 @@ describe 'Flor punit' do
 
   describe 'graft' do
 
+    it 'fails if it cannot find the subtree'
+
     it 'grafts a subtree in the current tree' do
 
       flor = %{
@@ -42,20 +44,20 @@ describe 'Flor punit' do
       expect(r['vars']['a']).to eq([ 1, 1 ])
     end
 
-    it 'grafts a subtree with function definitions'
-#
-#      flor = %{
-#        set a []
-#        graft 'sub1_funs'
-#        stack 1
-#        stack 2
-#      }
-#
-#      r = @unit.launch(flor, domain: 'com.acme.alpha', wait: true)
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['vars']['a']).to eq([ 1, 2 ])
-#    end
+    it 'grafts a subtree with function definitions' do
+
+      flor = %{
+        set a []
+        graft 'sub1_funs'
+        stack 1
+        stack 2
+      }
+
+      r = @unit.launch(flor, domain: 'com.acme.alpha', wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['a']).to eq([ 1, 2 ])
+    end
   end
 end
 

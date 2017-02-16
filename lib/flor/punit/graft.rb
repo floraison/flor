@@ -29,12 +29,11 @@ class Flor::Pro::Graft < Flor::Procedure
 
   def pre_execute
 
+    @node['execute_message'] = Flor.dup(@message)
     @node['atts'] = []
   end
 
   def receive_last
-
-    return reply if @node['grafted']
 
     subflow =
       att('flow', 'subflow', nil)
@@ -43,11 +42,18 @@ class Flor::Pro::Graft < Flor::Procedure
 
     tree = Flor::Lang.parse(source, source_path, {})
 
-    @node['tree'] = Flor.dup(self.tree)
-    @node['tree'][1] << tree
-    @node['grafted'] = true
+    # graft subtree into parent node
 
-    execute_child(@node['tree'][1].size - 1)
+    parent_tree = lookup_tree(parent)
+    cid = Flor.child_id(nid)
+    parent_tree[1][cid] = tree
+
+    # re-apply self with subtree
+
+    m = @node['execute_message']
+    m['tree'] = tree
+
+    [ m ]
   end
 end
 
