@@ -119,16 +119,19 @@ describe Flor::Loader do
       expect(tc['description']).to eq('/cet/dot.json')
 
       tc = @loader.tasker('com.example.alpha.tasker')
-      expect(tc['description']).to eq('usr/ceat/dot.json')
+      expect(tc['description']).to eq('/usr/ceat/dot.json')
 
       tc = @loader.tasker('com.example.alpha', 'tasker')
-      expect(tc['description']).to eq('usr/ceat/dot.json')
+      expect(tc['description']).to eq('/usr/ceat/dot.json')
 
       tc = @loader.tasker('com.example.bravo.tasker')
-      expect(tc['description']).to eq('usr/cebt/flor.json')
+      expect(tc['description']).to eq('/usr/cebt/flor.json')
 
       tc = @loader.tasker('com.example.bravo', 'tasker')
-      expect(tc['description']).to eq('usr/cebt/flor.json')
+      expect(tc['description']).to eq('/usr/cebt/flor.json')
+
+      tc = @loader.tasker('com.example.charly', 'tasker')
+      expect(tc['description']).to eq('/cect.json')
     end
 
     it 'load a tasker configuration {name}.json' do

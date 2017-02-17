@@ -32,6 +32,9 @@ module Flor
     # * sto_ storage prefix
     # * exe_ executor prefix
     # * log_ logger prefix
+    # * loa_ loader prefix
+    # * gan_ ganger prefix
+    # * (tas_ tasker prefix)
     #
     #
     # * :uni_name

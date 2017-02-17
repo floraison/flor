@@ -43,10 +43,10 @@ module Flor
 
       Dir[File.join(root, '**/*.json')]
         .select { |f| f.index('/etc/variables/') }
-        .sort # just to be sure
-        .sort_by(&:length)
-        .select { |f| path_matches?(domain, f, {}) }
-        .inject({}) { |vars, f| vars.merge!(interpret(f)) }
+        .collect { |pa| [ pa, expose_d(pa, {}) ] }
+        .select { |pa, d| is_subdomain?(domain, d) }
+        .sort_by { |pa, d| d.count('.') }
+        .inject({}) { |vars, (pa, d)| vars.merge!(interpret(pa)) }
     end
 
     #def procedures(path)
@@ -62,64 +62,40 @@ module Flor
       domain, name, opts = [ domain, nil, name ] if name.is_a?(Hash)
       domain, name = split_dn(domain, name)
 
-      path =
-        (Dir[File.join(root, '**/*.{flo,flor}')])
-          .sort
-          .sort_by(&:length)
-          .select { |f| f.index('/lib/') }
-          .select { |f| path_name_matches?(domain, name, f, opts) }
-          .first
+      path, d, n = (Dir[File.join(root, '**/*.{flo,flor}')])
+        .select { |f| f.index('/lib/') }
+        .collect { |pa| [ pa, *expose_dn(pa, opts) ] }
+        .select { |pa, d, n| n == name && is_subdomain?(domain, d) }
+        .sort_by { |pa, d, n| d.count('.') }
+        .last
 
       path ? [ Flor.relativize_path(path), File.read(path) ] : nil
     end
 
-#    class FlowEnv
-#
-#      attr_accessor :path, :domain, :flow_name, :source, :variables, :payload
-#      alias :flow :flow_name
-#
-#      def initialize(loader, path)
-#
-#        @path = path
-#
-#        es = path.split('.')
-#        @domain, @flow_name = [ es[0..-2].join('.'), es[-1] ]
-#
-#        @source = loader.library(@domain, @flow_name)
-#        @variables = loader.variables(@domain)
-#        #@payload = ... # TODO at some point, if necessary...
-#
-#        fail ArgumentError.new(
-#          "could not find flow at #{@path.inspect}"
-#        ) unless @source
-#      end
-#
-#      def to_a
-#
-#        [ path, domain, flow, source, variables, payload ]
-#      end
-#    end
-#
-#    def flow_environment(path)
-#
-#      FlowEnv.new(self, path)
-#    end
-
     def tasker(domain, name=nil)
 
       domain, name = split_dn(domain, name)
-#p [ domain, name ]
 
-      path = Dir[File.join(root, '**/*.json')]
-        .select { |f| f.index('/lib/taskers/') }
-        .sort # just to be sure
-        .select { |f| path_name_matches?(domain, name, f, {}) }
+      path, d, n = Dir[File.join(root, '**/*.json')]
+        .select { |pa| pa.index('/lib/taskers/') }
+        .collect { |pa| [ pa, *expose_dn(pa, {}) ] }
+        .select { |pa, d, n| n == name && is_subdomain?(domain, d) }
+        .sort_by { |pa, d, n| d.count('.') }
         .last
 
       path ? interpret(path) : nil
     end
 
     protected
+
+    # is da a subdomain of db?
+    #
+    def is_subdomain?(da, db)
+
+      da == db ||
+      db == '' ||
+      da[0, db.length + 1] == db + '.'
+    end
 
     def split_dn(domain, name)
 
@@ -131,26 +107,17 @@ module Flor
       end
     end
 
-    def root
+    def expose_d(path, opts)
 
-      if lp = @unit.conf['lod_path']
-        File.absolute_path(lp)
-      else
-        File.dirname(File.absolute_path(@unit.conf['_path'] + '/..'))
-      end
-    end
-
-    def path_matches?(domain, f, opts)
-
-      f = f[root.length..-1]
-      f = f[5..-1] if f[0, 5] == '/usr/'
+      pa = path[root.length..-1]
+      pa = pa[5..-1] if pa[0, 5] == '/usr/'
 
       libregex =
         opts[:subflows] ?
         /\/lib\/(subflows|flows|taskers)\// :
         /\/lib\/(flows|taskers)\//
 
-      f = f
+      pa
         .sub(/\/etc\/variables\//, '/')
         .sub(libregex, '/')
         .sub(/\/\z/, '')
@@ -158,19 +125,26 @@ module Flor
         .sub(/\.(flo|flor|json)\z/, '')
         .sub(/\A\//, '')
         .gsub(/\//, '.')
-
-#p [ :pm, domain[0, f.length], f, '=>', domain[0, f.length] == f ]
-      domain[0, f.length] == f
     end
 
-    def path_name_matches?(domain, name, f, opts)
+    def expose_dn(path, opts)
 
-      f = f.sub(/\/(flo|flor|dot)\.json\z/, '.json')
+      pa = expose_d(path, opts)
 
-      return false if File.basename(f).split('.').first != name
-#p [ domain, name, f ]
+      if ri = pa.rindex('.')
+        [ pa[0..ri - 1], pa[ri + 1..-1] ]
+      else
+        [ '', pa ]
+      end
+    end
 
-      path_matches?(domain, File.dirname(f) + '/', opts)
+    def root
+
+      if lp = @unit.conf['lod_path']
+        File.absolute_path(lp)
+      else
+        File.dirname(File.absolute_path(@unit.conf['_path'] + '/..'))
+      end
     end
 
     def interpret(path)
