@@ -170,7 +170,7 @@ module Flor::Tools
     end
 
     def hlp_new
-      %w{ erases current execution code, vars and payload }
+      %{ erases current execution code, vars and payload }
     end
     def cmd_new(line)
 
