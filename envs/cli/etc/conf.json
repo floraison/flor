@@ -1,0 +1,22 @@
+
+env: cli
+domain: cli
+
+log_out: stdout
+#log_out: tmp
+#log_colours: true
+#flor_debug: 'stdout,dbg'
+#flor_debug: [ stdout dbg ]
+
+sto_uri: (ife
+  == ruby_platform 'java'
+  "jdbc:sqlite::memory:"
+  "sqlite::memory:")
+
+sto_sync: true
+  # let's the storage sync access to DB, especially useful on JRuby + Sqlite
+
+sto_connection_validation: false
+#sto_connection_validation: true # sets to -1 (validates all the time)
+#sto_connection_validation: 60 # validates after 60 seconds
+

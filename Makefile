@@ -38,6 +38,7 @@ FLOR_ENV?=dev
 TO?=nil
 FROM?=nil
 
+
 migrate:
 	$(RUBY) -Ilib -e "require 'flor/unit'; Flor::Unit.new('envs/$(FLOR_ENV)/etc/conf.json').storage.migrate($(TO), $(FROM))"
 
@@ -62,9 +63,9 @@ mk:
 doc:
 	$(RUBY) -Imak -r 'doc' -e "make_procedures_doc()"
 
-repl:
-	$(RUBY) -Ilib -r 'flor/tools/repl' -e 'Flor::Tools::Repl.new("$(FLOR_ENV)")'
-r: repl
+cli:
+	$(RUBY) -Ilib -r 'flor/tools/cli' -e 'Flor::Tools::Cli.new'
+c: cli
 
 .PHONY: doc repl
 

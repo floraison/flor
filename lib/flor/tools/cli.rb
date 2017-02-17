@@ -28,14 +28,16 @@ require 'flor/unit'
 
 module Flor::Tools
 
-  class Repl
+  class Cli
 
-    def initialize(env)
+    def initialize
+
+      env = ENV['FLOR_ENV'] || 'cli'
 
       @unit = Flor::Unit.new("envs/#{env}/etc/conf.json")
 
       #pp @unit.conf
-      @unit.conf[:unit] = 'repl'
+      @unit.conf[:unit] = 'cli'
 
       #unit.hooker.add('journal', Flor::Journal)
       if @unit.conf['sto_uri'].match(/memory/)
@@ -44,26 +46,26 @@ module Flor::Tools
       end
       @unit.start
 
-      @lines = []
-      @payload = {}
-      @vars = {}
-
-      @outcome = nil
-
-      @unit.hook do |message|
-
-        if ! message['consumed']
-          # do nothing
-        elsif %w[ terminated failed ].include?(message['point'])
-          @outcome = message
-          out = Flor.to_pretty_s(@outcome)
-          col = message['point'] == 'failed' ? c.rd : c.gr
-          out = out.gsub(/"point"=>"([^"]+)"/, "\"point\"=>\"#{col}\\1#{c.y}\"")
-          out = "\n" + c.yl + out + c.rs
-          out = out.split("\n").collect { |l| '  ' + l }.join("\n")
-          print(out)
-        end
-      end
+#      @lines = []
+#      @payload = {}
+#      @vars = {}
+#
+#      @outcome = nil
+#
+#      @unit.hook do |message|
+#
+#        if ! message['consumed']
+#          # do nothing
+#        elsif %w[ terminated failed ].include?(message['point'])
+#          @outcome = message
+#          out = Flor.to_pretty_s(@outcome)
+#          col = message['point'] == 'failed' ? c.rd : c.gr
+#          out = out.gsub(/"point"=>"([^"]+)"/, "\"point\"=>\"#{col}\\1#{c.y}\"")
+#          out = "\n" + c.yl + out + c.rs
+#          out = out.split("\n").collect { |l| '  ' + l }.join("\n")
+#          print(out)
+#        end
+#      end
 
       @c = Flor.colours({})
 

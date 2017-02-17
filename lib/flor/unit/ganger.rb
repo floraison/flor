@@ -42,6 +42,10 @@ module Flor
 
       domain = exid.split('-', 2).first
 
+# TODO tasker map?
+#      * map.rb # <--- first
+#      * map.json
+
       !! @unit.loader.tasker(domain, name)
     end
 
