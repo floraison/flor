@@ -57,21 +57,20 @@ module Flor::Tools
         elsif %w[ terminated failed ].include?(message['point'])
           @outcome = message
           out = Flor.to_pretty_s(@outcome)
-          col = message['point'] == 'failed' ? _rd : _gr
-          out = out.gsub(/"point"=>"([^"]+)"/, "\"point\"=>\"#{col}\\1#{_yl}\"")
-          out = "\n" + _yl + out + _rs
+          col = message['point'] == 'failed' ? c.rd : c.gr
+          out = out.gsub(/"point"=>"([^"]+)"/, "\"point\"=>\"#{col}\\1#{c.y}\"")
+          out = "\n" + c.yl + out + c.rs
           out = out.split("\n").collect { |l| '  ' + l }.join("\n")
           print(out)
         end
       end
 
-      @_c, @_dg, @_yl, @_bl, @_lg, @_gr, @_lr, @_rd = Flor.colours({})
+      @c = Flor.colours({})
 
       do_loop
     end
 
-    # reset dark_grey light_yellow blue light_grey light_green light_red red
-    attr_reader :_rs, :_dg, :_yl, :_bl, :_lg, :_gr, :_lr, :_rd
+    attr_reader :c
 
     protected
 
@@ -112,7 +111,7 @@ module Flor::Tools
     def cmd_launch(line)
 
       exid = @unit.launch(@lines.join("\n"), vars: @vars, payload: @payload)
-      puts "  launched #{_yl}#{exid}#{_rs}"
+      puts "  launched #{c.yl}#{exid}#{c.rs}"
     end
 
     alias hlp_run hlp_launch
@@ -151,7 +150,7 @@ module Flor::Tools
       sw = 5 - lw
 
       lines.each_with_index do |l, i|
-        puts "#{_dg}% #{sw}s%0#{lw}i #{_yl}%s#{_rs}" % [ '', i + 1, l ]
+        puts "#{c.dg}% #{sw}s%0#{lw}i #{c.yl}%s#{c.rs}" % [ '', i + 1, l ]
       end
     end
     def cmd_list(line)
@@ -194,7 +193,7 @@ module Flor::Tools
     end
 
     def hlp_cat
-      %{ outputs the content of the give file }
+      %{ outputs the content of the given file }
     end
     def cmd_cat(line)
 
