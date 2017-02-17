@@ -53,7 +53,6 @@ module Flor
 
       domain = message['exid'].split('-', 2).first
       tname = message['tasker']
-p [ domain, tname ]
 
       tconf =
         ( ! message['routed'] && @unit.loader.tasker(domain, 'tasker')) ||
