@@ -385,6 +385,57 @@ module Flor::Tools
         end
     end
 
+    def detail_execution(id)
+
+      exe =
+        if id.match(/\A\d+\z/)
+          @unit.executions[id.to_i]
+        else
+          @unit.executions.first(exid: "%#{id}%")
+        end
+
+      if exe
+        con = Flor::Storage.from_blob(exe.values.delete(:content))
+        exe.values[:content] = '...'
+        nodes = con.delete('nodes')
+        con['nodes'] = '...'
+        puts "--- exe #{id.inspect} record:"
+        np exe
+        puts "--- exe #{id.inspect} content:"
+        np con
+        puts "--- exe #{id.inspect} content/nodes:"
+        nodes.each do |k, v|
+          puts "  -"
+          puts "  -"
+          puts "  - #{k}:"
+          pp v
+        end
+      else
+        puts "not found"
+      end
+    end
+
+    def hlp_detail
+      %{ det {exe|ta|ti} {id or frag} : details an element }
+    end
+    def cmd_detail(line)
+
+      type = arg(line)
+      id = arg(line, 2)
+
+      unless type && id
+        puts "please specify type (exe, ti, ta) and id (int) or fragment of id"
+        return
+      end
+      case type
+      when /\Ae/ then detail_execution(id)
+      when /\Ati/ then detail_timer(id)
+      when /\At/ then detail_task(id)
+      else puts "unknown type #{type.inspect}"
+      end
+    end
+    make_alias('det', 'detail')
+
     #
     # use Readline if possible
 
