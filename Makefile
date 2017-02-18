@@ -34,6 +34,9 @@ push: build
 ## flor tasks ##
 
 RUBY=bundle exec ruby
+#RUBY=bundle exec ruby --disable-did_you_mean
+  # gem uninstall did_you_mean
+
 FLOR_ENV?=dev
 TO?=nil
 FROM?=nil

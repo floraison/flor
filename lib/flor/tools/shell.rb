@@ -136,8 +136,15 @@ module Flor::Tools
     end
     def cmd_launch(line)
 
-      exid = @unit.launch(@lines.join("\n"), vars: @vars, payload: @payload)
-      puts "  launched #{c.yl}#{exid}#{c.rs}"
+      flow = File.read(@flow_path)
+      variables = Flor::ConfExecutor.interpret(@variables_path)
+      payload = Flor::ConfExecutor.interpret(@payload_path)
+      domain = 'shell'
+
+      exid = @unit.launch(
+        flow, domain: domain, vars: variables, payload: payload)
+
+      puts "  launched #{@c.green}#{exid}#{@c.reset}"
     end
 
     alias hlp_run hlp_launch

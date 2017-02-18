@@ -182,10 +182,16 @@ module Flor
 
     def self.interpret(path)
 
-      s = path
-
-      s = File.read(s).strip unless s.match(/[\r\n]/)
-      s = "{\n#{s}\n}"
+      s =
+        if path.match(/[\r\n]/)
+          path.strip
+        else
+          ls = File.readlines(path)
+          ls.reject! { |l| l.strip[0, 1] == '#' }
+          s = ls.join("\n").strip
+        end
+      s =
+        "{\n#{s}\n}" unless s[0, 1] == '{' && s[-1, 1] == '}'
 
       vs = Hash.new { |h, k| k }
       class << vs
