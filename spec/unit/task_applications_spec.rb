@@ -365,12 +365,27 @@ describe 'Flor unit' do
     end
   end
 
-  describe 'a domain tasker' do
+  describe 'a ruby tasker' do
 
-    it 'reroutes to specific taskers' do
+    it 'accepts taskers which initializer with tasker, conf, message' do
 
       flor = %{
-        #acme_alpha # <-- won't work, the domain taskers won't recognize it
+        set f.a 1
+        emil _
+      }
+
+      r = @unit.launch(flor, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['emil']).to eq('was here')
+    end
+  end
+
+  context 'with a domain tasker' do
+
+    it 'reroutes to specific taskers (via "task")' do
+
+      flor = %{
         task 'acme_alpha'
       }
 
@@ -396,21 +411,38 @@ describe 'Flor unit' do
         'attd' => {}
       })
     end
-  end
 
-  describe 'a ruby tasker' do
-
-    it 'accepts taskers which initializer with tasker, conf, message' do
+    it 'reroutes to specific taskers' do
 
       flor = %{
-        set f.a 1
-        emil _
+        acme_alpha _
       }
 
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        flor,
+        domain: 'net.acme', wait: true)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['emil']).to eq('was here')
+
+      expect(r['payload']['ret']).to eq('acme_alpha')
+      expect(r['payload']['seen'].size).to eq(1)
+    end
+
+    it "fails explicitely if the domain tasker doesn't know where to reroute" do
+
+      flor = %{
+        unknown_alpha _
+      }
+
+      r = @unit.launch(
+        flor,
+        domain: 'net.acme', wait: true)
+
+      expect(r['point']).to eq('failed')
+
+      expect(
+        r['error']['msg']
+      ).to eq("don't know how to apply \"unknown_alpha\"")
     end
   end
 end

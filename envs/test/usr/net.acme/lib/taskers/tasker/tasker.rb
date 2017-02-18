@@ -11,11 +11,11 @@ class NetAcmeTasker
 
   def task(message)
 
-    [
-      Flor.dup_and_merge(
-        message,
-        'tasker' => 'alpha', 'routed' => true)
-    ]
+    return [
+      Flor.dup_and_merge(message, 'routed' => false)
+    ] if message['tasker'].match(/\Aunknown_/)
+
+    [ Flor.dup_and_merge(message, 'tasker' => 'alpha', 'routed' => true) ]
   end
 end
 

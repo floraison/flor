@@ -357,8 +357,16 @@ module Flor
 
     def task(message)
 
+      return error_reply(
+        node(message['nid']),
+        message,
+        "don't know how to apply #{message['tasker'].inspect}"
+      ) if message['routed'] == false
+
       @execution['tasks'][message['nid']] =
         { 'tasker' => message['tasker'], 'name' => message['taskname'] }
+          #
+          # FIXME is it in use???
 
       @unit.ganger.task(self, message)
     end
@@ -367,6 +375,8 @@ module Flor
     def return(message)
 
       @execution['tasks'].delete(message['nid'])
+        #
+        # FIXME is it in use???
 
       [
         { 'point' => 'receive',
@@ -398,7 +408,7 @@ module Flor
         ms = []
         ms += @unit.notify(self, message) # pre
 
-        ms += self.send(message['point'].to_sym, message)
+        ms += self.send(message['point'], message)
 
         message['payload'] = message.delete('pld') if message.has_key?('pld')
         message['consumed'] = Flor.tstamp

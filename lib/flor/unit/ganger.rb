@@ -28,6 +28,8 @@ module Flor
 
     # NB: tasker configuration entries start with "gan_"
 
+    #RESERVED_NAMES = %w[ tag ]
+
     attr_reader :unit
 
     def initialize(unit)
@@ -40,13 +42,12 @@ module Flor
 
     def has_tasker?(exid, name)
 
-      domain = exid.split('-', 2).first
+      #return false if RESERVED_NAMES.include?(name)
 
-# TODO tasker map?
-#      * map.rb # <--- first
-#      * map.json
+      d = Flor.domain(exid)
 
-      !! @unit.loader.tasker(domain, name)
+      #!! @unit.loader.tasker(d, name)
+      !! (@unit.loader.tasker(d, 'tasker') || @unit.loader.tasker(d, name))
     end
 
     def task(executor, message)
