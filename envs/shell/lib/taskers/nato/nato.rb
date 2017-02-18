@@ -9,6 +9,10 @@ class NatoTasker < Flor::BasicTasker
     dir = File.join(root, 'var/tasks', name)
     FileUtils.mkdir_p(dir)
 
+    pl = @message.delete('payload')
+    @message['payload'] = pl
+      # place payload at the end
+
     File.open(File.join(dir, fname), 'w') do |f|
       f.puts(JSON.pretty_generate(@message))
     end

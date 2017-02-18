@@ -150,23 +150,23 @@ module Flor::Tools
       alias_method "cmd_#{a}", "cmd_#{b}"
     end
 
-    def fname(line); line.split(/\s+/)[1]; end
+    def fname(line, index=1); line.split(/\s+/)[index]; end
     alias arg fname
 
     def choose_path(line)
 
-      path =
-        case fname(line)
-        when /\Av/
-          @variables_path
-        when /\Ap/
-          @payload_path
-        when /\At/
-          i = line.split(/\s+/)[2].to_i
-          Dir[File.join(@root, 'var/tasks/**/*.json')][i]
-        else
-          @flow_path
-        end
+      b = arg(line, 2)
+
+      case fname(line)
+      when /\Av/
+        @variables_path
+      when /\Ap/
+        @payload_path
+      when /\At/
+        Dir[File.join(@root, 'var/tasks/**/*.json')].find { |pa| pa.index(b) }
+      else
+        @flow_path
+      end
     end
 
     #
@@ -288,6 +288,32 @@ module Flor::Tools
             [ e.id, e.exid, e.ctime[0, 19] ] }
     end
     make_alias('exes', 'executions')
+
+    def hlp_reply
+      %{ replies to a task }
+    end
+    def cmd_reply(line)
+
+      t = arg(line)
+
+      unless t
+        puts "please specify a task's exid-nid or a fragment of it"
+        return
+      end
+
+      path = Dir[File.join(@root, 'var/tasks/**/*.json')]
+        .find { |pa| pa.index(t) }
+
+      unless path
+        puts "couldn't find a task matching #{t.inspect}"
+        return
+      end
+
+      m = JSON.parse(File.read(path))
+      @unit.ganger.reply(m)
+      FileUtils.rm(path)
+    end
+    make_alias('rep', 'reply')
 
     #
     # use Readline if possible
