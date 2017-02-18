@@ -102,9 +102,16 @@ module Flor::Tools
 
     def prompt
 
-      tasks = Dir[File.join(@root, 'var/tasks/**/*.json')]
+      ec = @unit.executions.where(status: 'active').count
+      exes = " #{@c.yl}e#{ec}#{@c.rs}"
 
-      "flor #{@c.blue}#{tasks.count}#{@c.reset} > "
+      ts = nil
+      if Dir.exist?(File.join(@root, 'var/tasks'))
+        ts = Dir[File.join(@root, 'var/tasks/**/*.json')].count
+      end
+      tas = ts ? " #{@c.bl}t#{ts}#{@c.rs}" : ''
+
+      "flor#{exes}#{tas} > "
     end
 
     def do_loop
