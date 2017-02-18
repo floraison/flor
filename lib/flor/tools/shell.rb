@@ -42,13 +42,10 @@ module Flor::Tools
       @unit = Flor::Unit.new("#{@root}/etc/conf.json")
 
       @unit.conf['unit'] = 'cli'
-
       #unit.hooker.add('journal', Flor::Journal)
 
-      if @unit.conf['sto_uri'].match(/memory/)
-        @unit.storage.delete_tables
-        @unit.storage.migrate
-      end
+      prepare_db
+
       @unit.start
 
 #      @unit.hook do |message|
@@ -95,6 +92,12 @@ module Flor::Tools
         FileUtils.cp(hfn + '.template', hfn)
         puts ".. prepared #{hfn}"
       end
+    end
+
+    def prepare_db
+
+      @unit.storage.delete_tables if @unit.conf['sto_uri'].match(/memory/)
+      @unit.storage.migrate unless @unit.storage.ready?
     end
 
     def prompt
@@ -252,8 +255,10 @@ module Flor::Tools
        Dir[File.join(@root, 'var/tasks/**/*.json')]
         .each_with_index { |pa, i|
           ss = pa.split('/')
-          puts "%4d %11s %50s" % [ i, ss[-2], ss[-1] ] }
+          puts "%4d #{@c.yl}%11s#{@c.rs} %50s" % [ i, ss[-2], ss[-1] ] }
     end
+    alias hlp_tas hlp_tasks
+    alias cmd_tas cmd_tasks
 
     #
     # use Readline if possible

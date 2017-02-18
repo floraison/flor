@@ -20,4 +20,5 @@ envs/shell/home/scratch.flo
 envs/shell/home/payload.json
 envs/shell/home/variables.json
 envs/shell/var/tasks/*/*.json
+envs/shell/var/flor.db
 

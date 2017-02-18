@@ -10,8 +10,8 @@ log_out: stdout
 
 sto_uri: (ife
   == ruby_platform 'java'
-  "jdbc:sqlite::memory:"
-  "sqlite::memory:")
+  "jdbc:sqlite://envs/shell/var/flor.db"
+  "sqlite://envs/shell/var/flor.db")
 
 sto_sync: true
   # let's the storage sync access to DB, especially useful on JRuby + Sqlite
