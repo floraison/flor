@@ -149,7 +149,6 @@ module Flor::Tools
 
       puts "  launched #{@c.green}#{exid}#{@c.reset}"
     end
-
     alias hlp_run hlp_launch
     alias cmd_run cmd_launch
 
@@ -168,6 +167,8 @@ module Flor::Tools
       end
       puts
     end
+    alias hlp_h hlp_help
+    alias cmd_h cmd_help
 
     def hlp_exit
       %{ exits this repl, with the given int exit code or 0 }
@@ -259,6 +260,19 @@ module Flor::Tools
     end
     alias hlp_tas hlp_tasks
     alias cmd_tas cmd_tasks
+
+    def hlp_executions
+      %{ lists the executions currently active }
+    end
+    def cmd_executions(line)
+
+      @unit.executions.where(status: 'active')
+        .each { |e|
+          puts "%4d #{@c.yl}%42s#{@c.rs} %19sZ" %
+            [ e.id, e.exid, e.ctime[0, 19] ] }
+    end
+    alias hlp_exes hlp_executions
+    alias cmd_exes cmd_executions
 
     #
     # use Readline if possible
