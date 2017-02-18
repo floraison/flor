@@ -63,9 +63,9 @@ mk:
 doc:
 	$(RUBY) -Imak -r 'doc' -e "make_procedures_doc()"
 
-cli:
-	$(RUBY) -Ilib -r 'flor/tools/cli' -e 'Flor::Tools::Cli.new'
-c: cli
+shell:
+	$(RUBY) -Ilib -r 'flor/tools/shell' -e 'Flor::Tools::Shell.new'
+sh: shell
 
-.PHONY: doc repl
+.PHONY: doc shell
 

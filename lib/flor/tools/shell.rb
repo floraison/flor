@@ -28,13 +28,14 @@ require 'flor/unit'
 
 module Flor::Tools
 
-  class Cli
+  class Shell
 
     def initialize
 
-      env = ENV['FLOR_ENV'] || 'cli'
+      env = ENV['FLOR_ENV'] || 'shell'
+      @root = "envs/#{env}"
 
-      @unit = Flor::Unit.new("envs/#{env}/etc/conf.json")
+      @unit = Flor::Unit.new("#{@root}/etc/conf.json")
 
       #pp @unit.conf
       @unit.conf[:unit] = 'cli'
@@ -66,6 +67,7 @@ module Flor::Tools
 #          print(out)
 #        end
 #      end
+      @path = 'scratch.flo'
 
       @c = Flor.colours({})
 
@@ -78,7 +80,7 @@ module Flor::Tools
 
     def prompt
 
-      "flor l#{@lines.size} > "
+      "flor #{@c.yellow}#{@path}#{@c.reset} > "
     end
 
     def do_loop
@@ -90,7 +92,8 @@ module Flor::Tools
         break unless line
         next if line.strip == ''
 
-        cmd = "cmd_#{line.split(/\s/).first}".to_sym
+        md = line.split(/\s/).first
+        cmd = "cmd_#{md}".to_sym
 
         if cmd.size > 4 && methods.include?(cmd)
           begin
@@ -100,7 +103,7 @@ module Flor::Tools
             err.backtrace[0, 7].each { |l| puts "  #{l}" }
           end
         else
-          @lines << line
+          puts "unknown command #{md.inspect}"
         end
       end
 
@@ -143,42 +146,17 @@ module Flor::Tools
       exit(line.split(/\s+/)[1].to_i)
     end
 
-    def hlp_list
-      %{ lists the lines of the current execution code }
-    end
-    def do_list(lines)
-
-      lw = [ 2, lines.size.to_s.length ].max
-      sw = 5 - lw
-
-      lines.each_with_index do |l, i|
-        puts "#{c.dg}% #{sw}s%0#{lw}i #{c.yl}%s#{c.rs}" % [ '', i + 1, l ]
-      end
-    end
-    def cmd_list(line)
-
-      do_list(@lines)
-    end
-
     def hlp_parse
       %{ parses the current execution code and displays its tree }
     end
     def cmd_parse(line)
 
+      source = File.read(File.join(@root, '/lib/flows/', @path))
+
       Flor.print_tree(
-        Flor::Lang.parse(@lines.join("\n"), nil, {}),
+        Flor::Lang.parse(source, nil, {}),
         '0',
         headers: false)
-    end
-
-    def hlp_new
-      %{ erases current execution code, vars and payload }
-    end
-    def cmd_new(line)
-
-      @lines = []
-      @vars = {}
-      @payload = {}
     end
 
     def fname(line)
@@ -186,37 +164,17 @@ module Flor::Tools
       line.split(/\s+/)[1]
     end
 
-    def hlp_save
-      %{ saves the current execution code to the given file }
-    end
-    def cmd_save(line)
-
-      File.open(fname(line), 'wb') { |f| f.puts @lines }
-    end
-
     def hlp_cat
       %{ outputs the content of the given file }
     end
     def cmd_cat(line)
 
-      do_list(File.readlines(fname(line)).collect(&:chomp))
-    end
-
-    def hlp_load
-      %{ loads a file as execution code }
-    end
-    def cmd_load(line)
-
-      @lines = File.readlines(fname(line)).collect(&:chomp)
-    end
-
-    def cmd_cont(line)
-
-      fail NotImplementedError
+      path = fname(line) || File.join(@root, '/lib/flows/', @path)
+      puts File.read(path)
     end
 
     def hlp_edit
-      %{ saves the current execution code to .tmp.flo and opens it for edition }
+      %{ open current file for edition }
     end
     def cmd_edit(line)
 
