@@ -141,6 +141,37 @@ module Flor::Tools
       $stdout.puts
     end
 
+    #
+    # command helpers
+
+    def self.make_alias(a, b)
+
+      define_method("hlp_#{a}") { "alias to #{b.inspect}" }
+      alias_method "cmd_#{a}", "cmd_#{b}"
+    end
+
+    def fname(line); line.split(/\s+/)[1]; end
+    alias arg fname
+
+    def choose_path(line)
+
+      path =
+        case fname(line)
+        when /\Av/
+          @variables_path
+        when /\Ap/
+          @payload_path
+        when /\At/
+          i = line.split(/\s+/)[2].to_i
+          Dir[File.join(@root, 'var/tasks/**/*.json')][i]
+        else
+          @flow_path
+        end
+    end
+
+    #
+    # the commands
+
     def hlp_launch
       %{ launches a new execution of #{@flow_path} }
     end
@@ -156,8 +187,7 @@ module Flor::Tools
 
       puts "  launched #{@c.green}#{exid}#{@c.reset}"
     end
-    alias hlp_run hlp_launch
-    alias cmd_run cmd_launch
+    make_alias('run', 'launch')
 
     def hlp_help
       %{ displays this help }
@@ -174,8 +204,7 @@ module Flor::Tools
       end
       puts
     end
-    alias hlp_h hlp_help
-    alias cmd_h cmd_help
+    make_alias('h', 'help')
 
     def hlp_exit
       %{ exits this repl, with the given int exit code or 0 }
@@ -199,25 +228,6 @@ module Flor::Tools
       when 'p' then p tree
       else Flor.print_tree(tree, '0', headers: false)
       end
-    end
-
-    def fname(line); line.split(/\s+/)[1]; end
-    alias arg fname
-
-    def choose_path(line)
-
-      path =
-        case fname(line)
-        when /\Av/
-          @variables_path
-        when /\Ap/
-          @payload_path
-        when /\At/
-          i = line.split(/\s+/)[2].to_i
-          Dir[File.join(@root, 'var/tasks/**/*.json')][i]
-        else
-          @flow_path
-        end
     end
 
     def hlp_cat
@@ -265,8 +275,7 @@ module Flor::Tools
           ss = pa.split('/')
           puts "%4d #{@c.yl}%11s#{@c.rs} %50s" % [ i, ss[-2], ss[-1] ] }
     end
-    alias hlp_tas hlp_tasks
-    alias cmd_tas cmd_tasks
+    make_alias('tas', 'tasks')
 
     def hlp_executions
       %{ lists the executions currently active }
@@ -278,8 +287,7 @@ module Flor::Tools
           puts "%4d #{@c.yl}%42s#{@c.rs} %19sZ" %
             [ e.id, e.exid, e.ctime[0, 19] ] }
     end
-    alias hlp_exes hlp_executions
-    alias cmd_exes cmd_executions
+    make_alias('exes', 'executions')
 
     #
     # use Readline if possible
