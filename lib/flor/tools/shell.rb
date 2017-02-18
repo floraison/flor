@@ -197,9 +197,15 @@ module Flor::Tools
 
       path =
         case fname(line)
-        when /\Av/ then @variables_path
-        when /\Ap/ then @payload_path
-        else @flow_path
+        when /\Av/
+          @variables_path
+        when /\Ap/
+          @payload_path
+        when /\At/
+          i = line.split(/\s+/)[2].to_i
+          Dir[File.join(@root, 'var/tasks/**/*.json')][i]
+        else
+          @flow_path
         end
     end
 
@@ -216,7 +222,11 @@ module Flor::Tools
     end
     def cmd_edit(line)
 
-      system("$EDITOR #{choose_path(line)}")
+      if path = choose_path(line)
+        system("$EDITOR #{path}")
+      else
+        puts "not found"
+      end
     end
 
     def hlp_conf
@@ -224,6 +234,25 @@ module Flor::Tools
     end
     def cmd_conf(line)
       np @unit.conf
+    end
+
+    def hlp_t
+      %{ prints the file hierarchy for #{@root} }
+    end
+    def cmd_t(line)
+      puts
+      system("tree -C #{@root}")
+    end
+
+    def hlp_tasks
+      %{ lists the tasks currently under var/tasks/ }
+    end
+    def cmd_tasks(line)
+
+       Dir[File.join(@root, 'var/tasks/**/*.json')]
+        .each_with_index { |pa, i|
+          ss = pa.split('/')
+          puts "%4d %11s %50s" % [ i, ss[-2], ss[-1] ] }
     end
 
     #

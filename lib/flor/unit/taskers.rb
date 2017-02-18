@@ -49,6 +49,29 @@ module Flor
 
       @ganger.unit.execution(exid)
     end
+
+    # For domain taskers
+    #
+    def route(name)
+
+      if name == false
+
+        [
+          Flor.dup_and_merge(
+            @message,
+            'routed' => false)
+        ]
+
+      else
+
+        [
+          Flor.dup_and_merge(
+            @message,
+            'tasker' => name, 'original_tasker' => @message['tasker'],
+            'routed' => true)
+        ]
+      end
+    end
   end
 end
 
