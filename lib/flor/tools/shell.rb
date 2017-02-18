@@ -45,23 +45,12 @@ module Flor::Tools
       #unit.hooker.add('journal', Flor::Journal)
 
       prepare_db
+      prepare_hooks
+
+      @hook = 'on'
 
       @unit.start
 
-#      @unit.hook do |message|
-#
-#        if ! message['consumed']
-#          # do nothing
-#        elsif %w[ terminated failed ].include?(message['point'])
-#          @outcome = message
-#          out = Flor.to_pretty_s(@outcome)
-#          col = message['point'] == 'failed' ? c.rd : c.gr
-#          out = out.gsub(/"point"=>"([^"]+)"/, "\"point\"=>\"#{col}\\1#{c.y}\"")
-#          out = "\n" + c.yl + out + c.rs
-#          out = out.split("\n").collect { |l| '  ' + l }.join("\n")
-#          print(out)
-#        end
-#      end
       @flow_path = File.join(@root, 'home/scratch.flo')
       @payload_path = File.join(@root, 'home/payload.json')
       @variables_path = File.join(@root, 'home/variables.json')
@@ -98,6 +87,31 @@ module Flor::Tools
 
       @unit.storage.delete_tables if @unit.conf['sto_uri'].match(/memory/)
       @unit.storage.migrate unless @unit.storage.ready?
+    end
+
+    def prepare_hooks
+
+      @unit.hook do |message|
+
+        if @hook == 'off'
+
+          # do nothing
+
+        elsif ! message['consumed']
+
+          # do nothing
+
+        elsif %w[ terminated failed ].include?(message['point'])
+
+          sleep 0.4 # let eventual debug print its stuff
+
+          message['payload'] = message.delete('payload')
+          message['consumed'] = message.delete('consumed')
+            # reorganize to make payload/consumed stand out
+
+          np message
+        end
+      end
     end
 
     def prompt
@@ -327,6 +341,23 @@ module Flor::Tools
       rest = 'stdout,dbg' if rest && rest.strip == 'on'
 
       @unit.conf.merge!(Flor::Conf.interpret_flor_debug(rest)) if rest
+    end
+
+    def hlp_hook
+      %{ turns hook (terminated, failed) "on" or "off" }
+    end
+    def cmd_hook(line)
+
+      @hook =
+        case (a = arg(line))
+        when 'true', 'on'
+          'on'
+        when 'false', 'off'
+          'off'
+        else
+          puts "hook is #{@hook.inspect}"
+          @hook
+        end
     end
 
     #
