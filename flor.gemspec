@@ -37,6 +37,7 @@ A Ruby workflow engine (ruote next generation)
     # so Sequel is not a runtime dependency
 
   s.add_development_dependency 'rspec', '3.4.0'
+  s.add_development_dependency 'awesome_print'
 
   s.require_path = 'lib'
 end

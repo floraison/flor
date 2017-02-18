@@ -22,6 +22,8 @@
 # Made in Japan.
 #++
 
+require 'awesome_print' rescue nil
+
 require 'flor'
 require 'flor/unit'
 
@@ -35,24 +37,20 @@ module Flor::Tools
       env = ENV['FLOR_ENV'] || 'shell'
       @root = "envs/#{env}"
 
+      prepare_home
+
       @unit = Flor::Unit.new("#{@root}/etc/conf.json")
 
-      #pp @unit.conf
-      @unit.conf[:unit] = 'cli'
+      @unit.conf['unit'] = 'cli'
 
       #unit.hooker.add('journal', Flor::Journal)
+
       if @unit.conf['sto_uri'].match(/memory/)
         @unit.storage.delete_tables
         @unit.storage.migrate
       end
       @unit.start
 
-#      @lines = []
-#      @payload = {}
-#      @vars = {}
-#
-#      @outcome = nil
-#
 #      @unit.hook do |message|
 #
 #        if ! message['consumed']
@@ -67,7 +65,9 @@ module Flor::Tools
 #          print(out)
 #        end
 #      end
-      @path = 'scratch.flo'
+      @flow_path = File.join(@root, 'home/scratch.flo')
+      @payload_path = File.join(@root, 'home/payload.json')
+      @variables_path = File.join(@root, 'home/variables.json')
 
       @c = Flor.colours({})
 
@@ -78,9 +78,30 @@ module Flor::Tools
 
     protected
 
+    # nice print
+    def np(o)
+      defined?(AwesomePrint) ? ap(o) : pp(o)
+    end
+
+    def prepare_home
+
+      home = File.join(@root, 'home')
+      return unless Dir.exists?(home)
+
+      %w[ payload.json scratch.flo variables.json ].each do |fn|
+
+        hfn = File.join(home, fn); next if File.exists?(hfn)
+
+        FileUtils.cp(hfn + '.template', hfn)
+        puts ".. prepared #{hfn}"
+      end
+    end
+
     def prompt
 
-      "flor #{@c.yellow}#{@path}#{@c.reset} > "
+      tasks = Dir[File.join(@root, 'var/tasks/**/*.json')]
+
+      "flor #{@c.blue}#{tasks.count}#{@c.reset} > "
     end
 
     def do_loop
@@ -111,7 +132,7 @@ module Flor::Tools
     end
 
     def hlp_launch
-      %{ launches the current execution code }
+      %{ launches a new execution of #{@flow_path} }
     end
     def cmd_launch(line)
 
@@ -131,7 +152,7 @@ module Flor::Tools
       puts "## available commands:"
       puts
       COMMANDS.each do |cmd|
-        print "* #{cmd}"
+        print "* #{@c.yellow}#{cmd}#{@c.reset}"
         if hlp = (send("hlp_#{cmd}") rescue nil); print " - #{hlp.strip}"; end
         puts
       end
@@ -147,21 +168,32 @@ module Flor::Tools
     end
 
     def hlp_parse
-      %{ parses the current execution code and displays its tree }
+      %{ parses #{@flow_path} and displays the resulting tree }
     end
     def cmd_parse(line)
 
-      source = File.read(File.join(@root, '/lib/flows/', @path))
+      source = File.read(@flow_path)
+      tree = Flor::Lang.parse(source, nil, {})
 
-      Flor.print_tree(
-        Flor::Lang.parse(source, nil, {}),
-        '0',
-        headers: false)
+      case arg(line)
+      when 'raw' then np tree
+      when 'pp' then pp tree
+      when 'p' then p tree
+      else Flor.print_tree(tree, '0', headers: false)
+      end
     end
 
-    def fname(line)
+    def fname(line); line.split(/\s+/)[1]; end
+    alias arg fname
 
-      line.split(/\s+/)[1]
+    def choose_path(line)
+
+      path =
+        case fname(line)
+        when /\Av/ then @variables_path
+        when /\Ap/ then @payload_path
+        else @flow_path
+        end
     end
 
     def hlp_cat
@@ -169,8 +201,7 @@ module Flor::Tools
     end
     def cmd_cat(line)
 
-      path = fname(line) || File.join(@root, '/lib/flows/', @path)
-      puts File.read(path)
+      puts File.read(choose_path(line))
     end
 
     def hlp_edit
@@ -178,10 +209,14 @@ module Flor::Tools
     end
     def cmd_edit(line)
 
-      cmd_save('save .tmp.flo')
-      system('$EDITOR .tmp.flo')
-      cmd_load('load .tmp.flo')
-      FileUtils.rm('.tmp.flo')
+      system("$EDITOR #{choose_path(line)}")
+    end
+
+    def hlp_conf
+      %{ prints current unit configuration }
+    end
+    def cmd_conf(line)
+      np @unit.conf
     end
 
     #

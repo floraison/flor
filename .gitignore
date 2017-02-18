@@ -16,3 +16,7 @@ tmp/*.log
 .notes.md
 .todo.md
 
+envs/shell/home/scratch.flo
+envs/shell/home/payload.json
+envs/shell/home/variables.json
+
