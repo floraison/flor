@@ -47,7 +47,7 @@ migrate:
 
 start:
 	$(RUBY) -Ilib -e "require 'flor/unit'; Flor::Unit.new('envs/$(FLOR_ENV)/etc/conf.json').start.join"
-s: start
+#s: start
 
 
 ## misc tasks ##
@@ -70,5 +70,9 @@ shell:
 	$(RUBY) -Ilib -r 'flor/tools/shell' -e 'Flor::Tools::Shell.new'
 sh: shell
 
-.PHONY: doc shell
+cleanshell:
+	rm envs/shell/var/flor.db
+	rm -fR envs/shell/var/tasks/*
+
+.PHONY: doc shell cleanshell
 
