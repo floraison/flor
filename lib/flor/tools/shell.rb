@@ -117,15 +117,18 @@ module Flor::Tools
     def prompt
 
       ec = @unit.executions.where(status: 'active').count
-      exes = " #{@c.yl}e#{ec}#{@c.rs}"
+      exes = " #{@c.yl}ex#{ec}#{@c.rs}"
+
+      ti = @unit.timers.where(status: 'active').count
+      tis = ti > 0 ? " #{@c.light_gray}ti#{ti}#{@c.rs}" : ''
 
       ts = nil
       if Dir.exist?(File.join(@root, 'var/tasks'))
         ts = Dir[File.join(@root, 'var/tasks/**/*.json')].count
       end
-      tas = ts ? " #{@c.bl}t#{ts}#{@c.rs}" : ''
+      tas = ts ? " #{@c.bl}ta#{ts}#{@c.rs}" : ''
 
-      "flor#{exes}#{tas} > "
+      "flor#{exes}#{tis}#{tas} > "
     end
 
     def do_loop
@@ -296,12 +299,34 @@ module Flor::Tools
     end
     def cmd_executions(line)
 
-      @unit.executions.where(status: 'active')
+      exes = @unit.executions
+      exes = exes.where(status: 'active') unless arg(line) == 'all'
+
+      exes
         .each { |e|
           puts "%4d #{@c.yl}%42s#{@c.rs} %19sZ" %
             [ e.id, e.exid, e.ctime[0, 19] ] }
+      puts "#{exes.count} execution#{exes.count > 1 ? 's' : ''}."
     end
     make_alias('exes', 'executions')
+
+    def hlp_timers
+      %{ list the timers currently active }
+    end
+    def cmd_timers(line)
+
+      tis = @unit.timers
+      tis = tis.where(status: 'active') unless arg(line) == 'all'
+
+      #ap tis.all
+      tis
+        .each_with_index { |t, i|
+          puts(
+            "%4d %14s #{@c.yl}%-42s#{@c.rs} %5s %-10s next:%19sZ" %
+            [ t.id, t.nid, t.exid, t.type, t.schedule, t.ntime[0, 19] ]) }
+      puts "#{tis.count} timer#{tis.count > 1 ? 's' : ''}."
+    end
+    make_alias('tis', 'timers')
 
     def hlp_reply
       %{ replies to a task }
