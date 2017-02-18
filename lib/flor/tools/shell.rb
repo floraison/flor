@@ -315,6 +315,20 @@ module Flor::Tools
     end
     make_alias('rep', 'reply')
 
+    def hlp_debug
+      %{ re-sets debug flags (`debug on` vs `debug off`) }
+    end
+    def cmd_debug(line)
+
+      @unit.conf.select! { |k, v| ! k.match(/\Alog_/) }
+
+      rest = line.match(/\A[a-z]+(\s+.+)?/)[1]
+      rest = nil if rest && rest.strip == 'off'
+      rest = 'stdout,dbg' if rest && rest.strip == 'on'
+
+      @unit.conf.merge!(Flor::Conf.interpret_flor_debug(rest)) if rest
+    end
+
     #
     # use Readline if possible
 
