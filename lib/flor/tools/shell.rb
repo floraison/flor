@@ -283,7 +283,8 @@ module Flor::Tools
       tree = Flor::Lang.parse(source, nil, {})
 
       case arg(line)
-      when 'raw' then ap tree
+      when 'ap', 'raw' then ap tree
+      when 'djan' then puts Flor.to_d(tree, compact: true, colours: true)
       when 'pp' then pp tree
       when 'p' then p tree
       else Flor.print_tree(tree, '0', headers: false)

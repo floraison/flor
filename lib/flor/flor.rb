@@ -127,17 +127,18 @@ module Flor
 
   def self.to_djan(x, opts={})
 
-    opts[:cl] = opts[:color] || opts[:colour]
+    opts[:cl] =
+      opts[:color] || opts[:colour] || opts[:colours] || opts[:colors]
 
     r =
       case x
-        when nil then 'null'
-        when String then string_to_d(x, opts)
-        when Hash then object_to_d(x, opts)
-        when Array then array_to_d(x, opts)
-        when TrueClass then c_tru(x.to_s, opts)
-        when FalseClass then c_tru(x.to_s, opts)
-        else c_num(x.to_s, opts)
+      when nil then 'null'
+      when String then string_to_d(x, opts)
+      when Hash then object_to_d(x, opts)
+      when Array then array_to_d(x, opts)
+      when TrueClass then c_tru(x.to_s, opts)
+      when FalseClass then c_tru(x.to_s, opts)
+      else c_num(x.to_s, opts)
       end
     if opts[:inner]
       opts.delete(:inner)
@@ -218,7 +219,6 @@ module Flor
       a + x.collect { |e| to_djan(e, opts) }.join(b) + c
     end
   end
-
 
   #
   # ids
