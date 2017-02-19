@@ -31,6 +31,9 @@ GEM
     rspec-support (3.4.1)
     sequel (4.38.0)
     sqlite3 (1.3.11)
+    terminal-table (1.7.3)
+      unicode-display_width (~> 1.1.1)
+    unicode-display_width (1.1.3)
 
 PLATFORMS
   java
@@ -43,6 +46,7 @@ DEPENDENCIES
   rspec (= 3.4.0)
   sequel (~> 4)
   sqlite3 (= 1.3.11)
+  terminal-table
 
 BUNDLED WITH
    1.14.4

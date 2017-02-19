@@ -22,7 +22,8 @@
 # Made in Japan.
 #++
 
-require 'awesome_print' rescue nil
+require 'awesome_print'
+require 'terminal-table'
 
 require 'flor'
 require 'flor/unit'
@@ -64,11 +65,6 @@ module Flor::Tools
 
     protected
 
-    # nice print
-    def np(o)
-      defined?(AwesomePrint) ? ap(o) : pp(o)
-    end
-
     def prepare_home
 
       home = File.join(@root, 'home')
@@ -109,7 +105,7 @@ module Flor::Tools
           message['consumed'] = message.delete('consumed')
             # reorganize to make payload/consumed stand out
 
-          np message
+          ap message
         end
       end
     end
@@ -117,16 +113,16 @@ module Flor::Tools
     def prompt
 
       ec = @unit.executions.where(status: 'active').count
-      exes = " #{@c.yl}ex#{ec}#{@c.rs}"
+      exes = ' ' + @c.light_gray("ex#{ec}")
 
       ti = @unit.timers.where(status: 'active').count
-      tis = ti > 0 ? " #{@c.light_gray}ti#{ti}#{@c.rs}" : ''
+      tis = ti > 0 ? ' ' + @c.light_gray("ti#{ti}") : ''
 
-      ts = nil
+      ta = nil
       if Dir.exist?(File.join(@root, 'var/tasks'))
-        ts = Dir[File.join(@root, 'var/tasks/**/*.json')].count
+        ta = Dir[File.join(@root, 'var/tasks/**/*.json')].count
       end
-      tas = ts ? " #{@c.bl}ta#{ts}#{@c.rs}" : ''
+      tas = ta > 0 ? ' ' + @c.light_gray("ta#{ta}") : ''
 
       "flor#{exes}#{tis}#{tas} > "
     end
@@ -186,6 +182,18 @@ module Flor::Tools
       end
     end
 
+    def table_style
+
+      { border_x: "#{@c.dg}-#{@c.rs}",
+        border_y: "#{@c.dg}|#{@c.rs}",
+        border_i: "#{@c.dg}+#{@c.rs}" }
+    end
+
+    def aright(val)
+
+      { value: val, alignment: :right }
+    end
+
     #
     # the commands
 
@@ -215,7 +223,7 @@ module Flor::Tools
       puts "## available commands:"
       puts
       COMMANDS.each do |cmd|
-        print "* #{@c.yellow}#{cmd}#{@c.reset}"
+        print "* #{@c.yellow(cmd)}"
         if hlp = (send("hlp_#{cmd}") rescue nil); print " - #{hlp.strip}"; end
         puts
       end
@@ -240,7 +248,7 @@ module Flor::Tools
       tree = Flor::Lang.parse(source, nil, {})
 
       case arg(line)
-      when 'raw' then np tree
+      when 'raw' then ap tree
       when 'pp' then pp tree
       when 'p' then p tree
       else Flor.print_tree(tree, '0', headers: false)
@@ -271,7 +279,7 @@ module Flor::Tools
       %{ prints current unit configuration }
     end
     def cmd_conf(line)
-      np @unit.conf
+      ap @unit.conf
     end
 
     def hlp_t
@@ -287,10 +295,25 @@ module Flor::Tools
     end
     def cmd_tasks(line)
 
-       Dir[File.join(@root, 'var/tasks/**/*.json')]
+      table = Terminal::Table.new(
+        #title: 'tasks',
+        headings: %w[ id tasker nid exid ],
+        style: table_style)
+
+      tas = Dir[File.join(@root, 'var/tasks/**/*.json')]
+
+      tas
         .each_with_index { |pa, i|
+
           ss = pa.split('/')
-          puts "%4d #{@c.yl}%11s#{@c.rs} %50s" % [ i, ss[-2], ss[-1] ] }
+          tasker = ss[-2]
+          exid, nid = ss[-1][0..-6].split('-')[-2, 2]
+
+          table.add_row([
+            aright(i), tasker, nid, @c.yellow(exid) ]) }
+
+      puts table
+      puts "#{tas.count} task#{tas.count > 1 ? 's' : ''}.\n"
     end
     make_alias('tas', 'tasks')
 
@@ -302,11 +325,20 @@ module Flor::Tools
       exes = @unit.executions
       exes = exes.where(status: 'active') unless arg(line) == 'all'
 
+      table = Terminal::Table.new(
+        #title: 'executions',
+        headings: %w[ id exid started ],
+        style: table_style)
+      #table.align_column(0, :right)
+
       exes
         .each { |e|
-          puts "%4d #{@c.yl}%42s#{@c.rs} %19sZ" %
-            [ e.id, e.exid, e.ctime[0, 19] ] }
-      puts "#{exes.count} execution#{exes.count > 1 ? 's' : ''}."
+          table.add_row([
+            aright(e.id), @c.yl(e.exid), e.ctime[0, 19]
+          ]) }
+
+      puts table
+      puts "#{exes.count} execution#{exes.count > 1 ? 's' : ''}.\n"
     end
     make_alias('exes', 'executions')
 
@@ -318,13 +350,23 @@ module Flor::Tools
       tis = @unit.timers
       tis = tis.where(status: 'active') unless arg(line) == 'all'
 
+      table = Terminal::Table.new(
+        #title: 'timers',
+        headings: [ 'id', 'nid', 'exid', 'type', 'schedule', 'next time' ],
+        style: table_style)
+      #table.align_column(0, :right)
+      #table.align_column(4, :right)
+
       #ap tis.all
       tis
         .each_with_index { |t, i|
-          puts(
-            "%4d %14s #{@c.yl}%-42s#{@c.rs} %5s %-10s next:%19sZ" %
-            [ t.id, t.nid, t.exid, t.type, t.schedule, t.ntime[0, 19] ]) }
-      puts "#{tis.count} timer#{tis.count > 1 ? 's' : ''}."
+          table.add_row([
+            aright(t.id), t.nid, @c.yl(t.exid), t.type,
+            aright(t.schedule), t.ntime[0, 19]
+          ]) }
+
+      puts table
+      puts "#{tis.count} timer#{tis.count > 1 ? 's' : ''}.\n"
     end
     make_alias('tis', 'timers')
 
@@ -400,9 +442,9 @@ module Flor::Tools
         nodes = con.delete('nodes')
         con['nodes'] = '...'
         puts "--- exe #{id.inspect} record:"
-        np exe
+        ap exe
         puts "--- exe #{id.inspect} content:"
-        np con
+        ap con
         puts "--- exe #{id.inspect} content/nodes:"
         nodes.each do |k, v|
           puts "  -"

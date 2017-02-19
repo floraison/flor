@@ -50,9 +50,13 @@ module Flor
 
     Flor::COLS.each do |k, v|
       if v.match(/\A\d/)
-        class_eval("def #{k}; \"[#{v}m\"; end")
+        class_eval(%{
+          def #{k}(s=nil)
+           s ? "[#{v}m" + s + "[0;9m": "[#{v}m"
+           end })
       else
-        class_eval("alias #{k} #{v}")
+        class_eval(
+          "alias #{k} #{v}")
       end
     end
   end
