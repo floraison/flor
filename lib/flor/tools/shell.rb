@@ -22,7 +22,6 @@
 # Made in Japan.
 #++
 
-require 'awesome_print'
 require 'terminal-table'
 
 require 'flor'
@@ -105,7 +104,7 @@ module Flor::Tools
           message['consumed'] = message.delete('consumed')
             # reorganize to make payload/consumed stand out
 
-          ap message
+          puts Flor.to_d(message, colour: true, indent: 1, width: true)
         end
       end
     end
@@ -320,7 +319,7 @@ module Flor::Tools
       %{ prints current unit configuration }
     end
     def cmd_conf(line)
-      ap @unit.conf
+      puts Flor.to_d(@unit.conf, colour: true, indent: 1, width: true)
     end
 
     def hlp_t
@@ -398,7 +397,6 @@ module Flor::Tools
       #table.align_column(0, :right)
       #table.align_column(4, :right)
 
-      #ap tis.all
       tis
         .each_with_index { |t, i|
           table.add_row([
@@ -474,25 +472,17 @@ module Flor::Tools
         if id.match(/\A\d+\z/)
           @unit.executions[id.to_i]
         else
-          @unit.executions.first(exid: "%#{id}%")
+          @unit.executions.first(Sequel.like(exid: "%#{id}%"))
         end
 
       if exe
+        eid = { id: exe.id, exid: exe.exid }.inspect
         con = Flor::Storage.from_blob(exe.values.delete(:content))
         exe.values[:content] = '...'
-        nodes = con.delete('nodes')
-        con['nodes'] = '...'
-        puts "--- exe #{id.inspect} record:"
-        ap exe
-        puts "--- exe #{id.inspect} content:"
-        ap con
-        puts "--- exe #{id.inspect} content/nodes:"
-        nodes.each do |k, v|
-          puts "  -"
-          puts "  -"
-          puts "  - #{k}:"
-          pp v
-        end
+        puts @c.dg("--- exe #{eid} record:")
+        puts Flor.to_d(exe.values, colour: true, indent: 1, width: true)
+        puts @c.dg("--- exe #{eid} content:")
+        puts Flor.to_d(con, colour: true, indent: 1, width: true)
       else
         puts "not found"
       end
