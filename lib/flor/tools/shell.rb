@@ -161,6 +161,7 @@ module Flor::Tools
     def self.make_alias(a, b)
 
       define_method("hlp_#{a}") { "alias to #{b.inspect}" }
+      alias_method "man_#{a}", "man_#{b}" rescue nil
       alias_method "cmd_#{a}", "cmd_#{b}"
     end
 
@@ -172,7 +173,7 @@ module Flor::Tools
       b = arg(line, 2)
 
       case fname(line)
-      when /\Av/
+      when /\Av/,
         @variables_path
       when /\Ap/
         @payload_path
@@ -246,24 +247,48 @@ module Flor::Tools
 
       puts "  launched #{@c.green}#{exid}#{@c.reset}"
     end
-    make_alias('run', 'launch')
 
     def hlp_help
       %{ displays this help }
     end
+    def man_help
+      %{
+        * help|man
+          displays the list of commands and one-line help for each of them
+        * help|man cmd
+          displays the "manual" for the given command
+      }
+    end
     def cmd_help(line)
 
-      puts
-      puts "## available commands:"
-      puts
-      COMMANDS.each do |cmd|
-        print "* #{@c.yellow(cmd)}"
-        if hlp = (send("hlp_#{cmd}") rescue nil); print " - #{hlp.strip}"; end
+      if cmd = arg(line)
+        begin
+          send("man_#{cmd}").split("\n").collect(&:strip).each do |l|
+            if l[0, 1] == '*'
+              puts " #{@c.dg}*#{@c.rs} #{l[1..-1].strip}"
+            else
+              puts "   #{@c.dark_gray(l)}"
+            end
+          end
+        rescue => err
+          fail ArgumentError.new("no 'manual' for #{cmd.inspect}")
+        end
+
+      else
+
+        puts
+        puts "## available commands:"
+        puts
+        COMMANDS.each do |cmd|
+          print "* #{@c.yellow(cmd)}"
+          if hlp = (send("hlp_#{cmd}") rescue nil); print " - #{hlp.strip}"; end
+          puts
+        end
         puts
       end
-      puts
     end
     make_alias('h', 'help')
+    make_alias('man', 'help')
 
     def hlp_exit
       %{ exits this repl, with the given int exit code or 0 }
@@ -275,6 +300,16 @@ module Flor::Tools
 
     def hlp_parse
       %{ parses #{@flow_path} and displays the resulting tree }
+    end
+    def man_parse
+      %{
+        * parse
+          parses current #{@flow_path} and render with nids (best)
+        * parse d|raw
+          parses current #{@flow_path} and render with `.to_djan`
+        * parse pp
+          parses current #{@flow_path} and render with `pp`
+      }
     end
     def cmd_parse(line)
 
@@ -295,16 +330,20 @@ module Flor::Tools
       end
     end
 
-    def hlp_cat
-      %{ outputs the content of the given file }
-    end
-    def cmd_cat(line)
-
-      puts File.read(choose_path(line))
-    end
-
     def hlp_edit
-      %{ open current file for edition }
+      %{ edit vars, payload, flow or a task }
+    end
+    def man_edit
+      %{
+        * edit v|variables
+          edits the variables for the next execution
+        * edit p|payload
+          edits the payload for the next execution
+        * edit [f|flow]
+          edits the flow for the next execution
+        * edit t|task frag
+          edits a task currently under var/tasks/
+      }
     end
     def cmd_edit(line)
 
@@ -412,22 +451,28 @@ module Flor::Tools
     def hlp_reply
       %{ replies to a task }
     end
+    def man_reply
+      %{
+        * reply fragment
+          given a task filename fragment (for example "ache-0_0")
+          reads the task payload and replies to the unit (making the
+          execution go on)
+      }
+    end
     def cmd_reply(line)
 
       t = arg(line)
 
-      unless t
-        puts "please specify a task's exid-nid or a fragment of it"
-        return
-      end
+      fail ArgumentError.new(
+        "please specify a task's exid-nid or a fragment of it"
+      ) unless t
 
       path = Dir[File.join(@root, 'var/tasks/**/*.json')]
         .find { |pa| pa.index(t) }
 
-      unless path
-        puts "couldn't find a task matching #{t.inspect}"
-        return
-      end
+      fail ArgumentError.new(
+        "couldn't find a task matching #{t.inspect}"
+      ) unless path
 
       m = JSON.parse(File.read(path))
       @unit.ganger.reply(m)
@@ -436,7 +481,15 @@ module Flor::Tools
     make_alias('rep', 'reply')
 
     def hlp_debug
-      %{ re-sets debug flags (`debug on` vs `debug off`) }
+      %{ re-sets debug flags }
+    end
+    def man_debug
+      %{
+        * debug off
+          mute unit activity
+        * debug on
+          verbose unit activity
+      }
     end
     def cmd_debug(line)
 
@@ -450,7 +503,16 @@ module Flor::Tools
     end
 
     def hlp_hook
-      %{ turns hook (terminated, failed) "on" or "off" }
+      %{ turns hook for "failed"/"terminated" messages on or off }
+    end
+    def man_hook
+      %{
+        * hook on
+          hook off, "failed" or "terminated" messages will get printed
+          (asynchronously) to console
+        * hook off
+          messages will not get printed
+      }
     end
     def cmd_hook(line)
 
@@ -504,8 +566,23 @@ module Flor::Tools
       puts Flor.to_d(con, colour: true, indent: 1, width: true)
     end
 
+    def detail_task(id)
+
+fail NotImplementedError
+    end
+
     def hlp_detail
-      %{ det {exe|ta|ti} {id or frag} : details an element }
+      %{ detail an execution, a task or a timer }
+    end
+    def man_detail
+      %{
+        * detail e|execution id|frag
+          displays full execution information
+        * detail ti|timer id
+          displays full timer information
+        * detail task frag
+          displays task
+      }
     end
     def cmd_detail(line)
 
@@ -525,7 +602,15 @@ module Flor::Tools
     make_alias('det', 'detail')
 
     def hlp_cancel
-      %{ cancel {exid} {nid|_}: cancels a whole execution or one of its node }
+      %{ cancel an execution node }
+    end
+    def man_cancel
+      %{
+        * cancel exid_fragment nid
+          cancel the first node that matches
+        * cancel exid_fragment 0
+          cancel the first execution that matches
+      }
     end
     def cmd_cancel(line)
 
