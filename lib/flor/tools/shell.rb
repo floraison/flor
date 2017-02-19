@@ -372,14 +372,25 @@ module Flor::Tools
     def hlp_tasks
       %{ lists the tasks currently under var/tasks/ }
     end
+    def man_tasks
+      %{
+        * tasks
+          lists all tasks currently under var/tasks/{tasker}/
+        * tasks frag
+          lists all tasks whose filename matches the frag
+      }
+    end
     def cmd_tasks(line)
+
+      frag = arg(line)
 
       table = Terminal::Table.new(
         #title: 'tasks',
-        headings: %w[ id tasker nid exid ],
+        headings: %w[ id tasker nid exid payload mtime ],
         style: table_style)
 
       tas = Dir[File.join(@root, 'var/tasks/**/*.json')]
+      tas = tas.select { |pa| pa.index(frag) } if frag
 
       tas
         .each_with_index { |pa, i|
@@ -388,8 +399,18 @@ module Flor::Tools
           tasker = ss[-2]
           exid, nid = ss[-1][0..-6].split('-')[-2, 2]
 
+          data = JSON.parse(File.read(pa)) rescue nil
+          data = data || { 'payload': nil }
+            #
+          pl = Flor.to_d(
+            data['payload'],
+            colour: false, indent: nil, compact: true)
+          pl = @c.dark_gray(pl[0, 21] + '...')
+
+          mt = @c.dark_gray(File.mtime(pa).to_s[0, 19])
+
           table.add_row([
-            aright(i), tasker, nid, @c.yellow(exid) ]) }
+            aright(i), tasker, nid, @c.yellow(exid), pl, mt ]) }
 
       puts table
       puts "#{tas.count} task#{tas.count > 1 ? 's' : ''}.\n"
@@ -566,12 +587,10 @@ module Flor::Tools
       exe.values[:content] = '...'
 
       puts @c.dg("--- exe #{eid} :")
-      #puts Flor.to_d(exe.values, colour: true, indent: 1, width: true)
       puts h_to_table(exe.values)
       puts @c.dg("  exe #{eid} content:")
       nodes = con.delete('nodes')
       con['nodes'] = '...'
-      #puts Flor.to_d(con, colour: true, indent: 1, width: true)
       puts indent('  ', h_to_table(con))
       puts @c.dg("    exe #{eid} content/nodes:")
       table = Terminal::Table.new(
