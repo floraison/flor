@@ -462,12 +462,29 @@ module Flor
     o[2].is_a?(Integer)
   end
 
-  def self.tree_locate(t, nid)
+  # Returns [ st, i ], the parent subtree for the final i index of the nid
+  # Used when inserting updated subtrees.
+  #
+  def self.parent_tree_locate(t, nid)
+
+    return nil if t == nil
 
     n, i, d = nid.split('_', 3)
 
-    return t if i == nil
-    tree_locate(t[1][i.to_i], [ i, d ].compact.join('_'))
+    return [ t, nil ] if i == nil
+    return [ t, i.to_i ] if ! d
+    parent_tree_locate(t[1][i.to_i], [ i, d ].join('_'))
+  end
+
+  # Returns the subtree down at the given nid
+  #
+  def self.tree_locate(t, nid)
+
+    st, i = parent_tree_locate(t, nid)
+
+    return nil if st == nil
+    return st if i == nil
+    st[1][i]
   end
 end
 

@@ -137,6 +137,56 @@ describe Flor do
     end
   end
 
+  describe '.parent_tree_locate(t, nid)' do
+
+    before :all do
+
+      @t = Flor::Lang.parse(%{
+        sequence
+          alpha
+          concurrence
+            bravo
+            charly
+      })
+    end
+
+    it 'locates nil when tree is nil' do
+
+      t, i = Flor.parent_tree_locate(nil, '0_0')
+      expect([ t, i ]).to eq([ nil, nil ])
+    end
+
+    it 'locates 0' do
+
+      t, i = Flor.parent_tree_locate(@t, '0')
+      expect([ t[0], i ]).to eq([ 'sequence', nil ])
+    end
+
+    it 'locates 0_0' do
+
+      t, i = Flor.parent_tree_locate(@t, '0_0')
+      expect([ t[0], i ]).to eq([ 'sequence', 0 ])
+    end
+
+    it 'locates 0_1' do
+
+      t, i = Flor.parent_tree_locate(@t, '0_1')
+      expect([ t[0], i ]).to eq([ 'sequence', 1 ])
+    end
+
+    it 'locates 0_1_1' do
+
+      t, i = Flor.parent_tree_locate(@t, '0_1_1')
+      expect([ t[0], i ]).to eq([ 'concurrence', 1 ])
+    end
+
+    it 'does not locate 0_2_1' do
+
+      t, i = Flor.parent_tree_locate(@t, '0_2_1')
+      expect([ t, i ]).to eq([ nil, nil ])
+    end
+  end
+
   describe '.tree_locate(t, nid)' do
 
     it 'locates' do
@@ -148,6 +198,8 @@ describe Flor do
             bravo
             charly
       })
+
+      expect(Flor.tree_locate(t, '0_2')).to eq(nil)
 
       expect(Flor.tree_locate(t, '0')[0]).to eq('sequence')
       expect(Flor.tree_locate(t, '0_0')[0]).to eq('alpha')
