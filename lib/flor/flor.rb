@@ -461,5 +461,13 @@ module Flor
     Flor.is_array_of_trees?(o[1]) &&
     o[2].is_a?(Integer)
   end
+
+  def self.tree_locate(t, nid)
+
+    n, i, d = nid.split('_', 3)
+
+    return t if i == nil
+    tree_locate(t[1][i.to_i], [ i, d ].compact.join('_'))
+  end
 end
 

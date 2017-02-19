@@ -136,5 +136,24 @@ describe Flor do
       expect(Flor.is_sub_domain?('test.x', 'test.x.y')).to eq(true)
     end
   end
+
+  describe '.tree_locate(t, nid)' do
+
+    it 'locates' do
+
+      t = Flor::Lang.parse(%{
+        sequence
+          alpha
+          concurrence
+            bravo
+            charly
+      })
+
+      expect(Flor.tree_locate(t, '0')[0]).to eq('sequence')
+      expect(Flor.tree_locate(t, '0_0')[0]).to eq('alpha')
+      expect(Flor.tree_locate(t, '0_1')[0]).to eq('concurrence')
+      expect(Flor.tree_locate(t, '0_1_1')[0]).to eq('charly')
+    end
+  end
 end
 
