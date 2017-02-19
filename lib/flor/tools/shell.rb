@@ -32,7 +32,7 @@ module Flor::Tools
 
   class Shell
 
-    def initialize
+    def initialize(argv=nil)
 
       env = ENV['FLOR_ENV'] || 'shell'
       @root = "envs/#{env}"
@@ -57,7 +57,11 @@ module Flor::Tools
 
       @c = Flor.colours({})
 
-      do_loop
+      if argv.any?
+        do_eval(argv.join(' '))
+      else
+        do_loop
+      end
     end
 
     attr_reader :c
@@ -126,6 +130,25 @@ module Flor::Tools
       "flor#{exes}#{tis}#{tas} > "
     end
 
+    def do_eval(line)
+
+      md = line.split(/\s/).first
+      cmd = "cmd_#{md}".to_sym
+
+      if cmd.size > 4 && methods.include?(cmd)
+        begin
+          send(cmd, line)
+        rescue ArgumentError => aerr
+          puts @c.dark_gray(aerr.message)
+        rescue StandardError, NotImplementedError => err
+          p err
+          err.backtrace[0, 7].each { |l| puts "  #{l}" }
+        end
+      else
+        puts "unknown command #{md.inspect}"
+      end
+    end
+
     def do_loop
 
       loop do
@@ -135,21 +158,7 @@ module Flor::Tools
         break unless line
         next if line.strip == ''
 
-        md = line.split(/\s/).first
-        cmd = "cmd_#{md}".to_sym
-
-        if cmd.size > 4 && methods.include?(cmd)
-          begin
-            send(cmd, line)
-          rescue ArgumentError => aerr
-            puts @c.dark_gray(aerr.message)
-          rescue StandardError, NotImplementedError => err
-            p err
-            err.backtrace[0, 7].each { |l| puts "  #{l}" }
-          end
-        else
-          puts "unknown command #{md.inspect}"
-        end
+        do_eval(line)
       end
 
       $stdout.puts
@@ -578,7 +587,7 @@ module Flor::Tools
           @unit.executions[id.to_i] ||
           fail(ArgumentError.new("execution #{id} not found"))
         else
-          @unit.executions.first(Sequel.like(exid: "%#{id}%")) ||
+          @unit.executions.first(Sequel.like(:exid, "%#{id}%")) ||
           fail(ArgumentError.new("execution matching \"%#{id}%\" not found"))
         end
 
@@ -675,6 +684,34 @@ fail NotImplementedError
     end
     make_alias('can', 'cancel')
 
+    def hlp_render
+      %{ render execution tree with error and tasks locations }
+    end
+    def man_render
+      %{
+        * render frag
+          finds first execution matching fragment and renders its tree
+          highlight current tasks positions
+      }
+    end
+    def cmd_render(line)
+
+      frag = arg(line)
+
+      exe =
+        @unit.executions.first(Sequel.like(:exid, "%#{frag}%")) ||
+        fail(ArgumentError.new("execution matching \"%#{id}%\" not found"))
+#p exe
+      tree = exe.full_tree
+pp tree
+      nodes = exe.nodes
+
+      nodes.each do |k, v|
+p [ k, v.class ]
+      end
+    end
+    make_alias('r', 'render')
+
     #
     # use Readline if possible
 
@@ -700,5 +737,10 @@ fail NotImplementedError
       end
     end
   end
+end
+
+if __FILE__ == $0
+
+  Flor::Tools::Shell.new(ARGV)
 end
 

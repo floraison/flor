@@ -1,0 +1,5 @@
+#!/bin/sh
+
+#bundle exec ruby -Ilib -r 'flor/tools/shell' -e 'Flor::Tools::Shell.new'
+bundle exec ruby -Ilib lib/flor/tools/shell.rb $*
+

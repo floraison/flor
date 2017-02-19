@@ -43,6 +43,19 @@ module Flor
         .find { |n| n['failure'] && n['status'] != 'triggered-on-error' }
     end
 
+    def full_tree
+
+      tree = nodes['0']['tree']
+
+      nodes.each do |nid, n|
+        next if nid == '0'
+        t = n['tree']; next unless t
+# TODO
+      end
+
+      tree
+    end
+
     # class methods
 
     def self.by_status(s)
