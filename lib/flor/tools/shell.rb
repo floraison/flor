@@ -684,6 +684,30 @@ fail NotImplementedError
     end
     make_alias('can', 'cancel')
 
+    def render_node(t, nid)
+
+      ni = nid
+      head = t[0]
+      h = t.last.is_a?(Hash) ? t.last : {}
+      if h[:node]
+      else
+        ni = @c.dark_gray(ni)
+        head = @c.dark_gray(head)
+      end
+      if h[:tasker]
+#p h[:tasker]
+        rest = @c.green("  <--")
+      end
+
+      puts "  #{ni} #{head}#{rest}"
+
+      return unless t[1].is_a?(Array)
+
+      t[1].each_with_index do |ct, i|
+        render_node(t[1][i], "#{nid}_#{i}")
+      end
+    end
+
     def hlp_render
       %{ render execution tree with error and tasks locations }
     end
@@ -703,12 +727,28 @@ fail NotImplementedError
         fail(ArgumentError.new("execution matching \"%#{id}%\" not found"))
 #p exe
       tree = exe.full_tree
-pp tree
       nodes = exe.nodes
 
-      nodes.each do |k, v|
-p [ k, v.class ]
+      orphans = []
+
+      nodes.each do |nid, n|
+        if st = Flor.tree_locate(tree, nid)
+          st << { node: n }
+        else
+          orphans << n
+        end
       end
+
+      @unit.pointers.where(exid: exe.exid, type: 'tasker').each do |pt|
+        if st = Flor.tree_locate(tree, pt.nid)
+          h = st.last.is_a?(Hash) ? st.last : (st << {})
+          h[:tasker] = pt
+        else
+          orphans << n
+        end
+      end
+
+      render_node(tree, '0')
     end
     make_alias('r', 'render')
 
