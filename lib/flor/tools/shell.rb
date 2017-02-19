@@ -142,6 +142,8 @@ module Flor::Tools
         if cmd.size > 4 && methods.include?(cmd)
           begin
             send(cmd, line)
+          rescue ArgumentError => aerr
+            puts @c.dark_gray(aerr.message)
           rescue StandardError, NotImplementedError => err
             p err
             err.backtrace[0, 7].each { |l| puts "  #{l}" }
@@ -192,6 +194,39 @@ module Flor::Tools
     def aright(val)
 
       { value: val, alignment: :right }
+    end
+
+    def lookup_exid_nid(line)
+
+      a, b = [ arg(line, 1), arg(line, 2) ]
+
+      fail ArgumentError.new(
+        "please specify an exid fragment and a full nid"
+      ) unless b
+
+      exid, nid = a.match(/\A[0-9_]+\z/) ? [ b, a ] : [ a, b ]
+
+      onid = nid
+
+      exes = @unit.executions
+        .select(:exid, :content)
+        .where(Sequel.like(:exid, "%#{exid}%"))
+        .where(status: 'active')
+        .all
+
+      fail ArgumentError.new(
+        "found no execution matching \"%#{exid}%\""
+      ) if exes.empty?
+
+      exe = exes
+        .find { |e| e.data['nodes'][nid] }
+
+      fail ArgumentError.new(
+        "found #{exes.count} execution#{exes.count > 1 ? 's' : ''} " +
+        "matching \"%#{exid}%\", but none with a #{onid.inspect} node"
+      ) unless exe
+
+      [ exe.exid, nid ]
     end
 
     #
@@ -462,13 +497,12 @@ module Flor::Tools
     end
     def cmd_detail(line)
 
-      type = arg(line)
-      id = arg(line, 2)
+      type, id = arg(line), arg(line, 2)
 
-      unless type && id
-        puts "please specify type (exe, ti, ta) and id (int) or fragment of id"
-        return
-      end
+      fail ArgumentError.new(
+        "please specify type (exe, ti, ta) and id (int) or fragment of id"
+      ) unless type && id
+
       case type
       when /\Ae/ then detail_execution(id)
       when /\Ati/ then detail_timer(id)
@@ -477,6 +511,19 @@ module Flor::Tools
       end
     end
     make_alias('det', 'detail')
+
+    def hlp_cancel
+      %{ cancel {exid} {nid|_}: cancels a whole execution or one of its node }
+    end
+    def cmd_cancel(line)
+
+      exid, nid = lookup_exid_nid(line)
+
+      @unit.cancel(exid: exid, nid: nid)
+
+      puts @c.yellow("cancel message queued for #{exid} #{nid}")
+    end
+    make_alias('can', 'cancel')
 
     #
     # use Readline if possible

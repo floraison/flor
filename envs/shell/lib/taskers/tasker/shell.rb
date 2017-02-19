@@ -10,5 +10,7 @@ class ShellTasker < Flor::BasicTasker
     else route false
     end
   end
+
+  alias cancel task
 end
 

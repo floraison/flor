@@ -3,10 +3,8 @@ class NatoTasker < Flor::BasicTasker
 
   def task
 
-    name = @message['original_tasker'] || @message['tasker']
-    fname = [ 'task', exid, nid ].join('-') + '.json'
+    name, dir, fname = determine_name_dir_fname
 
-    dir = File.join(root, 'var/tasks', name)
     FileUtils.mkdir_p(dir)
 
     pl = @message.delete('payload')
@@ -20,7 +18,25 @@ class NatoTasker < Flor::BasicTasker
     []
   end
 
+  def cancel
+
+    _, dir, fname = determine_name_dir_fname
+
+    FileUtils.rm_f(File.join(dir, fname))
+
+    @ganger.reply(@message)
+  end
+
   protected
+
+  def determine_name_dir_fname
+
+    name = @message['original_tasker'] || @message['tasker']
+    dir = File.join(root, 'var/tasks', name)
+    fname = [ 'task', exid, nid ].join('-') + '.json'
+
+    [ name, dir, fname ]
+  end
 
   def root
 
