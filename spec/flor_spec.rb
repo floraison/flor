@@ -30,14 +30,14 @@ describe Flor do
 
     it 'quotes symbols that could be mistaken for numbers' do
 
-      expect(Flor.to_djan('123')).to eq('"123"')
-      expect(Flor.to_djan('123.456')).to eq('"123.456"')
+      expect(Flor.to_djan('123', colours: false)).to eq('"123"')
+      expect(Flor.to_djan('123.456', colours: false)).to eq('"123.456"')
     end
 
     it 'turns an object into a djan string' do
 
       expect(
-        Flor.to_djan(@v)
+        Flor.to_djan(@v, colours: false)
       ).to eq(%{
 { type: car, make/brand: mitsubishi, id: 2, ok: true, "suppliers,": [], stuff: nada, "'branding'": fail, x: "4", list: [], dict: {} }
       }.strip)
@@ -46,7 +46,7 @@ describe Flor do
     it 'returns a compact form when compact: true' do
 
       expect(
-        Flor.to_djan(@v, compact: true)
+        Flor.to_djan(@v, compact: true, colours: false)
       ).to eq(%{
 {type:car,make/brand:mitsubishi,id:2,ok:true,"suppliers,":[],stuff:nada,"'branding'":fail,x:"4",list:[],dict:{}}
       }.strip)

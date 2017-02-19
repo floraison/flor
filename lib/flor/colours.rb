@@ -65,7 +65,7 @@ module Flor
 
     Flor::COLS.each do |k, v|
       if v.match(/\A\d/)
-        class_eval("def #{k}; ''; end")
+        class_eval("def #{k}(s=''); s; end")
       else
         class_eval("alias #{k} #{v}")
       end
@@ -82,8 +82,10 @@ module Flor
 
   def self.colours(opts={})
 
-    return @colours if opts[:color] == true || opts[:colour] == true
-    return @no_colours if opts[:color] == false || opts[:colour] == false
+    c = opts[:color] || opts[:colour] || opts[:colors] || opts[:colours]
+
+    return @colours if c == true
+    return @no_colours if c == false
 
     o = opts[:out] || $stdout
 

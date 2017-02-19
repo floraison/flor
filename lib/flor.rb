@@ -39,6 +39,7 @@ module Flor
 end
 
 require 'flor/colours'
+require 'flor/djan'
 
 require 'flor/log'
 require 'flor/flor'
