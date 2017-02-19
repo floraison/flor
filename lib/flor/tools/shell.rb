@@ -112,16 +112,16 @@ module Flor::Tools
     def prompt
 
       ec = @unit.executions.where(status: 'active').count
-      exes = ' ' + @c.light_gray("ex#{ec}")
+      exes = ' ' + @c.yellow("ex#{ec}")
 
       ti = @unit.timers.where(status: 'active').count
-      tis = ti > 0 ? ' ' + @c.light_gray("ti#{ti}") : ''
+      tis = ti > 0 ? ' ' + @c.yellow("ti#{ti}") : ''
 
       ta = nil
       if Dir.exist?(File.join(@root, 'var/tasks'))
         ta = Dir[File.join(@root, 'var/tasks/**/*.json')].count
       end
-      tas = ta > 0 ? ' ' + @c.light_gray("ta#{ta}") : ''
+      tas = ta > 0 ? ' ' + @c.yellow("ta#{ta}") : ''
 
       "flor#{exes}#{tis}#{tas} > "
     end
@@ -528,6 +528,28 @@ module Flor::Tools
         end
     end
 
+    def indent(s, o)
+
+      io = StringIO.new
+      o.to_s.split("\n").each do |line|
+        io.print(s); io.puts(line)
+      end
+
+      io.string
+    end
+
+    def h_to_table(h)
+
+      table = Terminal::Table.new(
+        headings: %w[ key value ],
+        style: table_style)#.merge(all_separators: true))
+      h.each do |k, v|
+        table.add_row([ k, Flor.to_d(v, colour: true, indent: 0, width: 65) ])
+      end
+
+      table
+    end
+
     def detail_execution(id)
 
       exe =
@@ -543,10 +565,22 @@ module Flor::Tools
       con = Flor::Storage.from_blob(exe.values.delete(:content))
       exe.values[:content] = '...'
 
-      puts @c.dg("--- exe #{eid} record:")
-      puts Flor.to_d(exe.values, colour: true, indent: 1, width: true)
-      puts @c.dg("--- exe #{eid} content:")
-      puts Flor.to_d(con, colour: true, indent: 1, width: true)
+      puts @c.dg("--- exe #{eid} :")
+      #puts Flor.to_d(exe.values, colour: true, indent: 1, width: true)
+      puts h_to_table(exe.values)
+      puts @c.dg("  exe #{eid} content:")
+      nodes = con.delete('nodes')
+      con['nodes'] = '...'
+      #puts Flor.to_d(con, colour: true, indent: 1, width: true)
+      puts indent('  ', h_to_table(con))
+      puts @c.dg("    exe #{eid} content/nodes:")
+      table = Terminal::Table.new(
+        headings: %w[ nid data ],
+        style: table_style.merge(all_separators: true))
+      nodes.each do |k, v|
+        table.add_row([ k, Flor.to_d(v, colour: true, indent: 0, width: 70) ])
+      end
+      puts indent('    ', table)
     end
 
     def detail_timer(id)
@@ -560,7 +594,7 @@ module Flor::Tools
       con = Flor::Storage.from_blob(timer.delete(:content))
       timer[:content] = '...'
 
-      puts @c.dg("--- timer #{tid} record:")
+      puts @c.dg("--- timer #{tid} :")
       puts Flor.to_d(timer, colour: true, indent: 1, width: true)
       puts @c.dg("--- timer #{tid} content:")
       puts Flor.to_d(con, colour: true, indent: 1, width: true)
