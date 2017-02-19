@@ -80,9 +80,9 @@ module Flor
       t || Node.new(executor, nd, m).lookup_tree(nid)
     t0 =
       if t
-        " [#{rw}#{_c.yl}#{Flor.s_to_d(t[0], compact: true)}#{_c.dg} L#{t[2]}]"
+        " [#{rw}#{_c.yl}#{Flor.to_d(t[0], compact: true)}#{_c.dg} L#{t[2]}]"
       elsif nt
-        " [#{_c.dg}#{Flor.s_to_d(nt[0], compact: true)}#{_c.dg} L#{nt[2]}]"
+        " [#{_c.dg}#{Flor.to_d(nt[0], compact: true)}#{_c.dg} L#{nt[2]}]"
       else
         ''
       end
@@ -174,7 +174,7 @@ module Flor
     headers = opts[:headers]; headers = true if headers.nil?
     headers = true if opts[:title]
 
-    h = "#{_c.yl}#{Flor.s_to_d(tree[0], compact: true)}"
+    h = "#{_c.yl}#{Flor.to_d(tree[0], compact: true)}"
     c = tree[1].is_a?(Array) ? '' : " #{_c.yl}#{tree[1]}"
     l = " #{_c.dg}L#{tree[2]}"
 
@@ -224,7 +224,7 @@ module Flor
     end
 
     s << ind << _c.dg << '| ' << nid << ' '
-    s << _c.yl << Flor.s_to_d(tree[0], compact: true) << _c.dg << ' L' << tree[2]
+    s << _c.yl << Flor.to_d(tree[0], compact: true) << _c.dg << ' L' << tree[2]
 
     atts.each_with_index do |ct, i|
       print_flat_tree(ct, "_#{i}", opts)

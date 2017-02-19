@@ -82,7 +82,11 @@ module Flor
 
   def self.colours(opts={})
 
-    c = opts[:color] || opts[:colour] || opts[:colors] || opts[:colours]
+    c = nil
+      #
+    [ :color, :colour, :colors, :colours ].each do |k|
+      if opts.has_key?(k); c = opts[k]; break; end
+    end
 
     return @colours if c == true
     return @no_colours if c == false
