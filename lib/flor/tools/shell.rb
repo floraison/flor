@@ -470,22 +470,38 @@ module Flor::Tools
 
       exe =
         if id.match(/\A\d+\z/)
-          @unit.executions[id.to_i]
+          @unit.executions[id.to_i] ||
+          fail(ArgumentError.new("execution #{id} not found"))
         else
-          @unit.executions.first(Sequel.like(exid: "%#{id}%"))
+          @unit.executions.first(Sequel.like(exid: "%#{id}%")) ||
+          fail(ArgumentError.new("execution matching \"%#{id}%\" not found"))
         end
 
-      if exe
-        eid = { id: exe.id, exid: exe.exid }.inspect
-        con = Flor::Storage.from_blob(exe.values.delete(:content))
-        exe.values[:content] = '...'
-        puts @c.dg("--- exe #{eid} record:")
-        puts Flor.to_d(exe.values, colour: true, indent: 1, width: true)
-        puts @c.dg("--- exe #{eid} content:")
-        puts Flor.to_d(con, colour: true, indent: 1, width: true)
-      else
-        puts "not found"
-      end
+      eid = { id: exe.id, exid: exe.exid }.inspect
+      con = Flor::Storage.from_blob(exe.values.delete(:content))
+      exe.values[:content] = '...'
+
+      puts @c.dg("--- exe #{eid} record:")
+      puts Flor.to_d(exe.values, colour: true, indent: 1, width: true)
+      puts @c.dg("--- exe #{eid} content:")
+      puts Flor.to_d(con, colour: true, indent: 1, width: true)
+    end
+
+    def detail_timer(id)
+
+      timer = @unit.timers[id.to_i]
+
+      fail ArgumentError.new("timer #{id} not found") unless timer
+
+      tid = { id: timer.id, exid: timer.exid, nid: timer.nid }.inspect
+      timer = timer.values
+      con = Flor::Storage.from_blob(timer.delete(:content))
+      timer[:content] = '...'
+
+      puts @c.dg("--- timer #{tid} record:")
+      puts Flor.to_d(timer, colour: true, indent: 1, width: true)
+      puts @c.dg("--- timer #{tid} content:")
+      puts Flor.to_d(con, colour: true, indent: 1, width: true)
     end
 
     def hlp_detail
