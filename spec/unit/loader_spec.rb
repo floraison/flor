@@ -139,6 +139,21 @@ describe Flor::Loader do
       tc = @loader.tasker('org.example', 'charly')
       expect(tc['description']).to eq('org.example charly')
     end
+
+    it 'loads a tasker configuration do.ma.in.json' do
+
+      tc = @loader.tasker('mil.example', 'staff')
+      expect(tc['description']).to eq('mil.example.staff')
+
+      tc = @loader.tasker('mil.example.ground', 'staff')
+      expect(tc['description']).to eq('mil.example.ground.staff')
+
+      tc = @loader.tasker('mil.example.air', 'command')
+      expect(tc['description']).to eq('mil.example.air.command')
+
+      tc = @loader.tasker('mil.example.air.tactical', 'command')
+      expect(tc['description']).to eq('mil.example.air.command')
+    end
   end
 end
 

@@ -1,0 +1,10 @@
+
+# mil.example.json
+
+command: {
+  description: 'mil.example.command'
+}
+staff: {
+  description: 'mil.example.staff'
+}
+

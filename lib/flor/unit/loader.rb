@@ -79,11 +79,17 @@ module Flor
       path, d, n = Dir[File.join(root, '**/*.json')]
         .select { |pa| pa.index('/lib/taskers/') }
         .collect { |pa| [ pa, *expose_dn(pa, {}) ] }
-        .select { |pa, d, n| n == name && is_subdomain?(domain, d) }
+        .select { |pa, d, n|
+          is_subdomain?(domain, [ d, n ].join('.')) ||
+          (n == name && is_subdomain?(domain, d)) }
         .sort_by { |pa, d, n| d.count('.') }
         .last
 
-      path ? interpret(path) : nil
+      return nil unless path
+
+      conf = interpret(path)
+
+      n == name ? conf : conf[name]
     end
 
     protected

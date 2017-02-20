@@ -1,0 +1,10 @@
+
+# mil.example.ground.json
+
+command: {
+  description: 'mil.example.ground.command'
+}
+staff: {
+  description: 'mil.example.ground.staff'
+}
+
