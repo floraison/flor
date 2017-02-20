@@ -89,7 +89,13 @@ module Flor
 
       conf = interpret(path)
 
-      n == name ? conf : conf[name]
+      return conf if n == name
+
+      con = conf[name]
+
+      return nil unless con
+
+      con.merge!('_path' => conf['_path'])
     end
 
     protected

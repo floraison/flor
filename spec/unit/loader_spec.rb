@@ -138,6 +138,8 @@ describe Flor::Loader do
 
       tc = @loader.tasker('org.example', 'charly')
       expect(tc['description']).to eq('org.example charly')
+
+      expect(File.basename(tc['_path'])).to eq('charly.json')
     end
 
     it 'loads a tasker configuration do.ma.in.json' do
@@ -153,6 +155,8 @@ describe Flor::Loader do
 
       tc = @loader.tasker('mil.example.air.tactical', 'command')
       expect(tc['description']).to eq('mil.example.air.command')
+
+      expect(File.basename(tc['_path'])).to eq('air.json')
     end
   end
 end
