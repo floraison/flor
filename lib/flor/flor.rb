@@ -288,6 +288,15 @@ module Flor
     path
   end
 
+  def self.is_array_of_messages?(o)
+
+    o.is_a?(Array) &&
+    o.all? { |e|
+      e.is_a?(Hash) &&
+      e['point'].is_a?(String) &&
+      e.keys.all? { |k| k.is_a?(String) } }
+  end
+
   #
   # functions about time
 
