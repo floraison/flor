@@ -25,6 +25,9 @@
 
 module Flor
 
+  # used in procedure, cancel, until, cursor specs
+  # when "walking" and "stepping"
+
   def self.to_s(o=nil, k=nil)
 
     return 'FlorModule' if o == nil && k == nil
