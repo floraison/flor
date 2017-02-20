@@ -295,6 +295,19 @@ module Flor
       end
     end
 
+    def prepare_message(point, h)
+
+      msg = { 'point' => point }
+      [ :exid, :name, :nid, :payload ].each { |k| msg[k.to_s] = h[k] }
+
+      fail ArgumentError.new('missing :exid key') \
+        unless msg['exid'].is_a?(String)
+      fail ArgumentError.new('missing :name string key') \
+        if point == 'signal' && ! msg['name'].is_a?(String)
+
+      msg
+    end
+
     def cancel(h)
 
       queue(prepare_message('cancel', h), h)
@@ -304,17 +317,13 @@ module Flor
 
       h[:payload] ||= {}
       h[:name] ||= name
-
       queue(prepare_message('signal', h), h)
-    end
-
-    def re_apply(h)
-
-      queue(prepare_message('cancel', h.merge(re_apply: true)), h)
     end
 
     def put_timer(message)
 
+      #timer = @storage.put_timer(message)
+      #@mutex.synchronize { @timers.push(timer).sort_by!(&:ntime) }
       @storage.put_timer(message)
     end
 
@@ -370,38 +379,6 @@ module Flor
     end
 
     protected
-
-    def prepare_on_receive_last(h)
-
-      ei = h[:exid] || h['exid']
-      ni = h[:nid] || h['nid']
-      t = h[:tree] || h['tree']
-
-      t = Flor::Lang.parse(t, 're_apply', {})
-
-      [
-        { 'point' => 'execute', 'exid' => ei, 'nid' => ni, 'tree' => t }
-      ]
-    end
-
-    def prepare_message(point, h)
-
-      msg = { 'point' => point }
-
-      [ :exid, :name, :nid, :payload, :on_receive_last ]
-        .each { |k| v = h[k] || h[k.to_s]; msg[k.to_s] = v if v }
-
-      if h[:re_apply]
-        msg['on_receive_last'] = prepare_on_receive_last(h)
-      end
-
-      fail ArgumentError.new('missing :exid key') \
-        unless msg['exid'].is_a?(String)
-      fail ArgumentError.new('missing :name string key') \
-        if point == 'signal' && ! msg['name'].is_a?(String)
-
-      msg
-    end
 
     def make_idle_message
 
