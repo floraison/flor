@@ -100,7 +100,7 @@ module Flor
     a << tri
 
     cn = t ? " #{_c.dg}#{Flor.to_d(t[1], compact: true, inner: true)}" : ''
-    cn = cn.length > 49 ? "#{cn[0, 49]}..." : cn
+    cn = cn.length > 49 ? "#{cn[0, 49]}#{_c.rs}..." : cn
     a << cn
 
     hp = nd && nd['heap']

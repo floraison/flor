@@ -117,13 +117,17 @@ module Flor
 
     def object_to_d(x, opts)
 
+      inner = opts.delete(:inner)
+
       indent_space(opts)
 
       return c_inf('{}', opts) if x.empty?
 
       opts = adjust(x, opts)
 
-      c_inf('{', opts); space(opts)
+      unless inner
+        c_inf('{', opts); space(opts)
+      end
 
       x.each_with_index do |(k, v), i|
         string_to_d(k, indent(opts, first: i == 0))
@@ -136,10 +140,14 @@ module Flor
         end
       end
 
-      space(opts); c_inf('}', opts)
+      unless inner
+        space(opts); c_inf('}', opts)
+      end
     end
 
     def array_to_d(x, opts)
+
+      inner = opts.delete(:inner)
 
       indent_space(opts)
 
@@ -147,7 +155,9 @@ module Flor
 
       opts = adjust(x, opts)
 
-      c_inf('[', opts); space(opts)
+      unless inner
+        c_inf('[', opts); space(opts)
+      end
 
       x.each_with_index do |e, i|
         to_d(e, indent(opts, first: i == 0))
@@ -157,7 +167,9 @@ module Flor
         end
       end
 
-      space(opts); c_inf(']', opts)
+      unless inner
+        space(opts); c_inf(']', opts)
+      end
     end
 
     def string_to_d(x, opts)
@@ -207,32 +219,5 @@ module Flor
     def c_str(s, opts); opts[:s] << opts[:c].brown(s); end
     def c_num(s, opts); opts[:s] << opts[:c].light_blue(s); end
   end
-
-#  #
-#  # djan
-#  #
-#  # functions about the "djan" silly version of JSON
-#
-#  def self.to_djan(x, opts={})
-#
-#    opts[:cl] =
-#      opts[:color] || opts[:colour] || opts[:colours] || opts[:colors]
-#
-#    r =
-#      case x
-#      when nil then 'null'
-#      when String then string_to_d(x, opts)
-#      when Hash then object_to_d(x, opts)
-#      when Array then array_to_d(x, opts)
-#      when TrueClass then c_tru(x.to_s, opts)
-#      when FalseClass then c_tru(x.to_s, opts)
-#      else c_num(x.to_s, opts)
-#      end
-#    if opts[:inner]
-#      opts.delete(:inner)
-#      r = r[1..-2] if r[0, 1] == '[' || r[0, 1] == '{'
-#    end
-#    r
-#  end
 end
 
