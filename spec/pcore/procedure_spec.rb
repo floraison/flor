@@ -180,7 +180,44 @@ describe Flor::Procedure do
 
     describe '#receive' do
 
-      it 'works'
+      it 'works' do
+
+        # preparation
+
+        flon = %{
+          sequence      # 0
+            sequence    # 0_0 <-- our test point
+              sequence  # 0_0_0
+        }
+
+        ms = @executor.launch(flon, until_after: '0_0_0 execute')
+
+        expect(F.to_s(ms)).to eq('(msg 0_0 receive from:0_0_0)')
+
+        n = @executor.node('0_0')
+
+        ms0 = @executor.step({
+          'point' => 'cancel', 'nid' => '0_0', 'from' => '0' });
+
+        n = @executor.node('0_0')
+
+        expect(n['status'].last['status']).to eq('closed')
+
+        # test
+
+        ms = @executor.step({
+          'point' => 'receive', 'nid' => '0_0', 'from' => '0_0_0',
+          'payload' => {}  });
+
+        expect(ms.size).to eq(1)
+
+        m = ms[0]
+
+        expect(m['point']).to eq('receive')
+        expect(m['nid']).to eq('0')
+        expect(m['from']).to eq('0_0')
+        expect(m['payload']).to eq({})
+      end
     end
 
     describe '#cancel' do
