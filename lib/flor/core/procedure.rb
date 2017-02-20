@@ -294,7 +294,7 @@ class Flor::Procedure < Flor::Node
 
   def receive_when_closed
 
-    []
+    pop_on_receive_last || []
   end
 
   def receive_when_ended
@@ -541,6 +541,7 @@ class Flor::Procedure < Flor::Node
 
     return cancel_when_ended if node_ended?
     return cancel_when_closed if node_closed?
+    return cancel_when_orl if @message['on_receive_last']
 
     cancel
   end
@@ -555,6 +556,13 @@ class Flor::Procedure < Flor::Node
     [] # by default, no effect
   end
 
+  def cancel_when_orl
+
+    @node['on_receive_last'] = @message['on_receive_last']
+
+    cancel
+  end
+
   def cancel
 
     close_node
@@ -563,6 +571,8 @@ class Flor::Procedure < Flor::Node
 
     if nids && nids.any?
       cancel_children
+    elsif @node['on_receive_last']
+      do_receive
     else
       cancel_reply
     end
