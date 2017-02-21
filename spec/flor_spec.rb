@@ -207,5 +207,33 @@ describe Flor do
       expect(Flor.tree_locate(t, '0_1_1')[0]).to eq('charly')
     end
   end
+
+  describe '.extract_exid_and_nid(s)' do
+
+    it 'returns nil if s does not hold a exid-nid' do
+
+      expect(Flor.extract_exid_and_nid('x')).to eq(nil)
+    end
+
+    it 'returns [ exid, nid ]' do
+
+      expect(
+        Flor.extract_exid_and_nid(
+          'task-shell-cli-20170221.0029.fuchemowabe-0_1_1.json')
+      ).to eq(%w[
+        20170221.0029.fuchemowabe 0_1_1
+      ])
+    end
+
+    it 'returns [ exid, nid ] (when subnid)' do
+
+      expect(
+        Flor.extract_exid_and_nid(
+          'task-shell-cli-20170221.0029.fuchemowabe-0_1_1-1.json')
+      ).to eq(%w[
+        20170221.0029.fuchemowabe 0_1_1-1
+      ])
+    end
+  end
 end
 

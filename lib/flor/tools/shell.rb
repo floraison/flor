@@ -392,10 +392,7 @@ module Flor::Tools
           ss = pa.split('/')
           tasker = ss[-2]
 
-          exid, nid, subnid =
-            ss[-1].match(
-              /-(\d{8}\.\d{4}\.[a-z]+)-([\d_]+)(-\d+)?\.json\z/)[1, 3]
-          nid = nid + subnid if subnid
+          exid, nid = Flor.extract_exid_and_nid(ss[-1])
 
           data = JSON.parse(File.read(pa)) rescue nil
           data = data || { 'payload': nil }

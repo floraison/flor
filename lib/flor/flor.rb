@@ -173,6 +173,15 @@ module Flor
     !! (s.is_a?(String) && s.match(/\A[0-9]+(?:_[0-9]+)*(?:-[0-9]+)?\z/))
   end
 
+  # Returns [ exid, nid ]
+  #
+  def self.extract_exid_and_nid(s)
+
+    m = s.match(/(\d{8}\.\d{4}\.[a-z]+)-(\d+(?:_\d+)*)(-\d+)?/)
+
+    m ? [ m[1], [ m[2], m[3] ].compact.join ] : nil
+  end
+
   #
   # misc
   #
