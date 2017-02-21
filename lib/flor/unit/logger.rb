@@ -124,11 +124,13 @@ module Flor
       return unless @unit.conf['log_run']
 
       execution = executor.execution
+      exid = executor.exid
+
       _c = Flor.colours(out: @out)
       s = StringIO.new
 
       s << _c.dg
-      s << "    |   run ends #{self.class} #{self.object_id} #{@exid}"
+      s << "    |   run ends #{self.class} #{self.object_id} #{exid}"
       s << "\n    |   "; s << { started: tstamp, took: duration }.inspect
       s << "\n    |   "; s << {
         thread: Thread.current.object_id,
@@ -144,7 +146,7 @@ module Flor
       if @unit.archive
         s << "\n    |   "
         s << {
-          archive_size: @unit.archive[@exid].size
+          archive_size: (@unit.archive[exid].size rescue '???')
         }.inspect
       end
       s << "\n    \\--- ."
