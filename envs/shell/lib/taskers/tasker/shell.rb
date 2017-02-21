@@ -7,7 +7,7 @@ class ShellTasker < Flor::BasicTasker
 
     case @message['tasker']
     when *NATO then route 'nato'
-    else route false
+    else route true
     end
   end
 
