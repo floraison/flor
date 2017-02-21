@@ -76,7 +76,7 @@ module Flor
     a << tri
 
     cn = t ? " #{_c.dg}#{Flor.to_d(t[1], compact: true, inner: true)}" : ''
-    cn = cn.length > 49 ? "#{cn[0, 49]}#{_c.rs}..." : cn
+    cn = Flor.truncate_string(cn, 49, "#{_c.dg}...#{_c.rs}")
     a << cn
 
     hp = nd && nd['heap']
@@ -90,7 +90,7 @@ module Flor
     fr = m['from'] ? " from #{m['from']}" : ''
     a << fr
 
-    rt = ret_to_s(executor, m)
+    rt = ret_to_s(executor, m, _c)
     rt = rt.length > 0 ? " #{_c.lg}f.ret #{rt}" : ''
     a << rt
 
@@ -219,12 +219,11 @@ module Flor
     opts[:out].puts(s.string) if is_root
   end
 
-  def self.ret_to_s(executor, m)
+  def self.ret_to_s(executor, m, c)
 
     ret = (m['payload'] || {})['ret']
     s = Flor.to_d(ret, compact: true)
-    l = s.length
-    l < 35 ? s : "#{s[0, 35]}(...L#{l})"
+    Flor.truncate_string(s, 35, Proc.new { |x| "#{c.dg}... (L#{x})#{c.rs}" })
   end
 
   def self.nod_to_s(executor, n, opts, here=false)
