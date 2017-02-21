@@ -26,6 +26,9 @@ module Flor
     def payload; @message['payload']; end
     alias fields payload
 
+    def attd; @message['attd']; end
+    def attl; @message['attl']; end
+
     def tasker; @message['tasker']; end
     def taskname; @message['taskname']; end
     alias task_name taskname
@@ -41,12 +44,13 @@ module Flor
     #
     def route(name)
 
-      if name == false
+      if name.is_a?(String)
 
         [
           Flor.dup_and_merge(
             @message,
-            'routed' => false)
+            'tasker' => name, 'original_tasker' => @message['tasker'],
+            'routed' => true)
         ]
 
       else
@@ -54,8 +58,7 @@ module Flor
         [
           Flor.dup_and_merge(
             @message,
-            'tasker' => name, 'original_tasker' => @message['tasker'],
-            'routed' => true)
+            'routed' => !! name)
         ]
       end
     end
