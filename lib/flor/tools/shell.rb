@@ -405,7 +405,7 @@ module Flor::Tools
           exid, nid = Flor.extract_exid_and_nid(ss[-1])
 
           data = JSON.parse(File.read(pa)) rescue nil
-          data = data || { 'payload': nil }
+          data = data || { 'payload' => nil }
             #
           pl = Flor.to_d(
             data['payload'],
