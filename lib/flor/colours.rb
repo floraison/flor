@@ -73,5 +73,10 @@ module Flor
       @colours :
       @no_colours
   end
+
+  def self.decolour(s)
+    s.gsub(/\x1b\[\d+(;\d+)?m/, '')
+  end
+  class << self; alias decolor decolour; end
 end
 

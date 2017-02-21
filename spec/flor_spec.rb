@@ -53,6 +53,18 @@ describe Flor do
     end
   end
 
+  describe '.decolour(s)' do
+
+    it 'removes colour codes' do
+
+      c = Flor.colours
+      s = c.dg('nothing') + ' ' + c.yl('surf')
+
+      expect(s).to eq("\e[90mnothing\e[0;9m \e[33msurf\e[0;9m")
+      expect(Flor.decolour(s)).to eq('nothing surf')
+    end
+  end
+
   describe '.tstamp' do
 
     it 'returns the current timestamp' do
