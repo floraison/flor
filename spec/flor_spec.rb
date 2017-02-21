@@ -1,3 +1,4 @@
+# encoding: UTF-8
 
 #
 # specifying flor
@@ -69,10 +70,78 @@ describe Flor do
 
     it 'returns the string length, escape code put aside' do
 
-      c = Flor.colours
-      s = c.dg('tribu') + ' ' + c.yl('dana')
+      c = Flor.colours; s = c.dg('tribu') + ' ' + c.yl('dana')
 
       expect(Flor.bw_length(s)).to eq(10)
+    end
+  end
+
+  describe '.truncate_string(s, l)' do
+
+    it 'truncates' do
+
+      c = Flor.colours; s = c.dg('tribu') + ' de ' + c.yl('dana')
+
+      #(0..Flor.no_colour_length(s) + 1).each do |i|
+      #  puts Flor.truncate_string(s, i)
+      #end
+      expect(Flor.truncate_string(s, 7)).to eq("\e[90mtribu\e[0;9m d...")
+      expect(Flor.truncate_string(s, 6)).to eq("\e[90mtribu\e[0;9m ...")
+      expect(Flor.truncate_string(s, 5)).to eq("\e[90mtribu...")
+      expect(Flor.truncate_string(s, 4)).to eq("\e[90mtrib...")
+    end
+
+    it 'truncates (no colours)' do
+
+      s = 'tribut à César'
+
+      expect(Flor.truncate_string(s, 8)).to eq('tribut à...')
+    end
+  end
+
+  describe '.truncate_string(s, l, "<<<")' do
+
+    it 'truncates' do
+
+      c = Flor.colours; s = c.dg('tribu') + ' de ' + c.yl('dana')
+
+      expect(Flor.truncate_string(s, 7, '<<<')).to eq("\e[90mtribu\e[0;9m d<<<")
+    end
+
+    it 'truncates (no colours)' do
+
+      s = 'tribut à César'
+
+      expect(Flor.truncate_string(s, 8, '<<<')).to eq('tribut à<<<')
+    end
+  end
+
+  describe '.truncate_string(s, l, proc)' do
+
+    it 'truncates' do
+
+      c = Flor.colours; s = c.dg('tribu') + ' de ' + c.yl('dana')
+
+      expect(
+        Flor.truncate_string(s, 7, Proc.new { |x, y, z| [ x, y, z ].inspect })
+      ).to eq(
+        "\e[90mtribu\e[0;9m d[13, 7, \"\\e[90mtribu\\e[0;9m de " +
+        "\\e[33mdana\\e[0;9m\"]"
+      )
+      expect(
+        Flor.truncate_string(s, 7, Proc.new { |x| "... (L#{x})" })
+      ).to eq(
+        "\e[90mtribu\e[0;9m d... (L13)"
+      )
+    end
+
+    it 'truncates (no colours)' do
+
+      s = 'tribut à César'
+
+      expect(
+        Flor.truncate_string(s, 8, Proc.new { |x| "... (L#{x})" })
+      ).to eq('tribut à... (L14)')
     end
   end
 

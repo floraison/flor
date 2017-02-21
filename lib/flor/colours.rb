@@ -83,8 +83,34 @@ module Flor
     decolour(s).length
   end
 
-  #def self.truncate_string(s, post='...')
-  #end
+  def self.truncate_string(s, maxlen, post='...')
+
+    ncl = no_colour_length(s)
+    r = StringIO.new
+    l = 0
+
+    s.scan(/(\x1b\[\d+(?:;\d+)?m|[^\x1b]+)/) do |ss, _|
+      if ss[0, 1] == ""
+        r << ss
+      else
+#p({ r: r.string, l: l, ssl: ss.length, maxlen: maxlen, reml: maxlen - l })
+        ss = ss[0, maxlen - l]
+        r << ss
+        l += ss.length
+        break if l >= maxlen
+      end
+    end
+
+    return r.string if l < maxlen
+
+    if post.is_a?(String)
+      r << post
+    elsif post.is_a?(Proc)
+      r << post.call(ncl, maxlen, s)
+    end
+
+    r.string
+  end
 
   class << self
 
