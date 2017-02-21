@@ -24,7 +24,7 @@ class NatoTasker < Flor::BasicTasker
 
     FileUtils.rm_f(File.join(dir, fname))
 
-    @ganger.reply(@message)
+    reply
   end
 
   protected
