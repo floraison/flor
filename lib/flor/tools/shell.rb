@@ -37,6 +37,7 @@ module Flor::Tools
       if argv.any?
         do_eval(argv.join(' '))
       else
+        print_header
         do_loop
       end
     end
@@ -90,7 +91,14 @@ module Flor::Tools
       end
     end
 
+    def print_header
+
+      puts "flosh - a flor #{Flor::VERSION} shell"
+    end
+
     def prompt
+
+      root = @c.dark_gray(@root + '/')
 
       ec = @unit.executions.where(status: 'active').count
       exes = ' ' + @c.yellow("ex#{ec}")
@@ -104,7 +112,7 @@ module Flor::Tools
       end
       tas = ta > 0 ? ' ' + @c.yellow("ta#{ta}") : ''
 
-      "flor#{exes}#{tis}#{tas} > "
+      "#{root}#{exes}#{tis}#{tas} > "
     end
 
     def do_eval(line)
@@ -383,7 +391,11 @@ module Flor::Tools
 
           ss = pa.split('/')
           tasker = ss[-2]
-          exid, nid = ss[-1][0..-6].split('-')[-2, 2]
+
+          exid, nid, subnid =
+            ss[-1].match(
+              /-(\d{8}\.\d{4}\.[a-z]+)-([\d_]+)(-\d+)?\.json\z/)[1, 3]
+          nid = nid + subnid if subnid
 
           data = JSON.parse(File.read(pa)) rescue nil
           data = data || { 'payload': nil }
@@ -721,7 +733,7 @@ fail NotImplementedError
           h = st.last.is_a?(Hash) ? st.last : (st << {})
           h[:tasker] = pt
         else
-          orphans << n
+          orphans << pt
         end
       end
 
