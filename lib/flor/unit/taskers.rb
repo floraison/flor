@@ -23,6 +23,15 @@ module Flor
     def exid; @message['exid']; end
     def nid; @message['nid']; end
 
+    def payload; @message['payload']; end
+    alias fields payload
+
+    def tasker; @message['tasker']; end
+    def taskname; @message['taskname']; end
+    alias task_name taskname
+
+    def vars; @message['vars']; end
+
     def execution
 
       @ganger.unit.execution(exid)
