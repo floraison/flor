@@ -86,7 +86,17 @@ module Flor::Tools
           message['consumed'] = message.delete('consumed')
             # reorganize to make payload/consumed stand out
 
-          puts Flor.to_d(message, colour: true, indent: 1, width: true)
+          #puts Flor.to_d(message, colour: true, indent: 1, width: true)
+          #puts Flor.to_d(message, colour: true)
+
+          c = Flor.colours
+          s = StringIO.new
+          s << c.dg("\n  +--- hook intercept ---\n")
+          message.each do |k, v|
+            s << c.dg << ('  | ') << k << ' ' << v.inspect << c.rs << "\n"
+          end
+          s << c.dg("  .")
+          puts s.string
         end
       end
     end
