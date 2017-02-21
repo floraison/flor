@@ -65,6 +65,17 @@ describe Flor do
     end
   end
 
+  describe '.nocolour_length(s)' do
+
+    it 'returns the string length, escape code put aside' do
+
+      c = Flor.colours
+      s = c.dg('tribu') + ' ' + c.yl('dana')
+
+      expect(Flor.bw_length(s)).to eq(10)
+    end
+  end
+
   describe '.tstamp' do
 
     it 'returns the current timestamp' do

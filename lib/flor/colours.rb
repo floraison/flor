@@ -77,6 +77,23 @@ module Flor
   def self.decolour(s)
     s.gsub(/\x1b\[\d+(;\d+)?m/, '')
   end
-  class << self; alias decolor decolour; end
+
+  def self.no_colour_length(s)
+
+    decolour(s).length
+  end
+
+  #def self.truncate_string(s, post='...')
+  #end
+
+  class << self
+
+    alias decolor decolour
+
+    alias bw_length no_colour_length
+    alias nocolor_length no_colour_length
+    alias no_color_length no_colour_length
+    alias nocolour_length no_colour_length
+  end
 end
 
