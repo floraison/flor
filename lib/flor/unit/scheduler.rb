@@ -271,17 +271,16 @@ module Flor
       end
     end
 
-    def prepare_message(point, h)
+    def return(message)
 
-      msg = { 'point' => point }
-      [ :exid, :name, :nid, :payload ].each { |k| msg[k.to_s] = h[k] }
+      queue({
+        'point' => 'return',
+        'exid' => message['exid'],
+        'nid' => message['nid'],
+        'payload' => message['payload'],
+        'tasker' => message['tasker'] })
 
-      fail ArgumentError.new('missing :exid key') \
-        unless msg['exid'].is_a?(String)
-      fail ArgumentError.new('missing :name string key') \
-        if point == 'signal' && ! msg['name'].is_a?(String)
-
-      msg
+      nil
     end
 
     def cancel(h)
@@ -355,6 +354,19 @@ module Flor
     end
 
     protected
+
+    def prepare_message(point, h)
+
+      msg = { 'point' => point }
+      [ :exid, :name, :nid, :payload ].each { |k| msg[k.to_s] = h[k] }
+
+      fail ArgumentError.new('missing :exid key') \
+        unless msg['exid'].is_a?(String)
+      fail ArgumentError.new('missing :name string key') \
+        if point == 'signal' && ! msg['name'].is_a?(String)
+
+      msg
+    end
 
     def make_idle_message
 

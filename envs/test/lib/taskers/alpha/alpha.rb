@@ -25,7 +25,7 @@ class AlphaTasker
         }
       ]
 
-    @tasker.reply(message)
+    @tasker.return(message)
   end
 end
 

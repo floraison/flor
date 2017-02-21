@@ -64,16 +64,9 @@ module Flor
       fail NotImplementedError
     end
 
-    def reply(message)
+    def return(message)
 
-      @unit.queue({
-        'point' => 'return',
-        'exid' => message['exid'],
-        'nid' => message['nid'],
-        'payload' => message['payload'],
-        'tasker' => message['tasker'] })
-
-      nil
+      @unit.return(message)
     end
 
     protected

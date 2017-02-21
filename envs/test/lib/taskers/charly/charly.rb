@@ -22,7 +22,7 @@ class CharlyTasker
 
     message['payload']['charly'] = c
 
-    @tasker.reply(message)
+    @tasker.return(message)
   end
 end
 

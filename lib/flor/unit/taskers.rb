@@ -14,10 +14,11 @@ module Flor
 
     protected
 
-    def reply(force=false)
+    def return(force=false)
 
-      @ganger.reply(@message) if force || @ganger
+      @ganger.return(@message) if force || @ganger
     end
+    alias reply return
 
     def exid; @message['exid']; end
     def nid; @message['nid']; end

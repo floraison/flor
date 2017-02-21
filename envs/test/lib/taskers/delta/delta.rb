@@ -13,7 +13,7 @@ class DeltaTasker
 
     message['payload']['ret'] = 'dimitri'
 
-    @tasker.reply(message)
+    @tasker.return(message)
   end
 end
 

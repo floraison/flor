@@ -18,7 +18,7 @@ class BravoTasker
 
     message['payload']['ret'] = 'bravo cancelled'
 
-    @tasker.reply(message)
+    @tasker.return(message)
   end
 end
 

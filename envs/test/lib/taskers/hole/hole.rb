@@ -3,9 +3,9 @@
 
 class HoleTasker
 
-  def initialize(tasker, conf)
+  def initialize(ganger, conf)
 
-    @tasker = tasker
+    @ganger = ganger
   end
 
   def task(message)
@@ -19,7 +19,7 @@ class HoleTasker
     (message['payload'] ||= {})['holed'] = @@message
     @@message = nil
 
-    @tasker.reply(message)
+    @ganger.return(message)
   end
 
   def self.message

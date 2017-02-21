@@ -464,18 +464,18 @@ module Flor::Tools
     end
     make_alias('tis', 'timers')
 
-    def hlp_reply
-      %{ replies to a task }
+    def hlp_return
+      %{ returns a task to the unit }
     end
-    def man_reply
+    def man_return
       %{
-        * reply fragment
+        * return fragment
           given a task filename fragment (for example "ache-0_0")
-          reads the task payload and replies to the unit (making the
+          reads the task payload and returns it to the unit (making the
           execution go on)
       }
     end
-    def cmd_reply(line)
+    def cmd_return(line)
 
       t = arg(line)
 
@@ -491,10 +491,10 @@ module Flor::Tools
       ) unless path
 
       m = JSON.parse(File.read(path))
-      @unit.ganger.reply(m)
+      @unit.return(m)
       FileUtils.rm(path)
     end
-    make_alias('rep', 'reply')
+    make_alias('ret', 'return')
 
     def hlp_debug
       %{ re-sets debug flags }
