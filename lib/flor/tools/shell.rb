@@ -29,6 +29,7 @@ module Flor::Tools
       @unit.start
 
       @flow_path = File.join(@root, 'home/scratch.flo')
+      @ra_flow_path = File.join(@root, 'home/ra_scratch.flo')
       @payload_path = File.join(@root, 'home/payload.json')
       @variables_path = File.join(@root, 'home/variables.json')
 
@@ -183,6 +184,8 @@ module Flor::Tools
         @payload_path
       when /\At/
         Dir[File.join(@root, 'var/tasks/**/*.json')].find { |pa| pa.index(b) }
+      when /\Ar/
+        @ra_flow_path
       else
         @flow_path
       end
@@ -347,6 +350,8 @@ module Flor::Tools
           edits the flow for the next execution
         * edit t|task frag
           edits a task currently under var/tasks/
+        * edit r
+          edits the flow for re-applying
       }
     end
     def cmd_edit(line)
@@ -747,6 +752,26 @@ fail NotImplementedError
       render_node(tree, '0')
     end
     make_alias('r', 'render')
+
+    def hlp_reapply
+      %{ reapply at a given node with tree ra_sratch.flo }
+    end
+    def man_reapply
+      %{
+        * reapply exid_fragment nid
+      }
+    end
+    def cmd_reapply(line)
+
+      exid, nid = lookup_exid_nid(line)
+
+      t = File.read(@ra_flow_path)
+      pl = Flor::ConfExecutor.interpret(@payload_path)
+
+      @unit.re_apply(exid: exid, nid: nid, tree: t, payload: pl)
+
+      puts @c.yellow("re-apply message queued for #{exid} #{nid}")
+    end
 
     #
     # use Readline if possible
