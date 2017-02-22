@@ -10,7 +10,7 @@ def make_proc_doc(path)
 
   cline = lines.index { |l| l.match(/^class Flor::Pro::.* < Flor::Pro/) }
 
-  return unless cline > 0
+  return unless cline && cline > 0
 
   nline = lines.index { |l| l.match(/^ +names?/) }
 

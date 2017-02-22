@@ -16,5 +16,6 @@
 ## unit
 
 * [cancel, kill](cancel.md) - Cancels an execution branch
+* [schedule](schedule.md) - Schedules a function
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
 
