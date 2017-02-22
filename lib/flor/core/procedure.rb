@@ -260,6 +260,11 @@ class Flor::Procedure < Flor::Node
 
     @node['mtime'] = Flor.tstamp
 
+    #orl.each do |m|
+    #  m['payload'] ||= Flor.dup(@node['payload'])
+    #end
+      # No, let re_applier supply payload
+
     orl
   end
 
@@ -514,6 +519,9 @@ class Flor::Procedure < Flor::Node
   def do_cancel
 
     return kill if @message['flavour'] == 'kill'
+
+    orl = @message['on_receive_last']
+    @node['on_receive_last'] = orl if orl
 
     return cancel_when_ended if node_ended?
     return cancel_when_closed if node_closed?

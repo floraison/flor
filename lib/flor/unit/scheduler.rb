@@ -295,6 +295,11 @@ module Flor
       queue(prepare_message('signal', h), h)
     end
 
+    def re_apply(h)
+
+      queue(prepare_message('cancel', h.merge(re_apply: true)), h)
+    end
+
     def put_timer(message)
 
       #timer = @storage.put_timer(message)
@@ -355,10 +360,36 @@ module Flor
 
     protected
 
+    def prepare_on_receive_last(h)
+
+      ei = h[:exid] || h['exid']
+      ni = h[:nid] || h['nid']
+      t = h[:tree] || h['tree']
+      pl = h[:payload] || h['payload']
+
+      fail ArgumentError.new('missing :payload to re_apply') unless pl
+
+      t = Flor::Lang.parse(t, 're_apply', {})
+
+      [
+        { 'point' => 'execute',
+          'exid' => ei, 'nid' => ni + '_0',
+          'from' => ni,
+          'tree' => t,
+          'payload' => pl }
+      ]
+    end
+
     def prepare_message(point, h)
 
       msg = { 'point' => point }
-      [ :exid, :name, :nid, :payload ].each { |k| msg[k.to_s] = h[k] }
+
+      [ :exid, :name, :nid, :payload, :on_receive_last ]
+        .each { |k| v = h[k] || h[k.to_s]; msg[k.to_s] = v if v }
+
+      if h[:re_apply]
+        msg['on_receive_last'] = prepare_on_receive_last(h)
+      end
 
       fail ArgumentError.new('missing :exid key') \
         unless msg['exid'].is_a?(String)
@@ -377,28 +408,6 @@ module Flor
 
       m
     end
-
-#    # return [ domain, tree ]
-#    #
-#    def extract_domain_and_tree(s, opts)
-#
-#      if Flor.potential_domain_name?(s)
-#
-#        path = [ opts[:domain], s ].compact.join('.')
-#        elts = path.split('.')
-#        flow = @loader.library(path)
-#
-#        fail ArgumentError.new(
-#          "flow not found at #{path.inspect}"
-#        ) unless flow
-#
-#        [ elts[0..-2].join('.'), flow ]
-#
-#      else
-#
-#        [ opts[:domain], s ]
-#      end
-#    end
 
     def should_wake_up?
 
