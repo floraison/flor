@@ -232,7 +232,7 @@ module Flor
 
     t = n['tree'] || Node.new(executor, n, nil).lookup_tree(n['nid'])
     t = Flor.to_d(t, compact: true) if t
-    t = t[0, 35] + '...' if t && t.length > 35
+    t = Flor.truncate_string(t, 42);
 
     h = {}
     %w[ parent cnid noreply dbg removed ].each do |k|
