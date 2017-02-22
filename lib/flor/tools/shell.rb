@@ -128,6 +128,9 @@ module Flor::Tools
 
     def do_eval(line)
 
+      line = line.strip
+      return if line[0, 1] == '#'
+
       md = line.split(/\s/).first
       cmd = "cmd_#{md}".to_sym
 
