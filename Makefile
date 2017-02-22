@@ -71,7 +71,7 @@ shell:
 sh: shell
 
 cleanshell:
-	rm envs/shell/var/flor.db
+	rm -f envs/shell/var/flor.db
 	rm -fR envs/shell/var/tasks/*
 
 .PHONY: doc shell cleanshell
