@@ -373,8 +373,8 @@ module Flor
 
       [
         { 'point' => 'execute',
-          'exid' => ei, 'nid' => ni + '_0',
-          'from' => ni,
+          'exid' => ei, 'nid' => ni,
+          'from' => 'parent',
           'tree' => t,
           'payload' => pl }
       ]

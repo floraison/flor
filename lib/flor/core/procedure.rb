@@ -260,10 +260,13 @@ class Flor::Procedure < Flor::Node
 
     @node['mtime'] = Flor.tstamp
 
-    #orl.each do |m|
-    #  m['payload'] ||= Flor.dup(@node['payload'])
-    #end
-      # No, let re_applier supply payload
+    orl.each do |m|
+
+      m['from'] = @node['parent'] if m['from'] == 'parent'
+
+      #m['payload'] ||= Flor.dup(@node['payload'])
+        # No, let re_applier supply payload
+    end
 
     orl
   end
