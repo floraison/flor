@@ -91,11 +91,11 @@ module Flor::Tools
 
           c = Flor.colours
           s = StringIO.new
-          s << c.dg("\n  +--- hook intercept ---\n")
+          s << c.dg("\n  /---\n")
           message.each do |k, v|
-            s << c.dg << ('  | ') << k << ' ' << v.inspect << c.rs << "\n"
+            s << c.dg << ('  | ') << k << ': ' << v.inspect << c.rs << "\n"
           end
-          s << c.dg("  .")
+          s << c.dg("  \\---")
           puts s.string
         end
       end
