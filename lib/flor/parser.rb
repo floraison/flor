@@ -150,8 +150,29 @@ module Flor
 
     def rewrite_symbol(t); [ t.string, [], ln(t) ]; end
 
+#  rex(:dqstring, i, %r{
+#    "(
+#      \\["bfnrt] |
+#      \\u[0-9a-fA-F]{4} |
+#      [^"\\\b\f\n\r\t]
+#    )*"
+#  }x)
+    STRMAP = {
+      '"' => '"', 'b' => "\b",
+      'f' => "\f", 'n' => "\n",
+      'r' => "\r", 't' => "\t"
+    }
+    def restring(s)
+
+      s.gsub(/\\(["bfnrt])/) { |x| STRMAP[x[1, 1]] }
+    end
+
+    def rewrite_dqstring(t)
+
+      [ '_dqs', restring(t.string[1..-2]), ln(t) ]
+    end
+
     def rewrite_sqstring(t); [ '_sqs', t.string[1..-2], ln(t) ]; end
-    def rewrite_dqstring(t); [ '_dqs', t.string[1..-2], ln(t) ]; end
     def rewrite_rxstring(t); [ '_rxs', t.string, ln(t) ]; end
 
     def rewrite_boolean(t); [ '_boo', t.string == 'true', line_number(t) ]; end

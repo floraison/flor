@@ -80,6 +80,15 @@ parses to
 ---
 
 ```flor
+  "g\n\r\thi"
+```
+parses to
+```ruby
+  [ '_dqs', "g\n\r\thi", 1 ]
+```
+---
+
+```flor
   /jkl/
 ```
 parses to
