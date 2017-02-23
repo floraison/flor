@@ -239,7 +239,7 @@ module Flor
       end
 
       fail ArgumentError.new(
-        "flow not found in #{Flor.truncate(source_or_path, 35).inspect}"
+        "flow not found in #{Flor.truncate_string(source_or_path, 35).inspect}"
       ) unless source # will anyway fail badly if src is a tree (array of ...)
 
       @archive ||= {} if opts[:archive]

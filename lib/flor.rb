@@ -18,6 +18,7 @@ end
 require 'flor/colours'
 require 'flor/djan'
 
+require 'flor/id'
 require 'flor/log'
 require 'flor/flor'
 require 'flor/deep'
