@@ -112,6 +112,14 @@ parses to
 ```
 ---
 
+```flor
+  "\u5929\u6C17"
+```
+parses to
+```ruby
+  [ '_dqs', "天気", 1 ]
+```
+
 ### regular expressions
 
 ```flor

@@ -150,16 +150,16 @@ module Flor
 
     def rewrite_symbol(t); [ t.string, [], ln(t) ]; end
 
-    def unescape(s)
-      case (s1 = s[1, 1])
-      when '"', '\\', '/' then s1
-      when 'b' then "\b"; when 'f' then "\f"; when 'n' then "\n";
-      when 'r' then "\r"; when 't' then "\t"
-      else s
-      end
-    end
+    UNESCAPE = {
+      "'" => "'", '"' => '"', '\\' => '\\', '/' => '/',
+      'b' => "\b", 'f' => "\f", 'n' => "\n", 'r' => "\r", 't' => "\t"
+    }
     def restring(s)
-      s.gsub(/\\["\\\/bfnrt]/) { |ss| unescape(ss) }
+      s.gsub(
+        /\\(?:(["\\\/bfnrt])|u([\da-fA-F]{4}))/
+      ) {
+        $1 ? UNESCAPE[$1] : [ "#$2".hex ].pack('U*')
+      }
     end
 
     def rewrite_dqstring(t); [ '_dqs', restring(t.string[1..-2]), ln(t) ]; end
