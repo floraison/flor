@@ -24,6 +24,16 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('abc def')
     end
+
+    it 'works with strings with backslash escapes' do
+
+      r = @executor.launch(%{ "abc\\ndef" })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq("abc\ndef")
+    end
+
+    it 'works with strings with backslash escapes for unicode characters'
   end
 
   describe '_rxs' do

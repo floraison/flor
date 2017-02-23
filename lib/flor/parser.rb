@@ -16,7 +16,7 @@ module Flor
 
       rex(:dqstring, i, %r{
         "(
-          \\["bfnrt] |
+          \\["\\\/bfnrt] |
           \\u[0-9a-fA-F]{4} |
           [^"\\\b\f\n\r\t]
         )*"
@@ -27,7 +27,7 @@ module Flor
 
       rex(:sqstring, i, %r{
         '(
-          \\['bfnrt] |
+          \\['\\\/bfnrt] |
           \\u[0-9a-fA-F]{4} |
           [^'\\\b\f\n\r\t]
         )*'
@@ -150,28 +150,19 @@ module Flor
 
     def rewrite_symbol(t); [ t.string, [], ln(t) ]; end
 
-#  rex(:dqstring, i, %r{
-#    "(
-#      \\["bfnrt] |
-#      \\u[0-9a-fA-F]{4} |
-#      [^"\\\b\f\n\r\t]
-#    )*"
-#  }x)
-    STRMAP = {
-      '"' => '"', 'b' => "\b",
-      'f' => "\f", 'n' => "\n",
-      'r' => "\r", 't' => "\t"
-    }
+    def unescape(s)
+      case (s1 = s[1, 1])
+      when '"', '\\', '/' then s1
+      when 'b' then "\b"; when 'f' then "\f"; when 'n' then "\n";
+      when 'r' then "\r"; when 't' then "\t"
+      else s
+      end
+    end
     def restring(s)
-
-      s.gsub(/\\(["bfnrt])/) { |x| STRMAP[x[1, 1]] }
+      s.gsub(/\\["\\\/bfnrt]/) { |ss| unescape(ss) }
     end
 
-    def rewrite_dqstring(t)
-
-      [ '_dqs', restring(t.string[1..-2]), ln(t) ]
-    end
-
+    def rewrite_dqstring(t); [ '_dqs', restring(t.string[1..-2]), ln(t) ]; end
     def rewrite_sqstring(t); [ '_sqs', t.string[1..-2], ln(t) ]; end
     def rewrite_rxstring(t); [ '_rxs', t.string, ln(t) ]; end
 
