@@ -103,6 +103,15 @@ parses to
 ```
 ---
 
+```flor
+  "おはようございます、ええ天気ですねー"
+```
+parses to
+```ruby
+  [ '_dqs', "おはようございます、ええ天気ですねー", 1 ]
+```
+---
+
 ### regular expressions
 
 ```flor
