@@ -52,6 +52,8 @@ parses to
 ```
 ---
 
+### symbols
+
 ```flor
   abc
 ```
@@ -61,6 +63,8 @@ parses to
 ```
 ---
 
+### single quoted strings
+
 ```flor
   'def'
 ```
@@ -69,6 +73,8 @@ parses to
   [ '_sqs', 'def', 1 ]
 ```
 ---
+
+### double quoted strings
 
 ```flor
   "ghi"
@@ -96,6 +102,8 @@ parses to
   [ '_dqs', "0\"1\\2\\/3\\b4\\f5\\n6\\r7\\t8", 1 ]
 ```
 ---
+
+### regular expressions
 
 ```flor
   /jkl/
