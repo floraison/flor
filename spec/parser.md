@@ -74,6 +74,15 @@ parses to
 ```
 ---
 
+```flor
+  '\u5929\u6C17'
+```
+parses to
+```ruby
+  [ '_sqs', '天気', 1 ]
+```
+---
+
 ### double quoted strings
 
 ```flor
@@ -167,6 +176,15 @@ parses to
 parses to
 ```ruby
   [ '_rxs', '/^$\A\Z\z\G\b\Bmno/', 1 ]
+```
+---
+
+```flor
+  /\u5929\u6C17/
+```
+parses to
+```ruby
+  [ '_rxs', '/\u5929\u6C17/', 1 ]
 ```
 ---
 

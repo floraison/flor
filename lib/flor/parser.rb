@@ -163,7 +163,7 @@ module Flor
     end
 
     def rewrite_dqstring(t); [ '_dqs', restring(t.string[1..-2]), ln(t) ]; end
-    def rewrite_sqstring(t); [ '_sqs', t.string[1..-2], ln(t) ]; end
+    def rewrite_sqstring(t); [ '_sqs', restring(t.string[1..-2]), ln(t) ]; end
     def rewrite_rxstring(t); [ '_rxs', t.string, ln(t) ]; end
 
     def rewrite_boolean(t); [ '_boo', t.string == 'true', line_number(t) ]; end
