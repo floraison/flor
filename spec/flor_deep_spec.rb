@@ -22,32 +22,27 @@ describe Flor do
   describe '.deep_get' do
 
     [
-      [ :cars, 'simca', [ true, nil ], __LINE__ ],
-      [ :cars, 'alpha', [ true, { 'id' => 'FR1' } ], __LINE__ ],
-      [ :cars, 'alpha.id', [ true, 'FR1' ], __LINE__ ],
+      [ :@cars, 'simca', [ true, nil ] ],
+      [ :@cars, 'alpha', [ true, { 'id' => 'FR1' } ] ],
+      [ :@cars, 'alpha.id', [ true, 'FR1' ] ],
 
-      [ :cars, 'bentley.1', [ true, 'spur' ], __LINE__ ],
-      [ :cars, 'bentley.other', [ false, nil ] ],
-      [ :cars, 'bentley.other.nada', [ false, nil ] ],
+      [ :@cars, 'bentley.1', [ true, 'spur' ] ],
+      [ :@cars, 'bentley.other', [ false, nil ] ],
+      [ :@cars, 'bentley.other.nada', [ false, nil ] ],
 
-      [ :ranking, '0', [ true, 'Anh' ], __LINE__ ],
-      [ :ranking, '1', [ true, 'Bob' ], __LINE__ ],
-      [ :ranking, '-1', [ true, 'Charly' ], __LINE__ ],
-      [ :ranking, '-2', [ true, 'Bob' ], __LINE__ ],
-      [ :ranking, 'first', [ true, 'Anh' ], __LINE__ ],
-      [ :ranking, 'last', [ true, 'Charly' ], __LINE__ ],
+      [ :@ranking, '0', [ true, 'Anh' ] ],
+      [ :@ranking, '1', [ true, 'Bob' ] ],
+      [ :@ranking, '-1', [ true, 'Charly' ] ],
+      [ :@ranking, '-2', [ true, 'Bob' ] ],
+      [ :@ranking, 'first', [ true, 'Anh' ] ],
+      [ :@ranking, 'last', [ true, 'Charly' ] ]
 
-    ].each do |o, k, v, l|
+    ].each do |o, k, v|
 
-      it "gets #{k.inspect} (line #{l})" do
+      it "gets #{k.inspect}" do
 
-        o = self.instance_eval("@#{o}")
+        o = self.instance_eval(o.to_s)
 
-        #if v.is_a?(Class)
-        #  expect { Flor.deep_get(o, k) }.to raise_error(v)
-        #else
-        #  expect(Flor.deep_get(o, k)).to eq(v)
-        #end
         expect(Flor.deep_get(o, k)).to eq(v)
       end
     end

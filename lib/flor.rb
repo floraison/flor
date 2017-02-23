@@ -20,6 +20,7 @@ require 'flor/djan'
 
 require 'flor/log'
 require 'flor/flor'
+require 'flor/deep'
 require 'flor/dollar'
 require 'flor/errors'
 require 'flor/parser'
