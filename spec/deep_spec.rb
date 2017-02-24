@@ -30,6 +30,10 @@ describe Flor do
       [ :@cars, 'bentley.other', [ false, nil ] ],
       [ :@cars, 'bentley.other.nada', [ false, nil ] ],
 
+      [ :@cars, 'bentley[1]', [ true, 'spur' ] ],
+      [ :@cars, 'bentley["other"]', [ false, nil ] ],
+      [ :@cars, "bentley.other['nada']", [ false, nil ] ],
+
       [ :@ranking, '0', [ true, 'Anh' ] ],
       [ :@ranking, '1', [ true, 'Bob' ] ],
       [ :@ranking, '-1', [ true, 'Charly' ] ],
