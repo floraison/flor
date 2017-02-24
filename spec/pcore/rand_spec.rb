@@ -19,14 +19,13 @@ describe 'Flor procedures' do
 
     it 'returns a random integer' do
 
-      flor = %{
-        rand 10
-      }
+      flor = %{ rand 10 }
 
       r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to be_between(0, 10)
+      expect(r['payload']['ret']).to be_an(Integer)
     end
 
     it 'takes the current ret as max' do
@@ -40,6 +39,18 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to be_between(0, 10)
+      expect(r['payload']['ret']).to be_an(Integer)
+    end
+
+    it 'returns a float when given a float' do
+
+      flor = %{ rand 10.0 }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to be_between(0.0, 10.0)
+      expect(r['payload']['ret']).to be_a(Float)
     end
   end
 end

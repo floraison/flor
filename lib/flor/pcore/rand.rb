@@ -5,7 +5,7 @@ class Flor::Pro::Rand < Flor::Procedure
 
   def receive_last
 
-    payload['ret'] = rand(payload['ret'])
+    payload['ret'] = Random.rand(payload['ret'])
 
     reply
   end
