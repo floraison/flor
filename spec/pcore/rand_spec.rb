@@ -62,6 +62,28 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq("'rand' expects an integer or a float")
     end
+
+    it 'accepts two arguments (range 2 11)' do
+
+      flor = %{ rand 2 11 }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to be_between(2, 11)
+      expect(r['payload']['ret']).to be_a(Integer)
+    end
+
+    it 'accepts two arguments (range 2 11.5)' do
+
+      flor = %{ rand 2 11.5 }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to be_between(2, 11.5)
+      expect(r['payload']['ret']).to be_a(Float)
+    end
   end
 end
 

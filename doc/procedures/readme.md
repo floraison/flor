@@ -11,6 +11,7 @@
 * [move](move.md) - Moves a cursor to a given position
 * [noeval](noeval.md) - Immediately replies, children are not evaluated
 * [noret](noret.md) - executes its children, but doesn't alter the received f.ret
+* [rand](rand.md) - Returns a randomly generated number.
 * [sequence, _apply, begin](sequence.md) - Executes child expressions in sequence.
 
 ## unit
