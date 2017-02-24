@@ -52,6 +52,16 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to be_between(0.0, 10.0)
       expect(r['payload']['ret']).to be_a(Float)
     end
+
+    it 'fails gracefully when it cannot deal with its argument' do
+
+      flor = %{ rand "abcd" }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq("'rand' expects an integer or a float")
+    end
   end
 end
 
