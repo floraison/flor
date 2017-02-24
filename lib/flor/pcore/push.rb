@@ -1,7 +1,7 @@
 
 class Flor::Pro::Push < Flor::Procedure
 
-  name 'push', 'pushr'
+  names 'push', 'pushr'
 
   def pre_execute
 
