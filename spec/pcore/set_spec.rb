@@ -66,14 +66,23 @@ describe 'Flor procedures' do
       flor = %{
         set f.h.count
           7
+        set f.i.1
+          8
       }
 
-      r = @executor.launch(flor, payload: { 'h' => {} })
+      r = @executor.launch(
+        flor,
+        payload: { 'h' => {}, 'i' => [ 0, 1 ] })
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
       expect(r['vars']).to eq({})
-      expect(r['payload']).to eq({ 'h' => { 'count' => 7 }, 'ret' => nil })
+
+      expect(
+        r['payload']
+      ).to eq({
+        'h' => { 'count' => 7 }, 'i' => [ 0, 8 ], 'ret' => nil
+      })
     end
 
     it 'fails when it cannot set a deep field' do
@@ -161,6 +170,35 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(12)
+    end
+
+    it 'accepts bracketed keys' do
+
+      flor = %q{ # <-------------- using q to make the \"pullover\" work
+        set f.a.0 'zero'
+        set "f.a[1]" 'one'
+        set f.h.name 'Haddock'
+        set "f.h[age]" 45
+        set "f.h['hair']" 'black'
+        set 'f.h["state"]' 'drunk'
+        set "f.h[\"pullover\"]" 'blue'
+      }
+
+      r = @executor.launch(flor, payload: { 'h' => {}, 'a' => [ 0, 1, 2 ] })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']
+      ).to eq({
+        'h' => {
+          'name' => 'Haddock', 'age' => 45, 'hair' => 'black',
+          'state' => 'drunk', 'pullover' => 'blue' },
+        'a' => [
+          'zero', 'one', 2 ],
+        'ret' =>
+          nil
+      })
     end
   end
 
@@ -331,7 +369,7 @@ describe 'Flor procedures' do
 
   describe 'setr' do
 
-    it 'sets and return the just set value' do
+    it 'sets and returns the just set value' do
 
       flor = %{
         setr f.a
