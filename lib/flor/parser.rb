@@ -156,7 +156,7 @@ module Flor
     }
     def restring(s)
       s.gsub(
-        /\\(?:(["\\\/bfnrt])|u([\da-fA-F]{4}))/
+        /\\(?:(['"\\\/bfnrt])|u([\da-fA-F]{4}))/
       ) {
         $1 ? UNESCAPE[$1] : [ "#$2".hex ].pack('U*')
       }

@@ -83,6 +83,15 @@ parses to
 ```
 ---
 
+```flor
+  'don\'t think "food"'
+```
+parses to
+```ruby
+  [ '_sqs', "don't think \"food\"", 1 ]
+```
+---
+
 ### double quoted strings
 
 ```flor
@@ -128,6 +137,28 @@ parses to
 ```ruby
   [ '_dqs', "天気", 1 ]
 ```
+---
+
+```flor
+  "don't think \"food\""
+```
+parses to
+```ruby
+  [ '_dqs', "don't think \"food\"", 1 ]
+```
+---
+
+```flor
+  set "f.h[\"pullover\"]" 'blue'
+```
+parses to
+```ruby
+  [ 'set',
+    [ [ '_att', [ [ "_dqs", "f.h[\"pullover\"]", 1 ] ], 1 ],
+      [ '_att', [ [ "_sqs", "blue", 1 ] ], 1 ] ],
+    1 ]
+```
+---
 
 ### regular expressions
 
