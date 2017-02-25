@@ -5,12 +5,33 @@ module Flor
 
     # parsing
 
+    def ws_star(i); rex(nil, i, /[ \t]*/); end
+    def retnew(i); rex(nil, i, /[\r\n]*/); end
+    def dot(i); str(nil, i, '.'); end
+    def colon(i); str(nil, i, ':'); end
+    def comma(i); str(nil, i, ','); end
+    def bslash(i); str(nil, i, '\\'); end
+
+    def pstart(i); str(nil, i, '('); end
+    def pend(i); str(nil, i, ')'); end
+    def sbstart(i); str(nil, i, '['); end
+    def sbend(i); str(nil, i, ']'); end
+    def pbstart(i); str(nil, i, '{'); end
+    def pbend(i); str(nil, i, '}'); end
+
     def null(i); str(:null, i, 'null'); end
     def number(i); rex(:number, i, /-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/); end
 
     def tru(i); str(nil, i, 'true'); end
     def fls(i); str(nil, i, 'false'); end
     def boolean(i); alt(:boolean, i, :tru, :fls); end
+
+    def rf_symbol(i); rex(nil, i, /[^.:;| \b\f\n\r\t"',()\[\]{}#\\]+/); end
+    def rf_square_index(i); alt(nil, i, :rf_symbol, :dqstring, :sqstring); end
+    def rf_square(i); seq(nil, i, :sbstart, :rf_square_index, :sbend); end
+    def rf_dot(i); seq(nil, i, :dot, :rf_symbol); end
+    def rf_index(i); alt(nil, i, :rf_dot, :rf_square); end
+    def reference(i); seq(:ref, i, :rf_symbol, :rf_index, '*'); end
 
     def dqstring(i)
 
@@ -45,22 +66,7 @@ module Flor
       }x)
     end
 
-    def symbol(i); rex(:symbol, i, /[^:;| \b\f\n\r\t"',()\[\]{}#\\]+/); end
-
     def comment(i); rex(nil, i, /#[^\r\n]*/); end
-
-    def ws_star(i); rex(nil, i, /[ \t]*/); end
-    def retnew(i); rex(nil, i, /[\r\n]*/); end
-    def colon(i); str(nil, i, ':'); end
-    def comma(i); str(nil, i, ','); end
-    def bslash(i); str(nil, i, '\\'); end
-
-    def pstart(i); str(nil, i, '('); end
-    def pend(i); str(nil, i, ')'); end
-    def sbstart(i); str(nil, i, '['); end
-    def sbend(i); str(nil, i, ']'); end
-    def pbstart(i); str(nil, i, '{'); end
-    def pbend(i); str(nil, i, '}'); end
 
     def eol(i); seq(nil, i, :ws_star, :comment, '?', :retnew); end
     def postval(i); rep(nil, i, :eol, 0); end
@@ -85,7 +91,7 @@ module Flor
     def val(i)
       altg(:val, i,
         :panode, :par,
-        :symbol, :sqstring, :dqstring, :rxstring,
+        :reference, :sqstring, :dqstring, :rxstring,
         :arr, :obj,
         :number, :boolean, :null)
     end
@@ -148,7 +154,7 @@ module Flor
       Nod.new(t.lookup(:node)).to_a
     end
 
-    def rewrite_symbol(t); [ t.string, [], ln(t) ]; end
+    def rewrite_ref(t); [ t.string, [], ln(t) ]; end
 
     UNESCAPE = {
       "'" => "'", '"' => '"', '\\' => '\\', '/' => '/',

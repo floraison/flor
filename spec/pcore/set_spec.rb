@@ -182,6 +182,7 @@ describe 'Flor procedures' do
         set "f.h['hair']" 'black'
         set 'f.h["state"]' 'drunk'
         set "f.h[\"pullover\"]" 'blue'
+        set f.h["accessory"] 'pipe'
       }
 
       r = @executor.launch(flor, payload: { 'h' => {}, 'a' => [ 0, 1, 2 ] })
@@ -193,7 +194,7 @@ describe 'Flor procedures' do
       ).to eq({
         'h' => {
           'name' => 'Haddock', 'age' => 45, 'hair' => 'black',
-          'state' => 'drunk', 'pullover' => 'blue' },
+          'state' => 'drunk', 'pullover' => 'blue', 'accessory' => 'pipe' },
         'a' => [
           'zero', 'one', 2 ],
         'ret' =>

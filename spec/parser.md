@@ -219,6 +219,35 @@ parses to
 ```
 ---
 
+### references
+
+```flor
+  f.a
+```
+parses to
+```ruby
+  [ 'f.a', [] , 1 ]
+```
+---
+
+```flor
+  f.a.1
+```
+parses to
+```ruby
+  [ 'f.a.1', [] , 1 ]
+```
+---
+
+```flor
+  f.a.first[1]['hair']["colour"]
+```
+parses to
+```ruby
+  [ "f.a.first[1]['hair'][\"colour\"]", [], 1 ]
+```
+---
+
 ## arrays
 
 ```flor
