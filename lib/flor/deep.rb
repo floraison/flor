@@ -78,6 +78,30 @@ module Flor
     [ true, v ]
   end
 
+  def self.deep_unset(o, k) # --> [ success(boolean), value ]
+
+    ks = split_deep_path(k)
+    key = ks.pop
+
+    b, col = deep_get(o, ks)
+
+    return [ false, nil ] unless b
+
+    v =
+      case col
+      when Array
+        i = to_array_index(key)
+        return [ false, nil ] unless i
+        col.delete_at(i)
+      when Hash
+        col.delete(key)
+      else
+        return [ false, nil ]
+      end
+
+    [ true, v ]
+  end
+
   def self.deep_has_key?(o, k)
 
     val = o

@@ -95,6 +95,49 @@ describe Flor do
     end
   end
 
+  describe '.deep_unset' do
+
+    it 'unsets at the first level' do
+
+      o = { 'a' => 1 }
+      r = Flor.deep_unset(o, 'a')
+
+      expect(o).to eq({})
+      expect(r).to eq([ true, 1 ])
+    end
+
+    it 'unsets at the second level in a hash' do
+
+      o = { 'h' => { 'i' => 1 } }
+      r = Flor.deep_unset(o, 'h.i')
+
+      expect(o).to eq({ 'h' => {} })
+      expect(r).to eq([ true, 1 ])
+    end
+
+    it 'unsets at the second level in an array ' do
+
+      o = { 'a' => [ 1, 2, 3 ] }
+      r = Flor.deep_unset(o, 'a.1')
+
+      expect(o).to eq({ 'a' => [ 1, 3 ] })
+      expect(r).to eq([ true, 2 ])
+    end
+
+    it 'returns false if it cannot set' do
+
+      c = {}
+      r = Flor.deep_unset(c, 'a.b')
+      expect(c).to eq({})
+      expect(r).to eq([ false, nil ])
+
+      c = []
+      r = Flor.deep_unset(c, 'a')
+      expect(c).to eq([])
+      expect(r).to eq([ false, nil ])
+    end
+  end
+
   describe '.deep_has_key?' do
 
 #@cars = {
