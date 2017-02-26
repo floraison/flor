@@ -138,6 +138,49 @@ describe Flor do
     end
   end
 
+  describe '.deep_insert' do
+
+    it 'inserts at the first level' do
+
+      o = {}
+      r = Flor.deep_insert(o, 'a', 1)
+
+      expect(o).to eq({ 'a' => 1 })
+      expect(r).to eq([ true, 1 ])
+    end
+
+    it 'inserts at the second level in a hash' do
+
+      o = { 'h' => {} }
+      r = Flor.deep_insert(o, 'h.i', 1)
+
+      expect(o).to eq({ 'h' => { 'i' => 1 } })
+      expect(r).to eq([ true, 1 ])
+    end
+
+    it 'inserts at the second level in an array ' do
+
+      o = { 'a' => [ 1, 2, 3 ] }
+      r = Flor.deep_insert(o, 'a.1', 1)
+
+      expect(o).to eq({ 'a' => [ 1, 1, 2, 3 ] })
+      expect(r).to eq([ true, 1 ])
+    end
+
+    it 'returns false if it cannot set' do
+
+      c = {}
+      r = Flor.deep_insert(c, 'a.b', 1)
+      expect(c).to eq({})
+      expect(r).to eq([ false, 1 ])
+
+      c = []
+      r = Flor.deep_insert(c, 'a', 1)
+      expect(c).to eq([])
+      expect(r).to eq([ false, 1 ])
+    end
+  end
+
   describe '.deep_has_key?' do
 
 #@cars = {

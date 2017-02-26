@@ -78,6 +78,29 @@ module Flor
     [ true, v ]
   end
 
+  def self.deep_insert(o, k, v) # --> [ success(boolean), value ]
+
+    ks = split_deep_path(k)
+    key = ks.pop
+
+    b, col = deep_get(o, ks)
+
+    return [ false, nil ] unless b
+
+    case col
+    when Array
+      i = to_array_index(key)
+      return [ false, v ] unless i
+      col.insert(i, v)
+    when Hash
+      col[key] = v
+    else
+      return [ false, v ]
+    end
+
+    [ true, v ]
+  end
+
   def self.deep_unset(o, k) # --> [ success(boolean), value ]
 
     ks = split_deep_path(k)
