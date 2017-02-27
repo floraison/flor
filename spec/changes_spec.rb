@@ -36,14 +36,52 @@ describe Flor::Changes do
         })
       end
 
-      it 'adds to an array'
+      it 'adds to an array' do
+
+        r = Flor::Changes.apply(
+          { 'h' => { 'a' => [ 0, 1, 2 ] } },
+          [ { 'op' => 'add', 'path' => 'h.a.1', 'value' => 'one' } ])
+
+        expect(r).to eq({
+          'h' => { 'a' => [ 0, 'one', 1, 2 ] }
+        })
+      end
     end
 
     context '"replace"' do
 
-      it 'replaces at the root'
-      it 'replaces in a hash'
-      it 'replaces in a array'
+      it 'replaces at the root' do
+
+        r = Flor::Changes.apply(
+          { 'h' => { 'a' => [] } },
+          [ { 'op' => 'replace', 'path' => 'h', 'value' => 'hash' } ])
+
+        expect(r).to eq({
+          'h' => 'hash'
+        })
+      end
+
+      it 'replaces in a hash' do
+
+        r = Flor::Changes.apply(
+          { 'h' => { 'a' => [] } },
+          [ { 'op' => 'replace', 'path' => 'h.a', 'value' => [ 0, 1, 2 ] } ])
+
+        expect(r).to eq({
+          'h' => { 'a' => [ 0, 1, 2 ] }
+        })
+      end
+
+      it 'replaces in an array' do
+
+        r = Flor::Changes.apply(
+          { 'h' => { 'a' => [ 0, 1, 2 ] } },
+          [ { 'op' => 'replace', 'path' => 'h.a.1', 'value' => 'one' } ])
+
+        expect(r).to eq({
+          'h' => { 'a' => [ 0, 'one', 2 ] }
+        })
+      end
     end
 
     context '"remove"' do
@@ -58,8 +96,27 @@ describe Flor::Changes do
         })
       end
 
-      it 'removes from a hash'
-      it 'removes from an array'
+      it 'removes from a hash' do
+
+        r = Flor::Changes.apply(
+          { 'h' => { 'a' => [ 0, 1, 2 ] } },
+          [ { 'op' => 'remove', 'path' => 'h.a' } ])
+
+        expect(r).to eq({
+          'h' => {}
+        })
+      end
+
+      it 'removes from an array' do
+
+        r = Flor::Changes.apply(
+          { 'h' => { 'a' => [ 0, 1, 2 ] } },
+          [ { 'op' => 'remove', 'path' => 'h.a.1' } ])
+
+        expect(r).to eq({
+          'h' => { 'a' => [ 0, 2 ] }
+        })
+      end
     end
   end
 end
