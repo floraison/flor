@@ -6,7 +6,7 @@ module Flor
 
   def self.to_s(o=nil, k=nil)
 
-    return 'FlorModule' if o == nil && k == nil
+    return 'Flor' if o == nil && k == nil
       # should it emerge somewhere...
 
     return o.collect { |e| Flor.to_s(e, k) }.join("\n") if o.is_a?(Array)
