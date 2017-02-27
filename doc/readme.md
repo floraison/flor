@@ -7,4 +7,5 @@ It interprets a language describing "workflows". They can be thought of long-run
 
 * [glossary](glossary.md)
 * [procedures](procedures/)
+* [workflow control patterns](patterns.md)
 
