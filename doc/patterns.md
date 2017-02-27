@@ -14,7 +14,7 @@ Each pattern is illustrated with a flor implementation (or approximation). There
 ## index
 
 ### Basic Control Flow Patterns
-* [Sequence](#bcf-sequence) - [explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp1.php) [animation](http://www.workflowpatterns.com/patterns/control/basic/wcp1_animation.php)
+* [Sequence](#bcf-sequence)
 * parallel split
 * synchronization
 * exclusive choice
@@ -60,5 +60,5 @@ sequence
   task 'bravo'
 ```
 
-[explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp1.php) | [animation](http://www.workflowpatterns.com/patterns/control/basic/wcp1_animation.php) | [top](#top)
+[explanation⍆](http://www.workflowpatterns.com/patterns/control/basic/wcp1.php) | [animation⍆](http://www.workflowpatterns.com/patterns/control/basic/wcp1_animation.php) | [top](#top)
 
