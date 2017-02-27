@@ -81,6 +81,24 @@ describe Flor do
       expect(r).to eq([ true, 1 ])
     end
 
+    it 'sets array first' do
+
+      o = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+      r = Flor.deep_set(o, 'h.a.first', 'one')
+
+      expect(o).to eq({ 'h' => { 'a' => [ "one", 2, 3 ] } })
+      expect(r).to eq([ true, 'one' ])
+    end
+
+    it 'sets array last' do
+
+      o = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+      r = Flor.deep_set(o, 'h.a.last', 'three')
+
+      expect(o).to eq({ 'h' => { 'a' => [ 1, 2, 'three' ] } })
+      expect(r).to eq([ true, 'three' ])
+    end
+
     it 'returns false if it cannot set' do
 
       c = {}
@@ -124,7 +142,25 @@ describe Flor do
       expect(r).to eq([ true, 2 ])
     end
 
-    it 'returns false if it cannot set' do
+    it 'unsets array first' do
+
+      o = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+      r = Flor.deep_unset(o, 'h.a.first')
+
+      expect(o).to eq({ 'h' => { 'a' => [ 2, 3 ] } })
+      expect(r).to eq([ true, 1 ])
+    end
+
+    it 'unsets array last' do
+
+      o = { 'h' => { 'a' => [ 1, 2, 3 ] } }
+      r = Flor.deep_unset(o, 'h.a.last')
+
+      expect(o).to eq({ 'h' => { 'a' => [ 1, 2 ] } })
+      expect(r).to eq([ true, 3 ])
+    end
+
+    it 'returns false if it cannot unset' do
 
       c = {}
       r = Flor.deep_unset(c, 'a.b')
@@ -165,6 +201,24 @@ describe Flor do
 
       expect(o).to eq({ 'a' => [ 1, 1, 2, 3 ] })
       expect(r).to eq([ true, 1 ])
+    end
+
+    it 'inserts as array first' do
+
+      o = { 'a' => [ 'one', [ 2, 3, 4 ], 'three' ] }
+      r = Flor.deep_insert(o, 'a.1.first', 1)
+
+      expect(o).to eq({ 'a' => [ 'one', [ 1, 2, 3, 4 ], 'three' ] })
+      expect(r).to eq([ true, 1 ])
+    end
+
+    it 'inserts as array last' do
+
+      o = { 'a' => [ 'one', [ 2, 3, 4 ], 'three' ] }
+      r = Flor.deep_insert(o, 'a.1.last', 5)
+
+      expect(o).to eq({ 'a' => [ 'one', [ 2, 3, 4, 5 ], 'three' ] })
+      expect(r).to eq([ true, 5 ])
     end
 
     it 'returns false if it cannot set' do

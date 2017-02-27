@@ -26,6 +26,7 @@ require 'flor/dollar'
 require 'flor/errors'
 require 'flor/parser'
 require 'flor/conf'
+require 'flor/changes'
 require 'flor/to_string'
 
 require 'flor/core'
