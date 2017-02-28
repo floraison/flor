@@ -16,7 +16,7 @@ Each pattern is illustrated with a flor implementation (or approximation). There
 ### Basic Control Flow Patterns
 * [Sequence](#bcf-sequence)
 * [Parallel Split](#bcf-parallel-split)
-* synchronization
+* [Synchronization](#bcf-synchronization)
 * exclusive choice
 * simple merge
 
@@ -67,9 +67,29 @@ sequence
 
 ```
 concurrence
+  #
+  # alpha and bravo will be tasked concurrently
+  #
   task 'alpha'
   task 'bravo'
 ```
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp2.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp2_animation.php) | [top](#top)
+
+### Synchronization
+<a id="bcf-synchronization" />The [concurrence](procedures/concurrence.md) by waiting (by default) for all its children to reply is usual flor syncrhonization tool.
+
+```
+sequence
+  task 'alpha'
+  concurrence
+    task 'bravo'
+    task 'charly'
+    #
+    # task 'delta' will be reached once 'bravo' and 'charly' have replied
+    #
+  task 'delta'
+```
+
+[wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp3.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp3_animation.php) | [top](#top)
 
