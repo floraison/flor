@@ -5,6 +5,7 @@
 
 * [_skip](_skip.md) - Skips x messages, mostly used for testing flor.
 * [break, continue](break.md) - Breaks or continues a "while" or "until".
+* [cond](cond.md) - Evaluates all its condition children until one evaluates to true (or it's an else), then executes the corresponding clause child.
 * [cursor](cursor.md) - Executes child expressions in sequence, but may be "guided".
 * [def, fun, define](define.md) - Defines a function.
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
