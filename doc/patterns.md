@@ -15,7 +15,7 @@ Each pattern is illustrated with a flor implementation (or approximation). There
 
 ### Basic Control Flow Patterns
 * [Sequence](#bcf-sequence)
-* parallel split
+* [Parallel Split](#bcf-parallel-split)
 * synchronization
 * exclusive choice
 * simple merge
@@ -60,5 +60,16 @@ sequence
   task 'bravo'
 ```
 
-[explanation⍆](http://www.workflowpatterns.com/patterns/control/basic/wcp1.php) | [animation⍆](http://www.workflowpatterns.com/patterns/control/basic/wcp1_animation.php) | [top](#top)
+<a href="http://www.workflowpatterns.com/patterns/control/basic/wcp1.php">explanation<img src="out.svg" /></a> | <a href="http://www.workflowpatterns.com/patterns/control/basic/wcp1_animation.php">animation<img src="out.svg" /></a> | <a href="#top">top</a>
+
+### Parallel Split
+<a id="bcf-parallel-split" />The [concurrence](procedures/concurrence.md) is the main tool for the parallel split.
+
+```
+concurrence
+  task 'alpha'
+  task 'bravo'
+```
+
+<a href="http://www.workflowpatterns.com/patterns/control/basic/wcp2.php">explanation<img src="out.svg" /></a> | <a href="http://www.workflowpatterns.com/patterns/control/basic/wcp2_animation.php">animation<img src="out.svg" /></a> | <a href="#top">top</a>
 
