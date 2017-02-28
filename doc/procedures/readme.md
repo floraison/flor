@@ -17,6 +17,7 @@
 ## unit
 
 * [cancel, kill](cancel.md) - Cancels an execution branch
+* [concurrence](concurrence.md) - Executes its children concurrently.
 * [schedule](schedule.md) - Schedules a function
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
 
