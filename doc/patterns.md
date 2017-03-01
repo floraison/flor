@@ -17,7 +17,7 @@ Each pattern is illustrated with a flor implementation (or approximation). There
 * [Sequence](#bcf-sequence)
 * [Parallel Split](#bcf-parallel-split)
 * [Synchronization](#bcf-synchronization)
-* exclusive choice
+* [Exclusive Choice](#bcf-exclusive-choice)
 * simple merge
 
 ### Advanced Branching and Synchronization Patterns
@@ -92,4 +92,9 @@ sequence
 ```
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp3.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp3_animation.php) | [top](#top)
+
+### Exclusive Choice
+<a id="bcf-exclusive-choice" />The simplest flor procedure to use to support this pattern is [if](procedures/if.md)
+
+[wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp4.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp4_animation.php) | [top](#top)
 
