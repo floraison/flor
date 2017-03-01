@@ -56,7 +56,7 @@ describe 'Flor core' do
       # `break if a == 3`
       # is equivalent to
       # ```
-      # ife a == 3
+      # if a == 3
       #   break _
       # ```
       # (note the underscore)

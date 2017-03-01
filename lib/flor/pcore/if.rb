@@ -1,7 +1,14 @@
 
-class Flor::Pro::Ife < Flor::Procedure
+class Flor::Pro::If < Flor::Procedure
+  #
+  # The classical "if" (and its "unless" sidequick)
 
-  names 'ife', 'unlesse'
+  names %w[ if unless ife unlesse ]
+    #
+    # removing "ife" and "unlesse" leas to
+    # LoadError: cannot load such file -- sequel/adapters/
+    # when running spec/unit/ and spec/punit/
+    # weird...
 
   def pre_execute
 
@@ -14,9 +21,9 @@ class Flor::Pro::Ife < Flor::Procedure
       # "else" or "then" answered, replying to parent...
 
     off =
-      if tree[0] == 'unlesse'
+      if tree[0] == 'unless' || tree[0] == 'unlesse'
         Flor.false?(payload['ret']) ? 1 : 2
-      else # 'ife'
+      else # 'if' or 'ife'
         Flor.true?(payload['ret']) ? 1 : 2
       end
 

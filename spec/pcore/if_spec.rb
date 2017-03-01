@@ -15,7 +15,7 @@ describe 'Flor procedures' do
     @executor = Flor::TransientExecutor.new
   end
 
-  describe 'ife' do
+  describe 'if' do
 
     it 'has no effect it it has no children' do
 
@@ -23,7 +23,7 @@ describe 'Flor procedures' do
         sequence
           123
           push f.l 0
-          ife _
+          if _
           push f.l 1
       }
 
@@ -39,10 +39,10 @@ describe 'Flor procedures' do
       flor = %{
         sequence
           456
-          ife
+          if
             true
           push f.l
-          ife
+          if
             false
           push f.l
       }
@@ -58,7 +58,7 @@ describe 'Flor procedures' do
 
       flor = %{
         sequence
-          ife
+          if
             true
             push f.l 0
             push f.l 1
@@ -76,7 +76,7 @@ describe 'Flor procedures' do
 
       flor = %{
         sequence
-          ife
+          if
             false
             push f.l 0
             push f.l 1
@@ -90,10 +90,10 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq([ 1, 2 ])
     end
 
-    it 'does not mind atts on the ife' do
+    it 'does not mind atts on the if' do
 
       flor = %{
-        ife false tag: 'nada'
+        if false tag: 'nada'
           'then'
           'else'
       }
@@ -130,8 +130,8 @@ describe 'Flor procedures' do
     it 'can be used as a "one-liner"' do
 
       flor = %{
-        push f.l (ife true 'then' 'else')
-        push f.l (ife false 'then' 'else')
+        push f.l (if true 'then' 'else')
+        push f.l (if false 'then' 'else')
       }
 
       r = @executor.launch(flor, payload: { 'l' => [] })
@@ -142,13 +142,13 @@ describe 'Flor procedures' do
     end
   end
 
-  describe 'unlesse' do
+  describe 'unless' do
 
     it 'triggers the then child when $(ret) false' do
 
       flor = %{
         sequence
-          unlesse
+          unless
             false
             push f.l 0
             push f.l 1
@@ -166,7 +166,7 @@ describe 'Flor procedures' do
 
       flor = %{
         sequence
-          unlesse
+          unless
             true
             push f.l 0
             push f.l 1

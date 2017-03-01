@@ -284,7 +284,7 @@ module Flor
 
         # rewrite if/unless suffix
 
-        t = [ atts[i][0][0] == 'if' ? 'ife' : 'unlesse', [], @line ]
+        t = [ atts[i][0][0] == 'if' ? 'if' : 'unless', [], @line ]
         t[1].concat(atts[i + 1..-1].collect(&:first))
         t[1].push([ @head, cn[0, i], @line ])
 

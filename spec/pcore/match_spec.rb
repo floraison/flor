@@ -61,21 +61,21 @@ describe 'Flor procedures' do
 
   describe 'match?' do
 
-    it 'works alongside "ife"' do
+    it 'works alongside "if"' do
 
       flor = %{
         push f.l
-          ife
+          if
             match? "stuff", "^stuf*$"
             'a'
             'b'
         push f.l
-          ife
+          if
             match? "staff", "^stuf*$"
             'c'
             'd'
         push f.l
-          ife
+          if
             match? "$(nothing)", "^stuf*$"
             'e'
             'f'
