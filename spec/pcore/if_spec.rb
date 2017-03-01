@@ -17,7 +17,7 @@ describe 'Flor procedures' do
 
   describe 'if' do
 
-    it 'has no effect it it has no children' do
+    it 'has no effect if it has no children' do
 
       flor = %{
         sequence
