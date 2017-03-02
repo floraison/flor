@@ -2,8 +2,11 @@
 # flor CHANGELOG.md
 
 
-## flor 0.10.0  not yet released
+## flor 0.10.0  released 2017-03-03
 
+- Enhance shell, bring in bin/flosh (though not in gem)
+- Rework "deep" tools (accept square bracket indexes)
+- Implement vanilla "case"
 - Implement "graft"
 - Link unit name and unit identifier
 - Scheduler rework, emphasis on optimistic locking for messages and timers
