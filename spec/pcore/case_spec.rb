@@ -104,6 +104,25 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('high')
     end
+
+    it 'works without ;; ;-)' do
+
+      flor = %{
+        'nothing'
+        case 6
+          [ 0 1 2 ]
+          'low'
+          [ 3 4 5 ]
+          'high'
+          else
+          'over'
+      }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('over')
+    end
   end
 end
 
