@@ -123,6 +123,45 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('over')
     end
+
+    context 'flattening' do
+
+      before :all do
+
+        @flo = %{
+          case f.x
+            [ 0 1 2 ]
+              'a'
+            3
+              'b'
+              'c'
+            [ 4 5 ]
+              concurrence
+                'd'
+                'e'
+            6;; 'f'
+            else
+              'g'
+              'h'
+        }
+      end
+
+      [
+        [ 1, 'a' ],
+        [ 3, 'c' ],
+        [ 4, 'd' ],
+        [ 6, 'f' ],
+        [ 7, 'h' ]
+      ].each_with_index do |(x, ret), i|
+
+        it "works (#{i})" do
+
+          r = @executor.launch(@flo, payload: { 'x' => x }, wait: true)
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(ret)
+        end
+      end
+    end
   end
 end
 

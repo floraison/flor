@@ -37,6 +37,7 @@ class Flor::Pro::Case < Flor::Procedure
   def pre_execute
 
     unatt_unkeyed_children
+    flatten
   end
 
   def receive_non_att
@@ -74,6 +75,43 @@ class Flor::Pro::Case < Flor::Procedure
         execute_child(@fcid + 2)
       end
     end
+  end
+
+  def flatten
+
+    ot = tree; return if ot[1].size < 2
+    t = Flor.dup(ot)
+
+    nchildren = [ t[1].first ]
+    mode = :array
+
+    t[1][1..-1].each do |ct|
+
+      if mode == :array
+
+        if (Flor.is_tree?(ct[0]) || ct[0] == 'else') && ct[1].any?
+          nchildren << (ct[0] == 'else' ? [ 'else', [], ct[2] ] : ct[0])
+          if ct[1].size == 1
+            nchildren << ct[1].first
+          else # ct[1].size > 1
+            sequence = [ 'sequence', ct[1], ct[1].first[2] ]
+            nchildren << sequence
+          end
+        else
+          nchildren << ct
+          mode = :clause
+        end
+
+      else # mode == :clause
+
+        nchildren << ct
+        mode = :array
+      end
+    end
+
+    t[1] = nchildren
+
+    @node['tree'] = t if t != ot
   end
 end
 

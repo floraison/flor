@@ -241,6 +241,15 @@ module Flor
     o.is_a?(Array) && o.all? { |e| Flor.is_tree?(e) }
   end
 
+#  # Array, object or atom tree
+#  #
+#  def self.is_value_tree?(o)
+#
+#    o.is_a?(Array) &&
+#    %w[ _num _boo _sqs _dqs _rxs _nul _arr _obj ].include?(o[0]) &&
+#    o[2].is_a?(Integer)
+#  end
+
   def self.is_proc_tree?(o)
 
     o.is_a?(Array) &&
