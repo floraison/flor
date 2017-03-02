@@ -124,44 +124,72 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq('over')
     end
 
-    context 'flattening' do
-
-      before :all do
-
-        @flo = %{
-          case f.x
-            [ 0 1 2 ]
-              'a'
-            3
-              'b'
-              'c'
-            [ 4 5 ]
-              concurrence
-                'd'
-                'e'
-            6;; 'f'
-            else
-              'g'
-              'h'
-        }
-      end
-
-      [
-        [ 1, 'a' ],
-        [ 3, 'c' ],
-        [ 4, 'd' ],
-        [ 6, 'f' ],
-        [ 7, 'h' ]
-      ].each_with_index do |(x, ret), i|
-
-        it "works (#{i})" do
-
-          r = @executor.launch(@flo, payload: { 'x' => x }, wait: true)
-          expect(r['point']).to eq('terminated')
-          expect(r['payload']['ret']).to eq(ret)
-        end
-      end
-    end
+#    context 'flattening' do
+#
+#      before :all do
+#
+#        @flo = %{
+#          case f.x
+#            [ 0 1 2 ]
+#              'a'
+#            3
+#              'b'
+#              'c'
+#            [ 4 5 ]
+#              concurrence
+#                'd'
+#                'e'
+#            6;; 'f'
+#            else
+#              'g'
+#              'h'
+#        }
+#      end
+#
+#      [
+#        [ 1, 'a' ],
+#        [ 3, 'c' ],
+#        [ 4, 'd' ],
+#        [ 6, 'f' ],
+#        [ 7, 'h' ]
+#      ].each_with_index do |(x, ret), i|
+#
+#        it "works (#{i})" do
+#
+#          r = @executor.launch(@flo, payload: { 'x' => x }, wait: true)
+#          expect(r['point']).to eq('terminated')
+#          expect(r['payload']['ret']).to eq(ret)
+#        end
+#      end
+#
+#      it 'is ok with vars as arrays' do
+#
+#        flor = %{
+#          set r []
+#          set a [ 0 1 2 ]
+#          define b start
+#            [ start ]
+#          case 1
+#            a
+#            push r 'a'
+#            b 3
+#            push r 'b'
+#          case 1
+#            a
+#              push r 'aa'
+#            b 3
+#              push r 'bb'
+#          case 3
+#            a
+#              push r 'aaa'
+#            b 3
+#              push r 'bbb'
+#        }
+#
+#        r = @executor.launch(flor, wait: true)
+#        expect(r['vars']['r']).to eq(%w[ a aa bbb ])
+#      end
+#    end
   end
 end
 
