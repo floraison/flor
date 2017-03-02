@@ -209,6 +209,25 @@ class Flor::Node
     v
   end
 
+  def reheap(tree, heat)
+
+    if ! heat.is_a?(Array)
+      '_val'
+    elsif tree && tree[1] == []
+      '_val'
+    elsif heat[0] == '_proc'
+      heat[1]['proc']
+    elsif heat[0] == '_func'
+      'apply'
+    elsif heat[0] == '_task'
+      'task'
+    elsif Flor.is_tree_head_tree?(tree)
+      '_happly'
+    else
+      '_val'
+    end
+  end
+
   def tree
 
     lookup_tree(nid)
