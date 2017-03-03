@@ -124,8 +124,8 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq('over')
     end
 
-#    context 'flattening' do
-#
+    context 'flattening' do
+
 #      before :all do
 #
 #        @flo = %{
@@ -189,7 +189,58 @@ describe 'Flor procedures' do
 #        r = @executor.launch(flor, wait: true)
 #        expect(r['vars']['r']).to eq(%w[ a aa bbb ])
 #      end
-#    end
+
+#      before :each do
+#
+#        flon = %{ case 1; x;; y }
+#        ms = @executor.launch(
+#          flon,
+#          vars: {
+#            'a0' => [ 0, 1, 2 ]
+#          },
+#          until_after: '0_0 execute')
+#        @case = Flor::Pro::Case.new(@executor, nil, ms.first)
+#        class << @case
+#          def do_flatten(s)
+#            @node['tree'] = Flor::Lang.parse(s)
+##pp @node['tree']
+#            unatt_unkeyed_children
+#            flatten
+#            @node['tree']
+#          end
+#        end
+#      end
+#
+#      it 'flattens after a literal array' do
+#
+#        ft =
+#          @case.do_flatten(%{
+#            case 1
+#              [ 1 2 ]
+#                x
+#          })
+#        expect(ft[1]).to eq(
+#          [["_num", 1, 2],
+#           ["_arr", [["_num", 1, 3], ["_num", 2, 3]], 3],
+#            ["x", [], 4]]
+#        )
+#      end
+#
+#      it 'flattens after a literal number' do
+#
+#        ft =
+#          @case.do_flatten(%{
+#            case 1
+#              1
+#                x
+#          })
+#        expect(ft[1]).to eq(
+#          [["_num", 1, 2],
+#           ["_arr", [["_num", 1, 3], ["_num", 2, 3]], 3],
+#            ["x", [], 4]]
+#        )
+#      end
+    end
   end
 end
 

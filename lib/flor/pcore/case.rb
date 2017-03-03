@@ -82,39 +82,37 @@ class Flor::Pro::Case < Flor::Procedure
 #    ot = tree; return if ot[1].size < 2
 #    t = Flor.dup(ot)
 #
-#    nchildren = [ t[1].first ]
+#    nchildren = []
 #    mode = :array
 #
-#    t[1][1..-1].each do |ct|
+#    #t[1][1..-1].each do |ct|
+#    non_att_children.each do |ct|
 #
-#      if mode == :array
-#
-#        if ct[0].is_a?(String)
-#          puts "---"
-#          dct0 = deref(ct[0])
-#          hct0 = toheap(ct, dct0)
-#          p dct0
-#          p hct0
-#          puts "/---"
-#        end
-#
-#        if (Flor.is_tree?(ct[0]) || ct[0] == 'else') && ct[1].any?
-#          nchildren << (ct[0] == 'else' ? [ 'else', [], ct[2] ] : ct[0])
-#          if ct[1].size == 1
-#            nchildren << ct[1].first
-#          else # ct[1].size > 1
-#            sequence = [ 'sequence', ct[1], ct[1].first[2] ]
-#            nchildren << sequence
-#          end
-#        else
-#          nchildren << ct
-#          mode = :clause
-#        end
-#
-#      else # mode == :clause
-#
+#      if nchildren.empty? || mode == :clause
 #        nchildren << ct
 #        mode = :array
+#        next
+#      end
+#
+#      ct0, ct1, ct2 = ct
+#
+#      if (Flor.is_tree?(ct0) || ct0 == 'else') && ct1.any?
+#        nchildren << (ct0 == 'else' ? [ 'else', [], ct2 ] : ct0)
+#        if ct1.size == 1
+#          nchildren << ct1.first
+#        else # ct1.size > 1
+#          sequence = [ 'sequence', ct1, ct1.first[2] ]
+#          nchildren << sequence
+#        end
+#      #elsif ct0.is_a?(String) && ct1.is_a?(Array) && ct1.any?
+#      #  p ct
+#      #  dct0 = deref(ct0)
+#      #  hct0 = reheap(ct, dct0)
+#      #  p dct0
+#      #  p hct0
+#      else
+#        nchildren << ct
+#        mode = :clause
 #      end
 #    end
 #
