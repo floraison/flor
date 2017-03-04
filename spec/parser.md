@@ -913,7 +913,34 @@ parses to
 ```
 ---
 
-## semicolon
+## semicolon and pipe
+
+```flor
+  1; 2
+```
+parses to
+```ruby
+  [ [ '_num', 1, 1 ], [ [ '_num', 2, 1 ] ], 1 ]
+```
+---
+
+```flor
+  1;; 2
+```
+parses to
+```ruby
+  [ 'sequence', [ [ '_num', 1, 1 ], [ '_num', 2, 1 ] ], 0 ]
+```
+---
+
+```flor
+  1 | 2
+```
+parses to
+```ruby
+  [ 'sequence', [ [ '_num', 1, 1 ], [ '_num', 2, 1 ] ], 0 ]
+```
+---
 
 ```flor
   map [ 1, 2 ]; def x; + 1 x

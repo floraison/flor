@@ -241,9 +241,6 @@ describe 'Flor procedures' do
 #        )
 #      end
     end
-
-# TODO [ 1, 2, 3 ] timeout: '2h'
-#        task 'x'
   end
 end
 
