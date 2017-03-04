@@ -26,22 +26,22 @@ describe 'Flor punit' do
 
   describe '_arr' do
 
-    it 'considers its attributes first' #do
-#
-#      flor = %{
-#        [
-#          (sleep '5s')
-#          1
-#          2
-#        ] timeout: '2h'
-#      }
-#
-#      r = @unit.launch(flor)
-#
-#      sleep 0.490
-#
-#      expect(@unit.timers.collect(&:schedule)).to eq(%w[ 2h 5s ])
-#    end
+    it 'considers its attributes first' do
+
+      flor = %{
+        [
+          (sleep '5s')
+          1
+          2
+        ] timeout: '2h'
+      }
+
+      @unit.launch(flor)
+
+      sleep 0.490
+
+      expect(@unit.timers.collect(&:schedule)).to eq(%w[ 2h 5s ])
+    end
   end
 end
 
