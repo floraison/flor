@@ -864,9 +864,15 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'sleep',
-    [ [ '_att', [ [ '_sqs', '3h', 1 ] ], 1 ],
-      [ '_att', [ [ 'timeout', [], 1 ], [ '_sqs', '2h', 1 ] ], 1 ] ],
+  #[ 'sleep',
+  #  [ [ '_att', [ [ '_sqs', '3h', 1 ] ], 1 ],
+  #    [ '_att', [ [ 'timeout', [], 1 ], [ '_sqs', '2h', 1 ] ], 1 ] ],
+  #  1 ]
+    #
+    # leave the above "trick" to [] arrays and {} objects
+    #
+  [ [ 'sleep', [ [ '_att', [ [ '_sqs', '3h', 1 ] ], 1 ] ], 1 ],
+    [ [ '_att', [ [ 'timeout', [], 1 ], [ '_sqs', '2h', 1 ] ], 1 ] ],
     1 ]
 ```
 ---

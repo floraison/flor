@@ -275,7 +275,8 @@ module Flor
 
         if (
           @head.is_a?(Array) &&
-          Flor.is_array_of_trees?(@head[1]) &&
+          (@head[0] == '_arr' || @head[0] == '_obj') &&
+          #Flor.is_array_of_trees?(@head[1]) &&
           cn.all? { |c| c[0] == '_att' && c[1].size > 1 }
         )
           cn = @head[1] + cn
