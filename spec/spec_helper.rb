@@ -40,11 +40,6 @@ def wait_until(timeout=14, frequency=0.1, &block)
 end
 alias :wait_for :wait_until
 
-def floparse(s)
-
-  Flor::Lang.parse(s)
-end
-
 
 RSpec::Matchers.define :eqj do |o|
 
