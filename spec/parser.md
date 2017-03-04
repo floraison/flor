@@ -291,6 +291,21 @@ parses to
     [ '_num', 1, 1 ], [ '_num', 2, 1 ], [ '_num', 3, 2 ]
   ], 1 ]
 ```
+---
+
+```flor
+  [ (sleep '3h') 2 3 ] timeout: '2h'
+```
+parses to
+```ruby
+  [ '_arr',
+    [ [ '_att', [ [ 'timeout', [], 1 ], [ '_sqs', '2h', 1 ] ], 1 ],
+    [ 'sleep', [ [ '_att', [ [ '_sqs', '3h', 1 ] ], 1 ] ], 1 ],
+    [ '_num', 2, 1 ],
+    [ '_num', 3, 1 ] ],
+    1 ]
+```
+
 
 ## objects
 
@@ -341,6 +356,21 @@ parses to
     [ 'b', [], 2 ], [ '_num', 2, 2 ],
     [ 'c', [], 2 ], [ '_boo', true, 3 ]
   ], 1 ]
+```
+---
+
+```flor
+  { a: 1, b: 2 } timeout: '2h'
+```
+parses to
+```ruby
+  [ '_obj',
+    [ [ '_att', [ [ 'timeout', [], 1 ], [ '_sqs', '2h', 1 ] ], 1 ],
+      [ 'a', [], 1 ],
+      [ '_num', 1, 1 ],
+      [ 'b', [], 1 ],
+      [ '_num', 2, 1 ] ],
+    1 ]
 ```
 
 ## operations
@@ -828,6 +858,32 @@ parses to
   ], 1 ]
 ```
 ---
+
+```flor
+  (sleep '3h') timeout: '2h'
+```
+parses to
+```ruby
+  [ 'sleep',
+    [ [ '_att', [ [ '_sqs', '3h', 1 ] ], 1 ],
+      [ '_att', [ [ 'timeout', [], 1 ], [ '_sqs', '2h', 1 ] ], 1 ] ],
+    1 ]
+```
+---
+
+```flor
+  (def x y; (+ x y)) 7 2
+```
+parses to
+```ruby
+  [ [ 'def',
+      [ [ '_att', [ [ 'x', [], 1 ] ], 1 ],
+        [ '_att', [ [ 'y', [], 1 ] ], 1 ],
+        [ '+', [ [ 'x', [], 1 ], [ 'y', [], 1 ] ], 1 ] ],
+      1 ],
+    [ [ '_att', [ ['_num', 7, 1 ] ], 1 ], [ '_att', [ [ '_num', 2, 1 ] ], 1 ] ],
+    1 ]
+```
 
 ## dollar
 

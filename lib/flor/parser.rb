@@ -270,6 +270,20 @@ module Flor
 
         cn = @children.collect(&:to_a)
 
+        # make sure `[ 1 2 3 ] timeout: '2h'`
+        # turns into `_arr timeout: '2h'; 1 | 2 | 3`
+
+        if (
+          @head.is_a?(Array) &&
+          Flor.is_array_of_trees?(@head[1]) &&
+          cn.all? { |c| c[0] == '_att' && c[1].size > 1 }
+        )
+          cn = @head[1] + cn
+          @head = @head[0]
+          att, non_att = cn.partition { |c| c[0] == '_att' }
+          cn = att + non_att
+        end
+
         # detect if/unless suffix
 
         atts =
@@ -279,7 +293,6 @@ module Flor
             c.size == 1 && %w[ if unless ].include?(c[0][0]) && c[0][1] == []
           }
 
-        #return cn.first if @head == 'sequence' && @line == 0 && cn.size == 1
         return [ @head, cn, @line ] unless i
 
         # rewrite if/unless suffix
@@ -308,7 +321,7 @@ module Flor
         end
 
         ht = tree.lookup(:head)
-        @line = Lang.line_number(ht)
+        @line = Flor::Lang.line_number(ht)
 
         @head = Flor::Lang.rewrite(ht.c0)
         @head = @head[0] if @head[0].is_a?(String) && @head[1] == []
