@@ -34,3 +34,44 @@ sequence
 ## procedures
 ## attributes
 
+## parentheses
+
+## indentation again
+
+Coming back to the subject of indentation. Sometimes, indenting everything might be pain, sometimes emphasis has to be put on certain things, while compacting some other things.
+
+### backslash
+
+The backslash `\` joins two lines, enforcing a parent \ child relationship.
+
+```
+  parent \ child _
+      # equivalent to
+  parent
+    child _
+      # equivalent to
+  parent \
+child _
+      # equivalent to
+  parent
+\ child _
+```
+
+The `\` can be used to make one-liners around anonymous functions, like in:
+
+```
+cmap [ 1 2 3 ] \ def x \ * x 2
+    # equivalent to
+cmap [ 1 2 3 ]
+  def x \ * x 2
+    # equivalent to
+cmap [ 1 2 3 ]
+  def x
+    * x 2
+```
+
+Note the slope in the indented version just above. The backslash symbolizes it.
+
+### pipe or semicolon
+### collection comma
+
