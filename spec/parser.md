@@ -913,6 +913,52 @@ parses to
 ```
 ---
 
+
+## backslash
+
+```flor
+  a \ b
+```
+parses to
+```ruby
+  [ 'a', [ [ '_att', [ [ 'b', [], 1 ] ], 1 ] ], 1 ]
+```
+---
+
+```flor
+  a \
+b
+```
+parses to
+```ruby
+  [ 'a', [ [ '_att', [ [ 'b', [], 2 ] ], 2 ] ], 1 ]
+```
+---
+
+```flor
+  a \
+  b
+  c
+```
+parses to
+```ruby
+  [ 'sequence',
+    [ [ 'a', [ [ '_att', [ [ 'b', [], 2 ] ], 2 ] ], 1 ], [ 'c', [], 3 ] ],
+    0 ]
+```
+---
+
+----------pending
+```flor
+  a
+\ b
+```
+parses to
+```ruby
+  [ 'a', [ [ '_att', [ [ 'b', [], 2 ] ], 2 ] ], 1 ]
+```
+
+
 ## semicolon and pipe
 
 ```flor
