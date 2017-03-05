@@ -125,7 +125,7 @@ module Flor
     alias exp eor
 
     def key(i); seq(:key, i, :exp); end
-    def keycol(i); seq(nil, i, :key, :ws_star, :colon, :eol); end
+    def keycol(i); seq(nil, i, :key, :ws_star, :colon, :eol, :ws_star); end
 
     def att(i); seq(:att, i, :sep, :keycol, '?', :exp); end
     def head(i); seq(:head, i, :exp); end

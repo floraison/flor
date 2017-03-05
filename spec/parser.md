@@ -619,6 +619,32 @@ parses to
   ], 1 ]
 ```
 
+## lines with attributes
+
+```flor
+  sequence timeout:
+    '1h'
+```
+parses to
+```ruby
+  [ 'sequence',
+    [ [ '_att', [ [ 'timeout', [], 1 ], [ '_sqs', '1h', 2 ] ], 1 ] ],
+    1 ]
+```
+---
+
+```flor
+  sequence timeout: '1h',
+    vars: {}
+```
+parses to
+```ruby
+  [ 'sequence',
+    [ [ '_att', [ [ 'timeout', [], 1 ], [ '_sqs', '1h', 1 ] ], 1 ],
+      [ '_att', [ [ 'vars', [], 2 ], [ '_obj', 0, 2 ] ], 2 ] ],
+    1 ]
+```
+
 ## lines with regexes
 
 ```flor
