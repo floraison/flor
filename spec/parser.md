@@ -761,7 +761,7 @@ parses to
   [ 1,
   
   2,
-\
+
     4 ]
 ```
 parses to
@@ -819,7 +819,7 @@ parses to
 ---
 
 ```flor
-  sequence a, b, [ 1 \
+  sequence a, b, [ 1,
     2], c
 ```
 parses to
@@ -848,7 +848,7 @@ parses to
 ---
 
 ```flor
-  map \
+  map,
     [ 1, 2 ]
     fun
 ```
@@ -904,7 +904,7 @@ parses to
 ---
 
 ```flor
-  (def x y; (+ x y)) 7 2
+  (def x y \ (+ x y)) 7 2
 ```
 parses to
 ```ruby
@@ -947,7 +947,7 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'a', [ [ '_att', [ [ 'b', [], 1 ] ], 1 ] ], 1 ]
+  [ 'a', [ [ 'b', [], 1 ] ], 1 ]
 ```
 ---
 
@@ -957,7 +957,7 @@ b
 ```
 parses to
 ```ruby
-  [ 'a', [ [ '_att', [ [ 'b', [], 2 ] ], 2 ] ], 1 ]
+  [ 'a', [ [ 'b', [], 2 ] ], 1 ]
 ```
 ---
 
@@ -969,19 +969,36 @@ parses to
 parses to
 ```ruby
   [ 'sequence',
-    [ [ 'a', [ [ '_att', [ [ 'b', [], 2 ] ], 2 ] ], 1 ], [ 'c', [], 3 ] ],
+    [ [ 'a', [ [ 'b', [], 2 ] ], 1 ] , [ 'c', [], 3 ] ],
     0 ]
 ```
 ---
 
-----------pending
 ```flor
   a
 \ b
 ```
 parses to
 ```ruby
-  [ 'a', [ [ '_att', [ [ 'b', [], 2 ] ], 2 ] ], 1 ]
+  [ 'a', [ [ 'b', [], 2 ] ], 1 ]
+```
+---
+
+```flor
+  map [ 1, 2 ] \ def x \ + 1 x
+```
+parses to
+```ruby
+  [ 'map', [
+    [ '_att', [ [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 2, 1 ] ], 1 ] ], 1 ],
+    [ 'def', [
+      [ '_att', [ [ 'x', [], 1 ] ], 1 ],
+      [ '+', [
+        [ '_num', 1, 1 ],
+        [ 'x', [], 1 ]
+      ], 1 ]
+    ], 1 ]
+  ], 1 ]
 ```
 
 
@@ -992,12 +1009,12 @@ parses to
 ```
 parses to
 ```ruby
-  [ [ '_num', 1, 1 ], [ [ '_num', 2, 1 ] ], 1 ]
+  [ 'sequence', [ [ '_num', 1, 1 ], [ '_num', 2, 1 ] ], 0 ]
 ```
 ---
 
 ```flor
-  1;; 2
+  1; 2
 ```
 parses to
 ```ruby
@@ -1015,25 +1032,7 @@ parses to
 ---
 
 ```flor
-  map [ 1, 2 ]; def x; + 1 x
-```
-parses to
-```ruby
-  [ 'map', [
-    [ '_att', [ [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 2, 1 ] ], 1 ] ], 1 ],
-    [ 'def', [
-      [ '_att', [ [ 'x', [], 1 ] ], 1 ],
-      [ '+', [
-        [ '_num', 1, 1 ],
-        [ 'x', [], 1 ]
-      ], 1 ]
-    ], 1 ]
-  ], 1 ]
-```
----
-
-```flor
-  sequence; a;; b;; c
+  sequence \ a |  b |  c
 ```
 parses to
 ```ruby
@@ -1045,24 +1044,13 @@ parses to
 
 ```flor
   sequence
-;a
-    b;; c
+\a
+    b | c ; d
 ```
 parses to
 ```ruby
   [ 'sequence', [
-    [ 'a', [], 2 ], [ 'b', [], 3 ], [ 'c', [], 3 ]
-  ], 1 ]
-```
----
-
-```flor
-  sequence; a | b | c
-```
-parses to
-```ruby
-  [ 'sequence', [
-    [ 'a', [], 1 ], [ 'b', [], 1 ], [ 'c', [], 1 ]
+    [ 'a', [], 2 ], [ 'b', [], 3 ], [ 'c', [], 3 ], [ 'd', [], 3 ]
   ], 1 ]
 ```
 
@@ -1110,7 +1098,7 @@ parses to
 ## misc
 
 ```flor
-  { sto_uri: (ife; true | 10 | 11) a: 1 }
+  { sto_uri: (ife \ true | 10 | 11) a: 1 }
 ```
 parses to
 ```ruby

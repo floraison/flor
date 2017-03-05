@@ -45,8 +45,8 @@ describe 'Flor core' do
 
     it 'triggers when a child has an error' do
 
-      flor = %{
-        sequence on_error: (def err; push f.l err.error.msg)
+      flor = %q{
+        sequence on_error: (def err \ push f.l err.error.msg)
           push f.l 0
           push f.l x
           push f.l 1
@@ -60,8 +60,8 @@ describe 'Flor core' do
 
     it 'accepts the name of a function' do
 
-      flor = %{
-        define mute err; 'muted.'
+      flor = %q{
+        define mute err \ 'muted.'
         sequence on_error: mute
           push f.l 0
       }

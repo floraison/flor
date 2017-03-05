@@ -179,13 +179,13 @@ describe 'Flor procedures' do
 
     it 'compares integers' do
 
-      flor = %{
-        push f.l; < 2 3
-        push f.l; < 3 2
-        push f.l; > 2 3
-        push f.l; > 3 2
-        push f.l; > 3 2 1
-        push f.l; > 3 2 4
+      flor = %q{
+        push f.l \ < 2 3
+        push f.l \ < 3 2
+        push f.l \ > 2 3
+        push f.l \ > 3 2
+        push f.l \ > 3 2 1
+        push f.l \ > 3 2 4
       }
 
       r = @executor.launch(flor, payload: { 'l' => [] })
@@ -197,12 +197,12 @@ describe 'Flor procedures' do
     it 'compares floats' do
 
       flor = %{
-        push f.l; < 2.0 3.0
-        push f.l; < 3 2.0
-        push f.l; > 2.0 3.0
-        push f.l; > 3 2.0
-        push f.l; > 3 2.0 1.0
-        push f.l; > 3 2.0 4.1
+        push f.l (< 2.0 3.0)
+        push f.l (< 3 2.0)
+        push f.l (> 2.0 3.0)
+        push f.l (> 3 2.0)
+        push f.l (> 3 2.0 1.0)
+        push f.l (> 3 2.0 4.1)
       }
 
       r = @executor.launch(flor, payload: { 'l' => [] })
@@ -213,12 +213,12 @@ describe 'Flor procedures' do
 
     it 'compares strings' do
 
-      flor = %{
-        push f.l; < 'aa' 'bb'
-        push f.l; < 'cc' 'bb'
-        push f.l; > 'zz' 'cc' 'bb'
-        push f.l; > 'bb' 'zz'
-        push f.l; > 'zz' 'aa' 'bb'
+      flor = %q{
+        push f.l \ < 'aa' 'bb'
+        push f.l \ < 'cc' 'bb'
+        push f.l \ > 'zz' 'cc' 'bb'
+        push f.l \ > 'bb' 'zz'
+        push f.l \ > 'zz' 'aa' 'bb'
       }
 
       r = @executor.launch(flor, payload: { 'l' => [] })

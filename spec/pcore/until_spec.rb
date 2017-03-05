@@ -104,10 +104,10 @@ describe 'Flor procedures' do
 
     it "doesn't iterate if the condition is immediately true" do
 
-      flor = %{
+      flor = %q{
         123
         set f.a 1
-        until; = f.a 1
+        until\ = f.a 1
           6
       }
 
@@ -446,7 +446,6 @@ describe 'Flor procedures' do
 
       flor = %{
         set f.a 1
-        #while; < f.a 3
         while (< f.a 3)
           set f.a
             + f.a 1
@@ -463,9 +462,9 @@ describe 'Flor procedures' do
 
     it "doesn't iterate if the condition is immediately false" do
 
-      flor = %{
+      flor = %q{
         set f.a 0
-        while; = f.a 1
+        while\ = f.a 1
           #6
       }
 

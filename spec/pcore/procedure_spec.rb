@@ -309,8 +309,8 @@ describe Flor::Procedure do
 
         # preparation
 
-        flon = %{
-          sequence on_error: (def err; stall _)
+        flon = %q{
+          sequence on_error: (def err \ stall _)
             push l 1
         }
 
@@ -476,7 +476,7 @@ describe Flor::Procedure do
 
         # preparation
 
-        ms = @executor.launch('sequence;; stall _', until: '0_0 execute')
+        ms = @executor.launch('sequence \\ stall _', until: '0_0 execute')
 
         expect(F.to_s(ms)).to eq('(msg 0_0 execute from:0)')
 
@@ -498,7 +498,7 @@ describe Flor::Procedure do
 
         # preparation
 
-        ms = @executor.launch('sequence;; stall _', until: '0_0 execute')
+        ms = @executor.launch('sequence \\ stall _', until: '0_0 execute')
 
         expect(F.to_s(ms)).to eq('(msg 0_0 execute from:0)')
 
@@ -521,7 +521,7 @@ describe Flor::Procedure do
 
         # preparation
 
-        ms = @executor.launch('sequence;; stall _', until: '0_0 execute')
+        ms = @executor.launch('sequence \\ stall _', until: '0_0 execute')
 
         expect(F.to_s(ms)).to eq('(msg 0_0 execute from:0)')
 

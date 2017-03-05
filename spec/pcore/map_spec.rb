@@ -62,9 +62,9 @@ describe 'Flor procedures' do
 
     it 'does not let att get in the way of col and fun' do
 
-      flor = %{
+      flor = %q{
         map [ 0, 1, 2 ], tag: 'y'
-          def x; + x 3
+          def x \ + x 3
       }
 
       r = @executor.launch(flor)
@@ -94,9 +94,9 @@ describe 'Flor procedures' do
 
     it 'shows the index via vars' do
 
-      flor = %{
+      flor = %q{
         map [ 'a', 'b' ]
-          def x; idx
+          def x \ idx
       }
 
       r = @executor.launch(flor)

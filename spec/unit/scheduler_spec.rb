@@ -226,7 +226,7 @@ describe 'Flor unit' do
 
           msg, _ =
             @unit.launch(
-              'sequence; bob | charly',
+              'sequence \\ bob | charly',
               domain: 'org.acme', nolaunch: true)
 
           expect(msg['point']).to eq('execute')

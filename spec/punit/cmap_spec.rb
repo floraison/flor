@@ -65,9 +65,9 @@ describe 'Flor punit' do
 
     it 'executes atts in sequence then children in concurrence' do
 
-      flor = %{
+      flor = %q{
         cmap [ 1 2 3 ]
-          def x; (* x 2)
+          def x \ * x 2
       }
 
       r = @unit.launch(flor, wait: true)

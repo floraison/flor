@@ -40,11 +40,11 @@ describe 'Flor procedures' do
 
     it 'binds at the last moment' do
 
-      flor = %{
-        define "sum0" a, b; (+ a b)
+      flor = %q{
+        define "sum0" a, b \ (+ a b)
         set name 'su'
-        define "$(name)m1" a, b; (+ a b)
-        define 'sum2' a, b; (+ a b)
+        define "$(name)m1" a, b \ (+ a b)
+        define 'sum2' a, b \ (+ a b)
         set f.r0 (sum0 1, 2)
         set f.r1 (sum1 3, -1)
         set f.r2 (sum2 4, 5)

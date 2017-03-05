@@ -10,7 +10,6 @@ module Flor
     def dot(i); str(nil, i, '.'); end
     def colon(i); str(nil, i, ':'); end
     def comma(i); str(nil, i, ','); end
-    def bslash(i); str(nil, i, '\\'); end
 
     def pstart(i); str(nil, i, '('); end
     def pend(i); str(nil, i, ')'); end
@@ -72,11 +71,10 @@ module Flor
     def postval(i); rep(nil, i, :eol, 0); end
 
     def comma_eol(i); seq(nil, i, :comma, :eol, :ws_star); end
-    def bslash_eol(i); seq(nil, i, :bslash, :eol, :ws_star); end
-    def sep(i); alt(nil, i, :comma_eol, :bslash_eol, :ws_star); end
+    def sep(i); alt(nil, i, :comma_eol, :ws_star); end
 
     def comma_qmark_eol(i); seq(nil, i, :comma, '?', :eol); end
-    def coll_sep(i); alt(nil, i, :bslash_eol, :comma_qmark_eol, :ws_star); end
+    def coll_sep(i); alt(nil, i, :comma_qmark_eol, :ws_star); end
 
     def ent(i); seq(:ent, i, :key, :postval, :colon, :postval, :exp, :postval); end
     def ent_qmark(i); rep(nil, i, :ent, 0, 1); end
@@ -129,11 +127,16 @@ module Flor
 
     def att(i); seq(:att, i, :sep, :keycol, '?', :exp); end
     def head(i); seq(:head, i, :exp); end
-    def indent(i); rex(:indent, i, /[|; \t]*/); end
+    def indent(i); rex(:indent, i, /[ \t]*/); end
     def node(i); seq(:node, i, :indent, :head, :att, '*'); end
 
+    def linjoin(i); rex(nil, i, /[ \t]*[\\|;][ \t]*/); end
+    def outjnl(i); seq(nil, i, :linjoin, :comment, '?', :retnew); end
+    def outnlj(i); seq(nil, i, :ws_star, :comment, '?', :retnew, :linjoin); end
+    def outdent(i); alt(:outdent, i, :outjnl, :outnlj, :eol); end
+
     def line(i)
-      seq(:line, i, :node, '?', :eol)
+      seq(:line, i, :node, '?', :outdent)
     end
     def panode(i)
       seq(:panode, i, :pstart, :eol, :ws_star, :line, '*', :eol, :pend)
@@ -151,7 +154,7 @@ module Flor
 
     def rewrite_par(t)
 
-      Nod.new(t.lookup(:node)).to_a
+      Nod.new(t.lookup(:node), nil).to_a
     end
 
     def rewrite_ref(t); [ t.string, [], ln(t) ]; end
@@ -237,7 +240,7 @@ module Flor
       attr_accessor :parent, :indent
       attr_reader :children
 
-      def initialize(tree)
+      def initialize(tree, outdent)
 
         @parent = nil
         @indent = -1
@@ -245,15 +248,21 @@ module Flor
         @children = []
         @line = 0
 
+        @outdent = outdent ? outdent.strip : nil
+        @outdent = nil if @outdent && @outdent.size < 1
+
         read(tree) if tree
       end
 
       def append(node)
 
-        if node.indent == :east
-          node.indent = self.indent + 2
-        elsif node.indent == :south
-          node.indent = self.indent
+        if @outdent
+          if @outdent.index('\\')
+            node.indent = self.indent + 2
+          elsif @outdent.index('|') || @outdent.index(';')
+            node.indent = self.indent
+          end
+          @outdent = nil
         end
 
         if node.indent > self.indent
@@ -309,17 +318,17 @@ module Flor
 
       def read(tree)
 
-        if it = tree.lookup(:indent)
-
-          s = it.string
-          semicount = s.count(';')
-          pipe = s.index('|')
-
-          @indent =
-            if semicount == 1 then :east
-            elsif semicount > 1 || pipe then :south
-            else s.length; end
-        end
+        #if it = tree.lookup(:indent)
+        #  #s = it.string
+        #  #semicount = s.count(';')
+        #  #pipe = s.index('|')
+        #  #
+        #  #@indent =
+        #  #  if semicount == 1 then :east
+        #  #  elsif semicount > 1 || pipe then :south
+        #  #  else s.length; end
+        #end
+        @indent = tree.lookup(:indent).string.length
 
         ht = tree.lookup(:head)
         @line = Flor::Lang.line_number(ht)
@@ -355,10 +364,13 @@ module Flor
 
     def rewrite_flor(t)
 
-      prev = root = Nod.new(nil)
+      prev = root = Nod.new(nil, nil)
 
-      t.gather(:node).each do |nt|
-        n = Nod.new(nt)
+      #t.gather(:node).each do |nt|
+      t.gather(:line).each do |lt|
+        nt = lt.lookup(:node); next unless nt
+        ot = lt.lookup(:outdent).string
+        n = Nod.new(nt, ot)
         prev.append(n)
         prev = n
       end

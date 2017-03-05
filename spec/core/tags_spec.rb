@@ -149,8 +149,8 @@ describe 'Flor core' do
 
     it 'accepts functions as tags' do
 
-      flor = %{
-        define x; _
+      flor = %q{
+        define x \ _
         sequence tag: x
       }
 
@@ -172,11 +172,17 @@ describe 'Flor core' do
 
     it 'accepts functions as tags (closure)' do
 
-      flor = %{
+      flor = %q{
+
         define make_tag x
-          def; sequence tag: x
-        define t1; _
-        set v; make_tag t1
+          def \ sequence tag: x
+
+        define t1 \ _
+
+        #set v \ make_tag t1
+          # or
+        set v (make_tag t1)
+
         v _
         v _
       }

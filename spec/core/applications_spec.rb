@@ -178,8 +178,8 @@ describe 'Flor core' do
 
     it 'works with an anonymous function (paren)' do
 
-      flor = %{
-        (def x y; (+ x y)) 7 2
+      flor = %q{
+        (def x y \ (+ x y)) 7 2
       }
 
       r = @executor.launch(flor)

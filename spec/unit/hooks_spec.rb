@@ -206,9 +206,9 @@ end
       end
 
       r =
-        @unit.launch(%{
-          define fun0 x; trace "fun0:$(x)"
-          define fun1 x; trace "fun1:$(x)"
+        @unit.launch(%q{
+          define fun0 x \ trace "fun0:$(x)"
+          define fun1 x \ trace "fun1:$(x)"
           sequence
             fun0 'a'
             fun1 'b'

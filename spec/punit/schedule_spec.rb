@@ -28,9 +28,9 @@ describe 'Flor punit' do
 
     it 'creates a timer' do
 
-      flor = %{
+      flor = %q{
         schedule cron: '0 0 1 jan *'
-          def msg; alpha
+          def msg \ alpha
       }
 
       exid = @unit.launch(flor)

@@ -71,9 +71,9 @@ describe 'Flor punit' do
 
     it "doesn't mind tag:" do
 
-      flor = %{
+      flor = %q{
         trap tag: 'x'
-          def msg; trace "$(msg.point):x"
+          def msg \ trace "$(msg.point):x"
         trace 'a', tag: 'x'
       }
 

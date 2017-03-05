@@ -34,8 +34,8 @@ describe 'Flor procedures' do
 
       flor = %{
         case 1 a: 'b'
-          [ 0 1 2 ];; 'low'
-          [ 3 4 5 ];; 'high'
+          [ 0 1 2 ]; 'low'
+          [ 3 4 5 ]; 'high'
       }
 
       r = @executor.launch(flor)
@@ -48,8 +48,8 @@ describe 'Flor procedures' do
 
       flor = %{
         case 4
-          [ 0 1 2 ];; 'low'
-          [ 3 4 5 ];; 'high'
+          [ 0 1 2 ]; 'low'
+          [ 3 4 5 ]; 'high'
       }
 
       r = @executor.launch(flor)
@@ -63,8 +63,8 @@ describe 'Flor procedures' do
       flor = %{
         'nothing'
         case 6
-          [ 0 1 2 ];; 'low'
-          [ 3 4 5 ];; 'high'
+          [ 0 1 2 ]; 'low'
+          [ 3 4 5 ]; 'high'
       }
 
       r = @executor.launch(flor)
@@ -78,9 +78,9 @@ describe 'Flor procedures' do
       flor = %{
         'nothing'
         case 6
-          [ 0 1 2 ];; 'low'
-          [ 3 4 5 ];; 'high'
-          else;; 'over'
+          [ 0 1 2 ]; 'low'
+          [ 3 4 5 ]; 'high'
+          else; 'over'
       }
 
       r = @executor.launch(flor)
@@ -94,9 +94,9 @@ describe 'Flor procedures' do
       flor = %{
         'nothing'
         case 6
-          [ 0 1 2 ];; 'low'
-          6;; 'high'
-          else;; 'over'
+          [ 0 1 2 ]; 'low'
+          6; 'high'
+          else; 'over'
       }
 
       r = @executor.launch(flor)
@@ -105,7 +105,7 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq('high')
     end
 
-    it 'works without ;; ;-)' do
+    it 'works without ; ;-)' do
 
       flor = %{
         'nothing'
@@ -139,7 +139,7 @@ describe 'Flor procedures' do
 #              concurrence
 #                'd'
 #                'e'
-#            6;; 'f'
+#            6; 'f'
 #            else
 #              'g'
 #              'h'
@@ -192,7 +192,7 @@ describe 'Flor procedures' do
 
 #      before :each do
 #
-#        flon = %{ case 1; x;; y }
+#        flon = %{ case 1; x; y }
 #        ms = @executor.launch(
 #          flon,
 #          vars: {

@@ -28,10 +28,10 @@ describe 'Flor punit' do
 
     it 'traps messages' do
 
-      flor = %{
+      flor = %q{
         sequence
           trap 'terminated'
-            def msg; trace "t:$(msg.from)"
+            def msg \ trace "t:$(msg.from)"
           trace "s:$(nid)"
       }
 
@@ -50,9 +50,9 @@ describe 'Flor punit' do
 
     it 'traps multiple times' do
 
-      flor = %{
+      flor = %q{
         trap point: 'receive'
-          def msg; trace "$(msg.nid)<-$(msg.from)"
+          def msg \ trace "$(msg.nid)<-$(msg.from)"
         sequence
           sequence
             trace '*'
@@ -81,8 +81,8 @@ describe 'Flor punit' do
 
     it 'traps in the current execution only by default' do
 
-      exid0 = @unit.launch(%{
-        trap tag: 't0'; def msg; trace "t0_$(msg.exid)"
+      exid0 = @unit.launch(%q{
+        trap tag: 't0' \ def msg \ trace "t0_$(msg.exid)"
         noret tag: 't0'
         trace "stalling_$(exid)"
         stall _
@@ -114,9 +114,9 @@ describe 'Flor punit' do
 
     it 'is bound at the parent level by default' do
 
-      m = @unit.launch(%{
+      m = @unit.launch(%q{
         sequence
-          trap tag: 't0'; def msg; trace "t0_$(msg.exid)"
+          trap tag: 't0' \ def msg \ trace "t0_$(msg.exid)"
           stall _
       }, wait: '0_1 receive')
 
@@ -130,10 +130,10 @@ describe 'Flor punit' do
 
     it 'has access to variables in the parent node' do
 
-      flor = %{
+      flor = %q{
         set l []
         trap point: 'signal'
-          def msg; push l "$(msg.name)"
+          def msg \ push l "$(msg.name)"
         signal 'hello'
         push l 'over'
       }
@@ -148,8 +148,8 @@ describe 'Flor punit' do
 
       expect(@unit.traps.count).to eq(0)
 
-      r = @unit.launch(%{
-        trap tag: 't0'; def msg; trace "t0_$(msg.exid)"
+      r = @unit.launch(%q{
+        trap tag: 't0' \ def msg \ trace "t0_$(msg.exid)"
       }, wait: true)
 
       expect(r['point']).to eq('terminated')
@@ -163,10 +163,10 @@ describe 'Flor punit' do
 
       it 'determines how many times a trap triggers at max' do
 
-        flor = %{
+        flor = %q{
           concurrence
             trap tag: 'b', count: 2
-              def msg; trace "A>$(nid)"
+              def msg \ trace "A>$(nid)"
             sequence
               sleep 0.8
               noret tag: 'b'
@@ -201,9 +201,9 @@ describe 'Flor punit' do
 
       it 'traps given procedures' do
 
-        flor = %{
+        flor = %q{
           trap heap: 'sequence'
-            def msg; trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
+            def msg \ trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
           sequence
             noret _
         }
@@ -230,9 +230,9 @@ describe 'Flor punit' do
 
       it 'traps given head of trees' do
 
-        flor = %{
-          trap heat: 'fun0'; def msg; trace "t-$(msg.tree.0)-$(msg.nid)"
-          define fun0; trace "c-fun0-$(nid)"
+        flor = %q{
+          trap heat: 'fun0' \ def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
+          define fun0 \ trace "c-fun0-$(nid)"
           sequence
             fun0 # not a call
             fun0 # not a call
@@ -256,9 +256,9 @@ describe 'Flor punit' do
 
       it 'traps given procedures' do
 
-        flor = %{
-          trap heat: '_apply'; def msg; trace "t-heat-$(msg.nid)"
-          define fun0; trace "c-fun0-$(nid)"
+        flor = %q{
+          trap heat: '_apply' \ def msg \ trace "t-heat-$(msg.nid)"
+          define fun0 \ trace "c-fun0-$(nid)"
           sequence
             fun0 _
             fun0 _
@@ -291,10 +291,10 @@ describe 'Flor punit' do
 
       it 'traps only subnids' do
 
-        r = @unit.launch(%{
+        r = @unit.launch(%q{
           concurrence
             sequence
-              trap tag: 't0'; def msg; trace "in-$(msg.nid)"
+              trap tag: 't0' \ def msg \ trace "in-$(msg.nid)"
               stall tag: 't0'
             sequence
               sleep '1s' # give it time to process the trap
@@ -319,10 +319,10 @@ describe 'Flor punit' do
 
       it 'traps in the same execution' do
 
-        r = @unit.launch(%{
+        r = @unit.launch(%q{
           concurrence
             trap tag: 't1' range: 'execution'
-              def msg; trace "t1_$(msg.exid)"
+              def msg \ trace "t1_$(msg.exid)"
             sequence
               sleep '1s'
               sequence tag: 't1'
@@ -349,13 +349,12 @@ describe 'Flor punit' do
       end
     end
 
-
     context 'range: domain' do
 
       it 'traps the events in execution domain' do
 
-        exid0 = @unit.launch(%{
-          trap tag: 't0' range: 'domain'; def msg; trace "t0_$(msg.exid)"
+        exid0 = @unit.launch(%q{
+          trap tag: 't0' range: 'domain' \ def msg \ trace "t0_$(msg.exid)"
           trace "stalling_$(exid)"
           stall _
         }, domain: 'net.acme')
@@ -393,8 +392,8 @@ describe 'Flor punit' do
 
       it 'traps the events in range domain and its subdomains' do
 
-        exid0 = @unit.launch(%{
-          trap tag: 't0' range: 'subdomain'; def msg; trace "t0_$(msg.exid)"
+        exid0 = @unit.launch(%q{
+          trap tag: 't0' range: 'subdomain' \ def msg \ trace "t0_$(msg.exid)"
           trace "stalling_$(exid)"
           stall _
         }, domain: 'net.acme')
@@ -433,11 +432,11 @@ describe 'Flor punit' do
 
       it 'traps tag entered' do
 
-        flor = %{
+        flor = %q{
           sequence
             trace 'a'
             trap tag: 'x'
-              def msg; trace msg.point
+              def msg \ trace msg.point
             sequence tag: 'x'
               trace 'c'
         }
@@ -463,14 +462,14 @@ describe 'Flor punit' do
 
       it 'traps after the message consumption' do
 
-        flor = %{
+        flor = %q{
           trace 'a'
           trap point: 'signal', consumed: true
-            def msg; trace "0con:m$(msg.m)sm$(msg.sm)"
+            def msg \ trace "0con:m$(msg.m)sm$(msg.sm)"
           trap point: 'signal', consumed: true
-            def msg; trace "1con:m$(msg.m)sm$(msg.sm)"
+            def msg \ trace "1con:m$(msg.m)sm$(msg.sm)"
           trap point: 'signal'
-            def msg; trace "0nocon:m$(msg.m)sm$(msg.sm)"
+            def msg \ trace "0nocon:m$(msg.m)sm$(msg.sm)"
           signal 'S'
           trace 'b'
         }
@@ -493,11 +492,11 @@ describe 'Flor punit' do
 
       it 'traps "signal"' do
 
-        flor = %{
+        flor = %q{
           sequence
             trace 'a'
             trap point: 'signal'
-              def msg; trace "S"
+              def msg \ trace "S"
             trace 'b'
             signal 'S'
             trace 'c'
@@ -518,13 +517,13 @@ describe 'Flor punit' do
 
       it 'traps "signal" and name:' do
 
-        flor = %{
+        flor = %q{
           sequence
             trace 'a'
             trap point: 'signal', name: 's0'
-              def msg; trace "s0"
+              def msg \ trace "s0"
             trap point: 'signal', name: 's1'
-              def msg; trace "s1"
+              def msg \ trace "s1"
             signal 's0'
             signal 's1'
             signal 's2'
@@ -546,9 +545,9 @@ describe 'Flor punit' do
 
       it 'traps "signal" and its payload' do
 
-        flor = %{
+        flor = %q{
           trap point: 'signal', name: 's0'
-            def msg; trace "s0:$(msg.payload.ret)"
+            def msg \ trace "s0:$(msg.payload.ret)"
           signal 's0'
             [ 1, 2, 3 ]
         }
@@ -571,9 +570,9 @@ describe 'Flor punit' do
 
       it 'uses the trap payload if "trap" (default)' do
 
-        flor = %{
+        flor = %q{
           trap point: 'signal' name: 's0' payload: 'trap'
-            def msg; trace "s0:$(f.ret):$(msg.payload.ret)"
+            def msg \ trace "s0:$(f.ret):$(msg.payload.ret)"
           signal 's0'
             [ 1, 2, 3 ]
         }
@@ -621,11 +620,11 @@ describe 'Flor punit' do
 
       it 'traps messages matching all the criteria' do
 
-        flor = %{
+        flor = %q{
           sequence
             trace 'a'
             trap tag: 'x', point: 'left'
-              def msg; trace "$(msg.point)-$(msg.nid)"
+              def msg \ trace "$(msg.point)-$(msg.nid)"
             sequence tag: 'x'
               trace 'c'
         }
@@ -634,7 +633,7 @@ describe 'Flor punit' do
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.140
+        sleep 0.210
 
         expect(
           @unit.traces.collect(&:text)

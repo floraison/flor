@@ -62,8 +62,8 @@ describe 'Flor core' do
 
     it 'is keys on the function name' do
 
-      flor = %{
-        define k; stall _
+      flor = %q{
+        define k \ stall _
         _dump k: 'V'
       }
 
@@ -78,8 +78,8 @@ describe 'Flor core' do
 
     it 'is keys on the referenced function name' do
 
-      flor = %{
-        define k; stall _
+      flor = %q{
+        define k \ stall _
         set kk k
         _dump kk: 'V'
       }
