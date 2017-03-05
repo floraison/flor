@@ -32,6 +32,22 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 1, 2, 'trois' ])
     end
+
+    it 'builds an array (without commas)' do
+
+      r = @executor.launch(%{ [ 1 2 "trois" ] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 1, 2, 'trois' ])
+    end
+
+    it 'builds an array (with commas)' do
+
+      r = @executor.launch(%{ [ 1, 2,, 4 ] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 1, 2, 4 ])
+    end
   end
 end
 

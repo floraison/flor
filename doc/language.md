@@ -32,7 +32,10 @@ sequence
 ```
 
 ## procedures
+### arrays and objects
+
 ## attributes
+### the _ attribute
 
 ## parentheses
 
@@ -73,5 +76,55 @@ cmap [ 1 2 3 ]
 Note the slope in the indented version just above. The backslash symbolizes it.
 
 ### pipe or semicolon
+
+Pipe `|` and semicolon `;` have the same effect, the bind the two nodes they stand between in a sibling relationship.
+
+```
+sequence \ a | b | c
+sequence \ a ; b ; c
+    # is equivalent to
+sequence
+  a | b | c
+    # is equivalent to
+sequence
+\ a
+| b
+| c
+    # is equivalent to
+sequence
+  a
+  b
+  c
+```
+
 ### collection comma
+
+Arrays and objects in JSON have their elements separated by commas. This is not necessary in flor.
+
+```
+[ 1 2 3 ]
+  # is equivalent to
+[ 1, 2, 3 ]
+  # is equivalent to
+[ ,1,,, 2, 3, ]
+```
+
+As seen above, the comma is optional.
+
+It is useful in certain cases:
+```
+  task 'bob',
+    context: 'customer has a leak in kitchen',
+    mission: 'investigate leak'
+```
+
+The "collection" of attributes in a line also accept optional commas. The two trailing commas here bind the following lines to the initial "task" line and (imo) improve readability.
+
+In an array or an object, the closing `[` or `{` is expected, so introducing newlines is OK.
+```
+  [ 1
+    2 3 ]
+  { a: 'a'
+    b: 'b' }
+```
 

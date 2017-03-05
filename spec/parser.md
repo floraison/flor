@@ -645,6 +645,25 @@ parses to
     1 ]
 ```
 
+```flor
+  task 'bob',
+    context: 'customer has a leak in kitchen',
+    mission: 'investigate leak'
+```
+parses to
+```ruby
+  [ "task",
+    [ [ "_att", [ [ "_sqs", "bob", 1 ] ], 1 ],
+      [ "_att",
+        [ [ "context", [], 2 ],
+          [ "_sqs", "customer has a leak in kitchen", 2 ] ],
+        2 ],
+      [ "_att",
+        [ [ "mission", [], 3 ], [ "_sqs", "investigate leak", 3 ] ],
+        3 ] ],
+   1 ]
+```
+
 ## lines with regexes
 
 ```flor
