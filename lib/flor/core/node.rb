@@ -152,6 +152,8 @@ class Flor::Node
         @node
       elsif cat == 'v'
         lookup_var(@node, mod, key)
+      elsif cat == 't'
+        lookup_tag(mod, key)
       else
         lookup_field(mod, key)
       end
@@ -371,6 +373,17 @@ class Flor::Node
     lookup_var_name(parent_node(node), val)
   end
 
+  def lookup_tag(mod, key)
+
+    nids =
+      @execution['nodes'].inject([]) do |a, (nid, n)|
+        a << nid if n['tags'] && n['tags'].include?(key)
+        a
+      end
+
+    nids.empty? ? [ '_nul', nil, -1 ] : nids
+  end
+
   def lookup_field(mod, key)
 
     Flor.deep_get(payload.current, key)[1]
@@ -378,7 +391,8 @@ class Flor::Node
 
   def key_split(key) # => category, mode, key
 
-    m = key.match(/\A(?:([lgd]?)((?:v|var|variable)|w|f|fld|field)\.)?(.+)\z/)
+    m = key.match(
+      /\A(?:([lgd]?)((?:v|var|variable)|w|f|fld|field|t|tag)\.)?(.+)\z/)
 
     #fail ArgumentError.new("couldn't split key #{key.inspect}") unless m
       # spare that

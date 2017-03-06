@@ -204,5 +204,37 @@ describe 'Flor core' do
       ].join("\n"))
     end
   end
+
+  describe 'the tag pseudo-variable' do
+
+    it 'yields null when the tag is not set' do
+
+      flor = %{
+        set a []
+        push a tag.x
+        null
+      }
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['a']).to eq([ nil ])
+    end
+
+    it 'yields the array of nids with the tag on' do
+
+      flor = %{
+        set a []
+        sequence tag: 'alpha'
+          sequence tag: 'bravo'
+            push a tag.bravo
+            push a t.alpha
+        null
+      }
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['a']).to eq([ [ '0_1_1' ], [ '0_1' ] ])
+    end
+  end
 end
 
