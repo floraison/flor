@@ -38,7 +38,7 @@ Each pattern is illustrated with a flor implementation (or approximation). There
 ### State-based Patterns
 * deferred choice
 * interleaved parallel routing
-* milestone
+* [Milestone](#sb-milestone)
 
 ### Cancellation Patterns
 * cancel task
@@ -47,6 +47,7 @@ Each pattern is illustrated with a flor implementation (or approximation). There
 ### New Control Flow Patterns
 (coming soon)
 
+<!-- --------------------------------------------------------------------- -->
 ## Basic Control Flow Patterns
 
 ### Sequence
@@ -97,4 +98,39 @@ sequence
 <a id="bcf-exclusive-choice" />The simplest flor procedure to use to support this pattern is [if](procedures/if.md)
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp4.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp4_animation.php) | [top](#top)
+
+<!-- --------------------------------------------------------------------- -->
+## Advanced Branching and Synchronization Patterns
+
+<!-- --------------------------------------------------------------------- -->
+## Multiple Instance Patterns
+
+<!-- --------------------------------------------------------------------- -->
+## State-based Patterns
+
+### Milestone
+<a id="sb-milestone" />"A task is only enabled when the process instance (of which it is part) is in a specific state (typically a parallel branch)" says the [pattern description](http://www.workflowpatterns.com/patterns/control/state/wcp18.php).
+
+The flor code is might be paraphrased as "E is tasked only if the execution has the tag 'bravo'":
+```
+  concurrence
+    sequence
+      task 'A'
+      task 'B' tag: 'bravo'
+      task 'C'
+    sequence
+      task 'D'
+      task 'E' if tag.bravo
+      task 'F'
+```
+
+Ruote (the predecessor to flor) was [proposing](http://ruote.io/patterns.html#sa_milestone) a solution a bit more convoluted.
+
+[wp/explanation](http://www.workflowpatterns.com/patterns/control/state/wcp18.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/state/wcp18_animation.php) | [top](#top)
+
+<!-- --------------------------------------------------------------------- -->
+## Cancellation Patterns
+
+<!-- --------------------------------------------------------------------- -->
+## New Control Flow Patterns
 
