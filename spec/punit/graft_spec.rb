@@ -70,6 +70,21 @@ describe 'Flor punit' do
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq([ 1, 2 ])
     end
+
+    it 'accepts the file suffix in the graft name' do
+
+      flor = %{
+        sequence
+          set a []
+          graft 'sub0'
+          graft 'sub0.flo'
+      }
+
+      r = @unit.launch(flor, domain: 'com.acme.alpha', wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['a']).to eq([ 1, 1 ])
+    end
   end
 end
 

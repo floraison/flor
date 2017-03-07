@@ -1,5 +1,43 @@
 
 class Flor::Pro::Graft < Flor::Procedure
+  #
+  # Graft a subtree into the current flo
+  #
+  # Given
+  # ```
+  # # sub0.flo
+  # sequence
+  #   task 'a'
+  #   task 'b'
+  # ```
+  # and
+  # ```
+  # # sub1.flo
+  # sequence
+  #   task 'c'
+  #   task 'd'
+  # ```
+  # then
+  # ```
+  # # main.flo
+  # concurrence
+  #   graft 'sub0.flo'
+  #   graft 'sub1' # suffix can be omitted
+  #   graft 'sub0'
+  #     #
+  #     # which is thus equivalent to
+  #     #
+  # concurrence
+  #   sequence
+  #     task 'a'
+  #     task 'b'
+  #   sequence
+  #     task 'c'
+  #     task 'd'
+  #   sequence
+  #     task 'a'
+  #     task 'b'
+  # ```
 
   names 'graft', 'import'
 
@@ -14,7 +52,7 @@ class Flor::Pro::Graft < Flor::Procedure
     # look up subtree
 
     sub =
-      att('tree', 'subtree', 'flow', 'subflow', nil)
+      att('tree', 'subtree', 'flow', 'subflow', 'twig', nil)
     source_path, source =
       @executor.unit.loader.library(domain, sub, subflows: true)
 

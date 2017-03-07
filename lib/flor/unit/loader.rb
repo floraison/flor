@@ -39,6 +39,10 @@ module Flor
       domain, name, opts = [ domain, nil, name ] if name.is_a?(Hash)
       domain, name = split_dn(domain, name)
 
+      if m = name.match(/(\.flor?)\z/)
+        name = name[0..m[1].length - 1]
+      end
+
       path, d, n = (Dir[File.join(root, '**/*.{flo,flor}')])
         .select { |f| f.index('/lib/') }
         .collect { |pa| [ pa, *expose_dn(pa, opts) ] }
