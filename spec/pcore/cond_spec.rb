@@ -57,9 +57,9 @@ describe 'Flor procedures' do
         7
         set a 10
         cond
-          a < 4 ;; "less than four"
-          a < 7 ;; "less than seven"
-          a < 10 ;; "less than ten"
+          a < 4 ; "less than four"
+          a < 7 ; "less than seven"
+          a < 10 ; "less than ten"
       }
 
       r = @executor.launch(flor)
@@ -73,9 +73,9 @@ describe 'Flor procedures' do
       flor = %{
         set a 11
         cond
-          a < 4 ;; "less than four"
-          a < 7 ;; "less than seven"
-          else ;; "ten or bigger"
+          a < 4 ; "less than four"
+          a < 7 ; "less than seven"
+          else ; "ten or bigger"
       }
 
       r = @executor.launch(flor)
@@ -90,8 +90,8 @@ describe 'Flor procedures' do
         7
         set a 11
         cond
-          a < 4 ;; "less than four"
-          a < 7 ;; "less than seven"
+          a < 4 ; "less than four"
+          a < 7 ; "less than seven"
           else
       }
 
@@ -103,12 +103,14 @@ describe 'Flor procedures' do
 
     it 'is OK with a true instead of an "else"' do
 
+      # pipe or semicolon, trying with pipe for this one
+
       flor = %{
         set a 12
         cond
-          a < 4 ;; "less than four"
-          a < 7 ;; "less than seven"
-          true ;; "ten or bigger"
+          a < 4 | "less than four"
+          a < 7 | "less than seven"
+          true | "ten or bigger"
       }
 
       r = @executor.launch(flor)
@@ -123,8 +125,8 @@ describe 'Flor procedures' do
         7
         set a 12
         cond
-          a < 4 ;; "less than four"
-          a < 7 ;; "less than seven"
+          a < 4 ; "less than four"
+          a < 7 ; "less than seven"
           true
       }
 
