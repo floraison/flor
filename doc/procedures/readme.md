@@ -5,9 +5,11 @@
 
 * [_skip](_skip.md) - Skips x messages, mostly used for testing flor.
 * [break, continue](break.md) - Breaks or continues a "while" or "until".
+* [case](case.md) - The classical case form.
 * [cond](cond.md) - Evaluates all its condition children until one evaluates to true (or it's an else), then executes the corresponding clause child.
 * [cursor](cursor.md) - Executes child expressions in sequence, but may be "guided".
 * [def, fun, define](define.md) - Defines a function.
+* [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidequick)
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
 * [move](move.md) - Moves a cursor to a given position
 * [noeval](noeval.md) - Immediately replies, children are not evaluated
@@ -19,6 +21,7 @@
 
 * [cancel, kill](cancel.md) - Cancels an execution branch
 * [concurrence](concurrence.md) - Executes its children concurrently.
+* [graft, import](graft.md) - Graft a subtree into the current flo
 * [schedule](schedule.md) - Schedules a function
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
 
