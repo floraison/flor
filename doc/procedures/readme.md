@@ -4,11 +4,13 @@
 ## core
 
 * [_skip](_skip.md) - Skips x messages, mostly used for testing flor.
+* [apply](apply.md) - Applies a function.
 * [break, continue](break.md) - Breaks or continues a "while" or "until".
 * [case](case.md) - The classical case form.
 * [cond](cond.md) - Evaluates all its condition children until one evaluates to true (or it's an else), then executes the corresponding clause child.
 * [cursor](cursor.md) - Executes child expressions in sequence, but may be "guided".
 * [def, fun, define](define.md) - Defines a function.
+* [fail, error](fail.md) - Explicitely raises an error.
 * [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidequick)
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
 * [move](move.md) - Moves a cursor to a given position
