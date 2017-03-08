@@ -21,9 +21,13 @@ Flor is a "Ruby workflow engine", if that makes any sense.
 * All in all should be easy to maintain (engine itself and executions running
   on top of it)
 
+## Quickstart
+
+See [quickstart/](quickstart/).
+
 ## Documentation
 
-see [doc/](doc/).
+See [doc/](doc/).
 
 
 ## LICENSE
