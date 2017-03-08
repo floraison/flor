@@ -1,0 +1,8 @@
+
+# bob tasker
+
+on_task: {
+  require: 'tasker.rb'
+  class: BobTasker
+}
+

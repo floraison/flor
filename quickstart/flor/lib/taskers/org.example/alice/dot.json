@@ -1,0 +1,8 @@
+
+# alice tasker
+
+on_task: {
+  require: 'tasker.rb'
+  class: AliceTasker
+}
+

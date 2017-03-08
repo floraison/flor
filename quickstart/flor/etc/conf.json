@@ -1,0 +1,23 @@
+
+env: 'quickstart'
+domain: 'quickstart'
+
+#log_out: 'var/log'
+flor_debug: 'stdout,dbg'
+
+sto_uri: (ife
+  == ruby_platform 'java'
+  "jdbc:sqlite://$(root)/var/flor.db"
+  "sqlite://$(root)/var/flor.db")
+  #"sqlite::memory:")
+
+sto_migration_check: false
+  # let's stop if the db is not up-to-date with flor migrations
+
+sto_sync: true
+  # let's the storage sync access to DB, especially useful on JRuby + Sqlite
+
+#sto_connection_validation: true # sets to -1 (validates all the time)
+#sto_connection_validation: 60 # validates after 60 seconds
+sto_connection_validation: false
+
