@@ -78,17 +78,17 @@ describe Flor::Loader do
       t = @loader.tasker('', 'alice')
 
       expect(t['description']).to eq('basic alice')
-      expect(t.keys).to eq(%w[ description a _path ])
+      expect(t.keys).to eq(%w[ description a _path root ])
 
       t = @loader.tasker('net.example', 'alice')
 
       expect(t['description']).to eq('basic alice')
-      expect(t.keys).to eq(%w[ description a _path ])
+      expect(t.keys).to eq(%w[ description a _path root ])
 
       t = @loader.tasker('org.example', 'alice')
 
       expect(t['description']).to eq('org.example alice')
-      expect(t.keys).to eq(%w[ description ao _path ])
+      expect(t.keys).to eq(%w[ description ao _path root ])
 
       t = @loader.tasker('', 'bob')
 
@@ -97,17 +97,17 @@ describe Flor::Loader do
       t = @loader.tasker('net.example', 'bob')
 
       expect(t['description']).to eq('usr net.example bob')
-      expect(t.keys).to eq(%w[ description ubn _path ])
+      expect(t.keys).to eq(%w[ description ubn _path root ])
 
       t = @loader.tasker('org.example', 'bob')
 
       expect(t['description']).to eq('org.example bob')
-      expect(t.keys).to eq(%w[ description bo _path ])
+      expect(t.keys).to eq(%w[ description bo _path root ])
 
       t = @loader.tasker('org.example.bob')
 
       expect(t['description']).to eq('org.example bob')
-      expect(t.keys).to eq(%w[ description bo _path ])
+      expect(t.keys).to eq(%w[ description bo _path root ])
     end
 
     it 'loads a domain tasker configuration' do

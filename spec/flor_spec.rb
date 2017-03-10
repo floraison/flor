@@ -327,5 +327,26 @@ describe Flor do
       ])
     end
   end
+
+  describe '.relativize_path(path, from)' do
+
+    it 'relativizes paths' do
+
+      expect(
+        Flor.relativize_path(
+          File.absolute_path('spec'))
+      ).to eq(
+        'spec'
+      )
+
+p File.absolute_path('spec')
+      expect(
+        Flor.relativize_path(
+          File.absolute_path('spec'), File.absolute_path('spec'))
+      ).to eq(
+        '.'
+      )
+    end
+  end
 end
 

@@ -191,6 +191,7 @@ module Flor
       h = Flor.dup(r['payload']['ret'])
 
       h.merge!('_path' => path) unless path.match(/[\r\n]/)
+      h['root'] ||= Flor.relativize_path(vs['root'])
 
       h
     end

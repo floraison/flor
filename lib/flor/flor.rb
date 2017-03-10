@@ -89,7 +89,7 @@ module Flor
 
     path = path[from.length + 1..-1] if path[0, from.length] == from
 
-    path
+    path || '.'
   end
 
   def self.is_array_of_messages?(o)

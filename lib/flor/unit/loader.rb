@@ -11,6 +11,8 @@ module Flor
 
       @cache = {}
       @mutex = Mutex.new
+
+      @root = File.absolute_path(@unit.conf['lod_path'] || @unit.conf['root'])
     end
 
     def shutdown
@@ -18,7 +20,7 @@ module Flor
 
     def variables(domain)
 
-      Dir[File.join(root, '**/*.json')]
+      Dir[File.join(@root, '**/*.json')]
         .select { |f| f.index('/etc/variables/') }
         .collect { |pa| [ pa, expose_d(pa, {}) ] }
         .select { |pa, d| is_subdomain?(domain, d) }
@@ -43,7 +45,7 @@ module Flor
         name = name[0..m[1].length - 1]
       end
 
-      path, d, n = (Dir[File.join(root, '**/*.{flo,flor}')])
+      path, d, n = (Dir[File.join(@root, '**/*.{flo,flor}')])
         .select { |f| f.index('/lib/') }
         .collect { |pa| [ pa, *expose_dn(pa, opts) ] }
         .select { |pa, d, n| n == name && is_subdomain?(domain, d) }
@@ -57,7 +59,7 @@ module Flor
 
       domain, name = split_dn(domain, name)
 
-      path, d, n = Dir[File.join(root, '**/*.json')]
+      path, d, n = Dir[File.join(@root, '**/*.json')]
         .select { |pa| pa.index('/lib/taskers/') }
         .collect { |pa| [ pa, *expose_dn(pa, {}) ] }
         .select { |pa, d, n|
@@ -102,7 +104,7 @@ module Flor
 
     def expose_d(path, opts)
 
-      pa = path[root.length..-1]
+      pa = path[@root.length..-1]
       pa = pa[5..-1] if pa[0, 5] == '/usr/'
 
       libregex =
@@ -128,15 +130,6 @@ module Flor
         [ pa[0..ri - 1], pa[ri + 1..-1] ]
       else
         [ '', pa ]
-      end
-    end
-
-    def root
-
-      if lp = @unit.conf['lod_path']
-        File.absolute_path(lp)
-      else
-        File.dirname(File.absolute_path(@unit.conf['_path'] + '/..'))
       end
     end
 

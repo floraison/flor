@@ -28,7 +28,8 @@ describe Flor::Conf do
         'name' => 'stuff',
         'version' => '3.2.1',
         'count' => 7,
-        'blah' => [ 'a', 'b', 2 ]
+        'blah' => [ 'a', 'b', 2 ],
+        'root' => '.'
       })
     end
 

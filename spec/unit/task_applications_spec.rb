@@ -359,7 +359,8 @@ describe 'Flor unit' do
         ).to eq({
           'flow_name' => 'test_dvariables',
           'flow_x' => 1, 'flow_y' => 2,
-          'company' => 'ACME'
+          'company' => 'ACME',
+          'root' => 'envs/test/etc/variables/com.acme'
         })
       end
     end

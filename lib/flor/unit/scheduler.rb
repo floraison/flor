@@ -39,6 +39,9 @@ module Flor
       @logger =
         (Flor::Conf.get_class(@conf, 'logger') || Flor::Logger).new(self)
 
+      @spooler =
+        (Flor::Conf.get_class(@conf, 'spooler') || Flor::Spooler).new(self)
+
       @hooker.add('logger', @logger)
       @hooker.add('wlist', Flor::WaitList)
 
@@ -168,6 +171,8 @@ module Flor
                 if should_wake_up?
 
                   unreserve_messages
+
+                  spool
 
                   trigger_timers
                   trigger_executions
@@ -426,6 +431,11 @@ module Flor
       @logger.info(
         "#{self.class}#unreserve_messages", "#{c} message#{c > 1 ? 's' : ''}"
       ) if c > 0
+    end
+
+    def spool
+
+      @spooler.spool
     end
 
     def trigger_timers
