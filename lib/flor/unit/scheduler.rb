@@ -168,11 +168,11 @@ module Flor
 
                 t0 = Time.now
 
+                spool
+
                 if should_wake_up?
 
                   unreserve_messages
-
-                  spool
 
                   trigger_timers
                   trigger_executions
@@ -435,7 +435,8 @@ module Flor
 
     def spool
 
-      @spooler.spool
+      count = @spooler.spool
+      @wake_up = true if count > 0
     end
 
     def trigger_timers

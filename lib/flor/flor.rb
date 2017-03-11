@@ -132,6 +132,15 @@ module Flor
     isostamp(true, false, false, t)
   end
 
+  def self.tamp(t=Time.now)
+
+    t = t.utc
+    s = StringIO.new
+    s << t.strftime('%Y%m%dT%H%M%S') << sprintf('.%06dZ', t.usec)
+
+    s.string
+  end
+
   # hour stamp
   #
   def self.hstamp(t=Time.now)
