@@ -27,13 +27,12 @@ module Flor
           begin
             File.open(path, 'rb') do |f|
               lock(path, f) or next
-              accept(path, f)
+              accept(path, f) or next
               unlock(path, f)
             end
             count += 1
           rescue => err
-p err
-            reject(path)
+            reject(path, err)
           end
 
           count
@@ -58,34 +57,52 @@ p err
 
     def unlock(path, file)
 
-      File.delete(path)
-        # nothing more to do
+      # nothing more to do
     end
 
     def accept(path, file)
 
       json = file.read
 
+      return false if json == ''
+
       @unit.storage.put_message(JSON.parse(json))
 
       con = File.join(@dir, 'consumed')
 
-      return unless File.directory?(con)
+      File.delete(path)
 
-      fn = "#{File.basename(path, '.json')}.#{Flor.tamp}.json"
+      return true unless File.directory?(con)
+
+      fn = File.join(con, "#{File.basename(path, '.json')}.#{Flor.tamp}.json")
 
       File.open(fn, 'wb') { |f| f.write(json) }
+
+      true
     end
 
-    def reject(path)
+    def reject(path, err)
 
       rej = File.join(@dir, 'rejected')
 
-      return unless File.directory?(rej)
+      FileUtils.mkdir_p(rej)
 
-      FileUtils.mv(
-        path,
-        File.join(rej, "#{File.basename(path, '.json')}.#{Flor.tamp}.json"))
+      eh = err.hash.abs
+      ts = Flor.tamp
+
+      jfn = File.join(
+        rej, "#{File.basename(path, '.json')}__#{eh}_#{ts}.json")
+      tfn = File.join(
+        rej, "#{File.basename(path, '.json')}__#{eh}_#{ts}.txt")
+
+      FileUtils.mv(path, jfn)
+
+      File.open(tfn, 'wb') do |tf|
+        tf.puts(err.inspect)
+        tf.puts(err.class.to_s)
+        tf.puts(err.to_s)
+        tf.puts(err.backtrace)
+      end
     end
   end
 end

@@ -36,14 +36,17 @@ describe Flor::Spooler do
   after :each do
 
     @unit.shutdown
+
+    system('rm -fR envs/test/var/spool/consumed')
+    system('rm -fR envs/test/var/spool/rejected')
   end
 
   describe '#spool' do
 
     it 'consumes' do
 
-      exid = Flor.generate_exid('org.acme', 'u0')
-
+      exid =
+        Flor.generate_exid('org.acme', 'u0')
       msg = {
         'point' => 'execute',
         'exid' => exid,
@@ -61,12 +64,65 @@ describe Flor::Spooler do
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']).to eq({ 'a' => 1, 'b' => 2 })
+
+      expect(Dir['envs/test/var/spool/*.json']).to eq([])
     end
 
-    it 'consumes and puts in spool/consumed/ if present'
+    it 'consumes and puts in spool/consumed/ if present' do
 
-    it 'rejects'
-    it 'rejects and puts in spool/rejected/ if present'
+      system('mkdir -p envs/test/var/spool/consumed')
+
+      exid =
+        Flor.generate_exid('org.acme', 'u0')
+      msg = {
+        'point' => 'execute',
+        'exid' => exid,
+        'nid' => '0',
+        'tree' => Flor::Lang.parse(%q{ set a 3 }),
+        'payload' => {},
+        'vars' => {} }
+
+      File.open('envs/test/var/spool/launch.json', 'wb') do |f|
+        f.flock(File::LOCK_EX)
+        f.write(JSON.dump(msg))
+      end
+
+      r = @unit.wait(exid)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']).to eq({ 'a' => 3 })
+
+      expect(Dir['envs/test/var/spool/*.json']).to eq([])
+
+      expect(
+        Dir['envs/test/var/spool/consumed/*.json'].size
+      ).to eq(1)
+      expect(
+        Dir['envs/test/var/spool/consumed/*.json'].first
+      ).to match(/\/consumed\/launch.\d{8}T\d{6}\.\d+Z\.json\z/)
+    end
+
+    it 'rejects and puts in spool/rejected/' do
+
+      File.open('envs/test/var/spool/launch.json', 'wb') do |f|
+        f.flock(File::LOCK_EX)
+        f.write('nada nada nada nada')
+      end
+
+      sleep 0.350
+
+      expect(
+        Dir['envs/test/var/spool/rejected/*.json'].size
+      ).to eq(1)
+      expect(
+        Dir['envs/test/var/spool/rejected/*.json'].first
+      ).to match(/\/rejected\/launch__\d+_\d{8}T\d{6}\.\d+Z\.json\z/)
+
+      err = File.read(Dir['envs/test/var/spool/rejected/*.txt'].first)
+
+      expect(err).to match(/JSON::ParserError/)
+      expect(err).to match(/unexpected token at 'nada nada nada nada'/)
+    end
   end
 end
 
