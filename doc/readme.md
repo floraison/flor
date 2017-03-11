@@ -9,5 +9,6 @@ It interprets a language describing "workflows". They can be thought of long-run
 * [messages](messages.md)
 * [language](language.md)
 * [procedures](procedures/)
+* [services](services/)
 * [workflow control patterns](patterns.md)
 
