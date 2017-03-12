@@ -3,13 +3,11 @@
 
 ## introduction
 
-The [Workflow Patterns](http://www.workflowpatterns.com/) are a catalog of various building blocks for workflow execution.
+Workflow patterns refer specifically to recurrent problems and proven solutions related to the development of process-oriented applications. 
 
-The main section of the Workflow Patterns is the [Control-Flow Patterns](http://www.workflowpatterns.com/patterns/control/).
+This document describe Flor implementation for each of the [Control-Flow Patterns](http://www.workflowpatterns.com/patterns/control/) presented by the [Workflow Patterns](http://www.workflowpatterns.com/) website which catalog a comprehensive list of those workflow building blocks. Each implementation are provided with a link to the original pattern explanation and flash animation.
 
-Described here are ways to implement each of those control-flow patterns with flor. Some of them are not directly realizable with flor, approximations are proposed. This is a self-evaluation, for an authoritative voice, the workflow patterns website and its [mailing list](http://groups.google.com/group/workflow-patterns) are here.
-
-Each pattern is illustrated with a flor implementation (or approximation). There is a link to the original pattern explanation and its flash animation.
+This is a self-evaluation. For an authoritative source, see the [workflow patterns website](http://www.workflowpatterns.com/) and its [mailing list](http://groups.google.com/group/workflow-patterns).
 
 ## index
 
@@ -78,7 +76,7 @@ concurrence
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp2.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp2_animation.php) | [top](#top)
 
 ### Synchronization
-<a id="bcf-synchronization" />The [concurrence](procedures/concurrence.md) by waiting (by default) for all its children to reply is usual flor syncrhonization tool.
+<a id="bcf-synchronization" />The [concurrence](procedures/concurrence.md) by waiting (by default) for all its children to reply is usual flor synchronization tool.
 
 ```
 sequence
@@ -109,9 +107,9 @@ sequence
 ## State-based Patterns
 
 ### Milestone
-<a id="sb-milestone" />"A task is only enabled when the process instance (of which it is part) is in a specific state (typically a parallel branch)" says the [pattern description](http://www.workflowpatterns.com/patterns/control/state/wcp18.php).
+A task is only enabled when in a specific state (typically a parallel branch).
 
-The flor code is might be paraphrased as "E is tasked only if the execution has the tag 'bravo'":
+Flor's workflow definition might be paraphrased as: "E is tasked only if the execution has the tag 'bravo'":
 ```
   concurrence
     sequence
@@ -124,7 +122,7 @@ The flor code is might be paraphrased as "E is tasked only if the execution has 
       task 'F'
 ```
 
-Ruote (the predecessor to flor) was [proposing](http://ruote.io/patterns.html#sa_milestone) a solution a bit more convoluted.
+The predecessor to Flor (Ruote) was proposing a syntax a bit more [convoluted](http://ruote.io/patterns.html#sa_milestone).
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/state/wcp18.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/state/wcp18_animation.php) | [top](#top)
 
