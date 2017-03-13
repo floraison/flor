@@ -134,7 +134,7 @@ describe Flor::Loader do
       expect(tc['description']).to eq('/cect.json')
     end
 
-    it 'load a tasker configuration {name}.json' do
+    it 'loads a tasker configuration {name}.json' do
 
       tc = @loader.tasker('org.example', 'charly')
       expect(tc['description']).to eq('org.example charly')
@@ -157,6 +157,24 @@ describe Flor::Loader do
       expect(tc['description']).to eq('mil.example.air.command')
 
       expect(File.basename(tc['_path'])).to eq('air.json')
+    end
+  end
+
+  describe '#hooks' do
+
+    it 'works' do
+
+      exid = Flor.generate_exid('org.example', 'uni')
+
+      hooks = @loader.hooks('org.example')
+
+      expect(hooks).to eq(
+        { "execute" => [
+            { "require" => "xyz/my_hooks.rb", "class" => "Xyz::MyExecuteHook" },
+            { "require" => "xyz/oe_hooks.rb", "class" => "Xyz::OeExecuteHook" } ],
+          "terminated" => [
+            { "require" => "xyz/my_hooks.rb", "class" => "Xyz::MyGenericHook" } ] }
+      )
     end
   end
 end

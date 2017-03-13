@@ -81,6 +81,22 @@ module Flor
       con.merge!('_path' => conf['_path'])
     end
 
+    def hooks(domain, name=nil)
+
+      Dir[File.join(@root, '**/*.json')]
+        .select { |f| f.index('/lib/hooks/') }
+        .collect { |pa| [ pa, expose_d(pa, {}) ] }
+        .select { |pa, d| is_subdomain?(domain, d) }
+        .sort_by { |pa, d| d.count('.') }
+        .collect { |pa, d| interpret(pa) }
+        .flatten(1)
+        .inject({}) { |h, hh|
+          hh.each { |k, v|
+            next if %w[ _path root ].include?(k)
+            (h[k] ||= []).concat(v) }
+          h }
+    end
+
     protected
 
     # is da a subdomain of db?
@@ -109,8 +125,8 @@ module Flor
 
       libregex =
         opts[:subflows] ?
-        /\/lib\/(subflows|flows|taskers)\// :
-        /\/lib\/(flows|taskers)\//
+        /\/lib\/(subflows|flows|hooks|taskers)\// :
+        /\/lib\/(flows|hooks|taskers)\//
 
       pa
         .sub(/\/etc\/variables\//, '/')

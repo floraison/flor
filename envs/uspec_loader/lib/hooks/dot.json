@@ -1,0 +1,8 @@
+
+execute: [
+  { require: 'xyz/my_hooks.rb', class: 'Xyz::MyExecuteHook' }
+]
+terminated: [
+  { require: 'xyz/my_hooks.rb', class: 'Xyz::MyGenericHook' }
+]
+

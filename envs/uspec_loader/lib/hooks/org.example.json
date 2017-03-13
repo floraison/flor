@@ -1,0 +1,5 @@
+
+execute: [
+  { require: 'xyz/oe_hooks.rb', class: 'Xyz::OeExecuteHook' }
+]
+
