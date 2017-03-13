@@ -25,7 +25,9 @@ describe Flor do
         "'branding'" => 'fail',
         'x' => '4',
         'list' => [],
-        'dict' => {}
+        'dict' => {},
+        'date' => '2017-03-13',
+        'exp' => 'a+b'
       }
     end
 
@@ -40,7 +42,7 @@ describe Flor do
       expect(
         Flor.to_djan(@v, colours: false)
       ).to eq(%{
-{ type: car, make/brand: mitsubishi, id: 2, ok: true, "suppliers,": [], stuff: nada, "'branding'": fail, x: "4", list: [], dict: {} }
+{ type: car, "make/brand": mitsubishi, id: 2, ok: true, "suppliers,": [], stuff: nada, "'branding'": fail, x: "4", list: [], dict: {}, date: "2017-03-13", exp: "a+b" }
       }.strip)
     end
 
@@ -49,7 +51,7 @@ describe Flor do
       expect(
         Flor.to_djan(@v, compact: true, colours: false)
       ).to eq(%{
-{type:car,make/brand:mitsubishi,id:2,ok:true,"suppliers,":[],stuff:nada,"'branding'":fail,x:"4",list:[],dict:{}}
+{type:car,"make/brand":mitsubishi,id:2,ok:true,"suppliers,":[],stuff:nada,"'branding'":fail,x:"4",list:[],dict:{},date:"2017-03-13",exp:"a+b"}
       }.strip)
     end
   end

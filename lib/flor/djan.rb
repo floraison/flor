@@ -156,7 +156,7 @@ module Flor
       indent_space(opts)
 
       if (
-        x.match(/\A[^: \b\f\n\r\t"',()\[\]{}#\\]+\z/) == nil ||
+        x.match(/\A[^: \b\f\n\r\t"',()\[\]{}#\\+%\/><^!=-]+\z/) == nil ||
         x.to_i.to_s == x ||
         x.to_f.to_s == x
       )
