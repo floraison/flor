@@ -38,12 +38,11 @@ module Flor
 
       @logger =
         (Flor::Conf.get_class(@conf, 'logger') || Flor::Logger).new(self)
+      @wlist =
+        (Flor::Conf.get_class(@conf, 'wlist') || Flor::WaitList).new(self)
 
       @spooler =
         (Flor::Conf.get_class(@conf, 'spooler') || Flor::Spooler).new(self)
-
-      @hooker.add('logger', @logger)
-      @hooker.add('wlist', Flor::WaitList)
 
       @heart_rate = @conf[:sch_heart_rate] || 0.3
       @reload_after = @conf[:sch_reload_after] || 60

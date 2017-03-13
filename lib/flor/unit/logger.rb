@@ -14,6 +14,7 @@ module Flor
     def initialize(unit)
 
       @unit = unit
+      @unit.hooker.add('logger', self)
 
       @out = prepare_out
 

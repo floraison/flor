@@ -6,6 +6,7 @@ module Flor
     def initialize(unit)
 
       @unit = unit
+      @unit.hooker.add('wlist', self)
 
       @mutex = Mutex.new
       @waiters = []
