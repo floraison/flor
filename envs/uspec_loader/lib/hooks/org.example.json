@@ -1,5 +1,6 @@
 
-execute: [
-  { require: 'xyz/oe_hooks.rb', class: 'Xyz::OeExecuteHook' }
+[
+  { point: execute,
+    require: 'xyz/oe_hooks.rb', class: 'Xyz::OeExecuteHook' }
 ]
 

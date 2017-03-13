@@ -90,11 +90,11 @@ module Flor
         .sort_by { |pa, d| d.count('.') }
         .collect { |pa, d| interpret(pa) }
         .flatten(1)
-        .inject({}) { |h, hh|
-          hh.each { |k, v|
-            next if %w[ _path root ].include?(k)
-            (h[k] ||= []).concat(v) }
-          h }
+        #.inject({}) { |h, hh|
+        #  hh.each { |k, v|
+        #    next if %w[ _path root ].include?(k)
+        #    (h[k] ||= []).concat(v) }
+        #  h }
     end
 
     protected

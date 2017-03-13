@@ -1,0 +1,6 @@
+
+[
+  { point: receive,
+    require: 'xyz/me_hooks.rb', class: 'Xyz::MeReceiveHook' }
+]
+

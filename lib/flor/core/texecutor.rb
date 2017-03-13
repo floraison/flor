@@ -166,8 +166,17 @@ module Flor
           ls.reject! { |l| l.strip[0, 1] == '#' }
           s = ls.join("\n").strip
         end
+
+      a, b = s[0, 1], s[-1, 1]
+
       s =
-        "{\n#{s}\n}" unless s[0, 1] == '{' && s[-1, 1] == '}'
+        if (a == '{' && b == '}') || (a == '[' && b == ']')
+          s
+        elsif s.match(/[^\r\n]+:/) || s == ''
+          "{\n#{s}\n}"
+        else
+          "[\n#{s}\n]"
+        end
 
       vs = Hash.new { |h, k| k }
       class << vs
@@ -188,12 +197,14 @@ module Flor
         fail ae
       end
 
-      h = Flor.dup(r['payload']['ret'])
+      o = Flor.dup(r['payload']['ret'])
 
-      h.merge!('_path' => path) unless path.match(/[\r\n]/)
-      h['root'] ||= Flor.relativize_path(vs['root'])
+      if o.is_a?(Hash)
+        o.merge!('_path' => path) unless path.match(/[\r\n]/)
+        o['root'] ||= Flor.relativize_path(vs['root'])
+      end
 
-      h
+      o
     end
 
     def self.determine_root(path)

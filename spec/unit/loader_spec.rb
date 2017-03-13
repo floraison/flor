@@ -168,13 +168,14 @@ describe Flor::Loader do
 
       hooks = @loader.hooks('org.example')
 
-      expect(hooks).to eq(
-        { "execute" => [
-            { "require" => "xyz/my_hooks.rb", "class" => "Xyz::MyExecuteHook" },
-            { "require" => "xyz/oe_hooks.rb", "class" => "Xyz::OeExecuteHook" } ],
-          "terminated" => [
-            { "require" => "xyz/my_hooks.rb", "class" => "Xyz::MyGenericHook" } ] }
-      )
+      expect(hooks).to eq([
+        { 'point' => 'execute',
+          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyExecuteHook' },
+        { 'point' => 'terminated',
+          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyGenericHook' },
+        { 'point' => 'execute',
+          'require' => 'xyz/oe_hooks.rb', 'class' => 'Xyz::OeExecuteHook' }
+      ])
     end
   end
 end
