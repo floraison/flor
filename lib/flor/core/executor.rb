@@ -111,7 +111,7 @@ module Flor
       @htraps = nil if @htraps && @htraps.size != @traps.size
 
       @htraps ||= @traps.collect(&:to_hook)
-      @hhooks ||= @hooks.collect { |e| Hooker.to_hook(e) }
+      @hhooks ||= @hooks.collect(&:to_hook)
 
       @htraps + @hhooks
     end

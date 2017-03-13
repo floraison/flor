@@ -12,7 +12,7 @@ module Flor
 
       super(
         unit,
-        unit.loader.hooks(@exid),
+        unit.loader.load_hooks(@exid),
         unit.storage.fetch_traps(@exid),
         unit.storage.load_execution(@exid))
 

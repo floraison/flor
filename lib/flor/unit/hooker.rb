@@ -72,11 +72,6 @@ module Flor
         end
     end
 
-    def self.to_hook(e)
-
-fail NotImplementedError
-    end
-
     protected
 
     def o(opts, *keys)

@@ -90,11 +90,12 @@ module Flor
         .sort_by { |pa, d| d.count('.') }
         .collect { |pa, d| interpret(pa) }
         .flatten(1)
-        #.inject({}) { |h, hh|
-        #  hh.each { |k, v|
-        #    next if %w[ _path root ].include?(k)
-        #    (h[k] ||= []).concat(v) }
-        #  h }
+    end
+
+    def load_hooks(exid)
+
+      hooks(Flor.domain(exid))
+        .collect { |h| Flor::Hook.new(exid, h) }
     end
 
     protected

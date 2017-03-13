@@ -5,33 +5,29 @@ module Flor
 
     def to_hook
 
-      @hook ||=
-        begin
+      opts = {}
 
-          opts = {}
+      opts[:consumed] = tconsumed
 
-          opts[:consumed] = tconsumed
+      opts[:point] = tpoints.split(',') if tpoints
+      opts[:heap] = theaps.split(',') if theaps
+      opts[:heat] = theats.split(',') if theats
 
-          opts[:point] = tpoints.split(',') if tpoints
-          opts[:heap] = theaps.split(',') if theaps
-          opts[:heat] = theats.split(',') if theats
+      opts[:name] = data['names']
 
-          opts[:name] = data['names']
+      case trange
+        when 'execution'
+          opts[:exid] = exid
+        when 'subdomain'
+          opts[:subdomain] = Flor.domain(exid)
+        when 'domain'
+          opts[:domain] = Flor.domain(exid)
+        else #'subnid' # default
+          opts[:exid] = exid
+          opts[:subnid] = true
+      end
 
-          case trange
-            when 'execution'
-              opts[:exid] = exid
-            when 'subdomain'
-              opts[:subdomain] = Flor.domain(exid)
-            when 'domain'
-              opts[:domain] = Flor.domain(exid)
-            else #'subnid' # default
-              opts[:exid] = exid
-              opts[:subnid] = true
-          end
-
-          [ "trap#{id}", opts, self, nil ]
-        end
+      [ "trap#{id}", opts, self, nil ]
     end
 
     def trigger(executor, message)
