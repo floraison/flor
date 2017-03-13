@@ -151,48 +151,13 @@ module Flor
 
       @thread =
         if @thread
-
           @thread.run
-
         else
-
           Thread.new do
-
             loop do
-
-              begin
-
-                Thread.stop if @thread_status == :stop
-                break if @thread_status == :shutdown
-
-                t0 = Time.now
-
-                spool
-
-                if should_wake_up?
-
-                  unreserve_messages
-
-                  trigger_timers
-                  trigger_executions
-
-                  reload_next_time
-                  reload_wake_up
-                  @reloaded_at = Time.now
-
-                elsif @executors.empty?
-
-                  @idle_count += 1
-                  notify(nil, make_idle_message)
-                end
-
-                sleep [ @heart_rate - (Time.now - t0), 0 ].max #\
-                  #unless should_wake_up?
-
-              rescue Exception => ex
-
-                puts on_start_exc(ex)
-              end
+              Thread.stop if @thread_status == :stop
+              break if @thread_status == :shutdown
+              tick
             end
           end
         end
@@ -363,6 +328,37 @@ module Flor
     end
 
     protected
+
+    def tick
+
+      t0 = Time.now
+
+      spool
+
+      if should_wake_up?
+
+        unreserve_messages
+
+        trigger_timers
+        trigger_executions
+
+        reload_next_time
+        reload_wake_up
+        @reloaded_at = Time.now
+
+      elsif @executors.empty?
+
+        @idle_count += 1
+        notify(nil, make_idle_message)
+      end
+
+      sleep [ @heart_rate - (Time.now - t0), 0 ].max #\
+        #unless should_wake_up?
+
+    rescue Exception => ex
+
+      puts on_start_exc(ex)
+    end
 
     def prepare_on_receive_last(h)
 
