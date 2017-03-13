@@ -341,7 +341,6 @@ describe Flor do
         'spec'
       )
 
-p File.absolute_path('spec')
       expect(
         Flor.relativize_path(
           File.absolute_path('spec'), File.absolute_path('spec'))
