@@ -64,17 +64,8 @@ module Flor
               executor.trigger_trap(hook, message)
             elsif hook
               executor.trigger_hook(hook, message)
-            else # if block
-              r =
-                if block.arity == 1
-                  block.call(message)
-                elsif block.arity == 2
-                  block.call(message, opts)
-                else
-                  block.call(executor, message, opts)
-                end
-              r.is_a?(Array) && r.all? { |e| e.is_a?(Hash) } ? r : []
-                # be lenient with block hooks, help them return an array
+            else
+              executor.trigger_block(block, opts, message)
             end)
         end
     end

@@ -54,17 +54,32 @@ module Flor
       counter_add(key, 1)
     end
 
-    def trigger_hook(hook, message)
-
-      hook.notify(self, message)
-    end
-
     def trigger_trap(trap, message)
 
       del, msgs = trap.trigger(self, message)
       @traps.delete(trap) if del
 
       msgs
+    end
+
+    def trigger_hook(hook, message)
+
+      hook.notify(self, message)
+    end
+
+    def trigger_block(block, opts, message)
+
+      r =
+        if block.arity == 1
+          block.call(message)
+        elsif block.arity == 2
+          block.call(message, opts)
+        else
+          block.call(self, message, opts)
+        end
+
+      r.is_a?(Array) && r.all? { |e| e.is_a?(Hash) } ? r : []
+        # be lenient with block hooks, help them return an array
     end
 
     # Given a nid, returns a copy of all the var the node sees
