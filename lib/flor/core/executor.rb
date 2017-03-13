@@ -5,13 +5,16 @@ module Flor
 
     attr_reader :unit
     attr_reader :execution
+    attr_reader :hooks
     attr_reader :traps
 
-    def initialize(unit, traps, execution)
+    def initialize(unit, hooks, traps, execution)
 
       @unit = unit
       @execution = execution
-      @traps = traps
+
+      @hooks = hooks # raw hooks if any, fresh from the loader
+      @traps = traps # array of Trap instances
     end
 
     def conf; @unit.conf; end
@@ -101,6 +104,16 @@ module Flor
       if pa = n['parent']; vars(pa, vs); end
 
       vs
+    end
+
+    def traps_and_hooks
+
+      @htraps = nil if @htraps && @htraps.size != @traps.size
+
+      @htraps ||= @traps.collect(&:to_hook)
+      @hhooks ||= @hooks.collect { |e| Hooker.to_hook(e) }
+
+      @htraps + @hhooks
     end
 
     protected

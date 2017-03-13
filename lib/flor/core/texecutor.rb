@@ -64,6 +64,7 @@ module Flor
 
       super(
         TransientUnit.new(conf),
+        [], # no hooks
         [], # no traps
         {
           'exid' => Flor.generate_exid('eval', 'u0'),

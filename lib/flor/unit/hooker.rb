@@ -53,7 +53,9 @@ module Flor
 
     def notify(executor, message)
 
-      (@hooks + executor.traps.collect(&:to_hook))
+      (
+        @hooks + executor.traps_and_hooks
+      )
         .inject([]) do |a, (_, opts, hook, block)|
           # name of hook is piped into "_" oblivion
 
@@ -68,6 +70,11 @@ module Flor
               executor.trigger_block(block, opts, message)
             end)
         end
+    end
+
+    def self.to_hook(e)
+
+fail NotImplementedError
     end
 
     protected
