@@ -133,7 +133,7 @@ module Flor
         .sub(/\/etc\/variables\//, '/')
         .sub(libregex, '/')
         .sub(/\/\z/, '')
-        .sub(/\/(flo|flor|dot)\.json\z/, '')
+        .sub(/\/(flo|flor|dot|hooks)\.json\z/, '')
         .sub(/\.(flo|flor|json)\z/, '')
         .sub(/\A\//, '')
         .gsub(/\//, '.')

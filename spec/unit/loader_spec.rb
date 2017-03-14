@@ -162,9 +162,7 @@ describe Flor::Loader do
 
   describe '#hooks' do
 
-    it 'works' do
-
-      exid = Flor.generate_exid('org.example', 'uni')
+    it 'returns the sum of the hooks for a domain' do
 
       hooks = @loader.hooks('org.example')
 
@@ -175,6 +173,20 @@ describe Flor::Loader do
           'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyGenericHook' },
         { 'point' => 'execute',
           'require' => 'xyz/oe_hooks.rb', 'class' => 'Xyz::OeExecuteHook' }
+      ])
+    end
+
+    it 'loads from hooks.json' do
+
+      hooks = @loader.hooks('mil.example')
+
+      expect(hooks).to eq([
+        { 'point' => 'execute',
+          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyExecuteHook' },
+        { 'point' => 'terminated',
+          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyGenericHook' },
+        { 'point' => 'receive',
+          'require' => 'xyz/me_hooks.rb', 'class' => 'Xyz::MeReceiveHook' }
       ])
     end
   end
