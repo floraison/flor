@@ -5,7 +5,7 @@ module Flor
 
     attr_reader :conf, :env
 
-    attr_reader :hooker, :storage, :loader, :ganger
+    attr_reader :hooker, :storage, :loader, :ganger, :runner
     attr_reader :logger
 
     attr_reader :thread_status
@@ -27,12 +27,14 @@ module Flor
       @env = (Kernel.const_get(@env) rescue @env) if @env.match(/\A[A-Z]+\z/)
         # when env is "RAILS_ENV" for example...
 
+      @loader =
+        (Flor::Conf.get_class(@conf, 'loader') || Flor::Loader).new(self)
+      @runner =
+        (Flor::Conf.get_class(@conf, 'runner') || Flor::Runner).new(self)
       @hooker =
         (Flor::Conf.get_class(@conf, 'hooker') || Flor::Hooker).new(self)
       @storage =
         (Flor::Conf.get_class(@conf, 'storage') || Flor::Storage).new(self)
-      @loader =
-        (Flor::Conf.get_class(@conf, 'loader') || Flor::Loader).new(self)
       @ganger =
         (Flor::Conf.get_class(@conf, 'ganger') || Flor::Ganger).new(self)
 

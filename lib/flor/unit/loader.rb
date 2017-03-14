@@ -97,7 +97,7 @@ module Flor
     def load_hooks(exid)
 
       hooks(Flor.domain(exid))
-        .collect { |h| Flor::Hook.new(exid, h) }
+        .collect { |h| Flor::Hook.new(@unit, exid, h) }
     end
 
     protected

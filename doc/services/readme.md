@@ -8,6 +8,7 @@
 * ganger - receives tasks from the scheduler and hands them to the right tasker
 * hooker - sees any message passing and may alter them, mostly triggers
 * [loader](loader.md) - used by other services to load start variables, taskers, libraries, definitions
+* runner - used by hooker and ganger to run/invoke taskers and hooks
 * storage - the service between flor and Sequel
 * [spooler](spooler.md) - watches a "spool" dir for incoming flor messages (launch requests, answers from taskers, ...)
 

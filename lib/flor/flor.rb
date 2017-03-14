@@ -49,7 +49,7 @@ module Flor
     h['kla'] = o.class.to_s
     t = nil
 
-    if o.is_a?(Exception)
+    if o.is_a?(::Exception)
 
       h['msg'] = o.message
 
@@ -68,6 +68,8 @@ module Flor
     end
 
     h['trc'] = t[0..(t.rindex { |l| l.match(/\/lib\/flor\//) }) + 1] if t
+    h['cwd'] = Dir.pwd
+    h['rlp'] = $: if o.is_a?(::LoadError)
 
     h
   end
@@ -99,6 +101,25 @@ module Flor
       e.is_a?(Hash) &&
       e['point'].is_a?(String) &&
       e.keys.all? { |k| k.is_a?(String) } }
+  end
+
+  def self.h_fetch_a(h, *keys)
+
+    default = keys.last.is_a?(String) ? [] : keys.pop
+
+    k = keys.find { |k| h.has_key?(k) }
+    v = k ? h[k] : nil
+
+    v_to_a(v) || default
+  end
+
+  def self.v_to_a(o)
+
+    return o if o.is_a?(Array)
+    return o.split(',') if o.is_a?(String)
+    return nil if o.nil?
+
+    fail ArgumentError.new("cannot turn instance of #{o.class} into an array")
   end
 
   #

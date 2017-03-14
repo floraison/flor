@@ -18,6 +18,8 @@ describe 'Flor unit' do
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
+
+    #$: << Dir.pwd unless $:.include?(Dir.pwd)
   end
 
   after :each do
@@ -34,21 +36,26 @@ describe 'Flor unit' do
 
     it 'is handed the matching messages' do
 
+      require 'unit/hooks/alpha'
+        # require here, since this path is outside of envs/test/
+
       $seen = []
 
       hooks = [
-        { point: 'receive',
-          require: 'unit/hooks/alpha', class: 'AlphaHook' }
+        { point: 'receive', class: 'AlphaHook' }
       ]
 
       File.open('envs/test/lib/hooks/dot.json', 'wb') do |f|
         f.puts(Flor.to_djan(hooks, color: false))
       end
 
-      @unit.launch(%{
-        sequence
-          noret _
-      }, wait: true)
+      r =
+        @unit.launch(%{
+          sequence
+            noret _
+        }, wait: true)
+
+      expect(r['point']).to eq('terminated')
 
       expect($seen.size).to eq(6)
     end
