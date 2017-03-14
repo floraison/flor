@@ -1,7 +1,6 @@
 
 module Flor
 
-
   class Hook
 
     def initialize(exid, h)
