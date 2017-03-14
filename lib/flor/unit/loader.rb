@@ -88,7 +88,8 @@ module Flor
         .collect { |pa| [ pa, expose_d(pa, {}) ] }
         .select { |pa, d| is_subdomain?(domain, d) }
         .sort_by { |pa, d| d.count('.') }
-        .collect { |pa, d| interpret(pa) }
+        .collect { |pa, d|
+          interpret(pa).each { |h| h['_path'] = Flor.relativize_path(pa) } }
         .flatten(1)
     end
 

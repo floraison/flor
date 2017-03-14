@@ -168,11 +168,14 @@ describe Flor::Loader do
 
       expect(hooks).to eq([
         { 'point' => 'execute',
-          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyExecuteHook' },
+          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyExecuteHook',
+          '_path' => 'envs/uspec_loader/lib/hooks/dot.json' },
         { 'point' => 'terminated',
-          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyGenericHook' },
+          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyGenericHook',
+          '_path' => 'envs/uspec_loader/lib/hooks/dot.json' },
         { 'point' => 'execute',
-          'require' => 'xyz/oe_hooks.rb', 'class' => 'Xyz::OeExecuteHook' }
+          'require' => 'xyz/oe_hooks.rb', 'class' => 'Xyz::OeExecuteHook',
+          '_path' => 'envs/uspec_loader/lib/hooks/org.example.json' }
       ])
     end
 
@@ -182,11 +185,14 @@ describe Flor::Loader do
 
       expect(hooks).to eq([
         { 'point' => 'execute',
-          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyExecuteHook' },
+          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyExecuteHook',
+          '_path' => 'envs/uspec_loader/lib/hooks/dot.json' },
         { 'point' => 'terminated',
-          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyGenericHook' },
+          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyGenericHook',
+          '_path' => 'envs/uspec_loader/lib/hooks/dot.json' },
         { 'point' => 'receive',
-          'require' => 'xyz/me_hooks.rb', 'class' => 'Xyz::MeReceiveHook' }
+          'require' => 'xyz/me_hooks.rb', 'class' => 'Xyz::MeReceiveHook',
+          '_path' => 'envs/uspec_loader/usr/mil.example/lib/hooks/hooks.json' }
       ])
     end
   end
