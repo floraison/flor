@@ -40,7 +40,7 @@ module Flor
         fail ArgumentError.new('".." not allowed in paths') if pa =~ /\.\./
         load(fjoin(root, pa)) }
 
-      k = Flor.const_get(conf['class'] || conf['module'])
+      k = Flor.const_lookup(conf['class'] || conf['module'])
 
       o =
         if k.class == Module
