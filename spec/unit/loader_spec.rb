@@ -158,6 +158,21 @@ describe Flor::Loader do
 
       expect(File.basename(tc['_path'])).to eq('air.json')
     end
+
+    it 'loads a tasker array configuration do.ma.in.json' do
+
+      tc = @loader.tasker('mil.example.air.tactical', 'intel')
+
+      expect(tc.size).to eq(2)
+
+      expect(tc[0]['point']).to eq('task')
+      expect(tc[1]['point']).to eq('detask')
+
+      expect(tc[0]['_path']).to match(
+        /\/envs\/uspec_loader\/usr\/mil\.example\/lib\/taskers\/air\.json\z/)
+      expect(tc[1]['_path']).to match(
+        /\/envs\/uspec_loader\/usr\/mil\.example\/lib\/taskers\/air\.json\z/)
+    end
   end
 
   describe '#hooks' do

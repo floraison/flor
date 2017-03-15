@@ -7,4 +7,8 @@ command: {
 staff: {
   description: 'mil.example.air.staff'
 }
+intel: [
+  { point: 'task' class: 'Mil::Air::IntelTasker' }
+  { point: 'detask' class: 'Mil::Air::SpecialIntelTasker' }
+]
 

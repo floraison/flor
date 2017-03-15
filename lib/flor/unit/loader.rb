@@ -57,6 +57,9 @@ module Flor
 
     def tasker(domain, name=nil)
 
+      # NB: do not relativize path, because Ruby load path != cwd,
+      # stay absolute for `require` and `load`
+
       domain, name = split_dn(domain, name)
 
       path, d, n = Dir[File.join(@root, '**/*.json')]
@@ -78,7 +81,15 @@ module Flor
 
       return nil unless con
 
-      con.merge!('_path' => conf['_path'])
+      pa = conf['_path']
+
+      if con.is_a?(Array)
+        con.each { |c| c['_path'] = pa }
+      else
+        con['_path'] = pa
+      end
+
+      con
     end
 
     def hooks(domain, name=nil)
