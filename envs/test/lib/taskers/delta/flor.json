@@ -1,6 +1,5 @@
 
-on_task: {
-  require: 'delta.rb'
-  class: DeltaTasker
-}
+
+require: 'delta.rb'
+class: DeltaTasker
 

@@ -51,12 +51,6 @@ module Flor
             if message['point'] == 'detask'
       end
 
-      if ot = tconf['on_task']
-        ot['_path'] = tconf['_path']
-        tconf = ot
-      end
-        # remove at some point around flor 1.0
-
       message['tconf'] = tconf unless tconf['include_tconf'] == false
 
       message['vars'] = gather_vars(executor, tconf, message)
@@ -68,13 +62,6 @@ module Flor
       else
         []
       end
-    end
-
-    def cancel(tasker_name, fei)
-
-      # TODO use on_cancel || on_task
-
-      fail NotImplementedError
     end
 
     def return(message)

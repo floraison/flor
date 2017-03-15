@@ -1,6 +1,4 @@
 
-on_task: {
-  require: 'puts.rb'
-  class: PutsTasker
-}
+require: 'puts.rb'
+class: PutsTasker
 

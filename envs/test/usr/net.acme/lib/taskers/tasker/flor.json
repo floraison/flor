@@ -1,6 +1,4 @@
 
-on_task: {
-  require: 'tasker.rb'
-  class: NetAcmeTasker
-}
+require: 'tasker.rb'
+class: NetAcmeTasker
 

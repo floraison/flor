@@ -1,4 +1,2 @@
-on_task: {
 require: 'charly.rb'
 class: CharlyTasker
-}

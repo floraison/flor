@@ -1,6 +1,4 @@
 
-on_task: {
-  require: 'shell.rb'
-  class: ShellTasker
-}
+require: 'shell.rb'
+class: ShellTasker
 

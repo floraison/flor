@@ -1,6 +1,4 @@
 
-on_task: {
-  require: 'nato.rb'
-  class: NatoTasker
-}
+require: 'nato.rb'
+class: NatoTasker
 

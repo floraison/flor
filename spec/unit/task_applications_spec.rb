@@ -173,10 +173,8 @@ describe 'Flor unit' do
 
         File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
           f.puts(%{
-            on_task: {
-              require: 'charly.rb'
-              class: CharlyTasker
-            }
+            require: 'charly.rb'
+            class: CharlyTasker
           }.ftrim)
         end
       end
@@ -185,11 +183,9 @@ describe 'Flor unit' do
 
         File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
           f.puts(%{
-            on_task: {
-              require: 'charly.rb'
-              class: CharlyTasker
-              include_vars: false
-            }
+            require: 'charly.rb'
+            class: CharlyTasker
+            include_vars: false
           }.ftrim)
         end
 
@@ -210,11 +206,9 @@ describe 'Flor unit' do
 
         File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
           f.puts(%{
-            on_task: {
-              require: 'charly.rb'
-              class: CharlyTasker
-              include_vars: true
-            }
+            require: 'charly.rb'
+            class: CharlyTasker
+            include_vars: true
           }.ftrim)
         end
 
@@ -241,11 +235,9 @@ describe 'Flor unit' do
 
         File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
           f.puts(%{
-            on_task: {
-              require: 'charly.rb'
-              class: CharlyTasker
-              include_vars: [ 'b', 'd' ]
-            }
+            require: 'charly.rb'
+            class: CharlyTasker
+            include_vars: [ 'b', 'd' ]
           }.ftrim)
         end
 
@@ -272,11 +264,9 @@ describe 'Flor unit' do
 
         File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
           f.puts(%{
-            on_task: {
-              require: 'charly.rb'
-              class: CharlyTasker
-              include_vars: [ /^flow_/, 'd' ]
-            }
+            require: 'charly.rb'
+            class: CharlyTasker
+            include_vars: [ /^flow_/, 'd' ]
           }.ftrim)
         end
 
@@ -303,11 +293,9 @@ describe 'Flor unit' do
 
         File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
           f.puts(%{
-            on_task: {
-              require: 'charly.rb'
-              class: CharlyTasker
-              exclude_vars: [ /^flow_/, 'd' ]
-            }
+            require: 'charly.rb'
+            class: CharlyTasker
+            exclude_vars: [ /^flow_/, 'd' ]
           }.ftrim)
         end
 
@@ -334,11 +322,9 @@ describe 'Flor unit' do
 
         File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
           f.puts(%{
-            on_task: {
-              require: 'charly.rb'
-              class: CharlyTasker
-              include_vars: true
-            }
+            require: 'charly.rb'
+            class: CharlyTasker
+            include_vars: true
           }.ftrim)
         end
 
