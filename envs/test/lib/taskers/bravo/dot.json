@@ -1,8 +1,8 @@
 
-# alpha tasker
+# bravo tasker
 
-on_task: {
-  require: 'bravo.rb'
-  class: BravoTasker
-}
+[
+  { point: 'task' require: 'bravo.rb' class: BravoTasker }
+  { point: 'detask' require: 'bravo.rb' class: BravoTasker }
+]
 

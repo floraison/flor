@@ -173,7 +173,7 @@ module Flor
       s =
         if (a == '{' && b == '}') || (a == '[' && b == ']')
           s
-        elsif s.match(/[^\r\n]+:/) || s == ''
+        elsif s.match(/[^\r\n{]+:/) || s == ''
           "{\n#{s}\n}"
         else
           "[\n#{s}\n]"
@@ -201,8 +201,10 @@ module Flor
       o = Flor.dup(r['payload']['ret'])
 
       if o.is_a?(Hash)
-        o.merge!('_path' => path) unless path.match(/[\r\n]/)
+        o['_path'] = path unless path.match(/[\r\n]/)
         o['root'] ||= Flor.relativize_path(vs['root'])
+      elsif o.is_a?(Array)
+        o.each { |e| e['_path'] = path } unless path.match(/[\r\n]/)
       end
 
       o

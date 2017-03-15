@@ -18,8 +18,7 @@ module Flor
       return ruby_run(service, conf, message) if conf['class'] || conf['module']
       return cmd_run(service, conf, message) if conf['cmd']
 
-      fail ArgumentError.new(
-        "don't know how to run item at #{conf['_path']}")
+      fail ArgumentError.new("don't know how to run item at #{conf['_path']}")
     end
 
     protected

@@ -42,6 +42,15 @@ module Flor
         "tasker #{tname.inspect} not found"
       ) unless tconf
 
+      if tconf.is_a?(Array)
+        tconf =
+          tconf.find { |h| h['point'] == message['point'] } ||
+          tconf.find { |h| h['point'] == nil }
+        tconf ||=
+          tconf.find { |h| h['point'] == 'cancel' } \
+            if message['point'] == 'detask'
+      end
+
       if ot = tconf['on_task']
         ot['_path'] = tconf['_path']
         tconf = ot
@@ -51,11 +60,6 @@ module Flor
       message['tconf'] = tconf unless tconf['include_tconf'] == false
 
       message['vars'] = gather_vars(executor, tconf, message)
-
-#      m =
-#        message['point'] == 'detask' ?
-#        :cancel :
-#        :task
 
       r = @unit.runner.run(self, tconf, message)
 
