@@ -3,9 +3,9 @@
 
 class CharlyTasker
 
-  def initialize(tasker, conf)
+  def initialize(ganger, conf)
 
-    @tasker = tasker
+    @ganger = ganger
     @conf = conf
   end
 
@@ -22,7 +22,7 @@ class CharlyTasker
 
     message['payload']['charly'] = c
 
-    @tasker.return(message)
+    @ganger.return(message)
   end
 end
 

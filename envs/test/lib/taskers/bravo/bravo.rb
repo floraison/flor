@@ -3,10 +3,9 @@
 
 class BravoTasker
 
-  def initialize(tasker, conf)
+  def initialize(ganger, conf)
 
-    @tasker = tasker
-    @conf = conf
+    @ganger = ganger
   end
 
   def task(message)
@@ -18,7 +17,7 @@ class BravoTasker
 
     message['payload']['ret'] = 'bravo cancelled'
 
-    @tasker.return(message)
+    @ganger.return(message)
   end
 end
 

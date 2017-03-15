@@ -47,18 +47,32 @@ module Flor
           k
         else
           case k.instance_method(:initialize).arity
-          when 1 then k.new(conf)
-          when 2 then k.new(conf, message)
+          when 1 then k.new(service)
+          when 2 then k.new(service, conf)
           when 3 then k.new(service, conf, message)
+          when -1 then k.new({
+            service: service, configuration: conf, message: message })
           else k.new
           end
         end
 
-      case o.method(:on).arity
-      when 1 then o.on(message)
-      when 2 then o.on(@h, message)
-      when 3 then o.on(executor, @h, message)
-      else o.on
+      p = message['point']
+      m = :on
+      m = "on_#{p}" if ! o.respond_to?(m)
+      m = p if ! o.respond_to?(m)
+      m = :cancel if m == 'detask' && ! o.respond_to?(m)
+
+      fail(
+        "#{k.class.to_s.downcase} #{k} doesn't respond to on, on_#{p} or #{p}"
+      ) if ! o.respond_to?(m)
+
+      case o.method(m).arity
+      when 1 then o.send(m, message)
+      when 2 then o.send(m, conf, message)
+      when 3 then o.send(m, executor, conf, message)
+      when -1 then o.send(m, {
+        service: service, configuration: conf, message: message })
+      else o.send(m)
       end
     end
 

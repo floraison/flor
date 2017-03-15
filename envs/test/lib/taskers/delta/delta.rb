@@ -3,9 +3,9 @@
 
 class DeltaTasker
 
-  def initialize(tasker, conf)
+  def initialize(ganger, conf)
 
-    @tasker = tasker
+    @ganger = ganger
     @conf = conf
   end
 
@@ -13,7 +13,7 @@ class DeltaTasker
 
     message['payload']['ret'] = 'dimitri'
 
-    @tasker.return(message)
+    @ganger.return(message)
   end
 end
 

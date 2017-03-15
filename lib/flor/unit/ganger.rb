@@ -42,19 +42,28 @@ module Flor
         "tasker #{tname.inspect} not found"
       ) unless tconf
 
-      message['tconf'] = tconf \
-        unless tconf['on_task']['include_tconf'] == false
+      if ot = tconf['on_task']
+        ot['_path'] = tconf['_path']
+        tconf = ot
+      end
+        # remove at some point around flor 1.0
+
+      message['tconf'] = tconf unless tconf['include_tconf'] == false
 
       message['vars'] = gather_vars(executor, tconf, message)
 
-      cot = tconf['on_task']
+#      m =
+#        message['point'] == 'detask' ?
+#        :cancel :
+#        :task
 
-      return ruby_task(message, tconf) if cot['require'] || cot['class']
-      return cmd_task(message, tconf) if cot['cmd']
+      r = @unit.runner.run(self, tconf, message)
 
-      fail ArgumentError.new(
-        "don't know how to use tasker at #{tconf['_path']}"
-      )
+      if is_a_message_array?(r)
+        r
+      else
+        []
+      end
     end
 
     def cancel(tasker_name, fei)
@@ -76,53 +85,6 @@ module Flor
       o.is_a?(Array) &&
       o.first.is_a?(Hash) &&
       o.first['point'].is_a?(String)
-    end
-
-    def ruby_task(message, tconf)
-
-      root = File.dirname(tconf['_path'])
-
-      Array(tconf['on_task']['require'])
-        .each { |pa|
-          fail ArgumentError.new('".." not allowed in paths') if pa =~ /\.\./
-          require(File.join(root, pa)) }
-      Array(tconf['on_task']['load'])
-        .each { |pa|
-          fail ArgumentError.new('".." not allowed in paths') if pa =~ /\.\./
-          load(File.join(root, pa)) }
-
-      k = tconf['on_task']['class']
-      k = Flor.const_lookup(k)
-
-      ka = k.instance_method(:initialize).arity
-
-      m =
-        message['point'] == 'detask' ?
-        :cancel :
-        :task
-
-      r =
-        if ka == 2
-          k.new(self, tconf).send(m, message)
-        else # ka == 3
-          k.new(self, tconf, message).send(m)
-        end
-
-      # if the tasker returns something intelligible, use it
-      # else reply with "nothing further to do" (empty message array)
-
-      if is_a_message_array?(r)
-        r
-      else
-        []
-      end
-    end
-
-    def cmd_task(message, tconf)
-
-      fail NotImplementedError
-
-      []
     end
 
     def var_match(k, filter)
@@ -155,17 +117,15 @@ module Flor
 
     def gather_vars(executor, tconf, message)
 
-      ot = tconf['on_task']
-
       # try to return before calling executor.vars(nid) which my be costly...
 
-      return nil if (ot.keys & %w[ include_vars exclude_vars ]).empty?
+      return nil if (tconf.keys & %w[ include_vars exclude_vars ]).empty?
         # default behaviour, don't pass variables to taskers
 
-      iv = expand_filter(ot['include_vars'])
+      iv = expand_filter(tconf['include_vars'])
       return nil if iv == false
 
-      ev = expand_filter(ot['exclude_vars'])
+      ev = expand_filter(tconf['exclude_vars'])
       return {} if ev == true
 
       vars = executor.vars(message['nid'])

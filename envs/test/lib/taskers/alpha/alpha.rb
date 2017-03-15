@@ -3,9 +3,9 @@
 
 class AlphaTasker
 
-  def initialize(tasker, conf)
+  def initialize(ganger, conf, _)
 
-    @tasker = tasker
+    @ganger = ganger
     @conf = conf
   end
 
@@ -25,7 +25,7 @@ class AlphaTasker
         }
       ]
 
-    @tasker.return(message)
+    @ganger.return(message)
   end
 end
 
