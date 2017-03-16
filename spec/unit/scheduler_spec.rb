@@ -370,9 +370,14 @@ describe 'Flor unit' do
 
       it 'flags as "active" messages that have been reserved for too long' do
 
+        @unit.instance_eval { @reload_after = 1 }
+          # ensure we don't have to fait 1 minute before the next wake up
+
         dom = 'dom0'
         exid = Flor.generate_exid(dom, @unit.name)
-        msg = Flor.make_launch_msg(exid, %{ sequence }, {})
+
+        msg = Flor.make_launch_msg(
+          exid, %{ sequence \ sequence \ sequence _ }, {})
 
         ctime = Flor.tstamp(Time.now - 15 * 60)
         mtime = Flor.tstamp(Time.now - 14 * 60)
@@ -387,6 +392,9 @@ describe 'Flor unit' do
           cunit: 'some-unit',
           mtime: mtime,
           munit: 'some-unit')
+
+        @unit.instance_eval { @wake_up = true }
+          # force wake_up
 
         r = @unit.wait(exid, 'terminated')
 
