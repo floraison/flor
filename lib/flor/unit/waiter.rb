@@ -3,7 +3,7 @@ module Flor
 
   class Waiter
 
-    DEFAULT_TIMEOUT = 4 # seconds
+    DEFAULT_TIMEOUT = 5 # seconds
 
     def initialize(exid, opts)
 

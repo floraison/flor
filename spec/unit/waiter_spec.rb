@@ -26,7 +26,7 @@ describe Flor::Waiter do
         @waiter.expand_args(wait: 'terminated')
       ).to eq([
         [ [ nil, [ 'terminated' ] ] ],
-        4,
+        Flor::Waiter::DEFAULT_TIMEOUT,
         false
       ])
     end
@@ -37,7 +37,7 @@ describe Flor::Waiter do
         @waiter.expand_args(wait: '0_0 task')
       ).to eq([
         [ [ '0_0', [ 'task' ] ] ],
-        4,
+        Flor::Waiter::DEFAULT_TIMEOUT,
         false
       ])
     end
@@ -51,7 +51,7 @@ describe Flor::Waiter do
           [ '0_0', [ 'task' ] ],
           [ nil, [ 'terminated' ] ]
         ],
-        4,
+        Flor::Waiter::DEFAULT_TIMEOUT,
         false
       ])
     end
@@ -65,7 +65,7 @@ describe Flor::Waiter do
           [ '0_0', [ 'task', 'cancel' ] ],
           [ nil, [ 'terminated' ] ]
         ],
-        4,
+        Flor::Waiter::DEFAULT_TIMEOUT,
         false
       ])
     end
@@ -79,7 +79,7 @@ describe Flor::Waiter do
           [ '0_0', [ 'task', 'cancel' ] ],
           [ '0_1', [ 'task', 'cancel' ] ]
         ],
-        4,
+        Flor::Waiter::DEFAULT_TIMEOUT,
         false
       ])
     end
@@ -101,7 +101,7 @@ describe Flor::Waiter do
         @waiter.expand_args(wait: '0_0 task', repeat: 3)
       ).to eq([
         [ [ '0_0', [ 'task' ] ] ],
-        4,
+        Flor::Waiter::DEFAULT_TIMEOUT,
         3
       ])
     end
