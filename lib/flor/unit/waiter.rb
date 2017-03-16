@@ -3,7 +3,12 @@ module Flor
 
   class Waiter
 
-    DEFAULT_TIMEOUT = 5 # seconds
+    DEFAULT_TIMEOUT =
+      begin
+        dt = ENV['FLOR_DEFAULT_TIMEOUT'].to_i
+        dt = 5 if dt <= 0
+        dt
+      end
 
     def initialize(exid, opts)
 
