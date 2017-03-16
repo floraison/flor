@@ -169,6 +169,8 @@ describe Flor::Waiter do
 
       @unit.launch(%{ sleep 10 })
 
+      sleep 1
+
       #r = @unit.wait(nil, 'idle')
       r = @unit.wait('idle')
 
@@ -178,7 +180,7 @@ describe Flor::Waiter do
       expect(r.keys).to eq(%w[
         point idle_count consumed ])
 
-      expect(r['idle_count']).to eq(1)
+      expect(r['idle_count']).to be > 0
     end
   end
 end
