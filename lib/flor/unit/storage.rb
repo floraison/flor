@@ -254,7 +254,7 @@ module Flor
 
       synchronize do
 
-        @db[:flor_messages].count(status: 'created') > 0
+        @db[:flor_messages].where(status: 'created').count > 0
       end
 
     rescue => err
