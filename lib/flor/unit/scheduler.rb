@@ -416,8 +416,8 @@ module Flor
       return true if Time.now - @reloaded_at >= @reload_after
 
       return true if @wake_up
-      return false unless @next_time
 
+      @next_time &&
       @next_time <= Flor.tstamp.split('.').first
     end
 
