@@ -88,7 +88,7 @@ module Flor
     def self.get_class(conf, key)
 
       if v = conf[key]
-        Kernel.const_get(v)
+        Flor.const_lookup(v)
       else
         nil
       end
