@@ -3,6 +3,13 @@ module Flor
 
   class WaitList
 
+    # NB: tasker configuration entries start with "wtl_"
+    #
+    # `wtl_default_timeout`:
+    #   when #launch ing or #wait ing, set the default timeout, in seconds
+
+    DEFAULT_TIMEOUT = Flor.env_i('FLOR_DEFAULT_TIMEOUT')
+
     def initialize(unit)
 
       @unit = unit
@@ -49,6 +56,11 @@ module Flor
         else
           [ exid, opts ]
         end
+
+      opts[:timeout] =
+        nil if opts[:timeout] == true
+      opts[:timeout] ||=
+        (DEFAULT_TIMEOUT || @unit.conf['wtl_default_timeout'] || 5)
 
       @mutex.synchronize do
 

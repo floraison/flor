@@ -3,13 +3,6 @@ module Flor
 
   class Waiter
 
-    DEFAULT_TIMEOUT =
-      begin
-        dt = ENV['FLOR_DEFAULT_TIMEOUT'].to_i
-        dt = 5 if dt <= 0
-        dt
-      end
-
     def initialize(exid, opts)
 
       serie, timeout, repeat = expand_args(opts)
@@ -17,7 +10,7 @@ module Flor
       @exid = exid
       @original_serie = repeat ? Flor.dup(serie) : nil
       @serie = serie
-      @timeout = timeout == true ? DEFAULT_TIMEOUT : timeout
+      @timeout = timeout
 
       @queue = []
       @mutex = Mutex.new
@@ -96,7 +89,7 @@ module Flor
 
       owait = opts[:wait]
       orepeat = opts[:repeat] || false
-      otimeout = opts[:timeout] || DEFAULT_TIMEOUT
+      otimeout = opts[:timeout]
 
       case owait
       when true

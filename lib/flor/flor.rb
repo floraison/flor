@@ -11,6 +11,11 @@ module Flor
   #
   # miscellaneous functions
 
+  def self.env_i(k)
+
+    v = ENV[k]; (v && v.match(/\A\d+\z/)) ? v.to_i : nil
+  end
+
   def self.dup(o)
 
     Marshal.load(Marshal.dump(o))

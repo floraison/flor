@@ -17,6 +17,6 @@ branches:
 sudo: false
 cache: bundler
 
-env:
-  - FLOR_DEFAULT_TIMEOUT=7
+#env:
+#  - FLOR_DEFAULT_TIMEOUT=7
 
