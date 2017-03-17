@@ -413,7 +413,7 @@ module Flor
 
     def reload_after
 
-      @idle_count < 7 ? 1 : @reload_after
+      @idle_count < 5 ? 1 : @reload_after
     end
 
     def should_wake_up?
