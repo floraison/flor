@@ -2,6 +2,18 @@
 # flor CHANGELOG.md
 
 
+## flor 0.11.0  released 2017-03-17
+
+- Simplification of the tasker configuration files
+  (alignment on hooks configuration files)
+- Introduction of lib/hooks/
+- go for ; and | (same level) and \ (child level)
+- Implement "twig"
+- Implement basic spooler (var/spool/)
+- Introduce runner service
+- Fix Storage#any_message (misuse of Sequel Dataset#count)
+
+
 ## flor 0.10.0  released 2017-03-03
 
 - Enhance shell, bring in bin/flosh (though not in gem)
