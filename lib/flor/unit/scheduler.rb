@@ -411,14 +411,17 @@ module Flor
       m
     end
 
+    def reload_after
+
+      @idle_count < 7 ? 1 : @reload_after
+    end
+
     def should_wake_up?
 
-      return true if Time.now - @reloaded_at >= @reload_after
-
       return true if @wake_up
+      return true if Time.now - @reloaded_at >= reload_after
 
-      @next_time &&
-      @next_time <= Flor.tstamp.split('.').first
+      @next_time && @next_time <= Flor.tstamp.split('.').first
     end
 
     def unreserve_messages
