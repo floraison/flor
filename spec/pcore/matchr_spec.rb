@@ -57,6 +57,24 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ %w[ stuff ] ])
     end
+
+    context 'single argument' do
+
+      it 'takes $(f.ret) as the string' do
+
+        flor = %{
+          "blue moon" | matchr (/blue/) | push l
+          "blue moon" | matchr 'moon' | push l
+          "blue moon" | match? 'moon' | push l
+          "blue moon" | match? 'x' | push l
+        }
+
+        r = @executor.launch(flor, vars: { 'l' => [] })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']['l']).to eq([ %w[ blue ], %w[ moon ], true, false ])
+      end
+    end
   end
 
   describe 'match?' do

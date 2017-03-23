@@ -22,6 +22,26 @@ class Flor::Pro::Matchr < Flor::Procedure
   # ```
   # match? "alpha", 'alp'    # => true
   # ```
+  #
+  # When there is a single argument, `matchr` and `match?` will try
+  # to take the string out of `$(f.ret)`.
+  # ```
+  # "blue moon"
+  # match? (/blue/)
+  #   # => true
+  #
+  # "blue moon"
+  # match? 'blue'
+  #   # => true
+  #
+  # /blue/
+  # match? 'blue moon'
+  #   # => true
+  #
+  # 'blue'
+  # match? (/black/)
+  #   # => false
+  # ```
 
   names %w[ matchr match? ]
 
@@ -50,14 +70,18 @@ class Flor::Pro::Matchr < Flor::Procedure
 
   def arguments
 
+    rets = @node['rets'].dup
+    rets.unshift(node_payload_ret) if rets.size < 2
+
     fail ArgumentError.new(
-      "'#{tree[0]}' needs at least 2 arguments"
-    ) if @node['rets'].size < 2
+      "'#{tree[0]}' needs 1 or 2 arguments"
+    ) if rets.size < 2
 
-    rex = @node['rets']
-      .find { |r| r.is_a?(Array) && r[0] == '_rxs' } || @node['rets'].last
+    rex =
+      rets.find { |r| r.is_a?(Array) && r[0] == '_rxs' } ||
+      rets.last
 
-    str = (@node['rets'] - [ rex ]).first
+    str = (rets - [ rex ]).first
 
     rex = rex.is_a?(String) ? rex : rex[1].to_s
     rex = rex.match(/\A\/[^\/]*\/[a-z]*\z/) ? Kernel.eval(rex) : Regexp.new(rex)

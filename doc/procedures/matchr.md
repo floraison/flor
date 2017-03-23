@@ -23,6 +23,26 @@ regular expression.
 match? "alpha", 'alp'    # => true
 ```
 
+When there is a single argument, `matchr` and `match?` will try
+to take the string out of `$(f.ret)`.
+```
+"blue moon"
+match? (/blue/)
+  # => true
+
+"blue moon"
+match? 'blue'
+  # => true
+
+/blue/
+match? 'blue moon'
+  # => true
+
+'blue'
+match? (/black/)
+  # => false
+```
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/matchr.rb)
 * [matchr spec](https://github.com/floraison/flor/tree/master/spec/pcore/matchr_spec.rb)
