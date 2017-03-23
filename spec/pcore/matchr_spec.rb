@@ -15,12 +15,12 @@ describe 'Flor procedures' do
     @executor = Flor::TransientExecutor.new
   end
 
-  describe 'match' do
+  describe 'matchr' do
 
     it "returns empty array when it doesn't match" do
 
       flor = %{
-        match "alpha", /bravo/
+        matchr "alpha", /bravo/
       }
 
       r = @executor.launch(flor)
@@ -33,9 +33,9 @@ describe 'Flor procedures' do
 
       flor = %{
         push f.l
-          match "stuff", /stuf*/
+          matchr "stuff", /stuf*/
         push f.l
-          match "stuff", /s(tu)(f*)/
+          matchr "stuff", /s(tu)(f*)/
       }
 
       r = @executor.launch(flor, payload: { 'l' => [] })
@@ -48,8 +48,8 @@ describe 'Flor procedures' do
 
       flor = %{
         push f.l
-          #match "stuff", "^stuf*$"
-          match "stuff", "stuf*"
+          #match? "stuff", "^stuf*$"
+          matchr "stuff", "stuf*"
       }
 
       r = @executor.launch(flor, payload: { 'l' => [] })

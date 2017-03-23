@@ -1,7 +1,7 @@
 
-class Flor::Pro::Match < Flor::Procedure
+class Flor::Pro::Matchr < Flor::Procedure
 
-  names %w[ match match? ]
+  names %w[ matchr match? ]
 
   def pre_execute
 
@@ -29,7 +29,7 @@ class Flor::Pro::Match < Flor::Procedure
   def arguments
 
     fail ArgumentError.new(
-      "'match' needs at least 2 arguments"
+      "'#{tree[0]}' needs at least 2 arguments"
     ) if @node['rets'].size < 2
 
     rex = @node['rets']

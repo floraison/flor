@@ -38,9 +38,9 @@ describe 'Flor core' do
 
       flor = %{
         push f.l
-          match "car", /^[bct]ar$/
+          matchr "car", /^[bct]ar$/
         push f.l
-          match "car", "^[bct]ar$"
+          matchr "car", "^[bct]ar$"
       }
 
       r = @executor.launch(flor, payload: { 'l' => [] })
