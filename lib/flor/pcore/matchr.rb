@@ -1,6 +1,8 @@
 
 class Flor::Pro::Matchr < Flor::Procedure
   #
+  # Matches a string against a regular expression.
+  #
   # `matchr s r` will return an array of matching strings in `s` from regular
   # expression `r`.
   #
