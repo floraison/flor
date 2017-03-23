@@ -3,6 +3,7 @@
 #.rspec
 .rspec.out
 .errors
+.bxsinfo
 
 *.swp
 
