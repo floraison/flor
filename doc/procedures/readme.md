@@ -13,6 +13,7 @@
 * [fail, error](fail.md) - Explicitely raises an error.
 * [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidequick)
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
+* [matchr, match?](matchr.md) - `matchr s r` will return an array of matching strings in `s` from regular expression `r`.
 * [move](move.md) - Moves a cursor to a given position
 * [noeval](noeval.md) - Immediately replies, children are not evaluated
 * [noret](noret.md) - executes its children, but doesn't alter the received f.ret

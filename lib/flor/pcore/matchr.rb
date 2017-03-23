@@ -1,5 +1,25 @@
 
 class Flor::Pro::Matchr < Flor::Procedure
+  #
+  # `matchr s r` will return an array of matching strings in `s` from regular
+  # expression `r`.
+  #
+  # `match? s r` will return true if string `s` matches regular expression `r`.
+  # It returns false else.
+  #
+  # ```
+  # matchr "alpha", /bravo/
+  #   # yields an empty array []
+  #
+  # match? "alpha", /bravo/  # => false
+  # match? "alpha", /alp/    # => true
+  # ```
+  #
+  # The second argument to `match?` and `matchr` is turned into a
+  # regular expression.
+  # ```
+  # match? "alpha", 'alp'    # => true
+  # ```
 
   names %w[ matchr match? ]
 
