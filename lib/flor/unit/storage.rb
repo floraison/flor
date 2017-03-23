@@ -351,6 +351,13 @@ module Flor
           .where { mtime < tstamp }
           .update(status: 'created')
       end
+
+    rescue => err
+
+      @unit.logger.warn(
+        "#{self.class}#unreserve_messages(#{max_sec})", err, '(returning nil)')
+
+      -1 # not zero, to indicate a problem
     end
 
     def put_timer(message)
