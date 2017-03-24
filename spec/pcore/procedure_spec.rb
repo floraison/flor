@@ -468,7 +468,7 @@ describe Flor::Procedure do
     end
   end
 
-  context 'status )gone("' do
+  context 'status )gone(' do
 
     describe '#receive' do
 

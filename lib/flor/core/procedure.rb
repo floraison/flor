@@ -232,8 +232,8 @@ class Flor::Procedure < Flor::Node
   def do_receive
 
     from_child =
-      if ns = @node['cnodes']
-        ns.delete(from)
+      if cnodes = @node['cnodes']
+        cnodes.delete(from)
       else
         nil
       end

@@ -214,6 +214,9 @@ module Flor
         'exid' => message['exid'],
         'payload' => Flor.dupm(message['payload'], 'ret' => node['heat0'])
       }]) if heap == nil && message['accept_symbol'] == true
+        #
+        # used when `3 tags: 'xyz'` (attributes on atoms)
+        # the 'accept_symbol' flag is set by the "_att" procedure
 
       return error_reply(
         node, message, "don't know how to apply #{node['heat0'].inspect}"
@@ -224,7 +227,6 @@ module Flor
 
       head = heac.new(self, node, message)
 
-      #return process(head.rewrite) if head.is_a?(Flor::Macro)
       return [ head.rewrite ] if head.is_a?(Flor::Macro)
 
       nid = message['nid']
