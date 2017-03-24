@@ -369,8 +369,14 @@ class Flor::Procedure < Flor::Node
 
     m['sm'] = @message['m']
 
-    ret = :no
-    ret = h.delete('ret') if h.has_key?('ret')
+    ret =
+      if @node.has_key?('aret') # from the 'ret' common attribute
+        @node['aret']
+      elsif h.has_key?('ret')
+        h.delete('ret')
+      else
+        :no
+      end
 
     m['payload'] = payload.current
 
