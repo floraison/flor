@@ -113,7 +113,7 @@ describe 'Flor punit' do
         'a b c'
       )
 
-      sleep 0.140
+      sleep 0.490
 
       expect(
         @unit.journal
