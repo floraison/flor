@@ -33,9 +33,8 @@ describe 'Flor punit' do
           def msg \ alpha
       }
 
-      exid = @unit.launch(flor)
-
-      sleep 1
+      r = @unit.launch(flor, wait: 'schedule')
+      exid = r['exid']
 
       exe = @unit.executions[exid: exid]
 
