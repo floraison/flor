@@ -1072,6 +1072,18 @@ parses to
     [ 'a', [], 2 ], [ 'b', [], 3 ], [ 'c', [], 3 ], [ 'd', [], 3 ]
   ], 1 ]
 ```
+---
+
+```flor
+  def msg \ hole _
+```
+parses to
+```ruby
+  [ "def",
+    [ [ "_att", [ [ "msg", [], 1 ] ], 1 ],
+      [ "hole", [ [ "_att", [ [ "_", [], 1 ] ], 1 ] ], 1 ] ],
+    1 ]
+```
 
 
 ## suffix if and unless

@@ -53,16 +53,16 @@ describe 'Flor unit' do
 
     it 'cancels without a hitch (after scheduling)' do
 
-      flor = %{
+      flor = %q{
         concurrence
           hole 'a'
-          every '1s'
-            hole 'b'
+          every '1s' \ hole 'b'
       }
 
-      r = @unit.launch(flor, wait: 'trigger')
+      r = @unit.launch(flor, wait: 'task;trigger;task')
       sleep 0.5
-      r = @unit.cancel(exid: r['exid'], nid: '0', wait: true)
+      @unit.cancel(exid: r['exid'], nid: '0')
+      r = @unit.wait(r['exid'], 'ceased;terminated')
 
       expect(r['point']).to eq('terminated')
     end

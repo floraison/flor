@@ -26,7 +26,13 @@ class Flor::Pro::Schedule < Flor::Procedure
       "missing a function to call when the scheduler triggers"
     ) unless fun
 
-    msg = apply(fun, [], tree[2], false).first.merge('noreply' => true)
+    msg =
+      apply(fun, [], tree[2], false)
+        .first
+        .merge('noreply' => true)
+          #
+          # noreply: true
+          #   the applied node will not reply to this, parent, schedule node
 
     type, string =
       @node['atts'].find { |k, v| %w[ cron at in every ].include?(k) } ||
@@ -35,8 +41,6 @@ class Flor::Pro::Schedule < Flor::Procedure
     fail ArgumentError.new(
       "missing a schedule"
     ) unless string
-
-    #m = reply('point' => 'receive').first
 
     schedule('type' => type, 'string' => string, 'message' => msg)
   end

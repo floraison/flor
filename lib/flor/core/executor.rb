@@ -300,7 +300,7 @@ module Flor
       from = message['from']
       fnode = @execution['nodes'][from]
 
-      if fnode && fnode.has_key?('aret')
+      if fnode && fnode.has_key?('aret') # attribute ret
         message['payload']['ret'] = fnode['aret']
       end
 
