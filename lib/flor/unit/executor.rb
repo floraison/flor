@@ -86,11 +86,11 @@ module Flor
         @unit.storage.put_messages(oms)
       end
 
-      @unit.storage.consume(@consumed)
-
       @alive = false
 
       @unit.storage.put_execution(@execution)
+      @unit.storage.consume(@consumed)
+
       @unit.storage.put_messages(@messages)
 
       du = Time.now - t0
