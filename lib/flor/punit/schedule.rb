@@ -40,5 +40,10 @@ class Flor::Pro::Schedule < Flor::Procedure
 
     schedule('type' => type, 'string' => string, 'message' => msg)
   end
+
+  def cancel
+
+    super + reply('payload' => node_payload.current)
+  end
 end
 

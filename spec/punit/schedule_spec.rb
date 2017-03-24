@@ -93,6 +93,26 @@ describe 'Flor punit' do
         expect(seconds).to eq(ss)
       end
     end
+
+    context 'upon cancellation' do
+
+      it 'cancels its children and replies to its parent' do
+
+        flor = %{
+          schedule cron: '* * * * * *' # every second
+            def msg
+              hole _
+        }
+
+        r = @unit.launch(flor, wait: 'task')
+
+        sleep 0.140
+
+        r = @unit.cancel(exid: r['exid'], nid: '0', wait: true)
+
+        expect(r['point']).to eq('terminated')
+      end
+    end
   end
 end
 
