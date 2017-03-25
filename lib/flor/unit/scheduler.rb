@@ -271,9 +271,9 @@ module Flor
       queue(prepare_message('cancel', h.merge(re_apply: true)), h)
     end
 
-    def put_timer(message)
+    def schedule(node, message)
 
-      @storage.put_timer(message)
+      @storage.put_timer(node, message)
     end
 
     def wake_up

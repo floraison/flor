@@ -360,7 +360,7 @@ module Flor
       -1 # not zero, to indicate a problem
     end
 
-    def put_timer(message)
+    def put_timer(node, message)
 
       type, string = determine_type_and_schedule(message)
 
@@ -376,6 +376,7 @@ module Flor
             domain: Flor.domain(message['exid']),
             exid: message['exid'],
             nid: message['nid'],
+            onid: node['nid'],
             type: type,
             schedule: string,
             ntime: next_time,
