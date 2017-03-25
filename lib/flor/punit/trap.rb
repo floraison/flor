@@ -42,7 +42,7 @@ class Flor::Pro::Trap < Flor::Procedure
 
     msg =
       if fun
-        apply(fun, [], tree[2], false).first.merge('noreply' => true)
+        apply(fun, [], tree[2], false).first
       else
         reply.first
       end
@@ -63,14 +63,21 @@ class Flor::Pro::Trap < Flor::Procedure
 
     tra['range'] = att('range') || att('scope') || 'subnid'
 
+    @node['trapped'] = true
+
     reply('point' => 'trap','nid' => nid, 'trap' => tra) +
     (fun ? reply : [])
   end
 
   def receive_last
 
-    #fail ArgumentError.new('trap requires a function')
     receive_non_att
+  end
+
+  def receive
+
+    return [] if @node['trapped']
+    super
   end
 end
 

@@ -132,7 +132,7 @@ module Flor
         'ctime' => now,
         'mtime' => now }
 
-      %w[ vars vdomain cnid noreply dbg ].each do |k|
+      %w[ vars vdomain cnid dbg ].each do |k|
         v = message[k]
         node[k] = v if v != nil
       end
@@ -140,7 +140,6 @@ module Flor
         # vars: variables
         # vdomain: variable domain (used in conjuction with the loader)
         # cnid: closure nid
-        # noreply: this new node has a parent but shouldn't reply to it
         # dbg: used to debug messages (useful @node['dbg'] when 'receive')
 
       @execution['nodes'][nid] = node
@@ -277,7 +276,7 @@ module Flor
     end
 
     # "receive_terminated_or_ceased",
-    # when message['nid'] is nil or fnode['noreply']
+    # when message['nid'] is nil
     #
     def receive_toc(message, fnode)
 
@@ -307,7 +306,6 @@ module Flor
       messages = leave(fnode, message)
 
       nid = message['nid']
-      nid = nil if fnode && fnode['noreply']
 
       return messages + receive_toc(message, fnode) unless nid
 

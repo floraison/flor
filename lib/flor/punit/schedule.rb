@@ -29,10 +29,6 @@ class Flor::Pro::Schedule < Flor::Procedure
     msg =
       apply(fun, [], tree[2], false)
         .first
-        .merge('noreply' => true)
-          #
-          # noreply: true
-          #   the applied node will not reply to this, parent, schedule node
 
     type, string =
       @node['atts'].find { |k, v| %w[ cron at in every ].include?(k) } ||
@@ -42,7 +38,15 @@ class Flor::Pro::Schedule < Flor::Procedure
       "missing a schedule"
     ) unless string
 
+    @node['scheduled'] = true
+
     schedule('type' => type, 'string' => string, 'message' => msg)
+  end
+
+  def receive
+
+    return [] if @node['scheduled']
+    super
   end
 
   def cancel

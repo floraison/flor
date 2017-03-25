@@ -333,7 +333,7 @@ describe 'Flor unit' do
 
         @unit.signal('blue', exid: exid)
 
-        @unit.wait(exid, '0_0 ceased')
+        @unit.wait(exid, 'trigger; 0_0 receive')
 
         ts = @unit.traces.all
         t = ts.first

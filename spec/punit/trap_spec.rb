@@ -328,9 +328,9 @@ describe 'Flor punit' do
               sequence tag: 't1'
                 trace 'exe0'
                 stall _
-        }, wait: '0_0 ceased')
+        }, wait: 'trigger')
 
-        expect(r['point']).to eq('ceased')
+        expect(r['point']).to eq('trigger')
 
         exid0 = r['exid']
 

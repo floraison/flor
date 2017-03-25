@@ -62,7 +62,7 @@ describe 'Flor unit' do
       r = @unit.launch(flor, wait: 'task;trigger;task')
       sleep 0.5
       @unit.cancel(exid: r['exid'], nid: '0')
-      r = @unit.wait(r['exid'], 'ceased;terminated')
+      r = @unit.wait(r['exid'], '0_1 receive; terminated')
 
       expect(r['point']).to eq('terminated')
     end
