@@ -565,7 +565,7 @@ module Flor
 
       exid = exe['exid']
 
-      x = status == 'terminated' ? {} : { nid: exe['nodes'].keys }
+      x = (status == 'terminated') ? {} : { nid: exe['nodes'].keys }
         # if 'terminated' include all nodes
 
       if @archive

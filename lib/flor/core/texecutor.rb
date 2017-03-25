@@ -31,9 +31,9 @@ module Flor
         []
       end
 
-      def remove_node(exid, n)
+      def archive_node(exid, node)
 
-        (@archive[exid] ||= {})[n['nid']] = Flor.dup(n) if @archive
+        (@archive[exid] ||= {})[node['nid']] = Flor.dup(node) if @archive
       end
 
       def has_tasker?(exid, tname)

@@ -247,8 +247,8 @@ module Flor
 
       n['removed'] = true # or should I use "status" => "removed" ?
 
-      @unit.remove_node(exid, n)
-        # remove timers/waiters for this node, if any
+      @unit.archive_node(exid, n)
+        # archiving is only active during testing
 
       return if (n['closures'] || []).any?
         # don't remove the node if it's a closure for some other nodes

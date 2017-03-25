@@ -273,8 +273,6 @@ module Flor
 
     def put_timer(message)
 
-      #timer = @storage.put_timer(message)
-      #@mutex.synchronize { @timers.push(timer).sort_by!(&:ntime) }
       @storage.put_timer(message)
     end
 
@@ -304,16 +302,9 @@ module Flor
       @storage.put_trap(node, tra)
     end
 
-    def remove_node(exid, n)
+    def archive_node(exid, node)
 
-      #@storage.remove_node(exid, n)
-        # done in Storage#put_execution
-
-      #@mutex.synchronize do
-      #  @timers.reject! { |t| t.exid == exid && t.nid == n['nid'] }
-      #end
-
-      (@archive[exid] ||= {})[n['nid']] = Flor.dup(n) if @archive
+      (@archive[exid] ||= {})[node['nid']] = Flor.dup(node) if @archive
     end
 
     def executor(exid)
