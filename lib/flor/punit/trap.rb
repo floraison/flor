@@ -65,7 +65,7 @@ class Flor::Pro::Trap < Flor::Procedure
 
     @node['trapped'] = true
 
-    reply('point' => 'trap','nid' => nid, 'trap' => tra) +
+    queue('point' => 'trap','nid' => nid, 'trap' => tra) +
     (fun ? reply : [])
   end
 

@@ -359,7 +359,9 @@ class Flor::Procedure < Flor::Node
     reply('point' => 'entered', 'nid' => nid, 'tags' => ret)
   end
 
-  def reply(h={})
+  # The workhorse behind #reply
+  #
+  def queue(h={})
 
     m = {}
     m['point'] = 'receive'
@@ -389,7 +391,7 @@ class Flor::Procedure < Flor::Node
     [ m ]
   end
 
-  def queue(h); reply(h); end
+  alias reply queue
 
   def error_reply(o)
 
@@ -402,7 +404,7 @@ class Flor::Procedure < Flor::Node
     h['payload'] ||= {}
     h['nid'] ||= nid
 
-    reply(h)
+    queue(h)
   end
 
   def lookup_var_node(node, mode, k=nil)
