@@ -552,9 +552,9 @@ class Flor::Procedure < Flor::Node
 
     close_node
 
-    nids = @node['cnodes']
-
-    if nids && nids.any?
+    cnodes = @node['cnodes']
+      #
+    if cnodes && cnodes.any?
       cancel_children
     else
       cancel_reply
