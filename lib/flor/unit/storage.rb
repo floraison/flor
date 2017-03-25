@@ -371,20 +371,21 @@ module Flor
 
       synchronize do
 
-        @db[:flor_timers].insert(
-          domain: Flor.domain(message['exid']),
-          exid: message['exid'],
-          nid: message['nid'],
-          type: type,
-          schedule: string,
-          ntime: next_time,
-          content: to_blob(message),
-          count: 0,
-          status: 'active',
-          ctime: now,
-          mtime: now,
-          cunit: u,
-          munit: u)
+        @db[:flor_timers]
+          .insert(
+            domain: Flor.domain(message['exid']),
+            exid: message['exid'],
+            nid: message['nid'],
+            type: type,
+            schedule: string,
+            ntime: next_time,
+            content: to_blob(message),
+            count: 0,
+            status: 'active',
+            ctime: now,
+            mtime: now,
+            cunit: u,
+            munit: u)
       end
 
       @unit.wake_up
@@ -421,22 +422,23 @@ module Flor
       id =
         synchronize do
 
-          @db[:flor_traps].insert(
-            domain: dom,
-            exid: exid,
-            nid: tra['bnid'],
-            onid: node['nid'],
-            trange: tra['range'],
-            tpoints: tra['points'],
-            ttags: tra['tags'],
-            theats: tra['heats'],
-            theaps: tra['heaps'],
-            content: to_blob(tra),
-            status: 'active',
-            ctime: now,
-            mtime: now,
-            cunit: u,
-            munit: u)
+          @db[:flor_traps]
+            .insert(
+              domain: dom,
+              exid: exid,
+              nid: tra['bnid'],
+              onid: node['nid'],
+              trange: tra['range'],
+              tpoints: tra['points'],
+              ttags: tra['tags'],
+              theats: tra['heats'],
+              theaps: tra['heaps'],
+              content: to_blob(tra),
+              status: 'active',
+              ctime: now,
+              mtime: now,
+              cunit: u,
+              munit: u)
         end
 
       traps[id]
@@ -453,14 +455,15 @@ module Flor
 
       synchronize do
 
-        @db[:flor_traces].insert(
-          domain: Flor.domain(exid),
-          exid: exid,
-          nid: nid,
-          tracer: tracer,
-          text: text,
-          ctime: Flor.tstamp,
-          cunit: @unit.identifier)
+        @db[:flor_traces]
+          .insert(
+            domain: Flor.domain(exid),
+            exid: exid,
+            nid: nid,
+            tracer: tracer,
+            text: text,
+            ctime: Flor.tstamp,
+            cunit: @unit.identifier)
       end
     end
 
