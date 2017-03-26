@@ -42,7 +42,7 @@ class Flor::Pro::Case < Flor::Procedure
 
   def receive_non_att
 
-    return reply if @node['found']
+    return wrap_reply if @node['found']
 
     return receive_array if @node.has_key?('key')
 

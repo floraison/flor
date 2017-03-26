@@ -39,7 +39,7 @@ class Flor::Pro::Push < Flor::Procedure
     payload['ret'] = node_payload_ret \
       unless tree[0] == 'pushr'
 
-    reply
+    wrap_reply
   end
 end
 

@@ -46,7 +46,7 @@ class Flor::Pro::Cmap < Flor::Procedure
 
     payload['ret'] = @node['col']
 
-    reply
+    wrap
   end
 end
 

@@ -37,9 +37,8 @@ class Flor::Pro::Cancel < Flor::Procedure
 
     fla = @node['heap']
 
-    nids.uniq.collect { |nid|
-      reply('point' => 'cancel', 'nid' => nid, 'flavour' => fla).first
-    } + reply
+    nids.uniq.map { |nid| wrap_cancel('nid' => nid, 'flavour' => fla)[0] } +
+    wrap_reply
   end
 end
 

@@ -33,7 +33,7 @@ class Flor::Pro::Apply < Flor::Procedure
 
   def receive
 
-    return reply if from && from == @node['applied']
+    return wrap_reply if from && from == @node['applied']
 
     super
   end

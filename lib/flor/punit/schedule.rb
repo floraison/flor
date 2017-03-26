@@ -40,7 +40,7 @@ class Flor::Pro::Schedule < Flor::Procedure
 
     @node['scheduled'] = true
 
-    schedule('type' => t, 'string' => s, 'bnid' => bi, 'message' => m)
+    wrap_schedule('type' => t, 'string' => s, 'bnid' => bi, 'message' => m)
   end
 
   def receive
@@ -51,7 +51,7 @@ class Flor::Pro::Schedule < Flor::Procedure
 
   def cancel
 
-    super + reply('payload' => node_payload.current)
+    super + wrap_reply('payload' => node_payload.current)
   end
 end
 

@@ -27,7 +27,7 @@ class Flor::Pro::Set < Flor::Procedure
         node_payload_ret
       end
 
-    reply
+    wrap_reply
   end
 end
 

@@ -52,7 +52,7 @@ class Flor::Pro::If < Flor::Procedure
 
   def receive_non_att
 
-    return reply if @fcid > first_unkeyed_child_id
+    return wrap_reply if @fcid > first_unkeyed_child_id
       # "else" or "then" answered, replying to parent...
 
     off =
@@ -65,7 +65,7 @@ class Flor::Pro::If < Flor::Procedure
     nxt = @fcid + off
 
     if nxt >= children.size
-      reply('ret' => node_payload_ret)
+      wrap_reply('ret' => node_payload_ret)
     else
       execute_child(nxt)
     end

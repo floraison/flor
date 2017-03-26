@@ -30,7 +30,7 @@ class Flor::Pro::Break < Flor::Procedure
 
     if nid
 
-      ms += reply('point' => 'cancel', 'nid' => nid, 'flavour' => @node['heap'])
+      ms += wrap_cancel('nid' => nid, 'flavour' => @node['heap'])
     end
 
     unless is_ancestor_node?(nid)
@@ -38,7 +38,7 @@ class Flor::Pro::Break < Flor::Procedure
       pl = ms.any? ? payload.copy_current : payload.current
       pl['ret'] = node_payload_ret
 
-      ms += reply('payload' => pl)
+      ms += wrap_reply('payload' => pl)
     end
 
     ms

@@ -10,7 +10,7 @@ class Flor::Pro::Obj < Flor::Procedure
 
   def receive_first
 
-    return reply('ret' => {}) if children == 0
+    return wrap_reply('ret' => {}) if children == 0
 
     cn = children
       .inject([]) { |a, e| a << (a.size.even? ? stringify(e) : e); a }
@@ -27,7 +27,7 @@ class Flor::Pro::Obj < Flor::Procedure
         .each_slice(2)
         .inject({}) { |h, (k, v)| h[k.to_s] = v; h }
 
-    reply
+    wrap_reply
   end
 
   protected

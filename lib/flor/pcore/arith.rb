@@ -16,7 +16,7 @@ class Flor::Pro::Arith < Flor::Procedure
 
     payload['ret'] = @node['rets'].reduce(&sign) || DEFAULTS[sign]
 
-    reply
+    wrap_reply
   end
 end
 

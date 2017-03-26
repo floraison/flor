@@ -64,7 +64,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def receive_last_att
 
-    return reply unless children[@ncid]
+    return wrap_reply unless children[@ncid]
 
     (@ncid..children.size - 1)
       .map { |i| execute_child(i, 0, 'payload' => payload.copy_current) }
@@ -93,7 +93,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
       # determine post-concurrence payload
 
     cancel_remaining +
-    reply('payload' => pld)
+    wrap_reply('payload' => pld)
   end
 
   def receive_from_child_when_closed
@@ -132,7 +132,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     return [] if rem == 'forget'
 
-    cancel_nodes(@node['cnodes'])
+    wrap_cancel_children
   end
 
   def invoke_receiver

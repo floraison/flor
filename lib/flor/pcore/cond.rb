@@ -30,7 +30,7 @@ class Flor::Pro::Cond < Flor::Procedure
   def receive_non_att
 
     return execute_child(0) if @message['point'] == 'execute'
-    return reply if @node['found']
+    return wrap_reply if @node['found']
 
     tf2 = tree[1][@fcid + 2]
 

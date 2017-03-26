@@ -10,7 +10,7 @@ class Flor::Pro::Happly < Flor::Procedure
 
   def execute
 
-    queue(
+    wrap(
       'point' => 'execute',
       'nid' => Flor.child_nid(nid, tree[1].size),
       'tree' => tree[0])
@@ -20,7 +20,7 @@ class Flor::Pro::Happly < Flor::Procedure
 
     fcid = Flor.child_id(message['from'])
 
-    return reply if @node['applied']
+    return wrap_reply if @node['applied']
     return super unless fcid == tree[1].size
 
     ret = payload['ret']
@@ -33,7 +33,7 @@ class Flor::Pro::Happly < Flor::Procedure
 
     hret = @node['hret']
 
-    return reply('ret' => hret) unless Flor.is_func_tree?(hret)
+    return wrap_reply('ret' => hret) unless Flor.is_func_tree?(hret)
 
     args = @node['atts'].collect(&:last)
 

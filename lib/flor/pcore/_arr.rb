@@ -10,7 +10,7 @@ class Flor::Pro::Arr < Flor::Procedure
 
   def receive
 
-    return reply('ret' => []) if children == 0
+    return wrap_reply('ret' => []) if children == 0
 
     super
   end
@@ -19,7 +19,7 @@ class Flor::Pro::Arr < Flor::Procedure
 
     payload['ret'] = @node['rets']
 
-    reply
+    wrap_reply
   end
 end
 

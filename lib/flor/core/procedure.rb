@@ -41,7 +41,7 @@ class Flor::Procedure < Flor::Node
     nids = @node['cnodes']
 
     if nids && nids.any?
-      cancel_children
+      wrap_cancel_children
     else
       do_receive # which should trigger 'on_receive_last'
     end
@@ -162,7 +162,7 @@ class Flor::Procedure < Flor::Node
 
   def execute_child(index=0, sub=nil, h=nil)
 
-    return reply \
+    return wrap \
       if index < 0 || ( ! tree[1].is_a?(Array)) || tree[1][index] == nil
 
     sub = counter_next('subs') if sub == true
@@ -176,7 +176,7 @@ class Flor::Procedure < Flor::Node
       'payload' => payload.current }
     hh.merge!(h) if h
 
-    reply(hh)
+    wrap(hh)
   end
 
   def unatt_unkeyed_children(first_only=false)
@@ -273,7 +273,7 @@ class Flor::Procedure < Flor::Node
 
   def receive_from_child_when_closed
 
-    (@node['cnodes'].empty? && pop_on_receive_last) || reply
+    (@node['cnodes'].empty? && pop_on_receive_last) || wrap_reply
   end
 
   def receive_when_closed
@@ -333,7 +333,7 @@ class Flor::Procedure < Flor::Node
 
   def receive_last
 
-    reply
+    wrap_reply
   end
 
   # Used by 'cursor' (and 'loop') when
@@ -356,12 +356,10 @@ class Flor::Procedure < Flor::Node
 
     (@node['tags'] ||= []).concat(ret)
 
-    reply('point' => 'entered', 'nid' => nid, 'tags' => ret)
+    wrap('point' => 'entered', 'nid' => nid, 'tags' => ret)
   end
 
-  # The workhorse behind #reply
-  #
-  def queue(h={})
+  def wrap(h={})
 
     m = {}
     m['point'] = 'receive'
@@ -391,20 +389,29 @@ class Flor::Procedure < Flor::Node
     [ m ]
   end
 
-  alias reply queue
+  alias wrap_reply wrap
 
-  def error_reply(o)
+  def wrap_error(o)
 
-    reply('point' => 'failed', 'error' => Flor.to_error(o))
+    wrap('point' => 'failed', 'error' => Flor.to_error(o))
   end
 
-  def schedule(h)
+  def wrap_cancel(h)
+
+    h['point'] ||= 'cancel'
+    h['nid'] ||= nid
+    #h['flavour'] ||= 'xxx'
+
+    wrap(h)
+  end
+
+  def wrap_schedule(h)
 
     h['point'] ||= 'schedule'
     h['payload'] ||= {}
     h['nid'] ||= nid
 
-    queue(h)
+    wrap(h)
   end
 
   def lookup_var_node(node, mode, k=nil)
@@ -491,7 +498,7 @@ class Flor::Procedure < Flor::Node
       vars[key] = args[i]
     end
 
-    ms = reply(
+    ms = wrap(
       'point' => 'execute',
       'nid' => ani,
       'tree' => [ '_apply', t[1], line ],
@@ -505,23 +512,23 @@ class Flor::Procedure < Flor::Node
     ms
   end
 
-  def cancel_nodes(nids)
+  def wrap_cancel_nodes(nids)
 
     (nids || [])
-      .collect { |i| reply('point' => 'cancel', 'nid' => i, 'from' => nid) }
+      .collect { |i| wrap_cancel('nid' => i, 'from' => nid) }
       .flatten(1)
   end
 
-  def cancel_reply # "cancel" as a noun
+  def wrap_cancelled
 
-    reply(
+    wrap(
       'cause' => 'cancel',
       'payload' => @message['payload'] || @node['payload'])
   end
 
-  def cancel_children
+  def wrap_cancel_children
 
-    cancel_nodes(@node['cnodes'])
+    wrap_cancel_nodes(@node['cnodes'])
   end
 
   # The executor calls #do_cancel, while most procedure implementations
@@ -557,9 +564,9 @@ class Flor::Procedure < Flor::Node
     cnodes = @node['cnodes']
       #
     if cnodes && cnodes.any?
-      cancel_children
+      wrap_cancel_children
     else
-      cancel_reply
+      wrap_cancelled
     end
   end
 
@@ -567,7 +574,7 @@ class Flor::Procedure < Flor::Node
 
     return [] if node_ended?
 
-    reply + cancel_children
+    wrap_reply + wrap_cancel_children
   end
 end
 

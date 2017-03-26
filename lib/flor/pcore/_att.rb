@@ -5,11 +5,11 @@ class Flor::Pro::Att < Flor::Procedure
 
   def execute
 
-    return reply if children == [ [ '_', [], tree[2] ] ]
+    return wrap_reply if children == [ [ '_', [], tree[2] ] ]
       # spares 1 message
 
     pt = parent_node['tree']
-    return reply if pt && pt[0] == '_apply'
+    return wrap_reply if pt && pt[0] == '_apply'
 
     execute_child(0, nil, 'accept_symbol' => children.size > 1)
   end
@@ -71,7 +71,7 @@ class Flor::Pro::Att < Flor::Procedure
 
     payload['ret'] = @node['ret'] if key
 
-    reply
+    wrap_reply
   end
 
   # vars: { ... }, inits a scope for the parent node
@@ -81,7 +81,7 @@ class Flor::Pro::Att < Flor::Procedure
     parent_node['vars'] = payload['ret']
     payload['ret'] = @node['ret']
 
-    reply
+    wrap_reply
   end
 
   def receive_tag
@@ -96,13 +96,13 @@ class Flor::Pro::Att < Flor::Procedure
 
     tags = Array(ret)
 
-    return reply if tags.empty?
+    return wrap_reply if tags.empty?
 
     (parent_node['tags'] ||= []).concat(tags)
     parent_node['tags'].uniq!
 
-    queue('point' => 'entered', 'tags' => tags) +
-    reply
+    wrap('point' => 'entered', 'tags' => tags) +
+    wrap_reply
   end
   alias receive_tags receive_tag
 
@@ -112,17 +112,17 @@ class Flor::Pro::Att < Flor::Procedure
       pn['aret'] = Flor.dup(payload['ret'])
     end
 
-    reply
+    wrap_reply
   end
 
   def receive_timeout
 
     n = parent
-    m = reply('point' => 'cancel', 'nid' => n, 'flavour' => 'timeout').first
+    m = wrap_cancel('nid' => n, 'flavour' => 'timeout').first
     t = payload['ret']
 
-    schedule('type' => 'in', 'string' => t, 'bnid' => n, 'message' => m) +
-    reply
+    wrap_schedule('type' => 'in', 'string' => t, 'bnid' => n, 'message' => m) +
+    wrap_reply
   end
 
   def receive_on_error
@@ -132,7 +132,7 @@ class Flor::Pro::Att < Flor::Procedure
 
     (parent_node['on_error'] ||= []) << oe
 
-    reply
+    wrap_reply
   end
 end
 

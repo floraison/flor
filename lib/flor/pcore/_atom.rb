@@ -13,7 +13,7 @@ class Flor::Pro::Atom < Flor::Procedure
         else tree[1]
       end
 
-    reply
+    wrap_reply
   end
 end
 

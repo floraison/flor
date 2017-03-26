@@ -16,7 +16,7 @@ class Flor::Pro::NoEval < Flor::Procedure
 
   def execute
 
-    reply
+    wrap
   end
 end
 

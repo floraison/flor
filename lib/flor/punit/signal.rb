@@ -14,7 +14,7 @@ class Flor::Pro::Signal < Flor::Procedure
 
     return super unless name
 
-    reply(
+    wrap(
       'point' => 'signal', 'nid' => nid, 'name' => name,
       'payload' => payload.copy_current
     ) + super

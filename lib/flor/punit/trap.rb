@@ -44,7 +44,7 @@ class Flor::Pro::Trap < Flor::Procedure
       if fun
         apply(fun, [], tree[2], false).first
       else
-        reply.first
+        wrap_reply.first
       end
 
     tra = {}
@@ -65,8 +65,8 @@ class Flor::Pro::Trap < Flor::Procedure
 
     @node['trapped'] = true
 
-    queue('point' => 'trap','nid' => nid, 'trap' => tra) +
-    (fun ? reply : [])
+    wrap('point' => 'trap','nid' => nid, 'trap' => tra) +
+    (fun ? wrap_reply : [])
   end
 
   def receive_last

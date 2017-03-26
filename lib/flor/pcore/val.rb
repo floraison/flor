@@ -10,7 +10,7 @@ class Flor::Pro::Val < Flor::Procedure
 
     payload['ret'] = heat
 
-    reply
+    wrap_reply
   end
 end
 

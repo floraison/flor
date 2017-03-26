@@ -40,7 +40,7 @@ class Flor::Pro::Map < Flor::Procedure
     @node['idx'] += 1
     @node['mtime'] = Flor.tstamp
 
-    return reply('ret' => @node['res']) \
+    return wrap_reply('ret' => @node['res']) \
       if @node['idx'] == @node['col'].size
 
     @node['vars']['idx'] = @node['idx']

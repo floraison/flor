@@ -23,9 +23,9 @@ class Flor::Pro::Sleep < Flor::Procedure
 
     bi = parent || '0'
 
-    m = reply('point' => 'receive').first
+    m = wrap('point' => 'receive').first
 
-    schedule('type' => 'in', 'string' => t, 'bnid' => bi, 'message' => m)
+    wrap_schedule('type' => 'in', 'string' => t, 'bnid' => bi, 'message' => m)
   end
 end
 

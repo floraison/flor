@@ -14,7 +14,7 @@ class Flor::Pro::Twig < Flor::Procedure
     nac = non_att_children
 
     if nac.size == 1
-      reply('ret' => nac.first)
+      wrap_reply('ret' => nac.first)
     else
       super
     end
@@ -26,7 +26,7 @@ class Flor::Pro::Twig < Flor::Procedure
 
     set_value(payload['ret'], t)
 
-    reply
+    wrap
   end
 end
 

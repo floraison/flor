@@ -66,7 +66,7 @@ class Flor::Pro::Define < Flor::Procedure
 
     payload['ret'] = val
 
-    reply
+    wrap_reply
   end
 end
 

@@ -21,7 +21,7 @@ class Flor::Pro::Cmp < Flor::Procedure
         true
       end
 
-    reply
+    wrap_reply
   end
 
   protected

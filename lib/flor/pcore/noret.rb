@@ -17,7 +17,7 @@ class Flor::Pro::NoRet < Flor::Procedure
 
     payload['ret'] = node_payload_ret
 
-    reply
+    wrap
   end
 end
 

@@ -21,7 +21,7 @@ class Flor::Pro::Trace < Flor::Procedure
 
     payload['ret'] = node_payload_ret
 
-    reply
+    wrap
   end
 end
 

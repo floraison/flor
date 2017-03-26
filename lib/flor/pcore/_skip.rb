@@ -23,9 +23,9 @@ class Flor::Pro::Skip < Flor::Procedure
 
     @node['count'] -= 1
 
-    return reply if @node['count'] < 1
+    return wrap_reply if @node['count'] < 1
 
-    reply('nid' => nid, 'from' => Flor.child_nid(nid, children.size))
+    wrap_reply('nid' => nid, 'from' => Flor.child_nid(nid, children.size))
   end
 
   def receive_last

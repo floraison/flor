@@ -27,10 +27,9 @@ class Flor::Pro::Move < Flor::Procedure
 
     to = att('to')
 
-    rep = is_ancestor_node?(nid) ? [] : reply
+    rep = is_ancestor_node?(nid) ? [] : wrap_reply
 
-    reply(
-      'point' => 'cancel',
+    wrap_cancel(
       'nid' => nid,
       'flavour' => @node['heap'], # "move"
       'payload' => rep.any? ? payload.copy_current : payload.current,

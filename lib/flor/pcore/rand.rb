@@ -36,7 +36,7 @@ class Flor::Pro::Rand < Flor::Procedure
 
     payload['ret'] = Random.rand(a...b)
 
-    reply
+    wrap
   end
 
   protected

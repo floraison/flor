@@ -10,7 +10,7 @@ class Flor::Pro::Task < Flor::Procedure
 
   def do_receive
 
-    return reply('payload' => determine_reply_payload) \
+    return wrap_reply('payload' => determine_reply_payload) \
       if point == 'receive' && from == nil
 
     super
@@ -38,7 +38,7 @@ class Flor::Pro::Task < Flor::Procedure
 
     attl, attd = determine_atts
 
-    queue(
+    wrap(
       'point' => 'task',
       'exid' => exid, 'nid' => nid,
       'tasker' => tasker,
@@ -52,7 +52,7 @@ class Flor::Pro::Task < Flor::Procedure
 
     attl, attd = determine_atts
 
-    queue(
+    wrap(
       'point' => 'detask',
       'exid' => exid, 'nid' => nid,
       'tasker' => att(nil),

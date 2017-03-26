@@ -63,7 +63,7 @@ class Flor::Pro::Matchr < Flor::Procedure
         m ? m.to_a : []
       end
 
-    reply
+    wrap_reply
   end
 
   protected

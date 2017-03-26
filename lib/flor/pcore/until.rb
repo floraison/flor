@@ -36,13 +36,15 @@ class Flor::Pro::Until < Flor::Procedure
         # over
 
         ret = @node.has_key?('cret') ? @node['cret'] : node_payload_ret
-        reply('ret' => ret)
+
+        wrap_reply('ret' => ret)
 
       else
         #
         # condition yield false, enter "block"
 
         payload['ret'] = node_payload_ret
+
         execute_child(@ncid, @node['subs'].last)
       end
 
@@ -54,6 +56,7 @@ class Flor::Pro::Until < Flor::Procedure
 
       @node['cret'] = payload['ret']
       payload['ret'] = node_payload_ret
+
       execute_child(first_unkeyed_child_id, @node['subs'].last)
 
     else

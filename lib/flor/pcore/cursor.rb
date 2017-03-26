@@ -57,7 +57,7 @@ class Flor::Pro::Cursor < Flor::Procedure
         @node['subs'] << counter_next('subs')
         execute_child(first_non_att_child_id, @node['subs'].last)
       else
-        reply
+        wrap_reply
       end
     else
       execute_child(@ncid, @node['subs'].last)
@@ -105,7 +105,7 @@ class Flor::Pro::Cursor < Flor::Procedure
     if fla == 'continue'
 
       @node['on_receive_last'] =
-        reply(
+        wrap(
           'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
           'orl' => fla,
           'payload' => Flor.dup(message['payload']))
