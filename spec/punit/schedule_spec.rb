@@ -108,9 +108,14 @@ describe 'Flor punit' do
 
         r = @unit.launch(flor, wait: 'task')
 
-        sleep 0.140
+        exid = r['exid']
 
-        r = @unit.cancel(exid: r['exid'], nid: '0', wait: true)
+        @unit.wait(exid, 'end')
+
+        @unit.cancel(exid: r['exid'], nid: '0')
+
+        @unit.wait(exid, 'detask')
+        r = @unit.wait(exid, 'terminated')
 
         expect(r['point']).to eq('terminated')
       end
