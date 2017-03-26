@@ -11,7 +11,8 @@ module Flor
       {
         'point' => 'trigger',
         'exid' => self.exid,
-        'nid' => self.nid,
+        'nid' => self.onid,
+        'bnid' => self.nid,
         'type' => self.type,
         'schedule' => self.schedule,
         'timer_id' => self.id,

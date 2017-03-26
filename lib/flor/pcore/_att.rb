@@ -101,7 +101,7 @@ class Flor::Pro::Att < Flor::Procedure
     (parent_node['tags'] ||= []).concat(tags)
     parent_node['tags'].uniq!
 
-    reply('point' => 'entered', 'tags' => tags) +
+    queue('point' => 'entered', 'tags' => tags) +
     reply
   end
   alias receive_tags receive_tag
@@ -121,7 +121,7 @@ class Flor::Pro::Att < Flor::Procedure
     m = reply('point' => 'cancel', 'nid' => n, 'flavour' => 'timeout').first
     t = payload['ret']
 
-    schedule('type' => 'in', 'string' => t, 'nid' => n, 'message' => m) +
+    schedule('type' => 'in', 'string' => t, 'bnid' => n, 'message' => m) +
     reply
   end
 

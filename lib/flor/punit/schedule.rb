@@ -26,21 +26,21 @@ class Flor::Pro::Schedule < Flor::Procedure
       "missing a function to call when the scheduler triggers"
     ) unless fun
 
-    msg =
-      apply(fun, [], tree[2], false)
-        .first
+    m = apply(fun, [], tree[2], false).first
 
-    type, string =
+    t, s =
       @node['atts'].find { |k, v| %w[ cron at in every ].include?(k) } ||
       @node['atts'].find { |k, v| k == nil }
 
+    bi = parent || '0' # bound to nid
+
     fail ArgumentError.new(
       "missing a schedule"
-    ) unless string
+    ) unless s
 
     @node['scheduled'] = true
 
-    schedule('type' => type, 'string' => string, 'message' => msg)
+    schedule('type' => t, 'string' => s, 'bnid' => bi, 'message' => m)
   end
 
   def receive

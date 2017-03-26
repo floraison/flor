@@ -21,9 +21,11 @@ class Flor::Pro::Sleep < Flor::Procedure
     t = att('for', nil)
     fail ArgumentError.new("missing a sleep time duration") unless t
 
+    bi = parent || '0'
+
     m = reply('point' => 'receive').first
 
-    schedule('type' => 'in', 'string' => t, 'message' => m)
+    schedule('type' => 'in', 'string' => t, 'bnid' => bi, 'message' => m)
   end
 end
 

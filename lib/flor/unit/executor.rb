@@ -135,9 +135,7 @@ module Flor
 
     def schedule(message)
 
-      node = @execution['nodes'][message['nid']]
-
-      @unit.schedule(node, message)
+      @unit.schedule(message)
 
       []
     end
