@@ -31,9 +31,10 @@ describe 'Flor punit' do
       flor = %q{
         schedule cron: '0 0 1 jan *'
           def msg \ alpha
+        stall _
       }
 
-      r = @unit.launch(flor, wait: 'schedule')
+      r = @unit.launch(flor, wait: 'end')
       exid = r['exid']
 
       exe = @unit.executions[exid: exid]
@@ -67,6 +68,7 @@ describe 'Flor punit' do
           schedule cron: '* * * * * *' # every second
             def msg
               set count (+ count 1)
+          stall _
         }
 
         seconds = []
@@ -101,6 +103,7 @@ describe 'Flor punit' do
           schedule cron: '* * * * * *' # every second
             def msg
               hole _
+          stall _
         }
 
         r = @unit.launch(flor, wait: 'task')

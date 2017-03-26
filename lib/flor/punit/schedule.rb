@@ -40,7 +40,8 @@ class Flor::Pro::Schedule < Flor::Procedure
 
     @node['scheduled'] = true
 
-    wrap_schedule('type' => t, 'string' => s, 'bnid' => bi, 'message' => m)
+    wrap_schedule('type' => t, 'string' => s, 'bnid' => bi, 'message' => m) +
+    wrap_reply
   end
 
   def receive

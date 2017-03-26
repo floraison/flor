@@ -31,15 +31,16 @@ describe 'Flor punit' do
       flor = %{
         every 'day at midnight'
           task 'alpha'
+        stall _
       }
 
-      r = @unit.launch(flor, wait: '0 schedule')
+      r = @unit.launch(flor, wait: '0_0 schedule')
 
       expect(r['point']).to eq('schedule')
       expect(r['type']).to eq(nil)
       expect(r['string']).to eq('day at midnight')
 
-      sleep 0.4
+      r = @unit.wait(r['exid'], 'end')
 
       expect(@unit.timers.count).to eq(1)
 
