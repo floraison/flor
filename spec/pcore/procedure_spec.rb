@@ -238,13 +238,14 @@ describe Flor::Procedure do
         }
 
         ms = @executor.launch(flon, until_after: '0_0_0 execute')
+        exid = ms.first['exid']
 
         expect(F.to_s(ms)).to eq('(msg 0_0 receive from:0_0_0)')
 
         n = @executor.node('0_0')
 
         ms0 = @executor.step({
-          'point' => 'cancel', 'nid' => '0_0', 'from' => '0' });
+          'point' => 'cancel', 'exid' => exid, 'nid' => '0_0', 'from' => '0' });
 
         n = @executor.node('0_0')
 
@@ -254,7 +255,7 @@ describe Flor::Procedure do
 
         ms = @executor.step({
           'point' => 'cancel', 'flavour' => 'kill',
-          'nid' => '0_0', 'from' => '0' });
+          'exid' => exid, 'nid' => '0_0', 'from' => '0' });
 
         expect(F.to_s(ms)).to eq(%{
           (msg 0 receive from:0_0)
