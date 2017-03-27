@@ -157,7 +157,7 @@ class Flor::Procedure < Flor::Node
 
   def execute_child(index=0, sub=nil, h=nil)
 
-    return wrap \
+    return wrap_reply \
       if index < 0 || ( ! tree[1].is_a?(Array)) || tree[1][index] == nil
 
     sub = counter_next('subs') if sub == true
