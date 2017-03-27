@@ -30,12 +30,11 @@ class Flor::Pro::Cmap < Flor::Procedure
       "cmap expects a function"
     ) unless Flor.is_func_tree?(fun)
 
-    col = att(nil)
     @node['fun'] = fun
 
-    col.collect.with_index do |e, i|
-      apply(@node['fun'], [ e, i ], tree[2])
-    end.flatten(1)
+    att(nil)
+      .collect.with_index { |e, i| apply(fun, [ e, i ], tree[2]) }
+      .flatten(1)
   end
 
   def receive_elt
