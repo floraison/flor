@@ -69,3 +69,11 @@ A "sequence" procedure will only emit one "execute" message at a time. Upon rece
 
 * ...
 
+### basic behaviour
+
+"execute" creates a node and calls the `#execute` method of the corresponding procedure. The nid of the new node is added to the 'cnodes' list of the node that emitted the "execute" message.
+
+"receive" removes...
+
+TODO continue me!
+
