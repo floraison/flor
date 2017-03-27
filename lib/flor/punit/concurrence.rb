@@ -78,7 +78,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
     @node['receiver'] ||= determine_receiver
     @node['merger'] ||= determine_merger
 
-    (@node['cnodes'] || []).delete(from)
+    cnodes.delete(from)
 
     return [] if @node['over']
 

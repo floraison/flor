@@ -73,6 +73,9 @@ class Flor::Node
   def point; @message['point']; end
   def from; @message['from']; end
 
+  def cnodes; @node['cnodes']; end
+  def cnodes_any?; cnodes && cnodes.any?; end
+
   def payload
     @message_payload ||= Payload.new(self, :message)
   end

@@ -38,13 +38,8 @@ class Flor::Procedure < Flor::Node
     @node['on_receive_last'] =
       apply(@node['on_error'].shift, [ @message ], tree[2])
 
-    nids = @node['cnodes']
-
-    if nids && nids.any?
-      wrap_cancel_children
-    else
-      do_receive # which should trigger 'on_receive_last'
-    end
+    return wrap_cancel_children if cnodes_any?
+    do_receive # which should trigger 'on_receive_last'
   end
 
   def debug_tree(nid=nil)
@@ -231,12 +226,8 @@ class Flor::Procedure < Flor::Node
   #
   def do_receive
 
-    from_child =
-      if cnodes = @node['cnodes']
-        cnodes.delete(from)
-      else
-        nil
-      end
+    from_child = nil
+    from_child = cnodes.delete(from) if cnodes_any?
 
     if node_closed?
       return receive_from_child_when_closed if from_child
@@ -273,7 +264,7 @@ class Flor::Procedure < Flor::Node
 
   def receive_from_child_when_closed
 
-    (@node['cnodes'].empty? && pop_on_receive_last) || wrap_reply
+    (cnodes.empty? && pop_on_receive_last) || wrap_reply
   end
 
   def receive_when_closed
@@ -528,7 +519,7 @@ class Flor::Procedure < Flor::Node
 
   def wrap_cancel_children
 
-    wrap_cancel_nodes(@node['cnodes'])
+    wrap_cancel_nodes(cnodes)
   end
 
   # The executor calls #do_cancel, while most procedure implementations
@@ -543,7 +534,6 @@ class Flor::Procedure < Flor::Node
 
     return cancel_when_ended if node_ended?
     return cancel_when_closed if node_closed?
-
     cancel
   end
 
@@ -561,19 +551,13 @@ class Flor::Procedure < Flor::Node
 
     close_node
 
-    cnodes = @node['cnodes']
-      #
-    if cnodes && cnodes.any?
-      wrap_cancel_children
-    else
-      wrap_cancelled
-    end
+    return wrap_cancel_children if cnodes_any?
+    wrap_cancelled
   end
 
   def kill
 
     return [] if node_ended?
-
     wrap_reply + wrap_cancel_children
   end
 end

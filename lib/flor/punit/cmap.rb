@@ -42,7 +42,7 @@ class Flor::Pro::Cmap < Flor::Procedure
 
     @node['col'] << payload['ret']
 
-    return [] if @node['cnodes'].any?
+    return [] if cnodes_any?
 
     payload['ret'] = @node['col']
 
