@@ -178,7 +178,22 @@ module Flor
       node['heat'] = heat = n.deref(t0)
       node['heap'] = heap = n.reheap(tree, heat)
 
-      if heap == 'task' && heat[0] == '_task'
+      # "exceptions"
+
+# TODO could those two ifs go upstream (top of this method)
+#      and thus become smaller
+#
+      if message['accept_symbol'] && node['heat'] == nil
+        #
+        # tag: et al
+
+        tree = node['tree'] = message['tree'] = [ '_dqs', tree[0], tree[2] ]
+
+        node['heat0'] = tree[0]
+        node['heat'] = heat = n.deref(tree[0])
+        node['heap'] = heap = n.reheap(tree, heat)
+
+      elsif heap == 'task' && heat[0] == '_task'
         #
         # rewrite `alpha` into `task alpha`
 
@@ -206,16 +221,6 @@ module Flor
         else
           node['failure'] ? '_err' : nil
         end
-
-      return ([{
-        'point' => 'receive',
-        'nid' => message['from'], 'from' => message['nid'],
-        'exid' => message['exid'],
-        'payload' => Flor.dupm(message['payload'], 'ret' => node['heat0'])
-      }]) if heap == nil && message['accept_symbol'] == true
-        #
-        # used when `3 tags: 'xyz'` (attributes on atoms)
-        # the 'accept_symbol' flag is set by the "_att" procedure
 
       return error_reply(
         node, message, "don't know how to apply #{node['heat0'].inspect}"
@@ -260,43 +265,47 @@ module Flor
           m['point'] == 'receive' &&
           m['from'] == head.message['nid'] &&
           m['nid'] == head.parent }
-      head.send(:end_node) if reply
+
+      ms += leave_node(head) if reply
 
       ms
     end
 
-    def remove_node(n)
+    def remove_node(node)
 
-      return unless n
+      node.h['removed'] = true # or should I use "status" => "removed" ?
+# TODO remove?
 
-      n['removed'] = true # or should I use "status" => "removed" ?
-
-      @unit.archive_node(exid, n)
+      @unit.archive_node(node.exid, node.h)
         # archiving is only active during testing
 
-      return if (n['closures'] || []).any?
+      return if (node.h['closures'] || []).any?
         # don't remove the node if it's a closure for some other nodes
 
-      nid = n['nid']
-
-      return if nid == '0'
+      return if node.nid == '0'
         # don't remove if it's the "root" node
 
-      @execution['nodes'].delete(nid)
+      @execution['nodes'].delete(node.nid)
     end
 
-    def leave(node, message)
+    def leave_tags(node)
 
-      ts = node && node['tags']
-      return [] unless ts && ts.any?
+      ts = node.h['tags']; return [] unless ts && ts.any?
 
       [
         { 'point' => 'left',
           'tags' => ts,
           'exid' => exid,
-          'nid' => node['nid'],
-          'payload' => message['payload'] }
+          'nid' => node.nid,
+          'payload' => node.message['payload'] }
       ]
+    end
+
+    def leave_node(node)
+
+      node.end
+      remove_node(node)
+      leave_tags(node)
     end
 
     # "receive_terminated_or_ceased",
@@ -315,21 +324,15 @@ module Flor
 
     def receive(message)
 
-      from = message['from']
-      fnode = @execution['nodes'][from]
-
-      remove_node(fnode)
-      messages = leave(fnode, message)
-
       nid = message['nid']
 
-      return messages + toc_messages(message) unless nid
+      return toc_messages(message) unless nid
 
       node = @execution['nodes'][nid]
 
-      return messages unless node
+      return [] unless node
 
-      messages + apply(node, message)
+      apply(node, message)
     end
 
     def error_reply(node, message, err)

@@ -55,6 +55,11 @@ class Flor::Procedure < Flor::Node
     puts Flor.detail_msg(@executor, msg)
   end
 
+  def end
+
+    end_node
+  end
+
   protected
 
   def counter_next(k)

@@ -24,8 +24,8 @@ describe Flor::Procedure do
         # preparation
 
         flon = %{
-          sequence    # 0
-            sequence  # 0_0 <-- our test point
+          sequence  # 0
+            1       # 0_0 <-- our test point
         }
 
         ms = @executor.launch(flon, until: '0_0 execute')
@@ -35,20 +35,11 @@ describe Flor::Procedure do
         # test
 
         ms = @executor.step(ms.first) # <-- feed execute message to 0_0
-        m = ms.first
 
         n = @executor.node('0_0')
+        m = ms.first
 
-        expect(n['nid']).to eq('0_0')
-        expect(n['parent']).to eq('0')
-        expect(n['heat0']).to eq('sequence')
-
-        expect(
-          F.to_s(n, :status)
-        ).to eq(%{
-          (status ended pt:execute fro:0 m:2)
-          (status o pt:execute)
-        }.ftrim)
+        expect(n).to eq(nil)
 
         expect(ms.size).to eq(1)
 
@@ -66,11 +57,12 @@ describe Flor::Procedure do
         # preparation
 
         flon = %{
-          sequence      # 0
-            sequence _  # 0_0 <-- our test point
+          sequence    # 0
+            sequence  # 0_0 <-- our test point
+              1       # 0_0_0
         }
 
-        ms = @executor.launch(flon, until: '0_0 receive')
+        ms = @executor.launch(flon, until: '0_0 receive', archive: true)
 
         expect(F.to_s(ms)).to eq('(msg 0_0 receive from:0_0_0)')
 
@@ -78,7 +70,7 @@ describe Flor::Procedure do
 
         ms = @executor.step(ms.first) # <-- feed the receive to 0_0
 
-        n = @executor.node('0_0')
+        n = @executor.archive['0_0']
 
         expect(n['nid']).to eq('0_0')
         expect(n['parent']).to eq('0')
@@ -116,7 +108,7 @@ describe Flor::Procedure do
             stall _  # 0_0 <-- our test point
         }
 
-        ms = @executor.launch(flon, until_after: '0_0 receive')
+        ms = @executor.launch(flon, until_after: '0_0 receive', archive: true)
 
         expect(ms).to eq([])
 
@@ -126,7 +118,7 @@ describe Flor::Procedure do
 
         ms = @executor.step(m) # <-- feed cancel message to node 0_0
 
-        n = @executor.node('0_0')
+        n = @executor.archive['0_0']
 
         expect(n['nid']).to eq('0_0')
         expect(n['parent']).to eq('0')
@@ -368,13 +360,13 @@ describe Flor::Procedure do
             sequence  # 0_0 <-- our test point
         }
 
-        ms = @executor.launch(flon, until: '0 receive')
+        ms = @executor.launch(flon, until: '0 receive', archive: true)
 
         expect(F.to_s(ms)).to eq('(msg 0 receive from:0_0)')
 
         # test
 
-        n = @executor.node('0_0')
+        n = @executor.archive['0_0']
 
         expect(
           F.to_s(n, :status)
@@ -405,13 +397,13 @@ describe Flor::Procedure do
             sequence  # 0_0 <-- our test point
         }
 
-        ms = @executor.launch(flon, until: '0 receive')
+        ms = @executor.launch(flon, until: '0 receive', archive: true)
 
         expect(F.to_s(ms)).to eq('(msg 0 receive from:0_0)')
 
         # test
 
-        n = @executor.node('0_0')
+        n = @executor.archive['0_0']
 
         expect(
           F.to_s(n, :status)
@@ -442,13 +434,13 @@ describe Flor::Procedure do
             sequence  # 0_0 <-- our test point
         }
 
-        ms = @executor.launch(flon, until: '0 receive')
+        ms = @executor.launch(flon, until: '0 receive', archive: true)
 
         expect(F.to_s(ms)).to eq('(msg 0 receive from:0_0)')
 
         # test
 
-        n = @executor.node('0_0')
+        n = @executor.archive['0_0']
 
         expect(
           F.to_s(n, :status)

@@ -16,6 +16,10 @@ class Flor::Pro::Att < Flor::Procedure
 
   def receive
 
+#if from == '0_1_0_0'
+#  p @message
+#  puts caller
+#end
     if children.size < 2
       receive_unkeyed
     else

@@ -186,7 +186,7 @@ end
 
       expect(
         ms1.collect { |m| m['point'] }
-      ).to eq(%w[ execute ] * 4 + %w[ receive ] * 4)
+      ).to eq(%w[ execute ] * 4 + %w[ receive ] * 3)
     end
 
     it 'may filter on heat:/ht:' do

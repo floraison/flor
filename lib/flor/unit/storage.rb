@@ -125,6 +125,7 @@ module Flor
 
       status =
         if ex['nodes']['0'] && ex['nodes']['0']['removed']
+# FIXME 'removed' might be gone
           'terminated'
         else
           'active'
