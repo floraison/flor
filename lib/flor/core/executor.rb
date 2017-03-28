@@ -271,10 +271,14 @@ module Flor
       ms
     end
 
-    def remove_node(node)
+    def leave_node(node)
 
-      node.h['removed'] = true # or should I use "status" => "removed" ?
-# TODO remove?
+      node.end
+      remove_node(node)
+      leave_tags(node)
+    end
+
+    def remove_node(node)
 
       @unit.archive_node(node.exid, node.h)
         # archiving is only active during testing
@@ -299,13 +303,6 @@ module Flor
           'nid' => node.nid,
           'payload' => node.message['payload'] }
       ]
-    end
-
-    def leave_node(node)
-
-      node.end
-      remove_node(node)
-      leave_tags(node)
     end
 
     # "receive_terminated_or_ceased",
