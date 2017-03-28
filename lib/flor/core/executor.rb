@@ -244,6 +244,9 @@ module Flor
     def remove_node(n)
 
       return unless n
+puts "-" * 80
+pp n
+puts "-" * 80
 
       n['removed'] = true # or should I use "status" => "removed" ?
 

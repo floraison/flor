@@ -3,6 +3,8 @@ class Flor::Pro::Att < Flor::Procedure
 
   name '_att'
 
+  SYMBOL_ATTS = %w[ flank ]
+
   def execute
 
     return wrap_reply if children == [ [ '_', [], tree[2] ] ]
@@ -10,6 +12,11 @@ class Flor::Pro::Att < Flor::Procedure
 
     pt = parent_node['tree']
     return wrap_reply if pt && pt[0] == '_apply'
+
+    if children.size == 1 && SYMBOL_ATTS.include?(children[0][0])
+      @node['tree'] = Flor.dup(tree)
+      @node['tree'][1] << [ '_boo', true, @node['tree'][2] ]
+    end
 
     execute_child(0, nil, 'accept_symbol' => children.size > 1)
   end
@@ -132,6 +139,20 @@ class Flor::Pro::Att < Flor::Procedure
 
     (parent_node['on_error'] ||= []) << oe
 
+    wrap_reply
+  end
+
+  def receive_flank
+
+    return wrap_reply unless Flor.true?(payload['ret'])
+
+    parent_node['oparent'] = parent_node.delete('parent')
+
+    wrap(
+      'nid' => parent_node['oparent'],
+      'from' => parent,
+      'payload' => parent_node['payload'],
+      'remove_from_cnodes' => false) +
     wrap_reply
   end
 end

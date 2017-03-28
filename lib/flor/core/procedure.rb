@@ -226,8 +226,12 @@ class Flor::Procedure < Flor::Node
   #
   def do_receive
 
-    from_child = nil
-    from_child = cnodes.delete(from) if cnodes_any?
+    from_child =
+      if cnodes_any? && @message['remove_from_cnodes'] != false
+        cnodes.delete(from)
+      else
+        nil
+      end
 
     if node_closed?
       return receive_from_child_when_closed if from_child
@@ -375,6 +379,7 @@ class Flor::Procedure < Flor::Node
 
     m['payload']['ret'] = ret if ret != :no
 
+# TODO unflank here?
     end_node if m['nid'] == parent && m['point'] == 'receive'
 
     [ m ]
