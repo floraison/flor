@@ -379,9 +379,6 @@ class Flor::Procedure < Flor::Node
 
     m['payload']['ret'] = ret if ret != :no
 
-# TODO unflank here?
-    end_node if m['nid'] == parent && m['point'] == 'receive'
-
     [ m ]
   end
 
