@@ -302,7 +302,7 @@ module Flor
     # "receive_terminated_or_ceased",
     # when message['nid'] is nil
     #
-    def receive_toc(message, fnode)
+    def receive_toc(message)
 
       msg =
         %w[
@@ -331,7 +331,7 @@ module Flor
 
       nid = message['nid']
 
-      return messages + receive_toc(message, fnode) unless nid
+      return messages + receive_toc(message) unless nid
 
       node = @execution['nodes'][nid]
 
