@@ -228,17 +228,41 @@ module Flor
 
       return [ head.rewrite ] if head.is_a?(Flor::Macro)
 
-      nid = message['nid']
       pt = message['point']
       pt = "do_#{pt}" if pt == 'receive' || pt == 'cancel'
 
-      if pt == 'execute'
-        head.pre_execute
-        pnode = @execution['nodes'][node['parent']]
-        cnodes = pnode && (pnode['cnodes'] ||= [])
-        cnodes << nid if cnodes && ( ! cnodes.include?(nid))
-      end
-      head.send(pt)
+      pre_execute(head)
+
+      ms = head.send(pt)
+
+      post_reply(head, ms)
+    end
+
+    def pre_execute(head)
+
+      return unless head.message['point'] == 'execute'
+
+      nid = head.nid
+
+      head.pre_execute
+      pnode = @execution['nodes'][head.parent]
+      cnodes = pnode && (pnode['cnodes'] ||= [])
+      cnodes << nid if cnodes && ( ! cnodes.include?(nid))
+    end
+
+    def post_reply(head, ms)
+
+      # flag the node as 'ended' if the message triggered it to
+      # reply to its parent
+
+      reply = ms
+        .find { |m|
+          m['point'] == 'receive' &&
+          m['from'] == head.message['nid'] &&
+          m['nid'] == head.parent }
+      head.send(:end_node) if reply
+
+      ms
     end
 
     def remove_node(n)

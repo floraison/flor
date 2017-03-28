@@ -375,8 +375,6 @@ class Flor::Procedure < Flor::Node
 
     m['payload']['ret'] = ret if ret != :no
 
-    end_node if m['nid'] == parent && m['point'] == 'receive'
-
     [ m ]
   end
 
