@@ -41,7 +41,7 @@ describe 'Flor unit' do
       ms = @unit.launch(flor, wait: '0_2 receive')
 
       exe = @unit.executions[exid: ms['exid']].data
-pp exe
+#pp exe
     end
   end
 end

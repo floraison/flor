@@ -268,9 +268,6 @@ module Flor
     def remove_node(n)
 
       return unless n
-puts "-" * 80
-pp n
-puts "-" * 80
 
       n['removed'] = true # or should I use "status" => "removed" ?
 
@@ -329,6 +326,7 @@ puts "-" * 80
       from = message['from']
       fnode = @execution['nodes'][from]
 
+#p message if message.has_key?('remove')
       remove_node(fnode)
       messages = leave(fnode, message)
 
