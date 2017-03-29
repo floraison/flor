@@ -37,16 +37,23 @@ describe Flor::Procedure do
         ms = @executor.step(ms.first) # <-- feed execute message to 0_0
 
         n = @executor.node('0_0')
-        m = ms.first
 
-        expect(n).to eq(nil)
+        expect(n).not_to eq(nil)
 
         expect(ms.size).to eq(1)
+
+        m = ms.first
 
         expect(m['point']).to eq('receive')
         expect(m['nid']).to eq('0')
         expect(m['from']).to eq('0_0')
         expect(m['sm']).to eq(2)
+
+        ms = @executor.step(ms.first)
+
+        n = @executor.node('0_0')
+
+        expect(n).to eq(nil)
       end
     end
 
@@ -70,25 +77,38 @@ describe Flor::Procedure do
 
         ms = @executor.step(ms.first) # <-- feed the receive to 0_0
 
-        n = @executor.archive['0_0']
+        n = @executor.node('0_0')
 
         expect(n['nid']).to eq('0_0')
         expect(n['parent']).to eq('0')
         expect(n['heat0']).to eq('sequence')
 
+        expect(ms.size).to eq(1)
+        expect(ms[0]['point']).to eq('receive')
+        expect(ms[0]['nid']).to eq('0')
+        expect(ms[0]['from']).to eq('0_0')
+
+        ms = @executor.step(ms.first)
+
+        n = @executor.node('0_0')
+
+        expect(n).to eq(nil)
+
+        n = @executor.archive['0_0']
+
         expect(
           F.to_s(n, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_0_0 m:4)
+          (status ended pt:receive fro:0_0 m:5)
           (status o pt:execute)
         }.ftrim)
 
         expect(ms.size).to eq(1)
 
-        expect(ms.first['point']).to eq('receive')
-        expect(ms.first['nid']).to eq('0')
-        expect(ms.first['from']).to eq('0_0')
-        expect(ms.first['sm']).to eq(4)
+        expect(ms[0]['point']).to eq('receive')
+        expect(ms[0]['nid']).to eq(nil)
+        expect(ms[0]['from']).to eq('0')
+        expect(ms[0]['sm']).to eq(5)
       end
     end
 
@@ -118,7 +138,7 @@ describe Flor::Procedure do
 
         ms = @executor.step(m) # <-- feed cancel message to node 0_0
 
-        n = @executor.archive['0_0']
+        n = @executor.node('0_0')
 
         expect(n['nid']).to eq('0_0')
         expect(n['parent']).to eq('0')
@@ -127,7 +147,7 @@ describe Flor::Procedure do
         expect(
           F.to_s(n, :status)
         ).to eq(%{
-          (status ended pt:cancel m:5)
+          (status closed pt:cancel m:5)
           (status o pt:execute)
         }.ftrim)
 
@@ -137,6 +157,18 @@ describe Flor::Procedure do
         expect(ms.first['nid']).to eq('0')
         expect(ms.first['from']).to eq('0_0')
         expect(ms.first['sm']).to eq(5)
+
+        ms = @executor.step(ms.first)
+
+        n = @executor.archive['0_0']
+
+        expect(
+          F.to_s(n, :status)
+        ).to eq(%{
+          (status ended pt:receive fro:0_0 m:6)
+          (status closed pt:cancel m:5)
+          (status o pt:execute)
+        }.ftrim)
       end
     end
 
@@ -335,7 +367,6 @@ describe Flor::Procedure do
         expect(
           F.to_s(seq, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_0_1-1 m:22)
           (status closed pt:failed fla:on-error fro:0_1_1 m:13)
           (status o pt:execute)
         }.ftrim)
@@ -343,6 +374,16 @@ describe Flor::Procedure do
         ms = @executor.step(ms.first)
 
         expect(F.to_s(ms)).to eq('(msg  terminated from:0)')
+
+        seq = @executor.node('0')
+
+        expect(
+          F.to_s(seq, :status)
+        ).to eq(%{
+          (status ended pt:receive fro:0 m:23)
+          (status closed pt:failed fla:on-error fro:0_1_1 m:13)
+          (status o pt:execute)
+        }.ftrim)
       end
     end
   end
@@ -351,113 +392,20 @@ describe Flor::Procedure do
 
     describe '#receive' do
 
-      it 'is rejected' do
-
-        # preparation
-
-        flon = %{
-          sequence    # 0
-            sequence  # 0_0 <-- our test point
-        }
-
-        ms = @executor.launch(flon, until: '0 receive', archive: true)
-
-        expect(F.to_s(ms)).to eq('(msg 0 receive from:0_0)')
-
-        # test
-
-        n = @executor.archive['0_0']
-
-        expect(
-          F.to_s(n, :status)
-        ).to eq(%{
-          (status ended pt:execute fro:0 m:2)
-          (status o pt:execute)
-        }.ftrim)
-
-        m = {
-          'point' => 'receive', 'exid' => n['exid'],
-          'nid' => '0_0', 'from' => '0_0_0',
-          'payload' => {} }
-
-        ms = @executor.step(m) # <-- feed receive message to ended 0_0
-
-        expect(ms).to eq([])
-      end
+      #it 'is rejected'
+        # because the node is gone
     end
 
     describe '#cancel' do
 
-      it 'is rejected' do
-
-        # preparation
-
-        flon = %{
-          sequence    # 0
-            sequence  # 0_0 <-- our test point
-        }
-
-        ms = @executor.launch(flon, until: '0 receive', archive: true)
-
-        expect(F.to_s(ms)).to eq('(msg 0 receive from:0_0)')
-
-        # test
-
-        n = @executor.archive['0_0']
-
-        expect(
-          F.to_s(n, :status)
-        ).to eq(%{
-          (status ended pt:execute fro:0 m:2)
-          (status o pt:execute)
-        }.ftrim)
-
-        m = {
-          'point' => 'cancel', 'exid' => n['exid'],
-          'nid' => '0_0', 'from' => '0',
-          'payload' => {} }
-
-        ms = @executor.step(m) # <-- feed receive message to ended 0_0
-
-        expect(ms).to eq([])
-      end
+      #it 'is rejected'
+        # because the node is gone
     end
 
     describe '#kill' do
 
-      it 'is rejected' do
-
-        # preparation
-
-        flon = %{
-          sequence    # 0
-            sequence  # 0_0 <-- our test point
-        }
-
-        ms = @executor.launch(flon, until: '0 receive', archive: true)
-
-        expect(F.to_s(ms)).to eq('(msg 0 receive from:0_0)')
-
-        # test
-
-        n = @executor.archive['0_0']
-
-        expect(
-          F.to_s(n, :status)
-        ).to eq(%{
-          (status ended pt:execute fro:0 m:2)
-          (status o pt:execute)
-        }.ftrim)
-
-        m = {
-          'point' => 'cancel', 'flavour' => 'kill', 'exid' => n['exid'],
-          'nid' => '0_0', 'from' => '0',
-          'payload' => {} }
-
-        ms = @executor.step(m) # <-- feed receive message to ended 0_0
-
-        expect(ms).to eq([])
-      end
+      #it 'is rejected'
+        # because the node is gone
     end
   end
 

@@ -238,9 +238,7 @@ module Flor
 
       pre_execute(head)
 
-      ms = head.send(pt)
-
-      post_reply(head, ms)
+      head.send(pt)
     end
 
     def pre_execute(head)
@@ -255,53 +253,61 @@ module Flor
       cnodes << nid if cnodes && ( ! cnodes.include?(nid))
     end
 
-    def post_reply(head, ms)
+    def receive(message)
 
-      # flag the node as 'ended' if the message triggered it to
-      # reply to its parent
+      messages = leave_node(message)
 
-      reply = ms
-        .find { |m|
-          m['point'] == 'receive' &&
-          m['from'] == head.message['nid'] &&
-          m['nid'] == head.parent }
+      nid = message['nid']
 
-      ms += leave_node(head) if reply
+      return messages + toc_messages(message) unless nid
+        # 'terminated' or 'ceased'
 
-      ms
+      node = @execution['nodes'][nid]
+
+      return messages unless node
+        # node gone...
+
+      messages + apply(node, message)
     end
 
-    def leave_node(node)
+    def leave_node(message)
 
-      node.end
-      remove_node(node)
-      leave_tags(node)
+      fnid = message['from']; return [] unless fnid
+      fnode = @execution['nodes'][fnid]; return [] unless fnode
+
+      remove_node(message, fnode)
+
+      leave_tags(message, fnode) # returns messages
     end
 
-    def remove_node(node)
+    def remove_node(message, node)
 
-      @unit.archive_node(node.exid, node.h)
-        # archiving is only active during testing
+      Flor::Procedure.new(self, node, message).end
 
-      return if (node.h['closures'] || []).any?
+      return if (node['closures'] || []).any?
         # don't remove the node if it's a closure for some other nodes
 
-      return if node.nid == '0'
+      nid = node['nid']
+
+      return if nid == '0'
         # don't remove if it's the "root" node
 
-      @execution['nodes'].delete(node.nid)
+      @unit.archive_node(message['exid'], node)
+        # archiving is only active during testing
+
+      @execution['nodes'].delete(nid)
     end
 
-    def leave_tags(node)
+    def leave_tags(message, node)
 
-      ts = node.h['tags']; return [] unless ts && ts.any?
+      ts = node['tags']; return [] unless ts && ts.any?
 
       [
         { 'point' => 'left',
           'tags' => ts,
           'exid' => exid,
-          'nid' => node.nid,
-          'payload' => node.message['payload'] }
+          'nid' => node['nid'],
+          'payload' => message['payload'] }
       ]
     end
 
@@ -312,21 +318,6 @@ module Flor
       m['point'] = message['from'] == '0' ? 'terminated' : 'ceased'
 
       [ m ]
-    end
-
-    def receive(message)
-
-      nid = message['nid']
-
-      return toc_messages(message) unless nid
-        # 'terminated' or 'ceased'
-
-      node = @execution['nodes'][nid]
-
-      return [] unless node
-        # node gone...
-
-      apply(node, message)
     end
 
     def error_reply(node, message, err)
