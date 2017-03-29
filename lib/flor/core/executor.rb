@@ -305,14 +305,9 @@ module Flor
       ]
     end
 
-    # "receive_terminated_or_ceased",
-    # when message['nid'] is nil
-    #
     def toc_messages(message)
 
-      m = %w[ exid nid from payload ]
-        .inject({}) { |h, k| h[k] = message[k] if message.has_key?(k); h }
-
+      m = message.select { |k, v| %w[ exid nid from payload ].include?(k) }
       m['sm'] = message['m']
       m['point'] = message['from'] == '0' ? 'terminated' : 'ceased'
 
@@ -324,10 +319,12 @@ module Flor
       nid = message['nid']
 
       return toc_messages(message) unless nid
+        # 'terminated' or 'ceased'
 
       node = @execution['nodes'][nid]
 
       return [] unless node
+        # node gone...
 
       apply(node, message)
     end
