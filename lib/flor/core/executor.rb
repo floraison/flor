@@ -236,21 +236,18 @@ module Flor
       pt = message['point']
       pt = "do_#{pt}" if pt == 'receive' || pt == 'cancel'
 
-      pre_execute(head)
+      pre_execute(head) if pt == 'execute'
 
       head.send(pt)
     end
 
     def pre_execute(head)
 
-      return unless head.message['point'] == 'execute'
-
-      nid = head.nid
-
       head.pre_execute
+
       pnode = @execution['nodes'][head.parent]
       cnodes = pnode && (pnode['cnodes'] ||= [])
-      cnodes << nid if cnodes && ( ! cnodes.include?(nid))
+      cnodes << head.nid if cnodes && ( ! cnodes.include?(head.nid))
     end
 
     def receive(message)
