@@ -221,6 +221,17 @@ class Flor::Procedure < Flor::Node
     @node['tree'] = [ tree[0], cn, tree[2] ]
   end
 
+  def do_execute
+
+    pre_execute
+
+    pnode = @execution['nodes'][parent]
+    cnodes = pnode && (pnode['cnodes'] ||= [])
+    cnodes << nid if cnodes && ( ! cnodes.include?(nid))
+
+    execute
+  end
+
   def execute
 
     receive

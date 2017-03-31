@@ -233,21 +233,7 @@ module Flor
 
       return [ head.rewrite ] if head.is_a?(Flor::Macro)
 
-      pt = message['point']
-      pt = "do_#{pt}" if pt == 'receive' || pt == 'cancel'
-
-      pre_execute(head) if pt == 'execute'
-
-      head.send(pt)
-    end
-
-    def pre_execute(head)
-
-      head.pre_execute
-
-      pnode = @execution['nodes'][head.parent]
-      cnodes = pnode && (pnode['cnodes'] ||= [])
-      cnodes << head.nid if cnodes && ( ! cnodes.include?(head.nid))
+      head.send("do_#{message['point']}")
     end
 
     def receive(message)
