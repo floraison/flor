@@ -69,9 +69,12 @@ module Flor
 
     o = opts[:out] || $stdout
 
-    (o.respond_to?(:log_colours?) ? o.log_colours? : o.tty?) ?
-      @colours :
-      @no_colours
+    col =
+      (o.respond_to?(:log_colours?) ? o.log_colours? : o.tty?) ||
+      ($0[-6..-1] == '/rspec' &&
+        (ARGV.include?('--tty') || ARGV.include?('--color')))
+
+    col ? @colours : @no_colours
   end
 
   def self.decolour(s)
