@@ -181,12 +181,20 @@ end
       }, wait: true)
 
       expect(
-        ms0.collect { |m| m['point'] }
-      ).to eq(%w[ execute ] * 2 + %w[ receive ] * 2)
+        F.to_s(ms0.reject { |m| ! m['consumed'] })
+      ).to eq(%{
+        (msg 0 execute)
+        (msg 0 receive from:0_0)
+      }.ftrim)
 
       expect(
-        ms1.collect { |m| m['point'] }
-      ).to eq(%w[ execute ] * 4 + %w[ receive ] * 3)
+        F.to_s(ms1.reject { |m| ! m['consumed'] })
+      ).to eq(%{
+        (msg 0 execute)
+        (msg 0_0 execute from:0)
+        (msg 0_0 receive from:0_0_0)
+        (msg 0 receive from:0_0)
+      }.ftrim)
     end
 
     it 'may filter on heat:/ht:' do
