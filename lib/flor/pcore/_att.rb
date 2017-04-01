@@ -23,10 +23,6 @@ class Flor::Pro::Att < Flor::Procedure
 
   def receive
 
-#if from == '0_1_0_0'
-#  p @message
-#  puts caller
-#end
     if children.size < 2
       receive_unkeyed
     else
@@ -150,13 +146,17 @@ class Flor::Pro::Att < Flor::Procedure
 
     return wrap_reply unless Flor.true?(payload['ret'])
 
+    parent_node['tree'] = lookup_tree(parent)
     parent_node['oparent'] = parent_node.delete('parent')
+      #
+      # make parent_node an orphan...
 
     wrap(
       'nid' => parent_node['oparent'],
       'from' => parent,
       'payload' => parent_node['payload'],
-      'remove_from_cnodes' => false) +
+      'remove_node' => false
+    ) +
     wrap_reply
   end
 end

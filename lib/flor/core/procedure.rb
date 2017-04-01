@@ -242,12 +242,10 @@ class Flor::Procedure < Flor::Node
   #
   def do_receive
 
-    from_child =
-      if cnodes_any? && @message['remove_from_cnodes'] != false
-        cnodes.delete(from)
-      else
-        nil
-      end
+    remove = @message['remove_node'] != false
+
+    from_child = nil
+    from_child = cnodes.delete(from) if cnodes_any? && remove
 
     if node_closed?
       return receive_from_child_when_closed if from_child

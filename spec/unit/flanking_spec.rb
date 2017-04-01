@@ -26,9 +26,9 @@ describe 'Flor unit' do
     @unit.shutdown
   end
 
-  describe 'flanking' do
+  describe 'a flanking node' do
 
-    it 'flanks burgers' do
+    it 'responds but is not removed from parent cnodes' do
 
       flor = %{
         sequence
@@ -41,7 +41,22 @@ describe 'Flor unit' do
       ms = @unit.launch(flor, wait: '0_2 receive')
 
       exe = @unit.executions[exid: ms['exid']].data
-#pp exe
+
+      n_0 = exe['nodes']['0']
+      n_0_0 = exe['nodes']['0_0']
+
+      expect(n_0_0).not_to eq(nil)
+      expect(n_0_0['parent']).to eq(nil)
+      expect(n_0_0['oparent']).to eq('0')
+      expect(n_0_0['tree'][0]).to eq('sequence')
+      expect(n_0_0['tree'][1][0]).to eq([ '_att', [ [ 'flank', [], 3 ] ], 3 ])
+
+      expect(n_0['cnodes']).to eq(%w[ 0_0 0_2 ])
+    end
+
+    context 'upon cancellation' do
+
+      it 'gets cancelled like other cnodes'
     end
   end
 end

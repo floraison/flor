@@ -78,6 +78,7 @@ module Flor
   end
 
   def self.decolour(s)
+
     s.gsub(/\x1b\[\d+(;\d+)?m/, '')
   end
 

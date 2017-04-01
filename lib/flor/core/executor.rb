@@ -258,6 +258,8 @@ module Flor
       fnid = message['from']; return [] unless fnid
       fnode = @execution['nodes'][fnid]; return [] unless fnode
 
+      return [] if message['remove_node'] == false
+
       remove_node(message, fnode)
 
       leave_tags(message, fnode) # returns messages

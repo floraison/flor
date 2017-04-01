@@ -142,6 +142,8 @@ module Flor
 
   def self.print_tree(tree, nid='0', opts={})
 
+    t0, t1, t2 = (tree || [])
+
     o = (opts[:out] ||= $stdout)
     _c = colours(opts)
 
@@ -150,14 +152,14 @@ module Flor
     headers = opts[:headers]; headers = true if headers.nil?
     headers = true if opts[:title]
 
-    h = "#{_c.yl}#{Flor.to_d(tree[0], compact: true)}"
-    c = tree[1].is_a?(Array) ? '' : " #{_c.yl}#{tree[1]}"
-    l = " #{_c.dg}L#{tree[2]}"
+    h = "#{_c.yl}#{Flor.to_d(t0, compact: true)}"
+    c = t1.is_a?(Array) ? '' : " #{_c.yl}#{t1}"
+    l = " #{_c.dg}L#{t2}"
 
     o.puts "#{ind}#{_c.dg}+--- #{opts[:title]}#{_c.rs}" if headers && nid == '0'
     o.puts "#{ind}#{_c.dg}| #{nid} #{h}#{c}#{l}#{_c.rs}"
-    if tree[1].is_a?(Array)
-      tree[1].each_with_index { |ct, i| print_tree(ct, "#{nid}_#{i}", opts) }
+    if t1.is_a?(Array)
+      t1.each_with_index { |ct, i| print_tree(ct, "#{nid}_#{i}", opts) }
     end
     o.puts "#{ind}#{_c.dg}.#{_c.rs}" if headers && nid == '0'
 
