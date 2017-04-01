@@ -282,8 +282,8 @@ describe Flor::Procedure do
           'exid' => exid, 'nid' => '0_0', 'from' => '0' });
 
         expect(F.to_s(ms)).to eq(%{
-          (msg 0 receive from:0_0)
           (msg 0_0_0 cancel from:0_0)
+          (msg 0 receive from:0_0)
         }.ftrim)
 
         cx = @executor.clone

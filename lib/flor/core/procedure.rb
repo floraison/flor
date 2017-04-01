@@ -541,14 +541,20 @@ class Flor::Procedure < Flor::Node
   #
   def do_cancel
 
-    return kill if @message['flavour'] == 'kill'
+    if @message['flavour'] == 'kill'
 
-    orl = @message['on_receive_last']
-    @node['on_receive_last'] = orl if orl
+      return [] if node_ended?
+      kill
 
-    return cancel_when_ended if node_ended?
-    return cancel_when_closed if node_closed?
-    cancel
+    else
+
+      orl = @message['on_receive_last']
+      @node['on_receive_last'] = orl if orl
+
+      return cancel_when_ended if node_ended?
+      return cancel_when_closed if node_closed?
+      cancel
+    end
   end
 
   def cancel_when_ended
@@ -571,8 +577,10 @@ class Flor::Procedure < Flor::Node
 
   def kill
 
-    return [] if node_ended?
-    wrap_reply + wrap_cancel_children
+    close_node
+
+    (cnodes_any? ? wrap_cancel_children : []) +
+    wrap_cancelled
   end
 end
 

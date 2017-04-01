@@ -198,7 +198,8 @@ describe 'Flor punit' do
       expect(
         F.to_s(seq, :status)
       ).to eq(%{
-        (status ended pt:cancel fla:kill fro:0_1_1 m:18)
+        (status ended pt:receive fro:0_0 m:21)
+        (status closed pt:cancel fla:kill fro:0_1_1 m:18)
         (status o pt:execute)
       }.ftrim)
 
@@ -207,7 +208,8 @@ describe 'Flor punit' do
       expect(
         F.to_s(sta, :status)
       ).to eq(%{
-        (status ended pt:cancel fro:0_0 m:21)
+        (status ended pt:receive fro:0_0_0 m:23)
+        (status closed pt:cancel fro:0_0 m:20)
         (status o pt:execute)
       }.ftrim)
 
@@ -238,8 +240,8 @@ describe 'Flor punit' do
         0_1_1:receive:
         0_0:cancel:kill
         0_1:receive:
-        0:receive:
         0_0_0:cancel:
+        0:receive:
         0:receive:
         0_0:receive:
         :receive:
