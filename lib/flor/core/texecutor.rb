@@ -72,6 +72,8 @@ module Flor
           #'ashes' => {},
           'start' => Flor.tstamp
         })
+
+      @unit.archive = {} if conf['archive']
     end
 
     def journal; @unit.journal; end
@@ -80,7 +82,7 @@ module Flor
     def launch(tree, opts={})
 
       @unit.opts = opts
-      @unit.archive = {} if opts[:archive]
+      @unit.archive ||= {} if opts[:archive]
 
       Flor.print_src(tree, opts) if conf['log_src']
 

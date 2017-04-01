@@ -12,7 +12,8 @@ describe Flor::Procedure do
 
   before :each do
 
-    @executor = Flor::TransientExecutor.new
+    @executor =
+      Flor::TransientExecutor.new('archive' => true)
   end
 
   context 'status open' do
@@ -69,7 +70,7 @@ describe Flor::Procedure do
               1       # 0_0_0
         }
 
-        ms = @executor.launch(flon, until: '0_0 receive', archive: true)
+        ms = @executor.launch(flon, until: '0_0 receive')
 
         expect(F.to_s(ms)).to eq('(msg 0_0 receive from:0_0_0)')
 
@@ -128,7 +129,7 @@ describe Flor::Procedure do
             stall _  # 0_0 <-- our test point
         }
 
-        ms = @executor.launch(flon, until_after: '0_0 receive', archive: true)
+        ms = @executor.launch(flon, until_after: '0_0 receive')
 
         expect(ms).to eq([])
 
