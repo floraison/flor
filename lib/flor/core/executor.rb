@@ -178,7 +178,22 @@ module Flor
       node['heat'] = heat = n.deref(t0)
       node['heap'] = heap = n.reheap(tree, heat)
 
-      if heap == 'task' && heat[0] == '_task'
+      # "exceptions"
+
+# TODO could those two ifs go upstream (top of this method)
+#      and thus become smaller
+#
+      if message['accept_symbol'] && node['heat'] == nil
+        #
+        # tag: et al
+
+        tree = node['tree'] = message['tree'] = [ '_dqs', tree[0], tree[2] ]
+
+        node['heat0'] = tree[0]
+        node['heat'] = heat = n.deref(tree[0])
+        node['heap'] = heap = n.reheap(tree, heat)
+
+      elsif heap == 'task' && heat[0] == '_task'
         #
         # rewrite `alpha` into `task alpha`
 
@@ -207,16 +222,6 @@ module Flor
           node['failure'] ? '_err' : nil
         end
 
-      return ([{
-        'point' => 'receive',
-        'nid' => message['from'], 'from' => message['nid'],
-        'exid' => message['exid'],
-        'payload' => Flor.dupm(message['payload'], 'ret' => node['heat0'])
-      }]) if heap == nil && message['accept_symbol'] == true
-        #
-        # used when `3 tags: 'xyz'` (attributes on atoms)
-        # the 'accept_symbol' flag is set by the "_att" procedure
-
       return error_reply(
         node, message, "don't know how to apply #{node['heat0'].inspect}"
       ) if heap == nil
@@ -228,67 +233,57 @@ module Flor
 
       return [ head.rewrite ] if head.is_a?(Flor::Macro)
 
-      pt = message['point']
-      pt = "do_#{pt}" if pt == 'receive' || pt == 'cancel'
-
-      pre_execute(head)
-
-      ms = head.send(pt)
-
-      post_reply(head, ms)
+      head.send("do_#{message['point']}")
     end
 
-    def pre_execute(head)
+    def receive(message)
 
-      return unless head.message['point'] == 'execute'
+      messages = leave_node(message)
 
-      nid = head.nid
+      nid = message['nid']
 
-      head.pre_execute
-      pnode = @execution['nodes'][head.parent]
-      cnodes = pnode && (pnode['cnodes'] ||= [])
-      cnodes << nid if cnodes && ( ! cnodes.include?(nid))
+      return messages + toc_messages(message) unless nid
+        # 'terminated' or 'ceased'
+
+      node = @execution['nodes'][nid]
+
+      return messages unless node
+        # node gone...
+
+      messages + apply(node, message)
     end
 
-    def post_reply(head, ms)
+    def leave_node(message)
 
-      # flag the node as 'ended' if the message triggered it to
-      # reply to its parent
+      fnid = message['from']; return [] unless fnid
+      fnode = @execution['nodes'][fnid]; return [] unless fnode
 
-      reply = ms
-        .find { |m|
-          m['point'] == 'receive' &&
-          m['from'] == head.message['nid'] &&
-          m['nid'] == head.parent }
-      head.send(:end_node) if reply
+      remove_node(message, fnode)
 
-      ms
+      leave_tags(message, fnode) # returns messages
     end
 
-    def remove_node(n)
+    def remove_node(message, node)
 
-      return unless n
+      Flor::Procedure.new(self, node, message).end
 
-      n['removed'] = true # or should I use "status" => "removed" ?
-
-      @unit.archive_node(exid, n)
-        # archiving is only active during testing
-
-      return if (n['closures'] || []).any?
+      return if (node['closures'] || []).any?
         # don't remove the node if it's a closure for some other nodes
 
-      nid = n['nid']
+      nid = node['nid']
 
       return if nid == '0'
         # don't remove if it's the "root" node
 
+      @unit.archive_node(message['exid'], node)
+        # archiving is only active during testing
+
       @execution['nodes'].delete(nid)
     end
 
-    def leave(node, message)
+    def leave_tags(message, node)
 
-      ts = node && node['tags']
-      return [] unless ts && ts.any?
+      ts = node['tags']; return [] unless ts && ts.any?
 
       [
         { 'point' => 'left',
@@ -299,46 +294,13 @@ module Flor
       ]
     end
 
-    # "receive_terminated_or_ceased",
-    # when message['nid'] is nil
-    #
-    def receive_toc(message, fnode)
+    def toc_messages(message)
 
-      msg =
-        %w[
-          exid nid from payload
-        ].inject({}) { |h, k| h[k] = message[k] if message.has_key?(k); h }
+      m = message.select { |k, v| %w[ exid nid from payload ].include?(k) }
+      m['sm'] = message['m']
+      m['point'] = message['from'] == '0' ? 'terminated' : 'ceased'
 
-      msg['sm'] = message['m']
-
-      msg['point'] =
-        if message['from'] == '0' || @execution['nodes'].empty? # termination?
-          'terminated'
-        else
-          'ceased'
-        end
-
-      [ msg ]
-    end
-
-    def receive(message)
-
-      from = message['from']
-      fnode = @execution['nodes'][from]
-
-#p message if message.has_key?('remove')
-      remove_node(fnode)
-      messages = leave(fnode, message)
-
-      nid = message['nid']
-
-      return messages + receive_toc(message, fnode) unless nid
-
-      node = @execution['nodes'][nid]
-
-      return messages unless node
-
-      messages + apply(node, message)
+      [ m ]
     end
 
     def error_reply(node, message, err)

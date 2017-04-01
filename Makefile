@@ -55,6 +55,9 @@ start:
 backup_notes_and_todos:
 	tar czvf flor_notes_$(shell date "+%Y%m%d_%H%M").tgz .notes.md .todo.md && mv flor_notes_*.tgz ~/Dropbox/backup/
 ba: backup_notes_and_todos
+backup_src:
+	cd .. && tar czvf flor_$(shell date "+%Y%m%d_%H%M").tgz flor && mv flor_*.tgz ~/Dropbox/backup/
+bak: backup_src
 
 t:
 	tree spec/unit/loader

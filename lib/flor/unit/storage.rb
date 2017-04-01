@@ -123,12 +123,11 @@ module Flor
 
     def put_execution(ex)
 
-      status =
-        if ex['nodes']['0'] && ex['nodes']['0']['removed']
-          'terminated'
-        else
-          'active'
-        end
+      root_status =
+        ex['nodes']['0'] &&
+        ex['nodes']['0']['status'].last['status']
+
+      status = (root_status == 'ended') ? 'terminated' : 'active'
 
       id = ex['id']
 
