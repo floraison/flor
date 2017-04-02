@@ -128,7 +128,7 @@ class Flor::Pro::Att < Flor::Procedure
     m = wrap_cancel('nid' => n, 'flavour' => 'timeout').first
     t = payload['ret']
 
-    wrap_schedule('type' => 'in', 'string' => t, 'bnid' => n, 'message' => m) +
+    wrap_schedule('type' => 'in', 'string' => t, 'nid' => n, 'message' => m) +
     wrap_reply
   end
 

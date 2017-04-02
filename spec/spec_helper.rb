@@ -117,6 +117,24 @@ RSpec::Matchers.define :comprise do |o|
   end
 end
 
+RSpec::Matchers.define :include_msg do |o|
+
+  h = o.inject({}) { |hh, (k, v)| hh[k.to_s] = v; hh }
+
+  match do |actual|
+
+    return false unless actual.is_a?(Array)
+    return false unless actual.all? { |e| e.is_a?(Hash) }
+
+    !! actual.find { |m| h.all? { |k, v| m.has_key?(k) && m[k] == v } }
+  end
+
+  failure_message do |actual|
+
+    "did not find message matching #{Flor.to_d(h)}"
+  end
+end
+
 
 class RSpec::Core::ExampleGroup
 

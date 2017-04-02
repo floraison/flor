@@ -32,16 +32,14 @@ class Flor::Pro::Schedule < Flor::Procedure
       @node['atts'].find { |k, v| %w[ cron at in every ].include?(k) } ||
       @node['atts'].find { |k, v| k == nil }
 
-    bi = parent || '0' # bound to nid
-
     fail ArgumentError.new(
       "missing a schedule"
     ) unless s
 
     @node['scheduled'] = true
 
-    wrap_schedule('type' => t, 'string' => s, 'bnid' => bi, 'message' => m) +
-    wrap_reply
+    wrap_schedule('type' => t, 'string' => s, 'message' => m) +
+    flank
   end
 
   def receive

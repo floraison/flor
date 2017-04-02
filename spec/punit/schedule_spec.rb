@@ -14,6 +14,7 @@ describe 'Flor punit' do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf[:unit] = 'pu_schedule'
+    @unit.hooker.add('journal', Flor::Journal)
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
@@ -37,16 +38,19 @@ describe 'Flor punit' do
       r = @unit.launch(flor, wait: 'end')
       exid = r['exid']
 
+      # check execution
+
       exe = @unit.executions[exid: exid]
 
       expect(exe.failed?).to eq(false)
 
       expect(exe).not_to eq(nil)
 
-      ts = @unit.timers.all
-      t = ts.first
+      # check timer
 
-      expect(ts.count).to eq(1)
+      expect(@unit.timers.count).to eq(1)
+
+      t = @unit.timers.first
 
       expect(t.exid).to eq(exid)
       expect(t.type).to eq('cron')
@@ -57,6 +61,19 @@ describe 'Flor punit' do
 
       expect(td['message']['point']).to eq('execute')
       expect(td['message']['tree'][0]).to eq('_apply')
+
+      # check nodes 0 still knows 0_0, 0_0 is flanking 0
+
+      n_0 = exe.nodes['0']
+
+      expect(n_0['status'].last['status']).to eq(nil) # open
+      expect(n_0['cnodes']).to eq(%w[ 0_0 0_1 ]) # 0_0 is flanking
+
+      n_0_0 = exe.nodes['0_0']
+
+      expect(n_0_0['status'].last['status']).to eq(nil) # open
+      expect(n_0_0['parent']).to eq(nil)
+      expect(n_0_0['oparent']).to eq('0') # original parent
     end
 
     context 'cron' do
@@ -110,14 +127,18 @@ describe 'Flor punit' do
 
         exid = r['exid']
 
-        @unit.wait(exid, 'end')
-
         @unit.cancel(exid: r['exid'], nid: '0')
 
-        @unit.wait(exid, 'detask')
-        r = @unit.wait(exid, 'terminated')
+        @unit.wait(exid, 'end'); sleep 0.4
 
-        expect(r['point']).to eq('terminated')
+#puts Flor.to_s(@unit.journal)
+        j = @unit.journal
+        expect(j).to include_msg(point: 'terminated')
+        expect(j).to include_msg(point: 'trigger', nid: '0_0')
+        expect(j).to include_msg(point: 'detask', nid: '0_0_1_1-1')
+        expect(j).to include_msg(point: 'ceased', from: '0_0')
+
+        expect(@unit.timers.count).to eq(0)
       end
     end
   end

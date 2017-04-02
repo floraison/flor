@@ -374,8 +374,8 @@ module Flor
           .insert(
             domain: Flor.domain(message['exid']),
             exid: message['exid'],
-            nid: message['bnid'],
-            onid: message['nid'],
+            nid: message['nid'],
+            onid: message['onid'] || message['nid'],
             type: type,
             schedule: string,
             ntime: next_time,
