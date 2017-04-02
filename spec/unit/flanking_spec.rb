@@ -38,7 +38,7 @@ describe 'Flor unit' do
           stall _
       }
 
-      r = @unit.launch(flor, wait: '0_2 receive')
+      r = @unit.launch(flor, wait: 'end')
 
       exe = @unit.executions[exid: r['exid']].data
 
@@ -65,7 +65,7 @@ describe 'Flor unit' do
             stall _
         }
 
-        r = @unit.launch(flor, wait: '0_1 receive')
+        r = @unit.launch(flor, wait: 'end')
         exid = r['exid']
 
         exe = @unit.executions[exid: exid].data
@@ -88,16 +88,22 @@ describe 'Flor unit' do
           (status o pt:execute)
         }.ftrim)
 
-#pp @unit.journal
-# TODO add
-#   [ ] flanking
-#       node with parent: nil and oparent: 0 should not "reply" to nil
-#       ```
-#       00:12:59.075 tubi rec m22s20r2>2 from 0 f.ret null
-#       00:12:59.076 tubi rec m23s21r2>2 from 0_0 f.ret true
-#       00:12:59.076 tubi cea m24s23r2>2 from 0_0 f.ret true
-#       00:12:59.076 tubi ter m25s22r2>2 from 0 f.ret null
-#       ```
+
+        expect(
+          Flor.to_s(
+            @unit.journal.drop_while { |m| m['point'] != 'end' }[1..-1])
+        ).to eq(%{
+          (msg 0 cancel)
+          (msg 0_0 cancel from:0)
+          (msg 0_1 cancel from:0)
+          (msg 0_0_1 cancel from:0_0)
+          (msg 0 receive from:0_1)
+          (msg 0_0 receive from:0_0_1)
+          (msg  receive from:0)
+          (msg  receive from:0_0)
+          (msg  ceased from:0_0)
+          (msg  terminated from:0)
+        }.ftrim)
       end
     end
   end

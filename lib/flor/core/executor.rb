@@ -236,6 +236,15 @@ module Flor
       head.send("do_#{message['point']}")
     end
 
+    def toc_messages(message)
+
+      m = message.select { |k, v| %w[ exid nid from payload ].include?(k) }
+      m['sm'] = message['m']
+      m['point'] = message['from'] == '0' ? 'terminated' : 'ceased'
+
+      [ m ]
+    end
+
     def receive(message)
 
       messages = leave_node(message)
@@ -294,15 +303,6 @@ module Flor
           'nid' => node['nid'],
           'payload' => message['payload'] }
       ]
-    end
-
-    def toc_messages(message)
-
-      m = message.select { |k, v| %w[ exid nid from payload ].include?(k) }
-      m['sm'] = message['m']
-      m['point'] = message['from'] == '0' ? 'terminated' : 'ceased'
-
-      [ m ]
     end
 
     def error_reply(node, message, err)
