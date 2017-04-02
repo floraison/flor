@@ -37,8 +37,9 @@ module Flor
 
   def self.node_status_to_s(n)
 
-    s = StringIO.new
     stas = n['status'].reverse
+
+    s = StringIO.new
     while sta = stas.shift
       s << '(status ' << (sta['status'] || 'o') # o for open
       s << ' pt:' << sta['point']

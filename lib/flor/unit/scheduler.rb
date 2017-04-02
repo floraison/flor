@@ -65,7 +65,7 @@ module Flor
         #
       Kernel.const_set(c, self) if c
 
-      @archive = nil # used, so far, only for testing
+      @archive = @conf['archive'] ? {} : nil # used, so far, only for testing
     end
 
     def name
@@ -305,6 +305,11 @@ module Flor
     def archive_node(exid, node)
 
       (@archive[exid] ||= {})[node['nid']] = Flor.dup(node) if @archive
+    end
+
+    def archived_node(exid, nid)
+
+      (@archive[exid] || {})[nid]
     end
 
     def executor(exid)
