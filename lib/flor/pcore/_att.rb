@@ -145,18 +145,9 @@ class Flor::Pro::Att < Flor::Procedure
   def receive_flank
 
     return wrap_reply unless Flor.true?(payload['ret'])
+    return wrap_reply unless parent_node
 
-    parent_node['tree'] = lookup_tree(parent)
-    parent_node['oparent'] = parent_node.delete('parent')
-      #
-      # make parent_node an orphan...
-
-    wrap(
-      'nid' => parent_node['oparent'],
-      'from' => parent,
-      'payload' => parent_node['payload'],
-      'remove_node' => false
-    ) +
+    Flor::Procedure.new(@executor, parent_node, @message).flank +
     wrap_reply
   end
 end

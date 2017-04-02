@@ -13,6 +13,10 @@ The job of the executors is to process messages. Each message has a "point", the
 ### "m"
 ### "sm"
 
+### "remove_node"
+
+When `false`, the emitting node is not removed from the receiving node's `cnodes` list. Using by flanking nodes.
+
 ## messages by point
 
 ### "execute"

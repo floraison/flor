@@ -60,6 +60,18 @@ class Flor::Procedure < Flor::Node
     end_node
   end
 
+  def flank
+
+    @node['tree'] = Flor.dup(tree)
+    @node['oparent'] = @node.delete('parent')
+      #
+      # forget parent...
+
+    wrap(
+      'nid' => @node['oparent'],
+      'remove_node' => false)
+  end
+
   protected
 
   def counter_next(k)
