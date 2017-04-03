@@ -43,6 +43,7 @@ describe 'Flor punit' do
       exe = @unit.executions[exid: exid]
 
       expect(exe).not_to eq(nil)
+      expect(exe.status).to eq('active')
       expect(exe.failed?).to eq(false)
 
       # check timer
@@ -73,6 +74,59 @@ describe 'Flor punit' do
       expect(n_0_0['status'].last['status']).to eq(nil) # open
       expect(n_0_0['parent']).to eq(nil)
       expect(n_0_0['fparent']).to eq('0') # original parent
+    end
+
+    it 'behaves correctly as root node' do
+
+      flor = %q{
+        schedule cron: '0 0 1 jan *'
+          def msg \ alpha
+      }
+
+      r = @unit.launch(flor, wait: 'end')
+      exid = r['exid']
+
+      # check execution
+
+      exe = @unit.executions[exid: exid]
+
+      expect(exe).not_to eq(nil)
+      expect(exe.status).to eq('active')
+      expect(exe.failed?).to eq(false)
+      expect(exe.nodes.keys).to eq(%w[ 0 ])
+
+      # check nodes 0 still knows 0_0, 0_0 is flanking 0
+
+      n_0 = exe.nodes['0']
+
+      expect(n_0['status'].last['status']).to eq(nil) # open
+
+      # check journal
+
+      j = @unit.journal
+
+      expect(j).not_to include_msg(point: 'terminated')
+
+      # check timer
+
+      expect(@unit.timers.count).to eq(1)
+
+      t = @unit.timers.first
+
+      expect(t.exid).to eq(exid)
+      expect(t.type).to eq('cron')
+      expect(t.schedule).to eq('0 0 1 jan *')
+      expect(t.ntime_t.localtime.year).to eq(Time.now.utc.year + 1)
+
+      td = t.data
+
+      expect(td['message']['point']).to eq('execute')
+      expect(td['message']['tree'][0]).to eq('_apply')
+
+      #
+      # cancel and verify it terminates correctly
+
+# TODO
     end
 
     context 'cron' do

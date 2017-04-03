@@ -238,6 +238,8 @@ module Flor
 
     def toc_messages(message)
 
+      return [] if message['remove_node'] == false
+
       m = message.select { |k, v| %w[ exid nid from payload ].include?(k) }
       m['sm'] = message['m']
       m['point'] = message['from'] == '0' ? 'terminated' : 'ceased'
