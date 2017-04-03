@@ -90,6 +90,9 @@ module Flor
     fr = m['from'] ? " from #{m['from']}" : ''
     a << fr
 
+    rn = m['remove_node'] == false ? " #{_c.lg}rn #{_c.gr}false" : ''
+    a << rn
+
     rt = ret_to_s(executor, m, _c)
     rt = rt.length > 0 ? " #{_c.lg}f.ret #{rt}" : ''
     a << rt
