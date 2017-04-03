@@ -42,9 +42,8 @@ describe 'Flor punit' do
 
       exe = @unit.executions[exid: exid]
 
-      expect(exe.failed?).to eq(false)
-
       expect(exe).not_to eq(nil)
+      expect(exe.failed?).to eq(false)
 
       # check timer
 
@@ -73,7 +72,7 @@ describe 'Flor punit' do
 
       expect(n_0_0['status'].last['status']).to eq(nil) # open
       expect(n_0_0['parent']).to eq(nil)
-      expect(n_0_0['oparent']).to eq('0') # original parent
+      expect(n_0_0['fparent']).to eq('0') # original parent
     end
 
     context 'cron' do

@@ -134,10 +134,10 @@ module Flor
 
       if hook.is_a?(Flor::Trap) && o(opts, :subnid)
         if node = executor.node(message['nid'], true)
-          return false unless node.descendant_of?(hook.nid, true)
+          return false unless node.descendant_of?(hook.bnid, true)
           node = node.h
         else
-          return false if hook.nid != '0'
+          return false if hook.bnid != '0'
         end
       end
 
@@ -145,7 +145,6 @@ module Flor
         return false unless node ||= executor.node(message['nid'])
         return false unless hps.include?(node['heap'])
       end
-#p :yyy if hook.is_a?(Flor::Trap)
 
       if hts = o(opts, :heat, :ht, [])
         return false unless node ||= executor.node(message['nid'])

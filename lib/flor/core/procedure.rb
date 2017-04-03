@@ -63,13 +63,11 @@ class Flor::Procedure < Flor::Node
   def flank
 
     @node['tree'] = Flor.dup(tree)
-    @node['oparent'] = @node.delete('parent')
+    @node['fparent'] = @node.delete('parent')
       #
-      # forget parent...
+      # flanked parent...
 
-    wrap(
-      'nid' => @node['oparent'],
-      'remove_node' => false)
+    wrap('nid' => @node['fparent'], 'remove_node' => false)
   end
 
   protected

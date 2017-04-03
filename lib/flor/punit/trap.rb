@@ -48,7 +48,8 @@ class Flor::Pro::Trap < Flor::Procedure
       end
 
     tra = {}
-    tra['bnid'] = parent || '0' # shouldn't it be [the real] root?
+    tra['nid'] = nid
+    tra['bnid'] = parent || '0'
     tra['points'] = points
     tra['tags'] = tags
     tra['heaps'] = heaps
@@ -65,8 +66,8 @@ class Flor::Pro::Trap < Flor::Procedure
 
     @node['trapped'] = true
 
-    wrap('point' => 'trap','nid' => nid, 'trap' => tra) +
-    (fun ? wrap_reply : [])
+    wrap('point' => 'trap', 'nid' => nid, 'trap' => tra) +
+    (fun ? flank : [])
   end
 
   def receive_last

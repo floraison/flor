@@ -13,7 +13,8 @@ describe 'Flor punit' do
   before :each do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
-    @unit.conf['unit'] = 'u'
+    @unit.conf['unit'] = 'pu_trap'
+    @unit.hooker.add('journal', Flor::Journal)
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
@@ -26,13 +27,62 @@ describe 'Flor punit' do
 
   describe 'trap' do
 
+    it 'flanks its parent node' do
+
+      flor = %q{
+        trap 'nada'
+          def msg \ noret _
+        stall _
+      }
+
+      r = @unit.launch(flor, wait: 'end')
+      exid = r['exid']
+
+      # check execution
+
+      exe = @unit.executions[exid: exid]
+
+      expect(exe).not_to eq(nil)
+      expect(exe.failed?).to eq(false)
+
+      # check nodes
+
+      n_0 = exe.nodes['0']
+      n_0_0 = exe.nodes['0_0']
+
+      expect(n_0['status'].last['status']).to eq(nil) # open
+      expect(n_0['cnodes']).to eq(%w[ 0_0 0_1 ]) # 0_0 is flanking
+
+      expect(n_0_0['status'].last['status']).to eq(nil) # open
+      expect(n_0_0['parent']).to eq(nil)
+      expect(n_0_0['fparent']).to eq('0') # original parent
+
+      # check trap record
+
+      expect(@unit.traps.count).to eq(1)
+
+      t = @unit.traps.first
+
+#pp t.values.reject { |k, v| k == :content }
+#pp t.data
+      expect(t.exid).to eq(exid)
+      expect(t.domain).to eq('test')
+      expect(t.nid).to eq('0_0')
+      expect(t.onid).to eq('0_0')
+      expect(t.status).to eq('active')
+      expect(t.data['message']['point']).to eq('execute')
+      expect(t.data['message']['nid']).to eq('0_0_1')
+      expect(t.data['message']['from']).to eq('0_0')
+      expect(t.data['message']['tree'][0]).to eq('_apply')
+    end
+
     it 'traps messages' do
 
       flor = %q{
         sequence
           trap 'terminated'
-            def msg \ trace "t:$(msg.from)"
-          trace "s:$(nid)"
+            def msg \ trace "terminated(f:$(msg.from))"
+          trace "here($(nid))"
       }
 
       r = @unit.launch(flor, wait: true)
@@ -44,7 +94,7 @@ describe 'Flor punit' do
       expect(
         @unit.traces.collect(&:text).join(' ')
       ).to eq(
-        's:0_1_0_0 t:0'
+        'here(0_1_0_0) terminated(f:0)'
       )
     end
 
@@ -124,8 +174,9 @@ describe 'Flor punit' do
 
       tra = @unit.traps.first
 
-      expect(tra.nid).to eq('0')
+      expect(tra.nid).to eq('0_0')
       expect(tra.onid).to eq('0_0')
+      expect(tra.bnid).to eq('0')
     end
 
     it 'has access to variables in the parent node' do
@@ -146,16 +197,24 @@ describe 'Flor punit' do
 
     it 'is removed at the end of the execution' do
 
+# TODO rethink me...
       expect(@unit.traps.count).to eq(0)
 
       r = @unit.launch(%q{
-        trap tag: 't0' \ def msg \ trace "t0_$(msg.exid)"
+        sequence
+          trap tag: 't0' \ def msg \ trace "t0_$(msg.exid)"
       }, wait: true)
 
       expect(r['point']).to eq('terminated')
 
       sleep 0.4
 
+      exe = @unit.executions[exid: r['exid']]
+
+#pp exe.data['nodes']
+      expect(exe.status).to eq('terminated')
+
+#@unit.traps.each { |t| pp t.values }
       expect(@unit.traps.count).to eq(0)
     end
 
