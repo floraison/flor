@@ -131,7 +131,16 @@ RSpec::Matchers.define :include_msg do |o|
 
   failure_message do |actual|
 
-    "did not find message matching #{Flor.to_d(h)}"
+    "did not find message matching #{Flor.message_to_s(h)}\n" +
+    "  in\n" +
+    actual.collect { |m| "    #{Flor.message_to_s(m)}\n" }.join
+  end
+
+  failure_message_when_negated do |actual|
+
+    "did find message #{Flor.message_to_s(h)}\n" +
+    "  in\n" +
+    actual.collect { |m| "    #{Flor.message_to_s(m)}\n" }.join
   end
 end
 
