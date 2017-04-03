@@ -218,6 +218,28 @@ describe 'Flor punit' do
       expect(@unit.traps.count).to eq(0)
     end
 
+    it 'is removed at the end of the execution (trap at root)' do
+
+# TODO rethink me...
+      expect(@unit.traps.count).to eq(0)
+
+      r = @unit.launch(%q{
+        trap tag: 't0' \ def msg \ trace "t0_$(msg.exid)"
+      }, wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      sleep 0.4
+
+      exe = @unit.executions[exid: r['exid']]
+
+#pp exe.data['nodes']
+      expect(exe.status).to eq('terminated')
+
+#@unit.traps.each { |t| pp t.values }
+      expect(@unit.traps.count).to eq(0)
+    end
+
     context 'count:' do
 
       it 'determines how many times a trap triggers at max' do

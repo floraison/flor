@@ -165,7 +165,7 @@ module Flor
                 domain: Flor.domain(ex['exid']),
                 exid: ex['exid'],
                 content: data,
-                status: 'active',
+                status: status,
                 ctime: now,
                 mtime: now,
                 cunit: u,
