@@ -126,7 +126,24 @@ describe 'Flor punit' do
       #
       # cancel and verify it terminates correctly
 
-# TODO
+      @unit.cancel(exid: exid, nid: '0')
+
+      r = @unit.wait(exid, 'terminated')
+
+      expect(
+        @unit.journal.select { |m| m['point'] == 'terminated' }.count
+      ).to eq(
+        1
+      )
+
+      sleep 0.350
+
+      exe = @unit.executions[exid: exid]
+
+      expect(exe).not_to eq(nil)
+      expect(exe.status).to eq('terminated')
+      expect(exe.failed?).to eq(false)
+      expect(exe.nodes.keys).to eq(%w[ 0 ])
     end
 
     context 'cron' do
@@ -189,7 +206,7 @@ describe 'Flor punit' do
         expect(j).to include_msg(point: 'terminated')
         expect(j).to include_msg(point: 'trigger', nid: '0_0')
         expect(j).to include_msg(point: 'detask', nid: '0_0_1_1-1')
-        expect(j).to include_msg(point: 'ceased', from: '0_0')
+        expect(j).not_to include_msg(point: 'ceased', from: '0_0')
 
         expect(@unit.timers.count).to eq(0)
       end

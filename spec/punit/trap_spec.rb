@@ -218,26 +218,31 @@ describe 'Flor punit' do
       expect(@unit.traps.count).to eq(0)
     end
 
-    it 'is removed at the end of the execution (trap at root)' do
-
-# TODO rethink me...
-      expect(@unit.traps.count).to eq(0)
+    it 'behaves as expect when at the root' do
 
       r = @unit.launch(%q{
         trap tag: 't0' \ def msg \ trace "t0_$(msg.exid)"
-      }, wait: true)
+      }, wait: '0 trap')
 
-      expect(r['point']).to eq('terminated')
+      expect(r['point']).to eq('trap')
 
-      sleep 0.4
+      exid = r['exid']
 
-      exe = @unit.executions[exid: r['exid']]
+      sleep 0.350
 
-#pp exe.data['nodes']
-      expect(exe.status).to eq('terminated')
+      exe = @unit.executions[exid: exid]
 
-#@unit.traps.each { |t| pp t.values }
-      expect(@unit.traps.count).to eq(0)
+      expect(exe.status).to eq('active')
+      expect(exe.nodes.keys).to eq(%w[ 0 ])
+
+      expect(@unit.traps.count).to eq(1)
+
+      t = @unit.traps.first
+
+      expect(t.exid).to eq(exid)
+      expect(t.nid).to eq('0')
+      expect(t.onid).to eq('0')
+      expect(t.bnid).to eq('0')
     end
 
     context 'count:' do

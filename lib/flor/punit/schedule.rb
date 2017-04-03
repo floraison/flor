@@ -47,10 +47,5 @@ class Flor::Pro::Schedule < Flor::Procedure
     return [] if @node['scheduled']
     super
   end
-
-  def cancel
-
-    super + wrap_reply('payload' => node_payload.current)
-  end
 end
 
