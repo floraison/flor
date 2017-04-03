@@ -130,13 +130,13 @@ describe 'Flor punit' do
 
       r = @unit.wait(exid, 'terminated')
 
+      sleep 0.350
+
       expect(
         @unit.journal.select { |m| m['point'] == 'terminated' }.count
       ).to eq(
         1
       )
-
-      sleep 0.350
 
       exe = @unit.executions[exid: exid]
 
