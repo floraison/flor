@@ -62,9 +62,8 @@ module Flor
           fail(RuntimeError, "timeout for #{self.to_s}") if @queue.empty?
         end
 
-        executor, message = @queue.shift
-
-        message
+        #executor, message = @queue.shift
+        @queue.shift[1]
       end
     end
 

@@ -199,15 +199,15 @@ describe 'Flor punit' do
 
         @unit.cancel(exid: r['exid'], nid: '0')
 
-        @unit.wait(exid, 'end'); sleep 0.4
+        @unit.wait(exid, 'end'); sleep 0.777
 
         j = @unit.journal
 #puts Flor.to_s(j)
-pp j
+#pp j
         expect(j).to include_msg(point: 'terminated')
         expect(j).to include_msg(point: 'trigger', nid: '0_0')
         expect(j).to include_msg(point: 'detask', nid: '0_0_1_1-1')
-        expect(j).not_to include_msg(point: 'ceased', from: '0_0')
+        expect(j).to include_msg(point: 'ceased', from: '0_0')
 
         expect(@unit.timers.count).to eq(0)
       end
