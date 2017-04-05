@@ -277,14 +277,23 @@ module Flor
 
     def remove_node(message, node)
 
-      Flor::Procedure.new(self, node, message).end
-
-      return [] if (node['closures'] || []).any?
-        # don't remove the node if it's a closure for some other nodes
-
       nid = node['nid']
 
-      return [] if nid == '0'
+      Flor::Procedure.new(self, node, message).end
+
+      #cancels = (node['cnodes'] || [])
+      #  .collect { |cnid|
+      #    { 'point' => 'cancel',
+      #      'exid' => exid,
+      #      'nid' => cnid,
+      #      'from' => nid,
+      #      'deflank' => true } }
+      cancels = []
+
+      return cancels if node['closures'] && node['closures'].any?
+        # don't remove the node if it's a closure for some other nodes
+
+      return cancels if nid == '0'
         # don't remove if it's the "root" node
 
       @unit.archive_node(message['exid'], node)
@@ -292,7 +301,7 @@ module Flor
 
       @execution['nodes'].delete(nid)
 
-      []
+      cancels
     end
 
     def leave_tags(message, node)
