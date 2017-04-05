@@ -271,27 +271,28 @@ module Flor
 
       return [] if message['remove_node'] == false
 
-      remove_node(message, fnode)
-
-      leave_tags(message, fnode) # returns messages
+      remove_node(message, fnode) +
+      leave_tags(message, fnode)
     end
 
     def remove_node(message, node)
 
       Flor::Procedure.new(self, node, message).end
 
-      return if (node['closures'] || []).any?
+      return [] if (node['closures'] || []).any?
         # don't remove the node if it's a closure for some other nodes
 
       nid = node['nid']
 
-      return if nid == '0'
+      return [] if nid == '0'
         # don't remove if it's the "root" node
 
       @unit.archive_node(message['exid'], node)
         # archiving is only active during testing
 
       @execution['nodes'].delete(nid)
+
+      []
     end
 
     def leave_tags(message, node)
