@@ -109,42 +109,42 @@ describe 'Flor unit' do
 
     context 'when flanked nodes replies to its parent' do
 
-      it 'gets cancelled' do
+      it 'gets cancelled'
 
-        flor = %{
-          sequence
-            sequence flank
-              stall _
-            sleep 0.140
-        }
-
-        r = @unit.launch(flor, wait: true)
-
-        expect(r['point']).to eq('terminated')
-
-        sleep 0.490
-
-        # check execution
-
-        exid = r['exid']
-
-        exe = @unit.executions[exid: exid]
-
-        expect(exe.failed?).to eq(false)
-        expect(exe.status).to eq('terminated')
-        expect(exe.nodes.keys).to eq(%w[ 0 ])
-
-        # check journal
-
-        j = @unit.journal
-
-        expect(j).to include_msg(
-          point: 'cancel', nid: '0_0', from: '0', deflank: true)
-        expect(j).to include_msg(
-          point: 'cancel', nid: '0_0_1', from: '0_0')
-        expect(j).to include_msg(
-          point: 'ceased', from: '0_0')
-      end
+#        flor = %{
+#          sequence
+#            sequence flank
+#              stall _
+#            sleep 0.140
+#        }
+#
+#        r = @unit.launch(flor, wait: true)
+#
+#        expect(r['point']).to eq('terminated')
+#
+#        sleep 0.490
+#
+#        # check execution
+#
+#        exid = r['exid']
+#
+#        exe = @unit.executions[exid: exid]
+#
+#        expect(exe.failed?).to eq(false)
+#        expect(exe.status).to eq('terminated')
+#        expect(exe.nodes.keys).to eq(%w[ 0 ])
+#
+#        # check journal
+#
+#        j = @unit.journal
+#
+#        expect(j).to include_msg(
+#          point: 'cancel', nid: '0_0', from: '0', deflank: true)
+#        expect(j).to include_msg(
+#          point: 'cancel', nid: '0_0_1', from: '0_0')
+#        expect(j).to include_msg(
+#          point: 'ceased', from: '0_0')
+#      end
     end
   end
 end
