@@ -1,17 +1,17 @@
 
 class Flor::Procedure < Flor::Node
 
-  def self.inherited(subclass)
-
-    (@@inherited ||= []) << subclass
-  end
-
-  def self.[](name)
-
-    @@inherited.find { |k| k.names && k.names.include?(name) }
-  end
-
   class << self
+
+    def inherited(subclass)
+
+      (@@inherited ||= []) << subclass
+    end
+
+    def [](name)
+
+      @@inherited.find { |k| k.names && k.names.include?(name) }
+    end
 
     def names(*names)
 
