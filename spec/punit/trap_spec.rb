@@ -97,10 +97,11 @@ describe 'Flor punit' do
         'here(0_1_0_0) terminated(f:0)'
       )
 
-      tm = @unit.journal.select { |m| m['point'] == 'trigger' }.first
+      ms = @unit.journal
+      m0 = ms.find { |m| m['point'] == 'terminated' }
+      m1 = ms.find { |m| m['point'] == 'trigger' }
 
-      expect(tm['m']).to eq(19)
-      expect(tm['sm']).to eq(18)
+      expect(m1['sm']).to eq(m0['m'])
     end
 
     it 'traps multiple times' do
