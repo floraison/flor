@@ -70,8 +70,6 @@ module Flor
           m = @messages.shift
         end
 
-        point = m['point']
-
         ms = process(m)
 
         @consumed << m
