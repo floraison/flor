@@ -76,6 +76,21 @@ describe 'Flor punit' do
       expect(n_0_0['fparent']).to eq('0') # original parent
     end
 
+    it 'triggers' do
+
+      flor = %q{
+        schedule cron: '* * * * * *'
+          def msg \ 1
+        stall _
+      }
+
+      r = @unit.launch(flor, wait: 'trigger')
+
+      expect(r['point']).to eq('trigger')
+      expect(r['m']).to eq(16)
+      expect(r['sm']).to eq(11) # the 'schedule' message
+    end
+
     it 'behaves correctly as root node' do
 
       flor = %q{

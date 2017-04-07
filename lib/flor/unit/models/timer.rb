@@ -5,8 +5,12 @@ module Flor
 
     def to_trigger_message
 
-      m = self.data(false)['message']
+      d = self.data(false)
+
+      m = d['message']
       m['timer_id'] = self.id
+
+      sm = d['m']
 
       {
         'point' => 'trigger',
@@ -16,7 +20,8 @@ module Flor
         'type' => self.type,
         'schedule' => self.schedule,
         'timer_id' => self.id,
-        'message' => m
+        'message' => m,
+        'sm' => sm
       }
     end
 
