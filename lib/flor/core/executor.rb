@@ -283,7 +283,7 @@ module Flor
       pro.end
 
       cancels = []
-      #cancels = pro.send(:wrap_cancel_children, 'deflank' => true)
+      #cancels = pro.send(:wrap_cancel_children, 'remove_trailing' => true)
 
       return cancels if node['closures'] && node['closures'].any?
         # don't remove the node if it's a closure for some other nodes
