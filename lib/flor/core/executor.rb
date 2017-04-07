@@ -279,7 +279,8 @@ module Flor
 
       nid = node['nid']
 
-      Flor::Procedure.new(self, node, message).end
+      pro = Flor::Procedure.make(self, node, message)
+      pro.end
 
       #cancels = (node['cnodes'] || [])
       #  .collect { |cnid|
