@@ -96,6 +96,11 @@ describe 'Flor punit' do
       ).to eq(
         'here(0_1_0_0) terminated(f:0)'
       )
+
+      tm = @unit.journal.select { |m| m['point'] == 'trigger' }.first
+
+      expect(tm['m']).to eq(19)
+      expect(tm['sm']).to eq(18)
     end
 
     it 'traps multiple times' do

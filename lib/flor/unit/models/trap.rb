@@ -89,6 +89,7 @@ module Flor
         'trap' => to_hash,
         'trap_id' => self.id,
         'message' => msg,
+        'sm' => message['m'],
         #'dbg' => xx
       }#.tap { |m| pp m }
     end
