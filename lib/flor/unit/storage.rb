@@ -124,10 +124,10 @@ module Flor
     def put_execution(ex)
 
       root_status =
-        ex['nodes']['0'] &&
+        ex['nodes'].keys == %w[ 0 ] &&
         ex['nodes']['0']['status'].last['status']
-
-      status = (root_status == 'ended') ? 'terminated' : 'active'
+      status =
+        (root_status == 'ended') ? 'terminated' : 'active'
 
       id = ex['id']
 
