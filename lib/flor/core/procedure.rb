@@ -547,10 +547,10 @@ class Flor::Procedure < Flor::Node
     ms
   end
 
-  def wrap_cancel_nodes(nids)
+  def wrap_cancel_nodes(nids, h={})
 
     (nids || [])
-      .collect { |i| wrap_cancel('nid' => i, 'from' => nid) }
+      .collect { |i| wrap_cancel(h.merge('nid' => i, 'from' => nid)) }
       .flatten(1)
   end
 
@@ -561,9 +561,9 @@ class Flor::Procedure < Flor::Node
       'payload' => @message['payload'] || @node['payload'])
   end
 
-  def wrap_cancel_children
+  def wrap_cancel_children(h={})
 
-    wrap_cancel_nodes(cnodes)
+    wrap_cancel_nodes(cnodes, h)
   end
 
   # The executor calls #do_cancel, while most procedure implementations

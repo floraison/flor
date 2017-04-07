@@ -282,14 +282,8 @@ module Flor
       pro = Flor::Procedure.make(self, node, message)
       pro.end
 
-      #cancels = (node['cnodes'] || [])
-      #  .collect { |cnid|
-      #    { 'point' => 'cancel',
-      #      'exid' => exid,
-      #      'nid' => cnid,
-      #      'from' => nid,
-      #      'deflank' => true } }
       cancels = []
+      #cancels = pro.send(:wrap_cancel_children, 'deflank' => true)
 
       return cancels if node['closures'] && node['closures'].any?
         # don't remove the node if it's a closure for some other nodes
@@ -437,7 +431,6 @@ module Flor
 
       []
     end
-
 
     def failed(message)
 
