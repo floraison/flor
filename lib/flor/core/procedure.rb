@@ -56,7 +56,7 @@ class Flor::Procedure < Flor::Node
     @node['on_receive_last'] =
       apply(@node['on_error'].shift, [ @message ], tree[2])
 
-    return wrap_cancel_children if cnodes_any?
+    do_wrap_cancel_children ||
     do_receive # which should trigger 'on_receive_last'
   end
 
@@ -566,6 +566,15 @@ class Flor::Procedure < Flor::Node
     wrap_cancel_nodes(cnodes, h)
   end
 
+  def do_wrap_cancel_children(h={})
+
+    if (ms = wrap_cancel_children(h)).any?
+      ms
+    else
+      nil
+    end
+  end
+
   # The executor calls #do_cancel, while most procedure implementations
   # override #cancel...
   #
@@ -601,7 +610,7 @@ class Flor::Procedure < Flor::Node
 
     close_node
 
-    return wrap_cancel_children if cnodes_any?
+    do_wrap_cancel_children ||
     wrap_cancelled
   end
 
@@ -609,7 +618,7 @@ class Flor::Procedure < Flor::Node
 
     close_node
 
-    (cnodes_any? ? wrap_cancel_children('flavour' => 'kill') : []) +
+    wrap_cancel_children('flavour' => 'kill') +
     wrap_cancelled
   end
 end
