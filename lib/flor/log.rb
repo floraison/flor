@@ -159,7 +159,7 @@ module Flor
     o.puts "#{ind}#{_c.dg}+--- #{opts[:title]}#{_c.rs}" if headers && nid == '0'
     o.puts "#{ind}#{_c.dg}| #{nid} #{h}#{c}#{l}#{_c.rs}"
     if t1.is_a?(Array)
-      t1.each_with_index { |ct, i| print_tree(ct, "#{nid}_#{i}", opts) }
+      t1.each_with_index { |ct, i| print_tree(ct, Flor.child_nid(nid, i), opts) }
     end
     o.puts "#{ind}#{_c.dg}.#{_c.rs}" if headers && nid == '0'
 
@@ -308,7 +308,7 @@ module Flor
     o.puts "#{_c.dg}payload:#{_c.yl}"
     o.puts(Flor.to_pretty_s(m['payload'], 0))
     o.puts "#{_c.dg}tree:"
-    print_tree(node.lookup_tree(nid), nid, out: o) if node # FIXME
+    print_tree(node.lookup_tree(nid), nid, out: o) if node
     o.puts "#{_c.dg}node:#{_c.yl}"
     o.puts(Flor.to_pretty_s(n)) if n
     o.puts "#{_c.dg}nodes:"
