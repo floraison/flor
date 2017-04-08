@@ -283,7 +283,7 @@ describe Flor::Procedure do
           'exid' => exid, 'nid' => '0_0', 'from' => '0' });
 
         expect(F.to_s(ms)).to eq(%{
-          (msg 0_0_0 cancel from:0_0)
+          (msg 0_0_0 cancel from:0_0 flavour:kill)
           (msg 0 receive from:0_0)
         }.ftrim)
 
@@ -361,7 +361,12 @@ describe Flor::Procedure do
           'point' => 'receive', 'nid' => '0', 'from' => '0_0_1-1',
           'payload' => {} })
 
-        expect(F.to_s(ms)).to eq('(msg  receive from:0)')
+        expect(
+          F.to_s(ms)
+        ).to eq(%{
+          (msg 0_0_1_1-1 cancel from:0_0_1-1)
+          (msg  receive from:0)
+        }.ftrim)
 
         seq = @executor.node('0')
 
@@ -374,14 +379,24 @@ describe Flor::Procedure do
 
         ms = @executor.step(ms.first)
 
-        expect(F.to_s(ms)).to eq('(msg  terminated from:0)')
+        expect(
+          F.to_s(ms)
+        ).to eq(%{
+          (msg 0_0_1-1 receive from:0_0_1_1-1)
+        }.ftrim)
+
+        ms = @executor.step(ms.first)
+
+        expect(
+          F.to_s(ms)
+        ).to eq(%{
+        }.ftrim)
 
         seq = @executor.node('0')
 
         expect(
           F.to_s(seq, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0 m:23)
           (status closed pt:failed fla:on-error fro:0_1_1 m:13)
           (status o pt:execute)
         }.ftrim)

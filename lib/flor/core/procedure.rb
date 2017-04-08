@@ -547,7 +547,7 @@ class Flor::Procedure < Flor::Node
     ms
   end
 
-  def wrap_cancel_nodes(nids, h={})
+  def wrap_cancel_nodes(nids, h)
 
     (nids || [])
       .collect { |i| wrap_cancel(h.merge('nid' => i, 'from' => nid)) }
@@ -609,7 +609,7 @@ class Flor::Procedure < Flor::Node
 
     close_node
 
-    (cnodes_any? ? wrap_cancel_children : []) +
+    (cnodes_any? ? wrap_cancel_children('flavour' => 'kill') : []) +
     wrap_cancelled
   end
 end

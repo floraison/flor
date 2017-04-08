@@ -80,5 +80,18 @@ class Flor::Pro::Trap < Flor::Procedure
     return [] if @node['trapped']
     super
   end
+
+#  def cancel
+#
+#    close_node
+#
+#    return wrap_cancel_children if cnodes_any?
+#    wrap_cancelled
+#  end
+
+  def wrap_cancel_children(h={})
+
+    h['flavour'] == 'kill' ? super : []
+  end
 end
 

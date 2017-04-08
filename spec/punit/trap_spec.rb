@@ -203,7 +203,6 @@ describe 'Flor punit' do
 
     it 'is removed at the end of the execution' do
 
-# TODO rethink me...
       expect(@unit.traps.count).to eq(0)
 
       r = @unit.launch(%q{
@@ -217,7 +216,7 @@ describe 'Flor punit' do
 
       exe = @unit.executions[exid: r['exid']]
 
-#pp exe.data['nodes']
+#pp exe.data['nodes'].keys
       expect(exe.status).to eq('terminated')
 
 #@unit.traps.each { |t| pp t.values }
