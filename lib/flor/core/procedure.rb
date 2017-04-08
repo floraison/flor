@@ -85,7 +85,7 @@ class Flor::Procedure < Flor::Node
       #
       # flanked parent...
 
-    wrap('nid' => @node['fparent'], 'remove_node' => false)
+    wrap('nid' => @node['fparent'], 'flavour' => 'flank')
   end
 
   protected
@@ -270,7 +270,7 @@ class Flor::Procedure < Flor::Node
   #
   def do_receive
 
-    remove = @message['remove_node'] != false
+    remove = @message['flavour'] != 'flank'
 
     from_child = nil
     from_child = cnodes.delete(from) if cnodes_any? && remove

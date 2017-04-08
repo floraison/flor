@@ -238,7 +238,7 @@ module Flor
 
     def toc_messages(message)
 
-      return [] if message['remove_node'] == false
+      return [] if message['flavour'] == 'flank'
 
       m = message.select { |k, v| %w[ exid nid from payload ].include?(k) }
       m['sm'] = message['m']
@@ -269,7 +269,7 @@ module Flor
       fnid = message['from']; return [] unless fnid
       fnode = @execution['nodes'][fnid]; return [] unless fnode
 
-      return [] if message['remove_node'] == false
+      return [] if message['flavour'] == 'flank'
 
       remove_node(message, fnode) +
       leave_tags(message, fnode)

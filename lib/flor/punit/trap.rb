@@ -81,14 +81,9 @@ class Flor::Pro::Trap < Flor::Procedure
     super
   end
 
-#  def cancel
-#
-#    close_node
-#
-#    return wrap_cancel_children if cnodes_any?
-#    wrap_cancelled
-#  end
-
+  # Trap keep trackes of its children, but does not cascade 'cancel' to them,
+  # unless the cancel flavour is 'kill'.
+  #
   def wrap_cancel_children(h={})
 
     h['flavour'] == 'kill' ? super : []
