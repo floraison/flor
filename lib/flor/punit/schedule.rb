@@ -47,5 +47,13 @@ class Flor::Pro::Schedule < Flor::Procedure
     return [] if @node['scheduled']
     super
   end
+
+  # "schedule" keeps track of its children, but does not cascade 'cancel'
+  # to them, unless the cancel flavour is 'kill'.
+  #
+  def wrap_cancel_children(h={})
+
+    h['flavour'] == 'kill' ? super : []
+  end
 end
 

@@ -161,6 +161,39 @@ describe 'Flor punit' do
       expect(exe.nodes.keys).to eq(%w[ 0 ])
     end
 
+    it 'does not cancel its children' do
+
+      flor = %q{
+        schedule cron: '* * * * * *'
+          def msg \ stall _
+        stall _
+      }
+
+      exid = @unit.launch(flor)
+
+      @unit.wait(exid, 'end; end; end')
+
+      exe = @unit.executions[exid: exid]
+
+      expect(
+        exe.nodes.keys
+      ).to eq(%w[
+        0 0_0 0_1 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2
+      ])
+
+      @unit.cancel(exid: exid, nid: '0_0')
+
+      sleep 1
+
+      exe = @unit.executions[exid: exid]
+
+      expect(
+        exe.nodes.keys
+      ).to eq(%w[
+        0 0_1 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2
+      ])
+    end
+
     context 'cron' do
 
       it 'triggers repeatedly' do
@@ -199,7 +232,7 @@ describe 'Flor punit' do
 
     context 'upon cancellation' do
 
-      it 'cancels its children and replies to its parent' do
+      it 'cancels itself but not its children' do
 
         flor = %{
           schedule cron: '* * * * * *' # every second
@@ -221,10 +254,18 @@ describe 'Flor punit' do
 #pp j
         expect(j).to include_msg(point: 'terminated')
         expect(j).to include_msg(point: 'trigger', nid: '0_0')
-        expect(j).to include_msg(point: 'detask', nid: '0_0_1_1-1')
         expect(j).to include_msg(point: 'ceased', from: '0_0')
+        expect(j).not_to include_msg(point: 'detask')
 
         expect(@unit.timers.count).to eq(0)
+
+        exe = @unit.executions[exid: exid]
+
+        expect(
+          exe.nodes.keys
+        ).to eq(%w[
+          0 0_0_1-1 0_0_1_1-1
+        ])
       end
     end
   end

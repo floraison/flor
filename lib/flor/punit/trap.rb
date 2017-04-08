@@ -81,7 +81,14 @@ class Flor::Pro::Trap < Flor::Procedure
     super
   end
 
-  # Trap keep trackes of its children, but does not cascade 'cancel' to them,
+  def cancel
+
+    close_node
+
+    wrap_cancelled
+  end
+
+  # "trap" keeps track of its children, but does not cascade 'cancel' to them,
   # unless the cancel flavour is 'kill'.
   #
   def wrap_cancel_children(h={})

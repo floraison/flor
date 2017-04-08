@@ -104,6 +104,46 @@ describe 'Flor punit' do
       expect(m1['sm']).to eq(m0['m'])
     end
 
+    it 'does not cancel its children' do
+
+      flor = %q{
+        trap point: 'left'
+          def msg \ stall _
+        sequence tag: 'x'
+        sequence tag: 'y'
+        sequence tag: 'z'
+        stall _
+      }
+
+      r = @unit.launch(flor, wait: '0_4 receive; end')
+
+      exid = r['exid']
+
+      expect(
+        @unit.journal.select { |m| m['point'] == 'trigger' }.count
+      ).to eq(3)
+
+      exe = @unit.executions[exid: r['exid']]
+
+      expect(
+        exe.nodes.keys
+      ).to eq(%w[
+        0 0_0 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 0_4 0_0_1-3 0_0_1_1-3
+      ])
+
+      @unit.cancel(exid: exid, nid: '0_0')
+
+      @unit.wait(exid, 'end')
+
+      exe = @unit.executions[exid: r['exid']]
+
+      expect(
+        exe.nodes.keys
+      ).to eq(%w[
+        0 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 0_4 0_0_1-3 0_0_1_1-3
+      ])
+    end
+
     it 'traps multiple times' do
 
       flor = %q{
@@ -223,7 +263,7 @@ describe 'Flor punit' do
       expect(@unit.traps.count).to eq(0)
     end
 
-    it 'behaves as expect when at the root' do
+    it 'behaves as expected when at the root' do
 
       r = @unit.launch(%q{
         trap tag: 't0' \ def msg \ trace "t0_$(msg.exid)"
