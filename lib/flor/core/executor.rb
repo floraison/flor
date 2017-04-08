@@ -279,15 +279,13 @@ module Flor
 
       nid = node['nid']
       cls = node['closures']
-      cau = message['cause']
 
       pro = Flor::Procedure.make(self, node, message)
       pro.end
 
-      #cancels = []
       cancels = pro.send(:wrap_cancel_children, 'cancel_trailing' => true)
 
-      return cancels if ! cau && cls && cls.any?
+      return cancels if cls && cls.any?
         # don't remove the node if it's a closure for some other nodes
 
       return cancels if nid == '0'

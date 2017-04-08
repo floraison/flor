@@ -121,26 +121,25 @@ module Flor
       end
     end
 
-    def put_execution(ex)
+    def put_execution(exe)
 
-      root_status =
-        ex['nodes'].keys == %w[ 0 ] &&
-        ex['nodes']['0']['status'].last['status']
       status =
-        (root_status == 'ended') ? 'terminated' : 'active'
+        exe['nodes'].find { |_, n| n['status'].last['status'] != 'ended' } ?
+        'active' :
+        'terminated'
 
-      id = ex['id']
+      id = exe['id']
 
       if id
 
-        ex['end'] ||= Flor.tstamp \
+        exe['end'] ||= Flor.tstamp \
           if status == 'terminated'
-        ex['duration'] = Time.parse(ex['end']) - Time.parse(ex['start']) \
-          if ex['end']
+        exe['duration'] = Time.parse(exe['end']) - Time.parse(exe['start']) \
+          if exe['end']
       end
 
-      data = to_blob(ex)
-      ex['size'] = data.length
+      data = to_blob(exe)
+      exe['size'] = data.length
       u = @unit.identifier
 
       transync do
@@ -159,11 +158,11 @@ module Flor
 
         else
 
-          ex['id'] =
+          exe['id'] =
             @db[:flor_executions]
               .insert(
-                domain: Flor.domain(ex['exid']),
-                exid: ex['exid'],
+                domain: Flor.domain(exe['exid']),
+                exid: exe['exid'],
                 content: data,
                 status: status,
                 ctime: now,
@@ -173,15 +172,15 @@ module Flor
               .to_i
         end
 
-        remove_nodes(ex, status, now)
-        update_pointers(ex, status, now)
+        remove_nodes(exe, status, now)
+        update_pointers(exe, status, now)
       end
 
-      ex
+      exe
 
     rescue => err
 
-      Thread.current[:sto_errored_items] = [ ex ]
+      Thread.current[:sto_errored_items] = [ exe ]
       raise err
     end
 

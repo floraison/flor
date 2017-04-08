@@ -137,10 +137,13 @@ describe 'Flor punit' do
 
       exe = @unit.executions[exid: r['exid']]
 
+      expect(exe.status).to eq('active')
+      expect(exe.nodes['0_0']['status'].last['status']).to eq('ended')
+
       expect(
         exe.nodes.keys
       ).to eq(%w[
-        0 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 0_4 0_0_1-3 0_0_1_1-3
+        0 0_0 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 0_4 0_0_1-3 0_0_1_1-3
       ])
     end
 
