@@ -206,22 +206,21 @@ describe 'Flor punit' do
           stall _
         }
 
-        seconds = []
+        exid = @unit.launch(
+          flor,
+          wait: [ '0_1 trigger', '0_1 receive' ] * 4,
+          timeout: 7)
 
-        exid = @unit.launch(flor)#, wait: '0_1 trigger')
+        t = @unit.timers.first
+        ms = Flor.dup(@unit.journal)
 
-        4.times do |i|
+        tms = ms.select { |m| m['point'] == 'trigger' }
+        seconds = tms.collect { |m| Fugit.parse(m['consumed']).sec }
 
-          r = @unit.wait(exid, '0_1 trigger')
-          seconds << Time.now.sec
+        expect(tms.size).to eq(4)
 
-          sleep 0.1
-          expect(@unit.timers.count).to eq(1)
-
-          t = @unit.timers.first
-          expect(t.schedule).to eq('* * * * * *')
-          expect(t.count).to eq(1 + i)
-        end
+        expect(t.schedule).to eq('* * * * * *')
+        expect(t.count).to eq(4)
 
         ss = (seconds.first..seconds.first + 3)
           .collect { |s| s % 60 }
