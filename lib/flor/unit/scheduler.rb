@@ -254,21 +254,22 @@ module Flor
       nil
     end
 
-    def cancel(h)
+    def cancel(exid, *as)
 
-      queue(prepare_message('cancel', h), h)
+      queue(*prepare_message('cancel', [ exid, *as ]))
     end
 
     def signal(name, h={})
 
       h[:payload] ||= {}
       h[:name] ||= name
-      queue(prepare_message('signal', h), h)
+
+      queue(*prepare_message('signal', [ h ]))
     end
 
-    def re_apply(h)
+    def re_apply(exid, *as)
 
-      queue(prepare_message('cancel', h.merge(re_apply: true)), h)
+      queue(*prepare_message('cancel', [ exid, *as, { re_apply: true } ]))
     end
 
     def schedule(message)
@@ -358,35 +359,45 @@ module Flor
       puts on_start_exc(ex)
     end
 
-    def prepare_on_receive_last(h)
+    def prepare_on_receive_last(msg, opts)
 
-      ei = h[:exid] || h['exid']
-      ni = h[:nid] || h['nid']
-      t = h[:tree] || h['tree']
-      pl = h[:payload] || h['payload']
+      fail ArgumentError.new("missing 'payload' to re_apply") \
+        unless msg['payload']
 
-      fail ArgumentError.new('missing :payload to re_apply') unless pl
-
-      t = Flor::Lang.parse(t, 're_apply', {})
+      t = Flor::Lang.parse(opts[:tree], 're_apply', {})
 
       [
         { 'point' => 'execute',
-          'exid' => ei, 'nid' => ni,
+          'exid' => msg['exid'], 'nid' => msg['nid'],
           'from' => 'parent',
           'tree' => t,
-          'payload' => pl }
+          'payload' => msg['payload'] }
       ]
     end
 
-    def prepare_message(point, h)
+    def prepare_message(point, args)
+
+      h =
+        args.inject({}) { |hh, a|
+          if a.is_a?(Hash) then a.each { |k, v| hh[k.to_s] = v }
+          elsif ! hh.has_key?('exid') then hh['exid'] = a
+          elsif ! hh.has_key?('nid') then hh['nid'] = a
+          end
+          hh }
 
       msg = { 'point' => point }
+      opts = {}
 
-      [ :exid, :name, :nid, :payload, :on_receive_last ]
-        .each { |k| v = h[k] || h[k.to_s]; msg[k.to_s] = v if v }
+      h.each do |k, v|
+        if %w[ exid name nid payload on_receive_last ].include?(k)
+          msg[k] = v
+        else
+          opts[k.to_sym] = v
+        end
+      end
 
-      if h[:re_apply]
-        msg['on_receive_last'] = prepare_on_receive_last(h)
+      if opts[:re_apply]
+        msg['on_receive_last'] = prepare_on_receive_last(msg, opts)
       end
 
       fail ArgumentError.new('missing :exid key') \
@@ -394,7 +405,7 @@ module Flor
       fail ArgumentError.new('missing :name string key') \
         if point == 'signal' && ! msg['name'].is_a?(String)
 
-      msg
+      [ msg, opts ]
     end
 
     def make_idle_message

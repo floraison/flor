@@ -285,6 +285,55 @@ describe 'Flor unit' do
       end
     end
 
+    describe '#prepare_message (protected)' do
+
+      it 'works for #cancel(exid: a, nid: b)' do
+
+        msg, opts = @unit.send(:prepare_message,
+          'cancel', [ { exid: 'a', nid: 'b' } ])
+
+        expect(msg).to eqj(point: 'cancel', exid: 'a', nid: 'b')
+        expect(opts).to eq({})
+
+        msg, opts = @unit.send( :prepare_message,
+          'cancel', [ { exid: 'a', nid: 'b', 'nada' => 'c' } ])
+
+        expect(msg).to eqj(point: 'cancel', exid: 'a', nid: 'b')
+        expect(opts).to eq(nada: 'c')
+      end
+
+      it 'works for #cancel(exid, nid)' do
+
+        msg, opts = @unit.send(:prepare_message,
+          'cancel', [ 'a', 'b' ])
+
+        expect(msg).to eqj(point: 'cancel', exid: 'a', nid: 'b')
+        expect(opts).to eq({})
+
+        msg, opts = @unit.send(:prepare_message,
+          'cancel', [ 'a', 'b', { c: 0 }, { c: 1 } ])
+
+        expect(msg).to eqj(point: 'cancel', exid: 'a', nid: 'b')
+        expect(opts).to eq(c: 1)
+      end
+
+      it 'works for #cancel(exid)' do
+
+        msg, opts = @unit.send(:prepare_message,
+          'cancel', [ 'a' ])
+
+        expect(msg).to eqj(point: 'cancel', exid: 'a')
+        expect(opts).to eq({})
+
+        msg, opts = @unit.send(:prepare_message,
+          'cancel', [ 'a', { c: 0 }, { d: 1 } ])
+
+        #expect(msg).to eqj(point: 'cancel', exid: 'a', nid: 'b')
+        expect(msg).to eqj(point: 'cancel', exid: 'a')
+        expect(opts).to eq(c: 0, d: 1)
+      end
+    end
+
     describe '#cancel' do
 
       it 'queues cancel messages' do
@@ -295,15 +344,44 @@ describe 'Flor unit' do
               stall _
         }
 
-        exid = @unit.launch(flor)
+        r = @unit.launch(flor, wait: 'end')
+        exid = r['exid']
 
-        sleep 0.777
+        sleep 0.1
 
         xd = @unit.executions[exid: exid].data
 
         expect(xd['nodes'].keys).to eq(%w[ 0 0_0 0_0_0 ])
 
         r = @unit.cancel(exid: exid, nid: '0_0', wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        sleep 0.1
+
+        expect(
+          @unit.executions.where(status: 'active').count
+        ).to eq(0)
+      end
+
+      it 'queues cancel messages (2)' do
+
+        flor = %{
+          sequence
+            sequence
+              stall _
+        }
+
+        r = @unit.launch(flor, wait: 'end')
+        exid = r['exid']
+
+        sleep 0.1
+
+        xd = @unit.executions[exid: exid].data
+
+        expect(xd['nodes'].keys).to eq(%w[ 0 0_0 0_0_0 ])
+
+        r = @unit.cancel(exid, '0_0', wait: true)
 
         expect(r['point']).to eq('terminated')
 
