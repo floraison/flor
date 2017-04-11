@@ -14,9 +14,7 @@ module Flor
 
     def initialize(conf={}, over_conf={})
 
-      @conf = conf.is_a?(Hash) ? conf : Flor::Conf.read(conf)
-      @conf.merge!(Flor::Conf.read_env)
-      @conf.merge!(over_conf)
+      @conf = Flor::Conf.prepare(conf, over_conf)
 
       fail ArgumentError.new(
         "invalid domain name #{@conf['domain']}"

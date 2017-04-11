@@ -59,8 +59,7 @@ module Flor
 
     def initialize(conf={})
 
-      conf.merge!(Flor::Conf.read_env) unless conf['conf'] == true
-        # don't read FLOR_DEBUG if this executor is only meant to read the conf
+      conf = Flor::Conf.prepare(conf, {})
 
       super(
         TransientUnit.new(conf),

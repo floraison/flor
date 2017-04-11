@@ -67,22 +67,24 @@ module Flor
     #
     #   For example `debug: 'msg,stdout'`
 
-    def self.read(s)
+    def self.prepare(conf, over_conf)
 
-      h = {}
-      h.merge!(Flor::ConfExecutor.interpret(s))
-      h.merge!(interpret_flor_debug(h['flor_debug'] || h['debug']))
+      c = conf
+      c = Flor::ConfExecutor.interpret(c) if c.is_a?(String)
 
-      h
-    end
+      fail ArgumentError.new(
+        "cannot extract conf out of #{c.inspect} (#{conf.class})"
+      ) unless c.is_a?(Hash)
 
-    def self.read_env
+      unless c['conf'] == true
+        #
+        # don't read FLOR_DEBUG if this executor is only meant to read the conf
 
-      h = {}
-      h.merge!(interpret_env)
-      h.merge!(interpret_flor_debug(ENV['FLOR_DEBUG']))
+        c.merge!(interpret_flor_debug(c))
+        c.merge!(interpret_env)
+      end
 
-      h
+      c.merge!(over_conf)
     end
 
     def self.get_class(conf, key)
@@ -99,11 +101,15 @@ module Flor
     LOG_DBG_KEYS = %w[ dbg msg err src tree tree_rw run ]
     LOG_ALL_KEYS = %w[ all log sto ] + LOG_DBG_KEYS
 
-    def self.interpret_flor_debug(v)
+    def self.interpret_flor_debug(c)
 
-      a = v || ''
-      a = a.split(',') if a.is_a?(String)
-      a = a.collect(&:strip)
+      plus, minus = [ c['flor_debug'], c['debug'], ENV['FLOR_DEBUG'] ]
+        .collect { |v| (v || '').split(/\s*,\s*/) }
+        .flatten(1)
+        .partition { |v| v[0, 1] != '-' }
+      plus = plus.collect { |v| v[0, 1] == '+' ? v[1..-1] : v }
+      minus = minus.collect { |v| v[0, 1] == '-' ? v[1..-1] : v }
+      a = plus - minus
 
       h =
         a.inject({}) { |h, kv|
