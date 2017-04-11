@@ -568,11 +568,7 @@ class Flor::Procedure < Flor::Node
 
   def do_wrap_cancel_children(h={})
 
-    if (ms = wrap_cancel_children(h)).any?
-      ms
-    else
-      nil
-    end
+    wrap_cancel_children(h).instance_eval { |ms| ms.any? ? ms : nil }
   end
 
   # The executor calls #do_cancel, while most procedure implementations
