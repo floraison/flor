@@ -13,7 +13,8 @@ describe 'Flor unit' do
   before :each do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
-    @unit.conf['unit'] = 'u'
+    @unit.conf['unit'] = 'u_taskapp'
+    #@unit.hook('journal', Flor::Journal)
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
@@ -348,6 +349,31 @@ describe 'Flor unit' do
           'company' => 'ACME',
           'root' => 'envs/test/etc/variables/com.acme'
         })
+      end
+
+      it 'passes vars through \'fparent\'' do
+
+        File.open('envs/test/lib/taskers/charly/flor.json', 'wb') do |f|
+          f.puts(%{
+            require: 'charly.rb'
+            class: CharlyTasker
+            include_vars: true
+          }.ftrim)
+        end
+
+        flor = %{
+          on 'zap'
+            task 'charly'
+          set x 0
+          set y 1
+          signal 'zap'
+          stall _
+        }
+
+        r = @unit.launch(flor, wait: 'task')
+
+        expect(r['vars']['x']).to eq(0)
+        expect(r['vars']['y']).to eq(1)
       end
     end
   end
