@@ -3,8 +3,6 @@ class Flor::Pro::Att < Flor::Procedure
 
   name '_att'
 
-  SYMBOL_ATTS = %w[ flank ]
-
   def execute
 
     return wrap_reply if children == [ [ '_', [], tree[2] ] ]
@@ -13,10 +11,8 @@ class Flor::Pro::Att < Flor::Procedure
     pt = parent_node['tree']
     return wrap_reply if pt && pt[0] == '_apply'
 
-    if children.size == 1 && SYMBOL_ATTS.include?(children[0][0])
-      @node['tree'] = Flor.dup(tree)
-      @node['tree'][1] << [ '_boo', true, @node['tree'][2] ]
-    end
+    m = "pre_execute_#{children[0][0]}"
+    send(m) if respond_to?(m, true)
 
     execute_child(0, nil, 'accept_symbol' => children.size > 1)
   end
@@ -31,6 +27,22 @@ class Flor::Pro::Att < Flor::Procedure
   end
 
   protected
+
+  #
+  # execute phase
+
+  def pre_execute_boolean_attribute
+
+    return unless children.size == 1
+
+    @node['tree'] = Flor.dup(tree)
+    @node['tree'][1] << [ '_boo', true, @node['tree'][2] ]
+  end
+
+  alias pre_execute_flank pre_execute_boolean_attribute
+
+  #
+  # receive phase
 
   def receive_unkeyed
 
@@ -85,7 +97,8 @@ class Flor::Pro::Att < Flor::Procedure
   #
   def receive_vars
 
-    parent_node['vars'] = payload['ret']
+    (parent_node['vars'] ||= {}).merge!(payload['ret'])
+
     payload['ret'] = @node['ret']
 
     wrap_reply
