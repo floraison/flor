@@ -359,10 +359,12 @@ class Flor::Node
 
     return vars[key] if vars && vars.has_key?(key)
 
-    if cnid = node['cnid'] # look into closure
+    if cnid = node['cnid']
       cvars = (@execution['nodes'][cnid] || {})['vars']
       return cvars[key] if cvars && cvars.has_key?(key)
     end
+      #
+      # look into closure, just one level deep...
 
     lookup_var(pnode || fpnode, mod, key)
   end
