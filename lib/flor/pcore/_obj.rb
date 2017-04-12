@@ -6,6 +6,26 @@ class Flor::Pro::Obj < Flor::Procedure
   def pre_execute
 
     @node['rets'] = []
+    @node['atts'] = []
+  end
+
+  def receive_last_att
+
+    return super unless att('quote') == 'keys'
+
+    t0 = tree
+    t1 = Flor.dup(t0)
+
+    (@ncid..t1[1].length - 1).step(2) do |i|
+
+      c = t1[1][i]
+
+      t1[1][i] = [ '_sqs', c[0], *c[2..-1] ] if c[0].is_a?(String) && c[1] == []
+    end
+
+    @node['tree'] = t1 if t1 != t0
+
+    super
   end
 
   def receive_first

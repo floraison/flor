@@ -61,6 +61,24 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq({ 'colour' => 'yellow' })
     end
+
+    context "quote: 'keys'" do
+
+      it 'does not evaluate keys' do
+
+        flor = %{
+          set a "colour"
+          { a: 'red', (a _): 'green' } quote: 'keys'
+        }
+
+        r = @executor.launch(flor)
+
+        expect(r['point']).to eq(
+          'terminated')
+        expect(r['payload']['ret']).to eq(
+          { 'a' => 'red', 'colour' => 'green' })
+      end
+    end
   end
 end
 
