@@ -23,7 +23,16 @@ sequence
 ```
 
 ## vars: array
-## vars: '*'
+
+TODO
+
+## vars: '*' or 'copy'
+
+```
+sequence vars: { a: 'A', b: 'B' }
+  sequence vars: '*'
+    # copies locally all the known vars at that point
+```
 
 # ret:
 

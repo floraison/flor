@@ -51,6 +51,66 @@ describe 'Flor core' do
           [ [ 0, nil ], [ 1, 2 ], [ 0, nil ] ]
         )
       end
+
+      context 'array' do
+
+        it 'whitelists'
+        it 'whitelists with regexes'
+        it 'blacklists'
+        it 'blacklists with regexes'
+      end
+
+      context '"copy"' do
+
+        it 'copies all the vars' do
+
+          flor = %{
+            sequence vars: { a: 'A' }
+              push f.l [ 0 a ]
+              sequence vars: 'copy'
+                push f.l [ 1 a ]
+                set a 'B'
+                push f.l [ 2 a ]
+              push f.l [ 3 a ]
+          }
+
+          r = @executor.launch(flor, payload: { 'l' => [] })
+
+          expect(r['point']).to eq('terminated')
+
+          expect(
+            r['payload']['l']
+          ).to eq(
+            [ [ 0, 'A' ], [ 1, 'A' ], [ 2, 'B' ], [ 3, 'A' ] ]
+          )
+        end
+      end
+
+      context '"*"' do
+
+        it 'copies all the vars' do
+
+          flor = %{
+            sequence vars: { a: 'A' }
+              push f.l [ 0 a ]
+              sequence vars: '*'
+                push f.l [ 1 a ]
+                set a 'B'
+                push f.l [ 2 a ]
+              push f.l [ 3 a ]
+          }
+
+          r = @executor.launch(flor, payload: { 'l' => [] })
+
+          expect(r['point']).to eq('terminated')
+
+          expect(
+            r['payload']['l']
+          ).to eq(
+            [ [ 0, 'A' ], [ 1, 'A' ], [ 2, 'B' ], [ 3, 'A' ] ]
+          )
+        end
+      end
     end
 
     describe 'ret:' do

@@ -111,7 +111,10 @@ class Flor::Pro::Att < Flor::Procedure
   #
   def receive_vars
 
-    (parent_node['vars'] ||= {}).merge!(payload['ret'])
+    vars = payload['ret']
+    vars = @executor.vars(nid) if vars == 'copy' || vars == '*'
+
+    (parent_node['vars'] ||= {}).merge!(vars)
 
     payload['ret'] = @node['ret']
 
