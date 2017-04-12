@@ -35,11 +35,25 @@ class Flor::Pro::Att < Flor::Procedure
 
     return unless children.size == 1
 
-    @node['tree'] = Flor.dup(tree)
-    @node['tree'][1] << [ '_boo', true, @node['tree'][2] ]
+    t = @node['tree'] = Flor.dup(tree)
+    t[1] << [ '_boo', true, @node['tree'][2] ]
   end
 
   alias pre_execute_flank pre_execute_boolean_attribute
+
+  def pre_execute_vars
+
+    return unless children.size == 2 && children[1][0] == '_obj'
+
+    t = tree
+
+    return if t[1][1][1] == 0 # [ '_obj', 0, 123 ]
+
+    t = @node['tree'] = Flor.dup(t)
+
+    t[1][1][1].unshift([
+      '_att', [ [ 'quote', [], -1 ], [ '_sqs', 'keys', -1 ] ], -1 ])
+  end
 
   #
   # receive phase

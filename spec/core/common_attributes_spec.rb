@@ -30,6 +30,27 @@ describe 'Flor core' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(nil)
       end
+
+      it 'sets vars locally' do
+
+        flor = %{
+          sequence vars: { a: 0 }
+            push l [ a null ]
+            sequence vars: { a: 1 b: 2 }
+              push l [ a b ]
+            push l [ a null ]
+        }
+
+        r = @executor.launch(flor, vars: { 'l' => [] })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['vars']['l']
+        ).to eq(
+          [ [ 0, nil ], [ 1, 2 ], [ 0, nil ] ]
+        )
+      end
     end
 
     describe 'ret:' do
