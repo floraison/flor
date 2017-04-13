@@ -2,6 +2,13 @@
 # flor CHANGELOG.md
 
 
+## flor 0.12.0  released 2017-04-14
+
+- Implementation of 'flank' and application to "trap" and "schedule"
+- Introduce `{ a : 0 } quote: 'keys'`
+- Introduce `vars: copy` or `vars: '*'`
+
+
 ## flor 0.11.0  released 2017-03-17
 
 - Simplification of the tasker configuration files
