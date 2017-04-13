@@ -54,8 +54,8 @@ describe 'Flor punit' do
       expect(n_0['cnodes']).to eq(%w[ 0_0 0_1 ]) # 0_0 is flanking
 
       expect(n_0_0['status'].last['status']).to eq(nil) # open
-      expect(n_0_0['parent']).to eq(nil)
-      expect(n_0_0['fparent']).to eq('0') # original parent
+      expect(n_0_0['parent']).to eq('0')
+      expect(n_0_0['noreply']).to eq(true) # since it's flanking
 
       # check trap record
 

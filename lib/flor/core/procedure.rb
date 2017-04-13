@@ -81,11 +81,9 @@ class Flor::Procedure < Flor::Node
   def flank
 
     @node['tree'] = Flor.dup(tree)
-    @node['fparent'] = @node.delete('parent')
-      #
-      # flanked parent...
+    @node['noreply'] = true
 
-    wrap('nid' => @node['fparent'], 'flavour' => 'flank')
+    wrap('nid' => parent, 'flavour' => 'flank')
   end
 
   protected
@@ -401,7 +399,7 @@ class Flor::Procedure < Flor::Node
     m = {}
     m['point'] = 'receive'
     m['exid'] = exid
-    m['nid'] = parent
+    m['nid'] = @node['noreply'] ? nil : parent
     m['from'] = nid
 
     m['sm'] = @message['m']

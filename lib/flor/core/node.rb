@@ -343,13 +343,11 @@ class Flor::Node
     return lookup_dvar(mod, key) if node == nil || mod == 'd'
 
     pnode = parent_node(node)
-    fpnode = @execution['nodes'][node['fparent']] # flanked parent
     #cnode = closure_node(node)
 
     if mod == 'g'
       vars = node['vars']
       return lookup_var(pnode, mod, key) if pnode
-      return lookup_var(fpnode, mod, key) if fpnode
       return vars[key] if vars
       #return lookup_var(cnode, mod, key) if cnode
       fail "node #{node['nid']} has no vars and no parent"
@@ -366,7 +364,7 @@ class Flor::Node
       #
       # look into closure, just one level deep...
 
-    lookup_var(pnode || fpnode, mod, key)
+    lookup_var(pnode, mod, key)
   end
 
   def lookup_var_name(node, val)

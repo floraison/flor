@@ -72,8 +72,8 @@ describe 'Flor punit' do
       n_0_0 = exe.nodes['0_0']
 
       expect(n_0_0['status'].last['status']).to eq(nil) # open
-      expect(n_0_0['parent']).to eq(nil)
-      expect(n_0_0['fparent']).to eq('0') # original parent
+      expect(n_0_0['parent']).to eq('0')
+      expect(n_0_0['noreply']).to eq(true) # since it's flanking
     end
 
     it 'triggers' do

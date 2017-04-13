@@ -95,9 +95,8 @@ module Flor
         .each { |k, v| vs[k] = Flor.dup(v) unless vs.has_key?(k) }
 
       pnid = n['parent']
-      fpnid = n['fparent']
 
-      if @unit.loader && pnid == nil && fpnid == nil && n['vdomain'] != false
+      if @unit.loader && pnid == nil && n['vdomain'] != false
 
         @unit.loader.variables(n['vdomain'] || Flor.domain(@exid))
           .each { |k, v| vs[k] = Flor.dup(v) unless vs.has_key?(k) }
@@ -105,7 +104,6 @@ module Flor
 
       if cn = n['cnid']; vars(cn, vs); end
       vars(pnid, vs) if pnid
-      vars(fpnid, vs) if fpnid
 
       vs
     end
