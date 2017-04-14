@@ -10,6 +10,9 @@ class Flor::Pro::Task < Flor::Procedure
 
   def do_receive
 
+#p [ point, from ]
+#p @node['status']
+#p @node['on_receive_last']
     return wrap_reply('payload' => determine_reply_payload) \
       if point == 'receive' && from == nil
 
@@ -49,6 +52,8 @@ class Flor::Pro::Task < Flor::Procedure
   end
 
   def cancel
+
+    close_node
 
     attl, attd = determine_atts
 
