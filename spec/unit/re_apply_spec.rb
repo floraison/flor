@@ -35,10 +35,10 @@ describe 'Flor unit' do
             stall _
       }
 
-      r = @unit.launch(flor, wait: '0_0_0 receive')
+      r = @unit.launch(flor, wait: '0_0_0 receive; end')
       exid = r['exid']
 
-      sleep 0.350
+      #sleep 0.350
 
       new_tree = %{
         sequence
@@ -57,7 +57,33 @@ describe 'Flor unit' do
       expect(r['payload']['text']).to eq('hello world')
     end
 
-    it 'works (leaf node)'
+    it 'works (leaf node)' do
+
+      flor = %{
+        sequence
+          stall _
+      }
+
+      r = @unit.launch(flor, wait: '0_0 receive; end')
+      exid = r['exid']
+
+      #sleep 0.350
+
+      new_tree = %{ alpha _ }
+
+      @unit.re_apply(
+        exid: exid, nid: '0_0',
+        tree: new_tree,
+        payload: { 'text' => 'hello world' })
+
+      r = @unit.wait(exid, 'terminated')
+
+      expect(r['payload']['seen'].size).to eq(1)
+      expect(r['payload']['seen'][0][0]).to eq('alpha')
+      expect(r['payload']['text']).to eq('hello world')
+    end
+
+    it 'works (tasker leaf node)'
   end
 end
 

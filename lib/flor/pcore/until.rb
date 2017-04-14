@@ -77,9 +77,7 @@ class Flor::Pro::Until < Flor::Procedure
 
   def cancel
 
-    fla = @message['flavour']
-
-    if fla == 'continue'
+    if @message['flavour'] == 'continue'
 
       pl = node_payload.copy_current
       pl = pl.merge!(payload.copy_current)

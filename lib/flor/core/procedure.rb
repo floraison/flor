@@ -605,6 +605,7 @@ class Flor::Procedure < Flor::Node
     close_node
 
     do_wrap_cancel_children ||
+    pop_on_receive_last ||
     wrap_cancelled
   end
 
