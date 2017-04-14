@@ -73,49 +73,18 @@ class Flor::Pro::Cursor < Flor::Procedure
 
   def cancel
 
-    fla = @message['flavour']
+    if %w[ continue move ].include?(fla = @message['flavour'])
 
-#    busy = @node['on_receive_last']
-#
-#    close_node
-#
-#    @node['on_receive_last'] =
-#      if fla == 'continue'
-#        @node['subs'] << counter_next('subs')
-#        execute_child(first_non_att_child_id, @node['subs'].last, 'orl' => fla)
-#      elsif fla == 'move'
-#        @node['subs'] << counter_next('subs')
-#        execute_child(move_target_child_id, @node['subs'].last, 'orl' => fla)
-#      else # 'break'
-#        nil
-#      end
-#
-#    return [] if busy
-#      # <------- that implies that upon a sound reply,
-#      #          @node['on_receive_last'] is set to nil!
-#      #          @node['status'] is cleaned...
-#
-#    super.tap { |ms| pp ms }
+      cid =
+        fla == 'move' ?
+        move_target_child_id :
+        first_non_att_child_id
 
-#if nid == '0_1_0'
-#  puts "\\" * 80
-#  puts caller[0, 7]
-#end
-
-    if fla == 'continue'
+      @node['subs'] <<
+        counter_next('subs')
 
       @node['on_receive_last'] =
-        wrap(
-          'nid' => nid, 'from' => "#{nid}_#{children.size + 1}",
-          'orl' => fla,
-          'payload' => Flor.dup(message['payload']))
-
-    elsif fla == 'move'
-
-      @node['subs'] << counter_next('subs')
-
-      @node['on_receive_last'] =
-        execute_child(move_target_child_id, @node['subs'].last, 'orl' => fla)
+        execute_child(cid, @node['subs'].last, 'orl' => fla)
 
     else
 

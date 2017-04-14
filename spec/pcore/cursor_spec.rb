@@ -317,7 +317,7 @@ describe 'Flor pcore' do
         expect(
           F.to_s(cursor, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_1_0 m:102)
+          (status ended pt:receive fro:0_1_0 m:103)
           (status closed pt:cancel fla:break fro:0_1_1_4 m:94)
           (status o pt:receive fro:0_1_0_2 m:89)
           (status closed pt:cancel fla:continue fro:0_1_1_2 m:57)
