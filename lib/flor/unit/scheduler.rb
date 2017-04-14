@@ -269,6 +269,7 @@ module Flor
 
       queue(*prepare_message('cancel', [ exid, *as, { re_apply: true } ]))
     end
+    alias reapply re_apply
 
     def schedule(message)
 
