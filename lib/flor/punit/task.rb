@@ -10,9 +10,9 @@ class Flor::Pro::Task < Flor::Procedure
 
   def do_receive
 
-#p [ point, from ]
-#p @node['status']
-#p @node['on_receive_last']
+    orl = pop_on_receive_last if node_closed?
+    return orl if orl
+
     return wrap_reply('payload' => determine_reply_payload) \
       if point == 'receive' && from == nil
 

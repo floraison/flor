@@ -83,7 +83,31 @@ describe 'Flor unit' do
       expect(r['payload']['text']).to eq('hello world')
     end
 
-    it 'works (tasker leaf node)'
+    it 'works (tasker leaf node)' do
+
+      flor = %{
+        sequence
+          hole _
+      }
+
+      r = @unit.launch(flor, wait: '0_0 task; end')
+      exid = r['exid']
+
+      #sleep 0.350
+
+      new_tree = %{ alpha _ }
+
+      @unit.re_apply(
+        exid: exid, nid: '0_0',
+        tree: new_tree,
+        payload: { 'text' => 'hello world' })
+
+      r = @unit.wait(exid, 'terminated')
+
+      expect(r['payload']['seen'].size).to eq(1)
+      expect(r['payload']['seen'][0][0]).to eq('alpha')
+      expect(r['payload']['text']).to eq('hello world')
+    end
   end
 end
 
