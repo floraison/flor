@@ -8,10 +8,7 @@ class Flor::Pro::Task < Flor::Procedure
     @node['atts'] = []
   end
 
-  def do_receive
-
-    orl = pop_on_receive_last if node_closed?
-    return orl if orl
+  def receive
 
     return wrap_reply('payload' => determine_reply_payload) \
       if point == 'receive' && from == nil
@@ -19,6 +16,8 @@ class Flor::Pro::Task < Flor::Procedure
     super
       # which goes to #receive or #receive_when_status
   end
+
+  alias receive_when_closed receive_from_child_when_closed
 
   def receive_last_att
 
