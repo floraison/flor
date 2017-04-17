@@ -108,6 +108,35 @@ describe 'Flor unit' do
       expect(r['payload']['seen'][0][0]).to eq('alpha')
       expect(r['payload']['text']).to eq('hello world')
     end
+
+    it 'works (subnid node)' do
+
+      flor = %{
+        set a 0
+        loop
+          set a (+ a 1)
+          continue _ if a < 2
+          stall _
+      }
+
+      r = @unit.launch(flor, wait: 'end')
+      exid = r['exid']
+
+      #sleep 0.350
+
+      new_tree = %{ alpha _ }
+
+      @unit.re_apply(
+        exid: exid, nid: '0_1_2-1',
+        tree: new_tree,
+        payload: { 'text' => 'hello world -1' })
+
+      r = @unit.wait(exid, '0_1_2-2 receive')
+
+      expect(r['payload']['seen'].size).to eq(1)
+      expect(r['payload']['seen'][0][0]).to eq('alpha')
+      expect(r['payload']['text']).to eq('hello world -1')
+    end
   end
 end
 
