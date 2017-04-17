@@ -40,8 +40,8 @@ class Flor::Pro::Cursor < Flor::Procedure
   # cursor
   #   do-this
   #   move to: 'do-that-other-thing'
-  #   do-that # got skipped
-  #   do-that-other-thing
+  #   do-that _ # got skipped
+  #   do-that-other-thing _
   # ```
 
   name 'cursor'

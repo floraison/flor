@@ -1241,7 +1241,6 @@ parses to
     [ '_num', 1, 5 ]
   ], 1 ]
 ```
-
 ---
 
 ```flor
@@ -1260,3 +1259,13 @@ parses to
     ], 1 ]
   ], 1 ]
 ```
+---
+
+```flor
+  do-that-other-thing _
+```
+parses to
+```ruby
+  [ 'do-that-other-thing', [ [ '_att', [ [ '_', [], 1 ] ], 1 ], ], 1 ]
+```
+

@@ -7,8 +7,8 @@ class Flor::Pro::Move < Flor::Procedure
   # cursor
   #   do-this
   #   move to: 'do-that-other-thing'
-  #   do-that # got skipped
-  #   do-that-other-thing
+  #   do-that _ # got skipped
+  #   do-that-other-thing _
   # ```
 
   name 'move'
