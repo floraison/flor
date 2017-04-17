@@ -30,6 +30,8 @@ describe 'Flor punit' do
 
       flor = %{
         trace 'hello'
+        trace
+          'world'
       }
 
       r = @unit.launch(flor, wait: true)
@@ -39,11 +41,15 @@ describe 'Flor punit' do
 
       traces = @unit.traces.all
 
-      expect(traces.count).to eq(1)
+      expect(traces.count).to eq(2)
       expect(traces[0].exid).to eq(r['exid'])
-      expect(traces[0].nid).to eq('0')
+      expect(traces[0].nid).to eq('0_0')
       expect(traces[0].tracer).to eq('trace')
       expect(traces[0].text).to eq('hello')
+      expect(traces[1].exid).to eq(r['exid'])
+      expect(traces[1].nid).to eq('0_1')
+      expect(traces[1].tracer).to eq('trace')
+      expect(traces[1].text).to eq('world')
     end
 
     it 'traces in sequence' do

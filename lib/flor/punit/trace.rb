@@ -5,14 +5,10 @@ class Flor::Pro::Trace < Flor::Procedure
 
   def receive
 
-    if @message['point'] == 'receive'
+    t = lookup_tree(@message['from'])
 
-      t = lookup_tree(@message['from'])
-
-      if t.first == '_att' && t[1].size == 1
-        @executor.unit.storage.trace(exid, nid, 'trace', payload['ret'])
-      end
-    end
+    @executor.unit.storage.trace(exid, nid, 'trace', payload['ret']) \
+      if point == 'receive' && (t[0] != '_att' || t[1].size == 1)
 
     super
   end
@@ -21,7 +17,7 @@ class Flor::Pro::Trace < Flor::Procedure
 
     payload['ret'] = node_payload_ret
 
-    wrap
+    super
   end
 end
 
