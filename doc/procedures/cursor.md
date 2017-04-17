@@ -22,6 +22,28 @@ cursor
 task 'charly'
 ```
 
+## continue
+
+Cursor also understands `continue`. It's useful to rewind a cursor:
+```
+cursor
+  sales_team "fill in customer details"
+  ops_team "attribute account number"
+  continue _ if f.ops_decision == 'reject'
+  create_account
+```
+
+## move
+
+Cursor accepts move orders, as in:
+```
+cursor
+  do-this
+  move to: 'do-that-other-thing'
+  do-that # got skipped
+  do-that-other-thing
+```
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/cursor.rb)
 * [cursor spec](https://github.com/floraison/flor/tree/master/spec/pcore/cursor_spec.rb)
