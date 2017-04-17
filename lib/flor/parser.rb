@@ -309,7 +309,12 @@ module Flor
 
         t = [ atts[i][0][0] == 'if' ? 'if' : 'unless', [], @line ]
         t[1].concat(atts[i + 1..-1].collect(&:first))
-        t[1].push([ @head, cn[0, i], @line ])
+
+        cn0i = cn[0, i]; if Flor.is_tree?(@head) && cn0i == []
+          t[1].push(@head)
+        else
+          t[1].push([ @head, cn0i, @line ])
+        end
 
         t
       end
