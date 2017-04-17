@@ -125,14 +125,12 @@ module Flor
     o.puts "#{_c.dg}| #{opts.inspect}#{_c.rs}" if opts.any?
 
     if src.is_a?(String)
-      src.split("\n").select { |l| l.strip.length > 0 }.each do |line|
-        o.puts "#{_c.dg}| #{_c.yl}#{line}#{_c.rs}"
-      end
+      src.split("\n")
+        .select { |l| l.strip.length > 0 && l.match(/\A\s*[^#]/) }
+        .each { |l| o.puts "#{_c.dg}| #{_c.yl}#{l}#{_c.rs}" }
     else
-      ss = Flor.to_pretty_s(src).split("\n")
-      ss.each do |line|
-        o.puts "#{_c.dg}| #{_c.yl}#{line}#{_c.rs}"
-      end
+      Flor.to_pretty_s(src).split("\n")
+        .each { |l| o.puts "#{_c.dg}| #{_c.yl}#{l}#{_c.rs}" }
     end
 
     o.puts "#{_c.dg}.#{_c.rs}"
