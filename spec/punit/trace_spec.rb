@@ -113,10 +113,9 @@ describe 'Flor punit' do
         'a b c'
       )
 
-      sleep 0.490
-
       expect(
         @unit.journal
+          .reject { |m| m['point'] == 'end' }
           .collect { |m|
             tags = m['tags']; tags = tags ? tags.join(',') : nil
             [ m['nid'], m['point'], tags ].compact.join(':') }
@@ -145,7 +144,6 @@ describe 'Flor punit' do
         receive
         0:left:x
         terminated
-        end
       ].join("\n"))
     end
 
