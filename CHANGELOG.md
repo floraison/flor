@@ -2,6 +2,12 @@
 # flor CHANGELOG.md
 
 
+## flor 0.13.0  released 2017-04-24
+
+- Simplify "trace" implementation
+- Simplify "task" implementation
+
+
 ## flor 0.12.0  released 2017-04-14
 
 - Implementation of 'flank' and application to "trap" and "schedule"
