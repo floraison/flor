@@ -35,6 +35,24 @@ describe 'Flor core' do
     end
   end
 
+  describe 'a variable reference' do
+
+    it 'yields the value' do
+
+      flor = %{
+        [ key, v.key ]
+      }
+
+      r = @executor.launch(flor, vars: { 'key' => 'a major' })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['key']).to eq('a major')
+      expect(r['payload']['ret']).to eq([ 'a major' ] * 2)
+    end
+
+    it 'yields null else'
+  end
+
   describe 'a variable deep reference' do
 
     it 'yields the desired value' do

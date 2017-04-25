@@ -15,6 +15,24 @@ describe 'Flor core' do
     @executor = Flor::TransientExecutor.new
   end
 
+  describe 'a field reference' do
+
+    it 'yields the value' do
+
+      flor = %{
+        f.key
+      }
+
+      r = @executor.launch(flor, payload: { 'key' => 'c major' })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['key']).to eq('c major')
+      expect(r['payload']['ret']).to eq('c major')
+    end
+
+    it 'yields null else'
+  end
+
   describe 'a field deep reference' do
 
     it 'yields the desired value' do
