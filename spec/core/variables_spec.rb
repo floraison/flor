@@ -40,14 +40,14 @@ describe 'Flor core' do
     it 'yields the desired value' do
 
       flor = %{
-        set f.c f.a.0
-        f.a.0.b
+        set c a.0
+        a.0.b
       }
 
-      r = @executor.launch(flor, payload: { 'a' => [ { 'b' => 'c' } ] })
+      r = @executor.launch(flor, vars: { 'a' => [ { 'b' => 'c' } ] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['c']).to eq({ 'b' => 'c' })
+      expect(r['vars']['c']).to eq({ 'b' => 'c' })
       expect(r['payload']['ret']).to eq('c')
     end
   end
