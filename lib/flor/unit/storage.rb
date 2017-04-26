@@ -625,9 +625,11 @@ module Flor
         }.compact
 
       pointers +=
-        exe['tasks'].collect { |nid, v|
-          [ dom, exid, nid, 'tasker', v['tasker'], v['name'], now, u ]
-        }
+        exe['tasks']
+          .reject { |_, v|
+            v['tasker'] == nil }
+          .collect { |nid, v|
+            [ dom, exid, nid, 'tasker', v['tasker'], v['name'], now, u ] }
 
       cps = @db[:flor_pointers] # current pointers
         .where(exid: exid)
