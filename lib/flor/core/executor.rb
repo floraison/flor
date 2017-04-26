@@ -182,10 +182,15 @@ module Flor
 
       # "exceptions"
 
-# TODO could those two ifs go upstream (top of this method)
-#      and thus become smaller
-#
-      if message['accept_symbol'] && node['heat'] == nil
+      if heat == nil && tree[0].match(/\A(f|fld|field)\..+/)
+        #
+        # a field reference that points to nothing returns null
+
+        node['heat0'] = '_nul'
+        node['heat'] = '_nul'
+        node['heap'] = '_nul'
+
+      elsif message['accept_symbol'] && node['heat'] == nil
         #
         # tag: et al
 
@@ -193,7 +198,7 @@ module Flor
 
         node['heat0'] = tree[0]
         node['heat'] = heat = n.deref(tree[0])
-        node['heap'] = heap = n.reheap(tree, heat)
+        node['heap'] = n.reheap(tree, heat)
 
       elsif heap == 'task' && heat[0] == '_task'
         #
