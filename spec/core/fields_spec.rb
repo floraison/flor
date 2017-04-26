@@ -15,6 +15,26 @@ describe 'Flor core' do
     @executor = Flor::TransientExecutor.new
   end
 
+  describe 'a field as head' do
+
+    it 'is derefenced upon application' do
+
+      flor = %{
+        set f.a
+          sequence
+        #$(f.a)
+        f.a
+          1
+          2
+      }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(2)
+    end
+  end
+
   describe 'a field reference' do
 
     it 'yields the value' do

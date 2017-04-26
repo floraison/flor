@@ -20,10 +20,10 @@ describe 'Flor core' do
     it 'is derefenced upon application' do
 
       flor = %{
-        set f.a
+        set a
           sequence
         #$(f.a)
-        f.a
+        a
           1
           2
       }
