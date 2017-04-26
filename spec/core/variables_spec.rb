@@ -62,7 +62,21 @@ describe 'Flor core' do
       expect(r['error']['msg']).to eq("don't know how to apply \"key\"")
     end
 
-    it 'yields null if referenced with a v. prefix'
+      # not super sure about this one
+      # regular interpreters fail on this one
+      # limiting this behaviour to fields is better, probably
+      #
+    it 'yields null if referenced with a v. prefix'# do
+#
+#      flor = %{
+#        v.a
+#      }
+#
+#      r = @executor.launch(flor)
+#
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['ret']).to eq(nil)
+#    end
   end
 
   describe 'a variable deep reference' do
@@ -80,6 +94,18 @@ describe 'Flor core' do
       expect(r['vars']['c']).to eq({ 'b' => 'c' })
       expect(r['payload']['ret']).to eq('c')
     end
+
+    it 'yields null when the container exists'# do
+#
+#      flor = %{
+#        [ a.0, h.k0 ]
+#      }
+#
+#      r = @executor.launch(flor, vars: { 'a' => [], 'h' => {} })
+#
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['ret']).to eq([ nil, nil ])
+#    end
   end
 
   describe 'the "node" pseudo-variable' do
