@@ -50,7 +50,19 @@ describe 'Flor core' do
       expect(r['payload']['ret']).to eq([ 'a major' ] * 2)
     end
 
-    it 'yields null else'
+    it 'fails else' do
+
+      flor = %{
+        key
+      }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq("don't know how to apply \"key\"")
+    end
+
+    it 'yields null if referenced with a v. prefix'
   end
 
   describe 'a variable deep reference' do

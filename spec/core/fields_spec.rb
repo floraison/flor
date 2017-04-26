@@ -30,7 +30,17 @@ describe 'Flor core' do
       expect(r['payload']['ret']).to eq('c major')
     end
 
-    it 'yields null else'
+    it 'yields null else'# do
+#
+#      flor = %{
+#        f.key
+#      }
+#
+#      r = @executor.launch(flor)
+#
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['ret']).to eq(nil)
+#    end
   end
 
   describe 'a field deep reference' do
