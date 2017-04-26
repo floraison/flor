@@ -58,6 +58,18 @@ describe 'Flor core' do
       expect(r['payload']['c']).to eq({ 'b' => 'c' })
       expect(r['payload']['ret']).to eq('c')
     end
+
+    it 'yields null if not found' do
+
+      flor = %{
+        f.a.0.b
+      }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+    end
   end
 end
 
