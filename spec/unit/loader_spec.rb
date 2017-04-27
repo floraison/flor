@@ -139,7 +139,8 @@ describe Flor::Loader do
       tc = @loader.tasker('org.example', 'charly')
       expect(tc['description']).to eq('org.example charly')
 
-      expect(File.basename(tc['_path'])).to eq('charly.json')
+      expect(tc['_path']).to point_to(
+        'envs/uspec_loader/lib/taskers/org.example/charly.json')
     end
 
     it 'loads a tasker configuration do.ma.in.json' do
@@ -156,7 +157,8 @@ describe Flor::Loader do
       tc = @loader.tasker('mil.example.air.tactical', 'command')
       expect(tc['description']).to eq('mil.example.air.command')
 
-      expect(File.basename(tc['_path'])).to eq('air.json')
+      expect(tc['_path']).to point_to(
+        'envs/uspec_loader/usr/mil.example/lib/taskers/air.json')
     end
 
     it 'loads a tasker array configuration do.ma.in.json' do
@@ -168,10 +170,10 @@ describe Flor::Loader do
       expect(tc[0]['point']).to eq('task')
       expect(tc[1]['point']).to eq('detask')
 
-      expect(tc[0]['_path']).to match(
-        /\/envs\/uspec_loader\/usr\/mil\.example\/lib\/taskers\/air\.json\z/)
-      expect(tc[1]['_path']).to match(
-        /\/envs\/uspec_loader\/usr\/mil\.example\/lib\/taskers\/air\.json\z/)
+      expect(tc[0]['_path']).to point_to(
+        'envs/uspec_loader/usr/mil.example/lib/taskers/air.json')
+      expect(tc[1]['_path']).to point_to(
+        'envs/uspec_loader/usr/mil.example/lib/taskers/air.json')
     end
   end
 
@@ -181,34 +183,68 @@ describe Flor::Loader do
 
       hooks = @loader.hooks('org.example')
 
-      expect(hooks).to eq([
-        { 'point' => 'execute',
-          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyExecuteHook',
-          '_path' => $flor_path + 'envs/uspec_loader/lib/hooks/dot.json:0' },
-        { 'point' => 'terminated',
-          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyGenericHook',
-          '_path' => $flor_path + 'envs/uspec_loader/lib/hooks/dot.json:1' },
-        { 'point' => 'execute',
-          'require' => 'xyz/oe_hooks.rb', 'class' => 'Xyz::OeExecuteHook',
-          '_path' => $flor_path + 'envs/uspec_loader/lib/hooks/org.example.json:0' }
-      ])
+      expect(hooks.size).to eq(3)
+
+      expect(hooks[0]['point'])
+        .to eq('execute')
+      expect(hooks[0]['require'])
+        .to eq('xyz/my_hooks.rb')
+      expect(hooks[0]['class'])
+        .to eq('Xyz::MyExecuteHook')
+      expect(hooks[0]['_path'])
+        .to point_to('envs/uspec_loader/lib/hooks/dot.json:0')
+
+      expect(hooks[1]['point'])
+        .to eq('terminated')
+      expect(hooks[1]['require'])
+        .to eq('xyz/my_hooks.rb')
+      expect(hooks[1]['class'])
+        .to eq('Xyz::MyGenericHook')
+      expect(hooks[1]['_path'])
+        .to point_to('envs/uspec_loader/lib/hooks/dot.json:1')
+
+      expect(hooks[2]['point'])
+        .to eq('execute')
+      expect(hooks[2]['require'])
+        .to eq('xyz/oe_hooks.rb')
+      expect(hooks[2]['class'])
+        .to eq('Xyz::OeExecuteHook')
+      expect(hooks[2]['_path'])
+        .to point_to('envs/uspec_loader/lib/hooks/org.example.json:0')
     end
 
     it 'loads from hooks.json' do
 
       hooks = @loader.hooks('mil.example')
 
-      expect(hooks).to eq([
-        { 'point' => 'execute',
-          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyExecuteHook',
-          '_path' => $flor_path + 'envs/uspec_loader/lib/hooks/dot.json:0' },
-        { 'point' => 'terminated',
-          'require' => 'xyz/my_hooks.rb', 'class' => 'Xyz::MyGenericHook',
-          '_path' => $flor_path + 'envs/uspec_loader/lib/hooks/dot.json:1' },
-        { 'point' => 'receive',
-          'require' => 'xyz/me_hooks.rb', 'class' => 'Xyz::MeReceiveHook',
-          '_path' => $flor_path + 'envs/uspec_loader/usr/mil.example/lib/hooks/hooks.json:0' }
-      ])
+      expect(hooks.size).to eq(3)
+
+      expect(hooks[0]['point'])
+        .to eq('execute')
+      expect(hooks[0]['require'])
+        .to eq('xyz/my_hooks.rb')
+      expect(hooks[0]['class'])
+        .to eq('Xyz::MyExecuteHook')
+      expect(hooks[0]['_path'])
+        .to point_to('envs/uspec_loader/lib/hooks/dot.json:0')
+
+      expect(hooks[1]['point'])
+        .to eq('terminated')
+      expect(hooks[1]['require'])
+        .to eq('xyz/my_hooks.rb')
+      expect(hooks[1]['class'])
+        .to eq('Xyz::MyGenericHook')
+      expect(hooks[1]['_path'])
+        .to point_to('envs/uspec_loader/lib/hooks/dot.json:1')
+
+      expect(hooks[2]['point'])
+        .to eq('receive')
+      expect(hooks[2]['require'])
+        .to eq('xyz/me_hooks.rb')
+      expect(hooks[2]['class'])
+        .to eq('Xyz::MeReceiveHook')
+      expect(hooks[2]['_path'])
+        .to point_to('envs/uspec_loader/usr/mil.example/lib/hooks/hooks.json:0')
     end
   end
 end

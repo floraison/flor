@@ -1,6 +1,3 @@
-require 'pathname'
-path = Pathname.new(File.dirname(__FILE__) + '/../')
-$flor_path = path.realpath.to_s + '/'
 
 #
 # Specifying flor
@@ -144,6 +141,23 @@ RSpec::Matchers.define :include_msg do |o|
     "did find message #{Flor.message_to_s(h)}\n" +
     "  in\n" +
     actual.collect { |m| "    #{Flor.message_to_s(m)}\n" }.join
+  end
+end
+
+RSpec::Matchers.define :point_to do |path|
+
+  apath = File.absolute_path(path)
+
+  match do |actual|
+
+    actual == apath
+  end
+
+  failure_message do |actual|
+
+    ppath = ' ' * (apath.length - path.length) + path
+
+    "expected\n  #{actual}\n\nto point to\n  #{ppath}\n  #{apath}"
   end
 end
 
