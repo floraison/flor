@@ -71,6 +71,25 @@ describe 'Flor pcore' do
       expect(r['payload']['l']).to eq(%w[ 0_0_1 0_0_1-1 0_2_1-1 ])
     end
 
+    it 'understands an outer "continue"' do
+
+      flor = %{
+        cursor
+          set outer-continue continue
+          push f.l "$(nid)"
+          cursor
+            push f.l "$(nid)"
+            outer-continue _ if "$(nid)" == '0_2_1_0_0'
+      }
+
+      r = @executor.launch(flor, payload: { 'l' => [] })
+
+      expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ 0_1_1 0_2_0_1 0_1_1-1 0_2_0_1-1 ])
+    end
+
     it 'goes {nid}-n for the subsequent cycles' do
 
       flor = %{
