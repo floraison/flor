@@ -28,7 +28,7 @@ Warning: be consistent with the indentation of the children. In the following se
 ```
 sequence
   task 'a'
-   task 'b'
+    task 'b'
 ```
 
 ## procedures
