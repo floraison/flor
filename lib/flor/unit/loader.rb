@@ -94,6 +94,9 @@ module Flor
 
     def hooks(domain, name=nil)
 
+      # NB: do not relativize path, because Ruby load path != cwd,
+      # stay absolute for `require` and `load`
+
       Dir[File.join(@root, '**/*.json')]
         .select { |f| f.index('/lib/hooks/') }
         .collect { |pa| [ pa, expose_d(pa, {}) ] }
@@ -101,7 +104,7 @@ module Flor
         .sort_by { |pa, d| d.count('.') }
         .collect { |pa, d|
           interpret(pa).each_with_index { |h, i|
-            h['_path'] = Flor.relativize_path(pa) + ":#{i}" } }
+            h['_path'] = pa + ":#{i}" } }
         .flatten(1)
     end
 

@@ -1,3 +1,6 @@
+require 'pathname'
+path = Pathname.new(File.dirname(__FILE__) + '/../')
+$flor_path = path.realpath.to_s + '/'
 
 #
 # Specifying flor
