@@ -433,6 +433,24 @@ describe 'Flor pcore' do
         }.ftrim)
       end
     end
+
+    it 'accepts a var: attribute' do
+
+      # those procedures with a local variable scope, they create it
+      # before processing the vars: attribute, and this attributes simply
+      # merges in that existing local scope
+
+      flor = %{
+        cursor vars: { a: 0, b: 1 }
+          0
+      }
+
+      r = @executor.launch(flor, wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(0)
+      expect(r['vars'].keys).to eq(%w[ break continue move a b ])
+    end
   end
 end
 
