@@ -27,7 +27,7 @@ describe 'Flor unit' do
 
   describe 'domain variables' do
 
-    it 'lookups' do
+    it 'looks up' do
 
       r =
         @unit.launch(%{
