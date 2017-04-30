@@ -48,6 +48,41 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 1, 2, 4 ])
     end
+
+    it 'builds an array (with newlines)' do
+
+      r = @executor.launch(%{
+        [
+          1
+          2
+        ]
+      })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 1, 2 ])
+    end
+
+    it 'builds an array (with newlines)' do
+
+      r = @executor.launch(%{
+        [ 1
+          2 ]
+      })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 1, 2 ])
+    end
+
+    it 'builds an array (with newlines)' do
+
+      r = @executor.launch(%{
+        [ 1
+          (2 _) ]
+      })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 1, 2 ])
+    end
   end
 end
 
