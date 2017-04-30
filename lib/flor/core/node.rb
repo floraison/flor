@@ -147,24 +147,17 @@ class Flor::Node
 
   def lookup(name)
 
-    cat, mod, key = key_split(name)
-    key, pth = key.split('.', 2)
+    cat, mod, key_and_path = key_split(name)
+    key, pth = key_and_path.split('.', 2)
 
-    val =
-      if [ cat, mod, key ] == [ 'v', '', 'node' ]
-        @node
-      elsif cat == 'v'
-        lookup_var(@node, mod, key)
-      elsif cat == 't'
-        lookup_tag(mod, key)
-      else
-        lookup_field(mod, key)
-      end
-
-    if pth
-      Flor.deep_get(val, pth)[1]
+    if [ cat, mod, key ] == [ 'v', '', 'node' ]
+      lookup_in_node(pth)
+    elsif cat == 'v'
+      lookup_var(@node, mod, key, pth)
+    elsif cat == 't'
+      lookup_tag(mod, key)
     else
-      val
+      lookup_field(mod, key_and_path)
     end
   end
 
@@ -202,10 +195,10 @@ class Flor::Node
 
     ref =
       case v[0]
-        when '_func' then true
-        when '_proc' then v[1]['proc'] != o
-        when '_task' then v[1]['task'] != o
-        else false
+      when '_func' then true
+      when '_proc' then v[1]['proc'] != o
+      when '_task' then v[1]['task'] != o
+      else false
       end
 
     v[1]['oref'] ||= v[1]['ref'] if ref && v[1]['ref']
@@ -338,7 +331,21 @@ class Flor::Node
     nil
   end
 
-  def lookup_var(node, mod, key)
+  def lookup_in_node(pth)
+
+    return Flor.deep_get(@node, pth)[1] if pth
+    @node
+  end
+
+  def lookup_var(node, mod, key, pth)
+
+    val = do_lookup_var(node, mod, key)
+
+    return Flor.deep_get(val, pth)[1] if pth
+    val
+  end
+
+  def do_lookup_var(node, mod, key)
 
     return lookup_dvar(mod, key) if node == nil || mod == 'd'
 
@@ -347,9 +354,9 @@ class Flor::Node
 
     if mod == 'g'
       vars = node['vars']
-      return lookup_var(pnode, mod, key) if pnode
+      return do_lookup_var(pnode, mod, key) if pnode
       return vars[key] if vars
-      #return lookup_var(cnode, mod, key) if cnode
+      #return do_lookup_var(cnode, mod, key) if cnode
       fail "node #{node['nid']} has no vars and no parent"
     end
 
@@ -364,7 +371,7 @@ class Flor::Node
       #
       # look into closure, just one level deep...
 
-    lookup_var(pnode, mod, key)
+    do_lookup_var(pnode, mod, key)
   end
 
   def lookup_var_name(node, val)
@@ -389,9 +396,9 @@ class Flor::Node
     nids.empty? ? [ '_nul', nil, -1 ] : nids
   end
 
-  def lookup_field(mod, key)
+  def lookup_field(mod, key_and_path)
 
-    Flor.deep_get(payload.current, key)[1]
+    Flor.deep_get(payload.current, key_and_path)[1]
   end
 
   def key_split(key) # => category, mode, key
