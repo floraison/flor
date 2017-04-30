@@ -182,7 +182,7 @@ module Flor
 
       # "exceptions"
 
-      if heat == nil && tree[0].match(/\A(f|fld|field)\..+/)
+      if heat == nil && tree[0].match(/\A(f|fld|field)\..+/) && tree[1].empty?
         #
         # a field reference that points to nothing returns null
 

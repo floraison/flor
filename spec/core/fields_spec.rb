@@ -19,19 +19,29 @@ describe 'Flor core' do
 
     it 'is derefenced upon application' do
 
-      flor = %{
+      r = @executor.launch(%{
         set f.a
           sequence
         #$(f.a)
         f.a
           1
           2
-      }
-
-      r = @executor.launch(flor)
+      })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)
+    end
+
+    it 'triggers an error when missing' do
+
+      r = @executor.launch(%{
+        f.a
+          1
+          2
+      })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq("don't know how to apply \"f.a\"")
     end
   end
 
@@ -39,11 +49,11 @@ describe 'Flor core' do
 
     it 'yields the value' do
 
-      flor = %{
-        f.key
-      }
-
-      r = @executor.launch(flor, payload: { 'key' => 'c major' })
+      r = @executor.launch(
+        %{
+          f.key
+        },
+        payload: { 'key' => 'c major' })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['key']).to eq('c major')
@@ -52,11 +62,10 @@ describe 'Flor core' do
 
     it 'yields null else' do
 
-      flor = %{
+      r = @executor.launch(%{
         f.key
-      }
+      })
 
-      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -67,12 +76,12 @@ describe 'Flor core' do
 
     it 'yields the desired value' do
 
-      flor = %{
-        set f.c f.a.0
-        f.a.0.b
-      }
-
-      r = @executor.launch(flor, payload: { 'a' => [ { 'b' => 'c' } ] })
+      r = @executor.launch(
+        %{
+          set f.c f.a.0
+          f.a.0.b
+        },
+        payload: { 'a' => [ { 'b' => 'c' } ] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['c']).to eq({ 'b' => 'c' })
@@ -81,11 +90,9 @@ describe 'Flor core' do
 
     it 'yields null if not found' do
 
-      flor = %{
+      r = @executor.launch(%{
         f.a.0.b
-      }
-
-      r = @executor.launch(flor)
+      })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
