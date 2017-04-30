@@ -32,7 +32,7 @@ module Flor
         end }
   end
 
-  def self.deep_get(o, k) # --> success(boolean), value
+  def self.deep_get(o, k) # --> [ success(boolean), value ]
 
     return [ true, o ] unless k
 
