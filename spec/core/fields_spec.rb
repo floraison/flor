@@ -43,6 +43,17 @@ describe 'Flor core' do
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq("don't know how to apply \"f.a\"")
     end
+
+    it 'yields the value if not a proc or a func' do
+
+      r = @executor.launch(%{
+        set f.a 1
+        f.a 2
+      })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(1)
+    end
   end
 
   describe 'a field reference' do
