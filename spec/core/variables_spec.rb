@@ -53,6 +53,17 @@ describe 'Flor core' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(1)
     end
+
+    it 'yields the value if not a proc or a func (null)'# do
+#
+#      r = @executor.launch(%{
+#        set a null
+#        a 2
+#      })
+#
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['ret']).to eq(nil)
+#    end
   end
 
   describe 'a variable reference' do
@@ -115,11 +126,23 @@ describe 'Flor core' do
 
     it 'yields null when the container exists'# do
 #
-#      flor = %{
-#        [ a.0, h.k0 ]
-#      }
+#      r = @executor.launch(
+#        %{
+#          [ a.0, h.k0 ]
+#        },
+#        vars: { 'a' => [], 'h' => {} })
 #
-#      r = @executor.launch(flor, vars: { 'a' => [], 'h' => {} })
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['ret']).to eq([ nil, nil ])
+#    end
+
+    it 'fails when the container does not exist'# do
+#
+#      r = @executor.launch( %{
+#        #[ a.0, h.k0 ]
+#        sequence on_error: 1
+#          a.0
+#      })
 #
 #      expect(r['point']).to eq('terminated')
 #      expect(r['payload']['ret']).to eq([ nil, nil ])
