@@ -19,19 +19,39 @@ describe 'Flor core' do
 
     it 'is derefenced upon application' do
 
-      flor = %{
+      r = @executor.launch(%{
         set a
           sequence
-        #$(f.a)
         a
           1
           2
-      }
-
-      r = @executor.launch(flor)
+      })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)
+    end
+
+    it 'triggers an error when missing' do
+
+      r = @executor.launch(%{
+        a
+          1
+          2
+      })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq("don't know how to apply \"a\"")
+    end
+
+    it 'yields the value if not a proc or a func' do
+
+      r = @executor.launch(%{
+        set a 1
+        a 2
+      })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(1)
     end
   end
 
@@ -39,11 +59,11 @@ describe 'Flor core' do
 
     it 'yields the value' do
 
-      flor = %{
-        [ key, v.key ]
-      }
-
-      r = @executor.launch(flor, vars: { 'key' => 'a major' })
+      r = @executor.launch(
+        %{
+          [ key, v.key ]
+        },
+        vars: { 'key' => 'a major' })
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['key']).to eq('a major')
@@ -52,11 +72,9 @@ describe 'Flor core' do
 
     it 'fails else' do
 
-      flor = %{
+      r = @executor.launch(%{
         key
-      }
-
-      r = @executor.launch(flor)
+      })
 
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq("don't know how to apply \"key\"")
@@ -83,12 +101,12 @@ describe 'Flor core' do
 
     it 'yields the desired value' do
 
-      flor = %{
-        set c a.0
-        a.0.b
-      }
-
-      r = @executor.launch(flor, vars: { 'a' => [ { 'b' => 'c' } ] })
+      r = @executor.launch(
+        %{
+          set c a.0
+          a.0.b
+        },
+        vars: { 'a' => [ { 'b' => 'c' } ] })
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['c']).to eq({ 'b' => 'c' })
@@ -112,14 +130,14 @@ describe 'Flor core' do
 
     it 'gives access to the node' do
 
-      flor = %{
-        push f.l node.nid
-        push f.l "$(node.nid)"
-        push f.l node.heat0
-        push f.l "$(node.heat0)"
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %{
+          push f.l node.nid
+          push f.l "$(node.nid)"
+          push f.l node.heat0
+          push f.l "$(node.heat0)"
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ 0_0_1 0_1_1 node.heat0 _dqs ])
