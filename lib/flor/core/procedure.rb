@@ -477,9 +477,9 @@ class Flor::Procedure < Flor::Node
 
     if node
 
-      b, v = Flor.deep_set(node['vars'], k, v)
+      v = Flor.deep_set(node['vars'], k, v)
 
-      return v if b
+      return v unless v.is_a?(Symbol)
     end
 
     fail IndexError.new("couldn't set var #{mode}v.#{k}")
@@ -487,9 +487,9 @@ class Flor::Procedure < Flor::Node
 
   def set_field(k, v)
 
-    success, value = Flor.deep_set(payload.copy, k, v)
+    value = Flor.deep_set(payload.copy, k, v)
 
-    fail IndexError.new("couldn't set field #{k}") unless success
+    fail IndexError.new("couldn't set field #{k}") if value.is_a?(Symbol)
 
     value
   end
@@ -501,10 +501,10 @@ class Flor::Procedure < Flor::Node
     cat, mod, key = key_split(k)
 
     case cat[0, 1]
-      when 'f' then set_field(key, v)
-      when 'v' then set_var(mod, key, v)
-      #when 'w' then set_war(key, v)
-      else fail IndexError.new("don't know how to set #{k.inspect}")
+    when 'f' then set_field(key, v)
+    when 'v' then set_var(mod, key, v)
+    #when 'w' then set_war(key, v)
+    else fail IndexError.new("don't know how to set #{k.inspect}")
     end
   end
 

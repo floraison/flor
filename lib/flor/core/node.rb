@@ -171,7 +171,8 @@ class Flor::Node
       return @node.exid if k == 'exid'
       return Flor.tstamp if k == 'tstamp'
 
-      @node.lookup(k)
+      r = @node.lookup(k)
+      r.is_a?(Symbol) ? nil : r
     end
   end
 
@@ -187,6 +188,7 @@ class Flor::Node
     return o unless o.is_a?(String)
 
     v = lookup(o)
+v = nil if v.is_a?(Symbol) # FIXME
 
     return v unless Flor.is_tree?(v)
     return v unless v[1].is_a?(Hash)
@@ -333,16 +335,14 @@ class Flor::Node
 
   def lookup_in_node(pth)
 
-    return Flor.deep_get(@node, pth)[1] if pth
-    @node
+    Flor.deep_get(@node, pth)
   end
 
   def lookup_var(node, mod, key, pth)
 
     val = do_lookup_var(node, mod, key)
 
-    return Flor.deep_get(val, pth)[1] if pth
-    val
+    Flor.deep_get(val, pth)
   end
 
   def do_lookup_var(node, mod, key)
@@ -398,7 +398,7 @@ class Flor::Node
 
   def lookup_field(mod, key_and_path)
 
-    Flor.deep_get(payload.current, key_and_path)[1]
+    Flor.deep_get(payload.current, key_and_path)
   end
 
   def key_split(key) # => category, mode, key

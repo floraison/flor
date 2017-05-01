@@ -129,14 +129,14 @@ module Flor
       case val
       when Array
         i = to_array_index(kk)
-        return false unless i
-        return (i < 0 ? -i < val.length : i < val.length) if ks.empty?
+        break false unless i
+        break (i < 0 ? -i < val.length : i < val.length) if ks.empty?
         val = val[i]
       when Hash
-        return val.has_key?(kk) if ks.empty?
+        break val.has_key?(kk) if ks.empty?
         val = val[kk]
       else
-        return false
+        break false
       end
     end
   end

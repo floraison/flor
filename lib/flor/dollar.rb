@@ -61,7 +61,7 @@ module Flor
       def rewrite_span(t)
         t.children.collect { |c| rewrite(c) }
       end
-    end
+    end # module Parser
 
     module PipeParser include Raabro
 
@@ -72,7 +72,7 @@ module Flor
       def rewrite_elt(t); t.string; end
       def rewrite_pipe(t); t.string == '|' ? :pipe : :dpipe; end
       def rewrite_elts(t); t.children.collect { |e| rewrite(e) }; end
-    end
+    end # module PipeParser
 
     #def lookup(s)
     #  # ...
@@ -196,7 +196,6 @@ module Flor
 
         result =
           if mode == :lookup
-            #k[0, 1] == "'" ? k[1..-1] : do_lookup(k)
             k[0, 1] == "'" ? k[1..-1] : lookup(k)
           else # :call
             call(k, result)
