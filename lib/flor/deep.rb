@@ -32,97 +32,89 @@ module Flor
         end }
   end
 
-  def self.deep_get(o, k) # --> [ success(boolean), value ]
+  # Returns a symbol in case of failure.
+  #
+  def self.deep_get(o, k)
 
-    return [ true, o ] unless k
+    return o unless k
 
-    val = o
+    split_deep_path(k).inject([ o, [] ]) do |(val, seen), kk|
 
-    split_deep_path(k).each do |kk|
+      seen << kk
 
       case val
       when Array
         i = to_array_index(kk)
-        return [ false, nil ] unless i
-        val = val[i]
+        return seen.join('.').to_sym unless i
+        [ val[i], seen ]
       when Hash
-        val = val[kk]
+        [ val[kk], seen ]
       else
-        return [ false, nil ]
+        return seen.join('.').to_sym
       end
-    end
 
-    [ true, val ]
+    end.first
   end
 
-  def self.deep_set(o, k, v) # --> [ success(boolean), value ]
+  def self.deep_set(o, k, v)
 
     ks = split_deep_path(k)
     key = ks.pop
-
-    b, col = deep_get(o, ks)
-
-    return [ false, v ] unless b
+    col = deep_get(o, ks)
 
     case col
+    when Symbol
+      col
     when Array
       i = to_array_index(key)
-      return [ false, v ] unless i
+      return ks.join('.').to_sym unless i
       col[i] = v
     when Hash
       col[key] = v
     else
-      return [ false, v ]
+      ks.join('.').to_sym
     end
-
-    [ true, v ]
   end
 
-  def self.deep_insert(o, k, v) # --> [ success(boolean), value ]
+  def self.deep_insert(o, k, v)
 
     ks = split_deep_path(k)
     key = ks.pop
-
-    b, col = deep_get(o, ks)
-
-    return [ false, nil ] unless b
+    col = deep_get(o, ks)
 
     case col
+    when Symbol
+      col
     when Array
       i = to_array_index(key)
-      return [ false, v ] unless i
+      return ks.join('.').to_sym unless i
       col.insert(i, v)
+      v
     when Hash
       col[key] = v
     else
-      return [ false, v ]
+      ks.join('.').to_sym
     end
-
-    [ true, v ]
   end
 
-  def self.deep_unset(o, k) # --> [ success(boolean), value ]
+  def self.deep_unset(o, k)
 
     ks = split_deep_path(k)
     key = ks.pop
+    col = deep_get(o, ks)
 
-    b, col = deep_get(o, ks)
-
-    return [ false, nil ] unless b
-
-    v =
-      case col
-      when Array
-        i = to_array_index(key)
-        return [ false, nil ] unless i
-        col.delete_at(i)
-      when Hash
-        col.delete(key)
-      else
-        return [ false, nil ]
-      end
-
-    [ true, v ]
+    case col
+    when Symbol
+      col
+    when Array
+      i = to_array_index(key)
+      return ks.join('.').to_sym unless i
+      col.delete_at(i)
+    when Hash
+      col.delete(key)
+    else
+      return ks.join('.').to_sym
+    end
   end
 
   def self.deep_has_key?(o, k)
