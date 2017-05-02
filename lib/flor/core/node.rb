@@ -188,7 +188,6 @@ class Flor::Node
     return o unless o.is_a?(String)
 
     v = lookup(o)
-v = nil if v.is_a?(Symbol) # FIXME
 
     return v unless Flor.is_tree?(v)
     return v unless v[1].is_a?(Hash)
@@ -398,7 +397,8 @@ v = nil if v.is_a?(Symbol) # FIXME
 
   def lookup_field(mod, key_and_path)
 
-    Flor.deep_get(payload.current, key_and_path)
+    r = Flor.deep_get(payload.current, key_and_path)
+    r.is_a?(Symbol) ? nil : r
   end
 
   def key_split(key) # => category, mode, key
