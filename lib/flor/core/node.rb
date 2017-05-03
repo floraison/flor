@@ -145,7 +145,7 @@ class Flor::Node
     #
     # that might be the way...
 
-  def lookup(name)
+  def lookup(name, silence_index_error=false)
 
     cat, mod, key_and_path = key_split(name)
     key, pth = key_and_path.split('.', 2)
@@ -159,6 +159,10 @@ class Flor::Node
     else
       lookup_field(mod, key_and_path)
     end
+
+  rescue IndexError
+
+    raise unless silence_index_error
   end
 
   class Expander < Flor::Dollar
@@ -171,7 +175,7 @@ class Flor::Node
       return @node.exid if k == 'exid'
       return Flor.tstamp if k == 'tstamp'
 
-      r = @node.lookup(k)
+      r = @node.lookup(k, true)
       r.is_a?(Symbol) ? nil : r
     end
   end
@@ -311,6 +315,11 @@ class Flor::Node
   #  @execution['nodes'][node['cnid']]
   #end
 
+  def lookup_in_node(pth)
+
+    Flor.deep_get(@node, pth)
+  end
+
   def lookup_dvar(mod, key)
 
     if mod != 'd' && Flor::Procedure[key]
@@ -332,16 +341,25 @@ class Flor::Node
     nil
   end
 
-  def lookup_in_node(pth)
-
-    Flor.deep_get(@node, pth)
-  end
-
   def lookup_var(node, mod, key, pth)
 
     val = do_lookup_var(node, mod, key)
 
-    Flor.deep_get(val, pth)
+    r = Flor.deep_get(val, pth)
+
+    return r unless r.is_a?(Symbol)
+    return nil unless r.to_s.count('.') < pth.count('.')
+
+    rs = r.to_s.split('.')
+
+    qualifier = 'key'
+    tail = rs.pop
+    qualifier, tail = [ 'index', tail.to_i ] if tail.match(/\A\d+\z/)
+
+    body = [ key, *rs ].join('.')
+
+    fail IndexError.new(
+      "no #{qualifier} #{tail.inspect} in variable #{body.inspect}")
   end
 
   def do_lookup_var(node, mod, key)

@@ -35,13 +35,12 @@ describe Flor::Conf do
       })
     end
 
-    it 'fails when it cannot parse' do
+    it 'fails if it cannot parse' do
 
       expect {
-        Flor::Conf.prepare(%{\n version: 3.2.1 }, {})
+        p Flor::Conf.prepare(%{\n version: 3.2.1 }, {})
       }.to raise_error(
-        ArgumentError,
-        "error while reading conf: don't know how to apply \"3.2.1\""
+        ArgumentError, 'error while reading conf: no index 2 in variable "3"'
       )
     end
   end

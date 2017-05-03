@@ -147,6 +147,19 @@ describe 'Flor core' do
 #      expect(r['point']).to eq('terminated')
 #      expect(r['payload']['ret']).to eq([ nil, nil ])
 #    end
+
+    it 'fails when the container does not exist (deeper)'# do
+#
+#      r = @executor.launch( %{
+#        #[ a.0, h.k0 ]
+#        sequence on_error: 1
+#          a.0
+#      },
+#        vars: { 'a' => [], 'h' => {} })
+#
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['ret']).to eq([ nil, nil ])
+#    end
   end
 
   describe 'the "node" pseudo-variable' do
