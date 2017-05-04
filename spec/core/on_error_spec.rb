@@ -71,6 +71,22 @@ describe 'Flor core' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 'muted.' })
     end
+
+    it 'accepts a function that returns a function' do
+
+      flor = %{
+        define do-return x
+          def err
+            x
+        sequence on_error: (do-return 2)
+          push f.l 0
+      }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(2)
+    end
   end
 end
 
