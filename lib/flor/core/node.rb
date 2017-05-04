@@ -320,75 +320,81 @@ class Flor::Node
     Flor.deep_get(@node, pth)
   end
 
-  def lookup_dvar(mod, key)
+  class PseudoVarContainer < Hash
+    #
+    # inherit from Hash so that deep.rb is quietly mislead
+    #
+    def initialize(type); @type = type; end
+    #def has_key?(key); true; end
+    def [](key); [ "_#{@type}", { @type => key }, -1 ]; end
+  end
+    #
+  PROC_VAR_CONTAINER = PseudoVarContainer.new('proc')
+  TASKER_VAR_CONTAINER = PseudoVarContainer.new('task')
+
+  def lookup_var(node, mod, key, pth)
+
+    c = lookup_var_container(node, mod, key)
+
+    kp = [ key, pth ].reject { |x| x == nil || x.size < 1 }.join('.')
+
+    v = Flor.deep_get(c, kp)
+#p [ mod, key, pth, '->', v ]
+
+    return v unless v.is_a?(Symbol)
+
+    vs = v.to_s.split('.')
+    tail = vs.pop
+    vs = vs.join('.')
+
+    fail IndexError.new("variable #{tail.inspect} not found") if vs.empty?
+    fail IndexError.new("no key #{tail.inspect} in variable #{vs.inspect}")
+  end
+
+  def lookup_var_container(node, mod, key)
+
+    return lookup_dvar_container(mod, key) if node == nil || mod == 'd'
+
+    pnode = parent_node(node)
+    vars = node['vars']
+
+    if mod == 'g'
+      return lookup_var_container(pnode, mod, key) if pnode
+      return vars if vars
+      fail "node #{node['nid']} has no vars and no parent"
+    end
+
+    return vars if vars && vars.has_key?(key)
+
+    if cnid = node['cnid']
+      cvars = (@execution['nodes'][cnid] || {})['vars']
+      return cvars if cvars && cvars.has_key?(key)
+    end
+      #
+      # look into closure, just one level deep...
+
+    lookup_var_container(pnode, mod, key)
+  end
+
+  def lookup_dvar_container(mod, key)
 
     if mod != 'd' && Flor::Procedure[key]
-      return [ '_proc', { 'proc' => key }, -1 ]
+      return PROC_VAR_CONTAINER
     end
 
     l = @executor.unit.loader
     vdomain = @node['vdomain']
       #
     if l && vdomain != false
-      v = l.variables(vdomain || domain).fetch(key) { :no }
-      return v unless v == :no
+      vars = l.variables(vdomain || domain)
+      return vars if vars.has_key?(key)
     end
 
     if mod != 'd' && @executor.unit.has_tasker?(@executor.exid, key)
-      return [ '_task', { 'task' => key }, -1 ]
+      return TASKER_VAR_CONTAINER
     end
 
-    nil
-  end
-
-  def lookup_var(node, mod, key, pth)
-
-    val = do_lookup_var(node, mod, key)
-
-    r = Flor.deep_get(val, pth)
-
-    return r unless r.is_a?(Symbol)
-    return nil unless r.to_s.count('.') < pth.count('.')
-
-    rs = r.to_s.split('.')
-
-    qualifier = 'key'
-    tail = rs.pop
-    qualifier, tail = [ 'index', tail.to_i ] if tail.match(/\A\d+\z/)
-
-    body = [ key, *rs ].join('.')
-
-    fail IndexError.new(
-      "no #{qualifier} #{tail.inspect} in variable #{body.inspect}")
-  end
-
-  def do_lookup_var(node, mod, key)
-
-    return lookup_dvar(mod, key) if node == nil || mod == 'd'
-
-    pnode = parent_node(node)
-    #cnode = closure_node(node)
-
-    if mod == 'g'
-      vars = node['vars']
-      return do_lookup_var(pnode, mod, key) if pnode
-      return vars[key] if vars
-      #return do_lookup_var(cnode, mod, key) if cnode
-      fail "node #{node['nid']} has no vars and no parent"
-    end
-
-    vars = node['vars']
-
-    return vars[key] if vars && vars.has_key?(key)
-
-    if cnid = node['cnid']
-      cvars = (@execution['nodes'][cnid] || {})['vars']
-      return cvars[key] if cvars && cvars.has_key?(key)
-    end
-      #
-      # look into closure, just one level deep...
-
-    do_lookup_var(pnode, mod, key)
+    {}
   end
 
   def lookup_var_name(node, val)

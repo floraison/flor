@@ -50,7 +50,7 @@ module Flor
       when Hash
         [ val[kk], seen ]
       else
-        return seen.join('.').to_sym
+        return seen[0..-2].join('.').to_sym
       end
 
     end.first

@@ -124,42 +124,35 @@ describe 'Flor core' do
       expect(r['payload']['ret']).to eq('c')
     end
 
-    it 'yields null when the container exists'# do
-#
-#      r = @executor.launch(
-#        %{
-#          [ a.0, h.k0 ]
-#        },
-#        vars: { 'a' => [], 'h' => {} })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['ret']).to eq([ nil, nil ])
-#    end
+    it 'yields null when the container exists' do
 
-    it 'fails when the container does not exist'# do
-#
-#      r = @executor.launch( %{
-#        #[ a.0, h.k0 ]
-#        sequence on_error: 1
-#          a.0
-#      })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['ret']).to eq([ nil, nil ])
-#    end
+      r = @executor.launch(
+        %{
+          [ a.0, h.k0 ]
+        },
+        vars: { 'a' => [], 'h' => {} })
 
-    it 'fails when the container does not exist (deeper)'# do
-#
-#      r = @executor.launch( %{
-#        #[ a.0, h.k0 ]
-#        sequence on_error: 1
-#          a.0
-#      },
-#        vars: { 'a' => [], 'h' => {} })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['ret']).to eq([ nil, nil ])
-#    end
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ nil, nil ])
+    end
+
+    it 'fails when the container does not exist' do
+
+      r = @executor.launch(%{ a.0 })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('variable "a" not found')
+    end
+
+    it 'fails when the container does not exist (deeper)' do
+
+      r = @executor.launch(
+        %{ h.a.0 },
+        vars: { 'h' => {} })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('no key "a" in variable "h"')
+    end
   end
 
   describe 'the "node" pseudo-variable' do
