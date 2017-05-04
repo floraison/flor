@@ -190,15 +190,15 @@ module Flor
         node['heat'] = '_nul'
         node['heap'] = '_nul'
 
-      elsif message['accept_symbol'] && node['heat'] == nil
+      elsif message['accept_symbol'] && heat == nil
         #
         # tag: et al
 
-        tree = node['tree'] = message['tree'] = [ '_dqs', tree[0], tree[2] ]
+        node['tree'] = message['tree'] = t = [ '_dqs', tree[0], tree[2] ]
 
-        node['heat0'] = tree[0]
-        node['heat'] = heat = n.deref(tree[0])
-        node['heap'] = n.reheap(tree, heat)
+        node['heat0'] = t[0]
+        node['heat'] = h = n.deref(t[0])
+        node['heap'] = n.reheap(t, h)
 
       elsif heap == 'task' && heat[0] == '_task'
         #
