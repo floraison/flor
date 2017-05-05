@@ -19,8 +19,8 @@ module Flor
       @waiters = []
 
       @unit.instance_eval do
-        def wait(exid, opts=true)
-          @hooker['wlist'].wait(exid, opts)
+        def wait(exid, opts=true, more=nil)
+          @hooker['wlist'].wait(exid, opts, more)
         end
       end
     end
@@ -46,7 +46,7 @@ module Flor
       [] # no new messages
     end
 
-    def wait(exid, opts)
+    def wait(exid, opts, more)
 
       exid, opts =
         if opts == true && exid == 'idle'
@@ -56,6 +56,7 @@ module Flor
         else
           [ exid, opts ]
         end
+      opts.merge!(more) if more.is_a?(Hash)
 
       opts[:timeout] =
         nil if opts[:timeout] == true
