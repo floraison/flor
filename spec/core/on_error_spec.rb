@@ -75,10 +75,10 @@ describe 'Flor core' do
     it 'accepts a function that returns a function' do
 
       flor = %{
-        define do-return x
+        define return x
           def err
             x
-        sequence on_error: (do-return 2)
+        sequence on_error: (return 2)
           push f.l 0
       }
 
