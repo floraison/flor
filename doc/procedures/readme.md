@@ -10,6 +10,7 @@
 * [cond](cond.md) - Evaluates all its condition children until one evaluates to true (or it's an else), then executes the corresponding clause child.
 * [cursor](cursor.md) - Executes child expressions in sequence, but may be "guided".
 * [def, fun, define](define.md) - Defines a function.
+* [do-return](do_return.md) - Takes a set of arguments and returns a function that will return those arguments again.
 * [fail, error](fail.md) - Explicitely raises an error.
 * [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidequick)
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
@@ -25,6 +26,7 @@
 * [cancel, kill](cancel.md) - Cancels an execution branch
 * [concurrence](concurrence.md) - Executes its children concurrently.
 * [graft, import](graft.md) - Graft a subtree into the current flo
+* [on](on.md) - Traps a signal by name
 * [schedule](schedule.md) - Schedules a function
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
 

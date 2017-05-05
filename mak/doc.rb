@@ -8,7 +8,8 @@ def make_proc_doc(path)
 
   lines = File.readlines(path)
 
-  cline = lines.index { |l| l.match(/^class Flor::Pro::.* < Flor::Pro/) }
+  cline = lines
+    .index { |l| l.match(/^class Flor::Pro::.* < Flor::(Pro|Macro)/) }
 
   return unless cline && cline > 0
 
