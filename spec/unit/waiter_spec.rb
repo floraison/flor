@@ -27,6 +27,7 @@ describe Flor::Waiter do
       ).to eq([
         [ [ nil, [ 'terminated' ] ] ],
         nil,
+        'fail',
         false
       ])
     end
@@ -38,6 +39,7 @@ describe Flor::Waiter do
       ).to eq([
         [ [ '0_0', [ 'task' ] ] ],
         nil,
+        'fail',
         false
       ])
     end
@@ -52,6 +54,7 @@ describe Flor::Waiter do
           [ nil, [ 'terminated' ] ]
         ],
         nil,
+        'fail',
         false
       ])
     end
@@ -66,6 +69,7 @@ describe Flor::Waiter do
           [ nil, [ 'terminated' ] ]
         ],
         nil,
+        'fail',
         false
       ])
     end
@@ -80,6 +84,7 @@ describe Flor::Waiter do
           [ '0_1', [ 'task', 'cancel' ] ]
         ],
         nil,
+        'fail',
         false
       ])
     end
@@ -91,6 +96,19 @@ describe Flor::Waiter do
       ).to eq([
         [ [ '0_0', [ 'task' ] ] ],
         12,
+        'fail',
+        false
+      ])
+    end
+
+    it 'accepts an on_timeout:' do
+
+      expect(
+        @waiter.expand_args(wait: '0_0 task', on_timeout: 'shutup')
+      ).to eq([
+        [ [ '0_0', [ 'task' ] ] ],
+        nil,
+        'shutup',
         false
       ])
     end
@@ -102,6 +120,7 @@ describe Flor::Waiter do
       ).to eq([
         [ [ '0_0', [ 'task' ] ] ],
         nil,
+        'fail',
         3
       ])
     end
@@ -117,6 +136,13 @@ describe Flor::Waiter do
       @unit.storage.delete_tables
       @unit.storage.migrate
       @unit.start
+
+      class << @unit
+        attr_reader :wlist
+      end
+      class << @unit.wlist
+        attr_reader :waiters
+      end
     end
 
     after :each do
@@ -147,6 +173,30 @@ describe Flor::Waiter do
       expect(r.keys).to eq(%w[
         point exid start duration consumed counters nodes size er pr ])
     end
+
+#    it 'understands timeout:' do
+#
+#      Thread.new do
+#        @unit.launch(%{ sleep 10 }, wait: 'end', timeout: 7)
+#      end
+#      waiter = wait_until { @unit.wlist.waiters.first }
+#
+#      class << waiter; attr_reader :timeout; end
+#
+#      expect(waiter.timeout).to eq(7)
+#    end
+#
+#    it 'understands on_timeout:' do
+#
+#      Thread.new do
+#        @unit.launch(%{ sleep 10 }, wait: 'end', on_timeout: 'shutup')
+#      end
+#      waiter = wait_until { @unit.wlist.waiters.first }
+#
+#      class << waiter; attr_reader :on_timeout; end
+#
+#      expect(waiter.on_timeout).to eq('shutup')
+#    end
   end
 
   context 'when called via unit#wait' do

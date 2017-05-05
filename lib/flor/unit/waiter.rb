@@ -5,12 +5,14 @@ module Flor
 
     def initialize(exid, opts)
 
-      serie, timeout, repeat = expand_args(opts)
+      serie, timeout, on_timeout, repeat =
+        expand_args(opts)
 
       @exid = exid
       @original_serie = repeat ? Flor.dup(serie) : nil
       @serie = serie
       @timeout = timeout
+      @on_timeout = on_timeout
 
       @queue = []
       @mutex = Mutex.new
@@ -59,7 +61,11 @@ module Flor
           @var.wait(@mutex, @timeout)
             # will wait "in aeternum" if @timeout is nil
 
-          fail(RuntimeError, "timeout for #{self.to_s}") if @queue.empty?
+          if @queue.empty?
+            fail RuntimeError.new(
+              "timeout for #{self.to_s}") if @on_timeout == 'fail'
+            return { 'exid' => @exid, 'timed_out' => @on_timeout }
+          end
         end
 
         #executor, message = @queue.shift
@@ -89,19 +95,23 @@ module Flor
       owait = opts[:wait]
       orepeat = opts[:repeat] || false
       otimeout = opts[:timeout]
+      oontimeout = opts[:on_timeout] || opts[:ontimeout] || 'fail'
 
       case owait
       when true
         [ [ [ nil, %w[ failed terminated ] ] ], # serie
           otimeout,
+          oontimeout,
           orepeat ]
       when Numeric
         [ [ [ nil, %w[ failed terminated ] ] ], # serie
           owait, # timeout
+          oontimeout,
           orepeat ]
       when String, Array
         [ parse_serie(owait), # serie
           otimeout,
+          oontimeout,
           orepeat ]
       else
         fail ArgumentError.new(
