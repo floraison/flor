@@ -95,6 +95,20 @@ describe 'Flor procedures' do
         [ '_func', { 'nid' => '0', 'cnid' => '0', 'fun' => 0 }, 2 ]
       )
     end
+
+    it 'defines functions with no arguments' do
+
+      flor = %{
+        def
+          1 + 1
+        f.ret _
+      }
+
+      r = @executor.launch(flor)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(2)
+    end
   end
 
   describe 'fun' do
