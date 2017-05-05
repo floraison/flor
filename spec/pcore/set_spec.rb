@@ -201,6 +201,53 @@ describe 'Flor procedures' do
           nil
       })
     end
+
+    it 'accepts results of function calls' do
+
+      r = @executor.launch(%q{ # <--- q
+        define f0 \ 0
+        define f1 x \ 1 + x
+        set f.a (f0 _)
+        set f.b (f1 1)
+        set f.aa
+          f0 _
+        set f.bb
+          f1 1
+      })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['a']).to eq(0)
+      expect(r['payload']['b']).to eq(2)
+      expect(r['payload']['aa']).to eq(0)
+      expect(r['payload']['bb']).to eq(2)
+    end
+
+    it 'accepts results of function definitions' do
+
+      r = @executor.launch(%q{ # <--- q
+        set f0
+          def
+            0
+        set f.a0
+          f0 _
+        set f.b0 (f0 _)
+
+        set f1
+          def \ 1
+        set f.a1 (f1 _)
+
+        #set f2 (def \ 2)
+        #set f.a2 (f2 _)
+      })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['a0']).to eq(0)
+      expect(r['payload']['b0']).to eq(0)
+
+      expect(r['payload']['a1']).to eq(1)
+    end
   end
 
   describe 'set a' do

@@ -629,6 +629,7 @@ class Flor::Macro < Flor::Procedure
   def rewrite
 
     t = rewrite_tree
+#Flor.print_tree(t, nid)
 
     m = @message.dup
     m['tree'] = t
