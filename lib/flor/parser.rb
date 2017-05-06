@@ -154,7 +154,7 @@ module Flor
 
     def rewrite_par(t)
 
-      Nod.new(t.lookup(:node), nil).to_a
+      Nod.new(t.name, t.lookup(:node), nil).to_a
     end
 
     def rewrite_ref(t); [ t.string, [], ln(t) ]; end
@@ -238,10 +238,11 @@ module Flor
     class Nod
 
       attr_accessor :parent, :indent
-      attr_reader :children
+      attr_reader :type, :children
 
-      def initialize(tree, outdent)
+      def initialize(type, tree, outdent)
 
+        @type = type
         @parent = nil
         @indent = -1
         @head = 'sequence'
@@ -369,13 +370,12 @@ module Flor
 
     def rewrite_flor(t)
 
-      prev = root = Nod.new(nil, nil)
+      prev = root = Nod.new(t.name, nil, nil)
 
-      #t.gather(:node).each do |nt|
       t.gather(:line).each do |lt|
         nt = lt.lookup(:node); next unless nt
-        ot = lt.lookup(:outdent).string
-        n = Nod.new(nt, ot)
+        ot = lt.children.last.string
+        n = Nod.new(nt.name, nt, ot)
         prev.append(n)
         prev = n
       end
