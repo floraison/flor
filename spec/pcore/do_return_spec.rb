@@ -25,6 +25,11 @@ describe 'Flor procedures' do
             do-return 1
           set b \ (do-return 'two')
           [ (a _) (b _) ]
+
+          #set c (do-return 'three')
+          #set d (def \ 4)
+          #[ (a _) (b _) (c _) (d _) ]
+            # these cases are explored in spec/pcore/set_spec.rb
         })
 
       expect(r['point']).to eq('terminated')

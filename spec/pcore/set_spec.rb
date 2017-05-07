@@ -236,9 +236,6 @@ describe 'Flor procedures' do
         set f1
           def \ 1
         set f.a1 (f1 _)
-
-        #set f2 (def \ 2)
-        #set f.a2 (f2 _)
       })
 
       expect(r['point']).to eq('terminated')
@@ -247,6 +244,18 @@ describe 'Flor procedures' do
       expect(r['payload']['b0']).to eq(0)
 
       expect(r['payload']['a1']).to eq(1)
+    end
+
+    it 'accepts results of (inline) function definitions' do
+
+      r = @executor.launch(%q{ # <--- q
+        set f2 (def \ 2)
+        set f.a2 (f2 _)
+      })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['a2']).to eq(2)
     end
   end
 
