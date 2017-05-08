@@ -257,6 +257,24 @@ describe 'Flor procedures' do
 
       expect(r['payload']['a2']).to eq(2)
     end
+
+    it "doesn't mind a last tag" do
+
+      r = @executor.launch(%q{ # <--- q
+        set a 2 tag: 'here'
+      })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['vars']['a']).to eq(2)
+      expect(r['payload']['a2']).to eq(nil)
+
+      ent = @executor.journal.find { |m| m['point'] == 'entered' }
+      lef = @executor.journal.find { |m| m['point'] == 'left' }
+
+      expect(ent['tags']).to eq(%w[ here ])
+      expect(lef['tags']).to eq(%w[ here ])
+    end
   end
 
   describe 'set a' do
