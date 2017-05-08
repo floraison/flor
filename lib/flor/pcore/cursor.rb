@@ -132,20 +132,27 @@ class Flor::Pro::Cursor < Flor::Procedure
     fail("move target #{to.inspect} not found")
   end
 
+  def is_tag_tree?(t, tagname)
+
+    Flor.is_att_tree?(t) &&
+    t[1].size == 2 &&
+    t[1][0][0, 2] == [ 'tag', [] ] &&
+    Flor.is_string_tree?(t[1][1], tagname)
+  end
+
+  def is_att_string_tree?(t, s)
+
+    Flor.is_att_tree?(t) &&
+    t[1].size == 1 &&
+    Flor.is_string_tree?(t[1].first, s)
+  end
+
   def find_tag_target(to)
 
     tree[1]
-      .index { |c|
-        c[1].is_a?(Array) &&
-        c[1].index { |cc|
-          Flor.is_tree?(cc) &&
-          cc[0] == '_att' &&
-          cc[1].size == 2 &&
-          cc[1][0][0] == 'tag' &&
-          %w[ _sqs _dqs ].include?(cc[1][1][0]) &&
-          cc[1][1][1] == to
-        }
-      }
+      .index { |ct|
+        ct[1].is_a?(Array) &&
+        ct[1].index { |cc| is_tag_tree?(cc, to) } }
   end
 
   def find_string_arg_target(to)
@@ -153,24 +160,19 @@ class Flor::Pro::Cursor < Flor::Procedure
     tree[1]
       .index { |c|
         c[1].is_a?(Array) &&
-        c[1].index { |cc|
-          Flor.is_tree?(cc) &&
-          cc[0] == '_att' &&
-          cc[1].size == 1 &&
-          %w[ _sqs _dqs ].include?(cc[1][0][0]) &&
-          cc[1][0][1] == to
-        }
-      }
+        c[1].index { |cc| is_att_string_tree?(cc, to) } }
   end
 
   def find_string_target(to)
 
-    tree[1].index { |c| %w[ _sqs _dqs ].include?(c[0]) && c[1] == to }
+    tree[1]
+      .index { |ct| Flor.is_string_tree?(ct, to) }
   end
 
   def find_name_target(to)
 
-    tree[1].index { |c| c[0] == to }
+    tree[1]
+      .index { |ct| ct[0] == to }
   end
 
   def find_att_target(to)
@@ -182,9 +184,7 @@ class Flor::Pro::Cursor < Flor::Procedure
         c[1].find { |cc|
           cc[0] == '_att' &&
           cc[1].is_a?(Array) &&
-          cc[1][0][0, 2] == [ 'here', [] ]
-        }
-      }
+          cc[1][0][0, 2] == [ 'here', [] ] } } # FIXME hardcoded...
   end
 end
 

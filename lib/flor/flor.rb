@@ -264,16 +264,26 @@ module Flor
     t[2].is_a?(Integer)
   end
 
+  def self.is_string_tree?(t, s=nil)
+
+    t.is_a?(Array) &&
+    t[2].is_a?(Integer) &&
+    %w[ _sqs _dqs ].include?(t[0]) &&
+    (s ? (t[1] == s) : t[1].is_a?(String))
+  end
+
   def self.is_att_tree?(t)
 
     t.is_a?(Array) &&
+    t[2].is_a?(Integer) &&
     t[0] == '_att' &&
     t[1].is_a?(Array)
   end
 
   def self.is_array_of_trees?(o)
 
-    o.is_a?(Array) && o.all? { |e| Flor.is_tree?(e) }
+    o.is_a?(Array) &&
+    o.all? { |e| Flor.is_tree?(e) }
   end
 
 #  # Array, object or atom tree
