@@ -37,7 +37,7 @@ class Flor::Pro::Happly < Flor::Procedure
 
     args = @node['atts'].collect(&:last)
 
-    hret[1].merge!('head' => true, 'nid' => nid)
+    hret[1].merge!('nid' => nid)
 
     msgs = apply(hret, args, tree[2])
 
