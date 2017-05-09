@@ -3,7 +3,8 @@
 #.rspec
 .rspec.out
 .errors
-.bxsinfo
+.bxsinfo.yaml
+.bxsenvs.yaml
 
 *.swp
 
