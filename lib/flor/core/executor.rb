@@ -301,10 +301,40 @@ module Flor
       @unit.archive_node(message['exid'], node)
         # archiving is only active during testing
 
+      #update_parent_node_tree(node)
+
       @execution['nodes'].delete(nid)
 
       cancels
     end
+
+  # This saves the modified trees in the parent when the node is removed
+  # it works ok except for 3 (2017-05-9) failing specs.
+  #
+  # Introducing 3 exceptions for this is not interesting.
+  #
+#    def update_parent_node_tree(node)
+#
+#      t = node['tree']; return unless t
+##return if t[0] == '_apply'
+#      pnode = @execution['nodes'][node['parent']]; return unless pnode
+#
+#      pt =
+#        pnode['tree'] ||
+#        Flor::Node.new(self, pnode, nil).lookup_tree(pnode['nid'])
+#      cid =
+#        Flor.child_id(node['nid'])
+#
+#      if cid == pt[1].size # head "exception"
+#        return if pt[0] == t
+#        pt[0] = t
+#        pnode['tree'] = pt
+#        return
+#      end
+#
+#      pt[1][cid] = t
+#      pnode['tree'] = pt
+#    end
 
     def leave_tags(message, node)
 

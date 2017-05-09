@@ -519,7 +519,7 @@ class Flor::Procedure < Flor::Node
     t = lookup_tree(fni)
     fail ArgumentError.new("couldn't find function at #{fni}") unless t
 
-    t = t[0] if fun[1]['head']
+    t = t[0] if fun[1]['head'] # TODO verify if it's still in use
 
     sig = t[1].select { |c| c[0] == '_att' }
     sig = sig.drop(1) if t[0] == 'define'
