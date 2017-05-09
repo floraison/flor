@@ -520,6 +520,7 @@ class Flor::Procedure < Flor::Node
     fail ArgumentError.new("couldn't find function at #{fni}") unless t
 
     t = t[0] if t[0].is_a?(Array)
+    t = t[1][0] if t[0] == '_att'
 
     sig = t[1].select { |c| c[0] == '_att' }
     sig = sig.drop(1) if t[0] == 'define'

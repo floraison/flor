@@ -23,8 +23,31 @@ describe 'Flor procedures' do
         %q{
           set a
             do-return 1
+          a _
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(1)
+    end
+
+    it 'works (tree rewriting)' do
+
+      r = @executor.launch(
+        %q{
           set b \ (do-return 'two')
-          [ (a _) (b _) ]
+          b _
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('two')
+    end
+
+    it 'works (tree rewriting)' do
+
+      r = @executor.launch(
+        %q{
+          set c (do-return 'trois')
+          c _
 
           #set c (do-return 'three')
           #set d (def \ 4)
@@ -33,7 +56,7 @@ describe 'Flor procedures' do
         })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ 1, 'two' ])
+      expect(r['payload']['ret']).to eq('trois')
     end
   end
 end

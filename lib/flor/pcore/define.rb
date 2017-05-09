@@ -50,6 +50,7 @@ class Flor::Pro::Define < Flor::Procedure
     cnode = lookup_var_node(@node, 'l')
     cnid = cnode['nid']
     fun = counter_next('funs') - 1
+
     (cnode['closures'] ||= []) << fun
 
     val = [ '_func', { 'nid' => nid, 'cnid' => cnid, 'fun' => fun }, t[2] ]
