@@ -294,6 +294,8 @@ module Flor
           cn = att + non_att
         end
 
+#p @head
+
         # detect if/unless suffix
 
         atts =
