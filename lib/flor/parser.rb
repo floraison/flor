@@ -301,8 +301,8 @@ module Flor
 #        if @head.is_a?(Array)
 #p @head
 #p cn
-#          cn = [ @head, [ 'f.ret', cn, @line ] ]
-#          @head = 'sequence'
+#          #cn = [ @head, [ 'f.ret', cn, @line ] ]
+#          #@head = 'sequence'
 #        end
 
         #
