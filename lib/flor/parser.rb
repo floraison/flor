@@ -279,6 +279,7 @@ module Flor
 
         cn = @children.collect(&:to_a)
 
+        #
         # make sure `[ 1 2 3 ] timeout: '2h'`
         # turns into `_arr timeout: '2h'; 1 | 2 | 3`
 
@@ -294,8 +295,17 @@ module Flor
           cn = att + non_att
         end
 
-#p @head
+        #
+        # ...
 
+#        if @head.is_a?(Array)
+#p @head
+#p cn
+#          cn = [ @head, [ 'f.ret', cn, @line ] ]
+#          @head = 'sequence'
+#        end
+
+        #
         # detect if/unless suffix
 
         atts =
@@ -307,6 +317,7 @@ module Flor
 
         return [ @head, cn, @line ] unless i
 
+        #
         # rewrite if/unless suffix
 
         t = [ atts[i][0][0] == 'if' ? 'if' : 'unless', [], @line ]

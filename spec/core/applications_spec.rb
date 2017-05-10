@@ -31,11 +31,10 @@ describe 'Flor core' do
 
     it 'returns itself' do
 
-      flor = %{
-        3 tags: 'xyz'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %{
+          3 tags: 'xyz'
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(3)

@@ -121,12 +121,17 @@ class Flor::Pro::Att < Flor::Procedure
     wrap_reply
   end
 
+  def parent_is_trap?
+
+    pt = parent_node_tree; return false unless pt
+    pt0 = pt[0]; return false unless pt0.is_a?(String)
+    pro = Flor::Procedure[pt0]; return false unless pro
+    pro.names.include?('trap')
+  end
+
   def receive_tag
 
-    pt = parent_node_tree
-
-    return receive_att('tags') \
-      if pt && pt[0].is_a?(String) && Flor::Procedure[pt[0]].names[0] == 'trap'
+    return receive_att('tags') if parent_is_trap?
 
     ret = payload['ret']
     ret = unref(ret, :att)

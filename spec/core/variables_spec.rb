@@ -64,6 +64,24 @@ describe 'Flor core' do
 #      expect(r['point']).to eq('terminated')
 #      expect(r['payload']['ret']).to eq(nil)
 #    end
+
+    it 'accepts a tag' do
+
+      r = @executor.launch(
+        %{
+          a tag: 'x'
+        },
+        vars: { 'a' => 1 })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(1)
+
+      ent = @executor.journal.find { |m| m['point'] == 'entered' }
+      lef = @executor.journal.find { |m| m['point'] == 'left' }
+
+      expect(ent['tags']).to eq(%w[ x ])
+      expect(lef['tags']).to eq(%w[ x ])
+    end
   end
 
   describe 'a variable reference' do

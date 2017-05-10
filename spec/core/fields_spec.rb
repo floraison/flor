@@ -46,13 +46,32 @@ describe 'Flor core' do
 
     it 'yields the value if not a proc or a func' do
 
-      r = @executor.launch(%{
-        set f.a 1
-        f.a 2
-      })
+      r = @executor.launch(
+        %{
+          f.a 2
+        },
+        payload: { 'a' => 1 })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(1)
+    end
+
+    it 'accepts a tag' do
+
+      r = @executor.launch(
+        %{
+          f.a tag: 'x'
+        },
+        payload: { 'a' => 1 })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(1)
+
+      ent = @executor.journal.find { |m| m['point'] == 'entered' }
+      lef = @executor.journal.find { |m| m['point'] == 'left' }
+
+      expect(ent['tags']).to eq(%w[ x ])
+      expect(lef['tags']).to eq(%w[ x ])
     end
   end
 

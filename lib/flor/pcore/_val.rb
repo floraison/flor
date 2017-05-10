@@ -3,14 +3,18 @@ class Flor::Pro::Val < Flor::Procedure
 
   name '_val'
 
-  def execute
+  def wrap_reply
 
-    heat = @node['heat']
-    heat = nil if heat == [ '_proc', 'val', -1 ] || heat[0] == '_nul'
+    if node_open?
 
-    payload['ret'] = heat
+      heat = @node['heat']
+      #heat = nil if heat == [ '_proc', 'val', -1 ] || heat[0] == '_nul'
+      heat = nil if heat[0] == '_nul'
 
-    wrap_reply
+      payload['ret'] = heat
+    end
+
+    super
   end
 end
 
