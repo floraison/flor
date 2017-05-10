@@ -176,13 +176,24 @@ describe 'Flor core' do
       expect(r['payload']['ret']).to eq(10)
     end
 
+    it 'works with an anonymous function (f.ret)' do
+
+      r = @executor.launch(
+        %q{
+          def x y \ (+ x y)
+          f.ret 6 2
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(8)
+    end
+
     it 'works with an anonymous function (paren)' do
 
-      flor = %q{
-        (def x y \ (+ x y)) 7 2
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          (def x y \ (+ x y)) 7 2
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(9)
