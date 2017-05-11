@@ -277,75 +277,53 @@ module Flor
 
         return @head if @head.is_a?(Array) && @children.empty?
 
+# [o] put if/unless suffix aside
+# [o] fix _arr/_obj
+# [ ] remove need for "head"
+# [o] add back if/unless
+
         cn = @children.collect(&:to_a)
 
-        #
-        # make sure `[ 1 2 3 ] timeout: '2h'`
-        # turns into `_arr timeout: '2h'; 1 | 2 | 3`
+        as, non_atts = cn.partition { |c| c[0] == '_att' }
+        atts, suff = [], nil
 
-        if (
-          @head.is_a?(Array) &&
-          (@head[0] == '_arr' || @head[0] == '_obj') &&
-          #Flor.is_array_of_trees?(@head[1]) &&
-          cn.all? { |c| c[0] == '_att' && c[1].size > 1 }
-        )
-          cn = @head[1] + cn
-          @head = @head[0]
-          att, non_att = cn.partition { |c| c[0] == '_att' }
-          cn = att + non_att
+        as.each do |c|
+
+          c1 = c[1]; c10 = c1.size == 1 && c1[0]
+          suff = [] if c10 && c10[1] == [] && %w[ if unless ].include?(c10[0])
+
+          (suff || atts) << c
         end
 
-        #
-        # ...
+        atts, non_atts = ta_rework_arr_or_obj(atts, non_atts)
 
-#        if @head.is_a?(Array)
-#p @head
-#p cn
-#          #cn = [ @head, [ 'f.ret', cn, @line ] ]
-#          #@head = 'sequence'
-#        end
+        core = [ @head, atts + non_atts, @line ]
+        core = core[0] if core[0].is_a?(Array) && core[1].empty?
 
-        #
-        # detect if/unless suffix
+        return core unless suff
 
-        atts =
-          cn.inject([]) { |a, c| a << c[1] if c[0] == '_att'; a }
-        i =
-          atts.index { |c|
-            c.size == 1 && %w[ if unless ].include?(c[0][0]) && c[0][1] == []
-          }
+        iou = suff.shift[1][0][0]
 
-        return [ @head, cn, @line ] unless i
-
-        #
-        # rewrite if/unless suffix
-
-        t = [ atts[i][0][0] == 'if' ? 'if' : 'unless', [], @line ]
-        t[1].concat(atts[i + 1..-1].collect(&:first))
-
-        cn0i = cn[0, i]; if Flor.is_tree?(@head) && cn0i == []
-          t[1].push(@head)
-        else
-          t[1].push([ @head, cn0i, @line ])
-        end
-
-        t
+        [ iou, [ suff.first[1].first, core ], @line ]
       end
 
       protected
 
+      def ta_rework_arr_or_obj(atts, non_atts)
+
+        return [ atts, non_atts ] unless (
+          @head.is_a?(Array) &&
+          non_atts.empty? &&
+          %w[ _arr _obj ].include?(@head[0]))
+
+        cn = @head[1] + atts + non_atts
+        @head = @head[0]
+
+        cn.partition { |c| c[0] == '_att' }
+      end
+
       def read(tree)
 
-        #if it = tree.lookup(:indent)
-        #  #s = it.string
-        #  #semicount = s.count(';')
-        #  #pipe = s.index('|')
-        #  #
-        #  #@indent =
-        #  #  if semicount == 1 then :east
-        #  #  elsif semicount > 1 || pipe then :south
-        #  #  else s.length; end
-        #end
         @indent = tree.lookup(:indent).string.length
 
         ht = tree.lookup(:head)
