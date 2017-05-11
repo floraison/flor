@@ -405,16 +405,31 @@ parses to
 ---
 
 ```flor
-  1 + 1 * 2
+  1 + 2 * 3
 ```
 parses to
 ```ruby
   [ '+', [
     [ '_num', 1, 1 ],
     [ '*', [
+      [ '_num', 2, 1 ],
+      [ '_num', 3, 1 ]
+    ], 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  1 * 2 + 3
+```
+parses to
+```ruby
+  [ '+', [
+    [ '*', [
       [ '_num', 1, 1 ],
       [ '_num', 2, 1 ]
-    ], 1 ]
+    ], 1 ],
+    [ '_num', 3, 1 ]
   ], 1 ]
 ```
 ---
@@ -574,6 +589,59 @@ parses to
 parses to
 ```ruby
   [ '==', [ [ 'a', [], 1 ], [ 'b', [], 1 ] ], 1 ]
+```
+
+## logical operations
+
+```flor
+  not a
+```
+parses to
+```ruby
+  [ 'not', [
+    [ '_att', [
+      [ 'a', [], 1 ]
+    ], 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  and a b
+```
+parses to
+```ruby
+  [ 'and', [
+    [ '_att', [ [ 'a', [], 1 ] ], 1 ],
+    [ '_att', [ [ 'b', [], 1 ] ], 1 ],
+  ], 1 ]
+```
+---
+
+```flor
+  a and b
+```
+parses to
+```ruby
+  [ 'and', [
+    [ 'a', [], 1 ],
+    [ 'b', [], 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  a and b or c
+```
+parses to
+```ruby
+  [ 'or', [
+    [ 'and', [
+      [ 'a', [], 1 ],
+      [ 'b', [], 1 ]
+    ], 1 ],
+    [ 'c', [], 1 ]
+  ], 1 ]
 ```
 
 ## lines
