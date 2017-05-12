@@ -60,6 +60,30 @@ describe 'Flor unit' do
       expect($seen.size).to eq(6)
     end
 
+    it 'intercepts launch messages' do
+
+      require 'unit/hooks/alpha'
+        # require here, since this path is outside of envs/test/
+
+      $seen = []
+
+      hooks = [
+        { point: 'execute', nid: '0', class: 'AlphaHook' }
+      ]
+
+      File.open('envs/test/lib/hooks/dot.json', 'wb') do |f|
+        f.puts(Flor.to_djan(hooks, color: false))
+      end
+
+      exid0 = @unit.launch(%{ sequence \ noret _ })
+      exid1 = @unit.launch(%{ sequence \ noret _ })
+      r = @unit.wait('idle')
+
+      expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ execute ])
+      expect($seen.collect { |m| m['nid'] }.uniq).to eq(%w[ 0 ])
+      expect($seen.size).to eq(4) # 2 + 2 consumed
+    end
+
     it 'may alter a message'
   end
 end

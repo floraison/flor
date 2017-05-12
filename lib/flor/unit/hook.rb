@@ -15,6 +15,7 @@ module Flor
       opts = {}
       opts[:consumed] = @h['consumed']
       opts[:point] = Flor.h_fetch_a(@h, 'points', 'point', nil)
+      opts[:nid] = Flor.h_fetch_a(@h, 'nids', 'nid', nil)
       opts[:heap] = Flor.h_fetch_a(@h, 'heaps', 'heap', nil)
       opts[:heat] = Flor.h_fetch_a(@h, 'heats', 'heat', nil)
       #opts[:name] = data['names']
