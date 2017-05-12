@@ -92,11 +92,11 @@ describe 'Flor unit' do
       $seen = []
 
       hooks = [
-	{ point: 'terminated', class: 'AlphaHook' }
+        { point: 'terminated', class: 'AlphaHook' }
       ]
 
       File.open('envs/test/lib/hooks/dot.json', 'wb') do |f|
-	f.puts(Flor.to_djan(hooks, color: false))
+        f.puts(Flor.to_djan(hooks, color: false))
       end
 
       exid0 = @unit.launch(%{ sequence \ noret _ })
@@ -116,15 +116,18 @@ describe 'Flor unit' do
       $seen = []
 
       hooks = [
-	{ point: 'cancel', class: 'AlphaHook' }
+        { point: 'cancel', class: 'AlphaHook' }
       ]
 
       File.open('envs/test/lib/hooks/dot.json', 'wb') do |f|
-	f.puts(Flor.to_djan(hooks, color: false))
+        f.puts(Flor.to_djan(hooks, color: false))
       end
 
       r = @unit.launch(%q{ sequence \ stall _ }, wait: '0_0 execute')
+
       @unit.cancel(r['exid'], '0_0')
+
+      @unit.wait(r['exid'], 'terminated')
 
       expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ cancel ])
       expect($seen.collect { |m| m['nid'] }.uniq).to eq([ nil ])
