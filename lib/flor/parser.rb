@@ -19,7 +19,10 @@ module Flor
     def pbend(i); str(nil, i, '}'); end
 
     def null(i); str(:null, i, 'null'); end
-    def number(i); rex(:number, i, /-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/); end
+
+    def number(i)
+      rex(:number, i, /[-+]?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/)
+    end
 
     def tru(i); str(nil, i, 'true'); end
     def fls(i); str(nil, i, 'false'); end
@@ -208,31 +211,53 @@ module Flor
       rewrite(t.c0)
     end
 
+    def invert(operation, operand)
+
+      l = operand[2]
+
+      case operation
+      when '+'
+        if operand[0] == '_num' && operand[1].is_a?(Numeric)
+          [ operand[0], - operand[1], l ]
+        else
+          [ '-', [ operand ], l ]
+        end
+      when '*'
+        [ '/', [ [ 'num', 1, l ], operand ], l ]
+      else
+fail "don't know how to invert #{operation.inspect}" # FIXME
+      end
+    end
+
     def rewrite_exp(t)
 
       return rewrite(t.c0) if t.children.size == 1
 
-      cn = [ rewrite(t.c0) ]
-      op = t.lookup(:sop).string
+      cn = t.children.collect { |ct| ct.lookup(nil) }
 
-      tcn = t.children[2..-1].dup
+      operation =
+        case s = cn.find { |ct| ct.name == :sop }.string
+        when '+', '-' then '+'
+        when '*', '/' then '*'
+        else s
+        end
 
-      loop do
-        c = tcn.shift; break unless c
-        cn << rewrite(c)
-        o = tcn.shift; break unless o
-        o = o.lookup(:sop).string
-        next if o == op
-        cn = [ [ op, cn, cn.first[2] ] ]
-        op = o
+      operator = operation
+      operands = []
+
+      cn.each do |ct|
+        if ct.name == :sop
+          operator = ct.string
+        else
+          o = rewrite(ct)
+          o = invert(operation, o) if operator != operation
+          operands << o
+        end
       end
 
-      if op == '-' && cn.all? { |c| c[0] == '_num' }
-        op = '+'
-        cn[1..-1].each { |c| c[1] = -c[1] }
-      end
-
-      [ op, cn, cn.first[2] ]
+      [ operation, operands, operands.first[2] ]
+#.tap { |x| p x }
+# TODO simplify resulting exp (maybe take some of the work of invert)
     end
 
     class Nod
@@ -275,6 +300,7 @@ module Flor
 
       def to_a
 
+        return [ @head, @children, @line ] unless @children.is_a?(Array)
         return @head if @head.is_a?(Array) && @children.empty?
 
 # [o] put if/unless suffix aside
@@ -341,12 +367,12 @@ module Flor
             if kt
               k = Flor::Lang.rewrite(kt.c0)
               as << [ '_att', [ k, v ], k[2] ]
-            elsif %w[ - + ].include?(@head) && v[0, 2] != [ '_', [] ]
-              if v[0] == '+'
-                as.concat(v[1])
-              else
-                as << v
-              end
+            #elsif %w[ - + ].include?(@head) && v[0, 2] != [ '_', [] ]
+            #  if v[0] == '+'
+            #    as.concat(v[1])
+            #  else
+            #    as << v
+            #  end
             else
               as << [ '_att', [ v ], v[2] ]
             end
@@ -355,6 +381,27 @@ module Flor
           end
 
         @children.concat(atts)
+
+        rework_subtraction if @head == '-'
+      end
+
+      def rework_subtraction
+
+        return unless @children.size == 1
+
+        c = @children.first
+        return unless c[0] == '_att' && c[1].size == 1
+
+        c = c[1].first
+
+        if c[0] == '_num'
+          @head = '_num'
+          @children = - c[1]
+        elsif c[0] == '+'
+          @head = '+'
+          @children = c[1]
+          @children[0] = Flor::Lang.invert('+', @children[0])
+        end
       end
     end
 
