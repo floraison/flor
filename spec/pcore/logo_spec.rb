@@ -49,6 +49,25 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(false)
     end
+
+    it 'returns false as soon as possible' do
+
+      r = @executor.launch(
+        %{
+          and false true
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(false)
+
+      expect(
+        @executor.journal
+          .find { |m|
+            m['point'] == 'execute' && m['tree'][0, 2] == [ '_boo', true ] }
+      ).to eq(
+        nil
+      )
+    end
   end
 
   describe 'or' do
@@ -62,6 +81,25 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(false)
+    end
+
+    it 'returns true as soon as possible' do
+
+      r = @executor.launch(
+        %{
+          or true false
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(true)
+
+      expect(
+        @executor.journal
+          .find { |m|
+            m['point'] == 'execute' && m['tree'][0, 2] == [ '_boo', false ] }
+      ).to eq(
+        nil
+      )
     end
   end
 
