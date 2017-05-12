@@ -386,8 +386,8 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
         if c[0] == '_num'
           @head = '_num'
           @children = - c[1]
-        elsif c[0] == '+'
-          @head = '+'
+        elsif %w[ - + ].include?(c[0])
+          @head = c[0]
           @children = c[1]
           @children[0] = Flor::Lang.invert('+', @children[0])
         end
