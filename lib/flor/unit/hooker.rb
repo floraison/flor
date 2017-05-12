@@ -102,6 +102,11 @@ module Flor
       ps = o(opts, :point, :p, [])
       return false if ps && ! ps.include?(message['point'])
 
+      if nid = o(opts, :nid)
+        return false \
+          unless nid.include?(message['nid'])
+      end
+
       if exi = o(opts, :exid)
         return false \
           unless message['exid'] == exi

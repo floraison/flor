@@ -84,6 +84,53 @@ describe 'Flor unit' do
       expect($seen.size).to eq(4) # 2 + 2 consumed
     end
 
+    it 'intercepts terminated messages' do
+
+      require 'unit/hooks/alpha'
+        # require here, since this path is outside of envs/test/
+
+      $seen = []
+
+      hooks = [
+	{ point: 'terminated', class: 'AlphaHook' }
+      ]
+
+      File.open('envs/test/lib/hooks/dot.json', 'wb') do |f|
+	f.puts(Flor.to_djan(hooks, color: false))
+      end
+
+      exid0 = @unit.launch(%{ sequence \ noret _ })
+      exid1 = @unit.launch(%{ sequence \ noret _ })
+      r = @unit.wait('idle')
+
+      expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ terminated ])
+      expect($seen.collect { |m| m['nid'] }.uniq).to eq([ nil ])
+      expect($seen.size).to eq(4) # 2 + 2 consumed
+    end
+
+    it 'intercepts cancel messages' do
+
+      require 'unit/hooks/alpha'
+        # require here, since this path is outside of envs/test/
+
+      $seen = []
+
+      hooks = [
+	{ point: 'cancel', class: 'AlphaHook' }
+      ]
+
+      File.open('envs/test/lib/hooks/dot.json', 'wb') do |f|
+	f.puts(Flor.to_djan(hooks, color: false))
+      end
+
+      r = @unit.launch(%q{ sequence \ stall _ }, wait: '0_0 execute')
+      @unit.cancel(r['exid'], '0_0')
+
+      expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ cancel ])
+      expect($seen.collect { |m| m['nid'] }.uniq).to eq([ nil ])
+      expect($seen.size).to eq(4) # 2 + 2 consumed
+    end
+
     it 'may alter a message'
   end
 end
