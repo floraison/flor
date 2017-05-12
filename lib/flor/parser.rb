@@ -235,12 +235,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
       cn = t.children.collect { |ct| ct.lookup(nil) }
 
-      operation =
-        case s = cn.find { |ct| ct.name == :sop }.string
-        when '+', '-' then '+'
-        when '*', '/' then '*'
-        else s
-        end
+      operation = cn.find { |ct| ct.name == :sop }.string
 
       operator = operation
       operands = []
@@ -358,8 +353,8 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
         @head = Flor::Lang.rewrite(ht.c0)
         @head = @head[0] if @head[0].is_a?(String) && @head[1] == []
 
-        atts =
-          tree.children[2..-1].inject([]) do |as, ct|
+        atts = tree.children[2..-1]
+          .inject([]) { |as, ct|
 
             kt = ct.children.size == 3 ? ct.children[1].lookup(:key) : nil
             v = Flor::Lang.rewrite(ct.clast)
@@ -367,22 +362,16 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
             if kt
               k = Flor::Lang.rewrite(kt.c0)
               as << [ '_att', [ k, v ], k[2] ]
-            #elsif %w[ - + ].include?(@head) && v[0, 2] != [ '_', [] ]
-            #  if v[0] == '+'
-            #    as.concat(v[1])
-            #  else
-            #    as << v
-            #  end
             else
               as << [ '_att', [ v ], v[2] ]
             end
 
-            as
-          end
+            as }
 
         @children.concat(atts)
 
         rework_subtraction if @head == '-'
+        rework_addition if @head == '+' || @head == '-'
       end
 
       def rework_subtraction
@@ -402,6 +391,21 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
           @children = c[1]
           @children[0] = Flor::Lang.invert('+', @children[0])
         end
+      end
+
+      def rework_addition
+
+        katts, atts, cn = @children
+          .inject([ [], [], [] ]) { |cn, ct|
+            if ct[0] == '_att'
+              cn[ct[1].size == 2 ? 0 : 1] << ct
+            else
+              cn[2] << ct
+            end
+            cn }
+
+        @children =
+          katts + atts.collect { |ct| ct[1].first } + cn
       end
     end
 
