@@ -387,7 +387,7 @@ parses to
   ], 1 ]
 ```
 
-## operations
+## arithmetical operations
 
 ```flor
   -10
@@ -615,7 +615,60 @@ parses to
   ], 1 ]
 ```
 
-## comparisons
+## logical operations
+
+```flor
+  not a
+```
+parses to
+```ruby
+  [ 'not', [
+    [ '_att', [
+      [ 'a', [], 1 ]
+    ], 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  and a b
+```
+parses to
+```ruby
+  [ 'and', [
+    [ '_att', [ [ 'a', [], 1 ] ], 1 ],
+    [ '_att', [ [ 'b', [], 1 ] ], 1 ],
+  ], 1 ]
+```
+---
+
+```flor
+  a and b
+```
+parses to
+```ruby
+  [ 'and', [
+    [ 'a', [], 1 ],
+    [ 'b', [], 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  a and b or c
+```
+parses to
+```ruby
+  [ 'or', [
+    [ 'and', [
+      [ 'a', [], 1 ],
+      [ 'b', [], 1 ]
+    ], 1 ],
+    [ 'c', [], 1 ]
+  ], 1 ]
+```
+
+## comparison operations
 
 ```flor
   a < b
@@ -668,59 +721,6 @@ parses to
 parses to
 ```ruby
   [ '==', [ [ 'a', [], 1 ], [ 'b', [], 1 ] ], 1 ]
-```
-
-## logical operations
-
-```flor
-  not a
-```
-parses to
-```ruby
-  [ 'not', [
-    [ '_att', [
-      [ 'a', [], 1 ]
-    ], 1 ]
-  ], 1 ]
-```
----
-
-```flor
-  and a b
-```
-parses to
-```ruby
-  [ 'and', [
-    [ '_att', [ [ 'a', [], 1 ] ], 1 ],
-    [ '_att', [ [ 'b', [], 1 ] ], 1 ],
-  ], 1 ]
-```
----
-
-```flor
-  a and b
-```
-parses to
-```ruby
-  [ 'and', [
-    [ 'a', [], 1 ],
-    [ 'b', [], 1 ]
-  ], 1 ]
-```
----
-
-```flor
-  a and b or c
-```
-parses to
-```ruby
-  [ 'or', [
-    [ 'and', [
-      [ 'a', [], 1 ],
-      [ 'b', [], 1 ]
-    ], 1 ],
-    [ 'c', [], 1 ]
-  ], 1 ]
 ```
 
 ## lines
