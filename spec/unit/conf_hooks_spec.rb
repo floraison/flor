@@ -130,8 +130,8 @@ describe 'Flor unit' do
       @unit.wait(r['exid'], 'terminated')
 
       expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ cancel ])
-      expect($seen.collect { |m| m['nid'] }.uniq).to eq([ nil ])
-      expect($seen.size).to eq(4) # 2 + 2 consumed
+      expect($seen.collect { |m| m['nid'] }.uniq).to eq(%w[ 0_0 ])
+      expect($seen.size).to eq(2) # 1 + 1 consumed
     end
 
     it 'may alter a message'

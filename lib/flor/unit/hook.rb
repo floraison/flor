@@ -20,6 +20,12 @@ module Flor
       opts[:heat] = Flor.h_fetch_a(@h, 'heats', 'heat', nil)
       #opts[:name] = data['names']
 
+      correct_points(opts)
+        #
+        # Necessary since "cancel" gets interpreted as
+        # [ '_proc', { 'proc' => 'cancel' }, @line ]
+        # ...
+
       [ "hook#{object_id}", opts, self, nil ]
     end
 
@@ -27,6 +33,24 @@ module Flor
     def notify(executor, message)
 
       @unit.runner.run(executor, @h, message)
+    end
+
+    protected
+
+    def correct_points(opts)
+
+      pts = opts[:point]; return unless pts
+
+      opts[:point] =
+        Flor.is_tree?(pts) ?
+        correct_point(pts) :
+        pts.collect { |pt| correct_point(pt) }
+    end
+
+    def correct_point(point)
+
+      return point[1]['proc'] if point.is_a?(Array) && point[0] == '_proc'
+      point
     end
   end
 end
