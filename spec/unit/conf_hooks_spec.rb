@@ -56,7 +56,6 @@ describe 'Flor unit' do
         }, wait: true)
 
       expect(r['point']).to eq('terminated')
-
       expect($seen.size).to eq(6)
     end
 
@@ -82,6 +81,28 @@ describe 'Flor unit' do
       expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ execute ])
       expect($seen.collect { |m| m['nid'] }.uniq).to eq(%w[ 0 ])
       expect($seen.size).to eq(4) # 2 + 2 consumed
+    end
+
+    it 'intercepts return messages' do
+
+      require 'unit/hooks/alpha'
+        # require here, since this path is outside of envs/test/
+
+      $seen = []
+
+      hooks = [
+        { point: 'return', class: 'AlphaHook' }
+      ]
+
+      File.open('envs/test/lib/hooks/dot.json', 'wb') do |f|
+        f.puts(Flor.to_djan(hooks, color: false))
+      end
+
+      exid0 = @unit.launch(%q{ sequence \ task 'emil' }, wait: true)
+
+      expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ return ])
+      expect($seen.collect { |m| m['nid'] }.uniq).to eq([ '0_0' ])
+      expect($seen.size).to eq(2) # 1 + 1 consumed
     end
 
     it 'intercepts terminated messages' do
