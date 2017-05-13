@@ -182,7 +182,10 @@ module Flor
 
       vs = Hash.new { |h, k| k }
       class << vs
-        def has_key?(k); ! Flor::Procedure[k]; end
+        def has_key?(k)
+          prc = Flor::Procedure[k]
+          ( ! prc) || ( ! prc.core?) # ignore non-core procedures
+        end
       end
 
       vs['root'] = determine_root(path)

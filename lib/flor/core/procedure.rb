@@ -17,11 +17,14 @@ class Flor::Procedure < Flor::Node
 
       names = names.flatten
       @names = names if names.any?
+      @core = !! caller.find { |l| l.match(/flor\/pcore/) } if names.any?
 
       @names
     end
 
     alias :name :names
+
+    def core?; @core; end
 
     def make(executor, node, message)
 
