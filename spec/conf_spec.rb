@@ -43,6 +43,15 @@ describe Flor::Conf do
         ArgumentError, 'error while reading conf: variable "3" not found'
       )
     end
+
+    it 'does not use "unit" procedures'# do
+#
+#      expect(
+#        Flor::Conf.prepare(%{\n point: cancel }, {})
+#      ).to eq({
+#        'point' => 'cancel', 'root' => '.'
+#      })
+#    end
   end
 end
 
