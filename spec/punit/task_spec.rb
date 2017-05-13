@@ -14,6 +14,7 @@ describe 'Flor punit' do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf['unit'] = 'u'
+    @unit.hooker.add('journal', Flor::Journal)
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
@@ -65,6 +66,35 @@ describe 'Flor punit' do
       expect(HoleTasker.message).to eq(nil)
       expect(r['point']).to eq('terminated')
       expect(r['payload'].keys).to eq(%w[ song holed ])
+    end
+
+    it "emits a point: 'return' message" do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            task 'alpha'
+        },
+        wait: true)
+
+      ret = @unit.journal.find { |m| m['point'] == 'return' }
+
+      expect(ret['nid']).to eq('0_0')
+      expect(ret['tasker']).to eq('alpha')
+    end
+
+    it "emits a point: 'return' message (backslash)" do
+
+      r = @unit.launch(
+        %q{
+          sequence \ task 'alpha'
+        },
+        wait: true)
+
+      ret = @unit.journal.find { |m| m['point'] == 'return' }
+
+      expect(ret['nid']).to eq('0_0')
+      expect(ret['tasker']).to eq('alpha')
     end
   end
 end
