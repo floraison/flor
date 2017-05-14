@@ -17,47 +17,47 @@ describe 'Flor procedures' do
 
   describe 'do-return' do
 
-    it 'returns a function that returns its argument'# do
-#
-#      r = @executor.launch(
-#        %q{
-#          set a
-#            do-return 1
-#          a _
-#        })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['ret']).to eq(1)
-#    end
+    it 'returns a function that returns its argument' do
 
-    it 'works (tree rewriting)'# do
-#
-#      r = @executor.launch(
-#        %q{
-#          set b \ (do-return 'two')
-#          b _
-#        })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['ret']).to eq('two')
-#    end
+      r = @executor.launch(
+        %q{
+          set a
+            do-return 1
+          a _
+        })
 
-    it 'works (tree rewriting)'# do
-#
-#      r = @executor.launch(
-#        %q{
-#          set c (do-return 'trois')
-#          c _
-#
-#          #set c (do-return 'three')
-#          #set d (def \ 4)
-#          #[ (a _) (b _) (c _) (d _) ]
-#            # these cases are explored in spec/pcore/set_spec.rb
-#        })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['ret']).to eq('trois')
-#    end
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(1)
+    end
+
+    it 'works (tree rewriting)' do
+
+      r = @executor.launch(
+        %q{
+          set b \ (do-return 'two')
+          b _
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('two')
+    end
+
+    it 'works (tree rewriting)' do
+
+      r = @executor.launch(
+        %q{
+          set c (do-return 'trois')
+          c _
+
+          #set c (do-return 'three')
+          #set d (def \ 4)
+          #[ (a _) (b _) (c _) (d _) ]
+            # these cases are explored in spec/pcore/set_spec.rb
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('trois')
+    end
   end
 end
 
