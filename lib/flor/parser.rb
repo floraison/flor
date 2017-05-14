@@ -298,11 +298,6 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
         return [ @head, @children, @line ] unless @children.is_a?(Array)
         return @head if @head.is_a?(Array) && @children.empty?
 
-# [o] put if/unless suffix aside
-# [o] fix _arr/_obj
-# [ ] remove need for "head"
-# [o] add back if/unless
-
         cn = @children.collect(&:to_a)
 
         as, non_atts = cn.partition { |c| c[0] == '_att' }
@@ -320,6 +315,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
         core = [ @head, atts + non_atts, @line ]
         core = core[0] if core[0].is_a?(Array) && core[1].empty?
+        core = ta_rework_core(core) if core[0].is_a?(Array)
 
         return core unless suff
 
@@ -341,6 +337,19 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
         @head = @head[0]
 
         cn.partition { |c| c[0] == '_att' }
+      end
+
+      def ta_rework_core(core)
+
+        l = core[2]
+
+        [ 'sequence', [
+          [ 'set', [
+            [ 'head_', [], l ],
+            core[0]
+          ], l ],
+          [ 'head_', core[1], l ]
+        ], l ]
       end
 
       def read(tree)

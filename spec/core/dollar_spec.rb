@@ -31,7 +31,7 @@ describe 'Flor core' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 1, 2 ])
-      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['ret']).to eq('sequence')
     end
 
     it "doesn't get in the way of regexps" do

@@ -321,14 +321,6 @@ module Flor
     o[1]['task'].is_a?(String)
   end
 
-  def self.is_tree_head_tree?(o)
-
-    o.is_a?(Array) &&
-    Flor.is_tree?(o[0]) &&
-    Flor.is_array_of_trees?(o[1]) &&
-    o[2].is_a?(Integer)
-  end
-
   # Returns [ st, i ], the parent subtree for the final i index of the nid
   # Used when inserting updated subtrees.
   #
