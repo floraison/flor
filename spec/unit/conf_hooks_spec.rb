@@ -172,15 +172,32 @@ describe 'Flor unit' do
 
       r = @unit.launch(%q{ sequence \ fail 'arghh' }, wait: true)
 
-      @unit.cancel(r['exid'], '0_0')
-
       expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ failed ])
       expect($seen.collect { |m| m['error']['msg'] }.uniq).to eq(%w[ arghh ])
       expect($seen.collect { |m| m['nid'] }.uniq).to eq(%w[ 0 ])
       expect($seen.size).to eq(2) # 1 + 1 consumed
     end
 
-    it 'may alter a message'
-  end
+    it 'may alter a message' do
+ 
+      require 'unit/hooks/bravo'
+        # require here, since this path is outside of envs/test/
+
+      $seen = []
+
+      hooks = [
+        { point: 'return', consumed: false, class: 'BravoHook' }
+      ]
+
+      File.open('envs/test/lib/hooks/dot.json', 'wb') do |f|
+        f.puts(Flor.to_djan(hooks, color: false))
+      end
+
+      r = @unit.launch(%q{ sequence \ task 'emil' }, wait: 'terminated')
+
+      expect(r['payload']['emil']).to eq("was not here")
+    end
+
+ end
 end
 
