@@ -519,7 +519,8 @@ class Flor::Procedure < Flor::Node
 
     cni = fun[1]['cnid'] # closure nid
 
-    t = lookup_tree(fni)
+    t = fun[1]['tree']
+    t = t || lookup_tree(fni) # TODO when fun[1]['tree'] is settled, drop me
     fail ArgumentError.new("couldn't find function at #{fni}") unless t
 
     t = t[0] if t[0].is_a?(Array)

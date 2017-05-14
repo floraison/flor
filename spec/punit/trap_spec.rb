@@ -717,11 +717,15 @@ describe 'Flor punit' do
 
         wait_until { @unit.traces.count > 0 }
 
+        expect(@unit.traces.count).to eq(1)
+
         expect(
-          @unit.traces.collect(&:text)
+          @unit.traces.first.text
         ).to eq(%w[
-          s0:["_func",{"nid":"0_0_3","cnid":"0_0","fun":0},3]:[1,2,3]
-        ])
+          s0
+          ["_func",{"nid":"0_0_3","tree":["def",[["_att",[["msg",[],3]],3],["trace",[["_att",[["_dqs","s0:$(f.ret):$(msg.payload.ret)",3]],3]],3]],3],"cnid":"0_0","fun":0},3]
+          [1,2,3]
+        ].join(':'))
       end
 
       it 'uses the event payload if "event"' do
@@ -741,12 +745,21 @@ describe 'Flor punit' do
 
         wait_until { @unit.traces.count > 0 }
 
+        ts = @unit.traces.all
+
+        expect(ts.size).to eq(2)
+
         expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
+          ts[0].text
+        ).to eq(%{
           s0:[1,2,3]:[1,2,3]
-          s0:["_func",{"nid":"0_0_3","cnid":"0_0","fun":0},3]
-        ])
+        }.strip)
+
+        expect(
+          ts[1].text
+        ).to eq(%{
+          s0:["_func",{"nid":"0_0_3","tree":["def",[["_att",[["msg",[],3]],3],["trace",[["_att",[["_dqs","s0:$(f.ret):$(msg.payload.ret)",4]],4]],4],["trace",[["_att",[["_dqs","s0:$(payload.ret)",5]],5]],5]],3],"cnid":"0_0","fun":0},3]
+        }.strip)
       end
     end
 

@@ -53,7 +53,10 @@ class Flor::Pro::Define < Flor::Procedure
 
     (cnode['closures'] ||= []) << fun
 
-    val = [ '_func', { 'nid' => nid, 'cnid' => cnid, 'fun' => fun }, t[2] ]
+    val = [
+      '_func',
+      { 'nid' => nid, 'tree' => t, 'cnid' => cnid, 'fun' => fun },
+      t[2] ]
 
     if t[0] == 'define'
       name =

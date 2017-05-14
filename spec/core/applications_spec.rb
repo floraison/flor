@@ -104,13 +104,11 @@ describe 'Flor core' do
 
       expect(r['point']).to eq('terminated')
 
-      expect(
-        r['payload']['ret']
-      ).to eq(
-        [ '_func',
-          { 'nid' => '0_0', 'cnid' => '0', 'fun' => 0, 'ref' => 'sum' },
-          3 ]
-      )
+      expect(r['payload']['ret'][0]).to eq('_func')
+      expect(r['payload']['ret'][1]['nid']).to eq('0_0')
+      expect(r['payload']['ret'][1]['cnid']).to eq('0')
+      expect(r['payload']['ret'][1]['fun']).to eq(0)
+      expect(r['payload']['ret'][1]['tree'][0]).to eq('define')
     end
   end
 
@@ -226,17 +224,18 @@ describe 'Flor core' do
       expect(r['point']).to eq('terminated')
 
       expect(r['vars'].keys.sort).to eq(%w[ add3 make_adder ])
-      #
-      expect(r['vars']['make_adder']).to eq(
-        [ '_func',
-          { 'nid' => '0_0', 'cnid' => '0', 'fun' => 0, 'ref' => 'make_adder' },
-          3 ]
-      )
-      expect(r['vars']['add3']).to eq(
-        [ '_func',
-          { 'nid' => '0_0_2-1', 'cnid' => '0_0-1', 'fun' => 1, 'ref' => 'add3' },
-          4 ]
-      )
+
+      expect(r['vars']['make_adder'][0]).to eq('_func')
+      expect(r['vars']['make_adder'][1]['nid']).to eq('0_0')
+      expect(r['vars']['make_adder'][1]['cnid']).to eq('0')
+      expect(r['vars']['make_adder'][1]['fun']).to eq(0)
+      expect(r['vars']['make_adder'][1]['tree'][0]).to eq('define')
+
+      expect(r['vars']['add3'][0]).to eq('_func')
+      expect(r['vars']['add3'][1]['nid']).to eq('0_0_2-1')
+      expect(r['vars']['add3'][1]['cnid']).to eq('0_0-1')
+      expect(r['vars']['add3'][1]['fun']).to eq(1)
+      expect(r['vars']['add3'][1]['tree'][0]).to eq('def')
 
       expect(r['payload']['ret']).to eq(10)
 

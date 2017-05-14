@@ -87,10 +87,22 @@ describe 'Flor punit' do
 
       expect(r['point']).to eq('terminated')
 
+      expect(r['payload']['ret'][0]).to eq('_func')
+      expect(r['payload']['ret'][1].keys).to eq(%w[ nid tree cnid fun ])
+      expect(r['payload']['ret'][1]['nid']).to eq('0_0_1')
+      expect(r['payload']['ret'][1]['cnid']).to eq('0_0')
+      expect(r['payload']['ret'][1]['fun']).to eq(0)
+      expect(r['payload']['ret'][2]).to eq(3)
+
       expect(
-        r['payload']['ret']
+        r['payload']['ret'][1]['tree']
       ).to eq(
-        [ '_func', { 'nid' => '0_0_1', 'cnid' => '0_0', 'fun' => 0 }, 3 ]
+        [ 'def', [
+          [ '_att', [ ['msg', [], 3 ] ], 3 ],
+          [ 'trace', [
+            [ '_att', [ [ '_dqs', '$(msg.point):x', 3 ] ], 3 ]
+          ], 3 ]
+        ], 3 ]
       )
 
       expect(
