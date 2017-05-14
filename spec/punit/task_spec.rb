@@ -96,6 +96,20 @@ describe 'Flor punit' do
       expect(ret['nid']).to eq('0_0')
       expect(ret['tasker']).to eq('alpha')
     end
+
+    it "can reply with an error" do
+
+      r = @unit.launch(
+        %q{
+          sequence \ task 'failfox'
+        },
+        wait: true)
+
+      expect(r['nid']).to eq('0_0')
+      expect(r['tasker']).to eq('failfox')
+      expect(r['point']).to eq('failed')
+    end
+
   end
 end
 
