@@ -44,14 +44,14 @@ describe Flor::Conf do
       )
     end
 
-    it 'does not use "unit" procedures'# do
-#
-#      expect(
-#        Flor::Conf.prepare(%{\n point: cancel }, {})
-#      ).to eq({
-#        'point' => 'cancel', 'root' => '.'
-#      })
-#    end
+    it 'does not use "unit" procedures' do
+
+      expect(
+        Flor::Conf.prepare(%{\n point: cancel }, {})
+      ).to eq({
+        'point' => 'cancel', 'root' => '.'
+      })
+    end
   end
 end
 
