@@ -6,22 +6,36 @@ class Flor::Pro::Set < Flor::Procedure
   def pre_execute
 
     unatt_unkeyed_children
-    stringify_first_child
+
+    non_att_children[0..-2]
+      .each_with_index { |_, i| stringify_child(i) }
+        #
+        # don't stringify the last non att child
+
+    @node['refs'] = []
   end
 
   def receive_non_att
 
-    @node['ref'] ||= payload['ret']
+    ret = payload['ret']
+    last = (@fcid + 1) == children.size
+
+    @node['refs'] << ret if ! last && ret.is_a?(String)
 
     super
   end
 
   def receive_last
 
-    set_value(@node['ref'], payload['ret'])
+    if @node['refs'].size == 1
+      set_value(@node['refs'].first, payload['ret'])
+    else
+      @node['refs']
+        .each_with_index { |ref, i| set_value(ref, payload['ret'][i]) }
+    end
 
     payload['ret'] =
-      if tree[0] == 'setr' || @node['ref'] == 'f.ret'
+      if tree[0] == 'setr' || @node['refs'].last == 'f.ret'
         payload['ret']
       else
         node_payload_ret
@@ -30,23 +44,4 @@ class Flor::Pro::Set < Flor::Procedure
     wrap_reply
   end
 end
-
-#  protected
-#
-#  def splat(ks, vs)
-#
-#    ks.inject(0) { |off, k|
-#      if k[0, 1] == '*'
-#        #p({ off: off, k: k, ks: ks[off + 1..-1], vs: vs[off..-1] })
-#        l = vs.length - ks.length + 1
-#        set_value(k[1..-1], vs[off, l])
-#        off + l
-#      else
-#        set_value(k, vs[off])
-#        off + 1
-#      end
-#    }
-#  end
-  #
-  # TODO need a splat a some point
 

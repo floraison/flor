@@ -237,9 +237,9 @@ class Flor::Procedure < Flor::Node
     unatt_unkeyed_children(true)
   end
 
-  def stringify_first_child
+  def stringify_child(non_att_index)
 
-    c = non_att_children.first
+    c = non_att_children[non_att_index]
     return unless c
     return unless c[1] == [] && c[0].is_a?(String)
 
@@ -248,6 +248,11 @@ class Flor::Procedure < Flor::Node
     cn[ci] = [ '_sqs', c[0], c[2] ]
 
     @node['tree'] = [ tree[0], cn, tree[2] ]
+  end
+
+  def stringify_first_child
+
+    stringify_child(0)
   end
 
   def do_execute

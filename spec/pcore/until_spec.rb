@@ -178,17 +178,17 @@ describe 'Flor procedures' do
 
     it 'respects an outer "break"' do
 
-      flor = %{
-        until
-          false
-          push f.l 0
-          set outer-break break
-          until false
-            push f.l 'a'
-            outer-break 'x'
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          until
+            false
+            push f.l 0
+            set outer-break break
+            until false
+              push f.l 'a'
+              outer-break 'x'
+        },
+        payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 

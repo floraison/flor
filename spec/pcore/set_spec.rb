@@ -442,5 +442,27 @@ describe 'Flor procedures' do
       expect(r['payload']).to eq({ 'a' => 0, 'ret' => 0 })
     end
   end
+
+  context 'and splat' do
+
+    it 'splats arrays' do
+
+      r = @executor.launch(
+        %q{
+          set a b c
+            [ 0 1 2 3 ]
+          set d
+            [ 4 5 6 ]
+        })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['ret']).to eq(nil)
+
+      expect(r['vars']['a']).to eq(0)
+      expect(r['vars']['c']).to eq(2)
+      expect(r['vars']['d']).to eq([ 4, 5, 6 ])
+    end
+  end
 end
 
