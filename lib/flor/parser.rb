@@ -102,13 +102,15 @@ module Flor
     #  %w[ or or ], %w[ and and ],
     #  %w[ equ == != <> ], %w[ lgt < > <= >= ], %w[ sum + - ], %w[ prd * / % ],
 
-    def ssprd(i); rex(:sop, i, /[\*\/%]/); end
+    def ssmod(i); str(:sop, i, /%/); end
+    def ssprd(i); rex(:sop, i, /[\*\/]/); end
     def sssum(i); rex(:sop, i, /[+-]/); end
     def sslgt(i); rex(:sop, i, /(<=?|>=?)/); end
     def ssequ(i); rex(:sop, i, /(==?|!=|<>)/); end
     def ssand(i); str(:sop, i, 'and'); end
     def ssor(i); str(:sop, i, 'or'); end
 
+    def smod(i); seq(nil, i, :ssmod, :eol, '?'); end
     def sprd(i); seq(nil, i, :ssprd, :eol, '?'); end
     def ssum(i); seq(nil, i, :sssum, :eol, '?'); end
     def slgt(i); seq(nil, i, :sslgt, :eol, '?'); end
@@ -116,7 +118,8 @@ module Flor
     def sand(i); seq(nil, i, :ssand, :eol, '?'); end
     def sor(i); seq(nil, i, :ssor, :eol, '?'); end
 
-    def eprd(i); jseq(:exp, i, :val_ws, :sprd); end
+    def emod(i); jseq(:exp, i, :val_ws, :smod); end
+    def eprd(i); jseq(:exp, i, :emod, :sprd); end
     def esum(i); jseq(:exp, i, :eprd, :ssum); end
     def elgt(i); jseq(:exp, i, :esum, :slgt); end
     def eequ(i); jseq(:exp, i, :elgt, :sequ); end
@@ -251,8 +254,6 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
       end
 
       [ operation, operands, operands.first[2] ]
-#.tap { |x| p x }
-# TODO simplify resulting exp (maybe take some of the work of invert)
     end
 
     class Nod

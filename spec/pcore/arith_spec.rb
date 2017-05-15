@@ -195,5 +195,43 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([ 0, 0.15 ])
     end
   end
+
+  describe '%' do
+
+    it 'returns the remainder' do
+
+      r = @executor.launch(
+        %q{
+          [
+            0 % 1
+            10 % 5
+            11 % 5
+          ]
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 0, 0, 1 ])
+    end
+
+    it 'fails when there is 1 argument' do
+
+      r = @executor.launch(%q{ % 1 })
+
+      expect(r['point']).to eq('failed')
+
+      expect(r['error']['msg'])
+        .to eq('modulo % requires at least 2 arguments (line 1)')
+    end
+
+    it 'fails when there are 0 arguments' do
+
+      r = @executor.launch(%q{ % _ })
+
+      expect(r['point']).to eq('failed')
+
+      expect(r['error']['msg'])
+        .to eq('modulo % requires at least 2 arguments (line 1)')
+    end
+  end
 end
 
