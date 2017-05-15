@@ -7,7 +7,6 @@ class Flor::Pro::Set < Flor::Procedure
 
     unatt_unkeyed_children
     stringify_first_child
-#Flor.print_tree(@node['tree'], nid)
   end
 
   def receive_non_att

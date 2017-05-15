@@ -95,17 +95,16 @@ describe 'Flor procedures' do
 
     it 'pushes' do
 
-      flor = %{
-        0
-        push f.l
-          + 0 1
-        push f.l
-          + 1 2
-        push f.l
-          + 2 3
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          0
+          push f.l
+            + 0 1
+          push f.l
+            + 1 2
+          push f.l \ + 2 3
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 1, 3, 5 ])

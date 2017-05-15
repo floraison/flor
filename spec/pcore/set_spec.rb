@@ -19,11 +19,7 @@ describe 'Flor procedures' do
 
     it 'has no effect on its own' do
 
-      flor = %{
-        set _
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(' set _ ')
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
@@ -33,13 +29,12 @@ describe 'Flor procedures' do
 
     it 'sequences its children' do
 
-      flor = %{
-        set f.a
-          0
-          1
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set f.a
+            0
+            1
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
@@ -48,12 +43,11 @@ describe 'Flor procedures' do
 
     it 'sets fields' do
 
-      flor = %{
-        set f.a
-          0
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set f.a
+            0
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
@@ -63,15 +57,13 @@ describe 'Flor procedures' do
 
     it 'sets fields deep' do
 
-      flor = %{
-        set f.h.count
-          7
-        set f.i.1
-          8
-      }
-
       r = @executor.launch(
-        flor,
+        %q{
+          set f.h.count
+            7
+          set f.i.1
+            8
+        },
         payload: { 'h' => {}, 'i' => [ 0, 1 ] })
 
       expect(r['point']).to eq('terminated')
@@ -87,12 +79,12 @@ describe 'Flor procedures' do
 
     it 'fails when it cannot set a deep field' do
 
-      flor = %{
-        set f.h.i.j
-          7
-      }
-
-      r = @executor.launch(flor, payload: { 'h' => {} })
+      r = @executor.launch(
+        %q{
+          set f.h.i.j
+            7
+        },
+        payload: { 'h' => {} })
 
       expect(r['point']).to eq('failed')
       expect(r['from']).to eq('0_1')
@@ -102,12 +94,11 @@ describe 'Flor procedures' do
 
     it 'sets variables' do
 
-      flor = %{
-        set v.a
-          0
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set v.a
+            0
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
@@ -117,12 +108,12 @@ describe 'Flor procedures' do
 
     it 'sets variables deep' do
 
-      flor = %{
-        set v.h.count
-          8
-      }
-
-      r = @executor.launch(flor, vars: { 'h' => {} })
+      r = @executor.launch(
+        %q{
+          set v.h.count
+            8
+        },
+        vars: { 'h' => {} })
 
       expect(r['point']).to eq('terminated')
       expect(r['from']).to eq('0')
@@ -132,12 +123,11 @@ describe 'Flor procedures' do
 
     it 'fails when it cannot set a deep variable' do
 
-      flor = %{
-        set v.h.i.j
-          9
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set v.h.i.j
+            9
+        })
 
       expect(r['point']).to eq('failed')
       expect(r['from']).to eq('0_1')
@@ -147,12 +137,11 @@ describe 'Flor procedures' do
 
     it 'leaves f.ret untouched' do
 
-      flor = %{
-        11
-        set f.a 12
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          11
+          set f.a 12
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['a']).to eq(12)
@@ -161,12 +150,11 @@ describe 'Flor procedures' do
 
     it 'leaves f.ret unless explicitely setting it' do
 
-      flor = %{
-        11
-        set f.ret 12
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          11
+          set f.ret 12
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(12)
@@ -174,18 +162,18 @@ describe 'Flor procedures' do
 
     it 'accepts bracketed keys' do
 
-      flor = %q{ # <-------------- using q to make the \"pullover\" work
-        set f.a.0 'zero'
-        set "f.a[1]" 'one'
-        set f.h.name 'Haddock'
-        set "f.h[age]" 45
-        set "f.h['hair']" 'black'
-        set 'f.h["state"]' 'drunk'
-        set "f.h[\"pullover\"]" 'blue'
-        set f.h["accessory"] 'pipe'
-      }
-
-      r = @executor.launch(flor, payload: { 'h' => {}, 'a' => [ 0, 1, 2 ] })
+      r = @executor.launch(
+        %q{ # <-------------- using q to make the \"pullover\" work
+          set f.a.0 'zero'
+          set "f.a[1]" 'one'
+          set f.h.name 'Haddock'
+          set "f.h[age]" 45
+          set "f.h['hair']" 'black'
+          set 'f.h["state"]' 'drunk'
+          set "f.h[\"pullover\"]" 'blue'
+          set f.h["accessory"] 'pipe'
+        },
+        payload: { 'h' => {}, 'a' => [ 0, 1, 2 ] })
 
       expect(r['point']).to eq('terminated')
 
@@ -204,16 +192,17 @@ describe 'Flor procedures' do
 
     it 'accepts results of function calls' do
 
-      r = @executor.launch(%q{ # <--- q
-        define f0 \ 0
-        define f1 x \ 1 + x
-        set f.a (f0 _)
-        set f.b (f1 1)
-        set f.aa
-          f0 _
-        set f.bb
-          f1 1
-      })
+      r = @executor.launch(
+        %q{ # <--- q
+          define f0 \ 0
+          define f1 x \ 1 + x
+          set f.a (f0 _)
+          set f.b (f1 1)
+          set f.aa
+            f0 _
+          set f.bb
+            f1 1
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -225,18 +214,19 @@ describe 'Flor procedures' do
 
     it 'accepts results of function definitions' do
 
-      r = @executor.launch(%q{ # <--- q
-        set f0
-          def
-            0
-        set f.a0
-          f0 _
-        set f.b0 (f0 _)
+      r = @executor.launch(
+        %q{ # <--- q
+          set f0
+            def
+              0
+          set f.a0
+            f0 _
+          set f.b0 (f0 _)
 
-        set f1
-          def \ 1
-        set f.a1 (f1 _)
-      })
+          set f1
+            def \ 1
+          set f.a1 (f1 _)
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -248,10 +238,11 @@ describe 'Flor procedures' do
 
     it 'accepts results of (inline) function definitions' do
 
-      r = @executor.launch(%q{ # <--- q
-        set f2 (def \ 2)
-        set f.a2 (f2 _)
-      })
+      r = @executor.launch(
+        %q{ # <--- q
+          set f2 (def \ 2)
+          set f.a2 (f2 _)
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -260,9 +251,10 @@ describe 'Flor procedures' do
 
     it "doesn't mind a last tag" do
 
-      r = @executor.launch(%q{ # <--- q
-        set a 2 tag: 'here'
-      })
+      r = @executor.launch(
+        %q{ # <--- q
+          set a 2 tag: 'here'
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -281,18 +273,18 @@ describe 'Flor procedures' do
 
     it 'sets locally if there is no a in the lookup chain' do
 
-      flor = %{
-        sequence
-          sequence vars: {}
-            set a
-              1
+      r = @executor.launch(
+        %q{
+          sequence
+            sequence vars: {}
+              set a
+                1
+              push f.l
+                a
             push f.l
               a
-          push f.l
-            a
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('failed')
       expect(r['payload']['l']).to eq([ 1 ])
@@ -301,15 +293,14 @@ describe 'Flor procedures' do
 
     it 'overwrites an already set a (locally)' do
 
-      flor = %{
-        sequence
-          set a
-            0
-          set a
-            1
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence
+            set a
+              0
+            set a
+              1
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(1)
@@ -317,16 +308,15 @@ describe 'Flor procedures' do
 
     it 'overwrites an already set a (above)' do
 
-      flor = %{
-        sequence
-          set a
-            0
-          sequence vars: {}
+      r = @executor.launch(
+        %q{
+          sequence
             set a
-              1
-      }
-
-      r = @executor.launch(flor)
+              0
+            sequence vars: {}
+              set a
+                1
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(1)
@@ -337,18 +327,18 @@ describe 'Flor procedures' do
 
     it 'sets locally if there is no a in the lookup chain' do
 
-      flor = %{
-        sequence
-          sequence vars: {}
-            set v.a
-              1
+      r = @executor.launch(
+        %q{
+          sequence
+            sequence vars: {}
+              set v.a
+                1
+              push f.l
+                a
             push f.l
               a
-          push f.l
-            a
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('failed')
       expect(r['payload']['l']).to eq([ 1 ])
@@ -357,15 +347,14 @@ describe 'Flor procedures' do
 
     it 'overwrites an already set a (locally)' do
 
-      flor = %{
-        sequence
-          set v.a
-            0
-          set v.a
-            1
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence
+            set v.a
+              0
+            set v.a
+              1
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(1)
@@ -373,16 +362,15 @@ describe 'Flor procedures' do
 
     it 'overwrites an already set a (above)' do
 
-      flor = %{
-        sequence
-          set v.a
-            0
-          sequence vars: {}
+      r = @executor.launch(
+        %q{
+          sequence
             set v.a
-              1
-      }
-
-      r = @executor.launch(flor)
+              0
+            sequence vars: {}
+              set v.a
+                1
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(1)
@@ -393,19 +381,18 @@ describe 'Flor procedures' do
 
     it 'always sets locally' do
 
-      flor = %{
-        sequence
-          set lv.a
-            0
-          set b
-            10
-          set lv.a
-            1
-          set lv.b
-            11
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence
+            set lv.a
+              0
+            set b
+              10
+            set lv.a
+              1
+            set lv.b
+              11
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']).to eq({ 'a' => 1, 'b' => 11 })
@@ -416,18 +403,17 @@ describe 'Flor procedures' do
 
     it 'sets a field' do
 
-      flor = %{
-        sequence
-          set f.a
-            0
-          set f.b 1
-          set f.c (-2)
-          set f.d { a: 0, b: 1 }
-          set f.e
-            { c: 2, d: 3 }
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence
+            set f.a
+              0
+            set f.b 1
+            set f.c (-2)
+            set f.d { a: 0, b: 1 }
+            set f.e
+              { c: 2, d: 3 }
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -446,12 +432,11 @@ describe 'Flor procedures' do
 
     it 'sets and returns the just set value' do
 
-      flor = %{
-        setr f.a
-          0
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          setr f.a
+            0
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'a' => 0, 'ret' => 0 })
