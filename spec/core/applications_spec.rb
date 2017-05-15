@@ -248,28 +248,49 @@ describe 'Flor core' do
 
       # SICP p. 222
 
-      flor = %{
-        sequence
-          define make-withdraw bal
-            def amt
-              setr bal
-                -
-                  bal
-                  amt
-          set w0
-            make-withdraw 100
-          push f.l
-            w0 77
-          push f.l
-            w0 13
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          sequence
+            define make-withdraw bal
+              def amt
+                setr bal \ - bal amt
+            set w0
+              make-withdraw 100
+            push f.l
+              w0 77
+            push f.l
+              w0 13
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 23, 10 ])
+    end
 
-      #pp @executor.execution['nodes'].values
+    it 'works (write) (2 instances)' do
+
+      r = @executor.launch(
+        %q{
+          sequence
+            define make-withdraw bal
+              def amt
+                setr bal (- bal amt)
+            set w0 (make-withdraw 100)
+            set w1 (make-withdraw 100)
+            push f.l (w0 77)
+            push f.l (w0 13)
+            push f.l (w1 17)
+            push f.l (w1 3)
+            push f.l (w0 12)
+        },
+        payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ 23, 10, 83, 80, -2 ])
+#puts "-" * 80
+#pp r
+#puts "-" * 80
+#pp @executor.execution['nodes']
     end
   end
 end
