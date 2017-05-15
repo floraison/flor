@@ -172,6 +172,8 @@ describe 'Flor unit' do
 
       r = @unit.launch(%q{ sequence \ fail 'arghh' }, wait: true)
 
+      sleep 0.350
+
       expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ failed ])
       expect($seen.collect { |m| m['error']['msg'] }.uniq).to eq(%w[ arghh ])
       expect($seen.collect { |m| m['nid'] }.uniq).to eq(%w[ 0 ])
@@ -179,7 +181,7 @@ describe 'Flor unit' do
     end
 
     it 'may alter a message' do
- 
+
       require 'unit/hooks/bravo'
         # require here, since this path is outside of envs/test/
 
@@ -197,7 +199,6 @@ describe 'Flor unit' do
 
       expect(r['payload']['emil']).to eq("was not here")
     end
-
- end
+  end
 end
 
