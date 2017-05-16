@@ -30,8 +30,7 @@ class Flor::Pro::Set < Flor::Procedure
     if @node['refs'].size == 1
       set_value(@node['refs'].first, payload['ret'])
     else
-      @node['refs']
-        .each_with_index { |ref, i| set_value(ref, payload['ret'][i]) }
+      splat
     end
 
     payload['ret'] =
@@ -42,6 +41,30 @@ class Flor::Pro::Set < Flor::Procedure
       end
 
     wrap_reply
+  end
+
+  protected
+
+  SPLAT_REGEX = /\A(.*)__(_|\d+)\z/
+
+  def splat
+
+    refs = @node['refs'].dup
+    a = payload['ret'].dup
+
+    loop do
+
+      ref = refs.shift; break unless ref
+
+      if m = SPLAT_REGEX.match(ref)
+        r, l = m[1, 2]
+        l = l == '_' ? a.length - refs.length : l.to_i
+        set_value(r, a[0, l]) if r.length > 0
+        a = a.drop(l)
+      else
+        set_value(ref, a.shift)
+      end
+    end
   end
 end
 

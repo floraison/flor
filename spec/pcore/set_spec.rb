@@ -463,6 +463,44 @@ describe 'Flor procedures' do
       expect(r['vars']['c']).to eq(2)
       expect(r['vars']['d']).to eq([ 4, 5, 6 ])
     end
+
+    it 'star-splats' do
+
+      r = @executor.launch(
+        %q{
+          set a b___ c
+            [ 0 1 2 3 ]
+          set d e__2 f
+            [ 4 5 6 7 8 ]
+          set __2 g h
+            [ 9 10 11 12 13 ]
+          set i j___
+            [ 14 15 16 17 18 19 ]
+          set "k__$(c)" l
+            [ 20 21 22 23 24 ]
+        })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['ret']).to eq(nil)
+
+      expect(r['vars']['a']).to eq(0)
+      expect(r['vars']['b']).to eq([ 1, 2 ])
+      expect(r['vars']['c']).to eq(3)
+
+      expect(r['vars']['d']).to eq(4)
+      expect(r['vars']['e']).to eq([ 5, 6 ])
+      expect(r['vars']['f']).to eq(7)
+
+      expect(r['vars']['g']).to eq(11)
+      expect(r['vars']['h']).to eq(12)
+
+      expect(r['vars']['i']).to eq(14)
+      expect(r['vars']['j']).to eq([ 15, 16, 17, 18, 19 ])
+
+      expect(r['vars']['k']).to eq([ 20, 21, 22 ])
+      expect(r['vars']['l']).to eq(23)
+    end
   end
 end
 
