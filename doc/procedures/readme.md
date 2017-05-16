@@ -20,6 +20,7 @@
 * [noret](noret.md) - executes its children, but doesn't alter the received f.ret
 * [rand](rand.md) - Returns a randomly generated number.
 * [sequence, _apply, begin](sequence.md) - Executes child expressions in sequence.
+* [set, setr](set.md) - sets a field or a variable.
 
 ## unit
 
