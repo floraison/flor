@@ -349,5 +349,37 @@ describe Flor do
       )
     end
   end
+
+  describe '.splat' do
+
+    [
+      [ %w[ a b___ c ],
+        [ 0, 1, 2, 3 ],
+        { a: 0, b: [ 1, 2 ], c: 3 } ],
+      [ %w[ d e__2 f ],
+        [ 4, 5, 6, 7, 8 ],
+        { d: 4, e: [ 5, 6 ], f: 7 } ],
+      [ %w[ __2 g h ],
+        [ 9, 10, 11, 12, 13 ],
+        { g: 11, h: 12 } ],
+      [ %w[ i j___ ],
+        [ 14, 15, 16, 17, 18, 19 ],
+        { i: 14, j: (15..19).to_a } ],
+      [ %w[ k ],
+        [ 0, 1, 2, 3 ],
+        { k: 0 } ],
+      [ %w[ l___ ],
+        [ 0, 1, 2, 3 ],
+        { l: (0..3).to_a } ]
+    ].each do |keys, array, expected|
+
+      it "splats #{keys.join(', ')}" do
+
+        r = Flor.splat(keys, array)
+
+        expect(r).to eq(expected.inject({}) { |h, (k, v)| h[k.to_s] = v; h })
+      end
+    end
+  end
 end
 

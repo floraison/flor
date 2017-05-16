@@ -345,5 +345,32 @@ module Flor
     return st if i == nil
     st[1][i]
   end
+
+
+  #
+  # splat
+
+  SPLAT_REGEX = /\A(.*)__(_|\d+)\z/.freeze
+
+  def self.splat(keys, array)
+
+    ks = keys.dup
+    a = array.dup
+    h = {}
+
+    while k = ks.shift
+
+      if m = SPLAT_REGEX.match(k)
+        r, l = m[1, 2]
+        l = (l == '_') ? a.length - ks.length : l.to_i
+        h[r] = a.take(l) if r.length > 0
+        a = a.drop(l)
+      else
+        h[k] = a.shift
+      end
+    end
+
+    h
+  end
 end
 
