@@ -21,15 +21,14 @@ class Flor::Pro::Match < Flor::Procedure
 
     if match?
       @node['found'] = true
-      execute_child(@fcid + 1)
+      return execute_child(@fcid + 1)
+    end
+
+    if next_child_is_a_else?
+      @node['found'] = true
+      execute_child(@fcid + 3)
     else
-      t = tree[1][@fcid + 2]
-      if t && t[0, 2] == [ 'else', [] ]
-        @node['found'] = true
-        execute_child(@fcid + 3)
-      else
-        execute_child(@fcid + 2)
-      end
+      execute_child(@fcid + 2)
     end
   end
 
@@ -52,6 +51,14 @@ false
   def match_object?
 
 false
+  end
+
+  def next_child_is_a_else?
+
+    t = tree[1][@fcid + 2]; return false unless t
+
+    t[0, 2] == [ 'else', [] ] ||
+    t[0, 2] == [ '_', [] ]
   end
 end
 
