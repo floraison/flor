@@ -74,19 +74,61 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq('caught')
     end
 
-
-  # ```clojure
-  # (doseq [n (range 1 101)]
-  #   (println
-  #     (match [(mod n 3) (mod n 5)]
-  #       [0 0] "FizzBuzz"
-  #       [0 _] "Fizz"
-  #       [_ 0] "Buzz"
-  #       :else n)))
-  # ```
     context 'arrays' do
 
-      it 'matches'
+      it 'destructures'
+
+#      FizzBuzz =
+#        %q{
+#          match [ (% i 3) (% i 5) ]
+#            [ 0 0 ] 'FizzBuzz'
+#            [ 0 _ ] 'Fizz'
+#            [ _ 0 ] 'Buzz'
+#            else i
+#        }
+#
+#      [
+#        [ 1, 1 ],
+#        [ 3, 'Fizz' ],
+#        [ 4, 4 ],
+#        [ 5, 'Buzz' ],
+#        [ 15, 'FizzBuzz' ]
+#      ].each do |i, expected|
+#
+#        it "goes #{expected} for #{i}" do
+#
+#          r = @executor.launch(FizzBuzz, vars: { 'i' => i })
+#
+#          expect(r['point']).to eq('terminated')
+#          expect(r['payload']['ret']).to eq(expected)
+#        end
+#      end
+
+  # breaks apart because array parsing is too greedy somehow
+  #
+  # using "_arr" (avoid syntaxic sugar) is a solution
+  #
+#      it 'destructures arrays' do
+#
+#        r = @executor.launch(
+#          %q{
+#            for-each a
+#              def i
+#                push l
+#                  _arr
+#                    i
+#                    match [ (% i 3) (% i 5) ]
+#                      [ 0 0 ] 'FizzBuzz'
+#                      [ 0 _ ] 'Fizz'
+#                      [ _ 0 ] 'Buzz'
+#                      else i
+#          },
+#          vars: { 'a' => (1..17).to_a, 'l' => [] })
+#
+#        expect(r['point']).to eq('terminated')
+##        expect(r['payload']['ret']).to eq('caught')
+#        expect(r['vars']['l']).to eq(:xxx)
+#      end
     end
 
     context 'objects' do
