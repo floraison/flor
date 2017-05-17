@@ -9,11 +9,11 @@ class Flor::Pro::Case < Flor::Procedure
   #
   # ```
   # case level
-  #   [ 0 1 2 ];; 'low'
-  #   [ 3 4 5 ];; 'medium'
-  #   else;; 'high'
+  #   [ 0 1 2 ]; 'low'
+  #   [ 3 4 5 ]; 'medium'
+  #   else; 'high'
   # ```
-  # which is a ";;"ed version of
+  # which is a ";"ed version of
   # ```
   # case level
   #   [ 0 1 2 ]
