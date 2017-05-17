@@ -138,14 +138,14 @@ describe 'Flor procedures' do
       r = @executor.launch(
         %q{
           set l []
-          for-each [ 1, 2, 3 ]
+          for-each [ 0 1 2 3 4 5 6 7 ]
             def x
-              pushr l (2 * x)
+              pushr l (2 * x) if x % 2 == 0
         })
 
       expect(r['point']).to eq('terminated')
-      expect(r['vars']).to eq({ 'l' => [ 2, 4, 6 ] })
-      expect(r['payload']['ret']).to eq(6)
+      expect(r['vars']).to eq({ 'l' => [ 0, 4, 8, 12 ] })
+      expect(r['payload']['ret']).to eq(12)
     end
   end
 end
