@@ -44,6 +44,13 @@ module Flor
     pl = opts[:payload] || opts[:fields] || {}
     vs = opts[:variables] || opts[:vars] || {}
 
+    fail ArgumentError.new(
+      "given launch payload should be a Hash, but it's a #{pl.class}"
+    ) unless pl.is_a?(Hash)
+    fail ArgumentError.new(
+      "given launch variables should come in a Hash, but it's a #{vs.class}"
+    ) unless vs.is_a?(Hash)
+
     msg =
       { 'point' => 'execute',
         'exid' => exid,
