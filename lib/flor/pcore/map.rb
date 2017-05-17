@@ -1,11 +1,9 @@
 
 class Flor::Pro::Map < Flor::Procedure
 
-  name 'map'
+  names %w[ map for-each ]
 
   def pre_execute
-
-    #@node['ret'] = Flor.dup(payload['ret']) # now using @node['payload']
 
     @node['vars'] = {}
       # just to store the local idx
@@ -13,7 +11,8 @@ class Flor::Pro::Map < Flor::Procedure
     @node['col'] = nil
     @node['idx'] = -1
     @node['fun'] = nil
-    @node['res'] = []
+
+    @node['res'] = @node['heat0'] == 'map' ? [] : nil
 
     unatt_unkeyed_children
   end
@@ -33,15 +32,19 @@ class Flor::Pro::Map < Flor::Procedure
 
     if @node['idx'] < 0
       @node['fun'] = payload['ret']
-    else
-      @node['res'] << payload['ret']
+    elsif res = @node['res']
+      res << payload['ret']
     end
 
     @node['idx'] += 1
     @node['mtime'] = Flor.tstamp
 
-    return wrap_reply('ret' => @node['res']) \
-      if @node['idx'] == @node['col'].size
+    if @node['idx'] == @node['col'].size
+      if res = @node['res']
+        payload['ret'] = @node['res']
+      end
+      return wrap_reply
+    end
 
     @node['vars']['idx'] = @node['idx']
 
