@@ -68,10 +68,11 @@ class Flor::Pro::Set < Flor::Procedure
 
     unatt_unkeyed_children
 
-    non_att_children[0..-2]
-      .each_with_index { |_, i| stringify_child(i) }
-        #
-        # don't stringify the last non att child
+    nacn = non_att_children.dup
+    sc = @node['single_child'] = nacn.size == 1
+    nacn = non_att_children[0..-2] unless sc
+
+    nacn.each_with_index { |_, i| stringify_child(i) }
 
     @node['refs'] = []
   end
@@ -79,7 +80,7 @@ class Flor::Pro::Set < Flor::Procedure
   def receive_non_att
 
     ret = payload['ret']
-    last = (@fcid + 1) == children.size
+    last = ! @node['single_child'] && (@fcid + 1) == children.size
 
     @node['refs'] << ret if ! last && ret.is_a?(String)
 
@@ -88,15 +89,17 @@ class Flor::Pro::Set < Flor::Procedure
 
   def receive_last
 
+    ret = @node['single_child'] ? node_payload_ret : payload['ret']
+
     if @node['refs'].size == 1
-      set_value(@node['refs'].first, payload['ret'])
+      set_value(@node['refs'].first, ret)
     else
-      Flor.splat(@node['refs'], payload['ret']).each { |k, v| set_value(k, v) }
+      Flor.splat(@node['refs'], ret).each { |k, v| set_value(k, v) }
     end
 
     payload['ret'] =
       if tree[0] == 'setr' || @node['refs'].last == 'f.ret'
-        payload['ret']
+        ret
       else
         node_payload_ret
       end

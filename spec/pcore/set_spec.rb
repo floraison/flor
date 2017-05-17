@@ -160,6 +160,32 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(12)
     end
 
+    it 'copies the value of f.ret by default' do
+
+      r = @executor.launch(
+        %q{
+          14
+          set a
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']).to eq({ 'a' => 14 })
+      expect(r['payload']['ret']).to eq(14)
+    end
+
+    it 'copies the current, inner, f.ret (achtung)' do
+
+      r = @executor.launch(
+        %q{
+          13
+          set a f.ret
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']).to eq({ 'a' => 'a' })
+      expect(r['payload']['ret']).to eq(13)
+    end
+
     it 'accepts bracketed keys' do
 
       r = @executor.launch(
