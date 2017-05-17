@@ -129,6 +129,18 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 2, 4 ])
     end
+
+    it "keeps the given 'vars' hash" do
+
+      r = @executor.launch(
+        %q{
+          map a \ def i \ * 7 i
+        },
+        vars: { 'a' => (0..7).to_a })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 0, 7, 14, 21, 28, 35, 42, 49 ])
+    end
   end
 
   describe 'for-each' do

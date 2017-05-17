@@ -5,8 +5,7 @@ class Flor::Pro::Map < Flor::Procedure
 
   def pre_execute
 
-    @node['vars'] = {}
-      # just to store the local idx
+    @node['vars'] ||= {}
 
     @node['col'] = nil
     @node['idx'] = -1
