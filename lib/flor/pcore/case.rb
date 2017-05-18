@@ -56,8 +56,7 @@ class Flor::Pro::Case < Flor::Procedure
       @node['val'] = payload['ret']
     end
 
-    nt = tree[1][@ncid]
-    return wrap_reply('ret' => node_payload_ret) unless nt
+    return wrap_reply('ret' => node_payload_ret) unless tree[1][@ncid]
 
     return execute_child(@ncid) unless @node.has_key?('val')
 
@@ -70,30 +69,32 @@ class Flor::Pro::Case < Flor::Procedure
 
   protected
 
-  def execute_next
-
-    if tree[1][@ncid][0, 2] == [ 'else', [] ]
-      trigger(@ncid + 1)
-    else
-      execute_child(@ncid)
-    end
-  end
-
   def match
 
     a = payload['ret']
     a = a.nil? ? [ a ] : Array(a)
 
-    payload['ret'] = node_payload_ret
+    if a.include?(@node['val'])
+      trigger
+    else
+      execute_next
+    end
+  end
 
-    return execute_next unless a.include?(@node['val'])
+  def execute_next
 
-    trigger
+    if tree[1][@ncid][0, 2] == [ 'else', [] ]
+      trigger(@ncid + 1)
+    else
+      payload['ret'] = node_payload_ret
+      execute_child(@ncid)
+    end
   end
 
   def trigger(ncid=@ncid)
 
     @node['found'] = true
+    payload['ret'] = node_payload_ret
 
     execute_child(ncid)
   end

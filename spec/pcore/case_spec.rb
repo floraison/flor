@@ -171,6 +171,38 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('high')
     end
+
+    it 'the possibility array sees the original, outer, f.ret' do
+
+      r = @executor.launch(
+        %q{
+          7
+          case (+ 3 4)
+            5; 'cinq'
+            [ f.ret ]; 'sept'
+            6; 'six'
+            else; 'je ne sais pas'
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('sept')
+    end
+
+    it 'the then-tree sees the original, outer, f.ret' do
+
+      r = @executor.launch(
+        %q{
+          "six"
+          case 6
+            5; 'cinq'
+            7; 'sept'
+            6; "six $(f.ret|u)"
+            else; 'je ne sais pas'
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('six SIX')
+    end
   end
 end
 
