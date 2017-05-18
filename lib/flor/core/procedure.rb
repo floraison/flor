@@ -335,25 +335,21 @@ class Flor::Procedure < Flor::Node
     @ncid = (@fcid || -1) + 1
 
     return receive_first if @fcid == nil
-
-    child = children[@fcid]
-
-    return receive_att if child && child[0] == '_att'
-
+    return receive_att if (c = children[@fcid]) && c[0] == '_att'
     receive_non_att
   end
 
   def receive_first
 
-    return receive_last_att if children[0] && children[0][0] != '_att'
+    return receive_last_att if (c = children[0]) && c[0] != '_att'
     execute_child(@ncid)
   end
 
   def receive_att
 
-    nctree = children[@ncid]
+    nt = children[@ncid]
 
-    return receive_last_att if nctree == nil || nctree[0] != '_att'
+    return receive_last_att if nt == nil || nt[0] != '_att'
     execute_child(@ncid)
   end
 

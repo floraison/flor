@@ -74,6 +74,8 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq('caught')
     end
 
+    it "doesn't mind having nothing but a \"else\""
+
     context 'arrays' do
 
       it 'destructures'
@@ -84,7 +86,7 @@ describe 'Flor procedures' do
 #            [ 0 0 ] 'FizzBuzz'
 #            [ 0 _ ] 'Fizz'
 #            [ _ 0 ] 'Buzz'
-#            else i
+#            else; i
 #        }
 #
 #      [

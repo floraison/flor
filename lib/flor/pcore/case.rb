@@ -37,89 +37,65 @@ class Flor::Pro::Case < Flor::Procedure
   def pre_execute
 
     unatt_unkeyed_children
-#    flatten
+
+    @node['val'] = payload['ret'] if non_att_children.size.even?
+  end
+
+  def receive_last_att
+
+    @last_att = true
+
+    receive_non_att
   end
 
   def receive_non_att
 
     return wrap_reply if @node['found']
 
-    return receive_array if @node.has_key?('key')
+    if ! @last_att && ! @node.has_key?('val')
+      @node['val'] = payload['ret']
+    end
 
-    @node['key'] = payload['ret']
-    super
+    nt = tree[1][@ncid]
+    return wrap_reply('ret' => node_payload_ret) unless nt
+
+    return execute_child(@ncid) unless @node.has_key?('val')
+
+    return match if @node['on']
+
+    @node['on'] = true
+
+    execute_next
   end
 
   protected
 
-  def receive_array
+  def execute_next
+
+    if tree[1][@ncid][0, 2] == [ 'else', [] ]
+      trigger(@ncid + 1)
+    else
+      execute_child(@ncid)
+    end
+  end
+
+  def match
 
     a = payload['ret']
     a = a.nil? ? [ a ] : Array(a)
 
     payload['ret'] = node_payload_ret
 
-    if a.include?(@node['key'])
+    return execute_next unless a.include?(@node['val'])
 
-      @node['found'] = true
-      execute_child(@fcid + 1)
-
-    else
-
-      t = tree[1][@fcid + 2]
-
-      if t && t[0, 2] == [ 'else', [] ]
-        @node['found'] = true
-        execute_child(@fcid + 3)
-      else
-        execute_child(@fcid + 2)
-      end
-    end
+    trigger
   end
 
-#  def flatten
-#
-#    ot = tree; return if ot[1].size < 2
-#    t = Flor.dup(ot)
-#
-#    nchildren = []
-#    mode = :array
-#
-#    #t[1][1..-1].each do |ct|
-#    non_att_children.each do |ct|
-#
-#      if nchildren.empty? || mode == :clause
-#        nchildren << ct
-#        mode = :array
-#        next
-#      end
-#
-#      ct0, ct1, ct2 = ct
-#
-#      if (Flor.is_tree?(ct0) || ct0 == 'else') && ct1.any?
-#        nchildren << (ct0 == 'else' ? [ 'else', [], ct2 ] : ct0)
-#        if ct1.size == 1
-#          nchildren << ct1.first
-#        else # ct1.size > 1
-#          sequence = [ 'sequence', ct1, ct1.first[2] ]
-#          nchildren << sequence
-#        end
-#      #elsif ct0.is_a?(String) && ct1.is_a?(Array) && ct1.any?
-#      #  p ct
-#      #  dct0 = deref(ct0)
-#      #  hct0 = reheap(ct, dct0)
-#      #  p dct0
-#      #  p hct0
-#      else
-#        nchildren << ct
-#        mode = :clause
-#      end
-#    end
-#
-#    t[1] = nchildren
-#pp nchildren
-#
-#    @node['tree'] = t if t != ot
-#  end
+  def trigger(ncid=@ncid)
+
+    @node['found'] = true
+
+    execute_child(ncid)
+  end
 end
 
