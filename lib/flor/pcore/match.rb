@@ -1,36 +1,7 @@
 
-class Flor::Pro::Match < Flor::Procedure
+class Flor::Pro::Match < Flor::Pro::Case
 
   name 'match'
-
-  def pre_execute
-
-    unatt_unkeyed_children
-  end
-
-  def receive_non_att
-
-    if @node['found']
-      return wrap_reply
-    end
-
-    if ! @node.has_key?('val')
-      @node['val'] = payload['ret']
-      return super
-    end
-
-    if match?
-      @node['found'] = true
-      return execute_child(@fcid + 1)
-    end
-
-    if next_child_is_a_else?
-      @node['found'] = true
-      execute_child(@fcid + 3)
-    else
-      execute_child(@fcid + 2)
-    end
-  end
 
   protected
 
@@ -55,10 +26,10 @@ false
 
   def next_child_is_a_else?
 
-    t = tree[1][@fcid + 2]; return false unless t
+    t = tree[1][@ncid][0, 2]
 
-    t[0, 2] == [ 'else', [] ] ||
-    t[0, 2] == [ '_', [] ]
+    t == [ 'else', [] ] ||
+    t == [ '_', [] ]
   end
 end
 

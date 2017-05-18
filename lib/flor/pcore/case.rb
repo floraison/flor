@@ -71,10 +71,7 @@ class Flor::Pro::Case < Flor::Procedure
 
   def match
 
-    a = payload['ret']
-    a = a.nil? ? [ a ] : Array(a)
-
-    if a.include?(@node['val'])
+    if match?
       trigger
     else
       execute_next
@@ -83,7 +80,7 @@ class Flor::Pro::Case < Flor::Procedure
 
   def execute_next
 
-    if tree[1][@ncid][0, 2] == [ 'else', [] ]
+    if next_child_is_a_else?
       trigger(@ncid + 1)
     else
       payload['ret'] = node_payload_ret
@@ -97,6 +94,19 @@ class Flor::Pro::Case < Flor::Procedure
     payload['ret'] = node_payload_ret
 
     execute_child(ncid)
+  end
+
+  def match?
+
+    a = payload['ret']
+    a = a.nil? ? [ a ] : Array(a)
+
+    a.include?(@node['val'])
+  end
+
+  def next_child_is_a_else?
+
+    tree[1][@ncid][0, 2] == [ 'else', [] ]
   end
 end
 

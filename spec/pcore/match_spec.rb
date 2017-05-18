@@ -74,7 +74,31 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq('caught')
     end
 
-    it "doesn't mind having nothing but a \"else\""
+    it "doesn't mind having nothing but a \"else\"" do
+
+      r = @executor.launch(
+        %q{
+          match 7
+            else; "more than one"
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('more than one')
+    end
+
+    it 'considers f.ret by default' do
+
+      r = @executor.launch(
+        %q{
+          7
+          match
+            0; 'zero'
+            7; 'seven'
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('seven')
+    end
 
     context 'arrays' do
 
