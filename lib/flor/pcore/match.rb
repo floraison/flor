@@ -26,12 +26,12 @@ false
 false
   end
 
-  def next_child_is_a_else?
+  def else?(ncid)
 
-    t = tree[1][@ncid][0, 2]
+    t = tree[1][ncid]; return false unless t
 
-    t == [ 'else', [] ] ||
-    t == [ '_', [] ]
+    t[0, 2] == [ '_', [] ] ||
+    t[0, 2] == [ 'else', [] ]
   end
 end
 
