@@ -7,6 +7,7 @@ class Flor::Pro::Match < Flor::Pro::Case
 
   def match?
 
+#p [ :m, @node['val'], payload['ret'] ]
     case (v = @node['val'])
     when Array then match_array?
     when Hash then match_object?
@@ -16,6 +17,7 @@ class Flor::Pro::Match < Flor::Pro::Case
 
   def match_array?
 
+#p :ma?
 false
   end
 

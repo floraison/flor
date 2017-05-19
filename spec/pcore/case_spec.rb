@@ -203,6 +203,20 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('six SIX')
     end
+
+    it 'does not eval then-branches as conditionals' do
+
+      r = @executor.launch(
+        %q{
+          case 6
+            5; 6
+            7; 8
+            else; 9
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(9)
+    end
   end
 end
 

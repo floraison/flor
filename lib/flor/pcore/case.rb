@@ -41,59 +41,52 @@ class Flor::Pro::Case < Flor::Procedure
     @node['val'] = payload['ret'] if non_att_children.size.even?
   end
 
-  def receive_last_att
-
-    @last_att = true
-
-    receive_non_att
-  end
-
-  def receive_non_att
+  def receive
 
     return wrap_reply if @node['found']
 
-    if ! @last_att && ! @node.has_key?('val')
+    determine_fcid_and_ncid
+
+    return execute_child(@ncid) if @fcid == nil
+
+    has_no_val = ! @node.has_key?('val')
+
+    if has_no_val && ! from_att?
       @node['val'] = payload['ret']
+      execute_conditional
+    elsif has_no_val
+      execute_child(@ncid)
+    elsif match?
+      execute_then
+    else
+      execute_conditional(@ncid + 1)
     end
-
-    return wrap_reply('ret' => node_payload_ret) unless tree[1][@ncid]
-
-    return execute_child(@ncid) unless @node.has_key?('val')
-
-    return match if @node['on']
-
-    @node['on'] = true
-
-    execute_next
   end
 
   protected
 
-  def match
+  def execute_conditional(ncid=@ncid)
 
-    if match?
-      trigger
-    else
-      execute_next
-    end
-  end
-
-  def execute_next
-
-    if next_child_is_a_else?
-      trigger(@ncid + 1)
+    if else?(ncid)
+      execute_then(ncid + 1)
     else
       payload['ret'] = node_payload_ret
-      execute_child(@ncid)
+      execute_child(ncid)
     end
   end
 
-  def trigger(ncid=@ncid)
+  def execute_then(ncid=@ncid)
 
-    @node['found'] = true
     payload['ret'] = node_payload_ret
+    @node['found'] = true
 
     execute_child(ncid)
+  end
+
+  def else?(ncid)
+
+    (t = tree[1][ncid]) &&
+    t[0, 2] == [ 'else', [] ]
   end
 
   def match?
@@ -102,11 +95,6 @@ class Flor::Pro::Case < Flor::Procedure
     a = a.nil? ? [ a ] : Array(a)
 
     a.include?(@node['val'])
-  end
-
-  def next_child_is_a_else?
-
-    tree[1][@ncid][0, 2] == [ 'else', [] ]
   end
 end
 

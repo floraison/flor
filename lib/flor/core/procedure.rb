@@ -329,13 +329,23 @@ class Flor::Procedure < Flor::Node
     []
   end
 
-  def receive
+  def determine_fcid_and_ncid
 
     @fcid = point == 'receive' ? Flor.child_id(from) : nil
     @ncid = (@fcid || -1) + 1
+  end
+
+  def from_att?
+
+    @fcid && (c = children[@fcid]) && c[0] == '_att'
+  end
+
+  def receive
+
+    determine_fcid_and_ncid
 
     return receive_first if @fcid == nil
-    return receive_att if (c = children[@fcid]) && c[0] == '_att'
+    return receive_att if from_att?
     receive_non_att
   end
 

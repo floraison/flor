@@ -102,14 +102,12 @@ describe 'Flor procedures' do
 
     context 'arrays' do
 
-      it 'destructures'
-
 #      FizzBuzz =
 #        %q{
 #          match [ (% i 3) (% i 5) ]
-#            [ 0 0 ] 'FizzBuzz'
-#            [ 0 _ ] 'Fizz'
-#            [ _ 0 ] 'Buzz'
+#            [ 0 0 ]; 'FizzBuzz'
+#            [ 0 _ ]; 'Fizz'
+#            [ _ 0 ]; 'Buzz'
 #            else; i
 #        }
 #
