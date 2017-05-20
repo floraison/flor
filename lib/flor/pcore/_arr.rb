@@ -1,5 +1,20 @@
 
 class Flor::Pro::Arr < Flor::Procedure
+  #
+  # "_arr" is the procedure behind arrays.
+  #
+  # Writing
+  # ```
+  # [ 1 2 3 ]
+  # ```
+  # is in fact read as
+  # ```
+  # _arr
+  #   1
+  #   2
+  #   3
+  # ```
+  # by flor.
 
   name '_arr'
 

@@ -1,5 +1,21 @@
 
 class Flor::Pro::Obj < Flor::Procedure
+  #
+  # "_obj" is the procedure behind objects (maps).
+  #
+  # Writing
+  # ```
+  # { a: 1, b: 2 }
+  # ```
+  # is in fact read as
+  # ```
+  # _obj
+  #   'a'
+  #   1
+  #   'b'
+  #   2
+  # ```
+  # by flor.
 
   name '_obj'
 
