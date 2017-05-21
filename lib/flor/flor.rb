@@ -346,20 +346,6 @@ module Flor
     st[1][i]
   end
 
-  def self.replace_leaves(t, mapping)
-
-    if t[1] == [] && r = mapping[t[0]]
-      r
-    elsif t[1].is_a?(Array)
-      rs = t[1].collect { |tt| replace_leaves(tt, mapping) }
-      return nil if rs.all?(&:nil?)
-      t = Flor.dup(t); rs.each_with_index { |tt, i| t[1][i] = tt if tt }
-      t
-    else
-      nil
-    end
-  end
-
 
   #
   # splat
