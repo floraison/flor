@@ -98,7 +98,7 @@ class Flor::Pro::PatArr < Flor::Pro::PatContainer
   def receive_last
 
     payload['_pat_binding'] = @node['binding']
-#    payload.delete('_pat_val')
+    payload.delete('_pat_val')
 
     super
   end
