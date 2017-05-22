@@ -34,13 +34,15 @@ describe 'Flor procedures' do
 
       [ %q{ _pat_arr \ a; b___; c__2; d },
         [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-        { 'a' => 1, 'b' => [ 2, 3, 4, 5, 6 ], 'c' => [ 7, 8 ], 'd' => 9 } ]
+        { 'a' => 1, 'b' => [ 2, 3, 4, 5, 6 ], 'c' => [ 7, 8 ], 'd' => 9 } ],
+
+      [ %q{ _pat_arr \ 7 }, 7, nil ]
 
     ].each do |code, val, expected|
 
       it(
         "#{expected == nil ? 'doesn\'t match' : 'matches'}" +
-        " for `#{code.strip.to_s}`"
+        " for `#{code.strip.to_s}` vs `#{val.inspect}`"
       ) do
 
         r = @executor.launch(code, payload: { 'ret' => val })

@@ -102,31 +102,31 @@ describe 'Flor procedures' do
 
     context 'arrays' do
 
-#      FizzBuzz =
-#        %q{
-#          match [ (% i 3) (% i 5) ]
-#            [ 0 0 ]; 'FizzBuzz'
-#            [ 0 _ ]; 'Fizz'
-#            [ _ 0 ]; 'Buzz'
-#            else; i
-#        }
-#
-#      [
-#        [ 1, 1 ],
-#        [ 3, 'Fizz' ],
-#        [ 4, 4 ],
-#        [ 5, 'Buzz' ],
-#        [ 15, 'FizzBuzz' ]
-#      ].each do |i, expected|
-#
-#        it "goes #{expected} for #{i}" do
-#
-#          r = @executor.launch(FizzBuzz, vars: { 'i' => i })
-#
-#          expect(r['point']).to eq('terminated')
-#          expect(r['payload']['ret']).to eq(expected)
-#        end
-#      end
+      FizzBuzz =
+        %q{
+          match [ (% i 3) (% i 5) ]
+            [ 0 0 ]; 'FizzBuzz'
+            [ 0 _ ]; 'Fizz'
+            [ _ 0 ]; 'Buzz'
+            else; i
+        }
+
+      [
+        [ 1, 1 ],
+        [ 3, 'Fizz' ],
+        [ 4, 4 ],
+        [ 5, 'Buzz' ],
+        [ 15, 'FizzBuzz' ]
+      ].each do |i, expected|
+
+        it "goes #{expected} for #{i}" do
+
+          r = @executor.launch(FizzBuzz, vars: { 'i' => i })
+
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(expected)
+        end
+      end
 
   # breaks apart because array parsing is too greedy somehow
   #

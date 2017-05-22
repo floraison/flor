@@ -56,8 +56,8 @@ class Flor::Pro::Case < Flor::Procedure
       execute_conditional
     elsif has_no_val
       execute_child(@ncid)
-    elsif match?
-      execute_then
+    elsif m = match?
+      execute_then(@ncid, m)
     else
       execute_conditional(@ncid + 1)
     end
@@ -75,12 +75,14 @@ class Flor::Pro::Case < Flor::Procedure
     end
   end
 
-  def execute_then(ncid=@ncid)
+  def execute_then(ncid, vars=nil)
 
     payload['ret'] = node_payload_ret
     @node['found'] = true
 
-    execute_child(ncid)
+    h = vars.is_a?(Hash) ? { 'vars' => vars } : nil
+
+    execute_child(ncid, nil, h)
   end
 
   def else?(ncid)
