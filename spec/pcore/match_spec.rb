@@ -146,6 +146,23 @@ describe 'Flor procedures' do
     context 'objects' do
 
       it 'matches'
+
+      it "respects the `quote: 'keys'`" do
+
+        r = @executor.launch(
+          %q{
+            set a 'A'
+            set b 'B'
+            match { 'a': 1, 'b': 2 }
+              { a: 1, b: 2 } quote: 'keys'; 'match'
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('match')
+      end
+
+      it 'respects `only`'
     end
 
     context 'guards' do
