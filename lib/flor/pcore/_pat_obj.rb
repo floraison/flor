@@ -71,8 +71,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
     elsif ct.is_a?(Array)
 
-#p [ :else, ct ]
-# TODO
+      @node['binding'][ct[0]] = val[@node['key']] if ct[0].length > 0
 
     elsif val[key] != ret
 
@@ -86,7 +85,6 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
   def receive_last
 
-#p :rl
     payload['_pat_binding'] = @node['binding']
     payload.delete('_pat_val')
 
