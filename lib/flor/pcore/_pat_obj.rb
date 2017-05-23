@@ -7,31 +7,8 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
     @node['atts'] = []
 
-    key = true
-
-    cn = children
-      .collect { |ct|
-        next ct if ct[0] == '_att'
-        (key = ! key) ? ct : deref_and_stringify(ct) }
-
-    t = tree
-
-    @node['tree'] = [ t[0], cn, *t[2..-1] ] if cn != t[1]
-
     super
   end
-
-# TODO
-#
-# It’s also useful to specify that some map has only a set of specified keys,
-# this can be accomplished with the :only map pattern modifier:
-#
-# ```
-# _pat_obj
-#   _att \ only
-#   a; _
-#   b; 1
-# ```
 
   def receive_first
 
@@ -42,9 +19,10 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
   def receive_last_att
 
+    rewrite_keys
+
     @node['key'] = nil
 
-# TODO deal with `only`, @node['seen'] = []...
     super
   end
 
@@ -90,6 +68,35 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
     payload.delete('_pat_val')
 
     super
+  end
+
+  protected
+
+  def rewrite_keys
+
+    q = (att('quote') == 'keys')
+
+    key = true
+
+    cn = children
+      .collect { |ct|
+        next ct if ct[0] == '_att'
+        key = ! key
+        next ct if key
+        q ? quote_key(ct) : deref_and_stringify(ct) }
+
+    t = tree
+
+    @node['tree'] = [ t[0], cn, *t[2..-1] ] if cn != t[1]
+  end
+
+  def quote_key(t)
+
+    if t[1] == []
+      [ '_sqs', t[0], *t[2..-1] ]
+    else
+      t
+    end
   end
 end
 

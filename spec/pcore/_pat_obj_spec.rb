@@ -59,8 +59,40 @@ describe 'Flor procedures' do
         expect(r['payload']['_pat_binding']).to eq({})
       end
 
-      it 'evaluates keys'
-      it 'quotes all keys when `quote: \'keys\'`'
+      it 'evaluates keys' do
+
+        r = @executor.launch(
+          %q{
+            set a "colour"
+            _pat_obj
+              a
+              b
+          },
+          payload: { 'ret' => { 'colour' => 'blue' } })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({ 'b' => 'blue' })
+      end
+
+      it 'quotes all keys when `quote: \'keys\'`' do
+
+        r = @executor.launch(
+          %q{
+            set a "colour"
+            _pat_obj quote: 'keys'
+              a; v0
+              (a _); v1
+          },
+          payload: { 'ret' => { 'a' => 0, 'colour' => 'blue' } })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['_pat_binding']
+        ).to eq({
+          'v0' => 0, 'v1' => 'blue'
+        })
+      end
     end
   end
 end
