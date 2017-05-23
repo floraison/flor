@@ -19,6 +19,9 @@ describe 'Flor procedures' do
 
     [
 
+      [ [ '_pat_arr', 0, 1 ], 6, nil ],
+      [ %q{ _pat_arr \ 7 }, 7, nil ],
+
       [ [ '_pat_arr', 0, 1 ], [ 6 ], nil ],
       [ [ '_pat_arr', 0, 1 ], [], {} ],
 

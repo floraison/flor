@@ -15,22 +15,11 @@ describe 'Flor procedures' do
     @executor = Flor::TransientExecutor.new
   end
 
-# TODO
-#
-# It’s also useful to specify that some map has only a set of specified keys,
-# this can be accomplished with the :only map pattern modifier:
-#
-# ```
-# _pat_obj
-#   _att \ only
-#   a; _
-#   b; 1
-# ```
-
   describe '_pat_obj' do
 
     [
 
+      [ %q{ _pat_obj \ a; 1 }, 1, nil ],
       [ %q{ _pat_obj \ a; 1 }, { 'a' => 2 }, nil ],
       [ %q{ _pat_obj \ a; 1 }, { 'a' => 1 }, {} ],
 
