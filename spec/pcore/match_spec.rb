@@ -128,31 +128,19 @@ describe 'Flor procedures' do
         end
       end
 
-  # breaks apart because array parsing is too greedy somehow
-  #
-  # using "_arr" (avoid syntaxic sugar) is a solution
-  #
-#      it 'destructures arrays' do
-#
-#        r = @executor.launch(
-#          %q{
-#            for-each a
-#              def i
-#                push l
-#                  _arr
-#                    i
-#                    match [ (% i 3) (% i 5) ]
-#                      [ 0 0 ] 'FizzBuzz'
-#                      [ 0 _ ] 'Fizz'
-#                      [ _ 0 ] 'Buzz'
-#                      else i
-#          },
-#          vars: { 'a' => (1..17).to_a, 'l' => [] })
-#
-#        expect(r['point']).to eq('terminated')
-##        expect(r['payload']['ret']).to eq('caught')
-#        expect(r['vars']['l']).to eq(:xxx)
-#      end
+      it 'uses the bindings as vars in the then-branch' do
+
+        r = @executor.launch(
+          %q{
+            match [ 1 2 ]
+              [ 0 0 ]; 'zero'
+              [ 1 b ]; b
+              [ _ 2 ]; 'two'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(2)
+      end
     end
 
     context 'objects' do
