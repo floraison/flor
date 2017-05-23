@@ -19,6 +19,9 @@ describe 'Flor procedures' do
 
     [
 
+      [ [ '_pat_arr', 0, 1 ], [ 6 ], nil ],
+      [ [ '_pat_arr', 0, 1 ], [], {} ],
+
       [ %q{ _pat_arr \ 7 }, [ 6 ], nil ],
       [ %q{ _pat_arr \ 7 }, [ 7 ], {} ],
       [ %q{ _pat_arr \ a }, [ 5 ], { 'a' => 5 } ],
@@ -40,9 +43,11 @@ describe 'Flor procedures' do
 
     ].each do |code, val, expected|
 
+      c = code.is_a?(String) ? code.strip : code.inspect
+
       it(
         "#{expected == nil ? 'doesn\'t match' : 'matches'}" +
-        " for `#{code.strip.to_s}` vs `#{val.inspect}`"
+        " for `#{c}` vs `#{val.inspect}`"
       ) do
 
         r = @executor.launch(code, payload: { 'ret' => val })

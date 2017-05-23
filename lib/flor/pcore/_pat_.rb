@@ -6,6 +6,17 @@ class Flor::Pro::PatContainer < Flor::Procedure
     @node['binding'] = {}
   end
 
+  def execute
+
+    if tree[1] == 0
+      payload['_pat_binding'] = val == [] ? {} : nil
+      payload.delete('_pat_val')
+      return wrap_reply
+    end
+
+    super
+  end
+
   def execute_child(index=0, sub=nil, h=nil)
 
     ct = child_type(index)
@@ -13,11 +24,6 @@ class Flor::Pro::PatContainer < Flor::Procedure
     return wrap_reply(
       'nid' => nid, 'from' => Flor.child_nid(nid, index, sub)
     ) if ct.is_a?(String) || ct.is_a?(Array)
-
-#    if ct == :pattern
-## TODO inject _pat_val
-## TODO rectify f.ret
-#    end
 
     super(index, sub, h)
   end
