@@ -54,6 +54,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
     ret = payload['ret']
 
     unless key
+      ret = ret.to_s
       return wrap_no_match_reply unless val.has_key?(ret)
       @node['key'] = ret
       return super

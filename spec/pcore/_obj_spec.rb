@@ -51,12 +51,11 @@ describe 'Flor procedures' do
 
     it 'evaluates keys' do
 
-      flor = %{
-        set a "colour"
-        { a: 'yellow' }
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set a "colour"
+          { a: 'yellow' }
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq({ 'colour' => 'yellow' })
@@ -66,12 +65,11 @@ describe 'Flor procedures' do
 
       it 'does not evaluate keys' do
 
-        flor = %{
-          set a "colour"
-          { a: 'red', (a _): 'green' } quote: 'keys'
-        }
-
-        r = @executor.launch(flor)
+        r = @executor.launch(
+          %q{
+            set a "colour"
+            { a: 'red', (a _): 'green' } quote: 'keys'
+          })
 
         expect(r['point']).to eq(
           'terminated')
