@@ -15,29 +15,40 @@ describe 'Flor procedures' do
     @executor = Flor::TransientExecutor.new
   end
 
+# TODO
+#
+# It’s also useful to specify that some map has only a set of specified keys,
+# this can be accomplished with the :only map pattern modifier:
+#
+# ```
+# _pat_obj
+#   _att \ only
+#   a; _
+#   b; 1
+# ```
+
   describe '_pat_obj' do
 
-    it 'matches objects'
-#    [
-#
-#      [ %q{ _pat_obj \ a; 1 }, { 'a' => 2 }, nil ],
-#      [ %q{ _pat_obj \ a; 1 }, { 'a' => 1 }, {} ],
-#
-#    ].each do |code, val, expected|
-#
-#      it(
-#        "#{expected == nil ? 'doesn\'t match' : 'matches'}" +
-#        " for `#{code.strip.to_s}` vs `#{val.inspect}`"
-#      ) do
-#
-#        r = @executor.launch(code, payload: { 'ret' => val })
-#
-#        expect(r['point']).to eq('terminated')
-#        expect(r['payload']).to have_key('_pat_binding')
-#        expect(r['payload']).not_to have_key('_pat_val')
-#        expect(r['payload']['_pat_binding']).to eq(expected)
-#      end
-#    end
+    [
+
+      [ %q{ _pat_obj \ a; 1 }, { 'a' => 2 }, nil ],
+      [ %q{ _pat_obj \ a; 1 }, { 'a' => 1 }, {} ],
+
+    ].each do |code, val, expected|
+
+      it(
+        "#{expected == nil ? 'doesn\'t match' : 'matches'}" +
+        " for `#{code.strip.to_s}` vs `#{val.inspect}`"
+      ) do
+
+        r = @executor.launch(code, payload: { 'ret' => val })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']).to have_key('_pat_binding')
+        expect(r['payload']).not_to have_key('_pat_val')
+        expect(r['payload']['_pat_binding']).to eq(expected)
+      end
+    end
   end
 end
 
