@@ -255,6 +255,14 @@ class Flor::Procedure < Flor::Node
     stringify_child(0)
   end
 
+  # Used by "_obj" and "_pat_obj"
+  #
+  def deref_and_stringify(t)
+
+    return t unless t[1] == [] && t[0].is_a?(String)
+    [ '_sqs', deref(t[0]) || t[0], t[2] ]
+  end
+
   def do_execute
 
     pre_execute

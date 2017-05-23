@@ -66,13 +66,5 @@ class Flor::Pro::Obj < Flor::Procedure
 
     wrap_reply
   end
-
-  protected
-
-  def deref_and_stringify(t)
-
-    return t unless t[1] == [] && t[0].is_a?(String)
-    [ '_sqs', deref(t[0]) || t[0], t[2] ]
-  end
 end
 
