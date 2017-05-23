@@ -22,6 +22,7 @@ describe 'Flor procedures' do
       [ %q{ _pat_obj \ a; 1 }, 1, nil ],
       [ %q{ _pat_obj \ a; 1 }, { 'a' => 2 }, nil ],
       [ %q{ _pat_obj \ a; 1 }, { 'a' => 1 }, {} ],
+      [ %q{ _pat_obj \ a; b }, { 'a' => 2 }, { 'b' => 2 } ],
 
     ].each do |code, val, expected|
 

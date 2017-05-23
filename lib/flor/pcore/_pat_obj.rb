@@ -50,21 +50,43 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
   def receive_non_att
 
+    key = @node['key']
     ret = payload['ret']
 
-    if key = @node['key']
-      return wrap_no_match_reply unless val[key] == ret
-      @node['key'] = nil
-    else
+    unless key
       return wrap_no_match_reply unless val.has_key?(ret)
       @node['key'] = ret
+      return super
     end
+
+    ct = child_type(@fcid)
+
+    if ct == :pattern
+
+# TODO
+
+    elsif ct.is_a?(String)
+
+      @node['binding'][ct] = val[@node['key']] if ct != '_'
+
+    elsif ct.is_a?(Array)
+
+#p [ :else, ct ]
+# TODO
+
+    elsif val[key] != ret
+
+      return wrap_no_match_reply unless val[key] == ret
+    end
+
+    @node['key'] = nil
 
     super
   end
 
   def receive_last
 
+#p :rl
     payload['_pat_binding'] = @node['binding']
     payload.delete('_pat_val')
 
