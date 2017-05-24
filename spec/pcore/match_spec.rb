@@ -185,6 +185,19 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq('match')
       end
+
+      it 'respects `only`' do
+
+        r = @executor.launch(
+          %q{
+            match { 'a': 1, 'b': 2 }
+              { a: 1 } only; 'match'
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('no-match')
+      end
     end
 
     context 'guards' do

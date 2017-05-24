@@ -7,6 +7,22 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
     @node['atts'] = []
 
+    t = tree
+
+    if (
+      i = t[1].index { |ct|
+         ct[0] == '_att' &&
+         ct[1].size == 1 &&
+         ct[1][0][0, 2] == [ 'only', [] ] }
+    ) then
+      t[1][i] =
+        [ '_att', [
+          [ '_sqs', 'only', -1 ],
+          [ '_boo', true, -1 ],
+        ], *t[1][i][2..-1] ]
+      @node['tree'] = [ t[0], t[1], *t[1][2..-1] ]
+    end
+
     super
   end
 
@@ -22,6 +38,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
     rewrite_keys
 
     @node['key'] = nil
+    @node['keys'] = [] if att('only')
 
     super
   end
@@ -35,6 +52,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
       ret = ret.to_s
       return wrap_no_match_reply unless val.has_key?(ret)
       @node['key'] = ret
+      @node['keys'] << ret if @node['keys']
       return super
     end
 
@@ -63,6 +81,9 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
   end
 
   def receive_last
+
+    ks = @node['keys']
+    return wrap_no_match_reply if ks && val.keys.sort != ks.sort
 
     payload['_pat_binding'] = @node['binding']
     payload.delete('_pat_val')
