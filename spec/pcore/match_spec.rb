@@ -141,6 +141,19 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(2)
       end
+
+      it "doesn't patternize if suffixed with !" do
+
+        r = @executor.launch(
+          %q{
+            match [ 1 2 ]
+              [ 1 _ ] !; 'a'
+              [ 1 2 ] !; 'b'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('b')
+      end
     end
 
     context 'objects' do
@@ -198,6 +211,26 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq('no-match')
       end
+
+      it "doesn't patternize if suffixed with !" do
+
+        r = @executor.launch(
+          %q{
+            match { 'a': 1, 'b': 2 }
+              { a: 1 } !; 'match'
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('no-match')
+      end
+    end
+
+    context 'or' do
+
+      it 'matches'
+      it 'may not match'
+      it "doesn't patternize if suffixed with !"
     end
 
     context 'guards' do

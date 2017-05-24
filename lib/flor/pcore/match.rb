@@ -41,17 +41,31 @@ class Flor::Pro::Match < Flor::Pro::Case
 
   def patternize(t)
 
+    return t unless t[1].is_a?(Array)
+
+    bang = t[1]
+      .index { |ct|
+        ct[0] == '_att' &&
+        ct[1].size == 1 &&
+        ct[1][0][0, 2] == [ '!', [] ] }
+    pat =
+      case t[0]
+      when '_arr', '_obj' then "_pat#{t[0]}"
+      when 'or' then '_pat_or'
+      else nil
+      end
+
     t[0] =
-      if %w[ _arr _obj ].include?(t[0])
-        "_pat#{t[0]}"
-      elsif t[0] == 'or'
-        "_pat_or"
+      if pat && bang
+        t[1].delete_at(bang)
+        t[0]
+      elsif pat
+        pat
       else
         t[0]
       end
 
-    t[1].each_with_index { |ct, i| t[1][i] = patternize(t[1][i]) } \
-      if t[1].is_a?(Array)
+    t[1].each_with_index { |ct, i| t[1][i] = patternize(t[1][i]) }
 
     t
   end
