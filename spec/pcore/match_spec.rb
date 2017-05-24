@@ -145,7 +145,31 @@ describe 'Flor procedures' do
 
     context 'objects' do
 
-      it 'matches'
+      it 'matches' do
+
+        r = @executor.launch(
+          %q{
+            match { 'a': 1, 'b': 2 }
+              { a: 1 }; 'match'
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('match')
+      end
+
+      it 'may not match' do
+
+        r = @executor.launch(
+          %q{
+            match { 'a': 1, 'b': 2 }
+              { c: 1 }; 'match'
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('no-match')
+      end
 
       it "respects the `quote: 'keys'`" do
 
@@ -161,8 +185,6 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq('match')
       end
-
-      it 'respects `only`'
     end
 
     context 'guards' do
