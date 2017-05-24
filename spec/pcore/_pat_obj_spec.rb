@@ -94,6 +94,65 @@ describe 'Flor procedures' do
         })
       end
     end
+
+    context 'only' do
+
+      it 'matches `only`' do
+
+        r = @executor.launch(
+          %q{
+            _pat_obj only
+              a; _
+              b; _
+          },
+          payload: { 'ret' => { 'a' => 0, 'b' => 1 } })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({})
+      end
+
+      it 'does not match if there are extra keys `only`' do
+
+        r = @executor.launch(
+          %q{
+            _pat_obj only
+              a; _
+              b; _
+          },
+          payload: { 'ret' => { 'a' => 0, 'b' => 1, 'c' => 2 } })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq(nil)
+      end
+
+      it 'matches `only: true`' do
+
+        r = @executor.launch(
+          %q{
+            _pat_obj only: true
+              a; _
+              b; _
+          },
+          payload: { 'ret' => { 'a' => 0, 'b' => 1 } })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({})
+      end
+
+      it 'does not match if there are extra keys `only: true`' do
+
+        r = @executor.launch(
+          %q{
+            _pat_obj only: true
+              a; _
+              b; _
+          },
+          payload: { 'ret' => { 'a' => 0, 'b' => 1, 'c' => 2 } })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq(nil)
+      end
+    end
   end
 end
 
