@@ -31,9 +31,8 @@ class Flor::Pro::Match < Flor::Pro::Case
 
     t = tree[1][index]
 
-    if t && %w[ _pat_arr _pat_obj ].include?(t[0])
-      payload['_pat_val'] = @node['val']
-    end
+    payload['_pat_val'] = @node['val'] \
+      if t && %w[ _pat_arr _pat_obj _pat_or ].include?(t[0])
 
     super
   end
@@ -42,11 +41,17 @@ class Flor::Pro::Match < Flor::Pro::Case
 
   def patternize(t)
 
-    t[0] = "_pat#{t[0]}" if %w[ _arr _obj ].include?(t[0])
+    t[0] =
+      if %w[ _arr _obj ].include?(t[0])
+        "_pat#{t[0]}"
+      elsif t[0] == 'or'
+        "_pat_or"
+      else
+        t[0]
+      end
 
-    t[1].each_with_index { |ct, i|
-      t[1][i] = patternize(t[1][i])
-    } if t[1].is_a?(Array)
+    t[1].each_with_index { |ct, i| t[1][i] = patternize(t[1][i]) } \
+      if t[1].is_a?(Array)
 
     t
   end
