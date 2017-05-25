@@ -21,8 +21,8 @@ describe 'Flor procedures' do
 
       [ %q{ _pat_or _ }, 11, nil ],
       [ %q{ _pat_or \ 10 }, 11, nil ],
-      [ %q{ _pat_or \ 11 }, 11, nil ],
-      [ %q{ _pat_or \ 10; 11 }, 11, { 'or' => 11 } ],
+      [ %q{ _pat_or \ 11 }, 11, {} ],
+      [ %q{ _pat_or \ 10; 11 }, 11, {} ],
 
     ].each do |code, val, expected|
 
