@@ -51,6 +51,7 @@ class Flor::Pro::Match < Flor::Pro::Case
     pat =
       case t[0]
       when '_arr', '_obj' then "_pat#{t[0]}"
+      when 'or!' then 'or'
       when 'or' then '_pat_or'
       else nil
       end

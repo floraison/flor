@@ -266,6 +266,19 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq('no-match')
       end
+
+      it "doesn't patternize if suffixed with ! (or!)" do
+
+        r = @executor.launch(
+          %q{
+            match 2
+              or! 1 2; 'match'
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('no-match')
+      end
     end
 
     context 'guards' do
