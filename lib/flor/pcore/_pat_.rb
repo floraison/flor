@@ -25,6 +25,8 @@ class Flor::Pro::PatContainer < Flor::Procedure
       'nid' => nid, 'from' => Flor.child_nid(nid, index, sub)
     ) if ct.is_a?(String) || ct.is_a?(Array)
 
+    payload['_pat_val'] = sub_val if ct == :pattern
+
     super(index, sub, h)
   end
 
