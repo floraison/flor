@@ -228,9 +228,44 @@ describe 'Flor procedures' do
 
     context 'or' do
 
-      it 'matches'
-      it 'may not match'
-      it "doesn't patternize if suffixed with !"
+      it 'matches (infix)' do
+
+        r = @executor.launch(
+          %q{
+            match 11
+              22 or 11 or 9; 'match'
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('match')
+      end
+
+      it 'may not match (infix)' do
+
+        r = @executor.launch(
+          %q{
+            match 12
+              11 or 22 or 33; 'match'
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('no-match')
+      end
+
+      it "doesn't patternize if suffixed with !" do
+
+        r = @executor.launch(
+          %q{
+            match 2
+              or ! 1 2; 'match'
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('no-match')
+      end
     end
 
     context 'guards' do
