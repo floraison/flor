@@ -60,7 +60,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
     if ct == :pattern
 
-# TODO
+      @node['binding'].merge!(payload.delete('_pat_binding'))
 
     elsif ct.is_a?(String)
 
@@ -118,6 +118,11 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
     else
       t
     end
+  end
+
+  def sub_val
+
+    val[@node['key']]
   end
 end
 
