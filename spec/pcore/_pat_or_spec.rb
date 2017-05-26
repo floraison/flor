@@ -41,6 +41,83 @@ describe 'Flor procedures' do
         expect(r['payload']['_pat_binding']).to eq(expected)
       end
     end
+
+    context 'nested patterns' do
+
+      it 'accepts a nested _pat_arr' do
+
+        r = @executor.launch(
+          %q{
+            _pat_or
+              _pat_arr
+                a
+                1
+              _pat_arr
+                1
+                b
+          },
+          payload: { 'ret' => [ 1, 2 ] })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({ 'b' => 2 })
+      end
+
+      it 'accepts a nested _pat_arr (no match)' do
+
+        r = @executor.launch(
+          %q{
+            _pat_or
+              _pat_arr
+                a
+                1
+              _pat_arr
+                1
+                b
+          },
+          payload: { 'ret' => [ 3, 2 ] })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq(nil)
+      end
+
+      it 'accepts a nested _pat_obj' do
+
+        r = @executor.launch(
+          %q{
+            _pat_or
+              _pat_obj
+                a; 2
+                b; b
+              _pat_obj
+                a; a
+                b; 2
+          },
+          payload: { 'ret' => { 'a' => 1, 'b' => 2 } })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({ 'a' => 1 })
+      end
+
+      it 'accepts a nested _pat_or' do
+
+        r = @executor.launch(
+          %q{
+            _pat_or
+              _pat_or
+                1
+                2
+              _pat_or
+                3
+                4
+          },
+          payload: { 'ret' => 4 })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({})
+      end
+
+      it 'accepts a nested _pat_guard'
+    end
   end
 end
 

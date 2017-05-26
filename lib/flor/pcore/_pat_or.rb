@@ -9,11 +9,12 @@ class Flor::Pro::PatOr < Flor::Pro::PatContainer
 
     if ct == :pattern
 
-# TODO!
+      b = payload.delete('_pat_binding')
+      return wrap_match_reply(b) if b
 
     elsif payload['ret'] == val
 
-      return wrap_match_reply
+      return wrap_match_reply({})
     end
 
     super
@@ -26,12 +27,14 @@ class Flor::Pro::PatOr < Flor::Pro::PatContainer
 
   protected
 
-  def wrap_match_reply
+  def wrap_match_reply(binding)
 
-    payload['_pat_binding'] = {}
+    payload['_pat_binding'] = binding
     payload.delete('_pat_val')
 
     wrap_reply
   end
+
+  alias sub_val val
 end
 
