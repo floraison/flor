@@ -115,31 +115,31 @@ describe 'Flor procedures' do
         })
       end
 
-      it 'accepts a nested _pat_or'# do
-#
-#        r = @executor.launch(
-#          %q{
-#            # [ 1, b, (or 3 33), d ]
-#            _pat_arr
-#              1
-#              b
-#              _pat_or c
-#                3
-#                33
-#              d
-#          },
-#          payload: { 'ret' => [ 1, 2, 33, 4 ] })
-#
-#        expect(r['point']).to eq('terminated')
-#        expect(r['payload']).to have_key('_pat_binding')
-#        expect(r['payload']).not_to have_key('_pat_val')
-#
-#        expect(
-#          r['payload']['_pat_binding']
-#        ).to eq({
-#          'b' => 2, 'c' => 3, 'd' => 4
-#        })
-#      end
+      it 'accepts a nested _pat_or' do
+
+        r = @executor.launch(
+          %q{
+            # [ 1, b, (or 3 33), d ]
+            _pat_arr
+              1
+              b
+              _pat_or
+                3
+                33
+              d
+          },
+          payload: { 'ret' => [ 1, 2, 33, 4 ] })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']).to have_key('_pat_binding')
+        expect(r['payload']).not_to have_key('_pat_val')
+
+        expect(
+          r['payload']['_pat_binding']
+        ).to eq({
+          'b' => 2, 'd' => 4
+        })
+      end
 
       it 'accepts a nested _pat_guard'
     end
