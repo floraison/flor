@@ -19,7 +19,11 @@ class Flor::Pro::PatArr < Flor::Pro::PatContainer
 
     if ct == :pattern
 
-      @node['binding'].merge!(payload.delete('_pat_binding'))
+      if b = payload.delete('_pat_binding')
+        @node['binding'].merge!(b)
+      else
+        return wrap_no_match_reply
+      end
 
     elsif ct.is_a?(String)
 

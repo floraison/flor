@@ -8,7 +8,7 @@ class Flor::Pro::PatContainer < Flor::Procedure
 
   def execute
 
-    if tree[1] == 0
+    if tree[1] == 0 || tree[1] == []
       payload['_pat_binding'] = val == [] ? {} : nil
       payload.delete('_pat_val')
       return wrap_reply
@@ -43,7 +43,7 @@ class Flor::Pro::PatContainer < Flor::Procedure
     ct0 = ct[0]
 
     return :att if ct0 == '_att'
-    return :pattern if %w[ _pat_arr _pat_obj _pat_or ].include?(ct0)
+    return :pattern if %w[ _pat_arr _pat_obj _pat_or _pat_bind ].include?(ct0)
     return '_' if ct0 == '_'
     return ct0 if ct0.match(/\A[a-z][a-z0-9]*\z/) && ct[1] == []
 

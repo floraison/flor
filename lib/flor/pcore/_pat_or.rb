@@ -3,6 +3,11 @@ class Flor::Pro::PatOr < Flor::Pro::PatContainer
 
   name '_pat_or'
 
+  def pre_execute
+
+    unatt_unkeyed_children
+  end
+
   def receive_non_att
 
     ct = child_type(@fcid)
