@@ -32,7 +32,7 @@ describe 'Flor procedures' do
 
     context '_pat_guard {name}' do
 
-      it 'matches' do
+      it 'binds' do
 
         r = @executor.launch(
           %q{ _pat_guard x },
@@ -41,26 +41,64 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['_pat_binding']).to eq({ 'x' => 11 })
       end
+    end
 
-      it 'may not match'
+    context '_pat_guard {conditional}' do
+
+      it 'matches' do
+
+        r = @executor.launch(
+          %q{ _pat_guard true },
+          payload: { 'ret' => 11 })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({})
+      end
+
+      it 'does not match' do
+
+        r = @executor.launch(
+          %q{ _pat_guard false },
+          payload: { 'ret' => 11 })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq(nil)
+      end
     end
 
     context '_pat_guard {name} {pattern}' do
 
       it 'matches'
-      it 'may not match'
+      it 'does not match'
     end
 
     context '_pat_guard {name} {conditional}' do
 
-      it 'matches'
-      it 'may not match'
+      it 'matches' do
+
+        r = @executor.launch(
+          %q{ _pat_guard x true },
+          payload: { 'ret' => 11 })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({ 'x' => 11 })
+      end
+
+      it 'does not match' do
+
+        r = @executor.launch(
+          %q{ _pat_guard x false },
+          payload: { 'ret' => 11 })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq(nil)
+      end
     end
 
     context '_pat_guard {name} {pattern} {conditional}' do
 
       it 'matches'
-      it 'may not match'
+      it 'does not match'
     end
 
     context 'nested patterns' do

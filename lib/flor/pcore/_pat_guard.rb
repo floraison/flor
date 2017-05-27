@@ -15,26 +15,39 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
     unatt_unkeyed_children
     stringify_first_child
 
-    @node['key'] = nil
-  end
-
-  def receive_non_att
-
-    unless @node['key']
-      @node['key'] = payload['ret']
-      return super
-    end
-
-    #ct = child_type(@fcid)
-
-    super
+    @node['rets'] = []
   end
 
   def receive_last
 
-    payload['_pat_binding'] = { @node['key'] => val }
+#p [ 0, @node['rets'] ]
+    key = grab { |e| e.is_a?(String) }
+    boo = grab { |e| e == false || e == true }
+    pat = @node['rets'].pop
+#p({ key: key, boo: boo, pat: pat })
+#p [ 1, @node['rets'] ]
+
+    payload['_pat_binding'] =
+      if boo == false
+        nil
+      elsif key
+        { key => val }
+      else
+        {}
+      end
 
     super
+  end
+
+  protected
+
+  def grab(&block)
+
+    if i = @node['rets'].index(&block)
+      @node['rets'].delete_at(i)
+    else
+      nil
+    end
   end
 
 #  def execute_child(index=0, sub=nil, h=nil)
