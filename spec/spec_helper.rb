@@ -16,29 +16,34 @@ F = Flor
   # quicker access to Flor.to_s and co
 
 
-def jruby?
+module Helpers
 
-  !! RUBY_PLATFORM.match(/java/)
-end
+  def jruby?
 
-def wait_until(timeout=14, frequency=0.1, &block)
-
-  start = Time.now
-
-  loop do
-
-    sleep(frequency)
-
-    #return if block.call == true
-    r = block.call
-    return r if r
-
-    break if Time.now - start > timeout
+    !! RUBY_PLATFORM.match(/java/)
   end
 
-  fail "timeout after #{timeout}s"
+  def wait_until(timeout=14, frequency=0.1, &block)
+
+    start = Time.now
+
+    loop do
+
+      sleep(frequency)
+
+      #return if block.call == true
+      r = block.call
+      return r if r
+
+      break if Time.now - start > timeout
+    end
+
+    fail "timeout after #{timeout}s"
+  end
+  alias :wait_for :wait_until
 end
-alias :wait_for :wait_until
+
+RSpec.configure { |c| c.include(Helpers) }
 
 
 RSpec::Matchers.define :eqj do |o|
@@ -163,6 +168,8 @@ end
 
 
 class RSpec::Core::ExampleGroup
+  #
+  # for spec/parser_spec.rb
 
   class << self
 
@@ -249,6 +256,7 @@ class RSpec::Core::ExampleGroup
         end
       end
     end
+
   end
 end
 
