@@ -70,6 +70,7 @@ describe 'Flor procedures' do
 
       it 'matches'
       it 'does not match'
+      it 'gets rid of spurious underscores'
     end
 
     context '_pat_guard {name} {conditional}' do
@@ -92,6 +93,16 @@ describe 'Flor procedures' do
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['_pat_binding']).to eq(nil)
+      end
+
+      it 'passes the name->val to the conditional' do
+
+        r = @executor.launch(
+          %q{ _pat_guard x (x > 3) },
+          payload: { 'ret' => 4 })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({ 'x' => 4 })
       end
     end
 

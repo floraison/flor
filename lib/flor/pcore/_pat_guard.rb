@@ -39,6 +39,17 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
     super
   end
 
+  def execute_child(index=0, sub=nil, h=nil)
+
+    if (key = @node['rets'].first) && child_type(index) == nil
+      h ||= {}
+      h['vars'] ||= {}
+      h['vars'][key.to_s] = val
+    end
+
+    super(index, sub, h)
+  end
+
   protected
 
   def grab(&block)
