@@ -504,6 +504,9 @@ describe 'Flor procedures' do
             [ 14 15 16 17 18 19 ]
           set "k__$(c)" l
             [ 20 21 22 23 24 ]
+
+          set m n__0 o___
+            [ 25 26 27 28 ]
         })
 
       expect(r['point']).to eq('terminated')
@@ -526,6 +529,10 @@ describe 'Flor procedures' do
 
       expect(r['vars']['k']).to eq([ 20, 21, 22 ])
       expect(r['vars']['l']).to eq(23)
+
+      expect(r['vars']['m']).to eq(25)
+      expect(r['vars']['n']).to eq([])
+      expect(r['vars']['o']).to eq([ 26, 27, 28 ])
     end
   end
 end

@@ -42,6 +42,10 @@ describe 'Flor procedures' do
         [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
         { 'a' => 1, 'b' => [ 2, 3, 4, 5, 6 ], 'c' => [ 7, 8 ], 'd' => 9 } ],
 
+      [ %q{ _pat_arr \ a; b__0; c__2; d },
+        [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+        { 'a' => 1, 'b' => [], 'c' => [ 2, 3 ], 'd' => 4 } ],
+
       [ %q{ _pat_arr \ 7 }, 7, nil ]
 
     ].each do |code, val, expected|

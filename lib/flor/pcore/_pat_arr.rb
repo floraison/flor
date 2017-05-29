@@ -32,6 +32,7 @@ class Flor::Pro::PatArr < Flor::Pro::PatContainer
     elsif ct.is_a?(Array)
 
       offset = val[@node['index']..-1].size - remaining_index_count
+      offset = ct[1] if ct[1] && offset > ct[1]
       @node['binding'][ct[0]] = val[@node['index'], offset]
 
     elsif val[@node['index']] != payload['ret']
