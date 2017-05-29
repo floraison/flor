@@ -8,6 +8,7 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
   # _pat_guard name pattern
   # _pat_guard name conditional
   # _pat_guard name pattern conditional
+  # _pat_guard name conditional pattern
   # ```
 
   def pre_execute
@@ -16,6 +17,15 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
     stringify_first_child
 
     @node['rets'] = []
+  end
+
+  def receive_non_att
+
+    if (ct = child_type(@fcid)) == :pattern
+      return wrap_no_match_reply if payload['_pat_binding'] == nil
+    end
+
+    super
   end
 
   def receive_last
@@ -61,6 +71,8 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
     end
   end
 
+  alias sub_val val
+
 #  def execute_child(index=0, sub=nil, h=nil)
 #
 #    return super if @ncid == nil
@@ -86,9 +98,5 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 #
 #    wrap_reply
 #  end
-#
-#  protected
-#
-#  alias sub_val val
 end
 

@@ -68,8 +68,27 @@ describe 'Flor procedures' do
 
     context '_pat_guard {name} {pattern}' do
 
-      it 'matches'
-      it 'does not match'
+      it 'matches' do
+
+        r = @executor.launch(
+          %q{ _pat_guard x (_pat_or 1 11) },
+          payload: { 'ret' => 11 })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({ 'x' => 11 })
+      end
+
+      it 'does not match' do
+
+        r = @executor.launch(
+          %q{ _pat_guard x (_pat_or 1 11) },
+          payload: { 'ret' => 22 })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq(nil)
+      end
+
+      it 'passes on the binding from the sub-pattern'
       it 'gets rid of spurious underscores'
     end
 
