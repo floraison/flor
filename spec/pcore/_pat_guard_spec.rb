@@ -88,7 +88,21 @@ describe 'Flor procedures' do
         expect(r['payload']['_pat_binding']).to eq(nil)
       end
 
-      it 'passes on the binding from the sub-pattern'
+      it 'passes on the binding from the sub-pattern' do
+
+        r = @executor.launch(
+          %q{ _pat_guard a (_pat_arr \ _; a1; _) },
+          payload: { 'ret' => [ 1, 2, 3 ] })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['_pat_binding']
+        ).to eq({
+          'a' => [ 1, 2, 3 ], 'a1' => 2
+        })
+      end
+
       it 'gets rid of spurious underscores'
     end
 

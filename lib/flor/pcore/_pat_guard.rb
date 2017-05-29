@@ -22,7 +22,9 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
   def receive_non_att
 
     if (ct = child_type(@fcid)) == :pattern
-      return wrap_no_match_reply if payload['_pat_binding'] == nil
+      b = payload['_pat_binding']
+      return wrap_no_match_reply unless b
+      @node['binding'] = b
     end
 
     super
@@ -33,7 +35,7 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 #p [ 0, @node['rets'] ]
     key = grab { |e| e.is_a?(String) }
     boo = grab { |e| e == false || e == true }
-    pat = @node['rets'].pop
+    #pat = @node['rets'].pop
 #p({ key: key, boo: boo, pat: pat })
 #p [ 1, @node['rets'] ]
 
@@ -41,9 +43,9 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
       if boo == false
         nil
       elsif key
-        { key => val }
+        (@node['binding'] || {}).merge!(key => val)
       else
-        {}
+        @node['binding'] || {}
       end
 
     super
