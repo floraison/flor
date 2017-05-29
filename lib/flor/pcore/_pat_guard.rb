@@ -15,15 +15,25 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 
     unatt_unkeyed_children
     stringify_first_child
-
-    @node['rets'] = []
   end
 
   def receive_non_att
 
-    if (ct = child_type(@fcid)) == :pattern
+    ct = child_type(@fcid)
+
+    if ct == nil && @node['key'] == nil && payload['ret'].is_a?(String)
+
+      @node['key'] = payload['ret']
+
+    elsif ct == nil && payload['ret'] == false
+
+      return wrap_no_match_reply
+
+    elsif ct == :pattern
+
       b = payload['_pat_binding']
       return wrap_no_match_reply unless b
+
       @node['binding'] = b
     end
 
@@ -32,18 +42,9 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 
   def receive_last
 
-#p [ 0, @node['rets'] ]
-    key = grab { |e| e.is_a?(String) }
-    boo = grab { |e| e == false || e == true }
-    #pat = @node['rets'].pop
-#p({ key: key, boo: boo, pat: pat })
-#p [ 1, @node['rets'] ]
-
     payload['_pat_binding'] =
-      if boo == false
-        nil
-      elsif key
-        (@node['binding'] || {}).merge!(key => val)
+      if k = @node['key']
+        (@node['binding'] || {}).merge!(k => val)
       else
         @node['binding'] || {}
       end
@@ -53,7 +54,7 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 
   def execute_child(index=0, sub=nil, h=nil)
 
-    if (key = @node['rets'].first) && child_type(index) == nil
+    if (key = @node['key']) && child_type(index) == nil
       h ||= {}
       h['vars'] ||= {}
       h['vars'][key.to_s] = val
@@ -64,41 +65,6 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 
   protected
 
-  def grab(&block)
-
-    if i = @node['rets'].index(&block)
-      @node['rets'].delete_at(i)
-    else
-      nil
-    end
-  end
-
   alias sub_val val
-
-#  def execute_child(index=0, sub=nil, h=nil)
-#
-#    return super if @ncid == nil
-#pp tree
-#p @ncid
-#    ct = child_type(@ncid)
-#p ct
-#
-#    super
-#  end
-
-#  def receive_non_att
-#
-#    key = @node['key']
-#
-#    unless key
-#      @node['key'] = payload['ret'].to_s
-#      return super
-#    end
-#
-#    b = payload['_pat_binding']
-#    b[key] = val if b
-#
-#    wrap_reply
-#  end
 end
 
