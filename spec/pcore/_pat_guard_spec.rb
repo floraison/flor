@@ -149,7 +149,21 @@ describe 'Flor procedures' do
 
     context '_pat_guard {name} {conditional} {pattern}' do
 
-      it 'matches'
+      it 'matches' do
+
+        r = @executor.launch(
+          %q{ _pat_guard x ((length x) > 3) (_pat_arr \ a; ___; b) },
+          payload: { 'ret' => [ 0, 1, 2, 3, 4, 5 ] })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['_pat_binding']
+        ).to eq({
+          'x' => [ 0, 1, 2, 3, 4, 5 ], 'a' => 0, 'b' => 5
+        })
+      end
+
       it 'does not match'
     end
 
