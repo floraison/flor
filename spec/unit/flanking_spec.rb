@@ -88,10 +88,11 @@ describe 'Flor unit' do
           (status o pt:execute)
         }.ftrim)
 
-
         expect(
           Flor.to_s(
-            @unit.journal.drop_while { |m| m['point'] != 'end' }[1..-1])
+            @unit.journal
+              .drop_while { |m| m['point'] != 'end' }[1..-1]
+              .reject { |m| m['point'] == 'end' })
         ).to eq(%{
           (msg 0 cancel)
           (msg 0_0 cancel from:0)
