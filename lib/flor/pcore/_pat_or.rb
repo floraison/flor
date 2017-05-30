@@ -39,7 +39,5 @@ class Flor::Pro::PatOr < Flor::Pro::PatContainer
 
     wrap_reply
   end
-
-  alias sub_val val
 end
 

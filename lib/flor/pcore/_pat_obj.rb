@@ -124,9 +124,9 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
     end
   end
 
-  def sub_val
+  def sub_val(child_index)
 
-    val[@node['key']]
+    [ 1, val[@node['key']] ]
   end
 end
 

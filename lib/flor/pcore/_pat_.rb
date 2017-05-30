@@ -21,11 +21,17 @@ class Flor::Pro::PatContainer < Flor::Procedure
 
     ct = child_type(index)
 
+    if ct == :pattern || ct.is_a?(Array)
+      @node['_sub_pat_val'] = sv = sub_val(index)
+      payload['_pat_val'] = sv[1]
+    else
+      @node.delete('_sub_pat_val')
+      payload.delete('_pat_val')
+    end
+
     return wrap_reply(
       'nid' => nid, 'from' => Flor.child_nid(nid, index, sub)
     ) if ct.is_a?(String) || ct.is_a?(Array)
-
-    payload['_pat_val'] = sub_val if ct == :pattern
 
     super(index, sub, h)
   end
@@ -37,15 +43,22 @@ class Flor::Pro::PatContainer < Flor::Procedure
     node_payload['_pat_val'] || node_payload_ret
   end
 
+  # A default implementation
+  #
+  def sub_val(child_index)
+
+    [ 1, val ]
+  end
+
   def child_type(cid_or_tree)
 
     ct = cid_or_tree.is_a?(Array) ? cid_or_tree : tree[1][cid_or_tree]
     ct0 = ct[0]
 
     return :att if ct0 == '_att'
-    return :pattern if %w[ _pat_arr _pat_obj _pat_or _pat_bind ].include?(ct0)
+    return :pattern if /\A_pat_(arr|obj|or|bind|guard)\z/ === ct0
     return '_' if ct0 == '_'
-    return ct0 if ct0.match(/\A[a-z][a-z0-9]*\z/) && ct[1] == []
+    return ct0 if /\A[a-z][a-z0-9]*\z/ === ct0 && ct[1] == []
 
     m = ct0.match(Flor::SPLAT_REGEX)
     return [ m[1], m[2] == '_' ? nil : m[2].to_i ] if m

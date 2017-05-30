@@ -23,9 +23,5 @@ class Flor::Pro::PatBind < Flor::Pro::PatContainer
 
     wrap_reply
   end
-
-  protected
-
-  alias sub_val val
 end
 

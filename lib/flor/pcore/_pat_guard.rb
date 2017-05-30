@@ -44,6 +44,8 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 
     payload['_pat_binding'] =
       if k = @node['key']
+        m = k.match(Flor::SPLAT_REGEX)
+        k = m ? k[0] : k
         (@node['binding'] || {}).merge!(k => val)
       else
         @node['binding'] || {}
@@ -62,9 +64,5 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 
     super(index, sub, h)
   end
-
-  protected
-
-  alias sub_val val
 end
 

@@ -146,6 +146,29 @@ describe 'Flor procedures' do
       end
 
       it 'accepts a nested _pat_guard'
+
+      it 'reads quantifiers from nested patterns' do
+
+        r = @executor.launch(
+          %q{
+            _pat_arr
+              a
+              _pat_guard
+                b___
+              _pat_guard
+                c__2
+              d
+          },
+          payload: { 'ret' => [ 0, 1, 2, 3, 4, 5, 6 ] })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['_pat_binding']
+        ).to eq({
+          'a' => 0, 'b' => [ 1, 2, 3 ], 'c' => [ 4, 5 ], 'd' => 6
+        })
+      end
     end
   end
 end
