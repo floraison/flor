@@ -103,15 +103,15 @@ describe 'Flor procedures' do
         })
       end
 
-      it 'gets rid of unnecessary parent _pat_arr underscores'# do
-#
-#        r = @executor.launch(
-#          %q{ _pat_guard a___ (_pat_or [ 0 1 ] [ 1 2 ]) },
-#          payload: { 'ret' => [ 1, 2 ] })
-#
-#        expect(r['point']).to eq('terminated')
-#        expect(r['payload']['_pat_binding']).to eq({ 'a' => [ 1, 2 ] })
-#      end
+      it 'gets rid of unnecessary parent _pat_arr underscores' do
+
+        r = @executor.launch(
+          %q{ _pat_guard a___ (_pat_or [ 0 1 ] [ 1 2 ]) },
+          payload: { 'ret' => [ 1, 2 ] })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({ 'a' => [ 1, 2 ] })
+      end
     end
 
     context '_pat_guard {name} {conditional}' do
