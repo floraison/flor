@@ -171,7 +171,7 @@ describe 'Flor punit' do
 
       exid = @unit.launch(flor)
 
-      @unit.wait(exid, 'end; end; end')
+      3.times { @unit.wait(exid, 'end') }
 
       exe = @unit.executions[exid: exid]
 
@@ -183,7 +183,7 @@ describe 'Flor punit' do
 
       @unit.cancel(exid: exid, nid: '0_0')
 
-      sleep 1
+      @unit.wait(exid, 'ceased; end')
 
       exe = @unit.executions[exid: exid]
 
