@@ -56,7 +56,7 @@ class Flor::Pro::PatContainer < Flor::Procedure
     ct0 = ct[0]
 
     return :att if ct0 == '_att'
-    return :pattern if /\A_pat_(arr|obj|or|bind|guard)\z/ === ct0
+    return :pattern if /\A_pat_(arr|obj|or|guard)\z/ === ct0
     return '_' if ct0 == '_'
     return ct0 if /\A[a-z][a-z0-9]*\z/ === ct0 && ct[1] == []
 
