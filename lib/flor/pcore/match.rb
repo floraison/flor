@@ -32,7 +32,7 @@ class Flor::Pro::Match < Flor::Pro::Case
     t = tree[1][index]
 
     payload['_pat_val'] = @node['val'] \
-      if t && %w[ _pat_arr _pat_obj _pat_or ].include?(t[0])
+      if t && t[0].match(/\A_pat_(arr|obj|guard|bind)\z/)
 
     super
   end
@@ -51,7 +51,7 @@ class Flor::Pro::Match < Flor::Pro::Case
     pat =
       case t[0]
       when '_arr', '_obj' then "_pat#{t[0]}"
-      when 'or', 'bind' then "_pat_#{t[0]}"
+      when 'or', 'bind', 'guard' then "_pat_#{t[0]}"
       when 'or!' then 'or'
       else nil
       end

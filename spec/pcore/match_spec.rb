@@ -283,7 +283,33 @@ describe 'Flor procedures' do
 
     context 'guards' do
 
-      it 'accepts guards'
+      it 'accepts guards' do
+
+        r = @executor.launch(
+          %q{
+            match [ 1 2 3 4 ]
+              (guard a ((length a) == 3)); "l3"
+              (guard a ((length a) == 4)); "l4"
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('l4')
+      end
+
+      it "accepts guards (that don't match)" do
+
+        r = @executor.launch(
+          %q{
+            match [ 1 2 ]
+              (guard a ((length a) == 3)); "l3"
+              (guard a ((length a) == 4)); "l4"
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('no-match')
+      end
     end
 
     context 'bind' do
