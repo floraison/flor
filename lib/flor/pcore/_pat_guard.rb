@@ -15,6 +15,8 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 
     unatt_unkeyed_children
     stringify_first_child
+
+    @node['binding'] = {}
   end
 
   def receive_non_att
@@ -23,7 +25,12 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 
     if ct == nil && @node['key'] == nil && payload['ret'].is_a?(String)
 
-      @node['key'] = payload['ret']
+      k = payload['ret']
+      m = k.match(Flor::SPLAT_REGEX)
+      k = m ? k[0] : k
+
+      @node['key'] = k
+      @node['binding'].merge!(k => val)
 
     elsif ct == nil && payload['ret'] == false
 
@@ -34,7 +41,7 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
       b = payload['_pat_binding']
       return wrap_no_match_reply unless b
 
-      @node['binding'] = b
+      @node['binding'].merge!(b)
     end
 
     super
@@ -42,14 +49,7 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 
   def receive_last
 
-    payload['_pat_binding'] =
-      if k = @node['key']
-        m = k.match(Flor::SPLAT_REGEX)
-        k = m ? k[0] : k
-        (@node['binding'] || {}).merge!(k => val)
-      else
-        @node['binding'] || {}
-      end
+    payload['_pat_binding'] = @node['binding']
 
     super
   end
@@ -58,8 +58,7 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 
     if (key = @node['key']) && child_type(index) == nil
       h ||= {}
-      h['vars'] ||= {}
-      h['vars'][key.to_s] = val
+      (h['vars'] ||= {}).merge!(@node['binding'])
     end
 
     super(index, sub, h)

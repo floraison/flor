@@ -164,13 +164,44 @@ describe 'Flor procedures' do
         })
       end
 
-      it 'does not match'
+      it 'does not match' do
+
+        r = @executor.launch(
+          %q{ _pat_guard x ((length x) > 3) (_pat_arr \ a; ___; b) },
+          payload: { 'ret' => [ 0, 1 ] })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(r['payload']['_pat_binding']).to eq(nil)
+      end
     end
 
     context '_pat_guard {name} {pattern} {conditional}' do
 
-      it 'matches'
-      it 'does not match'
+      it 'matches' do
+
+        r = @executor.launch(
+          %q{ _pat_guard x (_pat_arr \ a; ___; b) (> b 4) },
+          payload: { 'ret' => [ 0, 1, 2, 3, 4, 5 ] })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['_pat_binding']
+        ).to eq({
+          'x' => [ 0, 1, 2, 3, 4, 5 ], 'a' => 0, 'b' => 5
+        })
+      end
+
+      it 'does not match' do
+
+        r = @executor.launch(
+          %q{ _pat_guard x (_pat_arr \ a; ___; b) (> b 7) },
+          payload: { 'ret' => [ 0, 1, 2, 3, 4, 5 ] })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq(nil)
+      end
     end
 
     context 'nested patterns' do
