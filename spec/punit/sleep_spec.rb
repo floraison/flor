@@ -29,11 +29,11 @@ describe 'Flor punit' do
 
     it 'creates a timer' do
 
-      flor = %{
-        sleep '1y'
-      }
-
-      r = @unit.launch(flor, wait: '0 schedule')
+      r = @unit.launch(
+        %q{
+          sleep '1y'
+        },
+        wait: '0 schedule')
 
       expect(r['point']).to eq('schedule')
       expect(r['type']).to eq('in')
@@ -59,11 +59,11 @@ describe 'Flor punit' do
 
     it 'understands for:' do
 
-      flor = %{
-        sleep for: '2y'
-      }
-
-      r = @unit.launch(flor, wait: '0 schedule')
+      r = @unit.launch(
+        %q{
+          sleep for: '2y'
+        },
+        wait: '0 schedule')
 
       expect(r['point']).to eq('schedule')
       expect(r['type']).to eq('in')
@@ -89,14 +89,14 @@ describe 'Flor punit' do
 
     it 'fails when missing a duration' do
 
-      flor = %{
-        sleep _
-      }
+      r = @unit.launch(
+        %q{
+          sleep _
+        },
+        wait: true)
 
-      msg = @unit.launch(flor, wait: true)
-
-      expect(msg['point']).to eq('failed')
-      expect(msg['error']['msg']).to eq('missing a sleep time duration')
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('missing a sleep time duration')
     end
 
 #    it 'does not sleep when t <= 0' do
@@ -130,11 +130,11 @@ describe 'Flor punit' do
 
     it 'makes an execution sleep for a while' do
 
-      flor = %{
-        sleep '1s'
-      }
-
-      r = @unit.launch(flor, wait: '0 schedule')
+      r = @unit.launch(
+        %q{
+          sleep '1s'
+        },
+        wait: '0 schedule')
 
       expect(r['point']).to eq('schedule')
 
