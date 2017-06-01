@@ -17,6 +17,26 @@ describe 'Flor procedures' do
 
   describe '_pat_arr' do
 
+    it "doesn't match if the value is not an array" do
+
+      r = @executor.launch(
+        %q{ _pat_arr \ a; b; c },
+        payload: { 'ret' => 0 })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['_pat_binding']).to eq(nil)
+    end
+
+    it "doesn't match if the size differs"# do
+#
+#      r = @executor.launch(
+#        %q{ _pat_arr \ a; b; c },
+#        payload: { 'ret' => [ 0 ] })
+#
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['_pat_binding']).to eq(nil)
+#    end
+
     [
 
       [ [ '_pat_arr', 0, 1 ], 6, nil ],

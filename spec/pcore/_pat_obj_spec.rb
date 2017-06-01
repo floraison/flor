@@ -17,9 +17,19 @@ describe 'Flor procedures' do
 
   describe '_pat_obj' do
 
+#    it "doesn't match if the value is not an object" do
+#
+#      r = @executor.launch(
+#        %q{ _pat_obj \ a; 1 },
+#        payload: { 'ret' => 0 })
+#
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['_pat_binding']).to eq(nil)
+#    end
+
     [
 
-      [ %q{ _pat_obj \ a; 1 }, 1, nil ],
+      [ %q{ _pat_obj \ a; 1 }, 1, nil ], # "doesn't match if value not object"
       [ %q{ _pat_obj \ a; 1 }, { 'a' => 2 }, nil ],
       [ %q{ _pat_obj \ a; 1 }, { 'a' => 1 }, {} ],
       [ %q{ _pat_obj \ a; _ }, { 'a' => 1 }, {} ],

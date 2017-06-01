@@ -28,7 +28,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
   def receive_first
 
-    return wrap_no_match_reply if ! val.is_a?(Hash)
+    return wrap_no_match_reply unless val.is_a?(Hash)
 
     super
   end

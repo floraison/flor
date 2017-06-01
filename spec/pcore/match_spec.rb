@@ -310,6 +310,33 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq('no-match')
       end
+
+      it 'accepts guards (with or)'# do
+#
+#        r = @executor.launch(
+#          %q{
+#            match [ 1 2 3 4 ]
+#              (guard a (or [ a0 __5 ] [ a0 a1 ___ ]) (a1 > 10)); "A:$(a0):$(a1)"
+#              (guard a (or [ a0 __5 ] [ a0 a1 ___ ])); "B:$(a0):$(a1)"
+#              else; 'no-match'
+#          })
+#
+#        expect(r['point']).to eq('terminated')
+#        expect(r['payload']['ret']).to eq('a:1:')
+#      end
+
+      it 'accepts guards (with or!)' do
+
+        r = @executor.launch(
+          %q{
+            match [ 1 2 3 4 ]
+              (guard a (or! ((length a) == 3) ((length a) == 4))); "match"
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('match')
+      end
     end
 
     context 'bind' do

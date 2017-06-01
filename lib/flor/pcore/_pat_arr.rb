@@ -10,6 +10,13 @@ class Flor::Pro::PatArr < Flor::Pro::PatContainer
     super
   end
 
+  def receive_first
+
+    return wrap_no_match_reply unless val.is_a?(Array)
+
+    super
+  end
+
   def receive_non_att
 
     ct = child_type(@fcid)
