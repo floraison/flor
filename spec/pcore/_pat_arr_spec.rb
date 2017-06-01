@@ -149,6 +149,35 @@ describe 'Flor procedures' do
         })
       end
 
+  # Commenting that out.
+  # This should be done using two _pat_arr
+  # The _pat_or would become too complicated should it have to handle
+  # that case
+  #
+#      it 'accepts a nested _pat_or of guards' do
+#
+#        r = @executor.launch(
+#          %q{
+#            _pat_arr
+#              a
+#              _pat_or
+#                _pat_guard
+#                  b___ (b.0 == 2)
+#                _pat_guard
+#                  c___
+#              d
+#          },
+#          payload: { 'ret' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ] })
+#
+#        expect(r['point']).to eq('terminated')
+#
+#        expect(
+#          r['payload']['_pat_binding']
+#        ).to eq({
+#          'a' => 0
+#        })
+#      end
+
       it 'accepts a nested _pat_guard' do
 
         r = @executor.launch(
