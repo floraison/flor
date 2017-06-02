@@ -27,15 +27,25 @@ describe 'Flor procedures' do
       expect(r['payload']['_pat_binding']).to eq(nil)
     end
 
-    it "doesn't match if the size differs"# do
-#
-#      r = @executor.launch(
-#        %q{ _pat_arr \ a; b; c },
-#        payload: { 'ret' => [ 0 ] })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['_pat_binding']).to eq(nil)
-#    end
+    it "doesn't match if the size differs (pattern is bigger)" do
+
+      r = @executor.launch(
+        %q{ _pat_arr \ a; b; c },
+        payload: { 'ret' => [ 0 ] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['_pat_binding']).to eq(nil)
+    end
+
+    it "doesn't match if the size differs (pattern is smaller)" do
+
+      r = @executor.launch(
+        %q{ _pat_arr \ a; b },
+        payload: { 'ret' => [ 0, 1, 2 ] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['_pat_binding']).to eq(nil)
+    end
 
     [
 
@@ -63,8 +73,11 @@ describe 'Flor procedures' do
         { 'a' => 1, 'b' => [ 2, 3, 4, 5, 6 ], 'c' => [ 7, 8 ], 'd' => 9 } ],
 
       [ %q{ _pat_arr \ a; b__0; c__2; d },
-        [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+        [ 1, 2, 3, 4 ],
         { 'a' => 1, 'b' => [], 'c' => [ 2, 3 ], 'd' => 4 } ],
+      [ %q{ _pat_arr \ a; b__0; c__2; d },
+        [ 1, 2, 3, 4, 5 ],
+        nil ],
 
       [ %q{ _pat_arr \ 7 }, 7, nil ],
 

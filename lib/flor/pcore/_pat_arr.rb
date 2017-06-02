@@ -52,10 +52,14 @@ class Flor::Pro::PatArr < Flor::Pro::PatContainer
 
     @node['index'] = @node['index'] + offset
 
+    return wrap_no_match_reply if @node['index'] > val.size
+
     super
   end
 
   def receive_last
+
+    return wrap_no_match_reply if @node['index'] < val.size
 
     payload['_pat_binding'] = @node['binding']
     payload.delete('_pat_val')
