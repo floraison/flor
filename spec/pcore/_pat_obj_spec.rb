@@ -17,15 +17,15 @@ describe 'Flor procedures' do
 
   describe '_pat_obj' do
 
-#    it "doesn't match if the value is not an object" do
-#
-#      r = @executor.launch(
-#        %q{ _pat_obj \ a; 1 },
-#        payload: { 'ret' => 0 })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['_pat_binding']).to eq(nil)
-#    end
+    it "doesn't match if the value is not an object" do
+
+      r = @executor.launch(
+        %q{ _pat_obj \ a; 1 },
+        payload: { 'ret' => 0 })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['_pat_binding']).to eq(nil)
+    end
 
     [
 
@@ -236,7 +236,31 @@ describe 'Flor procedures' do
         })
       end
 
-      it 'accepts a nested _pat_guard'
+      it 'accepts a nested _pat_guard (match)' do
+
+        r = @executor.launch(
+          %q{
+            _pat_obj
+              b; _pat_guard b (> b 10)
+          },
+          payload: { 'ret' => { 'b' => 11 } })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq({ 'b' => 11 })
+      end
+
+      it 'accepts a nested _pat_guard (no match)' do
+
+        r = @executor.launch(
+          %q{
+            _pat_obj
+              b; _pat_guard b (> b 10)
+          },
+          payload: { 'ret' => { 'b' => 1 } })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['_pat_binding']).to eq(nil)
+      end
     end
   end
 end
