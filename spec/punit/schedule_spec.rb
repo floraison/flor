@@ -198,18 +198,16 @@ describe 'Flor punit' do
 
       it 'triggers repeatedly' do
 
-        flor = %{
-          set count 0
-          schedule cron: '* * * * * *' # every second
-            def msg
-              set count (+ count 1)
-          stall _
-        }
-
-        exid = @unit.launch(
-          flor,
-          wait: [ '0_1 trigger', '0_1 receive' ] * 4,
-          timeout: 7)
+        @unit.launch(
+          %q{
+            set count 0
+            schedule cron: '* * * * * *' # every second
+              def msg
+                set count (+ count 1)
+            stall _
+          },
+          wait: [ '0_1 trigger' ] * 4,
+          timeout: 9)
 
         t = @unit.timers.first
         ms = Flor.dup(@unit.journal)
