@@ -1,4 +1,7 @@
 
+require 'flor/pcore/_pat_'
+
+
 class Flor::Pro::PatArr < Flor::Pro::PatContainer
 
   name '_pat_arr'
