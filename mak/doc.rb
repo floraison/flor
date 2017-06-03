@@ -14,6 +14,7 @@ def make_proc_doc(path)
   return unless cline && cline > 0
 
   nline = lines.index { |l| l.match(/^ +names?/) }
+  return unless nline
 
   names = lines[nline][7..-1]
   names = "[ #{names} ]" if names.index(',')
