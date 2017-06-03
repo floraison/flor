@@ -53,7 +53,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
     unless key
       ret = ret.to_s
-      return wrap_no_match_reply unless val.has_key?(ret)
+      return wrap_no_match_reply unless Flor.deep_has_key?(val, ret)
       @node['key'] = ret
       @node['keys'] << ret if @node['keys']
       return super
@@ -77,9 +77,9 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
       @node['binding'][ct[0]] = val[@node['key']] if ct[0].length > 0
 
-    elsif val[key] != ret
+    elsif Flor.deep_get(val, key) != ret
 
-      return wrap_no_match_reply unless val[key] == ret
+      return wrap_no_match_reply
     end
 
     @node['key'] = nil
@@ -111,7 +111,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
         next ct if ct[0] == '_att'
         key = ! key
         next ct if key
-        q ? quote_key(ct) : deref_and_stringify(ct) }
+        q ? quote_key(ct) : lookup_and_quote_key(ct) }
 
     t = tree
 
@@ -122,9 +122,17 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
     if t[1] == []
       [ '_sqs', t[0], *t[2..-1] ]
-    else
+    elsif t[1].is_a?(Array)
       t
+    else
+      [ '_sqs', t[1].to_s, *t[2..-1] ]
     end
+  end
+
+  def lookup_and_quote_key(t)
+
+    return t unless t[1] == []
+    [ '_sqs', lookup(t[0], true) || t[0], t[2] ]
   end
 
   def sub_val(child_index)

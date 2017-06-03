@@ -163,6 +163,7 @@ class Flor::Node
   rescue IndexError
 
     raise unless silence_index_error
+    nil
   end
 
   class Expander < Flor::Dollar

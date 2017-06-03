@@ -92,15 +92,17 @@ describe 'Flor procedures' do
             _pat_obj quote: 'keys'
               a; v0
               (a _); v1
+              7; v2
           },
-          payload: { 'ret' => { 'a' => 0, 'colour' => 'blue' } })
+          payload: { 'ret' => {
+            'a' => 0, 'colour' => 'blue', '7' => 'seven' } })
 
         expect(r['point']).to eq('terminated')
 
         expect(
           r['payload']['_pat_binding']
         ).to eq({
-          'v0' => 0, 'v1' => 'blue'
+          'v0' => 0, 'v1' => 'blue', 'v2' => 'seven'
         })
       end
     end

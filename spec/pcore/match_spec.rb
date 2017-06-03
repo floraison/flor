@@ -367,6 +367,27 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq('no-match')
       end
     end
+
+    context 'deep' do
+
+      it 'flips burgers' do
+
+        ret = {}
+        ret['player'] = { 'name' => 'Eldred', 'number' => 55 }
+
+        r = @executor.launch(
+          %q{
+            match
+              { player.name: 'Eldred' }; 'USA'
+              { player.name: 'Johnson' }; 'USA'
+              else; 'Japan'
+          },
+          payload: { 'ret' => ret })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('USA')
+      end
+    end
   end
 end
 
