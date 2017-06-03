@@ -171,7 +171,7 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq('match')
       end
 
-      it 'may not match' do
+      it "doesn't match" do
 
         r = @executor.launch(
           %q{
@@ -241,7 +241,7 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq('match')
       end
 
-      it 'may not match (infix)' do
+      it "doesn't match (infix)" do
 
         r = @executor.launch(
           %q{
@@ -283,7 +283,7 @@ describe 'Flor procedures' do
 
     context 'guards' do
 
-      it 'accepts guards' do
+      it 'matches' do
 
         r = @executor.launch(
           %q{
@@ -297,7 +297,7 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq('l4')
       end
 
-      it "accepts guards (that don't match)" do
+      it "doesn't match" do
 
         r = @executor.launch(
           %q{
@@ -311,7 +311,7 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq('no-match')
       end
 
-      it 'accepts guards (with or)'# do
+      it 'matches with a nested or (_pat_or)'# do
 #
 #        r = @executor.launch(
 #          %q{
@@ -325,7 +325,7 @@ describe 'Flor procedures' do
 #        expect(r['payload']['ret']).to eq('a:1:')
 #      end
 
-      it 'accepts guards (with or!)' do
+      it 'matches with a nested or! (or)' do
 
         r = @executor.launch(
           %q{
@@ -341,7 +341,7 @@ describe 'Flor procedures' do
 
     context 'bind' do
 
-      it 'binds' do
+      it 'matches' do
 
         r = @executor.launch(
           %q{
@@ -354,7 +354,7 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq('match y:3')
       end
 
-      it "doesn't bind if it doesn't match" do
+      it "doesn't match" do
 
         r = @executor.launch(
           %q{
