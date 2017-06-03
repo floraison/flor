@@ -237,26 +237,28 @@ describe Flor do
 
   describe '.deep_has_key?' do
 
-#@cars = {
-#  'alpha' => { 'id' => 'FR1' },
-#  'bentley' => %w[ blower spur markv ]
-#}
-#@ranking = %w[ Anh Bob Charly ]
     it 'works' do
 
-      expect(Flor.deep_has_key?(@cars, 'nada')).to eq(false)
-      expect(Flor.deep_has_key?(@cars, 'alpha.nada')).to eq(false)
-      expect(Flor.deep_has_key?(@cars, 'bentley.nada')).to eq(false)
-      expect(Flor.deep_has_key?(@cars, 'bentley.3')).to eq(false)
-      expect(Flor.deep_has_key?(@cars, 'bentley.-4')).to eq(false)
+      expect(Flor.deep_has_key?(@cars, 'nada')).to be false
+      expect(Flor.deep_has_key?(@cars, 'alpha.nada')).to be false
+      expect(Flor.deep_has_key?(@cars, 'bentley.nada')).to be false
+      expect(Flor.deep_has_key?(@cars, 'bentley.3')).to be false
+      expect(Flor.deep_has_key?(@cars, 'bentley.-4')).to be false
 
-      expect(Flor.deep_has_key?(@cars, 'alpha')).to eq(true)
-      expect(Flor.deep_has_key?(@cars, 'alpha.id')).to eq(true)
-      expect(Flor.deep_has_key?(@cars, 'bentley')).to eq(true)
-      expect(Flor.deep_has_key?(@cars, 'bentley.0')).to eq(true)
-      expect(Flor.deep_has_key?(@cars, 'bentley.-1')).to eq(true)
-      expect(Flor.deep_has_key?(@cars, 'bentley.first')).to eq(true)
-      expect(Flor.deep_has_key?(@cars, 'bentley.last')).to eq(true)
+      expect(Flor.deep_has_key?(@cars, 'alpha')).to be true
+      expect(Flor.deep_has_key?(@cars, 'alpha.id')).to be true
+      expect(Flor.deep_has_key?(@cars, 'bentley')).to be true
+      expect(Flor.deep_has_key?(@cars, 'bentley.0')).to be true
+      expect(Flor.deep_has_key?(@cars, 'bentley.-1')).to be true
+      expect(Flor.deep_has_key?(@cars, 'bentley.first')).to be true
+      expect(Flor.deep_has_key?(@cars, 'bentley.last')).to be true
+    end
+
+    it 'works with stringified int keys' do
+
+      expect(
+        Flor.deep_has_key?({ '7' => 'seven' }, '7')
+      ).to be true
     end
   end
 end

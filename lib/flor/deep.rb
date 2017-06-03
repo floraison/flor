@@ -133,8 +133,8 @@ module Flor
         break (i < 0 ? -i < val.length : i < val.length) if ks.empty?
         val = val[i]
       when Hash
-        break val.has_key?(kk) if ks.empty?
-        val = val[kk]
+        break val.has_key?(kk.to_s) if ks.empty? # nota bene: #to_s
+        val = val[kk.to_s]
       else
         break false
       end
