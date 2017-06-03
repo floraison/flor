@@ -16,6 +16,7 @@
 * [fail, error](fail.md) - Explicitely raises an error.
 * [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidequick)
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
+* [match](match.md) - "match" can be thought of as a "destructuring [case](case.md)".
 * [matchr, match?](matchr.md) - Matches a string against a regular expression.
 * [move](move.md) - Moves a cursor to a given position
 * [noeval](noeval.md) - Immediately replies, children are not evaluated
