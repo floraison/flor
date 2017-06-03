@@ -187,7 +187,10 @@ describe 'Flor punit' do
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.350
+        wait_until do
+          m = @unit.journal.last
+          m['point'] == 'end' && m['er'] == 3
+        end
 
         expect(
           @unit.journal
