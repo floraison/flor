@@ -83,7 +83,11 @@ describe 'Flor procedures' do
 
       [ %q{ _pat_arr \ a; ___; c__2; d },
         [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-        { 'a' => 1, 'c' => [ 7, 8 ], 'd' => 9 } ]
+        { 'a' => 1, 'c' => [ 7, 8 ], 'd' => 9 } ],
+
+      [ %q{ _pat_arr \ 1; ___; c },
+        [ 1, 2 ],
+        { 'c' => 2 } ]
 
     ].each do |code, val, expected|
 
@@ -228,6 +232,33 @@ describe 'Flor procedures' do
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['_pat_binding']).to eq(nil)
+      end
+
+      it 'accepts a nested _pat_guard (2)' do
+
+        r = @executor.launch(
+          %q{
+            _pat_arr
+              a
+              _pat_guard
+                ___
+                _pat_arr
+                  bf
+                  ___
+                  bl
+              _pat_guard
+                c__2
+              d
+          },
+          payload: { 'ret' => [ 0, 1, 2, 3, 4, 5, 6 ] })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['_pat_binding']
+        ).to eq({
+          'a' => 0, 'bf' => 1, 'bl' => 3, 'c' => [ 4, 5 ], 'd' => 6
+        })
       end
 
       it 'reads quantifiers from nested patterns' do

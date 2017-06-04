@@ -33,7 +33,7 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
       k = m ? k[0] : k
 
       @node['key'] = k
-      @node['binding'].merge!(k => val)
+      @node['binding'].merge!(k => val) if k != '_'
 
     elsif ct == nil && payload['ret'] == false
 
