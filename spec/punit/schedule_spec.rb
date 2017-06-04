@@ -209,6 +209,8 @@ describe 'Flor punit' do
           wait: [ '0_1 trigger' ] * 4,
           timeout: 9)
 
+        sleep 0.350
+
         t = @unit.timers.first
         ms = Flor.dup(@unit.journal)
 
