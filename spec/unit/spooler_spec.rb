@@ -109,14 +109,13 @@ describe Flor::Spooler do
         f.write('nada nada nada nada')
       end
 
-      sleep 0.350
+      wait_until { Dir['envs/test/var/spool/rejected/*.json'].size == 1 }
 
       expect(
-        Dir['envs/test/var/spool/rejected/*.json'].size
-      ).to eq(1)
-      expect(
         Dir['envs/test/var/spool/rejected/*.json'].first
-      ).to match(/\/rejected\/launch__\d+_\d{8}T\d{6}\.\d+Z\.json\z/)
+      ).to match(
+        /\/rejected\/launch__\d+_\d{8}T\d{6}\.\d+Z\.json\z/
+      )
 
       err = File.read(Dir['envs/test/var/spool/rejected/*.txt'].first)
 
