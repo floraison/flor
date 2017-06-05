@@ -199,6 +199,21 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq('match')
       end
 
+      it "respects quoted keys" do
+
+        r = @executor.launch(
+          %q{
+            set a 'A'
+            set b 'B'
+            match { 'a': 1, 'b': 2 }
+              { 'a': 1, 'b': 2 }; 'match'
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('match')
+      end
+
       it 'respects `only`' do
 
         r = @executor.launch(

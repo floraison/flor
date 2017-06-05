@@ -203,14 +203,6 @@ describe 'Flor procedures' do
         expect(r['payload']['_pat_binding']).to eq(nil)
       end
     end
-
-    context 'nested patterns' do
-
-      it 'accepts a nested _pat_arr'
-      it 'accepts a nested _pat_obj'
-      it 'accepts a nested _pat_or'
-      it 'accepts a nested _pat_guard'
-    end
   end
 end
 
