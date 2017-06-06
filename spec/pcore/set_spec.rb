@@ -439,6 +439,7 @@ describe 'Flor procedures' do
             set f.d { a: 0, b: 1 }
             set f.e
               { c: 2, d: 3 }
+            set f 'f'; set "f.$(f)" true
         })
 
       expect(r['point']).to eq('terminated')
@@ -449,6 +450,7 @@ describe 'Flor procedures' do
         'a' => 0, 'b' => 1, 'c' => -2,
         'd' => { 'a' => 0, 'b' => 1 },
         'e' => { 'c' => 2, 'd' => 3 },
+        'f' => true,
         'ret' => nil
       })
     end
