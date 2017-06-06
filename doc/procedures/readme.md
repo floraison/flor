@@ -23,6 +23,7 @@
 * [noret](noret.md) - executes its children, but doesn't alter the received f.ret
 * [push, pushr](push.md) - Pushes a value into an array (in a variable or a field).
 * [rand](rand.md) - Returns a randomly generated number.
+* [range](range.md) - "range" is a procedure to generate ranges of integers.
 * [sequence, _apply, begin](sequence.md) - Executes child expressions in sequence.
 * [set, setr](set.md) - sets a field or a variable.
 
