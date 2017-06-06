@@ -145,7 +145,7 @@ describe 'Flor procedures' do
 
   describe 'for-each' do
 
-    it 'iterate over each element' do
+    it 'iterates over each element' do
 
       r = @executor.launch(
         %q{
