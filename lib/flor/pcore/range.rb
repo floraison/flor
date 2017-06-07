@@ -14,13 +14,21 @@ class Flor::Pro::Range < Flor::Procedure
   # range (-4)      #--> [ 0, -1, -2, -3 ]
   # range 9 1 (-2)  #--> [ 9, 7, 5, 3 ] ]
   # ```
+  #
+  # ```
+  # range from: 9 to: 1 by: -2
+  #   # or
+  # range start: 9 end: 1 step: -2
+  #   #
+  #   # are also accepted
+  # ```
 
   name 'range'
 
   def pre_execute
 
     @node['rets'] = []
-    #@node['atts'] = []
+    @node['atts'] = []
 
     unatt_unkeyed_children
   end
@@ -30,8 +38,16 @@ class Flor::Pro::Range < Flor::Procedure
     rets = @node['rets'].select { |r| r.is_a?(Numeric) }.collect(&:to_i)
 
     sta = rets[1] ? rets[0] : 0
-    edn = rets[1] || rets[0]
+    edn = rets[1] || rets[0] || 0
     ste = rets[2] || ((sta > edn) ? -1 : 1)
+
+    asta = att('start') || att('from')
+    aedn = att('end') || att('to')
+    aste = att('step') || att('by') || att('inc')
+
+    sta = asta if asta
+    edn = aedn if aedn
+    ste = aste if aste
 
     fail ArgumentError.new("#{@node['heat0']} step is 0") if ste == 0
 

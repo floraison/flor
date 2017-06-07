@@ -19,6 +19,8 @@ describe 'Flor procedures' do
 
     [
 
+      [ "range _", nil ],
+
       #[ "range -4", [ 0, -1, -2, -3 ] ],
       [ "range (-4)", [ 0, -1, -2, -3 ] ],
 
@@ -30,7 +32,10 @@ describe 'Flor procedures' do
       [ "range 3 (-3)", [ 3, 2, 1, 0, -1, -2 ] ],
 
       [ "range 1 8 2", (1..7).step(2).to_a ],
-      [ "range 9 1 (-2)", [ 9, 7, 5, 3 ] ]
+      [ "range 9 1 (-2)", [ 9, 7, 5, 3 ] ],
+
+      [ "range from: 9 to: 1 by: -2", [ 9, 7, 5, 3 ] ],
+      [ "range start: 9 end: 1 step: -2", [ 9, 7, 5, 3 ] ]
 
     ].each do |flor, expected|
 
