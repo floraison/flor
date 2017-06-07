@@ -7,10 +7,12 @@ class Flor::Pro::Range < Flor::Procedure
   # # range {end}
   # # range {start} {end}
   # # range {start} {end} {step}
-  # range 0       #--> []
-  # range 4       #--> [ 0, 1, 2, 3 ]
-  # range 4 7     #--> [ 4, 5, 6 ]
-  # range 4 14 2  #--> [ 4, 6, 8, 10, 12 ]
+  # range 0         #--> []
+  # range 4         #--> [ 0, 1, 2, 3 ]
+  # range 4 7       #--> [ 4, 5, 6 ]
+  # range 4 14 2    #--> [ 4, 6, 8, 10, 12 ]
+  # range (-4)      #--> [ 0, -1, -2, -3 ]
+  # range 9 1 (-2)  #--> [ 9, 7, 5, 3 ] ]
   # ```
 
   name 'range'
@@ -29,10 +31,21 @@ class Flor::Pro::Range < Flor::Procedure
 
     sta = rets[1] ? rets[0] : 0
     edn = rets[1] || rets[0]
-    ste = rets[2] || 1
-#p [ sta, edn, ste ]
+    ste = rets[2] || ((sta > edn) ? -1 : 1)
 
-    payload['ret'] = (sta..edn - 1).step(ste).to_a
+    fail ArgumentError.new("#{@node['heat0']} step is 0") if ste == 0
+
+    #payload['ret'] = (sta..edn - 1).step(ste).to_a
+      # doesn't accept negative steps
+
+    payload['ret'] = []
+    cur = sta
+      #
+    loop do
+      break if (ste < 0) ? (cur <= edn) : (cur >= edn)
+      payload['ret'] << cur
+      cur = cur + ste
+    end
 
     super
   end
