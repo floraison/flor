@@ -2,6 +2,14 @@
 # flor CHANGELOG.md
 
 
+## flor 0.14.0  not yet released
+
+- Implement "match"
+- Implement "range"
+- Implement "for-each"
+- Merge enhancements by @jfrioux
+
+
 ## flor 0.13.0  released 2017-04-24
 
 - Simplify "trace" implementation
