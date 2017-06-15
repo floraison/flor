@@ -88,6 +88,9 @@ describe 'Flor unit' do
           (status o pt:execute)
         }.ftrim)
 
+        wait_until {
+          @unit.journal.find { |m| m['point'] == 'terminated' } }
+
         expect(
           Flor.to_s(
             @unit.journal
