@@ -39,6 +39,17 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 3, 2, 1 ])
     end
+
+    it 'reverses strings' do
+
+      r = @executor.launch(
+        %q{
+          reverse 'melimelo'
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('olemilem')
+    end
   end
 end
 
