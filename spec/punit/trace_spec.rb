@@ -131,6 +131,9 @@ describe 'Flor punit' do
         'a b c'
       )
 
+      wait_until {
+        @unit.journal.find { |m| m['point'] == 'terminated' } }
+
       expect(
         @unit.journal
           .reject { |m| m['point'] == 'end' }
