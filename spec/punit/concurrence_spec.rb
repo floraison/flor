@@ -29,26 +29,27 @@ describe 'Flor punit' do
 
     it 'has no effect when empty' do
 
-      flor = %{
-        concurrence _
-      }
-
-      msg = @unit.launch(flor, wait: true)
+      msg = @unit.launch(
+        %q{
+          concurrence _
+        },
+        wait: true)
 
       expect(msg['point']).to eq('terminated')
     end
 
     it 'has no effect when empty (2)' do
 
-      flor = %{
-        concurrence tag: 'z'
-      }
-
-      msg = @unit.launch(flor, wait: true)
+      msg = @unit.launch(
+        %q{
+          concurrence tag: 'z'
+        },
+        wait: true)
 
       expect(msg['point']).to eq('terminated')
 
-      sleep 0.4 # for jruby
+      wait_until { @unit.journal.find { |m| m['point'] == 'terminated' } }
+      wait_until { @unit.journal.find { |m| m['point'] == 'end' } }
 
       expect(
         @unit.journal
@@ -73,13 +74,13 @@ describe 'Flor punit' do
 
     it 'executes atts in sequence then children in concurrence' do
 
-      flor = %{
-        concurrence tag: 'x', nada: 'y'
-          trace 'a'
-          trace 'b'
-      }
-
-      msg = @unit.launch(flor, wait: true)
+      msg = @unit.launch(
+        %q{
+          concurrence tag: 'x', nada: 'y'
+            trace 'a'
+            trace 'b'
+        },
+        wait: true)
 
       expect(msg['point']).to eq('terminated')
 
@@ -103,14 +104,14 @@ describe 'Flor punit' do
 
       it 'merges all the payload, first reply wins' do
 
-        flor = %{
-          concurrence
-            set f.a 0
-            set f.a 1
-            set f.b 2
-        }
-
-        msg = @unit.launch(flor, wait: true)
+        msg = @unit.launch(
+          %q{
+            concurrence
+              set f.a 0
+              set f.a 1
+              set f.b 2
+          },
+          wait: true)
 
         expect(msg['point']).to eq('terminated')
         expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0, 'b' => 2 })
@@ -121,18 +122,18 @@ describe 'Flor punit' do
 
       it 'accepts an integer > 0' do
 
-        flor = %{
-          concurrence expect: 1
-            set f.a 0
-            set f.b 1
-        }
-
-        msg = @unit.launch(flor, wait: true)
+        msg = @unit.launch(
+          %q{
+            concurrence expect: 1
+              set f.a 0
+              set f.b 1
+          },
+          wait: true)
 
         expect(msg['point']).to eq('terminated')
         expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
 
-        sleep 0.350
+        wait_until { @unit.journal.find { |m| m['point'] == 'terminated' } }
 
         expect(
           @unit.journal
@@ -143,29 +144,42 @@ describe 'Flor punit' do
       end
     end
 
-    describe 'remaining:' do
+    context 'remaining:' do
 
-      it 'prevents child cancelling when "forget"' do
+      context "'forget'" do
 
-        flor = %{
-          concurrence expect: 1 rem: 'forget'
-            set f.a 0
-            set f.b 1
-        }
+        it 'prevents child cancelling' do
 
-        msg = @unit.launch(flor, wait: true)
+          msg = @unit.launch(
+            %q{
+              concurrence expect: 1 rem: 'forget'
+                set f.a 0
+                set f.b 1
+            },
+            wait: true)
 
-        expect(msg['point']).to eq('terminated')
-        expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
+          expect(msg['point']).to eq('terminated')
+          expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
 
-        sleep 0.4
+          wait_until { @unit.journal.find { |m| m['point'] == 'terminated' } }
 
-        expect(
-          @unit.journal
-            .collect { |m| [ m['point'][0, 3], m['nid'] ].join(':') }
-        ).to comprise(%w[
-          rec:0 rec:0 rec: ter:
-        ])
+          expect(
+            @unit.journal
+              .collect { |m| [ m['point'][0, 3], m['nid'] ].join(':') }
+          ).to comprise(%w[
+            rec:0 rec:0 rec: ter:
+          ])
+        end
+      end
+
+      context "'wait'" do
+
+        # ruote said:
+        # There is a third setting, ‘wait’. It behaves like ‘cancel’, but the
+        # concurrence waits for the cancelled children to reply. The workitems
+        # from cancelled branches are merged in as well.
+
+        it 'waits for the cancelled children'
       end
     end
 
@@ -173,13 +187,13 @@ describe 'Flor punit' do
 
       it 'cancels all its children' do
 
-        flor = %{
-          concurrence
-            task 'hole'
-            task 'hole'
-        }
-
-        msg = @unit.launch(flor, wait: '0_1 task')
+        msg = @unit.launch(
+          %q{
+            concurrence
+              task 'hole'
+              task 'hole'
+          },
+          wait: '0_1 task')
 
         r = @unit.queue(
           { 'point' => 'cancel', 'exid' => msg['exid'], 'nid' => '0' },
