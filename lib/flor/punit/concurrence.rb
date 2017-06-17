@@ -78,20 +78,19 @@ class Flor::Pro::Concurrence < Flor::Procedure
     @node['receiver'] ||= determine_receiver
     @node['merger'] ||= determine_merger
 
-    return [] if @node['over']
+    over = @node['over'] || invoke_receiver
+    old_over = over && @node['over']
+    just_over = over && ! @node['over']
+    @node['over'] = over
 
-    over = invoke_receiver
-      # true: the concurrence is over, false: the concurrence is still waiting
+    pld = just_over ? invoke_merger : nil
+    rem = just_over ? (att(:remaining, :rem) || 'cancel') : nil
 
-    return [] unless over
+    ms = []
+    ms.concat(wrap_cancel_children) if rem && rem != 'forget'
+    ms.concat(wrap_reply('payload' => pld)) if pld
 
-    @node['over'] = true
-
-    pld = invoke_merger
-      # determine post-concurrence payload
-
-    cancel_remaining +
-    wrap_reply('payload' => pld)
+    ms
   end
 
   def receive_from_child_when_closed
@@ -119,33 +118,8 @@ class Flor::Pro::Concurrence < Flor::Procedure
     'default_merge'
   end
 
-  def cancel_remaining
-
-    # remaining:
-    # * 'cancel' (default)
-    # * 'forget'
-    # * 'wait'
-
-    rem = att(:remaining, :rem)
-
-    return [] if rem == 'forget'
-
-    wrap_cancel_children
-  end
-
-  def invoke_receiver
-
-    # TODO: receiver function case
-
-    self.send(@node['receiver'])
-  end
-
-  def invoke_merger
-
-    # TODO: merger function case
-
-    self.send(@node['merger'])
-  end
+  def invoke_receiver; self.send(@node['receiver']); end
+  def invoke_merger; self.send(@node['merger']); end
 
   def store_payload
 
