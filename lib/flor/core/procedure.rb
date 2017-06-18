@@ -136,6 +136,11 @@ class Flor::Procedure < Flor::Node
     children.select { |c| c[0] != '_att' }
   end
 
+  def non_att_count
+
+    non_att_children.size
+  end
+
   def unkeyed_children
 
     children.select { |c| c[0] != '_att' || c[1].size == 1 }

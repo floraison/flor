@@ -38,7 +38,7 @@ class Flor::Pro::Case < Flor::Procedure
 
     unatt_unkeyed_children
 
-    @node['val'] = payload['ret'] if non_att_children.size.even?
+    @node['val'] = payload['ret'] if non_att_count.even?
   end
 
   def receive

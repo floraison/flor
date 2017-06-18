@@ -192,7 +192,7 @@ class Flor::Pro::Match < Flor::Pro::Case
     unatt_unkeyed_children
 
     conditional = true
-    @node['val'] = payload['ret'] if non_att_children.size.even?
+    @node['val'] = payload['ret'] if non_att_count.even?
     found_val = @node.has_key?('val')
     t = tree
     changed = false

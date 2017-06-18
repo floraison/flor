@@ -98,25 +98,26 @@ class Flor::Pro::Concurrence < Flor::Procedure
     just_over = over && ! @node['over']
     @node['over'] ||= just_over
 
-    pld = (@node['merged_payload'] ||= just_over ? invoke_merger : nil)
+    @node['merged_payload'] ||= just_over ? invoke_merger : nil
     rem = just_over ? (att(:remaining, :rem) || 'cancel') : nil
 
-    ms = []
+    cancel_children(rem) + reply_to_parent(rem)
+  end
 
-    if rem && rem != 'forget'
-      ms.concat(wrap_cancel_children)
-    end
+  def cancel_children(rem)
 
-    if (
-      ! @node['replied'] && (
-        (rem && rem != 'wait') ||
-        (@node['payloads'].size >= non_att_children.size))
-    ) then
-      ms.concat(wrap_reply('payload' => pld))
-      @node['replied'] = true
-    end
+    (rem && rem != 'forget') ? wrap_cancel_children : []
+  end
 
-    ms
+  def reply_to_parent(rem)
+
+    return [] \
+      if @node['replied']
+    return [] \
+      if @node['payloads'].size < non_att_count && ( ! rem || rem == 'wait')
+
+    @node['replied'] = true
+    wrap_reply('payload' => @node['merged_payload'])
   end
 
   def receive_from_child_when_closed
@@ -149,7 +150,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def default_receive
 
-    @node['payloads'].size >= non_att_children.size
+    @node['payloads'].size >= non_att_count
   end
 
   def expect_integer_receive
