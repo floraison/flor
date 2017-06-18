@@ -47,12 +47,25 @@ class Flor::Pro::Concurrence < Flor::Procedure
   # being already gone).
   #
   # `remaining:` may be shortened to `rem:`.
+  #
   # ```
   # concurrence expect: 1 rem: 'forget'
+  #     #
+  #     # will forget child 'alpha' as soon as child 'bravo' replies,
+  #     # and vice versa.
+  #     #
   #   task 'alpha'
   #   task 'bravo'
-  # # will forget child 'alpha' as soon as child 'bravo' replies,
-  # # and vice versa.
+  # ```
+  #
+  # ```
+  # concurrence expect: 1 rem: 'wait'
+  #     #
+  #     # if 'alpha' replies before 'bravo', the concurrence will wait for
+  #     # 'bravo', without cancelling it. And vice versa.
+  #     #
+  #   task 'alpha'
+  #   task 'bravo'
   # ```
 
   name 'concurrence'
@@ -85,12 +98,23 @@ class Flor::Pro::Concurrence < Flor::Procedure
     just_over = over && ! @node['over']
     @node['over'] ||= just_over
 
-    pld = just_over ? invoke_merger : nil
+    pld = (@node['merged_payload'] ||= just_over ? invoke_merger : nil)
     rem = just_over ? (att(:remaining, :rem) || 'cancel') : nil
 
     ms = []
-    ms.concat(wrap_cancel_children) if rem && rem != 'forget'
-    ms.concat(wrap_reply('payload' => pld)) if pld
+
+    if rem && rem != 'forget'
+      ms.concat(wrap_cancel_children)
+    end
+
+    if (
+      ! @node['replied'] && (
+        (rem && rem != 'wait') ||
+        (@node['payloads'].size >= non_att_children.size))
+    ) then
+      ms.concat(wrap_reply('payload' => pld))
+      @node['replied'] = true
+    end
 
     ms
   end

@@ -179,7 +179,28 @@ describe 'Flor punit' do
         # concurrence waits for the cancelled children to reply. The workitems
         # from cancelled branches are merged in as well.
 
-        it 'waits for the cancelled children'
+        it 'waits for the cancelled children' do
+
+          msg = @unit.launch(
+            %q{
+              concurrence expect: 1 rem: 'wait'
+                set f.a 0
+                sleep 1
+            },
+            wait: true)
+
+          expect(msg['point']).to eq('terminated')
+          expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
+
+          wait_until { @unit.journal.find { |m| m['point'] == 'terminated' } }
+
+          concurrence_over = @unit.journal.find { |m|
+            m['point'] == 'receive' && m['from'] == '0' }
+          sleep_over = @unit.journal.find { |m|
+            m['point'] == 'receive' && m['nid'] == '0' && m['from'] == '0_3' }
+
+          expect(concurrence_over['m']).to be.>(sleep_over['m'])
+        end
       end
     end
 
