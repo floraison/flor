@@ -60,11 +60,15 @@ class Flor::Pro::Concurrence < Flor::Procedure
   def pre_execute
 
     @node['atts'] = []
+    @node['payloads'] = {}
   end
 
   def receive_last_att
 
     return wrap_reply unless children[@ncid]
+
+    @node['receiver'] = determine_receiver
+    @node['merger'] = determine_merger
 
     (@ncid..children.size - 1)
       .map { |i| execute_child(i, 0, 'payload' => payload.copy_current) }
@@ -75,13 +79,11 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def receive_non_att
 
-    @node['receiver'] ||= determine_receiver
-    @node['merger'] ||= determine_merger
+    @node['payloads'][@message['from']] = @message['payload']
 
     over = @node['over'] || invoke_receiver
-    old_over = over && @node['over']
     just_over = over && ! @node['over']
-    @node['over'] = over
+    @node['over'] ||= just_over
 
     pld = just_over ? invoke_merger : nil
     rem = just_over ? (att(:remaining, :rem) || 'cancel') : nil
@@ -121,22 +123,12 @@ class Flor::Pro::Concurrence < Flor::Procedure
   def invoke_receiver; self.send(@node['receiver']); end
   def invoke_merger; self.send(@node['merger']); end
 
-  def store_payload
-
-    (@node['payloads'] ||= {})[@message['from']] =
-      @message['payload']
-  end
-
   def default_receive
-
-    store_payload
 
     @node['payloads'].size >= non_att_children.size
   end
 
   def expect_integer_receive
-
-    store_payload
 
     @node['payloads'].size >= att(:expect)
   end
