@@ -38,7 +38,7 @@ describe 'Flor punit' do
 
       @unit.launch(flor)
 
-      sleep 0.490
+      wait_until { @unit.timers.count >= 2 }
 
       expect(@unit.timers.collect(&:schedule)).to eq(%w[ 2h 5s ])
     end
