@@ -21,9 +21,11 @@ A Ruby workflow engine (ruote next generation)
 
   #s.files = `git ls-files`.split("\n")
   s.files = Dir[
+    'README.{md,txt}',
+    'CHANGELOG.{md,txt}', 'CREDITS.{md,txt}', 'LICENSE.{md,txt}',
     'Makefile',
     'lib/**/*.rb', #'spec/**/*.rb', 'test/**/*.rb',
-    '*.gemspec', '*.txt', '*.rdoc', '*.md'
+    "#{s.name}.gemspec",
   ]
 
   s.add_runtime_dependency 'munemo', '>= 1.0.1'
