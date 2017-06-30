@@ -77,6 +77,14 @@ class Flor::Pro::Set < Flor::Procedure
     @node['refs'] = []
   end
 
+  def execute_child(index=0, sub=nil, h=nil)
+
+    payload['ret'] = node_payload_ret \
+      if children[index]
+
+    super(index, sub, h)
+  end
+
   def receive_non_att
 
     ret = payload['ret']

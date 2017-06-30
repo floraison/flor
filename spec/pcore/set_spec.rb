@@ -106,6 +106,20 @@ describe 'Flor procedures' do
       expect(r['payload']).to eq({ 'ret' => nil })
     end
 
+    it 'sets variables' do
+
+      r = @executor.launch(
+        %q{
+          1
+          set a f.ret tag: 'nada'
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['from']).to eq('0')
+      expect(r['vars']).to eq({ 'a' => 1 })
+      expect(r['payload']).to eq({ 'ret' => 1 })
+    end
+
     it 'sets variables deep' do
 
       r = @executor.launch(
@@ -171,19 +185,6 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['vars']).to eq({ 'a' => 14 })
       expect(r['payload']['ret']).to eq(14)
-    end
-
-    it 'copies the current, inner, f.ret (achtung)' do
-
-      r = @executor.launch(
-        %q{
-          13
-          set a f.ret
-        })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['vars']).to eq({ 'a' => 'a' })
-      expect(r['payload']['ret']).to eq(13)
     end
 
     it 'accepts bracketed keys' do
