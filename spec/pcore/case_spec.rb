@@ -172,7 +172,7 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq('high')
     end
 
-    it 'the possibility array sees the original, outer, f.ret' do
+    it 'lets the possibility array sees the original, outer, f.ret' do
 
       r = @executor.launch(
         %q{
@@ -188,7 +188,7 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq('sept')
     end
 
-    it 'the then-tree sees the original, outer, f.ret' do
+    it 'lets the then-tree sees the original, outer, f.ret' do
 
       r = @executor.launch(
         %q{
