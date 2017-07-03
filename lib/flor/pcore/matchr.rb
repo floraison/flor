@@ -78,7 +78,7 @@ class Flor::Pro::Matchr < Flor::Procedure
     ) if rets.size < 2
 
     rex =
-      rets.find { |r| r.is_a?(Array) && r[0] == '_rxs' } ||
+      rets.find { |r| Flor.is_regex_tree?(r) } ||
       rets.last
 
     str = (rets - [ rex ]).first

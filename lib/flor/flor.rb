@@ -321,6 +321,15 @@ module Flor
     o[1]['task'].is_a?(String)
   end
 
+  def self.is_regex_tree?(o)
+
+    o.is_a?(Array) &&
+    o[0] == '_rxs' &&
+    o[2].is_a?(Integer) &&
+    o[1].is_a?(String) &&
+    o[1].match(/\A\/.*\/[a-zA-Z]*\z/)
+  end
+
   # Returns [ st, i ], the parent subtree for the final i index of the nid
   # Used when inserting updated subtrees.
   #
