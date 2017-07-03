@@ -57,6 +57,19 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq([ %w[ stuff ] ])
     end
 
+    it 'respects regex flags' do
+
+      r = @executor.launch(
+        %q{
+          push f.l
+            matchr "stUff", /stuff/i
+        },
+        payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ %w[ stUff ] ])
+    end
+
     context 'single argument' do
 
       it 'takes $(f.ret) as the string' do

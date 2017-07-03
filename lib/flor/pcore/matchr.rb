@@ -83,8 +83,7 @@ class Flor::Pro::Matchr < Flor::Procedure
 
     str = (rets - [ rex ]).first
 
-    rex = rex.is_a?(String) ? rex : rex[1].to_s
-    rex = rex.match(/\A\/[^\/]*\/[a-z]*\z/) ? Kernel.eval(rex) : Regexp.new(rex)
+    rex = Flor.to_regex(rex)
 
     [ rex, str ]
   end

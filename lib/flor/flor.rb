@@ -127,6 +127,27 @@ module Flor
     fail ArgumentError.new("cannot turn instance of #{o.class} into an array")
   end
 
+  def self.to_regex(o)
+
+    s =
+      case o
+      when String then o
+      when Array then o[1].to_s # hopefully regex tree
+      else o.to_s
+      end
+
+    m = s.match(/\A\/(.*)\/([a-z]*)\z/)
+
+    return Regexp.new(s) unless m
+
+    flags = 0
+    flags = flags | Regexp::EXTENDED if m[2].index('x')
+    flags = flags | Regexp::IGNORECASE if m[2].index('i')
+    #flags = flags | Regexp::MULTILINE if m[2].index('m')
+
+    Regexp.new(m[1], flags)
+  end
+
   #
   # functions about time
 
