@@ -19,26 +19,25 @@ describe 'Flor procedures' do
 
     it "returns empty array when it doesn't match" do
 
-      flor = %{
-        matchr "alpha", /bravo/
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          matchr "alpha", /bravo/
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => [] })
     end
 
-    it "returns the array of matches" do
+    it 'returns the array of matches' do
 
-      flor = %{
-        push f.l
-          matchr "stuff", /stuf*/
-        push f.l
-          matchr "stuff", /s(tu)(f*)/
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          push f.l
+            matchr "stuff", /stuf*/
+          push f.l
+            matchr "stuff", /s(tu)(f*)/
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ %w[ stuff ], %w[ stuff tu ff ] ])
@@ -46,13 +45,13 @@ describe 'Flor procedures' do
 
     it 'turns the second argument into a regular expression' do
 
-      flor = %{
-        push f.l
-          #match? "stuff", "^stuf*$"
-          matchr "stuff", "stuf*"
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          push f.l
+            #match? "stuff", "^stuf*$"
+            matchr "stuff", "stuf*"
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ %w[ stuff ] ])
@@ -62,14 +61,13 @@ describe 'Flor procedures' do
 
       it 'takes $(f.ret) as the string' do
 
-        flor = %{
-          "blue moon" | matchr (/blue/) | push l
-          "blue moon" | matchr 'moon' | push l
-          "blue moon" | match? 'moon' | push l
-          "blue moon" | match? 'x' | push l
-        }
-
-        r = @executor.launch(flor, vars: { 'l' => [] })
+        r = @executor.launch(
+          %q{
+            "blue moon" | matchr (/blue/) | push l
+            "blue moon" | matchr 'moon' | push l
+            "blue moon" | match? 'moon' | push l
+            "blue moon" | match? 'x' | push l
+          }, vars: { 'l' => [] })
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq([ %w[ blue ], %w[ moon ], true, false ])
@@ -81,25 +79,25 @@ describe 'Flor procedures' do
 
     it 'works alongside "if"' do
 
-      flor = %{
-        push f.l
-          if
-            match? "stuff", "^stuf*$"
-            'a'
-            'b'
-        push f.l
-          if
-            match? "staff", "^stuf*$"
-            'c'
-            'd'
-        push f.l
-          if
-            match? "$(nothing)", "^stuf*$"
-            'e'
-            'f'
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          push f.l
+            if
+              match? "stuff", "^stuf*$"
+              'a'
+              'b'
+          push f.l
+            if
+              match? "staff", "^stuf*$"
+              'c'
+              'd'
+          push f.l
+            if
+              match? "$(nothing)", "^stuf*$"
+              'e'
+              'f'
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a d f ])
