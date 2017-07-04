@@ -47,12 +47,25 @@ they will go on and their, future, reply will be discarded (the concurrence
 being already gone).
 
 `remaining:` may be shortened to `rem:`.
+
 ```
 concurrence expect: 1 rem: 'forget'
+    #
+    # will forget child 'alpha' as soon as child 'bravo' replies,
+    # and vice versa.
+    #
   task 'alpha'
   task 'bravo'
-# will forget child 'alpha' as soon as child 'bravo' replies,
-# and vice versa.
+```
+
+```
+concurrence expect: 1 rem: 'wait'
+    #
+    # if 'alpha' replies before 'bravo', the concurrence will wait for
+    # 'bravo', without cancelling it. And vice versa.
+    #
+  task 'alpha'
+  task 'bravo'
 ```
 
 
