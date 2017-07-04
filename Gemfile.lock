@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    flor (0.14.0)
+    flor (0.15.0)
       fugit (>= 1.0.0)
       munemo (>= 1.0.1)
       raabro (>= 1.1.3)
@@ -36,7 +36,6 @@ GEM
     terminal-table (1.7.3)
       unicode-display_width (~> 1.1.1)
     thread_safe (0.3.6)
-    thread_safe (0.3.6-java)
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
     unicode-display_width (1.1.3)
