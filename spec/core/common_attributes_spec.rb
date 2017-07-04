@@ -21,11 +21,10 @@ describe 'Flor core' do
 
       it 'does not set f.ret' do
 
-        flor = %{
-          sequence vars: { a: 1 }
-        }
-
-        r = @executor.launch(flor)
+        r = @executor.launch(
+          %q{
+            sequence vars: { a: 1 }
+          })
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(nil)
@@ -33,15 +32,15 @@ describe 'Flor core' do
 
       it 'sets vars locally' do
 
-        flor = %{
-          sequence vars: { a: 0 }
-            push l [ a null ]
-            sequence vars: { a: 1 b: 2 }
-              push l [ a b ]
-            push l [ a null ]
-        }
-
-        r = @executor.launch(flor, vars: { 'l' => [] })
+        r = @executor.launch(
+          %q{
+            sequence vars: { a: 0 }
+              push l [ a null ]
+              sequence vars: { a: 1 b: 2 }
+                push l [ a b ]
+              push l [ a null ]
+          },
+          vars: { 'l' => [] })
 
         expect(r['point']).to eq('terminated')
 
@@ -64,17 +63,17 @@ describe 'Flor core' do
 
         it 'copies all the vars' do
 
-          flor = %{
-            sequence vars: { a: 'A' }
-              push f.l [ 0 a ]
-              sequence vars: 'copy'
-                push f.l [ 1 a ]
-                set a 'B'
-                push f.l [ 2 a ]
-              push f.l [ 3 a ]
-          }
-
-          r = @executor.launch(flor, payload: { 'l' => [] })
+          r = @executor.launch(
+            %q{
+              sequence vars: { a: 'A' }
+                push f.l [ 0 a ]
+                sequence vars: 'copy'
+                  push f.l [ 1 a ]
+                  set a 'B'
+                  push f.l [ 2 a ]
+                push f.l [ 3 a ]
+            },
+            payload: { 'l' => [] })
 
           expect(r['point']).to eq('terminated')
 
@@ -90,17 +89,17 @@ describe 'Flor core' do
 
         it 'copies all the vars' do
 
-          flor = %{
-            sequence vars: { a: 'A' }
-              push f.l [ 0 a ]
-              sequence vars: '*'
-                push f.l [ 1 a ]
-                set a 'B'
-                push f.l [ 2 a ]
-              push f.l [ 3 a ]
-          }
-
-          r = @executor.launch(flor, payload: { 'l' => [] })
+          r = @executor.launch(
+            %q{
+              sequence vars: { a: 'A' }
+                push f.l [ 0 a ]
+                sequence vars: '*'
+                  push f.l [ 1 a ]
+                  set a 'B'
+                  push f.l [ 2 a ]
+                push f.l [ 3 a ]
+            },
+            payload: { 'l' => [] })
 
           expect(r['point']).to eq('terminated')
 
@@ -117,11 +116,10 @@ describe 'Flor core' do
 
       it 'overrides f.ret' do
 
-        flor = %{
-          3 ret: 4
-        }
-
-        r = @executor.launch(flor)
+        r = @executor.launch(
+          %q{
+            3 ret: 4
+          })
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(4)

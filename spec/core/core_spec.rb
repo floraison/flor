@@ -19,11 +19,7 @@ describe 'Flor core' do
 
     it 'is returned' do
 
-      flor = %{
-        sequence
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(%q{ sequence })
 
       expect(
         r['point']
@@ -38,11 +34,7 @@ describe 'Flor core' do
 
     it 'is executed' do
 
-      flor = %{
-        sequence _
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(%q{sequence _ })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -61,14 +53,13 @@ describe 'Flor core' do
       # ```
       # (note the underscore)
 
-      flor = %{
-        set a 3
-        until true
-          break if a == 3
-          set a (+ a 1)
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set a 3
+          until true
+            break if a == 3
+            set a (+ a 1)
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -79,11 +70,7 @@ describe 'Flor core' do
 
     it 'has a source message "sm"' do
 
-      flor = %{
-        sequence _
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(%q{ sequence _ })
 
       expect(r['point']).to eq('terminated')
       expect(r['m']).to eq(5)
@@ -95,16 +82,15 @@ describe 'Flor core' do
 
     it 'is accepted' do
 
-      flor = %{
-        set v0 'ag'
-        set v1 'tag'
-        sequence (+ "t" v0): 'xx'
-        sequence 'tag': 'yy'
-        sequence v1: 'zz'
-        sequence tag: 'aa'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set v0 'ag'
+          set v1 'tag'
+          sequence (+ "t" v0): 'xx'
+          sequence 'tag': 'yy'
+          sequence v1: 'zz'
+          sequence tag: 'aa'
+        })
 
       expect(r['point']).to eq('terminated')
 

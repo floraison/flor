@@ -19,12 +19,11 @@ describe 'Flor core' do
 
     it 'is accepted' do
 
-      flor = %{
-        _dump 3: 12
-        _dump []: 12
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          _dump 3: 12
+          _dump []: 12
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -43,12 +42,11 @@ describe 'Flor core' do
 
     it 'it keys on the var value' do
 
-      flor = %{
-        set k 'K'
-        _dump k: 'V'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set k 'K'
+          _dump k: 'V'
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -62,12 +60,11 @@ describe 'Flor core' do
 
     it 'is keys on the function name' do
 
-      flor = %q{
-        define k \ stall _
-        _dump k: 'V'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          define k \ stall _
+          _dump k: 'V'
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -78,13 +75,12 @@ describe 'Flor core' do
 
     it 'is keys on the referenced function name' do
 
-      flor = %q{
-        define k \ stall _
-        set kk k
-        _dump kk: 'V'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          define k \ stall _
+          set kk k
+          _dump kk: 'V'
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -98,12 +94,11 @@ describe 'Flor core' do
 
     it 'keys on the return value' do
 
-      flor = %{
-        define k; 'K'
-        _dump (k _): 'V'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          define k; 'K'
+          _dump (k _): 'V'
+        })
 
       expect(r['point']).to eq('terminated')
 

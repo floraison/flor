@@ -19,11 +19,11 @@ describe 'Flor core' do
 
     it 'returns itself' do
 
-      flor = %{
-        3
-      }
+      r = @executor.launch(
+        %q{
+          3
+        })
 
-      r = @executor.launch(flor)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(3)
@@ -32,7 +32,7 @@ describe 'Flor core' do
     it 'returns itself' do
 
       r = @executor.launch(
-        %{
+        %q{
           3 tags: 'xyz'
         })
 
@@ -73,11 +73,10 @@ describe 'Flor core' do
 
     it 'returns the referenced procedure' do
 
-      flor = %{
-        sequence
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -93,14 +92,13 @@ describe 'Flor core' do
 
     it 'returns the referenced function' do
 
-      flor = %{
-        sequence
-          define sum a, b
-            # empty
-          sum
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence
+            define sum a, b
+              # empty
+            sum
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -116,16 +114,15 @@ describe 'Flor core' do
 
     it 'works' do
 
-      flor = %{
-        sequence
-          define sum a, b
-            +
-              a
-              b
-          sum 1 2
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence
+            define sum a, b
+              +
+                a
+                b
+            sum 1 2
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(3)
@@ -133,19 +130,19 @@ describe 'Flor core' do
 
     it 'runs each time with a different subnid' do
 
-      flor = %{
-        sequence
-          define sub i
-            push f.l
-              #val $(nid)
-              [ i, "$(nid)" ]
-            + i 1
-          sub 0
-          sub 1
-          sub 2
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          sequence
+            define sub i
+              push f.l
+                #val $(nid)
+                [ i, "$(nid)" ]
+              + i 1
+            sub 0
+            sub 1
+            sub 2
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
 
@@ -163,17 +160,16 @@ describe 'Flor core' do
 
     it 'works with an anonymous function' do
 
-      flor = %{
-        sequence
-          set sum
-            def x y
-              +
-                x
-                y
-          sum 7 3
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence
+            set sum
+              def x y
+                +
+                  x
+                  y
+            sum 7 3
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(10)
@@ -207,19 +203,18 @@ describe 'Flor core' do
 
     it 'works (read)' do
 
-      flor = %{
-        sequence
-          define make_adder x
-            def y
-              +
-                x
-                y
-          set add3
-            make_adder 3
-          add3 7
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence
+            define make_adder x
+              def y
+                +
+                  x
+                  y
+            set add3
+              make_adder 3
+            add3 7
+        })
 
       expect(r['point']).to eq('terminated')
 

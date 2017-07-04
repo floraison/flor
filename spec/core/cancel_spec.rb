@@ -21,16 +21,16 @@ describe 'Flor core' do
 
      it 'cancels' do
 
-       flor = %{
-         concurrence
-           sequence # 0_0
-             stall _
-           sequence
-             _skip 1
-             cancel '0_0'
-       }
-
-       r = @executor.launch(flor, archive: true)
+       r = @executor.launch(
+         %q{
+           concurrence
+             sequence # 0_0
+               stall _
+             sequence
+               _skip 1
+               cancel '0_0'
+         },
+         archive: true)
 
        expect(r['point']).to eq('terminated')
 
@@ -55,24 +55,23 @@ describe 'Flor core' do
 
      it "doesn't over-cancel" do
 
-       flor = %{
-         concurrence
-           sequence # 0_0
-             sequence
+       r = @executor.launch(
+         %q{
+           concurrence
+             sequence # 0_0
                sequence
                  sequence
                    sequence
                      sequence
                        sequence
-                         stall _
-           sequence
-             _skip 1
-             cancel '0_0'
-             _skip 1
-             cancel '0_0'
-       }
-
-       r = @executor.launch(flor, archive: true)
+                         sequence
+                           stall _
+             sequence
+               _skip 1
+               cancel '0_0'
+               _skip 1
+               cancel '0_0'
+         }, archive: true)
 
        expect(r['point']).to eq('terminated')
 
@@ -91,17 +90,16 @@ describe 'Flor core' do
 
      it 'cancels with "cancel" flavour even if aliased' do
 
-       flor = %{
-         set fukup cancel
-         concurrence
-           sequence # 0_1_0
-             stall _
-           sequence
-             _skip 1
-             fukup '0_1_0'
-       }
-
-       r = @executor.launch(flor, archive: true)
+       r = @executor.launch(
+         %q{
+           set fukup cancel
+           concurrence
+             sequence # 0_1_0
+               stall _
+             sequence
+               _skip 1
+               fukup '0_1_0'
+         }, archive: true)
 
        expect(r['point']).to eq('terminated')
 
