@@ -218,6 +218,20 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(9)
     end
 
+    it 'makes $(matched) available' do
+
+      r = @executor.launch(
+        %q{
+          case 6
+            5; 'five'
+            [ 1, 6 ]; v.matched
+            else; 'zilch'
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(6)
+    end
+
     context 'and regexes' do
 
       it 'does not match if the argument is not a string' do
@@ -260,6 +274,20 @@ describe 'Flor procedures' do
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq('ohohoh')
+      end
+
+      it 'makes $(match) available' do
+
+        r = @executor.launch(
+          %q{
+            case 'ovomolzin'
+              /a+/; 'ahahah'
+              [ /u+/, /^ovo(.+)$/ ]; "matched:$(match.1)"
+              else; 'else'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('matched:molzin')
       end
 
       it 'does not match' do

@@ -40,6 +40,28 @@ class Flor::Pro::Case < Flor::Procedure
   # If there is no else and no matching array, the case terminates and
   # doesn't set the field "ret".
   #
+  # ### v.matched and $(matched)
+  #
+  # When it successfully matches, the matched value (the argument of the
+  # "case") is placed in the local (local to the then or else branch)
+  # variables under 'matched'.
+  #
+  # ```
+  # case 6
+  #   5; 'five'
+  #   [ 1, 6 ]; v.matched
+  #   else; 'zilch'
+  # # returns, well, 6...
+  # ```
+  #
+  # ```
+  # case 6
+  #   5; 'five'
+  #   [ 1, 6 ]; "matched! >$(matched)<"
+  #   else; 'zilch'
+  # # returns "matched! >6<"
+  # ```
+  #
   # ## regular expressions
   #
   # It's OK to match with regular expressions:
@@ -48,6 +70,19 @@ class Flor::Pro::Case < Flor::Procedure
   #   /a+/; 'ahahah'
   #   [ /u+/, /o+/ ]; 'ohohoh'   # <--- matches here
   #   else; 'else'
+  # ```
+  #
+  # ### v.match and $(match)
+  #
+  # When matching with a regular expression, the local variable 'matched' is
+  # set, as seen above, but also 'match':
+  #
+  # ```
+  # case 'ovomolzin'
+  #   /a+/; 'ahahah'
+  #   [ /u+/, /^ovo(.+)$/ ]; "matched:$(match.1)"
+  #   else; 'else'
+  # # yields "matched:molzin"
   # ```
 
   name 'case'
@@ -112,14 +147,23 @@ class Flor::Pro::Case < Flor::Procedure
   def match?
 
     v = @node['val']
-    array.find { |e| do_match?(e, v) }
+
+    array.each do |e|
+      m = do_match?(e, v)
+      return m if m
+    end
+
+    nil
   end
 
   def do_match?(elt, val)
 
-    return true if elt == val
-    return true if val.is_a?(String) && elt.is_a?(Regexp) && elt.match(val)
-    false
+    return { 'matched' => elt } if elt == val
+
+    m = val.is_a?(String) && elt.is_a?(Regexp) && elt.match(val)
+    return { 'matched' => elt, 'match' => m.to_a } if m
+
+    nil
   end
 
   def array

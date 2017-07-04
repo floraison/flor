@@ -40,6 +40,28 @@ a catchall and the child immediately following it is executed.
 If there is no else and no matching array, the case terminates and
 doesn't set the field "ret".
 
+### v.matched and $(matched)
+
+When it successfully matches, the matched value (the argument of the
+"case") is placed in the local (local to the then or else branch)
+variables under 'matched'.
+
+```
+case 6
+  5; 'five'
+  [ 1, 6 ]; v.matched
+  else; 'zilch'
+# returns, well, 6...
+```
+
+```
+case 6
+  5; 'five'
+  [ 1, 6 ]; "matched! >$(matched)<"
+  else; 'zilch'
+# returns "matched! >6<"
+```
+
 ## regular expressions
 
 It's OK to match with regular expressions:
@@ -48,6 +70,19 @@ case 'ovomolzin'
   /a+/; 'ahahah'
   [ /u+/, /o+/ ]; 'ohohoh'   # <--- matches here
   else; 'else'
+```
+
+### v.match and $(match)
+
+When matching with a regular expression, the local variable 'matched' is
+set, as seen above, but also 'match':
+
+```
+case 'ovomolzin'
+  /a+/; 'ahahah'
+  [ /u+/, /^ovo(.+)$/ ]; "matched:$(match.1)"
+  else; 'else'
+# yields "matched:molzin"
 ```
 
 
