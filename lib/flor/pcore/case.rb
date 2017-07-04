@@ -24,6 +24,14 @@ class Flor::Pro::Case < Flor::Procedure
   #   'high'
   # ```
   #
+  # Non-array values are OK:
+  # ```
+  # case level
+  #   0; 'zero'
+  #   1; 'one'
+  #   else; 'dunno'
+  # ```
+  #
   # ## else
   #
   # As seen in the example above, an "else" in lieu of an array acts as
@@ -31,6 +39,16 @@ class Flor::Pro::Case < Flor::Procedure
   #
   # If there is no else and no matching array, the case terminates and
   # doesn't set the field "ret".
+  #
+  # ## regular expressions
+  #
+  # It's OK to match with regular expressions:
+  # ```
+  # case 'ovomolzin'
+  #   /a+/; 'ahahah'
+  #   [ /u+/, /o+/ ]; 'ohohoh'   # <--- matches here
+  #   else; 'else'
+  # ```
 
   name 'case'
 
@@ -93,10 +111,22 @@ class Flor::Pro::Case < Flor::Procedure
 
   def match?
 
-    a = payload['ret']
-    a = a.nil? ? [ a ] : Array(a)
+    v = @node['val']
+    array.find { |e| do_match?(e, v) }
+  end
 
-    a.include?(@node['val'])
+  def do_match?(elt, val)
+
+    return true if elt == val
+    return true if val.is_a?(String) && elt.is_a?(Regexp) && elt.match(val)
+    false
+  end
+
+  def array
+
+    a = payload['ret']
+    a = [ a ] if Flor.is_regex_tree?(a) || ! a.is_a?(Array)
+    a.collect { |e| Flor.is_regex_tree?(e) ? Flor.to_regex(e) : e }
   end
 end
 

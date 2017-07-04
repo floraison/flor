@@ -217,6 +217,65 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(9)
     end
+
+    context 'and regexes' do
+
+      it 'does not match if the argument is not a string' do
+
+        r = @executor.launch(
+          %q{
+            case 6
+              /a+/; 'as'
+              /b+/; 'bs'
+              else; 'else'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('else')
+      end
+
+      it 'matches' do
+
+        r = @executor.launch(
+          %q{
+            case 'ovomolzin'
+              /a+/; 'ahahah'
+              /o+/; 'ohohoh'
+              else; 'else'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('ohohoh')
+      end
+
+      it 'matches when arrayed regexes' do
+
+        r = @executor.launch(
+          %q{
+            case 'ovomolzin'
+              /a+/; 'ahahah'
+              [ /u+/, /o+/ ]; 'ohohoh'
+              else; 'else'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('ohohoh')
+      end
+
+      it 'does not match' do
+
+        r = @executor.launch(
+          %q{
+            case 'ubuntu'
+              /a+/; 'ahahah'
+              /o+/; 'ohohoh'
+              else; 'else'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('else')
+      end
+    end
   end
 end
 

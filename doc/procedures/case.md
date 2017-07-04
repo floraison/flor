@@ -24,6 +24,14 @@ case level
   'high'
 ```
 
+Non-array values are OK:
+```
+case level
+  0; 'zero'
+  1; 'one'
+  else; 'dunno'
+```
+
 ## else
 
 As seen in the example above, an "else" in lieu of an array acts as
@@ -31,6 +39,16 @@ a catchall and the child immediately following it is executed.
 
 If there is no else and no matching array, the case terminates and
 doesn't set the field "ret".
+
+## regular expressions
+
+It's OK to match with regular expressions:
+```
+case 'ovomolzin'
+  /a+/; 'ahahah'
+  [ /u+/, /o+/ ]; 'ohohoh'   # <--- matches here
+  else; 'else'
+```
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/case.rb)
