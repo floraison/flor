@@ -19,12 +19,11 @@ describe 'Flor core' do
 
     it 'induces messages to be tagged' do
 
-      flor = %{
-        sequence tag: 'aa'
-          sequence tag: 'bb'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence tag: 'aa'
+            sequence tag: 'bb'
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -63,12 +62,11 @@ describe 'Flor core' do
 
     it 'lets multiple tags be flagged at once' do
 
-      flor = %{
-        sequence tag: 'aa', tag: 'bb'
-          sequence tags: [ 'cc', 'dd' ]
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence tag: 'aa', tag: 'bb'
+            sequence tags: [ 'cc', 'dd' ]
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -115,23 +113,21 @@ describe 'Flor core' do
 
     it 'fails on non-string attributes' do
 
-      flor = %{
-        sequence tag: aa
-          1
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence tag: aa
+            1
+        })
 
       expect(r['point']).to eq('failed')
     end
 
     it 'accepts procs as tags' do
 
-      flor = %{
-        sequence tag: sequence
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence tag: sequence
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -149,12 +145,11 @@ describe 'Flor core' do
 
     it 'accepts functions as tags' do
 
-      flor = %q{
-        define x \ _
-        sequence tag: x
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          define x \ _
+          sequence tag: x
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -172,22 +167,21 @@ describe 'Flor core' do
 
     it 'accepts functions as tags (closure)' do
 
-      flor = %q{
+      r = @executor.launch(
+        %q{
 
-        define make_tag x
-          def \ sequence tag: x
+          define make_tag x
+            def \ sequence tag: x
 
-        define t1 \ _
+          define t1 \ _
 
-        #set v \ make_tag t1
-          # or
-        set v (make_tag t1)
+          #set v \ make_tag t1
+            # or
+          set v (make_tag t1)
 
-        v _
-        v _
-      }
-
-      r = @executor.launch(flor)
+          v _
+          v _
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -209,12 +203,12 @@ describe 'Flor core' do
 
     it 'yields null when the tag is not set' do
 
-      flor = %{
-        set a []
-        push a tag.x
-        null
-      }
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set a []
+          push a tag.x
+          null
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq([ nil ])
@@ -222,15 +216,15 @@ describe 'Flor core' do
 
     it 'yields the array of nids with the tag on' do
 
-      flor = %{
-        set a []
-        sequence tag: 'alpha'
-          sequence tag: 'bravo'
-            push a tag.bravo
-            push a t.alpha
-        null
-      }
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set a []
+          sequence tag: 'alpha'
+            sequence tag: 'bravo'
+              push a tag.bravo
+              push a t.alpha
+          null
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq([ [ '0_1_1' ], [ '0_1' ] ])

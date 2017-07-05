@@ -115,11 +115,10 @@ describe 'Flor core' do
       #
     it 'yields null if referenced with a v. prefix'# do
 #
-#      flor = %{
-#        v.a
-#      }
-#
-#      r = @executor.launch(flor)
+#      r = @executor.launch(
+#        %q{
+#          v.a
+#        })
 #
 #      expect(r['point']).to eq('terminated')
 #      expect(r['payload']['ret']).to eq(nil)

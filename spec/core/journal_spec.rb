@@ -19,11 +19,7 @@ describe 'Flor texecutor' do
 
     it 'keeps a journal' do
 
-      flor = %{
-        sequence
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(%{ sequence })
 
       expect(r['point']).to eq('terminated')
 

@@ -19,12 +19,11 @@ describe 'Flor procedures' do
 
     it 'skips a few messages' do
 
-      flor = %{
-        123
-        _skip 7
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          123
+          _skip 7
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(123)

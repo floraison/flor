@@ -19,12 +19,12 @@ describe 'Flor core' do
 
     it 'has no effect when no error' do
 
-      flor = %{
-        sequence on_error: (def err; _)
-          push f.l 0
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          sequence on_error: (def err; _)
+            push f.l 0
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 0 ])
@@ -32,12 +32,12 @@ describe 'Flor core' do
 
     it 'fails if the handler does not exist' do
 
-      flor = %{
-        sequence on_error: nada
-          push f.l 0
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          sequence on_error: nada
+            push f.l 0
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq('don\'t know how to apply "nada"')
@@ -45,14 +45,14 @@ describe 'Flor core' do
 
     it 'triggers when a child has an error' do
 
-      flor = %q{
-        sequence on_error: (def err \ push f.l err.error.msg)
-          push f.l 0
-          push f.l x
-          push f.l 1
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          sequence on_error: (def err \ push f.l err.error.msg)
+            push f.l 0
+            push f.l x
+            push f.l 1
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 0, "don't know how to apply \"x\"" ])
@@ -60,13 +60,12 @@ describe 'Flor core' do
 
     it 'accepts the name of a function' do
 
-      flor = %q{
-        define mute err \ 'muted.'
-        sequence on_error: mute
-          push f.l 0
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          define mute err \ 'muted.'
+          sequence on_error: mute
+            push f.l 0
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 'muted.' })
@@ -74,15 +73,14 @@ describe 'Flor core' do
 
     it 'accepts a function that returns a function' do
 
-      flor = %{
-        define return x
-          def err
-            x
-        sequence on_error: (return 2)
-          push f.l 0
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          define return x
+            def err
+              x
+          sequence on_error: (return 2)
+            push f.l 0
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)

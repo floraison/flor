@@ -19,16 +19,15 @@ describe 'Flor procedures' do
 
     it 'applies a function' do
 
-      flor = %{
-        sequence
-          define sum a b
-            +
-              a
-              b
-          apply sum 1 2
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          sequence
+            define sum a b
+              +
+                a
+                b
+            apply sum 1 2
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(3)
