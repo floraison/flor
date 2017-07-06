@@ -21,14 +21,14 @@ describe 'Flor pcore' do
 
     it 'fails if the target cannot be found' do
 
-      flor = %{
-        cursor
-          push f.l 'a'
-          move to: 'final'
-          push f.l 'b'
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          cursor
+            push f.l 'a'
+            move to: 'final'
+            push f.l 'b'
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('failed')
       expect(r['payload']['l']).to eq(%w[ a ])
@@ -42,15 +42,15 @@ describe 'Flor pcore' do
 
     it 'moves to a tag' do
 
-      flor = %{
-        cursor
-          push f.l 'a'
-          move to: 'final'
-          push f.l 'b'
-          push f.l 'c' tag: 'final'
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          cursor
+            push f.l 'a'
+            move to: 'final'
+            push f.l 'b'
+            push f.l 'c' tag: 'final'
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
@@ -58,15 +58,15 @@ describe 'Flor pcore' do
 
     it 'moves to a string argument' do
 
-      flor = %{
-        cursor
-          push f.l 'a'
-          move to: 'c'
-          push f.l 'b'
-          push f.l 'c'
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          cursor
+            push f.l 'a'
+            move to: 'c'
+            push f.l 'b'
+            push f.l 'c'
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
@@ -74,20 +74,20 @@ describe 'Flor pcore' do
 
     it 'moves to a string' do
 
-      flor = %{
-        cursor
-          push f.l 'a'
-          move to: 'c'
-          push f.l 'b'
-          "c"
-          push f.l 'd'
-          move to: 'f'
-          push f.l 'e'
-          'f'
-          push f.l 'g'
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          cursor
+            push f.l 'a'
+            move to: 'c'
+            push f.l 'b'
+            "c"
+            push f.l 'd'
+            move to: 'f'
+            push f.l 'e'
+            'f'
+            push f.l 'g'
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a d g ])
@@ -95,22 +95,22 @@ describe 'Flor pcore' do
 
     it 'moves to a name' do
 
-      flor = %{
-        define here; noret
-        define there; noret
-        cursor
-          push f.l 'a'
-          move to: 'here'
-          push f.l 'b'
-          here _
-          push f.l 'c'
-          move to: 'there'
-          push f.l 'd'
-          there
-          push f.l 'e'
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          define here; noret
+          define there; noret
+          cursor
+            push f.l 'a'
+            move to: 'here'
+            push f.l 'b'
+            here _
+            push f.l 'c'
+            move to: 'there'
+            push f.l 'd'
+            there
+            push f.l 'e'
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c e ])
@@ -118,16 +118,16 @@ describe 'Flor pcore' do
 
     it 'accepts a symbol as to:' do
 
-      flor = %{
-        cursor
-          push f.l 'a'
-          move to: here
-          push f.l 'b'
-          _ here
-          push f.l 'c'
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          cursor
+            push f.l 'a'
+            move to: here
+            push f.l 'b'
+            _ here
+            push f.l 'c'
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
@@ -135,20 +135,19 @@ describe 'Flor pcore' do
 
     it 'can move a cursor by its tag name' do
 
-      flor = %{
-        set l []
-        concurrence
-          cursor tag: 'x0'
-            push l 'a'
-            stall _
-            push l 'b'
-          sequence
-            push l 0
-            move 'x0' to: 'b'
-            push l 1
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set l []
+          concurrence
+            cursor tag: 'x0'
+              push l 'a'
+              stall _
+              push l 'b'
+            sequence
+              push l 0
+              move 'x0' to: 'b'
+              push l 1
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq([ 0, 'a', 1, 'b' ])

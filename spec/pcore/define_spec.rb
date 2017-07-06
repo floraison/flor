@@ -99,13 +99,12 @@ describe 'Flor procedures' do
 
     it 'defines functions with no arguments' do
 
-      flor = %{
-        def
-          1 + 1
-        f.ret _
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          def
+            1 + 1
+          f.ret _
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)

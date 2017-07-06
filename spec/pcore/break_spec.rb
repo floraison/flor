@@ -21,18 +21,17 @@ describe 'Flor pcore' do
 
     it 'breaks an "until" from outside' do
 
-      flor = %{
-        set l []
-        concurrence
-          until false tag: 'x0'
-            push l 0
-            stall _
-          sequence
-            push l 1
-            break ref: 'x0'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set l []
+          concurrence
+            until false tag: 'x0'
+              push l 0
+              stall _
+            sequence
+              push l 1
+              break ref: 'x0'
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -53,18 +52,17 @@ describe 'Flor pcore' do
 
     it 'breaks a "cursor" from outside' do
 
-      flor = %{
-        set l []
-        concurrence
-          cursor tag: 'x0'
-            push l 0
-            stall _
-          sequence
-            push l 1
-            break ref: 'x0'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set l []
+          concurrence
+            cursor tag: 'x0'
+              push l 0
+              stall _
+            sequence
+              push l 1
+              break ref: 'x0'
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -88,22 +86,21 @@ describe 'Flor pcore' do
 
     it 'continues an "until" from outside' do
 
-      flor = %{
-        set l []
-        concurrence
-          sequence
-            set f.i 0
-            until tag: 'x0'
-              (== f.i 1)
-              push l f.i
-              stall _
-          sequence
-            _skip 8
-            set f.i 1
-            continue ref: 'x0'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set l []
+          concurrence
+            sequence
+              set f.i 0
+              until tag: 'x0'
+                (== f.i 1)
+                push l f.i
+                stall _
+            sequence
+              _skip 8
+              set f.i 1
+              continue ref: 'x0'
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -124,20 +121,19 @@ describe 'Flor pcore' do
 
     it 'continues a "cursor" from outside' do
 
-      flor = %{
-        set l []
-        concurrence
-          cursor tag: 'x'
-            push l 'a'
-            stall _
-          sequence
-            push l 'b'
-            continue ref: 'x'
-            push l 'c'
-            break ref: 'x'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          set l []
+          concurrence
+            cursor tag: 'x'
+              push l 'a'
+              stall _
+            sequence
+              push l 'b'
+              continue ref: 'x'
+              push l 'c'
+              break ref: 'x'
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)

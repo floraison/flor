@@ -19,15 +19,15 @@ describe 'Flor procedures' do
 
     it 'has no effect if it has no children' do
 
-      flor = %{
-        sequence
-          123
-          push f.l 0
-          if _
-          push f.l 1
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          sequence
+            123
+            push f.l 0
+            if _
+            push f.l 1
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(123)
@@ -36,18 +36,18 @@ describe 'Flor procedures' do
 
     it 'simply sets $(ret) if there are no then/else children' do
 
-      flor = %{
-        sequence
-          456
-          if
-            true
-          push f.l
-          if
-            false
-          push f.l
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          sequence
+            456
+            if
+              true
+            push f.l
+            if
+              false
+            push f.l
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(456)
@@ -56,16 +56,16 @@ describe 'Flor procedures' do
 
     it 'triggers the then child when $(ret) true' do
 
-      flor = %{
-        sequence
-          if
-            true
-            push f.l 0
-            push f.l 1
-          push f.l 2
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          sequence
+            if
+              true
+              push f.l 0
+              push f.l 1
+            push f.l 2
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(true)
@@ -74,16 +74,16 @@ describe 'Flor procedures' do
 
     it 'triggers the else child when $(ret) false' do
 
-      flor = %{
-        sequence
-          if
-            false
-            push f.l 0
-            push f.l 1
-          push f.l 2
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          sequence
+            if
+              false
+              push f.l 0
+              push f.l 1
+            push f.l 2
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(false)
@@ -92,13 +92,12 @@ describe 'Flor procedures' do
 
     it 'does not mind atts on the if' do
 
-      flor = %{
-        if false tag: 'nada'
-          'then'
-          'else'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          if false tag: 'nada'
+            'then'
+            'else'
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('else')
@@ -129,12 +128,12 @@ describe 'Flor procedures' do
 
     it 'can be used as a "one-liner"' do
 
-      flor = %{
-        push f.l (if true 'then' 'else')
-        push f.l (if false 'then' 'else')
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          push f.l (if true 'then' 'else')
+          push f.l (if false 'then' 'else')
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -146,16 +145,16 @@ describe 'Flor procedures' do
 
     it 'triggers the then child when $(ret) false' do
 
-      flor = %{
-        sequence
-          unless
-            false
-            push f.l 0
-            push f.l 1
-          push f.l 2
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          sequence
+            unless
+              false
+              push f.l 0
+              push f.l 1
+            push f.l 2
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(false)
@@ -164,16 +163,16 @@ describe 'Flor procedures' do
 
     it 'triggers the else child when $(ret) true' do
 
-      flor = %{
-        sequence
-          unless
-            true
-            push f.l 0
-            push f.l 1
-          push f.l 2
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          sequence
+            unless
+              true
+              push f.l 0
+              push f.l 1
+            push f.l 2
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(true)

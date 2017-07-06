@@ -19,13 +19,13 @@ describe 'Flor pcore' do
 
     it 'loops' do
 
-      flor = %{
-        loop
-          push f.l "$(nid)"
-          break _ if "$(nid)" == "0_1_0_0-2"
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          loop
+            push f.l "$(nid)"
+            break _ if "$(nid)" == "0_1_0_0-2"
+        },
+        payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -35,14 +35,14 @@ describe 'Flor pcore' do
 
     it 'understands "continue"' do
 
-      flor = %{
-        loop
-          continue _ if "$(nid)" == "0_0_0_0-1"
-          push f.l "$(nid)"
-          break _ if "$(nid)" == "0_2_0_0-2"
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          loop
+            continue _ if "$(nid)" == "0_0_0_0-1"
+            push f.l "$(nid)"
+            break _ if "$(nid)" == "0_2_0_0-2"
+        },
+        payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -52,12 +52,11 @@ describe 'Flor pcore' do
 
     it 'goes {nid}-n for the subsequent cycles' do
 
-      flor = %{
-        loop
-          break _ if "$(nid)" == "0_0_0_0-3"
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          loop
+            break _ if "$(nid)" == "0_0_0_0-3"
+        })
 
       expect(
         @executor.journal
@@ -90,13 +89,12 @@ describe 'Flor pcore' do
 
     it 'takes the first att child as tag' do
 
-      flor = %{
-        loop 'xyz'
-          break _ if "$(nid)" == "0_1_0_0-2"
-          #fail "hard"
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          loop 'xyz'
+            break _ if "$(nid)" == "0_1_0_0-2"
+            #fail "hard"
+        })
 
       expect(r['point']).to eq('terminated')
 

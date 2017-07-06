@@ -28,15 +28,14 @@ describe 'Flor punit' do
 
     it 'considers its attributes first' do
 
-      flor = %{
-        [
-          (sleep '5s')
-          1
-          2
-        ] timeout: '2h'
-      }
-
-      @unit.launch(flor)
+      @unit.launch(
+        %q{
+          [
+            (sleep '5s')
+            1
+            2
+          ] timeout: '2h'
+        })
 
       wait_until { @unit.timers.count >= 2 }
 

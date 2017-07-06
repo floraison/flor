@@ -21,14 +21,14 @@ describe 'Flor pcore' do
 
     it 'goes from a to b and exits' do
 
-      flor = %{
-        cursor
-          push f.l 0
-          push f.l 1
-        push f.l 2
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          cursor
+            push f.l 0
+            push f.l 1
+          push f.l 2
+        },
+        payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -38,15 +38,15 @@ describe 'Flor pcore' do
 
     it 'understands break' do
 
-      flor = %{
-        cursor
+      r = @executor.launch(
+        %q{
+          cursor
+            push f.l "$(nid)"
+            break _
+            push f.l "$(nid)"
           push f.l "$(nid)"
-          break _
-          push f.l "$(nid)"
-        push f.l "$(nid)"
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+        },
+        payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -56,14 +56,13 @@ describe 'Flor pcore' do
 
     it 'understands continue' do
 
-      flor = %{
-        cursor
-          push f.l "$(nid)"
-          continue _ if "$(nid)" == '0_1_0_0'
-          push f.l "$(nid)"
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          cursor
+            push f.l "$(nid)"
+            continue _ if "$(nid)" == '0_1_0_0'
+            push f.l "$(nid)"
+        }, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -73,16 +72,16 @@ describe 'Flor pcore' do
 
     it 'understands an outer "continue"' do
 
-      flor = %{
-        cursor
-          set outer-continue continue
-          push f.l "$(nid)"
+      r = @executor.launch(
+        %q{
           cursor
+            set outer-continue continue
             push f.l "$(nid)"
-            outer-continue _ if "$(nid)" == '0_2_1_0_0'
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+            cursor
+              push f.l "$(nid)"
+              outer-continue _ if "$(nid)" == '0_2_1_0_0'
+        },
+        payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
@@ -92,13 +91,12 @@ describe 'Flor pcore' do
 
     it 'goes {nid}-n for the subsequent cycles' do
 
-      flor = %{
-        cursor
-          continue _ if "$(nid)" == '0_0_0_0'
-          continue _ if "$(nid)" == '0_1_0_0-1'
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          cursor
+            continue _ if "$(nid)" == '0_0_0_0'
+            continue _ if "$(nid)" == '0_1_0_0-1'
+        })
 
       expect(
         @executor.journal
@@ -134,12 +132,11 @@ describe 'Flor pcore' do
 
     it 'takes the first att child as tag' do
 
-      flor = %{
-        cursor 'main'
-          set f.done true
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          cursor 'main'
+            set f.done true
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -169,15 +166,15 @@ describe 'Flor pcore' do
 
     it 'accepts "move"' do
 
-      flor = %{
-        cursor
-          push f.l 'a'
-          move to: 'final'
-          push f.l 'b'
-          push f.l 'c' tag: 'final'
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          cursor
+            push f.l 'a'
+            move to: 'final'
+            push f.l 'b'
+            push f.l 'c' tag: 'final'
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a c ])
@@ -185,14 +182,14 @@ describe 'Flor pcore' do
 
     it 'accepts "move" as final child' do
 
-      flor = %{
-        cursor
-          push f.l 'a' tag: 'a'
-          break _ if "$(nid)" == '0_1_0_0-1'
-          move to: 'a'
-      }
-
-      r = @executor.launch(flor, payload: { 'l' => [] })
+      r = @executor.launch(
+        %q{
+          cursor
+            push f.l 'a' tag: 'a'
+            break _ if "$(nid)" == '0_1_0_0-1'
+            move to: 'a'
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a a ])
@@ -202,12 +199,12 @@ describe 'Flor pcore' do
 
       it 'accepts "break" when breaking' do
 
-        flor = %{
-          set l []
-          concurrence
-            cursor tag: 'x1'
-              push l 'a'
-              sequence
+        r = @executor.launch(
+          %q{
+            set l []
+            concurrence
+              cursor tag: 'x1'
+                push l 'a'
                 sequence
                   sequence
                     sequence
@@ -215,16 +212,16 @@ describe 'Flor pcore' do
                         sequence
                           sequence
                             sequence
-                              stall _
-            sequence
-              _skip 1
-              push l 'b'
-              break 0 ref: 'x1'
-              push l 'c'
-              break 1 ref: 'x1'
-        }
-
-        r = @executor.launch(flor, archive: true)
+                              sequence
+                                stall _
+              sequence
+                _skip 1
+                push l 'b'
+                break 0 ref: 'x1'
+                push l 'c'
+                break 1 ref: 'x1'
+          },
+          archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])
@@ -249,12 +246,12 @@ describe 'Flor pcore' do
 
       it 'accepts "break" when continuing' do
 
-        flor = %{
-          set l []
-          concurrence
-            cursor tag: 'x2'
-              push l 'a'
-              sequence
+        r = @executor.launch(
+          %q{
+            set l []
+            concurrence
+              cursor tag: 'x2'
+                push l 'a'
                 sequence
                   sequence
                     sequence
@@ -262,16 +259,16 @@ describe 'Flor pcore' do
                         sequence
                           sequence
                             sequence
-                              stall _
-            sequence
-              _skip 1
-              push l 'b'
-              continue 0 ref: 'x2'
-              push l 'c'
-              break 1 ref: 'x2'
-        }
-
-        r = @executor.launch(flor, archive: true)
+                              sequence
+                                stall _
+              sequence
+                _skip 1
+                push l 'b'
+                continue 0 ref: 'x2'
+                push l 'c'
+                break 1 ref: 'x2'
+          },
+          archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])
@@ -301,28 +298,28 @@ describe 'Flor pcore' do
 
       it 'accepts "break" when continuing (nest-1)' do
 
-        flor = %{
-          set l []
-          concurrence
-            cursor tag: 'x2'
-              push l 'a'
-              sequence
+        r = @executor.launch(
+          %q{
+            set l []
+            concurrence
+              cursor tag: 'x2'
+                push l 'a'
                 sequence
                   sequence
                     sequence
                       sequence
                         sequence
                           sequence
-                              stall _
-            sequence
-              _skip 1
-              push l 'b'
-              continue 0 ref: 'x2'
-              push l 'c'
-              break 1 ref: 'x2'
-        }
-
-        r = @executor.launch(flor, archive: true)
+                            sequence
+                                stall _
+              sequence
+                _skip 1
+                push l 'b'
+                continue 0 ref: 'x2'
+                push l 'c'
+                break 1 ref: 'x2'
+          },
+          archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])
@@ -346,12 +343,12 @@ describe 'Flor pcore' do
 
       it 'rejects "continue" when breaking' do
 
-        flor = %{
-          set l []
-          concurrence
-            cursor tag: 'x3'
-              push l 'a'
-              sequence
+        r = @executor.launch(
+          %q{
+            set l []
+            concurrence
+              cursor tag: 'x3'
+                push l 'a'
                 sequence
                   sequence
                     sequence
@@ -359,16 +356,16 @@ describe 'Flor pcore' do
                         sequence
                           sequence
                             sequence
-                              stall _
-            sequence
-              _skip 1
-              push l 'b'
-              break 0 ref: 'x3'
-              push l 'c'
-              continue 'x' ref: 'x3'
-        }
-
-        r = @executor.launch(flor, archive: true)
+                              sequence
+                                stall _
+              sequence
+                _skip 1
+                push l 'b'
+                break 0 ref: 'x3'
+                push l 'c'
+                continue 'x' ref: 'x3'
+          },
+          archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])
@@ -390,30 +387,30 @@ describe 'Flor pcore' do
 
       it 'rejects "move" when breaking' do
 
-        flor = %{
-          set l []
-          concurrence
-            cursor tag: 'x3'
-              push l 'a'
-              sequence
+        r = @executor.launch(
+          %q{
+            set l []
+            concurrence
+              cursor tag: 'x3'
+                push l 'a'
                 sequence
                   sequence
                     sequence
                       sequence
-                        sequence ref: 'z'
-                          sequence
+                        sequence
+                          sequence ref: 'z'
                             sequence
                               sequence
-                                stall _
-            sequence
-              _skip 1
-              push l 'b'
-              break 0 ref: 'x3'
-              push l 'c'
-              move 'x3' to: 'z'
-        }
-
-        r = @executor.launch(flor, archive: true)
+                                sequence
+                                  stall _
+              sequence
+                _skip 1
+                push l 'b'
+                break 0 ref: 'x3'
+                push l 'c'
+                move 'x3' to: 'z'
+          },
+          archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])
@@ -440,12 +437,12 @@ describe 'Flor pcore' do
       # before processing the vars: attribute, and this attributes simply
       # merges in that existing local scope
 
-      flor = %{
-        cursor vars: { a: 0, b: 1 }
-          0
-      }
-
-      r = @executor.launch(flor, wait: true)
+      r = @executor.launch(
+        %q{
+          cursor vars: { a: 0, b: 1 }
+            0
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(0)
