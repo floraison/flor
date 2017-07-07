@@ -19,12 +19,11 @@ describe 'Flor procedures' do
 
     it 'stores a tree in a variable' do
 
-      flor = %q{
-        twig a
-          sequence \ 1; 2
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          twig a
+            sequence \ 1; 2
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -34,12 +33,11 @@ describe 'Flor procedures' do
 
     it 'stores a tree in a variable (keyed att in the way)' do
 
-      flor = %q{
-        twig tag: 'bravo' a
-          sequence \ 1; 2
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          twig tag: 'bravo' a
+            sequence \ 1; 2
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -49,12 +47,11 @@ describe 'Flor procedures' do
 
     it 'stores in a field' do
 
-      flor = %q{
-        twig f.subtree what: 'ever'
-          sequence \ 1; 2
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          twig f.subtree what: 'ever'
+            sequence \ 1; 2
+        })
 
       expect(r['point']).to eq('terminated')
 
@@ -64,12 +61,11 @@ describe 'Flor procedures' do
 
     it 'stores as payload.ret' do
 
-      flor = %q{
-        twig tag: 'bravo'
-          sequence \ 1; 2
-      }
-
-      r = @executor.launch(flor)
+      r = @executor.launch(
+        %q{
+          twig tag: 'bravo'
+            sequence \ 1; 2
+        })
 
       expect(r['point']).to eq('terminated')
 

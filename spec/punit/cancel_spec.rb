@@ -31,15 +31,15 @@ describe 'Flor punit' do
 
       it 'cancels a given nid' do
 
-        flor = %{
-          concurrence
-            stall _
-            stall _
-            cancel '0_0'
-            cancel nid: '0_1'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            concurrence
+              stall _
+              stall _
+              cancel '0_0'
+              cancel nid: '0_1'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -55,17 +55,17 @@ describe 'Flor punit' do
 
       it 'can cancel multiple nids' do
 
-        flor = %{
-          concurrence
-            stall _
-            stall _
-            stall _
-            stall _
-            cancel [ '0_0', '0_1' ]
-            cancel nid: [ '0_2', '0_3' ]
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            concurrence
+              stall _
+              stall _
+              stall _
+              stall _
+              cancel [ '0_0', '0_1' ]
+              cancel nid: [ '0_2', '0_3' ]
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -86,17 +86,17 @@ describe 'Flor punit' do
 
       it 'cancels a given tag' do
 
-        flor = %{
-          concurrence
-            stall tag: 'a'
-            stall tag: 'b'
-            sequence # wrap in sequence to give time to stall
-              cancel 'a'
-            sequence # wrap in sequence to give time to stall
-              cancel ref: 'b'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            concurrence
+              stall tag: 'a'
+              stall tag: 'b'
+              sequence # wrap in sequence to give time to stall
+                cancel 'a'
+              sequence # wrap in sequence to give time to stall
+                cancel ref: 'b'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -113,17 +113,17 @@ describe 'Flor punit' do
 
       it 'can cancel multiple tags' do
 
-        flor = %{
-          concurrence
-            stall tag: 'a'
-            stall tag: 'b'
-            stall tag: 'c'
-            stall tag: 'd'
-            cancel [ 'a', 'b' ]
-            cancel ref: [ 'c', 'd' ]
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            concurrence
+              stall tag: 'a'
+              stall tag: 'b'
+              stall tag: 'c'
+              stall tag: 'd'
+              cancel [ 'a', 'b' ]
+              cancel ref: [ 'c', 'd' ]
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -144,19 +144,19 @@ describe 'Flor punit' do
 
       it 'cancels nids or tags' do
 
-        flor = %{
-          concurrence
-            stall tag: 'a'
-            stall tag: 'b'
-            stall tag: 'c'
-            stall tag: 'd'
-            stall tag: 'e'
-            stall tag: 'f'
-            cancel [ 'a', 'b', '0_2' ]
-            cancel '0_3', 'e', '0_5'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            concurrence
+              stall tag: 'a'
+              stall tag: 'b'
+              stall tag: 'c'
+              stall tag: 'd'
+              stall tag: 'e'
+              stall tag: 'f'
+              cancel [ 'a', 'b', '0_2' ]
+              cancel '0_3', 'e', '0_5'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -180,16 +180,17 @@ describe 'Flor punit' do
 
     it 'kills a branch' do
 
-      flor = %{
-        concurrence
-          sequence
-            stall _
-          sequence
-            _skip 1
-            kill '0_0'
-      }
-
-      r = @unit.launch(flor, archive: true, wait: true)
+      r = @unit.launch(
+        %q{
+          concurrence
+            sequence
+              stall _
+            sequence
+              _skip 1
+              kill '0_0'
+        },
+        archive: true,
+        wait: true)
 
       expect(r['point']).to eq('terminated')
 
