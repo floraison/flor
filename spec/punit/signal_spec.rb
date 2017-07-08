@@ -29,15 +29,15 @@ describe 'Flor punit' do
 
     it 'emits a signal' do
 
-      flor = %{
-        signal 'close'
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          signal 'close'
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
 
-      sleep 0.420
+      wait_until { @unit.journal.find { |m| m['point'] == 'end' } }
 
       expect(
         @unit.journal

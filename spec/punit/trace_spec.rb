@@ -28,13 +28,13 @@ describe 'Flor punit' do
 
     it 'traces' do
 
-      flor = %{
-        trace 'hello'
-        trace
-          'world'
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          trace 'hello'
+          trace
+            'world'
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => nil })
@@ -54,16 +54,16 @@ describe 'Flor punit' do
 
     it 'traces in sequence' do
 
-      flor = %{
-        sequence
-          trace 'a'
-          set x 0
-          trace 'b'
-          set x 1
-          trace 'c'
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          sequence
+            trace 'a'
+            set x 0
+            trace 'b'
+            set x 1
+            trace 'c'
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => nil })
@@ -77,13 +77,13 @@ describe 'Flor punit' do
 
     it "doesn't mind tag:" do
 
-      flor = %q{
-        trap tag: 'x'
-          def msg \ trace "$(msg.point):x"
-        trace 'a', tag: 'x'
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          trap tag: 'x'
+            def msg \ trace "$(msg.point):x"
+          trace 'a', tag: 'x'
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
 
@@ -116,11 +116,11 @@ describe 'Flor punit' do
 
       @unit.hooker.add('journal', Flor::Journal)
 
-      flor = %{
-        trace 'a', 'b', tag: 'x', 'c'
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          trace 'a', 'b', tag: 'x', 'c'
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -170,12 +170,12 @@ describe 'Flor punit' do
 
     it "doesn't touch f.ret" do
 
-      flor = %{
-        123
-        trace 'a'
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          123
+          trace 'a'
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(123)

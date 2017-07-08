@@ -29,11 +29,11 @@ describe 'Flor punit' do
 
     it 'fails if it cannot find the subtree' do
 
-      flor = %{
-        graft 'sub99'
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          graft 'sub99'
+        },
+        wait: true)
 
       expect(r['point']).to eq(
         'failed')
@@ -43,14 +43,15 @@ describe 'Flor punit' do
 
     it 'grafts a subtree in the current tree' do
 
-      flor = %{
-        sequence
-          set a []
-          graft 'sub0'
-          graft 'sub0'
-      }
-
-      r = @unit.launch(flor, domain: 'com.acme.alpha', wait: true)
+      r = @unit.launch(
+        %q{
+          sequence
+            set a []
+            graft 'sub0'
+            graft 'sub0'
+        },
+        domain: 'com.acme.alpha',
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq([ 1, 1 ])
@@ -58,14 +59,14 @@ describe 'Flor punit' do
 
     it 'grafts a subtree with function definitions' do
 
-      flor = %{
-        set a []
-        graft 'sub1_funs'
-        stack 1
-        stack 2
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          set a []
+          graft 'sub1_funs'
+          stack 1
+          stack 2
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq([ 1, 2 ])
@@ -73,14 +74,15 @@ describe 'Flor punit' do
 
     it 'accepts the file suffix in the graft name' do
 
-      flor = %{
-        sequence
-          set a []
-          graft 'sub0'
-          graft 'sub0.flo'
-      }
-
-      r = @unit.launch(flor, domain: 'com.acme.alpha', wait: true)
+      r = @unit.launch(
+        %q{
+          sequence
+            set a []
+            graft 'sub0'
+            graft 'sub0.flo'
+        },
+        domain: 'com.acme.alpha',
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq([ 1, 1 ])

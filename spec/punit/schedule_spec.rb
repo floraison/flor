@@ -29,13 +29,14 @@ describe 'Flor punit' do
 
     it 'creates a timer' do
 
-      flor = %q{
-        schedule cron: '0 0 1 jan *'
-          def msg \ alpha
-        stall _
-      }
+      r = @unit.launch(
+        %q{
+          schedule cron: '0 0 1 jan *'
+            def msg \ alpha
+          stall _
+        },
+        wait: 'end')
 
-      r = @unit.launch(flor, wait: 'end')
       exid = r['exid']
 
       # check execution
@@ -78,13 +79,13 @@ describe 'Flor punit' do
 
     it 'triggers' do
 
-      flor = %q{
-        schedule cron: '* * * * * *'
-          def msg \ 1
-        stall _
-      }
-
-      r = @unit.launch(flor, wait: 'trigger')
+      r = @unit.launch(
+        %q{
+          schedule cron: '* * * * * *'
+            def msg \ 1
+          stall _
+        },
+        wait: 'trigger')
 
       expect(r['point']).to eq('trigger')
       expect(r['m']).to eq(16)
@@ -93,12 +94,13 @@ describe 'Flor punit' do
 
     it 'behaves correctly as root node' do
 
-      flor = %q{
-        schedule cron: '0 0 1 jan *'
-          def msg \ alpha
-      }
+      r = @unit.launch(
+        %q{
+          schedule cron: '0 0 1 jan *'
+            def msg \ alpha
+        },
+        wait: 'end')
 
-      r = @unit.launch(flor, wait: 'end')
       exid = r['exid']
 
       # check execution
@@ -163,13 +165,12 @@ describe 'Flor punit' do
 
     it 'does not cancel its children' do
 
-      flor = %q{
-        schedule cron: '* * * * * *'
-          def msg \ stall _
-        stall _
-      }
-
-      exid = @unit.launch(flor)
+      exid = @unit.launch(
+        %q{
+          schedule cron: '* * * * * *'
+            def msg \ stall _
+          stall _
+        })
 
       3.times { @unit.wait(exid, 'end') }
 
@@ -233,14 +234,14 @@ describe 'Flor punit' do
 
       it 'cancels itself but not its children' do
 
-        flor = %{
-          schedule cron: '* * * * * *' # every second
-            def msg
-              hole _
-          stall _
-        }
-
-        r = @unit.launch(flor, wait: 'task')
+        r = @unit.launch(
+          %q{
+            schedule cron: '* * * * * *' # every second
+              def msg
+                hole _
+            stall _
+          },
+          wait: 'task')
 
         exid = r['exid']
 

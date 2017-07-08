@@ -101,11 +101,11 @@ describe 'Flor punit' do
 
 #    it 'does not sleep when t <= 0' do
 #
-#      flor = %{
-#        sleep '0s'
-#      }
-#
-#      exid = @unit.launch(flor, wait: true)
+#      exid = @unit.launch(
+#        %q{
+#          sleep '0s'
+#        },
+#        wait: true)
 #
 #      sleep 0.140
 #

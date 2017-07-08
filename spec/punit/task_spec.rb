@@ -29,11 +29,11 @@ describe 'Flor punit' do
 
     it 'tasks' do
 
-      flor = %{
-        task 'alpha'
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          task 'alpha'
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('alpha')
@@ -45,23 +45,19 @@ describe 'Flor punit' do
 
     it 'can be cancelled' do
 
-      flor = %{
-        sequence
-          task 'hole'
-      }
-
       r = @unit.launch(
-        flor,
+        %q{
+          sequence
+            task 'hole'
+        },
         payload: { 'song' => 'Marcia Baila' },
         wait: '0_0 task')
-      #pp r
 
       expect(HoleTasker.message['exid']).to eq(r['exid'])
 
       r = @unit.queue(
         { 'point' => 'cancel', 'exid' => r['exid'], 'nid' => '0_0' },
         wait: true)
-      #pp r
 
       expect(HoleTasker.message).to eq(nil)
       expect(r['point']).to eq('terminated')

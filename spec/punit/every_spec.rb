@@ -28,13 +28,13 @@ describe 'Flor punit' do
 
     it 'schedule crons' do
 
-      flor = %{
-        every 'day at midnight'
-          task 'alpha'
-        stall _
-      }
-
-      r = @unit.launch(flor, wait: '0_0 schedule')
+      r = @unit.launch(
+        %q{
+          every 'day at midnight'
+            task 'alpha'
+          stall _
+        },
+        wait: '0_0 schedule')
 
       expect(r['point']).to eq('schedule')
       expect(r['type']).to eq(nil)

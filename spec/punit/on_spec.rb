@@ -28,16 +28,16 @@ describe 'Flor punit' do
 
     it 'traps signals' do
 
-      flor = %{
-        set l []
-        on 'approve'
-          push l 'approved'
-        push l 'requested'
-        signal 'approve'
-        push l 'done.'
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          set l []
+          on 'approve'
+            push l 'approved'
+          push l 'requested'
+          signal 'approve'
+          push l 'done.'
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq(%w[ requested done. approved ])
@@ -45,20 +45,20 @@ describe 'Flor punit' do
 
     it 'traps signals and their payload' do
 
-      flor = %{
-        set l []
-        push l 'a'
-        on 'approve'
-          push l sig
-          push l msg.payload.ret
-          push l f.color
-        set f.color 'blue'
-        signal 'approve'
-          'b'
-        push l 'c'
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          set l []
+          push l 'a'
+          on 'approve'
+            push l sig
+            push l msg.payload.ret
+            push l f.color
+          set f.color 'blue'
+          signal 'approve'
+            'b'
+          push l 'c'
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq(%w[ a c approve b blue ])

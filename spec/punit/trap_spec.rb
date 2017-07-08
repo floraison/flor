@@ -29,13 +29,14 @@ describe 'Flor punit' do
 
     it 'flanks its parent node' do
 
-      flor = %q{
-        trap 'nada'
-          def msg \ noret _
-        stall _
-      }
+      r = @unit.launch(
+        %q{
+          trap 'nada'
+            def msg \ noret _
+          stall _
+        },
+        wait: 'end')
 
-      r = @unit.launch(flor, wait: 'end')
       exid = r['exid']
 
       # check execution
@@ -78,14 +79,14 @@ describe 'Flor punit' do
 
     it 'traps messages' do
 
-      flor = %q{
-        sequence
-          trap 'terminated'
-            def msg \ trace "terminated(f:$(msg.from))"
-          trace "here($(nid))"
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          sequence
+            trap 'terminated'
+              def msg \ trace "terminated(f:$(msg.from))"
+            trace "here($(nid))"
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
 
@@ -106,16 +107,16 @@ describe 'Flor punit' do
 
     it 'does not cancel its children' do
 
-      flor = %q{
-        trap point: 'left'
-          def msg \ stall _
-        sequence tag: 'x'
-        sequence tag: 'y'
-        sequence tag: 'z'
-        stall _
-      }
-
-      r = @unit.launch(flor, wait: '0_4 receive; end')
+      r = @unit.launch(
+        %q{
+          trap point: 'left'
+            def msg \ stall _
+          sequence tag: 'x'
+          sequence tag: 'y'
+          sequence tag: 'z'
+          stall _
+        },
+        wait: '0_4 receive; end')
 
       exid = r['exid']
 
@@ -149,15 +150,15 @@ describe 'Flor punit' do
 
     it 'traps multiple times' do
 
-      flor = %q{
-        trap point: 'receive'
-          def msg \ trace "$(msg.nid)<-$(msg.from)"
-        sequence
+      r = @unit.launch(
+        %q{
+          trap point: 'receive'
+            def msg \ trace "$(msg.nid)<-$(msg.from)"
           sequence
-            trace '*'
-      }
-
-      r = @unit.launch(flor, wait: true)
+            sequence
+              trace '*'
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
 
@@ -230,15 +231,15 @@ describe 'Flor punit' do
 
     it 'has access to variables in the parent node' do
 
-      flor = %q{
-        set l []
-        trap point: 'signal'
-          def msg \ push l "$(msg.name)"
-        signal 'hello'
-        push l 'over'
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          set l []
+          trap point: 'signal'
+            def msg \ push l "$(msg.name)"
+          signal 'hello'
+          push l 'over'
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq(%w[ over hello ])
@@ -297,25 +298,25 @@ describe 'Flor punit' do
 
       it 'determines how many times a trap triggers at max' do
 
-        flor = %q{
-          concurrence
-            trap tag: 'b', count: 2
-              def msg \ trace "A>$(nid)"
-            sequence
-              sleep 0.8
-              noret tag: 'b'
-              trace "B>$(nid)"
-              noret tag: 'b'
-              trace "B>$(nid)"
-              noret tag: 'b'
-              trace "B>$(nid)"
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            concurrence
+              trap tag: 'b', count: 2
+                def msg \ trace "A>$(nid)"
+              sequence
+                sleep 0.8
+                noret tag: 'b'
+                trace "B>$(nid)"
+                noret tag: 'b'
+                trace "B>$(nid)"
+                noret tag: 'b'
+                trace "B>$(nid)"
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.350
+        wait_until { @unit.traces.count > 4 }
 
         expect(
           @unit.traces
@@ -335,18 +336,18 @@ describe 'Flor punit' do
 
       it 'traps given procedures' do
 
-        flor = %q{
-          trap heap: 'sequence'
-            def msg \ trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
-          sequence
-            noret _
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            trap heap: 'sequence'
+              def msg \ trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
+            sequence
+              noret _
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.350
+        wait_until { @unit.traces.count > 2 }
 
         expect(
           @unit.traces
@@ -364,19 +365,19 @@ describe 'Flor punit' do
 
       it 'traps given head of trees' do
 
-        flor = %q{
-          trap heat: 'fun0' \ def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
-          define fun0 \ trace "c-fun0-$(nid)"
-          sequence
-            fun0 # not a call
-            fun0 # not a call
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            trap heat: 'fun0' \ def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
+            define fun0 \ trace "c-fun0-$(nid)"
+            sequence
+              fun0 # not a call
+              fun0 # not a call
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.350
+        wait_until { @unit.traces.count > 1 }
 
         expect(
           @unit.traces
@@ -390,19 +391,19 @@ describe 'Flor punit' do
 
       it 'traps given procedures' do
 
-        flor = %q{
-          trap heat: '_apply' \ def msg \ trace "t-heat-$(msg.nid)"
-          define fun0 \ trace "c-fun0-$(nid)"
-          sequence
-            fun0 _
-            fun0 _
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            trap heat: '_apply' \ def msg \ trace "t-heat-$(msg.nid)"
+            define fun0 \ trace "c-fun0-$(nid)"
+            sequence
+              fun0 _
+              fun0 _
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.350
+        wait_until { @unit.traces.count > 7 }
 
         expect(
           @unit.traces
@@ -566,20 +567,20 @@ describe 'Flor punit' do
 
       it 'traps tag entered' do
 
-        flor = %q{
-          sequence
-            trace 'a'
-            trap tag: 'x'
-              def msg \ trace msg.point
-            sequence tag: 'x'
-              trace 'c'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            sequence
+              trace 'a'
+              trap tag: 'x'
+                def msg \ trace msg.point
+              sequence tag: 'x'
+                trace 'c'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.100
+        wait_until { @unit.traces.count > 2 }
 
         expect(
           @unit.traces.collect(&:text).join(' ')
@@ -596,23 +597,23 @@ describe 'Flor punit' do
 
       it 'traps after the message consumption' do
 
-        flor = %q{
-          trace 'a'
-          trap point: 'signal', consumed: true
-            def msg \ trace "0con:m$(msg.m)sm$(msg.sm)"
-          trap point: 'signal', consumed: true
-            def msg \ trace "1con:m$(msg.m)sm$(msg.sm)"
-          trap point: 'signal'
-            def msg \ trace "0nocon:m$(msg.m)sm$(msg.sm)"
-          signal 'S'
-          trace 'b'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            trace 'a'
+            trap point: 'signal', consumed: true
+              def msg \ trace "0con:m$(msg.m)sm$(msg.sm)"
+            trap point: 'signal', consumed: true
+              def msg \ trace "1con:m$(msg.m)sm$(msg.sm)"
+            trap point: 'signal'
+              def msg \ trace "0nocon:m$(msg.m)sm$(msg.sm)"
+            signal 'S'
+            trace 'b'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.210
+        wait_until { @unit.traces.count > 4 }
 
         expect(
           @unit.traces.collect(&:text).join(' ')
@@ -626,21 +627,21 @@ describe 'Flor punit' do
 
       it 'traps "signal"' do
 
-        flor = %q{
-          sequence
-            trace 'a'
-            trap point: 'signal'
-              def msg \ trace "S"
-            trace 'b'
-            signal 'S'
-            trace 'c'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            sequence
+              trace 'a'
+              trap point: 'signal'
+                def msg \ trace "S"
+              trace 'b'
+              signal 'S'
+              trace 'c'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.210
+        wait_until { @unit.traces.count > 3 }
 
         expect(
           @unit.traces.collect(&:text)
@@ -651,24 +652,24 @@ describe 'Flor punit' do
 
       it 'traps "signal" and name:' do
 
-        flor = %q{
-          sequence
-            trace 'a'
-            trap point: 'signal', name: 's0'
-              def msg \ trace "s0"
-            trap point: 'signal', name: 's1'
-              def msg \ trace "s1"
-            signal 's0'
-            signal 's1'
-            signal 's2'
-            trace 'b'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            sequence
+              trace 'a'
+              trap point: 'signal', name: 's0'
+                def msg \ trace "s0"
+              trap point: 'signal', name: 's1'
+                def msg \ trace "s1"
+              signal 's0'
+              signal 's1'
+              signal 's2'
+              trace 'b'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.210
+        wait_until { @unit.traces.count > 3 }
 
         expect(
           @unit.traces.collect(&:text)
@@ -679,14 +680,14 @@ describe 'Flor punit' do
 
       it 'traps "signal" and its payload' do
 
-        flor = %q{
-          trap point: 'signal', name: 's0'
-            def msg \ trace "s0:$(msg.payload.ret)"
-          signal 's0'
-            [ 1, 2, 3 ]
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            trap point: 'signal', name: 's0'
+              def msg \ trace "s0:$(msg.payload.ret)"
+            signal 's0'
+              [ 1, 2, 3 ]
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -704,14 +705,14 @@ describe 'Flor punit' do
 
       it 'uses the trap payload if "trap" (default)' do
 
-        flor = %q{
-          trap point: 'signal' name: 's0' payload: 'trap'
-            def msg \ trace "s0:$(f.ret):$(msg.payload.ret)"
-          signal 's0'
-            [ 1, 2, 3 ]
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            trap point: 'signal' name: 's0' payload: 'trap'
+              def msg \ trace "s0:$(f.ret):$(msg.payload.ret)"
+            signal 's0'
+              [ 1, 2, 3 ]
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -730,16 +731,16 @@ describe 'Flor punit' do
 
       it 'uses the event payload if "event"' do
 
-        flor = %{
-          trap point: 'signal' name: 's0' payload: 'event'
-            def msg
-              trace "s0:$(f.ret):$(msg.payload.ret)"
-              trace "s0:$(payload.ret)"
-          signal 's0'
-            [ 1, 2, 3 ]
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            trap point: 'signal' name: 's0' payload: 'event'
+              def msg
+                trace "s0:$(f.ret):$(msg.payload.ret)"
+                trace "s0:$(payload.ret)"
+            signal 's0'
+              [ 1, 2, 3 ]
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -767,20 +768,20 @@ describe 'Flor punit' do
 
       it 'traps messages matching all the criteria' do
 
-        flor = %q{
-          sequence
-            trace 'a'
-            trap tag: 'x', point: 'left'
-              def msg \ trace "$(msg.point)-$(msg.nid)"
-            sequence tag: 'x'
-              trace 'c'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            sequence
+              trace 'a'
+              trap tag: 'x', point: 'left'
+                def msg \ trace "$(msg.point)-$(msg.nid)"
+              sequence tag: 'x'
+                trace 'c'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.210
+        wait_until { @unit.traces.count > 2 }
 
         expect(
           @unit.traces.collect(&:text)
@@ -794,21 +795,21 @@ describe 'Flor punit' do
 
       it 'blocks once' do
 
-        flor = %{
-          concurrence
-            trap tag: 'b'
-            sequence
-              sleep 0.8
-              noret tag: 'b'
-              noret tag: 'b'
-              trace "B>$(nid)"
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            concurrence
+              trap tag: 'b'
+              sequence
+                sleep 0.8
+                noret tag: 'b'
+                noret tag: 'b'
+                trace "B>$(nid)"
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.350
+        wait_until { @unit.traces.count > 0 }
 
         expect(
           @unit.traces

@@ -29,26 +29,25 @@ describe 'Flor punit' do
 
     it 'has no effect when empty' do
 
-      flor = %{
-        cmap _
-      }
+      r = @unit.launch(
+        %q{
+          cmap _
+        }, wait: true)
 
-      msg = @unit.launch(flor, wait: true)
-
-      expect(msg['point']).to eq('terminated')
+      expect(r['point']).to eq('terminated')
     end
 
     it 'has no effect when empty (2)' do
 
-      flor = %{
-        cmap tag: 'z'
-      }
+      r = @unit.launch(
+        %q{
+          cmap tag: 'z'
+        },
+        wait: true)
 
-      msg = @unit.launch(flor, wait: true)
+      expect(r['point']).to eq('terminated')
 
-      expect(msg['point']).to eq('terminated')
-
-      sleep 0.4 # for jruby
+      wait_until { @unit.journal.find { |m| m['point'] == 'left' } }
 
       expect(
         @unit.journal
@@ -65,15 +64,14 @@ describe 'Flor punit' do
 
     it 'executes atts in sequence then children in concurrence' do
 
-      flor = %q{
-        cmap [ 1 2 3 ]
-          def x \ * x 2
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          cmap [ 1 2 3 ]
+            def x \ * x 2
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
-
       expect(r['payload']['ret']).to eq([ 2, 4, 6 ])
 
       #expect(
