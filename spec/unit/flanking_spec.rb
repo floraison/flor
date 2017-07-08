@@ -30,15 +30,15 @@ describe 'Flor unit' do
 
     it 'responds but is not removed from parent cnodes' do
 
-      flor = %{
-        sequence
-          sequence flank
+      r = @unit.launch(
+        %q{
+          sequence
+            sequence flank
+              stall _
+            sequence _
             stall _
-          sequence _
-          stall _
-      }
-
-      r = @unit.launch(flor, wait: 'end')
+        },
+        wait: 'end')
 
       exe = @unit.executions[exid: r['exid']].data
 
@@ -58,14 +58,15 @@ describe 'Flor unit' do
 
       it 'gets cancelled like other cnodes' do
 
-        flor = %{
-          sequence
-            sequence flank
+        r = @unit.launch(
+          %q{
+            sequence
+              sequence flank
+                stall _
               stall _
-            stall _
-        }
+          },
+          wait: 'end')
 
-        r = @unit.launch(flor, wait: 'end')
         exid = r['exid']
 
         exe = @unit.executions[exid: exid].data
@@ -113,24 +114,20 @@ describe 'Flor unit' do
 
       it 'cancels to its leaves' do
 
-        flor = %{
-          sequence
-            sequence flank
-              stall _
-            sequence _
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            sequence
+              sequence flank
+                stall _
+              sequence _
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.420
-
         # check execution
 
-        exid = r['exid']
-
-        exe = @unit.executions[exid: exid]
+        exe = wait_for { @unit.executions[exid: r['exid']] }
 
         expect(exe.failed?).to eq(false)
         expect(exe.status).to eq('terminated')

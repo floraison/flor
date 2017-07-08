@@ -29,21 +29,21 @@ describe 'Flor unit' do
 
     it 'works (node with children)' do
 
-      flor = %{
-        sequence
+      r = @unit.launch(
+        %q{
           sequence
-            stall _
-      }
+            sequence
+              stall _
+        },
+        wait: '0_0_0 receive; end')
 
-      r = @unit.launch(flor, wait: '0_0_0 receive; end')
       exid = r['exid']
 
-      #sleep 0.350
-
-      new_tree = %{
-        sequence
-          alpha _
-      }
+      new_tree =
+        %q{
+          sequence
+            alpha _
+        }
 
       @unit.re_apply(
         exid: exid, nid: '0_0',
@@ -59,17 +59,16 @@ describe 'Flor unit' do
 
     it 'works (leaf node)' do
 
-      flor = %{
-        sequence
-          stall _
-      }
+      r = @unit.launch(
+        %q{
+          sequence
+            stall _
+        },
+        wait: '0_0 receive; end')
 
-      r = @unit.launch(flor, wait: '0_0 receive; end')
       exid = r['exid']
 
-      #sleep 0.350
-
-      new_tree = %{ alpha _ }
+      new_tree = %q{ alpha _ }
 
       @unit.re_apply(
         exid: exid, nid: '0_0',
@@ -85,15 +84,14 @@ describe 'Flor unit' do
 
     it 'works (tasker leaf node)' do
 
-      flor = %{
-        sequence
-          hole _
-      }
+      r = @unit.launch(
+        %q{
+          sequence
+            hole _
+        },
+        wait: '0_0 task; end')
 
-      r = @unit.launch(flor, wait: '0_0 task; end')
       exid = r['exid']
-
-      #sleep 0.350
 
       new_tree = %{ alpha _ }
 
@@ -111,20 +109,19 @@ describe 'Flor unit' do
 
     it 'works (subnid node)' do
 
-      flor = %{
-        set a 0
-        loop
-          set a (+ a 1)
-          continue _ if a < 2
-          stall _
-      }
+      r = @unit.launch(
+        %q{
+          set a 0
+          loop
+            set a (+ a 1)
+            continue _ if a < 2
+            stall _
+        },
+        wait: 'end')
 
-      r = @unit.launch(flor, wait: 'end')
       exid = r['exid']
 
-      #sleep 0.350
-
-      new_tree = %{ alpha _ }
+      new_tree = %q{ alpha _ }
 
       @unit.re_apply(
         exid: exid, nid: '0_1_2-1',

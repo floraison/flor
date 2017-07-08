@@ -47,16 +47,15 @@ describe 'Flor unit' do
 
         @unit.stop
 
-        flor = %{
-          sequence
-            define sum a, b
-              +
-                a
-                b
-            sum 1 2
-        }
-
-        exid = @unit.launch(flor)
+        exid = @unit.launch(
+          %q{
+            sequence
+              define sum a, b
+                +
+                  a
+                  b
+              sum 1 2
+          })
 
         expect(
           exid
@@ -97,7 +96,7 @@ describe 'Flor unit' do
           expect(msg['point']).to eq('terminated')
           expect(msg['payload']['ret']).to eq(2)
 
-          sleep 0.350 # let it flush
+          wait_until { @unit.executions.count > 0 }
 
           es = @unit.executions.all
           e = es.first
@@ -105,7 +104,7 @@ describe 'Flor unit' do
           expect(es.size).to eq(1)
           expect(e[:exid]).to eq(msg['exid'])
 
-          sleep 0.3
+          #sleep 0.3
 
           d = @unit.executions.first.data
 
@@ -121,30 +120,30 @@ describe 'Flor unit' do
 
         it 'launches' do
 
-          flor = %{
-            sequence
-              define sum a, b
-                +
-                  a
-                  b
-              sum 1 2
-          }
+          r = @unit.launch(
+            %q{
+              sequence
+                define sum a, b
+                  +
+                    a
+                    b
+                sum 1 2
+            },
+            wait: true)
 
-          msg = @unit.launch(flor, wait: true)
+          expect(r.class).to eq(Hash)
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(3)
 
-          expect(msg.class).to eq(Hash)
-          expect(msg['point']).to eq('terminated')
-          expect(msg['payload']['ret']).to eq(3)
-
-          sleep 0.490 # let it flush the execution
+          wait_until { @unit.executions.count > 0 }
 
           es = @unit.executions.all
           e = es.first
 
           expect(es.size).to eq(1)
-          expect(e[:exid]).to eq(msg['exid'])
+          expect(e[:exid]).to eq(r['exid'])
 
-          sleep 0.3
+          wait_until { @unit.executions.first.data }
 
           d = @unit.executions.first.data
 
@@ -199,7 +198,7 @@ describe 'Flor unit' do
 
           r = @unit.launch('com.acme.flow1', wait: true)
 
-          sleep 0.4 # give it time to save its state
+          wait_until { @unit.executions.first }
 
           exe = @unit.executions.first.data
 
@@ -267,18 +266,16 @@ describe 'Flor unit' do
 
       it 'queues cancel messages' do
 
-        flor = %{
-          sequence
+        r = @unit.launch(
+          %q{
             sequence
-              stall _
-        }
-
-        exid = @unit.launch(flor)
-
-        sleep 0.350
+              sequence
+                stall _
+          },
+          wait: 'end')
 
         r = @unit.queue(
-          { 'point' => 'cancel', 'exid' => exid, 'nid' => '0_0' },
+          { 'point' => 'cancel', 'exid' => r['exid'], 'nid' => '0_0' },
           wait: true)
 
         expect(r['point']).to eq('terminated')
@@ -338,16 +335,17 @@ describe 'Flor unit' do
 
       it 'queues cancel messages' do
 
-        flor = %{
-          sequence
+        r = @unit.launch(
+          %q{
             sequence
-              stall _
-        }
+              sequence
+                stall _
+          },
+          wait: 'end')
 
-        r = @unit.launch(flor, wait: 'end')
         exid = r['exid']
 
-        sleep 0.1
+        wait_until { @unit.executions[exid: exid] }
 
         xd = @unit.executions[exid: exid].data
 
@@ -357,25 +355,22 @@ describe 'Flor unit' do
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.1
-
-        expect(
-          @unit.executions.where(status: 'active').count
-        ).to eq(0)
+        wait_until { @unit.executions.where(status: 'active').count < 1 }
       end
 
       it 'queues cancel messages (2)' do
 
-        flor = %{
-          sequence
+        r = @unit.launch(
+          %q{
             sequence
-              stall _
-        }
+              sequence
+                stall _
+          },
+          wait: 'end')
 
-        r = @unit.launch(flor, wait: 'end')
         exid = r['exid']
 
-        sleep 0.1
+        wait_until { @unit.executions[exid: exid] }
 
         xd = @unit.executions[exid: exid].data
 
@@ -385,11 +380,7 @@ describe 'Flor unit' do
 
         expect(r['point']).to eq('terminated')
 
-        sleep 0.1
-
-        expect(
-          @unit.executions.where(status: 'active').count
-        ).to eq(0)
+        wait_until { @unit.executions.where(status: 'active').count < 1 }
       end
     end
 
@@ -397,14 +388,15 @@ describe 'Flor unit' do
 
       it 'queues signal messages' do
 
-        flo = %{
-          on 'blue'
-            trace 'blue'
+        r = @unit.launch(
+          %q{
+            on 'blue'
+              trace 'blue'
 
-          stall _
-        }
+            stall _
+          },
+          wait: '0_1 receive')
 
-        r = @unit.launch(flo, wait: '0_1 receive')
         expect(r['point']).to eq('receive')
 
         exid = r['exid']
@@ -422,13 +414,13 @@ describe 'Flor unit' do
 
       it 'emits an empty payload by default' do
 
-        flor = %{
-          trap point: 'signal', name: 's0', payload: 'event'
-            def msg; trace "s0:$(msg.payload.ret)"
-          stall _
-        }
-
-        r = @unit.launch(flor, wait: '0_1 receive')
+        r = @unit.launch(
+          %q{
+            trap point: 'signal', name: 's0', payload: 'event'
+              def msg; trace "s0:$(msg.payload.ret)"
+            stall _
+          },
+          wait: '0_1 receive')
 
         expect(r['point']).to eq('receive')
 

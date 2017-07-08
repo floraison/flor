@@ -28,14 +28,11 @@ describe 'Flor unit' do
 
     it 'cancels a leaf node' do
 
-      flor = %{
-        stall _
-      }
+      r = @unit.launch(%q{ stall _ }, wait: '0 receive')
 
-      r = @unit.launch(flor, wait: '0 receive')
       exid = r['exid']
 
-      sleep 0.350
+      wait_until { @unit.executions[exid: exid] }
 
       xd = @unit.executions[exid: exid].data
 
@@ -47,7 +44,7 @@ describe 'Flor unit' do
 
       expect(r['point']).to eq('terminated')
 
-      sleep 0.1
+      wait_until { @unit.executions.where(status: 'active').count < 1 }
 
       expect(
         @unit.executions.where(status: 'active').count
@@ -56,15 +53,15 @@ describe 'Flor unit' do
 
     it 'cancels a node and its children' do
 
-      flor = %{
-        sequence
+      exid = @unit.launch(
+        %q{
           sequence
-            stall _
-      }
+            sequence
+              stall _
+        },
+        payload: { 'x' => 'y' })
 
-      exid = @unit.launch(flor, payload: { 'x' => 'y' })
-
-      sleep 0.777
+      wait_until { @unit.executions[exid: exid] }
 
       xd = @unit.executions[exid: exid].data
 
@@ -77,7 +74,7 @@ describe 'Flor unit' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'x' => 'y' })
 
-      sleep 0.1
+      wait_until { @unit.executions.where(status: 'active').count < 1 }
 
       expect(
         @unit.executions.where(status: 'active').count
@@ -86,15 +83,16 @@ describe 'Flor unit' do
 
     it 'can force a new payload on the cancelled node' do
 
-      flor = %{
-        sequence
+      r = @unit.launch(
+        %q{
           sequence
-            stall _
-      }
+            sequence
+              stall _
+        },
+        payload: { 'x' => '0' },
+        wait: '0_0_0 receive')
 
-      exid = @unit.launch(flor, payload: { 'x' => '0' })
-
-      sleep 0.350
+      exid = r['exid']
 
       r = @unit.queue(
         { 'point' => 'cancel',
@@ -111,15 +109,16 @@ describe 'Flor unit' do
 
     it 'has no effect' do
 
-      flor = %{
-        sequence
-          sequence
-            stall _
-      }
+      exid =
+        @unit.launch(
+          %q{
+            sequence
+              sequence
+                stall _
+          }, wait: '0_0_0 receive'
+        )['exid']
 
-      exid = @unit.launch(flor, wait: '0_0_0 receive')['exid']
-
-      sleep 0.140
+      wait_until { @unit.executions.first(exid: exid).data['nodes'].size > 2 }
 
       expect(
         @unit.executions.first(exid: exid).data['nodes'].keys
@@ -130,7 +129,7 @@ describe 'Flor unit' do
         'exid' => exid, 'nid' => '0_1',
         'payload' => {} })
 
-      sleep 0.5
+      @unit.wait(exid, 'end')
 
       expect(
         @unit.executions.first(exid: exid).data['nodes'].keys

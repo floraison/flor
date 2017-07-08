@@ -29,14 +29,13 @@ describe 'Flor unit' do
 
     it 'sets a timer' do
 
-      flor = %{
-        sequence
-          stall timeout: 60
-      }
+      exid = @unit.launch(
+        %q{
+          sequence
+            stall timeout: 60
+        })
 
-      exid = @unit.launch(flor)
-
-      sleep 0.777
+      wait_until { @unit.timers.count > 0 }
 
       ts = @unit.timers.all
       t = ts.first
@@ -61,16 +60,16 @@ describe 'Flor unit' do
 
     it 'triggers after the given time' do
 
-      flor = %{
-        sequence
-          stall timeout: "1s"
-      }
-
       t0 = Time.now
 
-      msg = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          sequence
+            stall timeout: "1s"
+        },
+        wait: true)
 
-      expect(msg['point']).to eq('terminated')
+      expect(r['point']).to eq('terminated')
 
       expect(@unit.timers.count).to eq(0)
 
@@ -85,13 +84,12 @@ describe 'Flor unit' do
 
     it 'is removed if the node ends before timing out' do
 
-      flor = %{
-        sleep '1s' timeout: '2.8s'
-      }
+      exid = @unit.launch(
+        %q{
+          sleep '1s' timeout: '2.8s'
+        })
 
-      exid = @unit.launch(flor)
-
-      sleep 0.490
+      wait_until { @unit.timers.count > 1 }
 
       expect(
         @unit.timers.collect { |t|
@@ -102,7 +100,8 @@ describe 'Flor unit' do
       )
 
       @unit.wait(exid, 'terminated')
-      sleep 0.280
+
+      wait_until { @unit.timers.count < 1 }
 
       expect(@unit.timers.count).to eq(0)
 

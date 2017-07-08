@@ -29,11 +29,11 @@ describe 'Flor unit' do
 
     it 'can be "referred" directly' do
 
-      flor = %{
-        alpha
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          alpha
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
 
@@ -46,11 +46,11 @@ describe 'Flor unit' do
 
     it 'can be "applied" directly' do
 
-      flor = %{
-        alpha _
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          alpha _
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('alpha')
@@ -62,11 +62,11 @@ describe 'Flor unit' do
 
     it 'passes attributes' do
 
-      flor = %{
-        alpha a: 0, b: 1
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          alpha a: 0, b: 1
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload'].keys).to eq(%w[ ret seen ])
@@ -76,13 +76,13 @@ describe 'Flor unit' do
 
     it 'preserves "attd" and "attl"' do
 
-      flor = %{
-        set f.attd { a: 0, b: -1, c: 2 }
-        set f.attl [ 'al', 'bob' ]
-        alpha a: 0, b: 1, d: 3
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          set f.attd { a: 0, b: -1, c: 2 }
+          set f.attl [ 'al', 'bob' ]
+          alpha a: 0, b: 1, d: 3
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload'].keys).to eq(%w[ ret attd attl seen ])
@@ -101,11 +101,11 @@ describe 'Flor unit' do
 
     it 'preserves non-keyed atts' do
 
-      flor = %{
-        alpha 'bravo' 'charly' 1 count: 2
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          alpha 'bravo' 'charly' 1 count: 2
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload'].keys).to eq(%w[ ret seen ])
@@ -124,14 +124,14 @@ describe 'Flor unit' do
 
     it 'respects postfix conditionals' do
 
-      flor = %{
-        set i 1
-        alpha x: 0 if i == 0
-        alpha x: 1 if i == 1
-        alpha x: 2 unless i == 2
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          set i 1
+          alpha x: 0 if i == 0
+          alpha x: 1 if i == 1
+          alpha x: 2 unless i == 2
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
 
@@ -147,11 +147,11 @@ describe 'Flor unit' do
 
     it 'can be cancelled' do
 
-      flor = %{
-        task 'bravo' x: 0
-      }
-
-      r = @unit.launch(flor, wait: '0 task')
+      r = @unit.launch(
+        %q{
+          task 'bravo' x: 0
+        },
+        wait: '0 task')
 
       expect(r['point']).to eq('task')
       expect(r['nid']).to eq('0')
@@ -190,12 +190,12 @@ describe 'Flor unit' do
           }.ftrim)
         end
 
-        flor = %{
-          set a 1
-          task 'charly'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            set a 1
+            task 'charly'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -213,14 +213,14 @@ describe 'Flor unit' do
           }.ftrim)
         end
 
-        flor = %{
-          set a 1
-          set b 2
-          sequence vars: { 'b': 3 'c': 4 }
-            task 'charly'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            set a 1
+            set b 2
+            sequence vars: { 'b': 3 'c': 4 }
+              task 'charly'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -242,14 +242,14 @@ describe 'Flor unit' do
           }.ftrim)
         end
 
-        flor = %{
-          set a 1
-          set b 2
-          sequence vars: { 'b': 3 'c': 4, 'd': 'five' }
-            task 'charly'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            set a 1
+            set b 2
+            sequence vars: { 'b': 3 'c': 4, 'd': 'five' }
+              task 'charly'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -271,14 +271,14 @@ describe 'Flor unit' do
           }.ftrim)
         end
 
-        flor = %{
-          set flow_name 1
-          set flow_x 2
-          sequence vars: { 'flow_x': 3 'c': 4, 'd': 'five' }
-            task 'charly'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            set flow_name 1
+            set flow_x 2
+            sequence vars: { 'flow_x': 3 'c': 4, 'd': 'five' }
+              task 'charly'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -300,14 +300,14 @@ describe 'Flor unit' do
           }.ftrim)
         end
 
-        flor = %{
-          set flow_name 1
-          set flow_x 2
-          sequence vars: { 'flow_x': 3 'c': 4, 'd': 'five' }
-            task 'charly'
-        }
-
-        r = @unit.launch(flor, wait: true)
+        r = @unit.launch(
+          %q{
+            set flow_name 1
+            set flow_x 2
+            sequence vars: { 'flow_x': 3 'c': 4, 'd': 'five' }
+              task 'charly'
+          },
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -329,14 +329,15 @@ describe 'Flor unit' do
           }.ftrim)
         end
 
-        flor = %{
-          set flow_name 'test_dvariables'
-          set flow_x 0
-          sequence vars: { 'flow_x': 1 'flow_y': 2 }
-            task 'charly'
-        }
-
-        r = @unit.launch(flor, vdomain: 'com.acme', wait: true)
+        r = @unit.launch(
+          %q{
+            set flow_name 'test_dvariables'
+            set flow_x 0
+            sequence vars: { 'flow_x': 1 'flow_y': 2 }
+              task 'charly'
+          },
+          vdomain: 'com.acme',
+          wait: true)
 
         expect(r['point']).to eq('terminated')
 
@@ -361,16 +362,16 @@ describe 'Flor unit' do
           }.ftrim)
         end
 
-        flor = %{
-          on 'zap'
-            task 'charly'
-          set x 0
-          set y 1
-          signal 'zap'
-          stall _
-        }
-
-        r = @unit.launch(flor, wait: 'task')
+        r = @unit.launch(
+          %q{
+            on 'zap'
+              task 'charly'
+            set x 0
+            set y 1
+            signal 'zap'
+            stall _
+          },
+          wait: 'task')
 
         expect(r['vars']['x']).to eq(0)
         expect(r['vars']['y']).to eq(1)
@@ -382,12 +383,12 @@ describe 'Flor unit' do
 
     it 'accepts taskers which initializer with tasker, conf, message' do
 
-      flor = %{
-        set f.a 1
-        emil _
-      }
-
-      r = @unit.launch(flor, wait: true)
+      r = @unit.launch(
+        %q{
+          set f.a 1
+          emil _
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['emil']).to eq('was here')
@@ -398,12 +399,8 @@ describe 'Flor unit' do
 
     it 'reroutes to specific taskers (via "task")' do
 
-      flor = %{
-        task 'acme_alpha'
-      }
-
       r = @unit.launch(
-        flor,
+        %q{ task 'acme_alpha' },
         domain: 'net.acme', wait: true)
 
       expect(r['point']).to eq('terminated')
@@ -427,12 +424,9 @@ describe 'Flor unit' do
 
     it 'reroutes to specific taskers' do
 
-      flor = %{
-        acme_alpha _
-      }
 
       r = @unit.launch(
-        flor,
+        %q{ acme_alpha _ },
         domain: 'net.acme', wait: true)
 
       expect(r['point']).to eq('terminated')
@@ -443,12 +437,9 @@ describe 'Flor unit' do
 
     it "fails explicitely if the domain tasker doesn't know where to reroute" do
 
-      flor = %{
-        unknown_alpha _
-      }
 
       r = @unit.launch(
-        flor,
+        %q{ unknown_alpha _ },
         domain: 'net.acme', wait: true)
 
       expect(r['point']).to eq('failed')
