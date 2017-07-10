@@ -385,7 +385,7 @@ describe 'Flor procedures' do
 
     context 'deep' do
 
-      it 'flips burgers' do
+      it 'matches' do
 
         ret = {}
         ret['player'] = { 'name' => 'Eldred', 'number' => 55 }
