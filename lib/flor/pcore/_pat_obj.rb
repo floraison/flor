@@ -77,6 +77,17 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
       @node['binding'][ct[0]] = val[@node['key']] if ct[0].length > 0
 
+    elsif Flor.is_regex_tree?(ret)
+
+      if (v = Flor.deep_get(val, key)).is_a?(String)
+
+        m = Flor.to_regex(ret).match(v)
+        return wrap_no_match_reply unless m
+
+        @node['binding']['matched'] = v
+        @node['binding']['match'] = m.to_a
+      end
+
     elsif Flor.deep_get(val, key) != ret
 
       return wrap_no_match_reply

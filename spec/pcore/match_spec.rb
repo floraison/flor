@@ -403,6 +403,45 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq('USA')
       end
     end
+
+    context 'regexes' do
+
+      it 'matches' do
+
+        ret = {}
+        ret['player'] = { 'name' => 'Johnson', 'number' => 42 }
+
+        r = @executor.launch(
+          %q{
+            match
+              { player.name: 'Eldred' }; 'red'
+              { player.name: /^(J.+)son$/ }; match.1
+              else; 'else'
+          },
+          payload: { 'ret' => ret })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('John')
+      end
+
+      it "doesn't match" do
+
+        ret = {}
+        ret['player'] = { 'name' => 'Gregson', 'number' => 99 }
+
+        r = @executor.launch(
+          %q{
+            match
+              { player.name: 'Eldred' }; 'red'
+              { player.name: /^J.+son$/ }; 'son'
+              else; 'else'
+          },
+          payload: { 'ret' => ret })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('else')
+      end
+    end
   end
 end
 
