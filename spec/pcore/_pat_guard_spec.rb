@@ -203,6 +203,33 @@ describe 'Flor procedures' do
         expect(r['payload']['_pat_binding']).to eq(nil)
       end
     end
+
+    context '_pat_guard {name} {_pat_regex}' do
+
+      it 'matches' do
+
+        r = @executor.launch(
+          [ '_pat_guard', [
+            [ '_att', [ [ 'x', [], 1 ] ] ],
+            [ '_pat_regex', '/^([a-z]{0,3})\d*$/', 1 ]
+          ], 1 ],
+          payload: { 'ret' => 'abc123' })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['_pat_binding']
+        ).to eq({
+          'match' => [ 'abc123', 'abc' ],
+          'matched' => 'abc123',
+          'x' => 'abc123',
+          'x_match' => [ 'abc123', 'abc' ],
+          'x_matched' => 'abc123'
+        })
+      end
+
+      it 'does not match'
+    end
   end
 end
 

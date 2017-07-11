@@ -44,6 +44,11 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
       b = payload['_pat_binding']
       return wrap_no_match_reply unless b
 
+      if (k = @node['key']) && (m = b['match'])
+        b["#{k}_match"] = m
+        b["#{k}_matched"] = val
+      end
+
       @node['binding'].merge!(b)
     end
 

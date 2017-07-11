@@ -216,7 +216,7 @@ class Flor::Pro::Match < Flor::Pro::Case
     t = tree[1][index]
 
     payload['_pat_val'] = @node['val'] \
-      if t && t[0].match(/\A_pat_(arr|obj|or|guard)\z/)
+      if t && t[0].match(/\A_pat_(arr|obj|or|guard|regex)\z/)
 
     super
   end
@@ -224,6 +224,8 @@ class Flor::Pro::Match < Flor::Pro::Case
   protected
 
   def patternize(t)
+
+    return [ '_pat_regex', *t[1..-1] ] if t[0] == '_rxs'
 
     return t unless t[1].is_a?(Array)
 

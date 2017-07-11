@@ -441,6 +441,34 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq('else')
       end
+
+      it 'binds' do
+
+        r = @executor.launch(
+          %q{
+            match [ 1 'bravo' ]
+              [ 1 (bind a (/^a.+/)) ]; "match a:$(a)"
+              [ 1 (bind b (/^b(.+)/)) ]; "match b:$(b):$(b_match.1)"
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('match b:bravo:ravo')
+      end
+
+      it 'does not bind' do
+
+        r = @executor.launch(
+          %q{
+            match [ 1 'charly' ]
+              [ 1 (bind a (/^a.+/)) ]; "match a:$(a)"
+              [ 1 (bind b (/^b.+/)) ]; "match b:$(b)"
+              else; 'no-match'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('no-match')
+      end
     end
   end
 end
