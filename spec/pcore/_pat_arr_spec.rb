@@ -282,6 +282,32 @@ describe 'Flor procedures' do
         })
       end
 
+      it 'accepts a nested _pat_regex nested in a _pat_guard' do
+
+        r = @executor.launch(
+          [ '_pat_arr', [
+            [ '_dqs', 'one', 1 ],
+            [ '_pat_guard', [
+              [ '_dqs', 'two', 1 ],
+              [ '_pat_regex', "/^[tz]([a-z]+)$/", 1 ]
+            ], 1 ],
+            [ '_pat_regex', "/^t[a-z]+$/", 1 ]
+          ], 1 ],
+          payload: { 'ret' => [ 'one', 'two', 'three' ] })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']).to have_key('_pat_binding')
+        expect(r['payload']).not_to have_key('_pat_val')
+
+        expect(
+          r['payload']['_pat_binding']
+        ).to eq({
+          'two' => 'two',
+          'two_matched' => 'two', 'two_match' => [ 'two', 'wo' ],
+          'matched' => 'three', 'match' => [ 'three' ]
+        })
+      end
+
       it 'reads quantifiers from nested patterns' do
 
         r = @executor.launch(
