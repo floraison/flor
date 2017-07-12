@@ -223,8 +223,8 @@ describe 'Flor procedures' do
           'match' => [ 'abc123', 'abc' ],
           'matched' => 'abc123',
           'x' => 'abc123',
-          'x_match' => [ 'abc123', 'abc' ],
-          'x_matched' => 'abc123'
+          'x__match' => [ 'abc123', 'abc' ],
+          'x__matched' => 'abc123'
         })
       end
 

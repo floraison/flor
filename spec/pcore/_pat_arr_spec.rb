@@ -303,7 +303,7 @@ describe 'Flor procedures' do
           r['payload']['_pat_binding']
         ).to eq({
           'two' => 'two',
-          'two_matched' => 'two', 'two_match' => [ 'two', 'wo' ],
+          'two__matched' => 'two', 'two__match' => [ 'two', 'wo' ],
           'matched' => 'three', 'match' => [ 'three' ]
         })
       end

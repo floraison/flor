@@ -448,7 +448,7 @@ describe 'Flor procedures' do
           %q{
             match [ 1 'bravo' ]
               [ 1 (bind a (/^a.+/)) ]; "match a:$(a)"
-              [ 1 (bind b (/^b(.+)/)) ]; "match b:$(b):$(b_match.1)"
+              [ 1 (bind b (/^b(.+)/)) ]; "match b:$(b):$(b__match.1)"
               else; 'no-match'
           })
 
