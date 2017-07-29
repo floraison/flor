@@ -81,7 +81,9 @@ module Flor
 
   def self.const_lookup(s)
 
-    s.split('::').inject(Kernel) { |k, sk| k.const_get(sk) }
+    s.split('::')
+      .select { |ss| ss.length > 0 }
+      .inject(Kernel) { |k, sk| k.const_get(sk) }
   end
 
   def self.to_coll(o)

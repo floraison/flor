@@ -2,10 +2,12 @@
 module Flor
 
   # TODO I need levels, ::Logger has them
-  # TODO I need log rotation, ::Logger has then
   # TODO I need line heads, ::Logger has them (and @progname)
   # TODO ::Logger has a formatting callback
   # TODO I need simply @out.puts...
+
+  # TODO I need log rotation, ::Logger has then
+    # NO, just dump to stdout (or stderr), see https://12factor.net/logs
 
   class Logger
 
@@ -25,7 +27,6 @@ module Flor
 
     def shutdown
 
-      #@file.close if @file
       @out.close
     end
 
@@ -209,12 +210,12 @@ module Flor
 
     def prepare_out
 
-      case (o = @unit.conf['log_out'] || 'stdout')
-        when false, 'null' then NoOut.new(@unit)
-        when true, 'stdout' then StdOut.new(@unit, $stdout)
-        when 'stderr' then StdOut.new(@unit, $stderr)
-        when /::/ then Flor.const_lookup(o).new(@unit)
-        else FileOut.new(@unit, o)
+      case (o = @unit.conf.fetch('log_out', 1))
+      when false, 'null' then NoOut.new(@unit)
+      when 1, true, 'stdout' then StdOut.new(@unit, $stdout)
+      when 2, 'stderr' then StdOut.new(@unit, $stderr)
+      when /::/ then Flor.const_lookup(o).new(@unit)
+      else FileOut.new(@unit, o)
       end
     end
 
@@ -274,7 +275,7 @@ module Flor
           @fname = fn
         end
 
-        @file ||= File.open(@fname, 'ab')
+        @file ||= File.open(@fname, 'ab:UTF-8')
       end
     end
   end
