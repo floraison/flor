@@ -1,17 +1,16 @@
 
 module Flor
 
-  # TODO I need levels, ::Logger has them
-  # TODO I need line heads, ::Logger has them (and @progname)
   # TODO ::Logger has a formatting callback
-  # TODO I need simply @out.puts...
 
-  # TODO I need log rotation, ::Logger has then
-    # NO, just dump to stdout (or stderr), see https://12factor.net/logs
+  # No log rotation,
+  # just dump to stdout (or stderr), see https://12factor.net/logs
 
   class Logger
 
     # NB: logger configuration entries start with "log_"
+
+    LEVELS_I = %w[ DEBUG INFO WARN ERROR FATAL UNKNOWN ]
 
     def initialize(unit)
 
@@ -21,6 +20,8 @@ module Flor
       @out = prepare_out
 
       @uni = @unit.identifier
+
+      self.level = @unit.conf['log_level'] || 1
     end
 
     def opts; { consumed: true }; end
@@ -30,17 +31,37 @@ module Flor
       @out.close
     end
 
+    attr_reader :level
+
+    def level=(i)
+
+      original = i
+      i = LEVELS_I.index(i.to_s.upcase) unless i.is_a?(Integer)
+
+      fail ArgumentError.new(
+        "'log_level' must be between 0 (DEBUG) and 4 (FATAL). " +
+        "#{original.inspect} not acceptable"
+      ) unless i.is_a?(Integer) && i > -1 && i < 6
+
+      @level = i
+    end
+
     def debug(*m); log(:debug, *m); end
-    def error(*m); log(:error, *m); end
     def info(*m); log(:info, *m); end
     def warn(*m); log(:warn, *m); end
+    def error(*m); log(:error, *m); end
+    def fatal(*m); log(:fatal, *m); end
+    def unknown(*m); log(:unknown, *m); end
 
     def log(level, *elts)
+
+      lvl = level.to_s.upcase
+      lvi = LEVELS_I.index(lvl)
+      return if lvi < @level
 
       n = Time.now.utc
       stp = Flor.tstamp(n)
 
-      lvl = level.to_s.upcase
       txt = elts.collect(&:to_s).join(' ')
       err = elts.find { |e| e.is_a?(Exception) }
 
