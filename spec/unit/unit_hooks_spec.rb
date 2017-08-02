@@ -82,12 +82,13 @@ describe 'Flor unit' do
       cms = []; @unit.hook(c: true) { |m| cms << Flor.dup(m); [] }
       ms = []; @unit.hook { |m| ms << Flor.dup(m); [] }
 
-      @unit.launch(%{
-        sequence
-          noret _
-      }, wait: true)
+      @unit.launch(
+        %q{
+          sequence
+            noret _
+        })
 
-      sleep 0.350
+      wait_until { ms.size == 15 }
 
       expect([ ms.size, cms.size, ncms.size ]).to eq([ 15, 8, 7 ])
     end
