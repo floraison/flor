@@ -199,18 +199,23 @@ describe 'Flor punit' do
 
       it 'triggers repeatedly' do
 
-        @unit.launch(
-          %q{
-            set count 0
-            schedule cron: '* * * * * *' # every second
-              def msg
-                set count (+ count 1)
-            stall _
-          },
-          wait: [ '0_1 trigger' ] * 4,
-          timeout: 9)
+        m =
+          @unit.launch(
+            %q{
+              set count 0
+              schedule cron: '* * * * * *' # every second
+                def msg
+                  set count (+ count 1)
+              stall _
+            },
+            wait: [ '0_1 trigger' ] * 4,
+            timeout: 9)
 
-        sleep 0.350
+        exid = m['exid']
+
+        #sleep 0.350
+        @unit.wait(exid, 'end')
+          # give time to the trigger to write to the database
 
         t = @unit.timers.first
         ms = Flor.dup(@unit.journal)
@@ -218,12 +223,12 @@ describe 'Flor punit' do
         tms = ms.select { |m| m['point'] == 'trigger' }
         seconds = tms.collect { |m| Fugit.parse(m['consumed']).sec }
 
-        expect(tms.size).to eq(4)
+        expect(tms.size).to be_between(4, 5)
 
         expect(t.schedule).to eq('* * * * * *')
-        expect(t.count).to eq(4)
+        expect(t.count).to eq(tms.size)
 
-        ss = (seconds.first..seconds.first + 3)
+        ss = (seconds.first..seconds.first + tms.size - 1)
           .collect { |s| s % 60 }
 
         expect(seconds).to eq(ss)
