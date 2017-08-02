@@ -65,5 +65,16 @@ describe 'Flor procedures' do
       expect(r['payload']).to eq({ 'ret' => 11 })
     end
   end
+
+  describe '_nul' do
+
+    it 'wraps a nil' do
+
+      r = @executor.launch(%{ null })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']).to eq({ 'ret' => nil })
+    end
+  end
 end
 
