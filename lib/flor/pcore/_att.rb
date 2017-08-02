@@ -107,12 +107,21 @@ class Flor::Pro::Att < Flor::Procedure
     wrap_reply
   end
 
-  # vars: { ... }, inits a scope for the parent node
+  # `vars: { ... }` inits a scope for the parent node
+  # `vars: 'copy'` copies the parent scope and use as local scope
+  # `vars: [ a, b ]` inits a new scope containing vars a and b
   #
   def receive_vars
 
-    vars = payload['ret']
-    vars = @executor.vars(nid) if vars == 'copy' || vars == '*'
+    vars =
+      case (vs = payload['ret'])
+      when 'copy', '*'
+        @executor.vars(nid)
+      when Array
+        Hash[@executor.vars(nid).map { |k, v| [ k, vs.include?(k) ? v : nil ] }]
+      else
+        vs
+      end
 
     (parent_node['vars'] ||= {}).merge!(vars)
 
