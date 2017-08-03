@@ -115,12 +115,9 @@ class Flor::Pro::Att < Flor::Procedure
 
     vars =
       case (vs = payload['ret'])
-      when 'copy', '*'
-        @executor.vars(nid)
-      when Array
-        Hash[@executor.vars(nid).map { |k, v| [ k, vs.include?(k) ? v : nil ] }]
-      else
-        vs
+      when 'copy', '*' then copy_vars
+      when Array then wlist_vars(vs)
+      else vs
       end
 
     (parent_node['vars'] ||= {}).merge!(vars)
@@ -128,6 +125,41 @@ class Flor::Pro::Att < Flor::Procedure
     payload['ret'] = @node['ret']
 
     wrap_reply
+  end
+
+  def copy_vars
+
+    @executor.vars(nid)
+  end
+
+  def wlist_vars(vs)
+
+    mode =
+      case vs.first
+      when '+' then '+'
+      when '-', '^', '!' then '-'
+      #else nil
+      end
+    vs.shift if mode
+
+    vs = vs.collect { |v| Flor.is_regex_tree?(v) ? Flor.to_regex(v) : v }
+    vars = copy_vars
+
+    if mode == '-'
+vars # TODO
+    else
+      Hash[vars.map { |k, v| [ k, var_match?(vs, k) ? v : nil ] }]
+    end
+  end
+
+  def var_match?(vs, key)
+
+    vs.each do |v|
+      return true if v == key
+      return true if v.is_a?(Regexp) && v =~ key
+    end
+
+    false
   end
 
   def parent_is_trap?

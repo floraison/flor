@@ -77,9 +77,40 @@ describe 'Flor core' do
           )
         end
 
-        it 'whitelists with regexes'
+        it 'whitelists with regexes' do
+
+          r = @executor.launch(
+            %q{
+              sequence vars: { a_0: 'a', a_1: 'A', b_0: 'b' }
+                push f.l [ 0 a_0 ]
+                push f.l [ 0 a_1 ]
+                push f.l [ 0 b_0 ]
+                sequence vars: [ /^a_.+/ ]
+                  push f.l [ 1 a_0 ]
+                  push f.l [ 1 a_1 ]
+                  push f.l [ 1 b_0 ]
+            },
+            payload: { 'l' => [] })
+
+          expect(r['point']).to eq('failed')
+
+          expect(r['error']['msg']).to eq("don't know how to apply \"b_0\"")
+
+          expect(
+            r['payload']['l']
+          ).to eq(
+            [ [ 0, 'a' ], [ 0, 'A' ], [ 0, 'b' ],
+              [ 1, 'a' ], [ 1, 'A' ] ]
+          )
+        end
+
+        it 'whitelists deep'
+        it 'whitelists deep with regexes'
+
         it 'blacklists'
         it 'blacklists with regexes'
+        it 'blacklists deep'
+        it 'blacklists deep with regexes'
       end
 
       context '"copy"' do
