@@ -18,7 +18,13 @@ module Flor
     return k if k.is_a?(Array)
 
     k
-      .scan(/(?:\.?(-?\d+)|\.?([^\.\[]+)|\[(-?\d+)\]|\[([^\[\]]+)\])/)
+      .scan(
+        /(?:
+          \.?(-?\d+) |
+          \.?([^\.\[]+) |
+          \[(-?\d+)\] |
+          \[([^\[\]]+)\]
+        )/x)
       .collect { |doti, dots, squi, squs|
         if doti
           doti.to_i
