@@ -109,7 +109,7 @@ class Flor::Pro::Att < Flor::Procedure
 
   # `vars: { ... }` inits a scope for the parent node
   # `vars: 'copy'` copies the parent scope and use as local scope
-  # `vars: [ a, b ]` inits a new scope containing vars a and b
+  # `vars: [ 'a', 'b' ]` inits a new scope containing vars a and b
   #
   def receive_vars
 
@@ -130,6 +130,7 @@ class Flor::Pro::Att < Flor::Procedure
   def copy_vars
 
     @executor.vars(nid)
+      # Returns a hash of all the vars known at point `nid` of the execution
   end
 
   def wlist_vars(vs)

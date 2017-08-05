@@ -119,13 +119,15 @@ describe 'Flor core' do
 
           r = @executor.launch(
             %q{
-              sequence vars: { a: 'A' }
-                push f.l [ 0 a ]
-                sequence vars: 'copy'
-                  push f.l [ 1 a ]
-                  set a 'B'
-                  push f.l [ 2 a ]
-                push f.l [ 3 a ]
+              sequence vars: { c: 'C' }
+                sequence vars: { a: 'A' }
+                  push f.l [ 0 a ]
+                  sequence vars: 'copy'
+                    push f.l [ 1 a ]
+                    set a 'B'
+                    push f.l [ 2 a ]
+                    push f.l [ 4 c ]
+                  push f.l [ 3 a ]
             },
             payload: { 'l' => [] })
 
@@ -134,7 +136,7 @@ describe 'Flor core' do
           expect(
             r['payload']['l']
           ).to eq(
-            [ [ 0, 'A' ], [ 1, 'A' ], [ 2, 'B' ], [ 3, 'A' ] ]
+            [ [ 0, 'A' ], [ 1, 'A' ], [ 2, 'B' ], [ 4, 'C' ], [ 3, 'A' ] ]
           )
         end
       end
@@ -163,6 +165,16 @@ describe 'Flor core' do
             [ [ 0, 'A' ], [ 1, 'A' ], [ 2, 'B' ], [ 3, 'A' ] ]
           )
         end
+      end
+
+      context 'function reference' do
+
+        it 'calls the function with a copy of the current vars as single arg'
+      end
+
+      context 'function call' do
+
+        it 'uses the return (as expected)'
       end
     end
 

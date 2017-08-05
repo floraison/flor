@@ -85,7 +85,7 @@ module Flor
         # be lenient with block hooks, help them return an array
     end
 
-    # Given a nid, returns a copy of all the var the node sees
+    # Given a nid, returns a copy of all the var the node sees at that point.
     #
     def vars(nid, vs={})
 
