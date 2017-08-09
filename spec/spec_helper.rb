@@ -256,7 +256,6 @@ class RSpec::Core::ExampleGroup
         end
       end
     end
-
   end
 end
 

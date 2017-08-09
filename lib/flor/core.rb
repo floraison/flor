@@ -38,7 +38,7 @@ module Flor
         # TODO re-parse and indicate what went wrong...
 
       fail ArgumentError.new(
-        "flor parse failure: " + tree.inspect[0, 35] + '...')
+        "flow parsing failed: " + tree.inspect[0, 35] + '...')
     end
 
     pl = opts[:payload] || opts[:fields] || {}

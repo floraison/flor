@@ -159,7 +159,7 @@ describe 'Flor unit' do
           expect {
             @unit.launch('sequence,,,,')
           }.to raise_error(
-            ArgumentError, 'flor parse failure: "sequence,,,,"...'
+            ArgumentError, 'flow parsing failed: "sequence,,,,"...'
           )
         end
       end
@@ -191,6 +191,15 @@ describe 'Flor unit' do
             @unit.launch('com.acme.flow-999')
           }.to raise_error(
             ArgumentError, 'flow not found in "com.acme.flow-999"'
+          )
+        end
+
+        it 'fails if the flow is not parseable' do
+
+          expect {
+            @unit.launch('com.acme.flow99')
+          }.to raise_error(
+            ArgumentError, /\Aflow parsing failed: /
           )
         end
 

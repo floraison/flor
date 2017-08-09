@@ -1,0 +1,8 @@
+
+# I'm supposed not to parse...
+
+sequence
+  alice
+  .
+  bob
+

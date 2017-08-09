@@ -443,7 +443,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
       #Raabro.pp(super(input, debug: 3))
 
       r = super(input, opts)
-      r << fname if fname
+      r << fname if r && fname
 
       r
     end
