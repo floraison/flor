@@ -250,7 +250,7 @@ class RSpec::Core::ExampleGroup
             elsif sta == :pending
               pending(title)
             else
-              it(title) { expect(Flor::Lang.parse(flor)).to eqt(ru) }
+              it(title) { expect(Flor.parse(flor)).to eqt(ru) }
             end
           end
         end

@@ -363,7 +363,7 @@ module Flor
       fail ArgumentError.new("missing 'payload' to re_apply") \
         unless msg['payload']
 
-      t = Flor::Lang.parse(opts[:tree], 're_apply', {})
+      t = Flor.parse(opts[:tree], 're_apply', {})
 
       [
         { 'point' => 'execute',

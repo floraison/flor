@@ -1,7 +1,20 @@
 
 module Flor
 
-  module Lang include Raabro
+  def self.parse(input, fname=nil, opts={})
+
+    opts = fname if fname.is_a?(Hash) && opts.empty?
+
+    #Raabro.pp(Flor::Parser.parse(input, debug: 2))
+    #Raabro.pp(Flor::Parser.parse(input, debug: 3))
+
+    r = Flor::Parser.parse(input, opts)
+    r << fname if r && fname
+
+    r
+  end
+
+  module Parser include Raabro
 
     # parsing
 
@@ -358,19 +371,19 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
         @indent = tree.lookup(:indent).string.length
 
         ht = tree.lookup(:head)
-        @line = Flor::Lang.line_number(ht)
+        @line = Flor::Parser.line_number(ht)
 
-        @head = Flor::Lang.rewrite(ht.c0)
+        @head = Flor::Parser.rewrite(ht.c0)
         @head = @head[0] if @head[0].is_a?(String) && @head[1] == []
 
         atts = tree.children[2..-1]
           .inject([]) { |as, ct|
 
             kt = ct.children.size == 3 ? ct.children[1].lookup(:key) : nil
-            v = Flor::Lang.rewrite(ct.clast)
+            v = Flor::Parser.rewrite(ct.clast)
 
             if kt
-              k = Flor::Lang.rewrite(kt.c0)
+              k = Flor::Parser.rewrite(kt.c0)
               as << [ '_att', [ k, v ], k[2] ]
             else
               as << [ '_att', [ v ], v[2] ]
@@ -399,7 +412,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
         elsif %w[ - + ].include?(c[0])
           @head = c[0]
           @children = c[1]
-          @children[0] = Flor::Lang.invert('+', @children[0])
+          @children[0] = Flor::Parser.invert('+', @children[0])
         end
       end
 
@@ -434,20 +447,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
       root.children.count == 1 ? root.children.first.to_a : root.to_a
     end
     alias rewrite_panode rewrite_flor
-
-    def parse(input, fname=nil, opts={})
-
-      opts = fname if fname.is_a?(Hash) && opts.empty?
-
-      #Raabro.pp(super(input, debug: 2))
-      #Raabro.pp(super(input, debug: 3))
-
-      r = super(input, opts)
-      r << fname if r && fname
-
-      r
-    end
-  end # module Lang
+  end # module Parser
 
   def self.unescape_u(cs)
 

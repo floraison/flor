@@ -324,7 +324,7 @@ module Flor::Tools
     def cmd_parse(line)
 
       source = File.read(@flow_path)
-      tree = Flor::Lang.parse(source, nil, {})
+      tree = Flor.parse(source, nil, {})
 
       case arg(line)
       when 'd', 'raw'

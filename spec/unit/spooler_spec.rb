@@ -51,7 +51,7 @@ describe Flor::Spooler do
         'point' => 'execute',
         'exid' => exid,
         'nid' => '0',
-        'tree' => Flor::Lang.parse(%q{ sequence \ set a 1; set b 2 }),
+        'tree' => Flor.parse(%q{ sequence \ set a 1; set b 2 }),
         'payload' => { 'a' => 'A' },
         'vars' => {} }
 
@@ -78,7 +78,7 @@ describe Flor::Spooler do
         'point' => 'execute',
         'exid' => exid,
         'nid' => '0',
-        'tree' => Flor::Lang.parse(%q{ set a 3 }),
+        'tree' => Flor.parse(%q{ set a 3 }),
         'payload' => {},
         'vars' => {} }
 

@@ -10,7 +10,7 @@ require 'spec_helper'
 require 'flor/parser'
 
 
-describe Flor::Lang do
+describe Flor::Parser do
 
   compare_flor_to_ruby File.join(File.dirname(__FILE__), 'parser_spec.md')
 

@@ -28,13 +28,13 @@ module Flor
 
     t =
       tree.is_a?(String) ?
-      Flor::Lang.parse(tree, opts[:fname], opts) :
+      Flor.parse(tree, opts[:fname], opts) :
       tree
 
     unless t
 
       #h = opts.merge(prune: false, rewrite: false, debug: 0)
-      #Raabro.pp(Flor::Lang.parse(tree, h[:fname], h))
+      #Raabro.pp(Flor.parse(tree, h[:fname], h))
         # TODO re-parse and indicate what went wrong...
 
       fail ArgumentError.new(

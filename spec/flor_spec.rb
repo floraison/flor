@@ -235,13 +235,14 @@ describe Flor do
 
     before :all do
 
-      @t = Flor::Lang.parse(%{
-        sequence
-          alpha
-          concurrence
-            bravo
-            charly
-      })
+      @t = Flor.parse(
+        %q{
+          sequence
+            alpha
+            concurrence
+              bravo
+              charly
+        })
     end
 
     it 'locates nil when tree is nil' do
@@ -285,13 +286,14 @@ describe Flor do
 
     it 'locates' do
 
-      t = Flor::Lang.parse(%{
-        sequence
-          alpha
-          concurrence
-            bravo
-            charly
-      })
+      t = Flor.parse(
+        %q{
+          sequence
+            alpha
+            concurrence
+              bravo
+              charly
+        })
 
       expect(Flor.tree_locate(t, '0_2')).to eq(nil)
 

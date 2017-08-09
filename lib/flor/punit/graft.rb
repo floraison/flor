@@ -60,7 +60,7 @@ class Flor::Pro::Graft < Flor::Procedure
       "no subtree #{sub.inspect} found (domain #{domain.inspect})"
     ) unless source
 
-    tree = Flor::Lang.parse(source, source_path, {})
+    tree = Flor.parse(source, source_path, {})
 
     # graft subtree into parent node
 

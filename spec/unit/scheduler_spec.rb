@@ -79,8 +79,8 @@ describe 'Flor unit' do
         it 'launches' do
 
           tree =
-            Flor::Lang.parse(
-              %{
+            Flor.parse(
+              %q{
                 sequence
                   define sum a, b
                     +
