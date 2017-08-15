@@ -159,7 +159,8 @@ describe 'Flor unit' do
           expect {
             @unit.launch('sequence,,,,')
           }.to raise_error(
-            ArgumentError, 'flow parsing failed: "sequence,,,,"...'
+            #ArgumentError, 'flow parsing failed: "sequence,,,,"...'
+            Flor::ParseError, 'syntax error at line 1 column 9'
           )
         end
       end
@@ -199,7 +200,8 @@ describe 'Flor unit' do
           expect {
             @unit.launch('com.acme.flow99')
           }.to raise_error(
-            ArgumentError, /\Aflow parsing failed: /
+            #ArgumentError, /\Aflow parsing failed: /
+            Flor::ParseError, 'syntax error at line 1 column 53'
           )
         end
 

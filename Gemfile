@@ -2,6 +2,7 @@
 source 'https://rubygems.org'
 
 #gem 'raabro', path: '../raabro/' # temporarily
+gem 'raabro', git: 'git@github.com:jmettraux/raabro.git' # temporarily
 #gem 'fugit', path: '../fugit/' # temporarily
 
 group :test do

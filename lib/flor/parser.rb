@@ -8,10 +8,30 @@ module Flor
     #Raabro.pp(Flor::Parser.parse(input, debug: 2))
     #Raabro.pp(Flor::Parser.parse(input, debug: 3))
 
-    r = Flor::Parser.parse(input, opts)
-    r << fname if r && fname
+    if r = Flor::Parser.parse(input, opts)
+      r << fname if fname
+      r
+    else
+      r = Flor::Parser.parse(input, opts.merge(error: true))
+      fail Flor::ParseError.new(r, fname)
+    end
+  end
 
-    r
+  class ParseError < StandardError
+
+    attr_reader :line, :column, :offset, :msg, :visual, :fname
+
+    def initialize(error_array, fname)
+
+#puts "-" * 80
+#p error_array
+#puts error_array.last
+#puts "-" * 80
+      @line, @column, @offset, @msg, @visual = error_array
+      @fname = fname
+
+      super("syntax error at line #{@line} column #{@column}")
+    end
   end
 
   module Parser include Raabro

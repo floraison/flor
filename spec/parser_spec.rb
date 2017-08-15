@@ -16,17 +16,21 @@ describe Flor::Parser do
 
   context 'when parsing fails' do
 
-    it 'returns the error location'# do
-#
-#      flor =
-#        %q{
-#          sequence
-#            nada
-#          .
-#        }
-#
-#      x = Flor::Lang.parse(flor, 'x.flor')
-#    end
+    it 'returns the error location' do
+
+      flor =
+        %q{
+sequence
+  nada
+.
+        }.strip
+
+      expect {
+        p Flor.parse(flor, 'x.flor')
+      }.to raise_error(
+        Flor::ParseError, 'syntax error at line 1 column 17'
+      )
+    end
   end
 end
 
