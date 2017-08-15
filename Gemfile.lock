@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:jmettraux/raabro.git
+  remote: https://github.com/jmettraux/raabro.git
   revision: e08e7e20481211dec1008fec3a550f779ad7f211
   specs:
     raabro (1.1.4)
@@ -60,4 +60,4 @@ DEPENDENCIES
   terminal-table
 
 BUNDLED WITH
-   1.14.6
+   1.15.3
