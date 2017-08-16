@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/jmettraux/raabro.git
-  revision: e08e7e20481211dec1008fec3a550f779ad7f211
+  revision: ecca019732c3eea1f4796c21d1b3452aa8a9ce23
   specs:
     raabro (1.1.4)
 
