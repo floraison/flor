@@ -1,9 +1,3 @@
-GIT
-  remote: https://github.com/jmettraux/raabro.git
-  revision: ecca019732c3eea1f4796c21d1b3452aa8a9ce23
-  specs:
-    raabro (1.1.4)
-
 PATH
   remote: .
   specs:
@@ -23,6 +17,7 @@ GEM
       raabro (~> 1.1)
     jdbc-sqlite3 (3.8.11.2)
     munemo (1.0.1)
+    raabro (1.1.4)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
@@ -53,7 +48,6 @@ PLATFORMS
 DEPENDENCIES
   flor!
   jdbc-sqlite3 (= 3.8.11.2)
-  raabro!
   rspec (= 3.4.0)
   sequel (~> 4)
   sqlite3 (= 1.3.11)
