@@ -233,7 +233,7 @@ module Flor::Tools
         .find { |e| e.data['nodes'][nid] }
 
       fail ArgumentError.new(
-        "found #{exes.count} execution#{exes.count > 1 ? 's' : ''} " +
+        "found #{exes.count} execution#{exes.count != 1 ? 's' : ''} " +
         "matching \"%#{exid}%\", but none with a #{onid.inspect} node"
       ) unless exe
 
@@ -427,7 +427,7 @@ module Flor::Tools
             aright(i), tasker, nid, @c.yellow(exid), pl, mt ]) }
 
       puts table
-      puts "#{tas.count} task#{tas.count > 1 ? 's' : ''}.\n"
+      puts "#{tas.count} task#{tas.count != 1 ? 's' : ''}.\n"
     end
     make_alias('tas', 'tasks')
 
@@ -452,7 +452,7 @@ module Flor::Tools
           ]) }
 
       puts table
-      puts "#{exes.count} execution#{exes.count > 1 ? 's' : ''}.\n"
+      puts "#{exes.count} execution#{exes.count != 1 ? 's' : ''}.\n"
     end
     make_alias('exes', 'executions')
 
@@ -479,7 +479,7 @@ module Flor::Tools
           ]) }
 
       puts table
-      puts "#{tis.count} timer#{tis.count > 1 ? 's' : ''}.\n"
+      puts "#{tis.count} timer#{tis.count != 1 ? 's' : ''}.\n"
     end
     make_alias('tis', 'timers')
 
