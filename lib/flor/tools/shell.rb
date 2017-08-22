@@ -441,14 +441,17 @@ module Flor::Tools
 
       table = Terminal::Table.new(
         #title: 'executions',
-        headings: %w[ id exid started ],
+        headings: %w[ id exid started status ],
         style: table_style)
       #table.align_column(0, :right)
 
       exes
         .each { |e|
           table.add_row([
-            aright(e.id), @c.yl(e.exid), e.ctime[0, 19]
+            aright(e.id),
+            @c.yl(e.exid),
+            e.ctime[0, 19],
+            e.failed? ? 'failed' : 'running'
           ]) }
 
       puts table

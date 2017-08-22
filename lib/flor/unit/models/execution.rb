@@ -19,6 +19,12 @@ module Flor
         .find { |n| n['failure'] && n['status'] != 'triggered-on-error' }
     end
 
+    def failed_nodes
+
+      nodes.values
+        .select { |n| n['failure'] && n['status'] != 'triggered-on-error' }
+    end
+
     def full_tree
 
       tree = nodes['0']['tree']
