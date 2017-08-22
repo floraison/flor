@@ -35,7 +35,7 @@ module Flor::Tools
 
       @c = Flor.colours({})
 
-      if argv.any?
+      if argv && argv.any?
         do_eval(argv.join(' '))
       else
         print_header
@@ -186,6 +186,7 @@ module Flor::Tools
       when /\Ap/
         @payload_path
       when /\At/
+        fail ArgumentError.new("'frag' argument missing") unless b
         Dir[File.join(@root, 'var/tasks/**/*.json')].find { |pa| pa.index(b) }
       when /\Ar/
         @ra_flow_path
@@ -507,6 +508,8 @@ module Flor::Tools
       fail ArgumentError.new(
         "couldn't find a task matching #{t.inspect}"
       ) unless path
+
+      puts "found task at #{path}"
 
       m = JSON.parse(File.read(path))
       @unit.return(m)
