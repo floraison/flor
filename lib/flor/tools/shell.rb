@@ -190,6 +190,15 @@ module Flor::Tools
         Dir[File.join(@root, 'var/tasks/**/*.json')].find { |pa| pa.index(b) }
       when /\Ar/
         @ra_flow_path
+      when /\Ae/
+        exe = lookup_execution(b)
+#p exe
+#pp exe.data
+#puts JSON.pretty_generate(exe.data)
+#puts JSON.dump(exe.data)
+#puts JSON.generate(exe.data, indent: '  ', space: ' ', object_nl: "\n", array_nl: "\n")
+puts Flor.to_d(exe.data, width: true, colours: true)
+fail NotImplementedError
       else
         @flow_path
       end
@@ -590,16 +599,20 @@ module Flor::Tools
       table
     end
 
+    def lookup_execution(id)
+
+      if id.match(/\A\d+\z/)
+        @unit.executions[id.to_i] ||
+        fail(ArgumentError.new("execution #{id} not found"))
+      else
+        @unit.executions.first(Sequel.like(:exid, "%#{id}%")) ||
+        fail(ArgumentError.new("execution matching \"%#{id}%\" not found"))
+      end
+    end
+
     def detail_execution(id)
 
-      exe =
-        if id.match(/\A\d+\z/)
-          @unit.executions[id.to_i] ||
-          fail(ArgumentError.new("execution #{id} not found"))
-        else
-          @unit.executions.first(Sequel.like(:exid, "%#{id}%")) ||
-          fail(ArgumentError.new("execution matching \"%#{id}%\" not found"))
-        end
+      exe = lookup_execution(id)
 
       eid = { id: exe.id, exid: exe.exid }.inspect
       con = Flor::Storage.from_blob(exe.values.delete(:content))
