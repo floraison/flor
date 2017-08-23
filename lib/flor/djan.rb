@@ -8,7 +8,7 @@ module Flor
 
   def self.to_d(x, opts={})
 
-    opts[:s] = StringIO.new
+    out = StringIO.new
     opts[:c] = Flor.colours(opts)
 
     if opts[:width] == true
@@ -16,62 +16,63 @@ module Flor
     elsif mw = (opts[:mw] || opts[:maxwidth] || opts[:max_width])
       opts[:width] = [ IO.console.winsize[1], mw ].min
     end
+    #opts[:indent] ||= 2 if opts[:width]
 
-    Djan.to_d(x, opts)
+    Djan.to_d(x, out, opts)
 
-    opts[:s].string
+    out.string
   end
 
   module Djan
     extend self
 
-    def to_d(x, opts)
+    def to_d(x, out, opts)
 
       case x
-      when nil then nil_to_d(x, opts)
-      when String then string_to_d(x, opts)
-      when Hash then object_to_d(x, opts)
-      when Array then array_to_d(x, opts)
-      when TrueClass then boolean_to_d(x.to_s, opts)
-      when FalseClass then boolean_to_d(x.to_s, opts)
-      else num_to_d(x.to_s, opts)
+      when nil then nil_to_d(x, out, opts)
+      when String then string_to_d(x, out, opts)
+      when Hash then object_to_d(x, out, opts)
+      when Array then array_to_d(x, out, opts)
+      when TrueClass then boolean_to_d(x.to_s, out, opts)
+      when FalseClass then boolean_to_d(x.to_s, out, opts)
+      else num_to_d(x.to_s, out, opts)
       end
     end
 
     def len(x, opts)
 
-      opts = opts.merge(
-        s: StringIO.new, c: Flor.no_colours, indent: nil, width: nil)
+      opts = opts.merge(c: Flor.no_colours, indent: nil, width: nil)
+      o = StringIO.new
 
-      to_d(x, opts)
+      to_d(x, o, opts)
 
-      opts[:s].string.length
+      o.string.length
     end
 
-    def newline(opts)
+    def newline(out, opts)
 
-      opts[:s] << "\n"
+      out << "\n"
     end
 
-    def space(opts, force=false)
+    def space(out, opts, force=false)
 
-      opts[:s] << ' ' if force || ! opts[:compact]
+      out << ' ' if force || ! opts[:compact]
     end
 
-    def newline_or_space(opts)
+    def newline_or_space(out, opts)
 
       if opts[:indent]
-        newline(opts)
+        newline(out, opts)
       elsif ! opts[:compact]
-        space(opts)
+        space(out, opts)
       end
     end
 
-    def indent_space(opts)
+    def indent_space(out, opts)
 
       return if opts.delete(:first)
       i = opts[:indent]
-      opts[:s] << '  ' * i if i
+      out << '  ' * i if i
     end
 
     def indent(opts, os={})
@@ -92,109 +93,109 @@ module Flor
       opts.merge(indent: nil)
     end
 
-    def object_to_d(x, opts)
+    def object_to_d(x, out, opts)
 
       inner = opts.delete(:inner)
 
-      indent_space(opts)
+      indent_space(out, opts)
 
-      return c_inf('{}', opts) if x.empty?
+      return c_inf('{}', out, opts) if x.empty?
 
       opts = adjust(x, opts)
 
       unless inner
-        c_inf('{', opts); space(opts)
+        c_inf('{', out, opts); space(out, opts)
       end
 
       x.each_with_index do |(k, v), i|
-        string_to_d(k, indent(opts, first: i == 0))
-        c_inf(':', opts)
-        newline_or_space(opts)
-        to_d(v, indent(opts, inc: 2))
+        string_to_d(k, out, indent(opts, first: i == 0))
+        c_inf(':', out, opts)
+        newline_or_space(out, opts)
+        to_d(v, out, indent(opts, inc: 2))
         if i < x.size - 1
-          c_inf(',', opts)
-          newline_or_space(opts)
+          c_inf(',', out, opts)
+          newline_or_space(out, opts)
         end
       end
 
       unless inner
-        space(opts); c_inf('}', opts)
+        space(out, opts); c_inf('}', out, opts)
       end
     end
 
-    def array_to_d(x, opts)
+    def array_to_d(x, out, opts)
 
       inner = opts.delete(:inner)
 
-      indent_space(opts)
+      indent_space(out, opts)
 
-      return c_inf('[]', opts) if x.empty?
+      return c_inf('[]', out, opts) if x.empty?
 
       opts = adjust(x, opts)
 
       unless inner
-        c_inf('[', opts); space(opts)
+        c_inf('[', out, opts); space(out, opts)
       end
 
       x.each_with_index do |e, i|
-        to_d(e, indent(opts, first: i == 0))
+        to_d(e, out, indent(opts, first: i == 0))
         if i < x.size - 1
-          c_inf(',', opts)
-          newline_or_space(opts)
+          c_inf(',', out, opts)
+          newline_or_space(out, opts)
         end
       end
 
       unless inner
-        space(opts); c_inf(']', opts)
+        space(out, opts); c_inf(']', out, opts)
       end
     end
 
-    def string_to_d(x, opts)
+    def string_to_d(x, out, opts)
 
       x = x.to_s
 
-      indent_space(opts)
+      indent_space(out, opts)
 
       if (
         x.match(/\A[^: \b\f\n\r\t"',()\[\]{}#\\+%\/><^!=-]+\z/) == nil ||
         x.to_i.to_s == x ||
         x.to_f.to_s == x
       )
-        c_inf('"', opts)
-        c_str(x.inspect[1..-2], opts)
-        c_inf('"', opts)
+        c_inf('"', out, opts)
+        c_str(x.inspect[1..-2], out, opts)
+        c_inf('"', out, opts)
       else
-        c_str(x, opts)
+        c_str(x, out, opts)
       end
     end
 
-    def boolean_to_d(x, opts)
+    def boolean_to_d(x, out, opts)
 
-      indent_space(opts)
+      indent_space(out, opts)
       if x
-        c_tru(x, opts)
+        c_tru(x, out, opts)
       else
-        c_fal(x, opts)
+        c_fal(x, out, opts)
       end
     end
 
-    def num_to_d(x, opts)
+    def num_to_d(x, out, opts)
 
-      indent_space(opts); c_num(x, opts)
+      indent_space(out, opts); c_num(x, out, opts)
     end
 
-    def nil_to_d(x, opts)
+    def nil_to_d(x, out, opts)
 
-      indent_space(opts); c_nil('null', opts)
+      indent_space(out, opts); c_nil('null', out, opts)
     end
 
-    def c_inf(s, opts); opts[:s] << opts[:c].dark_gray(s); end
+    def c_inf(s, out, opts); out << opts[:c].dark_gray(s); end
 
-    def c_nil(s, opts); opts[:s] << opts[:c].dark_gray(s); end
-    def c_tru(s, opts); opts[:s] << opts[:c].green(s); end
-    def c_fal(s, opts); opts[:s] << opts[:c].red(s); end
-    def c_str(s, opts); opts[:s] << opts[:c].brown(s); end
-    def c_num(s, opts); opts[:s] << opts[:c].light_blue(s); end
+    def c_nil(s, out, opts); out << opts[:c].dark_gray(s); end
+    def c_tru(s, out, opts); out << opts[:c].green(s); end
+    def c_fal(s, out, opts); out << opts[:c].red(s); end
+    def c_str(s, out, opts); out << opts[:c].brown(s); end
+    def c_num(s, out, opts); out << opts[:c].light_blue(s); end
   end
 end
 
