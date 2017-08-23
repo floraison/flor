@@ -84,6 +84,22 @@ describe 'Flor core' do
     end
   end
 
+  describe 'a variable as head (deep)' do
+
+    it 'is derefenced upon application' do
+
+      r = @executor.launch(%{
+        set a { b: sequence }
+        a.b
+          1
+          2
+      })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(2)
+    end
+  end
+
   describe 'a variable reference' do
 
     it 'yields the value' do
