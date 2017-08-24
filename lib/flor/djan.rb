@@ -49,6 +49,15 @@ module Flor
       o.string.length
     end
 
+    def adjust(x, opts)
+
+      i = opts[:indent]
+      w = opts[:width]
+
+      return opts unless i && w && i + len(x, opts) < w
+      opts.merge(indent: nil)
+    end
+
     def newline(out, opts)
 
       out << "\n"
@@ -82,15 +91,6 @@ module Flor
       else
         opts
       end
-    end
-
-    def adjust(x, opts)
-
-      i = opts[:indent]
-      w = opts[:width]
-
-      return opts unless i && w && i + len(x, opts) < w
-      opts.merge(indent: nil)
     end
 
     def object_to_d(x, out, opts)
@@ -171,12 +171,7 @@ module Flor
 
     def boolean_to_d(x, out, opts)
 
-      indent_space(out, opts)
-      if x
-        c_tru(x, out, opts)
-      else
-        c_fal(x, out, opts)
-      end
+      indent_space(out, opts); x ? c_tru(x, out, opts) : c_fal(x, out, opts)
     end
 
     def num_to_d(x, out, opts)
