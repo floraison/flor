@@ -16,7 +16,7 @@ module Flor
     elsif mw = (opts[:mw] || opts[:maxwidth] || opts[:max_width])
       opts[:width] = [ IO.console.winsize[1], mw ].min
     end
-    #opts[:indent] ||= 2 if opts[:width]
+    opts[:indent] ||= 0 if opts[:width]
 
     Djan.to_d(x, out, opts)
 
