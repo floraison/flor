@@ -110,6 +110,7 @@ describe Flor::Spooler do
       end
 
       wait_until { Dir['envs/test/var/spool/rejected/*.json'].size == 1 }
+      sleep 0.070
 
       expect(
         Dir['envs/test/var/spool/rejected/*.json'].first
