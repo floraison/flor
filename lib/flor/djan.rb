@@ -81,13 +81,13 @@ module Flor
 
       return if opts.delete(:first)
       i = opts[:indent]
-      out << '  ' * i if i
+      out << ' ' * i if i
     end
 
     def indent(opts, os={})
 
       if i = opts[:indent]
-        opts.merge(indent: i + (os[:inc] || 1), first: os[:first])
+        opts.merge(indent: i + (os[:inc] || 1) * 2, first: os[:first])
       else
         opts
       end
