@@ -11,10 +11,10 @@ module Flor
     out = StringIO.new
     opts[:c] = Flor.colours(opts)
 
-    if opts[:width] == true
-      opts[:width] = IO.console.winsize[1]
+    if [ :console, true ].include?(opts[:width])
+      opts[:width] = IO.console.winsize[1] rescue 80
     elsif mw = (opts[:mw] || opts[:maxwidth] || opts[:max_width])
-      opts[:width] = [ IO.console.winsize[1], mw ].min
+      opts[:width] = [ (IO.console.winsize[1] rescue 80), mw ].min
     end
     opts[:indent] ||= 0 if opts[:width]
 
