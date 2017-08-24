@@ -74,8 +74,15 @@ describe Flor do
 #  exp: "a+b" }
 #      }.strip)
 #    end
-#
-#    it 'respects json: true'
+
+    it 'respects json: true' do
+
+      expect(
+        Flor.to_djan(@v, json: true, colours: false)
+      ).to eq(%{
+{ "type": "car", "make/brand": "mitsubishi", "id": 2, "ok": true, "suppliers,": [], "stuff": "nada", "'branding'": "fail", "x": "4", "list": [], "dict": {}, "date": "2017-03-13", "exp": "a+b" }
+      }.strip)
+    end
   end
 
   describe '.decolour(s)' do
