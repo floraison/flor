@@ -54,7 +54,7 @@ module Flor
       i = opts[:indent]
       w = opts[:width]
 
-      return opts unless i && w && i + len(x, opts) < w
+      return opts unless i && w && (i + len(x, opts) < w)
       opts.merge(indent: nil)
     end
 
@@ -74,6 +74,15 @@ module Flor
         newline(out, opts)
       elsif ! opts[:compact]
         space(out, opts)
+      end
+    end
+
+    def newline_or_tab_or_space(out, keylen, opts)
+
+      if kml = opts[:key_max_len]
+        out << ' ' * (kml - opts[:indent] - keylen)
+      else
+        newline_or_space(out, opts)
       end
     end
 
@@ -107,10 +116,21 @@ module Flor
         c_inf('{', out, opts); space(out, opts)
       end
 
+      i = opts[:indent]
+      w = opts[:width]
+        #
+      key_max_len, val_max_len =
+        x.inject([ 0, 0 ]) { |(kl, vl), (k, v)|
+          [ [ kl, len(k, opts) ].max, [ vl, len(v, opts) ].max ] }
+        #
+      if i && w && i + key_max_len + 2 + val_max_len < w
+        opts = opts.merge(key_max_len: key_max_len)
+      end
+
       x.each_with_index do |(k, v), i|
-        string_to_d(k, out, indent(opts, first: i == 0))
+        kl = string_to_d(k, out, indent(opts, first: i == 0))
         c_inf(':', out, opts)
-        newline_or_space(out, opts)
+        newline_or_tab_or_space(out, kl, opts)
         to_d(v, out, indent(opts, inc: 2))
         if i < x.size - 1
           c_inf(',', out, opts)
@@ -161,12 +181,14 @@ module Flor
         x.match(/\A[^: \b\f\n\r\t"',()\[\]{}#\\+%\/><^!=-]+\z/) == nil ||
         x.to_i.to_s == x ||
         x.to_f.to_s == x
-      )
+      ) then
         c_inf('"', out, opts)
         c_str(x.inspect[1..-2], out, opts)
         c_inf('"', out, opts)
+        x.inspect[1..-2].length + 2
       else
         c_str(x, out, opts)
+        x.length
       end
     end
 

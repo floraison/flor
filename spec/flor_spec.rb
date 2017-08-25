@@ -60,30 +60,18 @@ describe Flor do
       expect(
         Flor.to_djan(@v, max_width: 80, colours: false)
       ).to eq(%{
-{ type:
-    car,
-  "make/brand":
-    mitsubishi,
-  id:
-    2,
-  ok:
-    true,
-  "suppliers,":
-    [],
-  stuff:
-    nada,
-  "'branding'":
-    fail,
-  x:
-    "4",
-  list:
-    [],
-  dict:
-    {},
-  date:
-    "2017-03-13",
-  exp:
-    "a+b" }
+{ type:            car,
+  "make/brand":    mitsubishi,
+  id:              2,
+  ok:              true,
+  "suppliers,":    [],
+  stuff:           nada,
+  "'branding'":    fail,
+  x:               "4",
+  list:            [],
+  dict:            {},
+  date:            "2017-03-13",
+  exp:             "a+b" }
       }.strip)
     end
 
