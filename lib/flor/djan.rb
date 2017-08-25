@@ -13,6 +13,8 @@ module Flor
 
     if [ :console, true ].include?(opts[:width])
       opts[:width] = IO.console.winsize[1] rescue 80
+    #elsif opts[:width].is_a?(Integer)
+      # let it go
     elsif mw = (opts[:mw] || opts[:maxwidth] || opts[:max_width])
       opts[:width] = [ (IO.console.winsize[1] rescue 80), mw ].min
     end

@@ -55,10 +55,10 @@ describe Flor do
       }.strip)
     end
 
-    it 'respects a max_width' do
+    it 'respects width: 80' do
 
       expect(
-        Flor.to_djan(@v, max_width: 80, colours: false)
+        Flor.to_djan(@v, width: 80, colours: false)
       ).to eq(%{
 { type:            car,
   "make/brand":    mitsubishi,
