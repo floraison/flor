@@ -82,7 +82,7 @@ module Flor
     def newline_or_tab_or_space(out, keylen, opts)
 
       if kml = opts[:key_max_len]
-        out << ' ' * (kml - opts[:indent] - keylen)
+        out << ' ' * (kml - keylen)
       else
         newline_or_space(out, opts)
       end
@@ -124,8 +124,9 @@ module Flor
       key_max_len, val_max_len =
         x.inject([ 0, 0 ]) { |(kl, vl), (k, v)|
           [ [ kl, len(k, opts) ].max, [ vl, len(v, opts) ].max ] }
+      key_max_len += 1
         #
-      if i && w && i + key_max_len + 2 + val_max_len < w
+      if i && w && i + key_max_len + 1 + val_max_len < w
         opts = opts.merge(key_max_len: key_max_len)
       end
 
