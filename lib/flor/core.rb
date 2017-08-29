@@ -74,7 +74,7 @@ module Flor
         File.join(File.dirname(__FILE__), dir, '*.rb')
       end
 
-    Dir[dirpath].each { |path| require(path) }
+    Dir[dirpath].sort.each { |path| require(path) }
   end
 end
 
