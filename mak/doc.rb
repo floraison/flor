@@ -65,7 +65,7 @@ def make_procedures_doc
 
   procs =
     (
-      Dir["lib/flor/pcore/*.rb"] + Dir["lib/flor/punit/*.rb"]
+      Dir["lib/flor/pcore/*.rb"].sort + Dir["lib/flor/punit/*.rb"].sort
     ).collect { |path| make_proc_doc(path) }.compact
   pp procs
 
