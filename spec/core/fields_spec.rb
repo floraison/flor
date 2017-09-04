@@ -28,6 +28,13 @@ describe 'Flor core' do
           2
       })
 
+if r['point'] != 'terminated'
+  puts "-" * 80
+  puts "-" * 80
+  pp r
+  puts "-" * 80
+  puts "-" * 80
+end
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)
     end
