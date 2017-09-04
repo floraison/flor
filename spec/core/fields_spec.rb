@@ -19,7 +19,7 @@ describe 'Flor core' do
 
     it 'is derefenced upon application' do
 
-      r = @executor.launch(%{
+      r = @executor.launch(%q{
         set f.a
           sequence
         #$(f.a)
@@ -28,20 +28,20 @@ describe 'Flor core' do
           2
       })
 
-if r['point'] != 'terminated'
-  puts "-" * 80
-  puts "-" * 80
-  pp r
-  puts "-" * 80
-  puts "-" * 80
-end
+#if r['point'] != 'terminated'
+#  puts "-" * 80
+#  puts "-" * 80
+#  pp r
+#  puts "-" * 80
+#  puts "-" * 80
+#end
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)
     end
 
     it 'triggers an error when missing' do
 
-      r = @executor.launch(%{
+      r = @executor.launch(%q{
         f.a
           1
           2
@@ -54,7 +54,7 @@ end
     it 'yields the value if not a proc or a func' do
 
       r = @executor.launch(
-        %{
+        %q{
           f.a 2
         },
         payload: { 'a' => 1 })
@@ -66,7 +66,7 @@ end
     it 'accepts a tag' do
 
       r = @executor.launch(
-        %{
+        %q{
           f.a tag: 'x'
         },
         payload: { 'a' => 1 })
@@ -87,7 +87,7 @@ end
     it 'yields the value' do
 
       r = @executor.launch(
-        %{
+        %q{
           f.key
         },
         payload: { 'key' => 'c major' })
@@ -99,7 +99,7 @@ end
 
     it 'yields null else' do
 
-      r = @executor.launch(%{
+      r = @executor.launch(%q{
         f.key
       })
 
@@ -114,7 +114,7 @@ end
     it 'yields the desired value' do
 
       r = @executor.launch(
-        %{
+        %q{
           set f.c f.a.0
           f.a.0.b
         },
@@ -127,7 +127,7 @@ end
 
     it 'yields null if not found' do
 
-      r = @executor.launch(%{
+      r = @executor.launch(%q{
         f.a.0.b
       })
 
