@@ -199,6 +199,7 @@ module Flor
           @db[:flor_messages]
             .select(:exid)
             .exclude(exid: _exids_being_processed)
+            .exclude(status: %w[ reserved consumed ])
             .limit(exe_count)
         @db[:flor_messages]
           .where(exid: _exids, status: 'created')
