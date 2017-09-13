@@ -83,6 +83,54 @@ describe Flor::Storage do
       expect(ms['cc'].map { |m| m[:status] }.uniq).to eq(%w[ created ])
       expect(ms['cc'].map { |m| m[:point] }).to eq(%w[ cancel ])
     end
+
+    it 'does not consider many "consumed" messages' do
+
+      d = 'domain1'
+
+      @db[:flor_messages].insert(
+        point: 'execute', exid: 'a0', status: 'consumed', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+      @db[:flor_messages].insert(
+        point: 'execute', exid: 'a1', status: 'consumed', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+      @db[:flor_messages].insert(
+        point: 'execute', exid: 'a2', status: 'consumed', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+      @db[:flor_messages].insert(
+        point: 'execute', exid: 'a3', status: 'consumed', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+      @db[:flor_messages].insert(
+        point: 'execute', exid: 'a4', status: 'consumed', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+      @db[:flor_messages].insert(
+        point: 'execute', exid: 'a5', status: 'consumed', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+      @db[:flor_messages].insert(
+        point: 'execute', exid: 'a6', status: 'consumed', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+      @db[:flor_messages].insert(
+        point: 'execute', exid: 'a7', status: 'consumed', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+      @db[:flor_messages].insert(
+        point: 'execute', exid: 'cc', status: 'consumed', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+      @db[:flor_messages].insert(
+        point: 'execute', exid: 'bb', status: 'created', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+      @db[:flor_messages].insert(
+        point: 'cancel', exid: 'cc', status: 'created', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+      @db[:flor_messages].insert(
+        point: 'execute', exid: 'bb', status: 'reserved-other', domain: d,
+        ctime: Flor.tstamp, mtime: Flor.tstamp)
+
+      ms = @unit.storage.load_messages(1)
+
+      expect(ms.keys).to eq(%w[ cc ])
+      expect(ms['cc'].map { |m| m[:status] }.uniq).to eq(%w[ created ])
+      expect(ms['cc'].map { |m| m[:point] }).to eq(%w[ cancel ])
+    end
   end
 end
 
