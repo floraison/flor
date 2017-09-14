@@ -287,11 +287,23 @@ module Flor
       synchronize do
 
         if @archive
+          n = Flor.tstamp
+          u = @unit.identifier
           @db[:flor_messages]
             .where(
               id: messages.collect { |m| m['mid'] }.compact)
             .update(
-              status: 'consumed', mtime: Flor.tstamp, munit: @unit.identifier)
+              status: 'consumed', mtime: n, munit: u)
+          p = %w[ terminated failed ceased ]
+          ms = messages.select {|m| !m['mid'] && p.include?(m['point'])}
+          @db[:flor_messages]
+            .import(
+              [ :domain, :exid, :point, :content,
+                :status, :ctime, :mtime, :cunit, :munit ],
+              ms.map { |m|
+                [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
+                  'consumed', n, n, u, u ]
+              })
         else
           @db[:flor_messages]
             .where(
