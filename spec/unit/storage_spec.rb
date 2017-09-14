@@ -178,7 +178,7 @@ describe Flor::Storage do
       @unit = Flor::Unit.new('envs/test/etc/conf.json')
       @unit.conf[:unit] = 'u_storage'
       #@unit.hooker.add('journal', Flor::Journal)
-      @unit.storage.instance_variable_set(:@archive, true)
+      @unit.storage.archive = true
       @unit.storage.delete_tables
       @unit.storage.migrate
       @unit.start

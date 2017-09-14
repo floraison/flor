@@ -11,6 +11,8 @@ module Flor
     attr_reader :mutex
       # might be useful for some implementations
 
+    attr_accessor :archive
+
     def initialize(unit)
 
       @unit = unit
