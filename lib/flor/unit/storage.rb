@@ -284,29 +284,35 @@ module Flor
       []
     end
 
+    POINTS_TO_ARCHIVE = %w[ terminated failed ceased ]
+
     def consume(messages)
 
-      synchronize do
+      transync do
 
         if @archive
+
           n = Flor.tstamp
           u = @unit.identifier
+
           @db[:flor_messages]
             .where(
               id: messages.collect { |m| m['mid'] }.compact)
             .update(
               status: 'consumed', mtime: n, munit: u)
-          p = %w[ terminated failed ceased ]
-          ms = messages.select {|m| !m['mid'] && p.include?(m['point'])}
+
           @db[:flor_messages]
             .import(
               [ :domain, :exid, :point, :content,
                 :status, :ctime, :mtime, :cunit, :munit ],
-              ms.map { |m|
-                [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
-                  'consumed', n, n, u, u ]
-              })
+              messages
+                .select { |m|
+                  ! m['mid'] && POINTS_TO_ARCHIVE.include?(m['point']) }
+                .map { |m|
+                  [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
+                    'consumed', n, n, u, u ] })
         else
+
           @db[:flor_messages]
             .where(
               id: messages.collect { |m| m['mid'] }.compact)
