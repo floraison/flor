@@ -288,36 +288,10 @@ module Flor
 
     def consume(messages)
 
-      transync do
-
-        if @archive
-
-          n = Flor.tstamp
-          u = @unit.identifier
-
-          @db[:flor_messages]
-            .where(
-              id: messages.collect { |m| m['mid'] }.compact)
-            .update(
-              status: 'consumed', mtime: n, munit: u)
-
-          @db[:flor_messages]
-            .import(
-              [ :domain, :exid, :point, :content,
-                :status, :ctime, :mtime, :cunit, :munit ],
-              messages
-                .select { |m|
-                  ! m['mid'] && POINTS_TO_ARCHIVE.include?(m['point']) }
-                .map { |m|
-                  [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
-                    'consumed', n, n, u, u ] })
-        else
-
-          @db[:flor_messages]
-            .where(
-              id: messages.collect { |m| m['mid'] }.compact)
-            .delete
-        end
+      if @archive
+        consume_and_archive(messages)
+      else
+        consume_and_discard(messages)
       end
 
     rescue => err
@@ -529,6 +503,43 @@ module Flor
     end
 
     protected
+
+    def consume_and_archive(messages)
+
+      transync do
+
+        n = Flor.tstamp
+        u = @unit.identifier
+
+        @db[:flor_messages]
+          .where(
+            id: messages.collect { |m| m['mid'] }.compact)
+          .update(
+            status: 'consumed', mtime: n, munit: u)
+
+        @db[:flor_messages]
+          .import(
+            [ :domain, :exid, :point, :content,
+              :status, :ctime, :mtime, :cunit, :munit ],
+            messages
+              .select { |m|
+                ! m['mid'] && POINTS_TO_ARCHIVE.include?(m['point']) }
+              .map { |m|
+                [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
+                  'consumed', n, n, u, u ] })
+      end
+    end
+
+    def consume_and_discard(messages)
+
+      synchronize do
+
+        @db[:flor_messages]
+          .where(
+            id: messages.collect { |m| m['mid'] }.compact)
+          .delete
+      end
+    end
 
     def load_timers
 
