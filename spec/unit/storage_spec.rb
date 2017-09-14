@@ -134,3 +134,83 @@ describe Flor::Storage do
   end
 end
 
+describe Flor::Storage do
+
+  context 'when not archiving' do
+
+    before :each do
+
+      @unit = Flor::Unit.new('envs/test/etc/conf.json')
+      @unit.conf[:unit] = 'u_storage'
+      #@unit.hooker.add('journal', Flor::Journal)
+      @unit.storage.delete_tables
+      @unit.storage.migrate
+      @unit.start
+    end
+
+    after :each do
+
+      @unit.shutdown
+    end
+
+    it 'cleans messages' do
+
+      expect(@unit.storage.db[:flor_messages].count).to eq(0)
+
+      r = @unit.launch(
+        %q{
+          sequence
+            sequence _
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      wait_until { @unit.storage.db[:flor_messages].count == 0 }
+        # which is some kind of expectation
+    end
+  end
+
+  context 'when archiving' do
+
+    before :each do
+
+      @unit = Flor::Unit.new('envs/test/etc/conf.json')
+      @unit.conf[:unit] = 'u_storage'
+      #@unit.hooker.add('journal', Flor::Journal)
+      @unit.storage.instance_variable_set(:@archive, true)
+      @unit.storage.delete_tables
+      @unit.storage.migrate
+      @unit.start
+    end
+
+    after :each do
+
+      @unit.shutdown
+    end
+
+    it 'archives important messages' do
+
+      expect(@unit.storage.db[:flor_messages].count).to eq(0)
+
+      r = @unit.launch(
+        %q{
+          sequence
+            sequence _
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      wait_until { @unit.storage.db[:flor_messages].count == 2 }
+
+      expect(
+        @unit.storage.db[:flor_messages].select(:point, :status).to_a
+      ).to eq([
+        { point: 'execute', status: 'consumed' },
+        { point: 'terminated', status: 'consumed' },
+      ])
+    end
+  end
+end
+
