@@ -404,5 +404,25 @@ module Flor
 
     h
   end
+
+
+  #
+  # misc
+
+  POINTS = %w[
+    execute receive
+    return
+    entered left
+    task detask
+    schedule trigger
+    signal cancel
+    terminated failed ceased
+    idle
+  ]
+
+  def self.point?(s)
+
+    POINTS.include?(s)
+  end
 end
 

@@ -4,6 +4,7 @@
 
 ## flor 0.15.0  not yet released
 
+- Introduce Flor.point?(s)
 - Archive terminated, failed and ceased messages (Tsunehisa Doi)
 - Let "case" match regular expressions
 

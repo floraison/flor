@@ -367,5 +367,20 @@ describe Flor do
       end
     end
   end
+
+  describe '.point?' do
+
+    it 'returns true if the argument is a point' do
+
+      expect(Flor.point?('execute')).to eq(true)
+      expect(Flor.point?('task')).to eq(true)
+    end
+
+    it 'returns false if the argument is not a point' do
+
+      expect(Flor.point?(1)).to eq(false)
+      expect(Flor.point?('nada')).to eq(false)
+    end
+  end
 end
 
