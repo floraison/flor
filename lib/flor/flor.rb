@@ -216,12 +216,12 @@ module Flor
 
   def self.potential_unit_name?(s)
 
-    s.is_a?(String) && s.match(UNIT_NAME_REX)
+    s.is_a?(String) && !! s.match(UNIT_NAME_REX)
   end
 
   def self.potential_domain_name?(s)
 
-    s.is_a?(String) && s.match(DOMAIN_NAME_REX)
+    s.is_a?(String) && !! s.match(DOMAIN_NAME_REX)
   end
 
   def self.split_flow_name(s)

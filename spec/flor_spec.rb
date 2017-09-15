@@ -186,6 +186,35 @@ describe Flor do
     end
   end
 
+  describe '.potential_domain_name?' do
+
+    [
+      [ 1234, false ],
+      [ 'net.ntt-u-20170915.0405.pukotsetibi', false ],
+      [ 'net.ntt', true ],
+    ].each do |o, r|
+
+      it "returns #{r} for #{o.inspect}" do
+
+        expect(Flor.potential_domain_name?(o)).to eq(r)
+      end
+    end
+  end
+
+#  describe '.potential_exid?' do
+#
+#    [
+#      [ 1234, false ],
+#      [ 'net.ntt-u-20170915.0405.pukotsetibi', true ],
+#    ].each do |o, r|
+#
+#      it "returns #{r} for #{o.inspect}" do
+#
+#        expect(Flor.potential_exid?(o)).to eq(r)
+#      end
+#    end
+#  end
+
   describe '.parent_tree_locate(t, nid)' do
 
     before :all do
