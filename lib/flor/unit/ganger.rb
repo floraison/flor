@@ -108,7 +108,7 @@ module Flor
 
     def gather_vars(executor, tconf, message)
 
-      # try to return before calling executor.vars(nid) which my be costly...
+      # try to return before a potentially costly call to executor.vars(nid)
 
       return nil if (tconf.keys & %w[ include_vars exclude_vars ]).empty?
         # default behaviour, don't pass variables to taskers
