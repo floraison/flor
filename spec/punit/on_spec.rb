@@ -32,7 +32,7 @@ describe 'Flor punit' do
         %q{
           set l []
           on 'approve'
-            push l 'approved'
+            push l "$(msg.name)d($(sig))"
           push l 'requested'
           signal 'approve'
           push l 'done.'
@@ -40,7 +40,7 @@ describe 'Flor punit' do
         wait: true)
 
       expect(r['point']).to eq('terminated')
-      expect(r['vars']['l']).to eq(%w[ requested done. approved ])
+      expect(r['vars']['l']).to eq(%w[ requested done. approved(approve) ])
     end
 
     it 'traps signals and their payload' do
