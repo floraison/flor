@@ -20,7 +20,7 @@ describe 'Flor procedures' do
     it 'returns true if empty' do
 
       r = @executor.launch(
-        %{
+        %q{
           and _
         })
 
@@ -31,7 +31,7 @@ describe 'Flor procedures' do
     it 'returns true if all the children yield true' do
 
       r = @executor.launch(
-        %{
+        %q{
           and true true
         })
 
@@ -42,7 +42,7 @@ describe 'Flor procedures' do
     it 'returns false if a child yields false' do
 
       r = @executor.launch(
-        %{
+        %q{
           and false true
         })
 
@@ -53,7 +53,7 @@ describe 'Flor procedures' do
     it 'returns false as soon as possible' do
 
       r = @executor.launch(
-        %{
+        %q{
           and false true
         })
 
@@ -86,7 +86,7 @@ describe 'Flor procedures' do
     it 'returns true as soon as possible' do
 
       r = @executor.launch(
-        %{
+        %q{
           or true false
         })
 
@@ -108,7 +108,7 @@ describe 'Flor procedures' do
     it 'gives higher precedence to "and"'# do
 #
 #      r = @executor.launch(
-#        %{
+#        %q{
 #          and true or false 2 FIXME
 #        })
 #
