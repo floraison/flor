@@ -375,6 +375,7 @@ fail NotImplementedError
         puts "not found"
       end
     end
+    make_alias('e', 'edit')
 
     def hlp_conf
       %{ prints current unit configuration }
