@@ -377,6 +377,21 @@ fail NotImplementedError
     end
     make_alias('e', 'edit')
 
+    def hlp_cat
+      %{ prints the current flow }
+    end
+    def man_cat
+      %{
+        * cat
+          prints the current flow
+      }
+    end
+    def cmd_cat(line)
+
+      puts "  # #{@flow_path}\n"
+      File.readlines(@flow_path).each { |line| puts "  #{line}" }
+    end
+
     def hlp_conf
       %{ prints current unit configuration }
     end
