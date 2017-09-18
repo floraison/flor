@@ -1,7 +1,8 @@
 
 class ShellTasker < Flor::BasicTasker
 
-  NATO = %w[ alpha bravo charly delta echo fox foxtrott golf echo hotel ]
+  NATO = %w[ alpha bravo charly delta fox foxtrott golf echo hotel ]
+    # there is no "echo" here, since there is an "echo" procedure
 
   def task
 
