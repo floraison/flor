@@ -461,6 +461,14 @@ fail NotImplementedError
     def hlp_executions
       %{ lists the executions currently active }
     end
+    def man_executions
+      %{
+        * executions
+          lists all the executions currently active
+        * executions all
+          lists all the executions
+      }
+    end
     def cmd_executions(line)
 
       exes = @unit.executions
