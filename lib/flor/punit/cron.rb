@@ -47,7 +47,6 @@ class Flor::Pro::Cron < Flor::Macro
     th[1] << td
 
     th
-.tap { |x| pp x }
   end
 end
 
