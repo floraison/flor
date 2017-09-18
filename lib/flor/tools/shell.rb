@@ -566,7 +566,9 @@ fail NotImplementedError
       rest = nil if rest && rest.strip == 'off'
       rest = 'stdout,dbg' if rest && rest.strip == 'on'
 
-      @unit.conf.merge!(Flor::Conf.interpret_flor_debug(rest)) if rest
+      @unit.conf.merge!(Flor::Conf.interpret_flor_debug(debug: rest)) if rest
+
+      cmd_conf(nil) # display conf
     end
 
     def hlp_hook

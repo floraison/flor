@@ -103,10 +103,11 @@ module Flor
 
     def self.interpret_flor_debug(c)
 
-      plus, minus = [ c['flor_debug'], c['debug'], ENV['FLOR_DEBUG'] ]
-        .collect { |v| (v || '').split(/\s*,\s*/) }
-        .flatten(1)
-        .partition { |v| v[0, 1] != '-' }
+      plus, minus = [
+        c['flor_debug'], c[:debug], c['debug'], ENV['FLOR_DEBUG'] ]
+          .collect { |v| (v || '').split(/\s*,\s*/) }
+          .flatten(1)
+          .partition { |v| v[0, 1] != '-' }
       plus = plus.collect { |v| v[0, 1] == '+' ? v[1..-1] : v }
       minus = minus.collect { |v| v[0, 1] == '-' ? v[1..-1] : v }
       a = plus - minus
