@@ -111,6 +111,8 @@ module Flor::Tools
 
       root = @c.dark_gray(@root + '/')
 
+      time = Time.now.strftime(' %H:%M:%S')
+
       ec = @unit.executions.where(status: 'active').count
       exes = ' ' + @c.yellow("ex#{ec}")
 
@@ -123,7 +125,7 @@ module Flor::Tools
       end
       tas = ta > 0 ? ' ' + @c.yellow("ta#{ta}") : ''
 
-      "#{root}#{exes}#{tis}#{tas} > "
+      "#{root}#{time}#{exes}#{tis}#{tas} > "
     end
 
     def do_eval(line)
