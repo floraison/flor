@@ -4,6 +4,7 @@ module Flor
   class Execution < FlorModel
 
     def nodes; data['nodes']; end
+    def zero_node; nodes['0']; end
 
     def tags
 
@@ -36,6 +37,11 @@ module Flor
       end
 
       tree
+    end
+
+    def zero_variables
+
+      zero_node['vars']
     end
 
     # class methods

@@ -468,15 +468,17 @@ fail NotImplementedError
 
       table = Terminal::Table.new(
         #title: 'executions',
-        headings: %w[ id exid started status ],
+        headings: %w[ id exid name started status ],
         style: table_style)
       #table.align_column(0, :right)
 
       exes
         .each { |e|
+          vs = e.zero_variables
           table.add_row([
             aright(e.id),
             @c.yl(e.exid),
+            vs['execution_name'] || vs['flow_name'] || vs['name'],
             e.ctime[0, 19],
             e.failed? ? 'failed' : 'running'
           ]) }
