@@ -168,11 +168,20 @@ module Flor::Tools
     #
     # command helpers
 
+    ALIASES = {}
+
     def self.make_alias(a, b)
 
       define_method("hlp_#{a}") { "alias to #{b.inspect}" }
       alias_method "man_#{a}", "man_#{b}" rescue nil
       alias_method "cmd_#{a}", "cmd_#{b}"
+
+      (ALIASES[b] ||= []) << a
+    end
+
+    def self.is_alias?(c)
+
+      !! ALIASES.values.find { |a| a.include?(c) }
     end
 
     def fname(line, index=1); line.split(/\s+/)[index]; end
@@ -284,6 +293,7 @@ fail NotImplementedError
     def cmd_help(line)
 
       if cmd = arg(line)
+
         begin
           send("man_#{cmd}").split("\n").collect(&:strip).each do |l|
             if l[0, 1] == '*'
@@ -826,10 +836,13 @@ fail NotImplementedError
     end
 
     #
-    # use Readline if possible
+    # enumerate commands (for cmd_help)
 
     COMMANDS = self.allocate.methods \
       .select { |m| m.to_s.match(/^cmd_/) }.collect { |m| m[4..-1] }.sort
+
+    #
+    # use Readline if possible
 
     begin
       require 'readline'
