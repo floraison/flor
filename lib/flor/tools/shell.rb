@@ -266,12 +266,23 @@ fail NotImplementedError
     def hlp_launch
       %{ launches a new execution of #{@flow_path} }
     end
+    def man_launch
+      %{
+        * launch
+          launches an execution of the current flow
+        * launch k0: v0, k1: v1, ...
+          launches an execution with the given variables
+      }
+    end
     def cmd_launch(line)
 
       flow = File.read(@flow_path)
       variables = Flor::ConfExecutor.interpret(@variables_path)
       payload = Flor::ConfExecutor.interpret(@payload_path)
       domain = 'shell'
+
+      vars = Flor::ConfExecutor.eval("\n" + line[6..-1]) rescue {}
+      variables.merge!(vars)
 
       exid = @unit.launch(
         flow, domain: domain, vars: variables, payload: payload)
