@@ -150,7 +150,7 @@ module Flor
     headers = opts[:headers]; headers = true if headers.nil?
     headers = true if opts[:title]
 
-    h = "#{_c.yl}#{Flor.to_d(t0, compact: true)}"
+    h = "#{_c.yl}#{Flor.to_d(t0, opts.merge(compact: true))}"
     c = t1.is_a?(Array) ? '' : " #{_c.yl}#{t1}"
     l = " #{_c.dg}L#{t2}"
 
@@ -200,7 +200,7 @@ module Flor
     end
 
     s << ind << _c.dg << '| ' << nid << ' '
-    s << _c.yl << Flor.to_d(tree[0], compact: true) << _c.dg << ' L' << tree[2]
+    s << _c.yl << Flor.to_d(tree[0], opts.merge(compact: true)) << _c.dg << ' L' << tree[2]
 
     atts.each_with_index do |ct, i|
       print_flat_tree(ct, "_#{i}", opts)
