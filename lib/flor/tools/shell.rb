@@ -496,7 +496,8 @@ fail NotImplementedError
           table.add_row([
             aright(e.id),
             @c.yl(e.exid),
-            vs['execution_name'] || vs['flow_name'] || vs['name'],
+            %w[ execution_name process_name flow_name name ]
+              .collect { |k| vs[k] }.compact.first,
             e.ctime[0, 19],
             e.failed? ? 'failed' : 'running'
           ]) }
