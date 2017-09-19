@@ -497,7 +497,7 @@ fail NotImplementedError
 
       table = Terminal::Table.new(
         #title: 'executions',
-        headings: %w[ id exid name started status ],
+        headings: %w[ id exid name started tis status ],
         style: table_style)
       #table.align_column(0, :right)
 
@@ -510,6 +510,7 @@ fail NotImplementedError
             %w[ execution_name process_name flow_name name ]
               .collect { |k| vs[k] }.compact.first,
             e.ctime[0, 19],
+            aright(@unit.timers.where(exid: e.exid, status: 'active').count),
             e.failed? ? 'failed' : 'running'
           ]) }
 
