@@ -800,7 +800,11 @@ fail NotImplementedError
       exe =
         @unit.executions.first(Sequel.like(:exid, "%#{frag}%")) ||
         fail(ArgumentError.new("execution matching \"%#{frag}%\" not found"))
-#p exe
+      puts
+      puts "  exid:    #{@c.yellow(exe.exid)}"
+      puts "  status:  #{@c.yellow(exe.status)}"
+      puts
+
       tree = exe.full_tree
       nodes = exe.nodes
 
