@@ -281,7 +281,7 @@ fail NotImplementedError
       payload = Flor::ConfExecutor.interpret(@payload_path)
       domain = 'shell'
 
-      vars = Flor::ConfExecutor.eval("\n" + line[6..-1]) rescue {}
+      vars = Flor::ConfExecutor.interpret_line("\n" + line[6..-1]) rescue {}
       variables.merge!(vars)
 
       exid = @unit.launch(

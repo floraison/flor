@@ -222,7 +222,7 @@ module Flor
       ps.last == 'etc' ? File.absolute_path(File.join(dir, '..')) : dir
     end
 
-    def self.eval(s)
+    def self.interpret_line(s)
 
       r = interpret("\n#{s}")
       r.delete('root') if r.is_a?(Hash)
