@@ -316,7 +316,7 @@ class Flor::Node
 
   def lookup_in_node(pth)
 
-    Flor.deep_get(@node, pth)
+    Dense.fetch(@node, pth)
   end
 
   class PseudoVarContainer < Hash
@@ -331,23 +331,33 @@ class Flor::Node
   PROC_VAR_CONTAINER = PseudoVarContainer.new('proc')
   TASKER_VAR_CONTAINER = PseudoVarContainer.new('task')
 
+  def escape(k)
+
+    case k
+    when '*', '.' then "\\#{k}"
+    else k
+    end
+  end
+
   def lookup_var(node, mod, key, pth)
 
     c = lookup_var_container(node, mod, key)
 
     kp = [ key, pth ].reject { |x| x == nil || x.size < 1 }.join('.')
+    kp = escape(kp)
 
-    v = Flor.deep_get(c, kp)
-#p [ mod, key, pth, '->', v ]
+    Dense.fetch(c, kp)
 
-    return v unless v.is_a?(Symbol)
+  rescue Dense::Path::NotIndexableError => nie
 
-    vs = v.to_s.split('.')
-    tail = vs.pop
-    vs = vs.join('.')
-
-    fail IndexError.new("variable #{tail.inspect} not found") if vs.empty?
-    fail IndexError.new("no key #{tail.inspect} in variable #{vs.inspect}")
+    if nie.fail_path.length == 1
+      fail nie.relabel(
+        "variable #{nie.fail_path.to_s.inspect} not found")
+    else
+      fail nie.relabel(
+        "no key #{nie.fail_path.last.inspect} " +
+        "in variable #{nie.fail_path[0..-2].to_s.inspect}")
+    end
   end
 
   def lookup_var_container(node, mod, key)
@@ -420,17 +430,17 @@ class Flor::Node
 
   def lookup_field(mod, key_and_path)
 
-    r = Flor.deep_get(payload.current, key_and_path)
-    r.is_a?(Symbol) ? nil : r
+    Dense.fetch(payload.current, key_and_path)
+
+  rescue IndexError
+
+    nil
   end
 
   def key_split(key) # => category, mode, key
 
     m = key.match(
       /\A(?:([lgd]?)((?:v|var|variable)|w|f|fld|field|t|tag)\.)?(.+)\z/)
-
-    #fail ArgumentError.new("couldn't split key #{key.inspect}") unless m
-      # spare that
 
     ca = (m[2] || 'v')[0, 1]
     mo = m[1] || ''

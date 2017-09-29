@@ -472,11 +472,11 @@ class Flor::Procedure < Flor::Node
 
     if vars
       return node if mode == 'l'
-      return node if mode == '' && Flor.deep_has_key?(vars, k)
+      return node if mode == '' && Dense.has_key?(vars, k)
     end
 
     if cnode = mode == '' && @execution['nodes'][node['cnid']]
-      return cnode if Flor.deep_has_key?(cnode['vars'], k)
+      return cnode if Dense.has_key?(cnode['vars'], k)
     end
 
     par = parent_node(node)
@@ -489,28 +489,28 @@ class Flor::Procedure < Flor::Node
 
   def set_var(mode, k, v)
 
-    fail IndexError.new("cannot set domain variables") if mode == 'd'
+    fail IndexError.new("Cannot set domain variables") if mode == 'd'
 
-    node = lookup_var_node(@node, mode, k)
-    node = lookup_var_node(@node, 'l', k) if node.nil? && mode == ''
+    begin
 
-    if node
+      node = lookup_var_node(@node, mode, k)
+      node = lookup_var_node(@node, 'l', k) if node.nil? && mode == ''
 
-      v = Flor.deep_set(node['vars'], k, v)
+      return Dense.set(node['vars'], k, v) if node
 
-      return v unless v.is_a?(Symbol)
+    rescue IndexError
     end
 
-    fail IndexError.new("couldn't set var #{mode}v.#{k}")
+    fail IndexError.new("Couldn't set var #{mode}v.#{k}")
   end
 
   def set_field(k, v)
 
-    value = Flor.deep_set(payload.copy, k, v)
+    Dense.set(payload.copy, k, v)
 
-    fail IndexError.new("couldn't set field #{k}") if value.is_a?(Symbol)
+  rescue IndexError
 
-    value
+    fail IndexError.new("Couldn't set field #{k}")
   end
 
   def set_value(k, v)
@@ -523,7 +523,7 @@ class Flor::Procedure < Flor::Node
     when 'f' then set_field(key, v)
     when 'v' then set_var(mod, key, v)
     #when 'w' then set_war(key, v)
-    else fail IndexError.new("don't know how to set #{k.inspect}")
+    else fail IndexError.new("Don't know how to set #{k.inspect}")
     end
   end
 

@@ -8,6 +8,7 @@ require 'socket'
 
 require 'munemo'
 require 'raabro'
+require 'dense'
 
 
 module Flor
@@ -21,7 +22,6 @@ require 'flor/djan'
 require 'flor/id'
 require 'flor/log'
 require 'flor/flor'
-require 'flor/deep'
 require 'flor/dollar'
 require 'flor/errors'
 require 'flor/parser'

@@ -33,7 +33,7 @@ class SpecDollar < Flor::Dollar
 
     key, pth = k.split('.', 2)
 
-    Flor.deep_get(@h[key], pth)
+    pth ? Dense.get(@h[key], pth) : @h[key]
   end
 end
 

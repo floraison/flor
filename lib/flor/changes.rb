@@ -17,9 +17,9 @@ module Flor::Changes
   def do_apply(h, c)
 
     case c['op']
-    when 'add' then Flor.deep_insert(h, c['path'], c['value'])
-    when 'replace' then Flor.deep_set(h, c['path'], c['value'])
-    when 'remove' then Flor.deep_unset(h, c['path'])
+    when 'add' then Dense.insert(h, c['path'], c['value'])
+    when 'replace' then Dense.set(h, c['path'], c['value'])
+    when 'remove' then Dense.unset(h, c['path'])
     end
   end
 end

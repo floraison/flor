@@ -53,7 +53,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
     unless key
       ret = ret.to_s
-      return wrap_no_match_reply unless Flor.deep_has_key?(val, ret)
+      return wrap_no_match_reply unless Dense.has_key?(val, ret)
       @node['key'] = ret
       @node['keys'] << ret if @node['keys']
       return super
@@ -77,7 +77,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
       @node['binding'][ct[0]] = val[@node['key']] if ct[0].length > 0
 
-    elsif Flor.deep_get(val, key) != ret
+    elsif Dense.get(val, key) != ret
 
       return wrap_no_match_reply
     end
@@ -137,7 +137,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
   def sub_val(child_index)
 
-    [ 1, Flor.deep_get(val, @node['key']) ]
+    [ 1, Dense.get(val, @node['key']) ]
   end
 end
 

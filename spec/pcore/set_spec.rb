@@ -88,7 +88,8 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('failed')
       expect(r['from']).to eq('0_1')
-      expect(r['error']['msg']).to eq("couldn't set field h.i.j")
+      expect(r['error']['kla']).to eq("IndexError")
+      expect(r['error']['msg']).to eq("Couldn't set field h.i.j")
       expect(r['payload']).to eq({ 'h' => {}, 'ret' => 7 })
     end
 
@@ -145,7 +146,8 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('failed')
       expect(r['from']).to eq('0_1')
-      expect(r['error']['msg']).to eq("couldn't set var v.h.i.j")
+      expect(r['error']['kla']).to eq("IndexError")
+      expect(r['error']['msg']).to eq("Couldn't set var v.h.i.j")
       expect(r['payload']).to eq({ 'ret' => 9 })
     end
 

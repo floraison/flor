@@ -171,16 +171,17 @@ describe 'Flor core' do
 
     it 'fails when the container does not exist' do
 
-      r = @executor.launch(%{ a.0 })
+      r = @executor.launch(%q{ a.0 })
 
       expect(r['point']).to eq('failed')
+      expect(r['error']['kla']).to eq('Dense::Path::NotIndexableError')
       expect(r['error']['msg']).to eq('variable "a" not found')
     end
 
     it 'fails when the container does not exist (deeper)' do
 
       r = @executor.launch(
-        %{ h.a.0 },
+        %q{ h.a.0 },
         vars: { 'h' => {} })
 
       expect(r['point']).to eq('failed')
