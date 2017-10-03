@@ -19,7 +19,7 @@
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
 * [match](match.md) - "match" can be thought of as a "destructuring [case](case.md)".
 * [matchr, match?](matchr.md) - Matches a string against a regular expression.
-* [move](move.md) - Moves a cursor to a given position
+* [move](move.md) - Moves a cursor to a given position, a kind of local goto.
 * [noeval](noeval.md) - Immediately replies, children are not evaluated
 * [noret](noret.md) - executes its children, but doesn't alter the received f.ret
 * [push, pushr](push.md) - Pushes a value into an array (in a variable or a field).

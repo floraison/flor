@@ -1,7 +1,7 @@
 
 # language.md
 
-Flor is mostly an interpreter. It takes as input a tree and traverses it node by node.
+Flor is mostly an interpreter. It takes as input a text, parses it into a(n abstract syntax) tree and traverses it node by node.
 
 Here is an example tree:
 ```ruby
@@ -32,6 +32,9 @@ sequence
 ```
 
 ## procedures
+
+Flor comes with a set of [predefined procedures](https://github.com/floraison/flor/tree/master/doc/procedures#procedures).
+
 ### arrays and objects
 
 ## attributes

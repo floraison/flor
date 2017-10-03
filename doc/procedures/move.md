@@ -1,13 +1,13 @@
 
 # move
 
-Moves a cursor to a given position
+Moves a cursor to a given position, a kind of local goto.
 
 ```
 cursor
-  do-this
+  do-this _
   move to: 'do-that-other-thing'
-  do-that _ # got skipped
+  do-that _ # gets skipped
   do-that-other-thing _
 ```
 
