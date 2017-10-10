@@ -665,26 +665,30 @@ fail NotImplementedError
 
     def detail_execution(id)
 
+      o = StringIO.new
+
       exe = lookup_execution(id)
 
       eid = { id: exe.id, exid: exe.exid }.inspect
       con = Flor::Storage.from_blob(exe.values.delete(:content))
       exe.values[:content] = '...'
 
-      puts @c.dg("--- exe #{eid} :")
-      puts h_to_table(exe.values)
-      puts @c.dg("  exe #{eid} content:")
+      o.puts @c.dg("--- exe #{eid} :")
+      o.puts h_to_table(exe.values)
+      o.puts @c.dg("  exe #{eid} content:")
       nodes = con.delete('nodes')
       con['nodes'] = '...'
-      puts indent('  ', h_to_table(con))
-      puts @c.dg("    exe #{eid} content/nodes:")
+      o.puts indent('  ', h_to_table(con))
+      o.puts @c.dg("    exe #{eid} content/nodes:")
       table = Terminal::Table.new(
         headings: %w[ nid data ],
         style: table_style.merge(all_separators: true))
       nodes.each do |k, v|
         table.add_row([ k, Flor.to_d(v, colour: true, indent: 0, width: 70) ])
       end
-      puts indent('    ', table)
+      o.puts indent('    ', table)
+
+      puts o.string
     end
 
     def detail_timer(id)
