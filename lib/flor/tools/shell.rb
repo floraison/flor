@@ -1,4 +1,5 @@
 
+require 'io/console'
 require 'terminal-table'
 
 require 'flor'
@@ -46,6 +47,11 @@ module Flor::Tools
     attr_reader :c
 
     protected
+
+    def terminal_row_count
+
+      IO.console.winsize[0]
+    end
 
     def prepare_home
 
@@ -260,6 +266,19 @@ fail NotImplementedError
       [ exe.exid, nid ]
     end
 
+    def page(type, o)
+
+      fn = "_#{type}.txt"
+      s = o.is_a?(String) ? o : o.string
+
+      if s.lines.to_a.size > terminal_row_count
+        File.open(fn, 'wb') { |f| f.write(s) }
+        system("less -R -N #{fn}")
+      else
+        puts s
+      end
+    end
+
     #
     # the commands
 
@@ -303,14 +322,16 @@ fail NotImplementedError
     end
     def cmd_help(line)
 
+      o = StringIO.new
+
       if cmd = arg(line)
 
         begin
           send("man_#{cmd}").split("\n").collect(&:strip).each do |l|
             if l[0, 1] == '*'
-              puts " #{@c.dg}*#{@c.rs} #{l[1..-1].strip}"
+              o.puts " #{@c.dg}*#{@c.rs} #{l[1..-1].strip}"
             else
-              puts "   #{@c.dark_gray(l)}"
+              o.puts "   #{@c.dark_gray(l)}"
             end
           end
         rescue => err
@@ -319,16 +340,20 @@ fail NotImplementedError
 
       else
 
-        puts
-        puts "## available commands:"
-        puts
+        o.puts
+        o.puts "## available commands:"
+        o.puts
         COMMANDS.each do |cmd|
-          print "* #{@c.yellow(cmd)}"
-          if hlp = (send("hlp_#{cmd}") rescue nil); print " - #{hlp.strip}"; end
-          puts
+          o.print "* #{@c.yellow(cmd)}"
+          if hlp = (send("hlp_#{cmd}") rescue nil)
+            o.print " - #{hlp.strip}"
+          end
+          o.puts
         end
-        puts
+        o.puts
       end
+
+      page(:help, o)
     end
     make_alias('h', 'help')
     make_alias('man', 'help')
@@ -419,7 +444,9 @@ fail NotImplementedError
       %{ prints current unit configuration }
     end
     def cmd_conf(line)
-      puts Flor.to_d(@unit.conf, colour: true, indent: 1, width: true)
+      page(
+        :configuration,
+        Flor.to_d(@unit.conf, colour: true, indent: 1, width: true))
     end
 
     def hlp_t
@@ -442,6 +469,8 @@ fail NotImplementedError
       }
     end
     def cmd_tasks(line)
+
+      o = StringIO.new
 
       frag = arg(line)
 
@@ -474,8 +503,10 @@ fail NotImplementedError
           table.add_row([
             aright(i), tasker, nid, @c.yellow(exid), pl, mt ]) }
 
-      puts table
-      puts "#{tas.count} task#{tas.count != 1 ? 's' : ''}.\n"
+      o.puts table
+      o.puts "#{tas.count} task#{tas.count != 1 ? 's' : ''}.\n"
+
+      page(:tasks, o)
     end
     make_alias('tas', 'tasks')
 
@@ -491,6 +522,8 @@ fail NotImplementedError
       }
     end
     def cmd_executions(line)
+
+      o = StringIO.new
 
       exes = @unit.executions
       exes = exes.where(status: 'active') unless arg(line) == 'all'
@@ -514,8 +547,10 @@ fail NotImplementedError
             e.failed? ? 'failed' : 'running'
           ]) }
 
-      puts table
-      puts "#{exes.count} execution#{exes.count != 1 ? 's' : ''}.\n"
+      o.puts table
+      o.puts "#{exes.count} execution#{exes.count != 1 ? 's' : ''}.\n"
+
+      page(:executions, o)
     end
     make_alias('exes', 'executions')
 
@@ -523,6 +558,8 @@ fail NotImplementedError
       %{ list the timers currently active }
     end
     def cmd_timers(line)
+
+      o = StringIO.new
 
       tis = @unit.timers
       tis = tis.where(status: 'active') unless arg(line) == 'all'
@@ -541,8 +578,10 @@ fail NotImplementedError
             aright(t.schedule), t.ntime[0, 19]
           ]) }
 
-      puts table
-      puts "#{tis.count} timer#{tis.count != 1 ? 's' : ''}.\n"
+      o.puts table
+      o.puts "#{tis.count} timer#{tis.count != 1 ? 's' : ''}.\n"
+
+      page(:timers, o)
     end
     make_alias('tis', 'timers')
 
@@ -688,10 +727,12 @@ fail NotImplementedError
       end
       o.puts indent('    ', table)
 
-      puts o.string
+      page(:execution, o)
     end
 
     def detail_timer(id)
+
+      o = StringIO.new
 
       timer = @unit.timers[id.to_i]
 
@@ -702,10 +743,12 @@ fail NotImplementedError
       con = Flor::Storage.from_blob(timer.delete(:content))
       timer[:content] = '...'
 
-      puts @c.dg("--- timer #{tid} :")
-      puts Flor.to_d(timer, colour: true, indent: 1, width: true)
-      puts @c.dg("--- timer #{tid} content:")
-      puts Flor.to_d(con, colour: true, indent: 1, width: true)
+      o.puts @c.dg("--- timer #{tid} :")
+      o.puts Flor.to_d(timer, colour: true, indent: 1, width: true)
+      o.puts @c.dg("--- timer #{tid} content:")
+      o.puts Flor.to_d(con, colour: true, indent: 1, width: true)
+
+      page(:timer, o)
     end
 
     def detail_task(id)
@@ -764,7 +807,7 @@ fail NotImplementedError
     end
     make_alias('can', 'cancel')
 
-    def render_node(t, nid)
+    def render_node(o, t, nid)
 
       ni = nid
       head = t[0]
@@ -779,12 +822,12 @@ fail NotImplementedError
         rest = @c.green("  <--")
       end
 
-      puts "  #{ni} #{head}#{rest}"
+      o.puts "  #{ni} #{head}#{rest}"
 
       return unless t[1].is_a?(Array)
 
       t[1].each_with_index do |ct, i|
-        render_node(t[1][i], "#{nid}_#{i}")
+        render_node(o, t[1][i], "#{nid}_#{i}")
       end
     end
 
@@ -800,15 +843,17 @@ fail NotImplementedError
     end
     def cmd_render(line)
 
+      o = StringIO.new
+
       frag = arg(line)
 
       exe =
         @unit.executions.first(Sequel.like(:exid, "%#{frag}%")) ||
         fail(ArgumentError.new("execution matching \"%#{frag}%\" not found"))
-      puts
-      puts "  exid:    #{@c.yellow(exe.exid)}"
-      puts "  status:  #{@c.yellow(exe.status)}"
-      puts
+      o.puts
+      o.puts "  exid:    #{@c.yellow(exe.exid)}"
+      o.puts "  status:  #{@c.yellow(exe.status)}"
+      o.puts
 
       tree = exe.full_tree
       nodes = exe.nodes
@@ -832,7 +877,9 @@ fail NotImplementedError
         end
       end
 
-      render_node(tree, '0')
+      render_node(o, tree, '0')
+
+      page(:nodes, o)
     end
     make_alias('r', 'render')
 
