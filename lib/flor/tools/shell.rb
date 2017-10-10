@@ -48,11 +48,6 @@ module Flor::Tools
 
     protected
 
-    def terminal_row_count
-
-      IO.console.winsize[0]
-    end
-
     def prepare_home
 
       home = File.join(@root, 'home')
@@ -266,14 +261,12 @@ fail NotImplementedError
       [ exe.exid, nid ]
     end
 
-    def page(type, o)
+    def page(o)
 
-      fn = "_#{type}.txt"
       s = o.is_a?(String) ? o : o.string
 
-      if s.lines.to_a.size > terminal_row_count
-        File.open(fn, 'wb') { |f| f.write(s) }
-        system("less -R -N #{fn}")
+      if s.lines.to_a.size > IO.console.winsize[0]
+        IO.popen('less -R -N', mode: 'w') { |io| io.write(s) }
       else
         puts s
       end
@@ -353,7 +346,7 @@ fail NotImplementedError
         o.puts
       end
 
-      page(:help, o)
+      page(o)
     end
     make_alias('h', 'help')
     make_alias('man', 'help')
@@ -444,9 +437,7 @@ fail NotImplementedError
       %{ prints current unit configuration }
     end
     def cmd_conf(line)
-      page(
-        :configuration,
-        Flor.to_d(@unit.conf, colour: true, indent: 1, width: true))
+      page(Flor.to_d(@unit.conf, colour: true, indent: 1, width: true))
     end
 
     def hlp_t
@@ -506,7 +497,7 @@ fail NotImplementedError
       o.puts table
       o.puts "#{tas.count} task#{tas.count != 1 ? 's' : ''}.\n"
 
-      page(:tasks, o)
+      page(o)
     end
     make_alias('tas', 'tasks')
 
@@ -550,7 +541,7 @@ fail NotImplementedError
       o.puts table
       o.puts "#{exes.count} execution#{exes.count != 1 ? 's' : ''}.\n"
 
-      page(:executions, o)
+      page(o)
     end
     make_alias('exes', 'executions')
 
@@ -581,7 +572,7 @@ fail NotImplementedError
       o.puts table
       o.puts "#{tis.count} timer#{tis.count != 1 ? 's' : ''}.\n"
 
-      page(:timers, o)
+      page(o)
     end
     make_alias('tis', 'timers')
 
@@ -727,7 +718,7 @@ fail NotImplementedError
       end
       o.puts indent('    ', table)
 
-      page(:execution, o)
+      page(o)
     end
 
     def detail_timer(id)
@@ -748,7 +739,7 @@ fail NotImplementedError
       o.puts @c.dg("--- timer #{tid} content:")
       o.puts Flor.to_d(con, colour: true, indent: 1, width: true)
 
-      page(:timer, o)
+      page(o)
     end
 
     def detail_task(id)
@@ -879,7 +870,7 @@ fail NotImplementedError
 
       render_node(o, tree, '0')
 
-      page(:nodes, o)
+      page(o)
     end
     make_alias('r', 'render')
 
