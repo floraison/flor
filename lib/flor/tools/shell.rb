@@ -749,16 +749,16 @@ fail NotImplementedError
       fail ArgumentError.new("Found no task matching #{id}") unless pa
 
       ta = JSON.load(File.read(pa))
+      tconf = ta['tconf']; ta['tconf'] = '...'
+      payload = ta['payload']; ta['payload'] = '...'
 
       o = StringIO.new
       o.puts "#{@c.dg} #\n # path: #{pa}\n ##{@c.reset}"
-      o.puts Flor.to_d(
-        ta.reject { |k, v| %w[ tconf payload ].include?(k) },
-        colour: true, indent: 1, width: true)
-      o.puts "#{@c.dg} #\n # tconf:#{@c.reset}"
-      o.puts Flor.to_d(ta['tconf'], colour: true, indent: 1, width: true)
-      o.puts "#{@c.dg} #\n # payload:#{@c.reset}"
-      o.puts Flor.to_d(ta['payload'], colour: true, indent: 1, width: true)
+      o.puts Flor.to_d(ta, colour: true, indent: 1, width: true)
+      o.puts "#{@c.dg} # tconf:#{@c.reset}"
+      o.puts Flor.to_d(tconf, colour: true, indent: 3, width: true)
+      o.puts "#{@c.dg} # payload:#{@c.reset}"
+      o.puts Flor.to_d(payload, colour: true, indent: 3, width: true)
 
       page(o)
     end
