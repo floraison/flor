@@ -744,7 +744,23 @@ fail NotImplementedError
 
     def detail_task(id)
 
-fail NotImplementedError
+      pa = Dir["#{@root}/var/tasks/**/*#{id}*.json"].first
+
+      fail ArgumentError.new("Found no task matching #{id}") unless pa
+
+      ta = JSON.load(File.read(pa))
+
+      o = StringIO.new
+      o.puts "#{@c.dg} #\n # path: #{pa}\n ##{@c.reset}"
+      o.puts Flor.to_d(
+        ta.reject { |k, v| %w[ tconf payload ].include?(k) },
+        colour: true, indent: 1, width: true)
+      o.puts "#{@c.dg} #\n # tconf:#{@c.reset}"
+      o.puts Flor.to_d(ta['tconf'], colour: true, indent: 1, width: true)
+      o.puts "#{@c.dg} #\n # payload:#{@c.reset}"
+      o.puts Flor.to_d(ta['payload'], colour: true, indent: 1, width: true)
+
+      page(o)
     end
 
     def hlp_detail
@@ -756,7 +772,7 @@ fail NotImplementedError
           displays full execution information
         * detail ti|timer id
           displays full timer information
-        * detail task frag
+        * detail t|task frag
           displays task
       }
     end
