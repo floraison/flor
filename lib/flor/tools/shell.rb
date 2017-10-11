@@ -185,8 +185,10 @@ module Flor::Tools
       !! ALIASES.values.find { |a| a.include?(c) }
     end
 
-    def fname(line, index=1); line.split(/\s+/)[index]; end
-    alias arg fname
+    def args(line); line.split(/\s+/); end
+    def argc(line); args(line).count; end
+    def arg(line, index=1); args(line)[index]; end
+    alias fname arg
 
     def choose_path(line)
 
@@ -434,10 +436,27 @@ fail NotImplementedError
     end
 
     def hlp_conf
-      %{ prints current unit configuration }
+      %{ prints or sets in current unit configuration }
     end
     def cmd_conf(line)
-      page(Flor.to_d(@unit.conf, colour: true, indent: 1, width: true))
+      key, value = arg(line), arg(line, 2)
+      if key && argc(line) > 2
+fail NotImplementedError
+      elsif key
+        puts Flor.to_d(@unit.conf[key], colour: true, indent: 1, width: true)
+      else
+        page(Flor.to_d(@unit.conf, colour: true, indent: 1, width: true))
+      end
+    end
+    def man_conf
+      %{
+        * conf
+          prints current unit configuration
+        * conf key
+          prints value for a single key
+        * conf key value
+          sets value for key
+      }
     end
 
     def hlp_t
