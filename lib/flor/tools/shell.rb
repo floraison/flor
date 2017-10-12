@@ -443,10 +443,17 @@ fail NotImplementedError
     end
     def cmd_conf(line)
       key, value = arg(line), arg(line, 2)
+      if key && @unit.conf.has_key?(key)
+        puts Flor.to_d(
+          { key: @unit.conf[key] }, colour: true, indent: 1, width: true)
+      end
       if key && argc(line) > 2
-fail NotImplementedError
+        @unit.conf[key] = JSON.parse(value)
+        puts "   #{@c.dg}# ==>#{@c.reset}"
+        puts Flor.to_d(
+          { key: @unit.conf[key] }, colour: true, indent: 1, width: true)
       elsif key
-        puts Flor.to_d(@unit.conf[key], colour: true, indent: 1, width: true)
+        # alreay done
       else
         page(Flor.to_d(@unit.conf, colour: true, indent: 1, width: true))
       end
@@ -648,12 +655,13 @@ fail NotImplementedError
       @unit.conf.select! { |k, v| ! k.match(/\Alog_/) }
 
       rest = line.match(/\A[a-z]+(\s+.+)?/)[1]
-      rest = nil if rest && rest.strip == 'off'
-      rest = 'stdout,dbg' if rest && rest.strip == 'on'
+      rest = rest.strip if rest
+      rest = nil if rest && rest == 'off'
+      rest = 'stdout,dbg' if rest && %w[ on 1 ].include?(rest)
 
       @unit.conf.merge!(Flor::Conf.interpret_flor_debug(debug: rest)) if rest
 
-      cmd_conf(nil) # display conf
+      cmd_conf('') # display conf
     end
 
     def hlp_hook
