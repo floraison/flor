@@ -105,7 +105,10 @@ module Flor::Tools
 
     def print_header
 
-      puts "flosh - a flor #{Flor::VERSION} shell"
+      git = (' ' + `git log -1`.lines.first.split.last[0, 7]) rescue ''
+      git = "#{@c.yellow}#{git}#{@c.reset}"
+
+      puts "flosh - a flor #{Flor::VERSION}#{git} shell"
     end
 
     def prompt
