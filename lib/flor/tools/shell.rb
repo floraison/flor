@@ -51,6 +51,11 @@ module Flor::Tools
 
     protected
 
+    def parse_single_json_value(s)
+
+      JSON.parse("[#{s}]").first
+    end
+
     def prepare_home
 
       home = File.join(@root, 'home')
@@ -477,7 +482,7 @@ fail NotImplementedError
           { key: @unit.conf[key] }, colour: true, indent: 1, width: true)
       end
       if key && argc(line) > 2
-        @unit.conf[key] = JSON.parse(value)
+        @unit.conf[key] = parse_single_json_value(value)
         puts "   #{@c.dg}# ==>#{@c.reset}"
         puts Flor.to_d(
           { key: @unit.conf[key] }, colour: true, indent: 1, width: true)
