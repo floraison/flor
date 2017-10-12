@@ -26,6 +26,7 @@ module Flor::Tools
       prepare_hooks
 
       @hook = 'on'
+      @mute = false
 
       @unit.start
 
@@ -35,6 +36,8 @@ module Flor::Tools
       @variables_path = File.join(@root, 'home/variables.json')
 
       @c = Flor.colours({})
+
+      load_floshrc
 
       if argv && argv.any?
         do_eval(argv.join(' '))
@@ -103,6 +106,20 @@ module Flor::Tools
       end
     end
 
+    def load_floshrc
+
+      @mute = true
+
+      (File.readlines(File.join(@root, '.floshrc')) rescue [])
+        .each { |line| do_eval(line) }
+      (File.readlines('.floshrc') rescue [])
+        .each { |line| do_eval(line) }
+
+    ensure
+
+      @mute = false
+    end
+
     def print_header
 
       git = (' ' + `git log -1`.lines.first.split.last[0, 7]) rescue ''
@@ -135,6 +152,7 @@ module Flor::Tools
     def do_eval(line)
 
       line = line.strip
+      return if line == ''
       return if line[0, 1] == '#'
 
       md = line.split(/\s/).first
@@ -161,7 +179,6 @@ module Flor::Tools
         line = prompt_and_read
 
         break unless line
-        next if line.strip == ''
 
         do_eval(line)
       end
@@ -266,14 +283,26 @@ fail NotImplementedError
       [ exe.exid, nid ]
     end
 
+    def print(o)
+
+      ::Kernel.print(o) unless @mute
+    end
+
+    def puts(o)
+
+      ::Kernel.puts(o) unless @mute
+    end
+
     def page(o)
+
+      return if @mute
 
       s = o.is_a?(String) ? o : o.string
 
       if s.lines.to_a.size > IO.console.winsize[0]
         IO.popen('less -R -N', mode: 'w') { |io| io.write(s) }
       else
-        puts s
+        ::Kernel.puts s
       end
     end
 

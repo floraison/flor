@@ -1,0 +1,8 @@
+
+# .floshrc
+
+debug on
+conf log_src false
+conf log_tree false
+conf log_tree_rw false
+
