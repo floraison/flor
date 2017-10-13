@@ -92,10 +92,8 @@ module Flor
           out: @out)
       end
 
-      if @unit.conf['log_msg']
-
-        Flor.log_message(executor, msg, out: @out)
-      end
+      @out.puts Flor.message_to_one_line_s(executor, msg) \
+        if @unit.conf['log_msg'] && msg['point'] != 'end'
 
       [] # we're only logging, do not queue further messages
     end

@@ -1,9 +1,10 @@
 
 module Flor
 
-  def self.log_message(executor, m, opts={})
-
-    return if m['point'] == 'end'
+  # Turns a flor message into a one line string.
+  # Used when logging messages.
+  #
+  def self.message_to_one_line_s(executor, m, opts={})
 
     _c = colours(opts)
 
@@ -34,10 +35,10 @@ module Flor
     pt = m['point'][0, 3]
     _pt =
       case pt
-        when 'tri', 'sig' then _c.gr
-        when 'cea', 'ter' then _c.lg
-        when 'can' then _c.ma
-        else _c.bl
+      when 'tri', 'sig' then _c.gr
+      when 'cea', 'ter' then _c.lg
+      when 'can' then _c.ma
+      else _c.bl
       end
     a << "#{_pt}#{pt}#{_c.dg}"
 
@@ -112,8 +113,8 @@ module Flor
 
     a << _c.rs
 
-    (opts[:out] || $stdout).puts a.join
-  end
+    a.join
+  end # message_to_one_line_s
 
   def self.print_src(src, opts={}, log_opts={})
 

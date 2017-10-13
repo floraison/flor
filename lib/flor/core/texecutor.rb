@@ -23,8 +23,8 @@ module Flor
 
         return [] if o['consumed']
 
-        Flor.log_message(executor, o) \
-          if @conf['log_msg']
+        puts Flor.message_to_one_line_s(executor, o) \
+          if @conf['log_msg'] && o['point'] != 'end'
 
         @journal << o
 

@@ -359,7 +359,6 @@ module Flor
       m['error'] = Flor.to_error(err)
 
       @unit.logger.log_err(self, m, flag: true)
-      #Flor.print_detail_msg(self, m, flag: true) if @unit.conf['log_err']
 
       #if m['error']['msg'].match(/\AToo many open files in system/)
       #  puts "=" * 80 + ' ...'
