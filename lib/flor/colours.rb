@@ -58,23 +58,29 @@ module Flor
 
   def self.colours(opts={})
 
-    c = nil
-      #
-    [ :color, :colour, :colors, :colours ].each do |k|
-      if opts.has_key?(k); c = opts[k]; break; end
-    end
+    #opts =
+    #  case opts
+    #  when Hash then opts
+    #  when Colours, NoColours then { color: opts }
+    #  else { out: opts }
+    #  end
+
+    c = nil;
+      [ :color, :colour, :colors, :colours ].each do |k|
+        if opts.has_key?(k); c = opts[k]; break; end
+      end
 
     return @colours if c == true
     return @no_colours if c == false
 
     o = opts[:out] || $stdout
 
-    col =
+    return @colours if (
       (o.respond_to?(:log_colours?) ? o.log_colours? : o.tty?) ||
       ($0[-6..-1] == '/rspec' &&
-        (ARGV.include?('--tty') || ARGV.include?('--color')))
+        (ARGV.include?('--tty') || ARGV.include?('--color'))))
 
-    col ? @colours : @no_colours
+    @no_colours
   end
 
   def self.decolour(s)

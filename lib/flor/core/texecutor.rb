@@ -17,14 +17,17 @@ module Flor
         @logger = TransientLogger.new(self)
         @journal = []
         @archive = nil
+
+        @out = Flor::Logger::Out.prepare(self)
       end
 
       def notify(executor, o)
 
         return [] if o['consumed']
 
-        puts Flor.message_to_one_line_s(executor, o) \
-          if @conf['log_msg'] && o['point'] != 'end'
+        @out.puts(
+          Flor.message_to_one_line_s(executor, o, out: @out)
+        ) if @conf['log_msg'] && o['point'] != 'end'
 
         @journal << o
 

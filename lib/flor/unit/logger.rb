@@ -17,7 +17,7 @@ module Flor
       @unit = unit
       @unit.hooker.add('logger', self)
 
-      @out = prepare_out
+      @out = Flor::Logger::Out.prepare(@unit)
 
       @uni = @unit.identifier
 
@@ -92,8 +92,9 @@ module Flor
           out: @out)
       end
 
-      @out.puts Flor.message_to_one_line_s(executor, msg) \
-        if @unit.conf['log_msg'] && msg['point'] != 'end'
+      @out.puts(
+        Flor.message_to_one_line_s(executor, msg, out: @out)
+      ) if @unit.conf['log_msg'] && msg['point'] != 'end'
 
       [] # we're only logging, do not queue further messages
     end
@@ -227,31 +228,35 @@ module Flor
       message[0..k + 2 + 4] + "(...len#{i - (k + 2 + 1)})" + message[i..-1]
     end
 
-    def prepare_out
-
-      case (o = @unit.conf.fetch('log_out', 1))
-      when false, 'null' then NoOut.new(@unit)
-      when 1, true, 'stdout' then StdOut.new(@unit, $stdout)
-      when 2, 'stderr' then StdOut.new(@unit, $stderr)
-      when /::/ then Flor.const_lookup(o).new(@unit)
-      else FileOut.new(@unit, o)
-      end
-    end
-
     class Out
+
       attr_reader :unit
+
       def initialize(unit); @unit = unit; end
       def log_colours?; @unit.conf.fetch('log_colours') { :no } == true; end
       def puts(s); end
       def flush; end
       def close; end
+
+      def self.prepare(unit)
+
+        case o = unit.conf.fetch('log_out', 1)
+        when false, 'null' then NoOut.new(unit)
+        when 1, true, 'stdout' then StdOut.new(unit, $stdout)
+        when 2, 'stderr' then StdOut.new(unit, $stderr)
+        when /::/ then Flor.const_lookup(o).new(unit)
+        else FileOut.new(unit, o)
+        end
+      end
     end
 
     class NoOut < Out
+
       def log_colours?; false; end
     end
 
     class StdOut < Out
+
       def initialize(unit, f); super(unit); @f = f; end
       def log_colours?
         lc = @unit.conf.fetch('log_colours') { :no }

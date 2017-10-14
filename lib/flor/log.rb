@@ -13,21 +13,15 @@ module Flor
 
     a = [ '  ' ]
 
-    n =
-      Time.now.utc
-    tm =
-      if opts[:date]
-        n.strftime('%Y%m%d.%H:%M:%S') + sprintf('.%06d', n.usec)[0, 4]
-      else
-        n.strftime('%H:%M:%S') + sprintf('.%06d', n.usec)[0, 4]
-      end
-    a << tm
-    a << ' '
-    a << _c.dg
+    n = Time.now.utc
+    a <<
+      opts[:date] ?
+      n.strftime('%Y%m%d.%H:%M:%S') + sprintf('.%06d', n.usec)[0, 4] :
+      n.strftime('%H:%M:%S') + sprintf('.%06d', n.usec)[0, 4]
+    a << ' ' << _c.dg
 
     if ex = (m['exid'] || '').split('.').last
-      a << ex[-4..-1]
-      a << ' '
+      a << ex[-4..-1] << ' '
     end
 
     a << "#{nd ? _c.dg : _c.dim + _c.dg}#{nid}#{_c.rs}#{_c.dg} " if nid
@@ -49,13 +43,10 @@ module Flor
     a << " #{_c.dim}#{_c.lg}#{st['status']}:#{st['flavour']}#{_c.rs}#{_c.dg}" \
       if st && st['status']
 
-    t =
-      m['tree']
-    rw =
-      (t && m['rewritten']) ? 'rw->' : ''
-    nt =
-      t || Node.new(executor, nd, m).lookup_tree(nid)
-    t0 =
+    t = m['tree']
+    rw = (t && m['rewritten']) ? 'rw->' : ''
+    nt = t || Node.new(executor, nd, m).lookup_tree(nid)
+    a <<
       if t
         " [#{rw}#{_c.yl}#{Flor.to_d(t[0], compact: true)}#{_c.dg} L#{t[2]}]"
       elsif nt
@@ -63,10 +54,8 @@ module Flor
       else
         ''
       end
-    a << t0
 
-    oe = m['on_error'] ? " #{_c.rd}on_error" : ''
-    a << oe
+    a << m['on_error'] ? " #{_c.rd}on_error" : ''
 
     tmi = m['timer_id']
     tmi = tmi ? " #{_c.dg}tmi:#{tmi}" : ''
@@ -88,24 +77,21 @@ module Flor
     msr << "r#{m['er']}>#{m['pr']}" if m['er'] && m['er'] > -1
     a << msr
 
-    fr = m['from'] ? " from #{m['from']}" : ''
-    a << fr
+    a << (m['from'] ? " from #{m['from']}" : '')
 
     rt = ret_to_s(executor, m, _c)
     rt = rt.length > 0 ? " #{_c.lg}f.ret #{rt}" : ''
     a << rt
 
-    ta =
-      m['point'] == 'entered' || m['point'] == 'left' ?
+    a << (
+      (m['point'] == 'entered' || m['point'] == 'left') ?
       " #{_c.dg}tags:#{_c.gr}#{m['tags'].join(',')}" :
-      nil
-    a << ta
+      nil)
 
-    vs =
+    a << (
       (nd && nd['vars']) ?
       " #{_c.dg}vars:#{_c.gr}#{nd['vars'].keys.join("#{_c.dg},#{_c.gr}")}" :
-      ''
-    a << vs
+      '')
 
     %w[ fpoint dbg ].each do |k|
       a << " #{_c.dg}#{k}:#{m[k]}" if m.has_key?(k)
