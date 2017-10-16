@@ -70,6 +70,13 @@ module Flor
 
         @out.puts(Flor.src_to_s(source, opts, log_opts))
       end
+
+      def log_tree(tree, nid='0', opts={})
+
+        return unless @unit.conf['log_tree']
+
+        @out.puts(Flor.tree_to_s(tree, nid, opts.merge(out: @out)))
+      end
     end
 
     def initialize(conf={})
@@ -102,7 +109,7 @@ module Flor
 
       messages = [ Flor.make_launch_msg(@execution['exid'], tree, opts) ]
 
-      Flor.print_tree(messages.first['tree']) if conf['log_tree']
+      @unit.logger.log_tree(messages.first['tree'], '0', opts)
 
       walk(messages, opts)
     end

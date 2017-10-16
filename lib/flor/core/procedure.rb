@@ -68,7 +68,7 @@ class Flor::Procedure < Flor::Node
     nid ||= self.nid
     tree = lookup_tree(nid)
 
-    Flor.print_tree(tree, nid)
+    puts Flor.tree_to_s(tree, nid)
   end
 
   def debug_msg(msg=message)
@@ -650,7 +650,7 @@ class Flor::Macro < Flor::Procedure
   def rewrite
 
     t = rewrite_tree
-#Flor.print_tree(t, nid)
+#puts Flor.tree_to_s(t, nid)
 
     m = @message.dup
     m['tree'] = t

@@ -426,7 +426,7 @@ fail NotImplementedError
       when 'p'
         p tree
       else
-        Flor.print_tree(tree, '0', headers: false)
+        puts Flor.tree_to_s(tree, '0', headers: false)
       end
     end
 

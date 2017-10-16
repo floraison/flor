@@ -126,11 +126,11 @@ module Flor
     o.string
   end # src_to_s
 
-  def self.print_tree(tree, nid='0', opts={})
+  def self.tree_to_s(tree, nid='0', opts={})
 
     t0, t1, t2 = (tree || [])
 
-    o = (opts[:out] ||= $stdout)
+    o = StringIO.new
     _c = colours(opts)
 
     ind = ' ' * (opts[:ind] || 0)
@@ -144,12 +144,11 @@ module Flor
 
     o.puts "#{ind}#{_c.dg}+--- #{opts[:title]}#{_c.rs}" if headers && nid == '0'
     o.puts "#{ind}#{_c.dg}| #{nid} #{h}#{c}#{l}#{_c.rs}"
-    if t1.is_a?(Array)
-      t1.each_with_index { |ct, i| print_tree(ct, Flor.child_nid(nid, i), opts) }
-    end
+    t1.each_with_index { |ct, i|
+      o.puts tree_to_s(ct, Flor.child_nid(nid, i), opts) } if t1.is_a?(Array)
     o.puts "#{ind}#{_c.dg}.#{_c.rs}" if headers && nid == '0'
 
-    o.is_a?(StringIO) ? o.string : nil
+    o.string
   end
 
   def self.print_flat_tree(tree, nid, opts)
@@ -294,7 +293,7 @@ module Flor
     o.puts "#{_c.dg}payload:#{_c.yl}"
     o.puts(Flor.to_pretty_s(m['payload'], 0))
     o.puts "#{_c.dg}tree:"
-    print_tree(node.lookup_tree(nid), nid, out: o) if node
+    o.puts tree_to_s(node.lookup_tree(nid), nid, out: o) if node
     o.puts "#{_c.dg}node:#{_c.yl}"
     o.puts(Flor.to_pretty_s(n)) if n
     o.puts "#{_c.dg}nodes:"

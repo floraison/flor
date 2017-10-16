@@ -195,7 +195,7 @@ module Flor
 
       return unless @unit.conf['log_tree']
 
-      Flor.print_tree(tree, nid, opts.merge(out: @out))
+      @out.puts(Flor.tree_to_s(tree, nid, opts.merge(out: @out)))
     end
 
     protected
