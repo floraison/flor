@@ -102,14 +102,15 @@ module Flor
     a.join
   end # message_to_one_line_s
 
-  def self.print_src(src, opts={}, log_opts={})
+  def self.src_to_s(src, launch_opts, opts={})
 
-    o = (log_opts[:out] ||= $stdout)
-    _c = colours(log_opts)
+    o = StringIO.new
+    _c = colours(opts)
 
     o.puts "#{_c.dg}+---#{_c.rs}"
 
-    o.puts "#{_c.dg}| #{opts.inspect}#{_c.rs}" if opts.any?
+    o.puts "#{_c.dg}| #{launch_opts.inspect}#{_c.rs}" if launch_opts.any?
+      # TODO use Flor.to_d ...
 
     if src.is_a?(String)
       src.split("\n")
@@ -122,8 +123,8 @@ module Flor
 
     o.puts "#{_c.dg}.#{_c.rs}"
 
-    o.is_a?(StringIO) ? o.string : nil
-  end
+    o.string
+  end # src_to_s
 
   def self.print_tree(tree, nid='0', opts={})
 

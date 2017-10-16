@@ -188,7 +188,7 @@ module Flor
 
       return unless @unit.conf['log_src']
 
-      Flor.print_src(source, opts, log_opts.merge(out: @out))
+      @out.puts(Flor.src_to_s(source, opts, log_opts))
     end
 
     def log_tree(tree, nid='0', opts={})

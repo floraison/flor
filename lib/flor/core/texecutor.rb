@@ -17,19 +17,14 @@ module Flor
         @logger = TransientLogger.new(self)
         @journal = []
         @archive = nil
-
-        @out = Flor::Logger::Out.prepare(self)
       end
 
-      def notify(executor, o)
+      def notify(executor, msg)
 
-        return [] if o['consumed']
+        return [] if msg['consumed']
 
-        @out.puts(
-          Flor.message_to_one_line_s(executor, o, out: @out)
-        ) if @conf['log_msg'] && o['point'] != 'end'
-
-        @journal << o
+        @logger.notify(executor, msg)
+        @journal << msg
 
         []
       end
@@ -50,6 +45,16 @@ module Flor
       def initialize(unit)
 
         @unit = unit
+
+        @out = Flor::Logger::Out.prepare(unit)
+      end
+
+      def notify(executor, message)
+
+        return if message['point'] == 'end'
+        return unless @unit.conf['log_msg']
+
+        @out.puts(Flor.message_to_one_line_s(executor, message, out: @out))
       end
 
       def log_err(executor, message, opts={})
@@ -57,6 +62,13 @@ module Flor
         return unless @unit.conf['log_err']
 
         Flor.print_detail_msg(executor, message, flag: true)
+      end
+
+      def log_src(source, opts, log_opts={})
+
+        return unless @unit.conf['log_src']
+
+        @out.puts(Flor.src_to_s(source, opts, log_opts))
       end
     end
 
@@ -86,7 +98,7 @@ module Flor
       @unit.opts = opts
       @unit.archive ||= {} if opts[:archive]
 
-      Flor.print_src(tree, opts) if conf['log_src']
+      @unit.logger.log_src(tree, opts)
 
       messages = [ Flor.make_launch_msg(@execution['exid'], tree, opts) ]
 
