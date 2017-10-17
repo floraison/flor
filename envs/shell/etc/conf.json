@@ -20,3 +20,7 @@ sto_connection_validation: false
 #sto_connection_validation: true # sets to -1 (validates all the time)
 #sto_connection_validation: 60 # validates after 60 seconds
 
+fls_more: 'less -R -N'
+#fls_vi: 'vim -c "w! .out.txt" -'
+fls_vi: 'vim -c "let &colorcolumn=\'\'" -c "w! .out.txt" -'
+

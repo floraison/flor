@@ -27,6 +27,7 @@ module Flor::Tools
 
       @hook = 'on'
       @mute = false
+      @paging = true
 
       @unit.start
 
@@ -304,15 +305,50 @@ fail NotImplementedError
 
       s = o.is_a?(String) ? o : o.string
 
-      if s.lines.to_a.size > IO.console.winsize[0]
-        IO.popen('less -R -N', mode: 'w') { |io| io.write(s) }
-      else
+      if @paging == false
         ::Kernel.puts s
+      elsif @paging == :vim
+        IO.popen(
+          @unit.conf['fls_vi'] || 'vi -', mode: 'w'
+        ) { |io| io.write(Flor.decolour(s)) }
+      else
+        if s.lines.to_a.size > IO.console.winsize[0]
+          IO.popen(
+            @unit.conf['fls_more'] || 'less -R -N', mode: 'w'
+          ) { |io| io.write(s) }
+        else
+          ::Kernel.puts s
+        end
       end
     end
 
     #
     # the commands
+
+    def hlp_page
+      %{ sets the paging mode }
+    end
+    def man_page
+      %{
+        * page off
+          disable paging, command output will always be output to stdout
+        * page on
+          enable paging, command output longer than terminal height will be paged
+        * page vim
+          always page into vim, whatever length, loses the colours
+      }
+    end
+    def cmd_page(line)
+
+      @paging =
+        case arg(line)
+        when 'vi', 'vim' then :vim
+        when 'no', 'off', 'false' then false
+        #when 'on', 'true' then true
+        else true
+        end
+      puts "paging set to #{@paging}"
+    end
 
     def hlp_launch
       %{ launches a new execution of #{@flow_path} }
