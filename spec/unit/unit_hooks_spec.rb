@@ -29,7 +29,7 @@ describe 'Flor unit' do
 
     it 'is given the opportunity to see any message' do
 
-      msgs = []
+      msgs = new_safe_array
       @unit.hook do |message|
         msgs << Flor.dup(message) if message['consumed']
         [] # make sure to return an empty list of new messages
@@ -78,9 +78,12 @@ describe 'Flor unit' do
 
     it 'may filter on consumed:/c:' do
 
-      ncms = []; @unit.hook(consumed: false) { |m| ncms << Flor.dup(m); [] }
-      cms = []; @unit.hook(c: true) { |m| cms << Flor.dup(m); [] }
-      ms = []; @unit.hook { |m| ms << Flor.dup(m); [] }
+      ncms = new_safe_array
+      @unit.hook(consumed: false) { |m| ncms << Flor.dup(m); [] }
+      cms = new_safe_array
+      @unit.hook(c: true) { |m| cms << Flor.dup(m); [] }
+      ms = new_safe_array
+      @unit.hook { |m| ms << Flor.dup(m); [] }
 
       @unit.launch(
         %q{
@@ -96,9 +99,9 @@ describe 'Flor unit' do
     it 'may filter on point:/p:' do
 
 begin
-      ms0 = []
+      ms0 = new_safe_array
       @unit.hook(point: 'execute') { |m| ms0 << Flor.dup(m); [] }
-      ms1 = []
+      ms1 = new_safe_array
       @unit.hook(p: %w[ execute terminated ]) { |m| ms1 << Flor.dup(m); [] }
 
       @unit.launch(%{
@@ -121,13 +124,13 @@ end
 
     it 'may filter on domain:/d:' do
 
-      ms0 = []
+      ms0 = new_safe_array
       @unit.hook(domain: 'com.acme') { |m| ms0 << Flor.dup(m); [] }
-      ms1 = []
+      ms1 = new_safe_array
       @unit.hook(d: %w[ com.acme org.acme ]) { |m| ms1 << Flor.dup(m); [] }
-      ms2 = []
+      ms2 = new_safe_array
       @unit.hook(d: /\A(com|org)\.acme(\.|$)/) { |m| ms2 << Flor.dup(m); [] }
-      ms3 = []
+      ms3 = new_safe_array
       @unit.hook(d: /\Anet\.acme(\.|$)/) { |m| ms2 << Flor.dup(m); [] }
 
       rs = []
@@ -148,11 +151,11 @@ end
 
     it 'may filter on subdomain:/sd: (domain and its subdomains)' do
 
-      ms0 = []
+      ms0 = new_safe_array
       @unit.hook(subdomain: 'com.acme') { |m| ms0 << Flor.dup(m); [] }
-      ms1 = []
+      ms1 = new_safe_array
       @unit.hook(subdomain: [ 'com', 'org' ]) { |m| ms1 << Flor.dup(m); [] }
-      ms2 = []
+      ms2 = new_safe_array
       @unit.hook(subdomain: 'net') { |m| ms2 << Flor.dup(m); [] }
 
       rs = []
@@ -171,9 +174,9 @@ end
 
     it 'may filter on heap:/hp:' do
 
-      ms0 = []
+      ms0 = new_safe_array
       @unit.hook(heap: 'sequence') { |m| ms0 << Flor.dup(m); [] }
-      ms1 = []
+      ms1 = new_safe_array
       @unit.hook(hp: %w[ sequence noret ]) { |m| ms1 << Flor.dup(m); [] }
 
       @unit.launch(%{
@@ -200,7 +203,7 @@ end
 
     it 'may filter on heat:/ht:' do
 
-      ms0 = []
+      ms0 = new_safe_array
       @unit.hook(heat: 'fun0', c: false) do |x, m, o|
         #pp m
         #pp x.node(m['nid'])
@@ -208,7 +211,7 @@ end
         []
       end
 
-      ms1 = []
+      ms1 = new_safe_array
       @unit.hook(ht: %w[ fun1 ], c: false) do |x, m, o|
         ms1 << Flor.dup(m)
         []
@@ -245,9 +248,9 @@ end
 
     it 'may filter on tag:/t:' do
 
-      ms0 = []
+      ms0 = new_safe_array
       @unit.hook(tag: 'blue', c: false) { |x, m, o| ms0 << Flor.dup(m); [] }
-      ms1 = []
+      ms1 = new_safe_array
       @unit.hook(tag: 'yellow', c: false) { |x, m, o| ms1 << Flor.dup(m); [] }
 
       r =
@@ -277,12 +280,12 @@ end
 
     it 'may filter on t: and p:' do
 
-      ms0 = []
+      ms0 = new_safe_array
       @unit.hook(tag: 'blue', c: false, p: 'entered') { |x, m, o|
         ms0 << Flor.dup(m)
         []
       }
-      ms1 = []
+      ms1 = new_safe_array
       @unit.hook(t: %w[ blue yellow ], c: false, p: %w[ entered left ]) { |x, m, o|
         ms1 << Flor.dup(m)
         []

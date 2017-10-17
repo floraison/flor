@@ -8,6 +8,8 @@
 require 'pp'
 require 'ostruct'
 
+require 'jruby/synchronized' if RUBY_PLATFORM.match(/java/)
+
 require 'flor'
 require 'flor/unit'
 
@@ -41,6 +43,12 @@ module Helpers
     fail "timeout after #{timeout}s"
   end
   alias :wait_for :wait_until
+
+  def new_safe_array
+
+    []
+      .tap { |a| a.extend(JRuby::Synchronized) if jruby? }
+  end
 end
 
 RSpec.configure { |c| c.include(Helpers) }
