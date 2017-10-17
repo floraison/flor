@@ -4,6 +4,7 @@ require 'terminal-table'
 
 require 'flor'
 require 'flor/unit'
+require 'flor/tools/shell_out'
 
 
 module Flor::Tools

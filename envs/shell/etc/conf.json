@@ -2,8 +2,9 @@
 env: cli
 domain: cli
 
-log_out: stdout
+#log_out: stdout
 #log_out: tmp
+log_out: 'Flor::Tools::ShellOut'
 #log_colours: true
 #flor_debug: 'stdout,dbg'
 #flor_debug: [ stdout dbg ]
