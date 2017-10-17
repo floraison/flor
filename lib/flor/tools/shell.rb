@@ -326,20 +326,20 @@ fail NotImplementedError
     #
     # the commands
 
-    def hlp_page
+    def hlp_paging
       %{ sets the paging mode }
     end
-    def man_page
+    def man_paging
       %{
-        * page off
+        * paging off
           disable paging, command output will always be output to stdout
-        * page on
+        * paging on
           enable paging, command output longer than terminal height will be paged
-        * page vim
+        * paging vim
           always page into vim, whatever length, loses the colours
       }
     end
-    def cmd_page(line)
+    def cmd_paging(line)
 
       @paging =
         case arg(line)
