@@ -974,6 +974,35 @@ fail NotImplementedError
       puts @c.yellow("re-apply message queued for #{exid} #{nid}")
     end
 
+    def hlp_flosh
+      %{ displays flosh explanation }
+    end
+    def man_flosh
+      %{
+        * flosh
+          displays flosh explanation
+      }
+    end
+    def cmd_flosh(line)
+      page %{
+#{@c.yellow}# flosh#{@c.reset}
+
+Flosh is a flor shell.
+
+It's meant for demonstration purposes, to show how flor works.
+
+Opening a flor shell, starts a flor scheduler pointing to #{@root}
+
+#{@c.yellow}# flosh provided taskers#{@c.reset}
+
+The following names can be used as "nato" taskers: alpha, bravo, charly, delta, fox, foxtrott, golf, echo, and hotel.
+
+Nato taskers simply put their tasks under #{@root}/var/tasks/{tasker-name}/ as JSON files. Those file can be edited with the `edit task {frag}`.
+
+Once edited (or not), a nato tasker task can be returned to flor (to the scheduler) with `return {frag}`.
+      }
+    end
+
     #
     # enumerate commands (for cmd_help)
 
