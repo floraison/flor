@@ -507,8 +507,7 @@ fail NotImplementedError
       %{ prints the file hierarchy for #{@root} }
     end
     def cmd_t(line)
-      puts
-      system("tree -C #{@root}")
+      page(`tree -C #{@root}`)
     end
 
     def hlp_tasks
