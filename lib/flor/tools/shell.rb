@@ -310,12 +310,14 @@ fail NotImplementedError
         ::Kernel.puts s
       elsif @paging == :vim
         IO.popen(
-          @unit.conf['fls_vi'] || 'vi -', mode: 'w'
+          @unit.conf['fls_vi'] || 'vi -',
+          mode: 'w'
         ) { |io| io.write(Flor.decolour(s)) }
       else
         if s.lines.to_a.size > IO.console.winsize[0]
           IO.popen(
-            @unit.conf['fls_more'] || 'less -R -N', mode: 'w'
+            @unit.conf['fls_more'] || 'less -R -N',
+            mode: 'w'
           ) { |io| io.write(s) }
         else
           ::Kernel.puts s
@@ -1008,6 +1010,19 @@ fail NotImplementedError
       @unit.re_apply(exid: exid, nid: nid, tree: t, payload: pl)
 
       puts @c.yellow("re-apply message queued for #{exid} #{nid}")
+    end
+
+    def hlp_read
+      %{ reads (pages) a file }
+    end
+    def man_read
+      %{
+        * read filename
+          reads (pages) a file
+      }
+    end
+    def cmd_read(line)
+      page(File.read(arg(line)))
     end
 
     def hlp_flosh

@@ -23,5 +23,5 @@ sto_connection_validation: false
 
 fls_more: 'less -R -N'
 #fls_vi: 'vim -c "w! .out.txt" -'
-fls_vi: 'vim -c "let &colorcolumn=\'\'" -c "w! .out.txt" -'
+fls_vi: 'vim -c "let &colorcolumn=\'\'" -c "set nu" -c "w! .out.txt" -'
 
