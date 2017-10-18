@@ -413,10 +413,18 @@ fail NotImplementedError
     end
 
     def hlp_vi
+      %{ runs the remainder of the command line and then edit output in vi }
     end
     def man_vi
+      %{
+        * vi filepath
+          reads the file and edits it
+        * vi command arg0 arg1 ... argN
+          runs `command arg0 arg1 ... argN` and opens its output with vi
+      }
     end
     def cmd_vi(line)
+      cmd_page(line, :vi)
     end
     make_alias('vim', 'vi')
 
