@@ -5,7 +5,7 @@ module Flor::Tools
 
     def initialize(unit)
 
-      @file = File.open('.log.txt', 'wb')
+      @file = File.open('.log.txt', 'ab')
       @file.sync = true
 
       #@unit.conf['fls_file']

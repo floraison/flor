@@ -300,6 +300,22 @@ fail NotImplementedError
       ::Kernel.puts(o) unless @mute
     end
 
+    def page_puts(s)
+      ::Kernel.puts s
+    end
+    def page_vi(s)
+      IO.popen(
+        @unit.conf['fls_vi'] || 'vi -',
+        mode: 'w'
+      ) { |io| io.write(Flor.decolour(s)) }
+    end
+    def page_more(s)
+      IO.popen(
+        @unit.conf['fls_more'] || 'less -R -N',
+        mode: 'w'
+      ) { |io| io.write(s) }
+    end
+
     def page(o)
 
       return if @mute
@@ -307,20 +323,16 @@ fail NotImplementedError
       s = o.is_a?(String) ? o : o.string
 
       if @paging == false
-        ::Kernel.puts s
-      elsif @paging == :vim
-        IO.popen(
-          @unit.conf['fls_vi'] || 'vi -',
-          mode: 'w'
-        ) { |io| io.write(Flor.decolour(s)) }
+        page_puts(s)
+      elsif @paging == :vi
+        page_vi(s)
+      elsif @paging == :more
+        page_more(s)
       else
         if s.lines.to_a.size > IO.console.winsize[0]
-          IO.popen(
-            @unit.conf['fls_more'] || 'less -R -N',
-            mode: 'w'
-          ) { |io| io.write(s) }
+          page_more(s)
         else
-          ::Kernel.puts s
+          page_puts(s)
         end
       end
     end
@@ -337,7 +349,9 @@ fail NotImplementedError
           disable paging, command output will always be output to stdout
         * paging on
           enable paging, command output longer than terminal height will be paged
-        * paging vim
+        * paging vi|vim
+          always page into vim, whatever length, loses the colours
+        * paging more|less
           always page into vim, whatever length, loses the colours
       }
     end
@@ -345,13 +359,66 @@ fail NotImplementedError
 
       @paging =
         case arg(line)
-        when 'vi', 'vim' then :vim
+        when 'vi', 'vim' then :vi
         when 'no', 'off', 'false' then false
+        when 'more', 'less' then :more
         #when 'on', 'true' then true
         else true
         end
       puts "paging set to #{@paging}"
     end
+
+    def hlp_read
+      %{ reads (pages) a file }
+    end
+    def man_read
+      %{
+        * read filename
+          reads (pages) a file
+      }
+    end
+    def cmd_read(line)
+      page(File.read(arg(line)))
+    end
+
+    def hlp_page
+      %{ pages the output of the remainder of the command line }
+    end
+    def man_page
+      %{
+        * page filepath
+          reads the file and pages it
+        * page command arg0 arg1 ... argN
+          runs `command arg0 arg1 ... argN` and pages its output
+      }
+    end
+    def cmd_page(line, paging=:more)
+
+      current_paging = @paging
+      @paging = paging
+
+      line = line.strip.split(/\s+/, 2)[1]
+
+      if line.nil? || line.empty?
+        do_eval('man page')
+      elsif File.exist?(line) && ! File.directory?(line)
+        page(File.read(line))
+      else
+        do_eval(line)
+      end
+
+    ensure
+
+      @paging = current_paging
+    end
+
+    def hlp_vi
+    end
+    def man_vi
+    end
+    def cmd_vi(line)
+    end
+    make_alias('vim', 'vi')
 
     def hlp_launch
       %{ launches a new execution of #{@flow_path} }
@@ -1010,19 +1077,6 @@ fail NotImplementedError
       @unit.re_apply(exid: exid, nid: nid, tree: t, payload: pl)
 
       puts @c.yellow("re-apply message queued for #{exid} #{nid}")
-    end
-
-    def hlp_read
-      %{ reads (pages) a file }
-    end
-    def man_read
-      %{
-        * read filename
-          reads (pages) a file
-      }
-    end
-    def cmd_read(line)
-      page(File.read(arg(line)))
     end
 
     def hlp_flosh
