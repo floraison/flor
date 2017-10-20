@@ -158,9 +158,8 @@ module Flor::Tools
 
     def do_eval(line)
 
-      line = line.strip
+      line = line.match(/\A([^#]*)(#.+)?\n*\z/)[1]
       return if line == ''
-      return if line[0, 1] == '#'
 
       md = line.split(/\s/).first
       cmd = "cmd_#{md}".to_sym
