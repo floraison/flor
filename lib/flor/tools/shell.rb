@@ -588,8 +588,18 @@ fail NotImplementedError
     def hlp_conf
       %{ prints or sets in current unit configuration }
     end
+    def man_conf
+      %{
+        * conf
+          prints current unit configuration
+        * conf key
+          prints value for a single key
+        * conf key value
+          sets value for key
+      }
+    end
     def cmd_conf(line)
-      key, value = arg(line), arg(line, 2)
+      key, value = arg(line), args(line)[2..-1].join(' ')
       if key && @unit.conf.has_key?(key)
         puts Flor.to_d(
           { key: @unit.conf[key] }, colour: true, indent: 1, width: true)
@@ -604,16 +614,6 @@ fail NotImplementedError
       else
         page(Flor.to_d(@unit.conf, colour: true, indent: 1, width: true))
       end
-    end
-    def man_conf
-      %{
-        * conf
-          prints current unit configuration
-        * conf key
-          prints value for a single key
-        * conf key value
-          sets value for key
-      }
     end
 
     def hlp_t
