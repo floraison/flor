@@ -6,3 +6,7 @@ conf log_src false
 conf log_tree false
 conf log_tree_rw false
 
+conf fls_more "less -R -N"
+#conf fls_vi "vim -c \"w! .out.txt\" -"
+conf fls_vi "vim -c \"let &colorcolumn=''\" -c \"set nu\" -c \"w! .out.txt\" -c \"set syntax=doitall\" -"
+

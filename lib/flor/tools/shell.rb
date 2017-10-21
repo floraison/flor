@@ -599,11 +599,14 @@ fail NotImplementedError
       }
     end
     def cmd_conf(line)
-      key, value = arg(line), args(line)[2..-1].join(' ')
+
+      key, value = arg(line), (args(line)[2..-1] || []).join(' ')
+
       if key && @unit.conf.has_key?(key)
         puts Flor.to_d(
           { key: @unit.conf[key] }, colour: true, indent: 1, width: true)
       end
+
       if key && argc(line) > 2
         @unit.conf[key] = parse_single_json_value(value)
         puts "   #{@c.dg}# ==>#{@c.reset}"
