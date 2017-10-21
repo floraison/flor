@@ -37,6 +37,10 @@ Its format is "{fully.qualified.domain}-{unitname}-{yyyymmdd.hhmm.mnemo}".
 
 ## expression
 
+## flow
+
+A \[business\] process definition, for short, a "flow". In flor, they are written in the flor language.
+
 ## ganger
 
 The ganger is a component of the [scheduler](#scheduler). It's the middleman between flor and the taskers. British definition of the word: "the foreman of a gang of labourers."
