@@ -55,7 +55,8 @@ module Flor::Tools
 
     def parse_single_json_value(s)
 
-      JSON.parse("[#{s}]").first
+      #JSON.parse("[#{s}]").first
+      (Flor::ConfExecutor.interpret_line(s) rescue []).first
     end
 
     def prepare_home
