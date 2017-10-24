@@ -1,6 +1,10 @@
 
 # glossary.md
 
+## attributes
+
+Read more at [attributes.md](attributes.md).
+
 ## core
 
 As opposed to [unit](#unit). The basics of flor, everything that makes it a basic flor language interpreter. Core flor executions always execute in a single [run](#run). As soon as there is a [timer](#timer) or a [trap](#trap), something that would not be present in a vanilla interpreter, it goes into "unit".
@@ -63,6 +67,8 @@ Flor is merely about emitting and processing messages within an execution.
 
 An initial "execute" message will launch a new execution and further "execute" message will expand it by adding new nodes to it. When a node is done it sends a "receive" message back to its parent node.
 
+Read more at [messages.md](messages.md).
+
 ### point: execute
 ### point: receive
 ### point: terminated
@@ -74,6 +80,9 @@ An initial "execute" message will launch a new execution and further "execute" m
 ### point: return
 
 ## node
+
+Read more at [node.md](node.md) and [nodes.md](nodes.md).
+
 ## payload
 ## procedure
 
