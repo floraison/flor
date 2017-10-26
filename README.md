@@ -8,6 +8,7 @@ Flor is a "Ruby workflow engine", if that makes any sense.
 
 * [![Join the chat at https://gitter.im/floraison/flor](https://badges.gitter.im/floraison/flor.svg)](https://gitter.im/floraison/flor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 * [floraison mailing list](https://groups.google.com/forum/#!forum/floraison)
+* [twitter.com/@flor_workflow](https://twitter.com/flor_workflow)
 
 ## Design
 
