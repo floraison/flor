@@ -87,7 +87,7 @@ describe 'Flor procedures' do
       expect(r['vars']).to eq({})
     end
 
-    it 'shows the index via vars' do
+    it 'shows the index via the "idx" var' do
 
       r = @executor.launch(
         %q{
@@ -103,7 +103,7 @@ describe 'Flor procedures' do
 
       r = @executor.launch(
         %q{
-          map [ 0, 1 ]
+          map [ 0, 1, 2 ]
             define sum x
               set y (+ y 1)
               + x y
@@ -112,14 +112,14 @@ describe 'Flor procedures' do
         })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ 3, 5 ])
+      expect(r['payload']['ret']).to eq([ 3, 5, 7 ])
     end
 
     it 'maps thanks to the last fun in the block' do
 
       r = @executor.launch(
         %q{
-          map [ 0, 1 ]
+          map [ 0 1 2 ]
             set y 1
             def x
               set y (+ y 1)
@@ -127,7 +127,7 @@ describe 'Flor procedures' do
         })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ 2, 4 ])
+      expect(r['payload']['ret']).to eq([ 2, 4, 6 ])
     end
 
     it "keeps the given 'vars' hash" do
@@ -157,7 +157,7 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']).to eq({ 'l' => [ 0, 4, 8, 12 ] })
-      expect(r['payload']['ret']).to eq(12)
+      expect(r['payload']['ret']).to eq((0..7).to_a)
     end
   end
 end

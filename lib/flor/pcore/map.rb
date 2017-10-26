@@ -39,9 +39,11 @@ class Flor::Pro::Map < Flor::Procedure
     @node['mtime'] = Flor.tstamp
 
     if @node['idx'] == @node['col'].size
-      if res = @node['res']
-        payload['ret'] = @node['res']
-      end
+      #
+      # if @node['res'] is set, it's a "map" or "collect"
+      # else it's a "for-each"
+      #
+      payload['ret'] = @node['res'] || @node['col']
       return wrap_reply
     end
 
