@@ -118,10 +118,11 @@ module Flor::Tools
 
       @mute = true
 
-      (File.readlines(File.join(@root, '.floshrc')) rescue [])
-        .each { |line| do_eval(line) }
-      (File.readlines('.floshrc') rescue [])
-        .each { |line| do_eval(line) }
+      [
+        File.join(@root, 'etc/floshrc'),
+        File.join(@root, 'home/.floshrc'),
+        '.floshrc'
+      ].each { |f| (File.readlines(f) rescue []).each { |l| do_eval(l) } }
 
     ensure
 
