@@ -14,6 +14,7 @@
 * [def, fun, define](define.md) - Defines a function.
 * [do-return](do_return.md) - Takes a set of arguments and returns a function that will return those arguments again.
 * [fail, error](fail.md) - Explicitely raises an error.
+* [for-each](for_each.md) - Calls a function for each element in the argument collection.
 * [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidequick)
 * [length](length.md) - Returns the length of its last collection argument or the length of the incoming f.ret
 * [and, or](logo.md) - When `and` evaluates the children and returns false as soon as one of returns a falsy value. Returns true else. When `or` evaluates the children and returns true as soon as one of them returns a trueish value. Returns false else.
