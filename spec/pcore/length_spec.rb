@@ -26,15 +26,27 @@ describe 'Flor procedures' do
             (length a0)
             (length a1)
             (length h0)
-            (length h0.a)
-            (length h0.b)
+            #(length h0.a)
+            #(length h0.b)
             ({ a: 'A', b: 'B'}; length _)
           ]
         },
         vars: { 'a0' => [], 'a1' => [ 1, 2 ], 'h0' => { 'a' => 0 } })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ 3, 0, 2, 1, -1, -1, 2 ])
+      expect(r['payload']['ret']).to eq([ 3, 0, 2, 1, 2 ])
+    end
+
+    it 'fails if there are no argument with a length' do
+
+      r = @executor.launch(
+        %q{
+          length _
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['kla']).to eq('ArgumentError')
+      expect(r['error']['msg']).to eq('Found no argument that has a length')
     end
 
     it 'returns the length of the non-att argument' do

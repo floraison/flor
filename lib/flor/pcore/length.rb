@@ -12,6 +12,9 @@ class Flor::Pro::Length < Flor::Procedure
   #   length _
   #     # f.ret ==> 3
   # ```
+  #
+  # It will fail unless "length" receives a (non-attribute) argument
+  # that has a length.
 
   name 'length'
 
@@ -27,8 +30,12 @@ class Flor::Pro::Length < Flor::Procedure
     if ! from_att? && ((r = payload['ret']).respond_to?(:length))
       @node['result'] = r.length
     end
+
     if last?
-      payload['ret'] = @node['result'] || -1
+      fail ArgumentError.new(
+        "Found no argument that has a length"
+      ) unless @node['result']
+      payload['ret'] = @node['result']
     end
 
     super
