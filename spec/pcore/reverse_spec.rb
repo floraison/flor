@@ -64,6 +64,21 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(%w[ nigeno nikhsup ])
     end
+
+    it 'fails if there is nothing to reverse' do
+
+      r = @executor.launch(
+        %q{
+          reverse _
+        })
+
+      expect(
+        r['point']).to eq('failed')
+      expect(
+        r['error']['kla']).to eq('ArgumentError')
+      expect(
+        r['error']['msg']).to eq('Found no argument that could be reversed')
+    end
   end
 end
 

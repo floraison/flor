@@ -15,6 +15,8 @@ class Flor::Pro::Reverse < Flor::Procedure
   # [ 5, 6, 4 ]   # sets f.ret to [ 5, 6, 4 ]
   # reverse _     # sets f.ret to [ 4, 6, 5 ]
   # ```
+  #
+  # Will fail if it finds nothing reversable.
 
   name 'reverse'
 
@@ -30,8 +32,13 @@ class Flor::Pro::Reverse < Flor::Procedure
     if ! from_att? && ((r = payload['ret']).respond_to?(:reverse))
       @node['result'] = r.reverse
     end
+
     if last?
-      payload['ret'] = @node['result']
+      if result = @node['result']
+        payload['ret'] = result
+      else
+        fail ArgumentError.new("Found no argument that could be reversed")
+      end
     end
 
     super

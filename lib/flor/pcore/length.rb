@@ -32,10 +32,11 @@ class Flor::Pro::Length < Flor::Procedure
     end
 
     if last?
-      fail ArgumentError.new(
-        "Found no argument that has a length"
-      ) unless @node['result']
-      payload['ret'] = @node['result']
+      if result = @node['result']
+        payload['ret'] = result
+      else
+        fail ArgumentError.new("Found no argument that has a length")
+      end
     end
 
     super
