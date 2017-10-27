@@ -1,55 +1,21 @@
 
-class Flor::Pro::Map < Flor::Procedure
+class Flor::Pro::Map < Flor::Pro::Iterator
 
-  names %w[ map for-each ]
+  names %w[ map collect ]
 
-  def pre_execute
+  def pre_iterations
 
-    @node['vars'] ||= {}
-
-    @node['col'] = nil
-    @node['idx'] = -1
-    @node['fun'] = nil
-
-    @node['res'] = @node['heat0'] == 'map' ? [] : nil
-
-    unatt_unkeyed_children
+    @node['res'] = []
   end
 
-  def receive_non_att
+  def receive_iteration
 
-    @node['col'] ||=
-      Flor.to_coll(
-        if Flor.is_func_tree?(payload['ret'])
-          node_payload_ret
-        else
-          payload['ret']
-        end)
+    @node['res'] << payload['ret']
+  end
 
-    return execute_child(@ncid) \
-      if @node['fun'] == nil && children[@ncid] != nil
+  def end_iterations
 
-    if @node['idx'] < 0
-      @node['fun'] = payload['ret']
-    elsif res = @node['res']
-      res << payload['ret']
-    end
-
-    @node['idx'] += 1
-    @node['mtime'] = Flor.tstamp
-
-    if @node['idx'] == @node['col'].size
-      #
-      # if @node['res'] is set, it's a "map" or "collect"
-      # else it's a "for-each"
-      #
-      payload['ret'] = @node['res'] || @node['col']
-      return wrap_reply
-    end
-
-    @node['vars']['idx'] = @node['idx']
-
-    apply(@node['fun'], @node['col'][@node['idx'], 1], tree[2])
+    wrap_reply('ret' => @node['res'])
   end
 end
 
