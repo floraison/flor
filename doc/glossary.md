@@ -11,9 +11,7 @@ TODO
 
 ## core
 
-As opposed to [unit](#unit). The basics of flor, everything that makes it a basic flor language interpreter. Core flor executions always execute in a single [run](#run). As soon as there is a [timer](#timer) or a [trap](#trap), something that would not be present in a vanilla interpreter, it goes into "unit".
-
-The [storage](#storage) is not a "core" thing, it belongs to "unit". Core flor concepts are transient.
+Core contains everything that makes the basic flor language interpreter. It's always executed in a single [run](#run) - always transient. As soon as there is a [timer](#timer) or a [trap](#trap) - something that would not be present in a vanilla interpreter - it goes into [unit](#unit). As such, the [storage](#storage) is not a "core" thing, it belongs to "unit".
 
 ## domain
 
@@ -35,21 +33,19 @@ TODO
 
 ## execution
 
-An execution is a live instance of a process or workflow (depending on your point of view). It's flagged with an [execution id](#exid) or [exid](#exid) for short.
+An execution is an instance of a flow or in other words a live occurence of a process/workflow. It's identified by an [execution id](#exid) ([exid](#exid)).
 
 ## executor
 
-When it receives a launch message (calling for a new [execution](#execution)) or a message for a currently sleeping execution, the [scheduler](#scheduler) will create an executor and hand it the messages for the execution.
+When it receives a launch message thus calling for a new [execution](#execution) (think of it as a new instance) or a message for a currently sleeping execution, the [scheduler](#scheduler) will create an executor and hand it the messages for the execution to start/resume.
 
-An executor will stop working when there are no more messages for the execution (did it just terminate?) or if a certain number of messages has been processed (without this limit, an execution might monopolize heavily the resources available to the scheduler, well at least that's the reasoning behind the design decision).
+An executor will die (stop working) when there are no more messages for the execution (did it just terminate?). In addition, under certain conditions, it can die after a certain number of messages has been processed. Without this limit, an execution might monopolize heavily the resources available to the scheduler. Well, at least that's the reasoning behind the design decision.
 
 If there is already an executor processing messages for the execution, the scheduler will not create a new one, it will simply queue the message for the executor to pick it up, sooner or later.
 
 ## exid
 
-A unique identifier for a flor [execution](#execution), for example "test-u-20161204.2144.kawajabachu".
-
-Its format is "{fully.qualified.domain}-{unitname}-{yyyymmdd.hhmm.mnemo}".
+A unique identifier for a flor [execution](#execution). For example "test-u-20161204.2144.kawajabachu" identifies an instance of a certain flow. It uses the following format: `{fully.qualified.domain}-{unitname}-{yyyymmdd.hhmm.mnemo}`.
 
 ## fei
 
@@ -71,7 +67,7 @@ There is a special `ret` field, it carries the result of a [procedure](#procedur
 
 ## flow
 
-A \[business\] process definition, for short, a "flow". In flor, they are written in the flor language.
+A \[business\] process definition or a flow for short. In flor, they are written in the flor language.
 
 ## ganger
 
@@ -83,7 +79,7 @@ The ganger is a component of the [scheduler](#scheduler). It's the middleman bet
 
 ## loader
 
-The loader is a [scheduler](#scheduler) component helping other components loading their codes and libraries. It follows the [domain](#domain) and sub-domain system to load only the codes accessible to a given domain.
+The loader is a [scheduler](#scheduler) component helping other components load their codes and libraries. It follows the [domain](#domain) and [sub-domain](#sub-domain) system to load only the codes accessible to a given domain.
 
 Read more at [services/loader.md](services/loader.md).
 
@@ -131,7 +127,7 @@ Payloads entries are named [fields](#field).
 
 ## procedure
 
-Procedures (called "expressions" in ruote) are the basic building block of the flor language.
+Procedures are the basic building block of the flor language. Those were called "expressions" in ruote.
 
 ```
 sequence
@@ -143,23 +139,14 @@ In this example, "sequence", "task" and "sleep" are procedures.
 
 ## run
 
-Each time an [executor](#executor) is instantiated to run one or more [messages](#message) for an [execution](#execution), the session is called an "execution run" or a "run" for short.
+Each time an [executor](#executor) is instantiated to run one or more [messages](#message) for an [execution](#execution), it is called an "execution run" or a "run" for short. The lifecycle of an execution might comprise one or more runs. For example a simple execution containing only a `sleep` call will span two runs.
 
-The lifecycle of an execution might comprise one or more runs. For example a simple execution containing only a `sleep` call will span two runs. The first run reaches the sleep and sets a [timer](#timer) for it, then when the timer triggers, an executor is instantiated and it performs the post-sleep, final run ending with a "terminated" message for the execution.
-
-Sometimes called a "session".
+1. The first run reaches the sleep and sets a [timer](#timer) for it;
+2. Then when the timer triggers, a new [executor](#executor) is instantiated and it performs the post-sleep portion which is the final run ending with a "terminated" message ending the execution.
 
 ## scheduler
 
-The scheduler is the flor component (server) that watches for incoming [messages](#message) and instantiates [executors](#executor) to act upon them.
-
-It takes its "scheduler" name from its main task of scheduling flor [executions](#execution) by instantiating executors to run them.
-
-A scheduler is composed of a [storage](#storage), a [hooker](#hooker), a [loader](#loader) and a [ganger](#ganger).
-
-## session
-
-Sometimes, [runs](#run) are called sessions.
+The scheduler is the flor component (daemon) that watches for incoming [messages](#message) and instantiates [executors](#executor) to act upon them. It's named after its main responsibility which is to schedule flor [executions](#execution) by instantiating [executors](#executors) to run them. A scheduler is composed of a [storage](#storage), a [hooker](#hooker), a [loader](#loader) and a [ganger](#ganger).
 
 ## storage
 
