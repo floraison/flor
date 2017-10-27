@@ -50,6 +50,20 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('olemilem')
     end
+
+    it 'does not reverse attributes' do
+
+      r = @executor.launch(
+        %q{
+          [
+            (reverse 'onegin' tag: 'a')
+            ('pushkin'; reverse tag: 'b')
+          ]
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(%w[ nigeno nikhsup ])
+    end
   end
 end
 

@@ -18,10 +18,20 @@ class Flor::Pro::Reverse < Flor::Procedure
 
   name 'reverse'
 
-  def receive_last
+  def pre_execute
 
-    if (ret = payload['ret']).respond_to?(:reverse)
-      payload['ret'] = ret.reverse
+    unatt_unkeyed_children
+  end
+
+  def receive
+
+    determine_fcid_and_ncid
+
+    if ! from_att? && ((r = payload['ret']).respond_to?(:reverse))
+      @node['result'] = r.reverse
+    end
+    if last?
+      payload['ret'] = @node['result']
     end
 
     super
