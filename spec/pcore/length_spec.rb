@@ -22,17 +22,54 @@ describe 'Flor procedures' do
       r = @executor.launch(
         %q{
           [
+            (length [ 'a' 'b' 'c' ])
             (length a0)
             (length a1)
             (length h0)
             (length h0.a)
             (length h0.b)
+            ({ a: 'A', b: 'B'}; length _)
           ]
         },
         vars: { 'a0' => [], 'a1' => [ 1, 2 ], 'h0' => { 'a' => 0 } })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ 0, 2, 1, -1, -1 ])
+      expect(r['payload']['ret']).to eq([ 3, 0, 2, 1, -1, -1, 2 ])
+    end
+
+    it 'returns the length of the non-att argument' do
+
+      r = @executor.launch(
+        %q{
+          length [ 0 1 2 ] tag: 'x'
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(3)
+    end
+
+    it 'returns the length of f.ret by default' do
+
+      r = @executor.launch(
+        %q{
+          [ 0 1 2 ]
+          length _
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(3)
+    end
+
+    it 'returns the length of f.ret by default (tag has no effect)' do
+
+      r = @executor.launch(
+        %q{
+          [ 0 1 2 ]
+          length tag: 'a'
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(3)
     end
   end
 end

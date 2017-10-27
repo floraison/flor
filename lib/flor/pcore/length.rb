@@ -1,16 +1,35 @@
 
 class Flor::Pro::Length < Flor::Procedure
+  #
+  # Returns the length of its last collection argument or
+  # the length of the incoming f.ret
+  #
+  # ```
+  #   length [ 0 1 2 3 ]
+  #     # f.ret ==> 4
+  #
+  #   { a: 'A', b: 'B', c: 'C' }
+  #   length _
+  #     # f.ret ==> 3
+  # ```
 
   name 'length'
 
-  def receive_last
+  def pre_execute
 
-    r = payload['ret']
+    unatt_unkeyed_children
+  end
 
-    payload['ret'] =
-      if r.respond_to?(:length) then r.length
-      else -1
-      end
+  def receive
+
+    determine_fcid_and_ncid
+
+    if ! from_att? && ((r = payload['ret']).respond_to?(:length))
+      @node['result'] = r.length
+    end
+    if last?
+      payload['ret'] = @node['result'] || -1
+    end
 
     super
   end

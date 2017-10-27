@@ -345,6 +345,11 @@ class Flor::Procedure < Flor::Node
     @fcid && (c = children[@fcid]) && c[0] == '_att'
   end
 
+  def last?
+
+    children[@ncid] == nil
+  end
+
   def receive
 
     determine_fcid_and_ncid
