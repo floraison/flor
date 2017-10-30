@@ -4,7 +4,7 @@ class Flor::Pro::Cron < Flor::Macro
   # "cron" is a macro procedure.
   #
   # ```
-  # cron: '0 0 1 jan *'
+  # cron '0 0 1 jan *'
   #   task albert 'take out garbage'
   # ```
   #
@@ -15,6 +15,10 @@ class Flor::Pro::Cron < Flor::Macro
   #   def msg
   #     task albert 'take out garbage'
   # ```
+  #
+  # ## see also
+  #
+  # Schedule, and every.
 
   name 'cron'
 

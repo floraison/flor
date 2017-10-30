@@ -1,21 +1,22 @@
 
-# schedule
+# every
 
-Schedules a function
+"every" is a macro procedure.
 
 ```
-schedule cron: '0 0 1 jan *'  # every 1st day of the year, check systems
+every 'day at midnight'
+  task 'alpha'
+```
+
+is automatically turned into:
+
+```
+schedule every: 'day at midnight'
   def msg
-    check_systems
+    task 'alpha'
 ```
 
-It understands `cron:`, `at:`, `in:`, and `every:`.
-
-The time string parsing is done by the
-[fugit](https://github.com/floraison/fugit) gem.
-
-## every:
-
+## time strings
 Every understands time durations and, somehow, frequencies.
 
 ```
@@ -43,6 +44,6 @@ every: 'wed or Monday at 5pm and 11'  # ==> '0 11,17 * * 1,3'
 Cron, at, in, every, and sleep.
 
 
-* [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/schedule.rb)
-* [schedule spec](https://github.com/floraison/flor/tree/master/spec/punit/schedule_spec.rb)
+* [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/every.rb)
+* [every spec](https://github.com/floraison/flor/tree/master/spec/punit/every_spec.rb)
 
