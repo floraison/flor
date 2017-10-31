@@ -18,7 +18,7 @@ schedule cron: '0 0 1 jan *'
 
 ## see also
 
-Schedule, and every.
+[Schedule](schedule.md), and [every](every.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/cron.rb)

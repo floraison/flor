@@ -1,36 +1,66 @@
 
 require 'pp'
 
-PURI = 'https://github.com/floraison/flor/tree/master/'
+PURI =
+  'https://github.com/floraison/flor/tree/master/'
 
-
-def make_proc_doc(path)
+def determine_names(path)
 
   lines = File.readlines(path)
 
-  cline = lines
-    .index { |l| l.match(/^class Flor::Pro::.* < Flor::(Pro|Macro)/) }
-
-  return unless cline && cline > 0
+  cline = lines.index { |l| l =~ /^class Flor::Pro::.* < Flor::(Pro|Macro)/ }
+  return nil unless cline && cline > 0
 
   nline = lines.index { |l| l.match(/^ +names?/) }
-  return unless nline
+  return nil unless nline
 
   names = lines[nline][7..-1]
   names = "[ #{names} ]" if names.index(',')
   names = Array(eval(names))
   #names = names.select { |n| n[0, 1] != '_' }
+  return nil if names.empty?
 
-  return if names.empty?
+  lines = lines[cline..nline].select { |l| l.match(/^  #/) }
+  return nil if lines.empty?
+
+  lines = lines.collect { |l| l.strip.length == 1 ? "\n" : l[4..-1] }
+
+  [ names, lines ]
+end
+
+NAMES_AND_LINES = Dir['lib/flor/{pcore,punit}/*.rb']
+  .sort
+  .inject({}) { |h, path|
+    names = determine_names(path)
+    h[path] = names if names
+    h }
+NAMES = NAMES_AND_LINES
+  .values
+  .collect(&:first)
+  .flatten
+ALSO_NAMES =
+  NAMES - %w[ and or ]
+
+def make_proc_doc(path, names_and_lines)
+
+  names, lines = names_and_lines
 
   fname = File.basename(path, '.rb')
 
-  lines = lines[cline..nline].select { |l| l.match(/^  #/) }
+  if see_also = lines.index("## see also\n")
 
-  return if lines.empty?
+    see_also = see_also + 2
+    count = lines[see_also..-1].index("\n") || 0
 
-  lines = lines.collect { |l| l.strip.length == 1 ? "\n" : l[4..-1] }
-  #
+    (see_also..see_also + count).each do |i|
+      lines[i] = lines[i]
+        .gsub(/\w+/) { |w|
+          dw = w.downcase
+          ALSO_NAMES.include?(dw) ? "[#{w}](#{dw}.md)" : w }
+    end
+    #pp lines
+  end
+
   lines.unshift("\n") if lines.first.strip != ''
   lines.push("\n") if lines.last.strip != ''
 
@@ -63,11 +93,10 @@ end
 
 def make_procedures_doc
 
-  procs =
-    (
-      Dir["lib/flor/pcore/*.rb"].sort + Dir["lib/flor/punit/*.rb"].sort
-    ).collect { |path| make_proc_doc(path) }.compact
-  pp procs
+  procs = NAMES_AND_LINES
+    .collect { |path, nsls| make_proc_doc(path, nsls) }
+    .compact
+  #pp procs
 
   File.open('doc/procedures/readme.md', 'wb') do |f|
 

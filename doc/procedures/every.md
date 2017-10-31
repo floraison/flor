@@ -41,7 +41,7 @@ every: 'wed or Monday at 5pm and 11'  # ==> '0 11,17 * * 1,3'
 
 ## see also
 
-Cron, at, in, every, and sleep.
+[Cron](cron.md), at, in, [every](every.md), and [sleep](sleep.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/every.rb)
