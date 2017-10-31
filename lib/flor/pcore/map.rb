@@ -1,7 +1,7 @@
 
 class Flor::Pro::Map < Flor::Pro::Iterator
 
-  names %w[ map collect ]
+  names %w[ map ]
 
   def pre_iterations
 
