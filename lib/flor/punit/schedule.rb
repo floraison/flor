@@ -88,3 +88,36 @@ class Flor::Pro::Schedule < Flor::Procedure
   end
 end
 
+
+class Flor::ScheduleMacro < Flor::Macro
+
+  def rewrite_schedule_tree(schedule_type)
+
+    atts = att_children
+    schedule_i = atts.index { |at| at[1].size == 1 }
+
+    fail ArgumentError.new(
+      "schedule not found in #{tree.inspect}"
+    ) unless schedule_i
+
+    schedule =
+      schedule_type ?
+      Flor.dup(atts.delete_at(schedule_i)[1][0]) :
+      nil
+
+    l = tree[2]
+
+    th = [ 'schedule', [], l, *tree[3] ]
+    th[1] << [ '_att', [ [ schedule_type, [], l ], schedule ], l ] if schedule
+    atts.each { |ac| th[1] << Flor.dup(ac) }
+
+    td = [ 'def', [], l ]
+    td[1] << [ '_att', [ [ 'msg', [], l ] ], l ]
+    non_att_children.each { |nac| td[1] << Flor.dup(nac) }
+
+    th[1] << td
+
+    th
+  end
+end
+

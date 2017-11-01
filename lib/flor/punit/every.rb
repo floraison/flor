@@ -1,5 +1,8 @@
 
-class Flor::Pro::Every < Flor::Macro
+require 'flor/punit/schedule'
+
+
+class Flor::Pro::Every < Flor::ScheduleMacro
   #
   # "every" is a macro procedure.
   #
@@ -17,7 +20,7 @@ class Flor::Pro::Every < Flor::Macro
   # ```
   #
   # ## time strings
-  3
+  #
   # Every understands time durations and, somehow, frequencies.
   #
   # ```
@@ -48,18 +51,7 @@ class Flor::Pro::Every < Flor::Macro
 
   def rewrite_tree
 
-    l = tree[2]
-
-    th = [ 'schedule', [], l, *tree[3] ]
-    att_children.each { |ac| th[1] << Flor.dup(ac) }
-
-    td = [ 'def', [], l ]
-    td[1] << [ '_att', [ [ 'msg', [], l ] ], l ]
-    non_att_children.each { |nac| td[1] << Flor.dup(nac) }
-
-    th[1] << td
-
-    th
+    rewrite_schedule_tree(nil)
   end
 end
 
