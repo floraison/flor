@@ -151,28 +151,30 @@ module Flor
     o.string
   end
 
-  def self.print_flat_tree(tree, nid, opts)
+  def self.to_flat_tree_s(tree, nid, opts)
 
+    o = StringIO.new
     _c = colours(opts)
 
-    s = opts[:s]
-
-    s << ' ' << nid << ' ' << _c.yl << tree[0] << _c.dg
+    o << ' ' << nid << ' ' << _c.yl << tree[0] << _c.dg
 
     if tree[1].is_a?(Array)
       tree[1].each_with_index do |t, i|
-        print_flat_tree(t, "#{nid}_#{i}", opts)
+        o << to_flat_tree_s(t, "#{nid}_#{i}", opts)
       end
     else
-      s << ' ' << tree[1]
+      o << ' ' << tree[1]
     end
+
+    o.string
   end
 
-  def self.print_compact_tree(tree, nid='0', opts={})
+  def self.to_compact_tree_s(tree, nid='0', opts={})
 
+    o = StringIO.new
     _c = colours(opts)
 
-    is_root = opts[:s].nil?
+    #is_root = opts[:s].nil?
     ind = ' ' * (opts[:ind] || 0)
 
     atts, natts =
@@ -180,30 +182,32 @@ module Flor
       tree[1].partition { |t| Flor.is_att_tree?(t) } :
       [ [], [] ]
 
-    s = (opts[:s] ||= StringIO.new)
-
     if t = opts.delete(:title)
-      s << ind << _c.dg << '+--- ' << t << "\n"
+      o << ind << _c.dg << '+--- ' << t << "\n"
     end
 
-    s << ind << _c.dg << '| ' << nid << ' '
-    s << _c.yl << Flor.to_d(tree[0], opts.merge(compact: true)) << _c.dg << ' L' << tree[2]
+    o <<
+      ind << _c.dg << '| ' << nid << ' ' <<
+      _c.yl << Flor.to_d(tree[0], opts.merge(compact: true)) <<
+      _c.dg << ' L' << tree[2]
 
     atts.each_with_index do |ct, i|
-      print_flat_tree(ct, "_#{i}", opts)
+      o << to_flat_tree_s(ct, "_#{i}", opts)
     end
 
     natts.each_with_index do |ct, i|
       i = atts.size + i
-      s << "\n"
-      print_compact_tree(ct, "#{nid}_#{i}", opts)
+      o << "\n" << to_compact_tree_s(ct, "#{nid}_#{i}", opts)
     end
 
-    s << "\n" << ind << _c.dg << '\---' if is_root && opts[:close]
+    #o << "\n" << ind << _c.dg << '\---' if is_root && opts[:close]
+    o << "\n" << ind << _c.dg << '\---' if opts[:close]
 
-    s << _c.rs
+    o << _c.rs
 
-    opts[:out].puts(s.string) if is_root
+    #opts[:out].puts(s.string) if is_root
+
+    o.string
   end
 
   def self.ret_to_s(executor, m, c)

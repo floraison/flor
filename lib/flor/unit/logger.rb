@@ -81,15 +81,15 @@ module Flor
 
       if msg['rewritten'] && @unit.conf['log_tree_rw']
 
-        Flor.print_compact_tree(
-          msg['rewritten'], msg['nid'],
-          ind: 6, title: "rewrote #{msg['exid']} #{msg['nid']}",
-          out: @out)
-        Flor.print_compact_tree(
-          msg['tree'], msg['nid'],
-          ind: 6, title: "into #{msg['exid']} #{msg['nid']}",
-          close: true,
-          out: @out)
+        @out <<
+          Flor.to_compact_tree_s(
+            msg['rewritten'], msg['nid'],
+            ind: 6, title: "rewrote #{msg['exid']} #{msg['nid']}")
+        @out <<
+          Flor.to_compact_tree_s(
+            msg['tree'], msg['nid'],
+            ind: 6, title: "into #{msg['exid']} #{msg['nid']}",
+            close: true)
       end
 
       @out.puts(
@@ -263,6 +263,8 @@ module Flor
         return lc if [ true, false ].include?(lc)
         @f.tty?
       end
+      def <<(s); @f << s; self; end
+      def print(s); @f.print(s); end
       def puts(s); @f.puts(s); end
       def flush; @f.flush; end
     end
