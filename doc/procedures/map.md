@@ -36,7 +36,7 @@ map [ 'a', 'b' ]
 
 ## see also
 
-Collect.
+[Collect](collect.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/map.rb)

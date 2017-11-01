@@ -9,6 +9,7 @@
 * [apply](apply.md) - Applies a function.
 * [break, continue](break.md) - Breaks or continues a "while" or "until".
 * [case](case.md) - The classical case form.
+* [collect](collect.md) - Collect is a simplified version of [map](map.md).
 * [cond](cond.md) - Evaluates all its condition children until one evaluates to true (or it's an else), then executes the corresponding clause child.
 * [cursor](cursor.md) - Executes child expressions in sequence, but may be "guided".
 * [def, fun, define](define.md) - Defines a function.
