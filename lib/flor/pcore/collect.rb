@@ -36,11 +36,14 @@ class Flor::Pro::Collect < Flor::Macro
     th = [ 'map', [], l, *tree[3] ]
     atts.each { |ac| th[1] << Flor.dup(ac) }
 
-    td = [ 'def', [], l ]
-    td[1] << [ '_att', [ [ 'elt', [], l ] ], l ]
-    non_att_children.each { |nac| td[1] << Flor.dup(nac) }
+    if non_att_children.any?
 
-    th[1] << td
+      td = [ 'def', [], l ]
+      td[1] << [ '_att', [ [ 'elt', [], l ] ], l ]
+      non_att_children.each { |nac| td[1] << Flor.dup(nac) }
+
+      th[1] << td
+    end
 
     th
   end
