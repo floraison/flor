@@ -280,33 +280,33 @@ module Flor
     sio.string
   end
 
-  def self.print_detail_msg(executor, m, opts={})
+  def self.msg_to_detail_s(executor, m, opts={})
 
     return if m['_detail_msg_flag']
     m['_detail_msg_flag'] = true if opts[:flag]
 
-    o = (opts[:out] ||= $stdout)
+    o = StringIO.new
     _c = colours(opts)
 
     nid = m['nid']
     n = executor.execution['nodes'][nid]
     node = n ? Flor::Node.new(executor, n, m) : nil
 
-    o.puts "#{_c.dg}<Flor.print_detail_msg>#{_c.rs}#{_c.yl}"
-    o.puts(Flor.to_pretty_s(m))
+    o.puts "#{_c.dg}<Flor.msg_to_detail_s>#{_c.rs}#{_c.yl}"
+    o.puts Flor.to_pretty_s(m)
     o.puts "#{_c.dg}payload:#{_c.yl}"
-    o.puts(Flor.to_pretty_s(m['payload'], 0))
+    o.puts Flor.to_pretty_s(m['payload'], 0)
     o.puts "#{_c.dg}tree:"
-    o.puts tree_to_s(node.lookup_tree(nid), nid, out: o) if node
+    o.puts(tree_to_s(node.lookup_tree(nid), nid, out: o)) if node
     o.puts "#{_c.dg}node:#{_c.yl}"
     o.puts(Flor.to_pretty_s(n)) if n
     o.puts "#{_c.dg}nodes:"
     o.puts nods_to_s(executor, m, opts)
     z = executor.execution['nodes'].size
     o.puts "#{_c.yl}#{z} node#{z == 1 ? '' : 's'}."
-    o.puts "#{_c.dg}</Flor.print_detail_msg>#{_c.rs}"
+    o.puts "#{_c.dg}</Flor.msg_to_detail_s>#{_c.rs}"
 
-    o.is_a?(StringIO) ? o.string : nil
+    o.string
   end
 end
 

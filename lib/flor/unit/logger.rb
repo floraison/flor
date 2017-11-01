@@ -181,7 +181,7 @@ module Flor
 
       return unless @unit.conf['log_err']
 
-      Flor.print_detail_msg(executor, message, opts.merge(out: @out))
+      @out.puts(Flor.msg_to_detail_s(executor, message, opts.merge(flag: true)))
     end
 
     def log_src(source, opts, log_opts={})
