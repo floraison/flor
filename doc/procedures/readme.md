@@ -19,6 +19,7 @@
 * [length](length.md) - Returns the length of its last collection argument or the length of the incoming f.ret
 * [and, or](logo.md) - When `and` evaluates the children and returns false as soon as one of returns a falsy value. Returns true else. When `or` evaluates the children and returns true as soon as one of them returns a trueish value. Returns false else.
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
+* [map](map.md) - This is the classical "map" procedure. It accepts a collection and a function and yields a new collection.
 * [match](match.md) - "match" can be thought of as a "destructuring [case](case.md)".
 * [matchr, match?](matchr.md) - Matches a string against a regular expression.
 * [move](move.md) - Moves a cursor to a given position, a kind of local goto.
@@ -35,8 +36,6 @@
 
 * [cancel, kill](cancel.md) - Cancels an execution branch
 * [concurrence](concurrence.md) - Executes its children concurrently.
-* [cron](cron.md) - "cron" is a macro procedure.
-* [every](every.md) - "every" is a macro procedure.
 * [graft, import](graft.md) - Graft a subtree into the current flo
 * [on](on.md) - Traps a signal by name
 * [schedule](schedule.md) - Schedules a function

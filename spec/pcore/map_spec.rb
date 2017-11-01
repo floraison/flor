@@ -99,6 +99,18 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([ 0, 1 ])
     end
 
+    it 'passing the index as second function var if possible'
+#
+#      r = @executor.launch(
+#        %q{
+#          map [ 'a', 'b' ]
+#            def x i \ [ i, x ]
+#        })
+#
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['ret']).to eq([ [ 0, 'a' ], [ 1, 'b' ] ])
+#    end
+
     it 'maps thanks to the last fun in the block' do
 
       r = @executor.launch(
