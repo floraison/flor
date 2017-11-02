@@ -382,5 +382,37 @@ describe Flor do
       expect(Flor.point?('nada')).to eq(false)
     end
   end
+
+  describe '.const_lookup' do
+
+    it 'returns a class given a string' do
+
+      expect(
+        Flor.const_lookup('Flor::Pro::Collect')
+      ).to eq(
+        Flor::Pro::Collect
+      )
+    end
+
+    it 'fails if it does not find' do
+
+      expect {
+        Flor.const_lookup('Very::Nada')
+      }.to raise_error(
+        NameError, 'uninitialized constant Kernel::Very'
+      )
+    end
+
+    it 'does not stray' do
+
+      class ::WhateverOut < Flor::Logger::Out; end
+
+      expect {
+        Flor.const_lookup('Flor::WhateverOut')
+      }.to raise_error(
+        NameError, /\Auninitialized constant Flor::WhateverOut/
+      )
+    end
+  end
 end
 

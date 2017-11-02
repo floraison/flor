@@ -87,7 +87,7 @@ describe 'Flor unit' do
           class ::DummyOut < Flor::Logger::Out
           end
 
-          @unit.conf['log_out'] = 'Flor::DummyOut'
+          @unit.conf['log_out'] = '::DummyOut'
           l = Flor::Logger.new(@unit)
           o = l.instance_eval { @out }
 

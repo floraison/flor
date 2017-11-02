@@ -1,203 +1,205 @@
 
 module Flor
 
-  def self.to_a(o)
+  class << self
 
-    o.nil? ? nil : Array(o)
-  end
+    def to_a(o)
 
-  #
-  # misc
-  #
-  # miscellaneous functions
-
-  def self.env_i(k)
-
-    v = ENV[k]; (v && v.match(/\A\d+\z/)) ? v.to_i : nil
-  end
-
-  def self.dup(o)
-
-    Marshal.load(Marshal.dump(o))
-  end
-
-  def self.dup_and_merge(h, hh)
-
-    self.dup(h).merge(hh)
-  end
-  def self.dupm(h, hh); self.dup_and_merge(h, hh); end
-
-  def self.deep_freeze(o)
-
-    if o.is_a?(Array)
-      o.each { |e| e.freeze }
-    elsif o.is_a?(Hash)
-      o.each { |k, v| k.freeze; v.freeze }
+      o.nil? ? nil : Array(o)
     end
 
-    o.freeze
-  end
+    #
+    # misc
+    #
+    # miscellaneous functions
 
-  def self.false?(o)
+    def env_i(k)
 
-    o == nil || o == false
-  end
-
-  def self.true?(o)
-
-    o != nil && o != false
-  end
-
-  def self.to_error(o)
-
-    h = {}
-    h['kla'] = o.class.to_s
-    t = nil
-
-    if o.is_a?(::Exception)
-
-      h['msg'] = o.message
-
-      t = o.backtrace
-
-      if n = o.respond_to?(:node) && o.node
-        h['lin'] = n.tree[2]
-        #h['tre'] = n.tree
-      end
-
-    else
-
-      h['msg'] = o.to_s
-
-      t = caller[1..-1]
+      v = ENV[k]; (v && v.match(/\A\d+\z/)) ? v.to_i : nil
     end
 
-    h['trc'] = t[0..(t.rindex { |l| l.match(/\/lib\/flor\//) }) + 1] if t
-    h['cwd'] = Dir.pwd
-    h['rlp'] = $: if o.is_a?(::LoadError)
+    def dup(o)
 
-    h
-  end
+      Marshal.load(Marshal.dump(o))
+    end
 
-  def self.const_lookup(s)
+    def dup_and_merge(h, hh)
 
-    s.split('::')
-      .select { |ss| ss.length > 0 }
-      .inject(Kernel) { |k, sk| k.const_get(sk) }
-  end
+      self.dup(h).merge(hh)
+    end
+    def dupm(h, hh); self.dup_and_merge(h, hh); end
 
-  def self.to_coll(o)
+    def deep_freeze(o)
 
-    #o.respond_to?(:to_a) ? o.to_a : [ a ]
-    Array(o)
-  end
-
-  def self.relativize_path(path, from=Dir.getwd)
-
-    path = File.absolute_path(path)
-
-    path = path[from.length + 1..-1] if path[0, from.length] == from
-
-    path || '.'
-  end
-
-  def self.is_array_of_messages?(o)
-
-    o.is_a?(Array) &&
-    o.all? { |e|
-      e.is_a?(Hash) &&
-      e['point'].is_a?(String) &&
-      e.keys.all? { |k| k.is_a?(String) } }
-  end
-
-  def self.h_fetch_a(h, *keys)
-
-    default = keys.last.is_a?(String) ? [] : keys.pop
-
-    k = keys.find { |k| h.has_key?(k) }
-    v = k ? h[k] : nil
-
-    v_to_a(v) || default
-  end
-
-  def self.v_to_a(o)
-
-    return o if o.is_a?(Array)
-    return o.split(',') if o.is_a?(String)
-    return nil if o.nil?
-
-    fail ArgumentError.new("cannot turn instance of #{o.class} into an array")
-  end
-
-  def self.to_regex(o)
-
-    s =
-      case o
-      when String then o
-      when Array then o[1].to_s # hopefully regex tree
-      else o.to_s
+      if o.is_a?(Array)
+        o.each { |e| e.freeze }
+      elsif o.is_a?(Hash)
+        o.each { |k, v| k.freeze; v.freeze }
       end
 
-    m = s.match(/\A\/(.*)\/([a-z]*)\z/)
+      o.freeze
+    end
 
-    return Regexp.new(s) unless m
+    def false?(o)
 
-    flags = 0
-    flags = flags | Regexp::EXTENDED if m[2].index('x')
-    flags = flags | Regexp::IGNORECASE if m[2].index('i')
-    #flags = flags | Regexp::MULTILINE if m[2].index('m')
+      o == nil || o == false
+    end
 
-    Regexp.new(m[1], flags)
-  end
+    def true?(o)
 
-  #
-  # functions about time
+      o != nil && o != false
+    end
 
-  def self.isostamp(show_date, show_time, show_usec, time)
+    def to_error(o)
 
-    t = (time || Time.now).utc
-    s = StringIO.new
+      h = {}
+      h['kla'] = o.class.to_s
+      t = nil
 
-    s << t.strftime('%Y-%m-%d') if show_date
-    s << t.strftime('T%H:%M:%S') if show_time
-    s << sprintf('.%06d', t.usec) if show_time && show_usec
-    s << 'Z' if show_time
+      if o.is_a?(::Exception)
 
-    s.string
-  end
+        h['msg'] = o.message
 
-  def self.tstamp(t=Time.now)
+        t = o.backtrace
 
-    isostamp(true, true, true, t)
-  end
+        if n = o.respond_to?(:node) && o.node
+          h['lin'] = n.tree[2]
+          #h['tre'] = n.tree
+        end
 
-  def self.ststamp(t=Time.now)
+      else
 
-    isostamp(true, true, false, t)
-  end
+        h['msg'] = o.to_s
 
-  def self.dstamp(t=Time.now)
+        t = caller[1..-1]
+      end
 
-    isostamp(true, false, false, t)
-  end
+      h['trc'] = t[0..(t.rindex { |l| l.match(/\/lib\/flor\//) }) + 1] if t
+      h['cwd'] = Dir.pwd
+      h['rlp'] = $: if o.is_a?(::LoadError)
 
-  def self.tamp(t=Time.now)
+      h
+    end
 
-    t = t.utc
-    s = StringIO.new
-    s << t.strftime('%Y%m%dT%H%M%S') << sprintf('.%06dZ', t.usec)
+    def const_lookup(s)
 
-    s.string
-  end
+      s.split('::')
+        .select { |ss| ss.length > 0 }
+        .inject(Kernel) { |k, sk| k.const_get(sk, k == Kernel) }
+    end
 
-  # hour stamp
-  #
-  def self.hstamp(t=Time.now)
+    def to_coll(o)
 
-    isostamp(false, true, true, t)
-  end
+      #o.respond_to?(:to_a) ? o.to_a : [ a ]
+      Array(o)
+    end
 
-#  def self.to_time(ts)
+    def relativize_path(path, from=Dir.getwd)
+
+      path = File.absolute_path(path)
+
+      path = path[from.length + 1..-1] if path[0, from.length] == from
+
+      path || '.'
+    end
+
+    def is_array_of_messages?(o)
+
+      o.is_a?(Array) &&
+      o.all? { |e|
+        e.is_a?(Hash) &&
+        e['point'].is_a?(String) &&
+        e.keys.all? { |k| k.is_a?(String) } }
+    end
+
+    def h_fetch_a(h, *keys)
+
+      default = keys.last.is_a?(String) ? [] : keys.pop
+
+      k = keys.find { |k| h.has_key?(k) }
+      v = k ? h[k] : nil
+
+      v_to_a(v) || default
+    end
+
+    def v_to_a(o)
+
+      return o if o.is_a?(Array)
+      return o.split(',') if o.is_a?(String)
+      return nil if o.nil?
+
+      fail ArgumentError.new("cannot turn instance of #{o.class} into an array")
+    end
+
+    def to_regex(o)
+
+      s =
+        case o
+        when String then o
+        when Array then o[1].to_s # hopefully regex tree
+        else o.to_s
+        end
+
+      m = s.match(/\A\/(.*)\/([a-z]*)\z/)
+
+      return Regexp.new(s) unless m
+
+      flags = 0
+      flags = flags | Regexp::EXTENDED if m[2].index('x')
+      flags = flags | Regexp::IGNORECASE if m[2].index('i')
+      #flags = flags | Regexp::MULTILINE if m[2].index('m')
+
+      Regexp.new(m[1], flags)
+    end
+
+    #
+    # functions about time
+
+    def isostamp(show_date, show_time, show_usec, time)
+
+      t = (time || Time.now).utc
+      s = StringIO.new
+
+      s << t.strftime('%Y-%m-%d') if show_date
+      s << t.strftime('T%H:%M:%S') if show_time
+      s << sprintf('.%06d', t.usec) if show_time && show_usec
+      s << 'Z' if show_time
+
+      s.string
+    end
+
+    def tstamp(t=Time.now)
+
+      isostamp(true, true, true, t)
+    end
+
+    def ststamp(t=Time.now)
+
+      isostamp(true, true, false, t)
+    end
+
+    def dstamp(t=Time.now)
+
+      isostamp(true, false, false, t)
+    end
+
+    def tamp(t=Time.now)
+
+      t = t.utc
+      s = StringIO.new
+      s << t.strftime('%Y%m%dT%H%M%S') << sprintf('.%06dZ', t.usec)
+
+      s.string
+    end
+
+    # hour stamp
+    #
+    def hstamp(t=Time.now)
+
+      isostamp(false, true, true, t)
+    end
+
+#  def to_time(ts)
 #
 #    m = ts.match(/\A(\d{4})(\d{2})(\d{2})\.(\d{2})(\d{2})(\d{2})(\d+)([uU]?)\z/)
 #    fail ArgumentError.new("cannot parse timestamp #{ts.inspect}") unless m
@@ -206,223 +208,224 @@ module Flor
 #    Time.local(*m[1, 7].collect(&:to_i))
 #  end
 
-  #
-  # functions about domains and units
+    #
+    # functions about domains and units
 
-  NAME_REX = '[a-zA-Z0-9_]+'
-  UNIT_NAME_REX = /\A#{NAME_REX}\z/
-  DOMAIN_NAME_REX = /\A#{NAME_REX}(\.#{NAME_REX})*\z/
-  FLOW_NAME_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)\.([a-zA-Z0-9_-]+)\z/
+    NAME_REX = '[a-zA-Z0-9_]+'
+    UNIT_NAME_REX = /\A#{NAME_REX}\z/
+    DOMAIN_NAME_REX = /\A#{NAME_REX}(\.#{NAME_REX})*\z/
+    FLOW_NAME_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)\.([a-zA-Z0-9_-]+)\z/
 
-  def self.potential_unit_name?(s)
+    def potential_unit_name?(s)
 
-    s.is_a?(String) && !! s.match(UNIT_NAME_REX)
-  end
-
-  def self.potential_domain_name?(s)
-
-    s.is_a?(String) && !! s.match(DOMAIN_NAME_REX)
-  end
-
-  def self.split_flow_name(s)
-
-    if s.is_a?(String) && m = s.match(FLOW_NAME_REX)
-      [ m[1], m[2] ]
-    else
-      nil
+      s.is_a?(String) && !! s.match(UNIT_NAME_REX)
     end
-  end
 
-  def self.is_sub_domain?(dom, sub)
+    def potential_domain_name?(s)
 
-    fail ArgumentError.new(
-      "not a domain #{dom.inspect}"
-    ) unless potential_domain_name?(dom)
-
-    fail ArgumentError.new(
-      "not a sub domain #{sub.inspect}"
-    ) unless potential_domain_name?(sub)
-
-    sub == dom || sub[0, dom.length + 1] == dom + '.'
-  end
-
-  DOMAIN_UNIT_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)-(#{NAME_REX})[-\z]/
-
-  def self.split_domain_unit(s)
-
-    if m = DOMAIN_UNIT_REX.match(s)
-      [ m[1], m[2] ]
-    else
-      []
+      s.is_a?(String) && !! s.match(DOMAIN_NAME_REX)
     end
-  end
 
-  def self.domain(s)
+    def split_flow_name(s)
 
-    split_domain_unit(s).first
-  end
+      if s.is_a?(String) && m = s.match(FLOW_NAME_REX)
+        [ m[1], m[2] ]
+      else
+        nil
+      end
+    end
 
-  def self.unit(s)
+    def is_sub_domain?(dom, sub)
 
-    split_domain_unit(s).last
-  end
+      fail ArgumentError.new(
+        "not a domain #{dom.inspect}"
+      ) unless potential_domain_name?(dom)
 
-  def self.to_pretty_s(o, twidth=79)
+      fail ArgumentError.new(
+        "not a sub domain #{sub.inspect}"
+      ) unless potential_domain_name?(sub)
 
-    sio = StringIO.new
-    PP.pp(o, sio, twidth)
+      sub == dom || sub[0, dom.length + 1] == dom + '.'
+    end
 
-    sio.string
-  end
+    DOMAIN_UNIT_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)-(#{NAME_REX})[-\z]/
+
+    def split_domain_unit(s)
+
+      if m = DOMAIN_UNIT_REX.match(s)
+        [ m[1], m[2] ]
+      else
+        []
+      end
+    end
+
+    def domain(s)
+
+      split_domain_unit(s).first
+    end
+
+    def unit(s)
+
+      split_domain_unit(s).last
+    end
+
+    def to_pretty_s(o, twidth=79)
+
+      sio = StringIO.new
+      PP.pp(o, sio, twidth)
+
+      sio.string
+    end
 
 
-  #
-  # tree
+    #
+    # tree
 
-  def self.is_tree?(t)
+    def is_tree?(t)
 
-    t.is_a?(Array) &&
-    t.size > 2 &&
-    (t[0].is_a?(String) || Flor.is_tree?(t[0])) &&
-    t[2].is_a?(Integer)
-  end
+      t.is_a?(Array) &&
+      t.size > 2 &&
+      (t[0].is_a?(String) || Flor.is_tree?(t[0])) &&
+      t[2].is_a?(Integer)
+    end
 
-  def self.is_string_tree?(t, s=nil)
+    def is_string_tree?(t, s=nil)
 
-    t.is_a?(Array) &&
-    t[2].is_a?(Integer) &&
-    %w[ _sqs _dqs ].include?(t[0]) &&
-    (s ? (t[1] == s) : t[1].is_a?(String))
-  end
+      t.is_a?(Array) &&
+      t[2].is_a?(Integer) &&
+      %w[ _sqs _dqs ].include?(t[0]) &&
+      (s ? (t[1] == s) : t[1].is_a?(String))
+    end
 
-  def self.is_att_tree?(t)
+    def is_att_tree?(t)
 
-    t.is_a?(Array) &&
-    t[2].is_a?(Integer) &&
-    t[0] == '_att' &&
-    t[1].is_a?(Array)
-  end
+      t.is_a?(Array) &&
+      t[2].is_a?(Integer) &&
+      t[0] == '_att' &&
+      t[1].is_a?(Array)
+    end
 
-  def self.is_array_of_trees?(o)
+    def is_array_of_trees?(o)
 
-    o.is_a?(Array) &&
-    o.all? { |e| Flor.is_tree?(e) }
-  end
+      o.is_a?(Array) &&
+      o.all? { |e| Flor.is_tree?(e) }
+    end
 
 #  # Array, object or atom tree
 #  #
-#  def self.is_value_tree?(o)
+#  def is_value_tree?(o)
 #
 #    o.is_a?(Array) &&
 #    %w[ _num _boo _sqs _dqs _rxs _nul _arr _obj ].include?(o[0]) &&
 #    o[2].is_a?(Integer)
 #  end
 
-  def self.is_proc_tree?(o)
+    def is_proc_tree?(o)
 
-    o.is_a?(Array) &&
-    o[0] == '_proc' &&
-    o[2].is_a?(Integer) &&
-    o[1].is_a?(Hash) &&
-    o[1]['proc'].is_a?(String)
-  end
-
-  def self.is_func_tree?(o)
-
-    o.is_a?(Array) &&
-    o[0] == '_func' &&
-    o[2].is_a?(Integer) &&
-    o[1].is_a?(Hash) && (o[1].keys & %w[ nid cnid fun ]).size == 3
-  end
-
-  def self.is_task_tree?(o)
-
-    o.is_a?(Array) &&
-    o[0] == '_task' &&
-    o[2].is_a?(Integer) &&
-    o[1].is_a?(Hash) &&
-    o[1]['task'].is_a?(String)
-  end
-
-  def self.is_regex_tree?(o)
-
-    o.is_a?(Array) &&
-    o[0] == '_rxs' &&
-    o[2].is_a?(Integer) &&
-    o[1].is_a?(String) &&
-    o[1].match(/\A\/.*\/[a-zA-Z]*\z/)
-  end
-
-  # Returns [ st, i ], the parent subtree for the final i index of the nid
-  # Used when inserting updated subtrees.
-  #
-  def self.parent_tree_locate(t, nid)
-
-    return nil if t == nil
-
-    n, i, d = nid.split('_', 3)
-
-    return [ t, nil ] if i == nil
-    return [ t, i.to_i ] if ! d
-    parent_tree_locate(t[1][i.to_i], [ i, d ].join('_'))
-  end
-
-  # Returns the subtree down at the given nid
-  #
-  def self.tree_locate(t, nid)
-
-    st, i = parent_tree_locate(t, nid)
-
-    return nil if st == nil
-    return st if i == nil
-    st[1][i]
-  end
-
-
-  #
-  # splat
-
-  SPLAT_REGEX = /\A(.*)__(_|\d+)\z/.freeze
-
-  def self.splat(keys, array)
-
-    ks = keys.dup
-    a = array.dup
-    h = {}
-
-    while k = ks.shift
-
-      if m = SPLAT_REGEX.match(k)
-        r, l = m[1, 2]
-        l = (l == '_') ? a.length - ks.length : l.to_i
-        h[r] = a.take(l) if r.length > 0
-        a = a.drop(l)
-      else
-        h[k] = a.shift
-      end
+      o.is_a?(Array) &&
+      o[0] == '_proc' &&
+      o[2].is_a?(Integer) &&
+      o[1].is_a?(Hash) &&
+      o[1]['proc'].is_a?(String)
     end
 
-    h
-  end
+    def is_func_tree?(o)
+
+      o.is_a?(Array) &&
+      o[0] == '_func' &&
+      o[2].is_a?(Integer) &&
+      o[1].is_a?(Hash) && (o[1].keys & %w[ nid cnid fun ]).size == 3
+    end
+
+    def is_task_tree?(o)
+
+      o.is_a?(Array) &&
+      o[0] == '_task' &&
+      o[2].is_a?(Integer) &&
+      o[1].is_a?(Hash) &&
+      o[1]['task'].is_a?(String)
+    end
+
+    def is_regex_tree?(o)
+
+      o.is_a?(Array) &&
+      o[0] == '_rxs' &&
+      o[2].is_a?(Integer) &&
+      o[1].is_a?(String) &&
+      o[1].match(/\A\/.*\/[a-zA-Z]*\z/)
+    end
+
+    # Returns [ st, i ], the parent subtree for the final i index of the nid
+    # Used when inserting updated subtrees.
+    #
+    def parent_tree_locate(t, nid)
+
+      return nil if t == nil
+
+      n, i, d = nid.split('_', 3)
+
+      return [ t, nil ] if i == nil
+      return [ t, i.to_i ] if ! d
+      parent_tree_locate(t[1][i.to_i], [ i, d ].join('_'))
+    end
+
+    # Returns the subtree down at the given nid
+    #
+    def tree_locate(t, nid)
+
+      st, i = parent_tree_locate(t, nid)
+
+      return nil if st == nil
+      return st if i == nil
+      st[1][i]
+    end
 
 
-  #
-  # misc
+    #
+    # splat
 
-  POINTS = %w[
-    execute receive
-    return
-    entered left
-    task detask
-    schedule trigger
-    signal cancel
-    terminated failed ceased
-    idle
-  ]
+    SPLAT_REGEX = /\A(.*)__(_|\d+)\z/.freeze
 
-  def self.point?(s)
+    def splat(keys, array)
 
-    POINTS.include?(s)
+      ks = keys.dup
+      a = array.dup
+      h = {}
+
+      while k = ks.shift
+
+        if m = SPLAT_REGEX.match(k)
+          r, l = m[1, 2]
+          l = (l == '_') ? a.length - ks.length : l.to_i
+          h[r] = a.take(l) if r.length > 0
+          a = a.drop(l)
+        else
+          h[k] = a.shift
+        end
+      end
+
+      h
+    end
+
+
+    #
+    # misc
+
+    POINTS = %w[
+      execute receive
+      return
+      entered left
+      task detask
+      schedule trigger
+      signal cancel
+      terminated failed ceased
+      idle
+    ]
+
+    def point?(s)
+
+      POINTS.include?(s)
+    end
   end
 end
 
