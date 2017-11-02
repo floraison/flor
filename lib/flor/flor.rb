@@ -1,6 +1,26 @@
 
 module Flor
 
+  NAME_REX = '[a-zA-Z0-9_]+'
+  UNIT_NAME_REX = /\A#{NAME_REX}\z/
+  DOMAIN_NAME_REX = /\A#{NAME_REX}(\.#{NAME_REX})*\z/
+  FLOW_NAME_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)\.([a-zA-Z0-9_-]+)\z/
+
+  DOMAIN_UNIT_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)-(#{NAME_REX})[-\z]/
+
+  SPLAT_REGEX = /\A(.*)__(_|\d+)\z/.freeze
+
+  POINTS = %w[
+    execute receive
+    return
+    entered left
+    task detask
+    schedule trigger
+    signal cancel
+    terminated failed ceased
+    idle
+  ]
+
   class << self
 
     def to_a(o)
@@ -211,11 +231,6 @@ module Flor
     #
     # functions about domains and units
 
-    NAME_REX = '[a-zA-Z0-9_]+'
-    UNIT_NAME_REX = /\A#{NAME_REX}\z/
-    DOMAIN_NAME_REX = /\A#{NAME_REX}(\.#{NAME_REX})*\z/
-    FLOW_NAME_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)\.([a-zA-Z0-9_-]+)\z/
-
     def potential_unit_name?(s)
 
       s.is_a?(String) && !! s.match(UNIT_NAME_REX)
@@ -247,8 +262,6 @@ module Flor
 
       sub == dom || sub[0, dom.length + 1] == dom + '.'
     end
-
-    DOMAIN_UNIT_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)-(#{NAME_REX})[-\z]/
 
     def split_domain_unit(s)
 
@@ -384,8 +397,6 @@ module Flor
     #
     # splat
 
-    SPLAT_REGEX = /\A(.*)__(_|\d+)\z/.freeze
-
     def splat(keys, array)
 
       ks = keys.dup
@@ -410,17 +421,6 @@ module Flor
 
     #
     # misc
-
-    POINTS = %w[
-      execute receive
-      return
-      entered left
-      task detask
-      schedule trigger
-      signal cancel
-      terminated failed ceased
-      idle
-    ]
 
     def point?(s)
 
