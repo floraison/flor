@@ -31,6 +31,12 @@ class Flor::Pro::Map < Flor::Pro::Iterator
   # ```
   # map [ 'a', 'b' ]
   #   def x \ [ idx, x ]
+  # # f.ret yields [ [ 0, 'a' ], [ 1, 'b' ] ]
+  # ```
+  # but that index can be included in the function signature:
+  # ```
+  # map [ 'a', 'b' ]
+  #   def x i \ [ x, i ]
   # # f.ret yields [ [ 'a', 0 ], [ 'b', 1 ] ]
   # ```
   #

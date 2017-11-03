@@ -41,7 +41,11 @@ class Flor::Pro::Iterator < Flor::Procedure
 
     @node['vars']['idx'] = @node['idx']
 
-    apply(@node['fun'], @node['col'][@node['idx'], 1], tree[2])
+    args = [
+      @node['col'][@node['idx']], # elt
+      @node['idx'] ] # index
+
+    apply(@node['fun'], args, tree[2])
   end
 end
 
