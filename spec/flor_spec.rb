@@ -399,7 +399,7 @@ describe Flor do
       expect {
         Flor.const_lookup('Very::Nada')
       }.to raise_error(
-        NameError, 'uninitialized constant Kernel::Very'
+        NameError, /\Auninitialized constant (Kernel::)?Very/
       )
     end
 
