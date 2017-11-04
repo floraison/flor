@@ -32,7 +32,8 @@ class Flor::Pro::ForEach < Flor::Pro::Iterator
 
   def end_iterations
 
-    wrap_reply('ret' => @node['col'])
+    wrap_reply('ret' => @node['ocol'])
+      # back to the original collection
   end
 end
 

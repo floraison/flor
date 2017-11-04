@@ -31,6 +31,27 @@ describe 'Flor procedures' do
       expect(r['vars']).to eq({ 'l' => [ 0, 4, 8, 12 ] })
       expect(r['payload']['ret']).to eq((0..7).to_a)
     end
+
+    context 'objects' do
+
+      it 'iterates over each entry' do
+
+        r = @executor.launch(
+          %q{
+            set l []
+            for-each { a: 'A', b: 'B', c: 'C' }
+              def k v
+                pushr l (+ k v)
+          })
+
+        expect(r['point']
+          ).to eq('terminated')
+        expect(r['vars']
+          ).to eq({ 'l' => %w[ aA bB cC ] })
+        expect(r['payload']['ret']
+          ).to eq({ 'a' => 'A', 'b' => 'B', 'c' => 'C' })
+      end
+    end
   end
 end
 
