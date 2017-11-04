@@ -5,7 +5,8 @@ class Flor::Pro::Iterator < Flor::Procedure
 
     @node['vars'] ||= {}
 
-    @node['col'] = nil
+    @node['col'] = nil # collection
+    @node['cot'] = nil # collection type
     @node['idx'] = -1
     @node['fun'] = nil
 
@@ -16,13 +17,16 @@ class Flor::Pro::Iterator < Flor::Procedure
 
   def receive_non_att
 
-    @node['col'] ||=
-      Flor.to_coll(
+    unless @node['col']
+      col =
         if Flor.is_func_tree?(payload['ret'])
           node_payload_ret
         else
           payload['ret']
-        end)
+        end
+      @node['col'] = Flor.to_coll(col)
+      @node['cot'] = col.is_a?(Hash) ? 'object' : 'array'
+    end
 
     return execute_child(@ncid) \
       if @node['fun'] == nil && children[@ncid] != nil
@@ -41,9 +45,15 @@ class Flor::Pro::Iterator < Flor::Procedure
 
     @node['vars']['idx'] = @node['idx']
 
-    args = [
-      @node['col'][@node['idx']], # elt
-      @node['idx'] ] # index
+    idx = @node['idx']
+    elt = @node['col'][idx]
+
+    args =
+      if @node['cot'] == 'object'
+        [ elt[0], elt[1], idx ]
+      else
+        [ elt, idx ]
+      end
 
     apply(@node['fun'], args, tree[2])
   end

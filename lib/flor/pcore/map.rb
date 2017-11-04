@@ -40,6 +40,18 @@ class Flor::Pro::Map < Flor::Pro::Iterator
   # # f.ret yields [ [ 'a', 0 ], [ 'b', 1 ] ]
   # ```
   #
+  # ## with objects (hashes)
+  #
+  # ```
+  # map { a: 'A', b: 'B', c: 'C' }
+  #   def k v \ [ k v ]
+  # # f.ret --> [ [ 'a', 'A' ], [ 'b', 'B' ], [ 'c', 'C' ] ]
+  #
+  # map { a: 'A', b: 'B', c: 'C' }
+  #   def k v i \ [ i k v ]
+  # # f.ret --> [ [ 0, 'a', 'A' ], [ 1, 'b', 'B' ], [ 2, 'c', 'C' ] ]
+  # ```
+  #
   # ## see also
   #
   # Collect.
