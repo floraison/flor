@@ -40,14 +40,14 @@ describe 'Flor procedures' do
           %q{
             set l []
             for-each { a: 'A', b: 'B', c: 'C' }
-              def k v
-                pushr l (+ k v)
+              def k v i
+                pushr l (+ k v i)
           })
 
         expect(r['point']
           ).to eq('terminated')
         expect(r['vars']
-          ).to eq({ 'l' => %w[ aA bB cC ] })
+          ).to eq({ 'l' => %w[ aA0 bB1 cC2 ] })
         expect(r['payload']['ret']
           ).to eq({ 'a' => 'A', 'b' => 'B', 'c' => 'C' })
       end

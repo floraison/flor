@@ -20,7 +20,15 @@ class Flor::Pro::Arith < Flor::Procedure
         "modulo % requires at least 2 arguments (line #{tree[2]})")
     end
 
-    payload['ret'] = @node['rets'].reduce(&sign) || DEFAULTS[sign]
+#p @node['rets']
+    payload['ret'] =
+      if @node['rets'].compact.empty?
+        DEFAULTS[sign]
+      elsif sign == :+
+        @node['rets'].reduce { |r, e| r + (r.is_a?(String) ? e.to_s : e) }
+      else
+        @node['rets'].reduce(&sign)
+      end
 
     wrap_reply
   end

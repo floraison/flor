@@ -51,6 +51,40 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'ret' => 4 })
     end
+
+    it 'adds two strings' do
+
+      r = @executor.launch(
+        %q{
+          + "fa" "ble"
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('fable')
+    end
+
+    it 'fails if adding a string to a number' do
+
+      r = @executor.launch(
+        %q{
+          + 1 "nada"
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['kla']).to eq('TypeError')
+      expect(r['error']['msg']).to eq("String can't be coerced into Integer")
+    end
+
+    it 'turns numbers intro strings when adding to a strings' do
+
+      r = @executor.launch(
+        %q{
+          + "" 1 true [ 1 2 ]
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('1true[1, 2]')
+    end
   end
 
   describe '-' do
