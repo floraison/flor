@@ -70,9 +70,12 @@ describe 'Flor procedures' do
           + 1 "nada"
         })
 
-      expect(r['point']).to eq('failed')
-      expect(r['error']['kla']).to eq('TypeError')
-      expect(r['error']['msg']).to eq("String can't be coerced into Integer")
+      expect(r['point']
+        ).to eq('failed')
+      expect(r['error']['kla']
+        ).to eq('TypeError')
+      expect(r['error']['msg']
+        ).to match(/\AString can't be coerced into (Integer|Fixnum)\z/)
     end
 
     it 'turns numbers intro strings when adding to a strings' do
