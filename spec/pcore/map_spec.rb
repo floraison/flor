@@ -154,7 +154,7 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([ 0, 7, 14, 21, 28, 35, 42, 49 ])
     end
 
-    context 'objects' do
+    context 'with objects' do
 
       it 'maps object with (key, value)' do
 

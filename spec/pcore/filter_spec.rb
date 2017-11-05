@@ -42,6 +42,25 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 1, 3, 5 ])
     end
+
+    context 'with objects' do
+
+      it 'returns an object with filtered entries' do
+
+        r = @executor.launch(
+          %q{
+            filter { a: 'A', b: 'B', c: 'C', d: 'D' }
+              def k v i
+                #or (k == 'a') (v == 'C') (i == 3)
+                k == 'a' or v == 'C' or i == 3
+          })
+
+        expect(r['point']
+          ).to eq('terminated')
+        expect(r['payload']['ret']
+          ).to eq({ 'a' => 'A', 'c' => 'C', 'd' => 'D' })
+      end
+    end
   end
 end
 
