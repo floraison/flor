@@ -17,7 +17,7 @@ describe 'Flor procedures' do
 
   describe 'to-array' do
 
-    it 'leaves an Array intact' do
+    it 'leaves an array intact' do
 
       r = @executor.launch(
         %q{
@@ -52,6 +52,44 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ %w[ a A ], %w[ b B ] ])
+    end
+  end
+
+  describe 'to-object' do
+
+    it 'leaves an object intact' do
+
+      r = @executor.launch(
+        %q{
+          { a: 'A', b: 'B', c: 'C' }
+          to-object _
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq({ 'a' => 'A', 'b' => 'B', 'c' => 'C' })
+    end
+
+    it 'turns an array with l % 2 == 0 elements into an object' do
+
+      r = @executor.launch(
+        %q{
+          to-object [ 'a' 'A' 'b' 'B' 'c' 'C' ]
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq({ 'a' => 'A', 'b' => 'B', 'c' => 'C' })
+    end
+
+    it 'fails if it cannot turn' do
+
+      r = @executor.launch(
+        %q{
+          to-object 1
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['kla']).to eq('ArgumentError')
+      expect(r['error']['msg']).to eq('to-object wants an array (or an object)')
     end
   end
 end

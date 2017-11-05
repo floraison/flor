@@ -1,7 +1,8 @@
 
 class Flor::Pro::ToArray < Flor::Procedure
   #
-  # Turns an argument into an array.
+  # "to-array", turns an argument into an array, "to-object" turns it into
+  # an object.
   #
   # ```
   # to-array [ 0 1 2 ]
@@ -14,11 +15,14 @@ class Flor::Pro::ToArray < Flor::Procedure
   #   # --> [ [ 'a', 'A' ], [ 'b', 'B' ] ]
   # ```
   #
-  # ## see also
+  # and
   #
-  # to-object
+  # ```
+  # to-object { 'a' 'A' 'b' 'B' 'c' 'C' }
+  #   # --> { 'a': 'A', b: 'B', c: 'C' }
+  # ```
 
-  name 'to-array'
+  names %w[ to-array to-object ]
 
   def pre_execute
 
@@ -29,17 +33,41 @@ class Flor::Pro::ToArray < Flor::Procedure
 
     determine_fcid_and_ncid
 
-    if ! from_att? && (r = payload['ret'])
-      @node['result'] = Flor.to_coll(r)
+    if ( ! from_att?) && (r = payload['ret'])
+      @node['result'] = r
     end
 
     if last?
-      ret = @node['result']
-      fail ArgumentError.new("No argument given") unless ret
-      payload['ret'] = ret
+
+      fail ArgumentError.new("#{tree[0]} needs an argument") \
+        unless @node.has_key?('result')
+
+      payload['ret'] =
+        tree[0] == 'to-object' ? to_object : to_array
     end
 
     super
+  end
+
+  protected
+
+  def to_array
+
+    Flor.to_coll(@node['result'])
+  end
+
+  def to_object
+
+    r = @node['result']
+
+    fail ArgumentError.new('to-object wants an array (or an object)') \
+      unless r.is_a?(Array) || r.is_a?(Hash)
+    fail ArgumentError.new('to-object wants an array with an even length') \
+      if r.is_a?(Array) && r.length.odd?
+
+    r = r.each_slice(2).to_a if r.find { |e| ! e.is_a?(Array) }
+
+    Hash[r]
   end
 end
 

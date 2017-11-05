@@ -1,7 +1,8 @@
 
-# to-array
+# to-array, to-object
 
-Turns an argument into an array.
+"to-array", turns an argument into an array, "to-object" turns it into
+an object.
 
 ```
 to-array [ 0 1 2 ]
@@ -14,9 +15,12 @@ to-array { a: 'A', b: 'B' }
   # --> [ [ 'a', 'A' ], [ 'b', 'B' ] ]
 ```
 
-## see also
+and
 
-to-object
+```
+to-object { 'a' 'A' 'b' 'B' 'c' 'C' }
+  # --> { 'a': 'A', b: 'B', c: 'C' }
+```
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/to_array.rb)

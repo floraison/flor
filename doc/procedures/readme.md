@@ -33,7 +33,7 @@
 * [reverse](reverse.md) - Reverses an array or a string.
 * [sequence, _apply, begin](sequence.md) - Executes child expressions in sequence.
 * [set, setr](set.md) - sets a field or a variable.
-* [to-array](to_array.md) - Turns an argument into an array.
+* [to-array, to-object](to_array.md) - "to-array", turns an argument into an array, "to-object" turns it into an object.
 
 ## unit
 
