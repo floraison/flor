@@ -74,26 +74,20 @@ module Flor
 
       h = {}
       h['kla'] = o.class.to_s
-      t = nil
 
-      if o.is_a?(::Exception)
-
-        h['msg'] = o.message
-
-        t = o.backtrace
-
-        if n = o.respond_to?(:node) && o.node
-          h['lin'] = n.tree[2]
-          #h['tre'] = n.tree
+      m, t =
+        if o.is_a?(::Exception)
+          [ o.message, o.backtrace ]
+        else
+          [ o.to_s, caller[1..-1] ]
         end
 
-      else
-
-        h['msg'] = o.to_s
-
-        t = caller[1..-1]
+      if n = o.respond_to?(:node) && o.node
+        h['prc'] = n.tree[0]
+        h['lin'] = n.tree[2]
       end
 
+      h['msg'] = m
       h['trc'] = t[0..(t.rindex { |l| l.match(/\/lib\/flor\//) }) + 1] if t
       h['cwd'] = Dir.pwd
       h['rlp'] = $: if o.is_a?(::LoadError)
