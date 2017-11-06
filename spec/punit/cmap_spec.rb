@@ -83,6 +83,47 @@ describe 'Flor punit' do
       #  exe:0_2_0_0 exe:0_3_0_0
       #])
     end
+
+    it 'shows the index via the "idx" var' #do
+#
+#      r = @unit.launch(
+#        %q{
+#          cmap [ 10 11 12 ]
+#            def x \ [ idx x ]
+#        },
+#        wait: true)
+#
+#      expect(r['point']).to eq('terminated')
+#      expect(r['payload']['ret']).to eq([ [ 0, 10 ], [ 1, 11 ], [ 2, 12 ] ])
+#    end
+
+    it 'passes the index as second function arg if possible' do
+
+      r = @unit.launch(
+        %q{
+          cmap [ 10 11 12 ]
+            def x i \ [ i x ]
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ [ 0, 10 ], [ 1, 11 ], [ 2, 12 ] ])
+    end
+
+    it 'preserves the children order' do
+
+      r = @unit.launch(
+        %q{
+          cmap [ 1 2 3 ]
+            def x
+              sleep 0.4 if (x % 2) == 0
+              x
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 1, 2, 3 ])
+    end
   end
 end
 

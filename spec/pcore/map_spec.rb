@@ -99,7 +99,7 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([ 0, 1 ])
     end
 
-    it 'passing the index as second function var if possible' do
+    it 'passes the index as second function arg if possible' do
 
       r = @executor.launch(
         %q{

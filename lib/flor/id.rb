@@ -35,9 +35,14 @@ module Flor
     child_id(nid) + 1
   end
 
-  def self.sub_nid(nid, subid)
+  def self.sub_nid(nid, subid=nil)
 
-    "#{nid.split('-').first}-#{subid}"
+    if subid
+      "#{nid.split('-').first}-#{subid}"
+    else
+      ss = nid.split('-')
+      ss.length > 1 ? ss.last.to_i : 0
+    end
   end
 
   # Remove the sub_nid if any.

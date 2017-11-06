@@ -38,7 +38,8 @@ class Flor::Pro::Cmap < Flor::Procedure
 
   def receive_elt
 
-    @node['col'] << payload['ret']
+    snid = Flor.sub_nid(message['from'])
+    @node['col'][snid - 1] = payload['ret']
 
     return [] if cnodes_any?
 
