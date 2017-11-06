@@ -26,9 +26,8 @@ class Flor::Pro::Cmap < Flor::Procedure
 
     fun = payload['ret']
 
-    fail ArgumentError.new(
-      "cmap expects a function"
-    ) unless Flor.is_func_tree?(fun)
+    fail Flor::FlorError.new("'#{tree[0]}' expects a function", self) \
+      unless Flor.is_func_tree?(fun)
 
     @node['fun'] = fun
 

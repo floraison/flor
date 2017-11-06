@@ -24,9 +24,8 @@ class Flor::Pro::On < Flor::Macro
     atts = att_children
     signame_i = atts.index { |at| at[1].size == 1 }
 
-    fail ArgumentError.new(
-      "signal name not found in #{tree.inspect}"
-    ) unless signame_i
+    fail Flor::FlorError.new("signal name not found in #{tree.inspect}", self) \
+      unless signame_i
 
     tname = atts[signame_i]
     tname = Flor.dup(tname[1][0])

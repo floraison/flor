@@ -56,8 +56,8 @@ class Flor::Pro::Graft < Flor::Procedure
     source_path, source =
       @executor.unit.loader.library(domain, sub, subflows: true)
 
-    fail ArgumentError.new(
-      "no subtree #{sub.inspect} found (domain #{domain.inspect})"
+    fail Flor::FlorError.new(
+      "no subtree #{sub.inspect} found (domain #{domain.inspect})", self
     ) unless source
 
     tree = Flor.parse(source, source_path, {})

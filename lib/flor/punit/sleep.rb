@@ -19,7 +19,7 @@ class Flor::Pro::Sleep < Flor::Procedure
   def receive_last
 
     t = att('for', nil)
-    fail ArgumentError.new("missing a sleep time duration") unless t
+    fail Flor::FlorError.new("missing a sleep time duration", self) unless t
 
     m = wrap('point' => 'receive').first
 

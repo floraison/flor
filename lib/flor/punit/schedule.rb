@@ -53,8 +53,8 @@ class Flor::Pro::Schedule < Flor::Procedure
 
     fun = @fcid > 0 ? payload['ret'] : nil
 
-    fail ArgumentError.new(
-      "missing a function to call when the scheduler triggers"
+    fail Flor::FlorError.new(
+      "missing a function to call when the scheduler triggers", self
     ) unless fun
 
     m = apply(fun, [], tree[2], false).first
@@ -63,8 +63,8 @@ class Flor::Pro::Schedule < Flor::Procedure
       @node['atts'].find { |k, v| %w[ cron at in every ].include?(k) } ||
       @node['atts'].find { |k, v| k == nil }
 
-    fail ArgumentError.new(
-      "missing a schedule"
+    fail Flor::FlorError.new(
+      "missing a schedule", self
     ) unless s
 
     @node['scheduled'] = true
@@ -96,9 +96,8 @@ class Flor::ScheduleMacro < Flor::Macro
     atts = att_children
     schedule_i = atts.index { |at| at[1].size == 1 }
 
-    fail ArgumentError.new(
-      "schedule not found in #{tree.inspect}"
-    ) unless schedule_i
+    fail Flor::FlorError.new("schedule not found in #{tree.inspect}", self) \
+      unless schedule_i
 
     schedule =
       schedule_type ?
