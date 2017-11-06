@@ -33,7 +33,7 @@ class Flor::Pro::Reverse < Flor::Procedure
       @node['result'] = r.reverse
     end
 
-    if last?
+    if last_receive?
       if result = @node['result']
         payload['ret'] = result
       else

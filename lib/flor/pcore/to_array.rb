@@ -37,7 +37,7 @@ class Flor::Pro::ToArray < Flor::Procedure
       @node['result'] = r
     end
 
-    if last?
+    if last_receive?
 
       fail ArgumentError.new("#{tree[0]} needs an argument") \
         unless @node.has_key?('result')

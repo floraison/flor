@@ -31,7 +31,7 @@ class Flor::Pro::Length < Flor::Procedure
       @node['result'] = r.length
     end
 
-    if last?
+    if last_receive?
       if result = @node['result']
         payload['ret'] = result
       else
