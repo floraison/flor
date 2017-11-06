@@ -49,7 +49,8 @@ class Flor::Pro::Range < Flor::Procedure
     edn = aedn if aedn
     ste = aste if aste
 
-    fail ArgumentError.new("#{@node['heat0']} step is 0") if ste == 0
+    fail Flor::FlorError.new("#{@node['heat0']} step is 0", self) \
+      if ste == 0
 
     #payload['ret'] = (sta..edn - 1).step(ste).to_a
       # doesn't accept negative steps

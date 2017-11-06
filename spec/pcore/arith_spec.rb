@@ -229,8 +229,8 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('failed')
 
-      expect(r['error']['msg'])
-        .to eq('modulo % requires at least 2 arguments (line 1)')
+      expect(r['error']['msg']).to eq('modulo % requires at least 2 arguments')
+      expect(r['error']['lin']).to eq(1)
     end
 
     it 'fails when there are 0 arguments' do
@@ -239,8 +239,8 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('failed')
 
-      expect(r['error']['msg'])
-        .to eq('modulo % requires at least 2 arguments (line 1)')
+      expect(r['error']['msg']).to eq('modulo % requires at least 2 arguments')
+      expect(r['error']['lin']).to eq(1)
     end
   end
 end

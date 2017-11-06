@@ -34,11 +34,10 @@ class Flor::Pro::Reverse < Flor::Procedure
     end
 
     if last_receive?
-      if result = @node['result']
-        payload['ret'] = result
-      else
-        fail ArgumentError.new("Found no argument that could be reversed")
-      end
+      payload['ret'] =
+        @node['result'] ||
+        fail(
+          Flor::FlorError.new('Found no argument that could be reversed', self))
     end
 
     super

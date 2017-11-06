@@ -30,8 +30,8 @@ class Flor::Pro::Rand < Flor::Procedure
 
     a, b = determine_bounds
 
-    fail ArgumentError.new(
-      "'rand' expects an integer or a float"
+    fail Flor::FlorError.new(
+      "'#{tree[0]}' expects an integer or a float", self
     ) unless is_number?(a) && is_number?(b)
 
     payload['ret'] = Random.rand(a...b)

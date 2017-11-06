@@ -39,7 +39,7 @@ class Flor::Pro::ToArray < Flor::Procedure
 
     if last_receive?
 
-      fail ArgumentError.new("#{tree[0]} needs an argument") \
+      fail Flor::FlorError.new("#{tree[0]} needs an argument", self) \
         unless @node.has_key?('result')
 
       payload['ret'] =
@@ -60,9 +60,10 @@ class Flor::Pro::ToArray < Flor::Procedure
 
     r = @node['result']
 
-    fail ArgumentError.new('to-object wants an array (or an object)') \
+    fail Flor::FlorError.new('to-object wants an array (or an object)', self) \
       unless r.is_a?(Array) || r.is_a?(Hash)
-    fail ArgumentError.new('to-object wants an array with an even length') \
+
+    fail Flor::FlorError.new('to-object expects array with even length', self) \
       if r.is_a?(Array) && r.length.odd?
 
     r = r.each_slice(2).to_a if r.find { |e| ! e.is_a?(Array) }

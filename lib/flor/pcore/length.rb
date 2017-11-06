@@ -32,11 +32,9 @@ class Flor::Pro::Length < Flor::Procedure
     end
 
     if last_receive?
-      if result = @node['result']
-        payload['ret'] = result
-      else
-        fail ArgumentError.new("Found no argument that has a length")
-      end
+      payload['ret'] =
+        @node['result'] ||
+        fail(Flor::FlorError.new("Found no argument that has a length", self))
     end
 
     super

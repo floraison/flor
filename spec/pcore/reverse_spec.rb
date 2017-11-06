@@ -72,12 +72,14 @@ describe 'Flor procedures' do
           reverse _
         })
 
-      expect(
-        r['point']).to eq('failed')
-      expect(
-        r['error']['kla']).to eq('ArgumentError')
-      expect(
-        r['error']['msg']).to eq('Found no argument that could be reversed')
+      expect(r['point']
+        ).to eq('failed')
+      expect(r['error']['kla']
+        ).to eq('Flor::FlorError')
+      expect(r['error']['msg']
+        ).to eq('Found no argument that could be reversed')
+      expect(r['error']['lin']
+        ).to eq(2)
     end
   end
 end

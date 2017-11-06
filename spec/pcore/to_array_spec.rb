@@ -88,8 +88,9 @@ describe 'Flor procedures' do
         })
 
       expect(r['point']).to eq('failed')
-      expect(r['error']['kla']).to eq('ArgumentError')
+      expect(r['error']['kla']).to eq('Flor::FlorError')
       expect(r['error']['msg']).to eq('to-object wants an array (or an object)')
+      expect(r['error']['lin']).to eq(2)
     end
   end
 end

@@ -73,8 +73,8 @@ class Flor::Pro::Matchr < Flor::Procedure
     rets = @node['rets'].dup
     rets.unshift(node_payload_ret) if rets.size < 2
 
-    fail ArgumentError.new(
-      "'#{tree[0]}' needs 1 or 2 arguments"
+    fail Flor::FlorError.new(
+      "'#{tree[0]}' needs 1 or 2 arguments", self
     ) if rets.size < 2
 
     rex =
