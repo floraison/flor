@@ -32,7 +32,9 @@ class Flor::Pro::Cmap < Flor::Procedure
     @node['fun'] = fun
 
     att(nil)
-      .collect.with_index { |e, i| apply(fun, [ e, i ], tree[2]) }
+      .collect
+      .with_index { |e, i|
+        apply(fun, [ e, i ], tree[2], vars: { 'idx' => i }) }
       .flatten(1)
   end
 

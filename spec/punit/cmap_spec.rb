@@ -84,18 +84,18 @@ describe 'Flor punit' do
       #])
     end
 
-    it 'shows the index via the "idx" var' #do
-#
-#      r = @unit.launch(
-#        %q{
-#          cmap [ 10 11 12 ]
-#            def x \ [ idx x ]
-#        },
-#        wait: true)
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['ret']).to eq([ [ 0, 10 ], [ 1, 11 ], [ 2, 12 ] ])
-#    end
+    it 'shows the index via the "idx" var' do
+
+      r = @unit.launch(
+        %q{
+          cmap [ 10 11 12 ]
+            def x \ [ idx x ]
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ [ 0, 10 ], [ 1, 11 ], [ 2, 12 ] ])
+    end
 
     it 'passes the index as second function arg if possible' do
 
