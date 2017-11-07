@@ -40,9 +40,11 @@ class Flor::Pro::Cmap < Flor::Procedure
 
   def receive_elt
 
-# This is not a good idea, the snid might have changed (reapply)! FIXME
-    snid = Flor.sub_nid(message['from'])
-    @node['col'][snid - 1] = payload['ret']
+    idx =
+      message['idx'] ||
+      Flor.sub_nid(message['from']) - 1 # fall back :-(
+
+    @node['col'][idx] = payload['ret']
 
     return [] if cnodes_any?
 

@@ -443,6 +443,14 @@ class Flor::Procedure < Flor::Node
 
     m['payload']['ret'] = ret if ret != :no
 
+    i = @node['vars'] && @node['vars']['idx']
+    m['idx'] = i if i
+      #
+      # initially for "cmap"
+      #
+      # was considering passing the whole vars back (as 'varz'), but
+      # it got in the way... and it might be heavy
+
     [ m ]
   end
 
@@ -554,7 +562,9 @@ class Flor::Procedure < Flor::Node
     sig = sig.drop(1) if t[0] == 'define'
 
     vars = opts[:vars] || {}
+      #
     vars['arguments'] = args # should I dup?
+      #
     sig.each_with_index do |att, i|
       key = att[1].first[0]
       vars[key] = args[i]
