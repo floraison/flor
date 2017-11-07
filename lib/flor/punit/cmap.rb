@@ -38,6 +38,7 @@ class Flor::Pro::Cmap < Flor::Procedure
 
   def receive_elt
 
+# This is not a good idea, the snid might have changed (reapply)! FIXME
     snid = Flor.sub_nid(message['from'])
     @node['col'][snid - 1] = payload['ret']
 

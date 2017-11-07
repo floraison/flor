@@ -57,7 +57,7 @@ class Flor::Pro::Schedule < Flor::Procedure
       "missing a function to call when the scheduler triggers", self
     ) unless fun
 
-    m = apply(fun, [], tree[2], false).first
+    m = apply(fun, [], tree[2], anid: false).first
 
     t, s =
       @node['atts'].find { |k, v| %w[ cron at in every ].include?(k) } ||

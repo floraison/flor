@@ -532,7 +532,10 @@ class Flor::Procedure < Flor::Node
     end
   end
 
-  def apply(fun, args, line, anid=true)
+  def apply(fun, args, line, opts={})
+
+    anid = opts.has_key?(:anid) ? opts[:anid] : true
+      # true => generate sub_nid
 
     fni = fun[1]['nid'] # fun nid
     ani = anid ? Flor.sub_nid(fni, counter_next('subs')) : fni
@@ -550,7 +553,7 @@ class Flor::Procedure < Flor::Node
     sig = t[1].select { |c| c[0] == '_att' }
     sig = sig.drop(1) if t[0] == 'define'
 
-    vars = {}
+    vars = opts[:vars] || {}
     vars['arguments'] = args # should I dup?
     sig.each_with_index do |att, i|
       key = att[1].first[0]

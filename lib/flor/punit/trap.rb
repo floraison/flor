@@ -42,7 +42,7 @@ class Flor::Pro::Trap < Flor::Procedure
 
     msg =
       if fun
-        apply(fun, [], tree[2], false).first
+        apply(fun, [], tree[2], anid: false).first
       else
         wrap_reply.first
       end
