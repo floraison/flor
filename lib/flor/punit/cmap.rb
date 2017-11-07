@@ -41,7 +41,7 @@ class Flor::Pro::Cmap < Flor::Procedure
   def receive_elt
 
     idx =
-      message['idx'] ||
+      (message['rvars'] && message['rvars']['idx']) ||
       Flor.sub_nid(message['from']) - 1 # fall back :-(
 
     @node['col'][idx] = payload['ret']

@@ -418,6 +418,10 @@ class Flor::Procedure < Flor::Node
     wrap('point' => 'entered', 'nid' => nid, 'tags' => ret)
   end
 
+  # "returning vars" variables to pass back to pass upon reply
+  #
+  RVARS = %w[ idx ]
+
   def wrap(h={})
 
     m = {}
@@ -443,8 +447,9 @@ class Flor::Procedure < Flor::Node
 
     m['payload']['ret'] = ret if ret != :no
 
-    i = @node['vars'] && @node['vars']['idx']
-    m['idx'] = i if i
+    if vs = @node['vars']
+      (RVARS & vs.keys).each { |k| (m['rvars'] ||= {})[k] = vs[k] }
+    end
       #
       # initially for "cmap"
       #
