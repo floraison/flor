@@ -1,6 +1,11 @@
 
 class Flor::Procedure < Flor::Node
 
+  # "Returning vars" variables to pass back to pass upon reply.
+  # In the 'receive' messages, it's a hash under the key 'rvars'.
+  #
+  RVARS = %w[ idx ]
+
   class << self
 
     def inherited(subclass)
@@ -417,10 +422,6 @@ class Flor::Procedure < Flor::Node
 
     wrap('point' => 'entered', 'nid' => nid, 'tags' => ret)
   end
-
-  # "returning vars" variables to pass back to pass upon reply
-  #
-  RVARS = %w[ idx ]
 
   def wrap(h={})
 
