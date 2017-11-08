@@ -2,7 +2,7 @@
 require 'flor/pcore/iterator'
 
 
-class Flor::Pro::Collect < Flor::IteratorMacro
+class Flor::Pro::Collect < Flor::Macro::Iterator
   #
   # Collect is a simplified version of [map](map.md).
   #

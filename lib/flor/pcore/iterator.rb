@@ -43,24 +43,25 @@ class Flor::Pro::Iterator < Flor::Procedure
     return end_iterations \
       if @node['idx'] == @node['col'].size
 
-    @node['vars']['idx'] = @node['idx']
-
     idx = @node['idx']
     elt = @node['col'][idx]
 
-    args =
+    vars =
       if @node['ocol'].is_a?(Array)
-        [ elt, idx ]
+        { 'elt' => elt, 'idx' => idx }
       else
-        [ elt[0], elt[1], idx ]
+        { 'key' => elt[0], 'val' => elt[1], 'idx' => idx }
       end
+
+    args = vars.values
+    vars.each { |k, v| @node['vars'][k] = v }
 
     apply(@node['fun'], args, tree[2])
   end
 end
 
 
-class Flor::IteratorMacro < Flor::Macro
+class Flor::Macro::Iterator < Flor::Macro
 
   def rewrite_iterator_tree(procedure_name)
 

@@ -17,6 +17,7 @@ schedule every: 'day at midnight'
 ```
 
 ## time strings
+
 Every understands time durations and, somehow, frequencies.
 
 ```

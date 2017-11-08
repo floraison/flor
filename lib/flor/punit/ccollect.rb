@@ -1,5 +1,5 @@
 
-class Flor::Pro::Ccollect < Flor::IteratorMacro
+class Flor::Pro::Ccollect < Flor::Macro::Iterator
 
   name 'ccollect'
 

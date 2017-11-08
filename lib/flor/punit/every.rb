@@ -2,7 +2,7 @@
 require 'flor/punit/schedule'
 
 
-class Flor::Pro::Every < Flor::ScheduleMacro
+class Flor::Pro::Every < Flor::Macro::Schedule
   #
   # "every" is a macro procedure.
   #

@@ -89,7 +89,7 @@ class Flor::Pro::Schedule < Flor::Procedure
 end
 
 
-class Flor::ScheduleMacro < Flor::Macro
+class Flor::Macro::Schedule < Flor::Macro
 
   def rewrite_schedule_tree(schedule_type)
 

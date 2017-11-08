@@ -9,6 +9,7 @@ class Flor::Pro::Filter < Flor::Pro::Iterator
   # filter [ 1, 2, 3, 4, 5 ]
   #   def x
   #     = (x % 2) 1
+  #
   # # f.ret --> [ 1, 3, 5 ]
   # ```
   #

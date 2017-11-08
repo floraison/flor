@@ -2,7 +2,7 @@
 require 'flor/punit/schedule'
 
 
-class Flor::Pro::Cron < Flor::ScheduleMacro
+class Flor::Pro::Cron < Flor::Macro::Schedule
   #
   # "cron" is a macro procedure.
   #
