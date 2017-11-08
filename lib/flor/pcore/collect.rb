@@ -1,5 +1,8 @@
 
-class Flor::Pro::Collect < Flor::Macro
+require 'flor/pcore/iterator'
+
+
+class Flor::Pro::Collect < Flor::IteratorMacro
   #
   # Collect is a simplified version of [map](map.md).
   #
@@ -29,23 +32,7 @@ class Flor::Pro::Collect < Flor::Macro
 
   def rewrite_tree
 
-    atts = att_children
-
-    l = tree[2]
-
-    th = [ 'map', [], l, *tree[3] ]
-    atts.each { |ac| th[1] << Flor.dup(ac) }
-
-    if non_att_children.any?
-
-      td = [ 'def', [], l ]
-      td[1] << [ '_att', [ [ 'elt', [], l ] ], l ]
-      non_att_children.each { |nac| td[1] << Flor.dup(nac) }
-
-      th[1] << td
-    end
-
-    th
+    rewrite_iterator_tree('map')
   end
 end
 

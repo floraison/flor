@@ -59,3 +59,28 @@ class Flor::Pro::Iterator < Flor::Procedure
   end
 end
 
+
+class Flor::IteratorMacro < Flor::Macro
+
+  def rewrite_iterator_tree(procedure_name)
+
+    atts = att_children
+
+    l = tree[2]
+
+    th = [ procedure_name, [], l, *tree[3] ]
+    atts.each { |ac| th[1] << Flor.dup(ac) }
+
+    if non_att_children.any?
+
+      td = [ 'def', [], l ]
+      td[1] << [ '_att', [ [ 'elt', [], l ] ], l ]
+      non_att_children.each { |nac| td[1] << Flor.dup(nac) }
+
+      th[1] << td
+    end
+
+    th
+  end
+end
+
