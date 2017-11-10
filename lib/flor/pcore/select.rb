@@ -22,15 +22,26 @@ class Flor::Pro::Select < Flor::Macro::Iterator
   # # f.ret --> { 'a' => 'A', 'c' => 'C', 'd' => 'D' }
   # ```
   #
+  # ## reject
+  #
+  # "reject" is the negative of "select".
+  #
+  # ```
+  # reject [ 1, 2, 3, 4, 5 ]
+  #   (elt % 2) == 0
+  #
+  # # f.ret --> [ 1, 3, 5 ]
+  # ```
+  #
   # ## see also
   #
-  # filter, map and collect.
+  # filter, map, reject, and collect.
 
-  name 'select'
+  names %w[ select reject ]
 
   def rewrite_tree
 
-    rewrite_iterator_tree('filter')
+    rewrite_iterator_tree(heap == 'select' ? 'filter' : 'filter-out')
   end
 end
 

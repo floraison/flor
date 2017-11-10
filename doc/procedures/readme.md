@@ -31,7 +31,7 @@
 * [rand](rand.md) - Returns a randomly generated number.
 * [range](range.md) - "range" is a procedure to generate ranges of integers.
 * [reverse](reverse.md) - Reverses an array or a string.
-* [select](select.md) - Filters a collection
+* [select, reject](select.md) - Filters a collection
 * [sequence, _apply, begin](sequence.md) - Executes child expressions in sequence.
 * [set, setr](set.md) - sets a field or a variable.
 * [to-array, to-object](to_array.md) - "to-array", turns an argument into an array, "to-object" turns it into an object.

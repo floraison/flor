@@ -1,5 +1,5 @@
 
-# select
+# select, reject
 
 Filters a collection
 
@@ -19,9 +19,20 @@ select { a: 'A', b: 'B', c: 'C', d: 'D' }
 # f.ret --> { 'a' => 'A', 'c' => 'C', 'd' => 'D' }
 ```
 
+## reject
+
+"reject" is the negative of "select".
+
+```
+reject [ 1, 2, 3, 4, 5 ]
+  (elt % 2) == 0
+
+# f.ret --> [ 1, 3, 5 ]
+```
+
 ## see also
 
-[filter](filter.md), [map](map.md) and [collect](collect.md).
+[filter](filter.md), [map](map.md), [reject](reject.md), and [collect](collect.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/select.rb)

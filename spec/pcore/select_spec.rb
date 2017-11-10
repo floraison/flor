@@ -59,5 +59,20 @@ describe 'Flor procedures' do
       end
     end
   end
+
+  describe 'reject' do
+
+    it 'filters out elements' do
+
+      r = @executor.launch(
+        %q{
+          reject [ 1, 2, 3, 4, 5 ]
+            (elt % 2) == 0
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 1, 3, 5 ])
+    end
+  end
 end
 
