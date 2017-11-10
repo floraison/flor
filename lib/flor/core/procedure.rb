@@ -94,6 +94,8 @@ class Flor::Procedure < Flor::Node
     wrap('nid' => parent, 'flavour' => 'flank')
   end
 
+  def heap; @node['heap']; end
+
   protected
 
   def counter_next(k)

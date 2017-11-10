@@ -5,6 +5,7 @@ require 'flor/pcore/iterator'
 class Flor::Pro::Filter < Flor::Pro::Iterator
   #
   # Filters a collection
+  #
   # ```
   # filter [ 1, 2, 3, 4, 5 ]
   #   def x
@@ -24,11 +25,23 @@ class Flor::Pro::Filter < Flor::Pro::Iterator
   # # f.ret --> { 'a' => 'A', 'c' => 'C', 'd' => 'D' }
   # ```
   #
+  # ## filter-out
+  #
+  # Is the negative sibling of "filter".
+  #
+  # ```
+  # filter-out [ 1, 2, 3, 4, 5 ]
+  #   def x
+  #     = (x % 2) 0
+  #
+  # # f.ret --> [ 1, 3, 5 ]
+  # ```
+  #
   # ## see also
   #
-  # map and select.
+  # map, select, and reject.
 
-  name 'filter'
+  names %w[ filter filter-out ]
 
   def pre_iterations
 
@@ -37,7 +50,10 @@ class Flor::Pro::Filter < Flor::Pro::Iterator
 
   def receive_iteration
 
-    @node['res'] << @node['col'][@node['idx']] if Flor.true?(payload['ret'])
+    @node['res'] << @node['col'][@node['idx']] \
+      if (
+        (heap == 'filter' && Flor.true?(payload['ret'])) ||
+        (heap == 'filter-out' && Flor.false?(payload['ret'])))
   end
 
   def end_iterations

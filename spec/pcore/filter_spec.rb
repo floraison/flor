@@ -62,5 +62,36 @@ describe 'Flor procedures' do
       end
     end
   end
+
+  describe 'filter-out' do
+
+    it 'filters out elements' do
+
+      r = @executor.launch(
+        %q{
+          filter-out [ 1, 2, 3, 4, 5 ]
+            def x
+              = (x % 2) 0
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 1, 3, 5 ])
+    end
+
+    context 'with objects' do
+
+      it 'returns an object with filtered out entries' do
+
+        r = @executor.launch(
+          %q{
+            filter-out { a: 'A', b: 'B', c: 'C', d: 'D' }
+              def k v i \ k == 'a' or k == 'b'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq({ 'c' => 'C', 'd' => 'D' })
+      end
+    end
+  end
 end
 
