@@ -58,6 +58,9 @@ select    do-filter       filter        find_all
 reject    do-filter-out   filter-out    delete_if
 inject    do-reduce       reduce        reduce
                                         foldr
+detect                    find          detect, find
+                          any
+                          every         all?
                           for-each      each
 ```
 

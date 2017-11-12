@@ -58,11 +58,6 @@ class Flor::Pro::Map < Flor::Pro::Iterator
 
   name 'map'
 
-  def pre_iterations
-
-    @node['res'] = []
-  end
-
   def receive_iteration
 
     @node['res'] << payload['ret']

@@ -16,6 +16,7 @@
 * [do-return](do_return.md) - Takes a set of arguments and returns a function that will return those arguments again.
 * [fail, error](fail.md) - Explicitely raises an error.
 * [filter, filter-out](filter.md) - Filters a collection
+* [find](find.md) - Finds the first matching element.
 * [for-each](for_each.md) - Calls a function for each element in the argument collection.
 * [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidequick)
 * [length](length.md) - Returns the length of its last collection argument or the length of the incoming f.ret

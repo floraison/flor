@@ -43,11 +43,6 @@ class Flor::Pro::Filter < Flor::Pro::Iterator
 
   names %w[ filter filter-out ]
 
-  def pre_iterations
-
-    @node['res'] = []
-  end
-
   def receive_iteration
 
     @node['res'] << @node['col'][@node['idx']] \

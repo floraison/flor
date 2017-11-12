@@ -41,7 +41,7 @@ class Flor::Pro::Iterator < Flor::Procedure
     @node['mtime'] = Flor.tstamp
 
     return end_iterations \
-      if @node['idx'] == @node['col'].size
+      if iterations_over?
 
     idx = @node['idx']
     elt = @node['col'][idx]
@@ -57,6 +57,18 @@ class Flor::Pro::Iterator < Flor::Procedure
     vars.each { |k, v| @node['vars'][k] = v }
 
     apply(@node['fun'], args, tree[2])
+  end
+
+  protected
+
+  def pre_iterations
+
+    @node['res'] = []
+  end
+
+  def iterations_over?
+
+    @node['idx'] == @node['col'].size
   end
 end
 
