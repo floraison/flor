@@ -63,9 +63,9 @@ class Flor::Pro::Map < Flor::Pro::Iterator
     @node['res'] << payload['ret']
   end
 
-  def end_iterations
+  def iterator_result
 
-    wrap_reply('ret' => @node['res'])
+    @node['res']
   end
 end
 

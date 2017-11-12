@@ -16,7 +16,7 @@ class Flor::Pro::Find < Flor::Pro::Iterator
 
   name 'find'
 
-  def pre_iterations
+  def pre_iterator
 
     # nothing to do
   end
@@ -26,14 +26,14 @@ class Flor::Pro::Find < Flor::Pro::Iterator
     # nothing to do
   end
 
-  def iterations_over?
+  def iterator_over?
 
     @node['idx'] > 0 && Flor.true?(payload['ret'])
   end
 
-  def end_iterations
+  def iterator_result
 
-    wrap_reply('ret' => @node['col'][@node['idx'] - 1])
+    @node['col'][@node['idx'] - 1]
   end
 end
 

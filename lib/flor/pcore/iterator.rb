@@ -10,7 +10,7 @@ class Flor::Pro::Iterator < Flor::Procedure
     @node['idx'] = -1
     @node['fun'] = nil
 
-    pre_iterations
+    pre_iterator
 
     unatt_unkeyed_children
   end
@@ -40,8 +40,7 @@ class Flor::Pro::Iterator < Flor::Procedure
     @node['idx'] += 1
     @node['mtime'] = Flor.tstamp
 
-    return end_iterations \
-      if iterations_over?
+    return end_iterator if iterator_over?
 
     idx = @node['idx']
     elt = @node['col'][idx]
@@ -61,14 +60,19 @@ class Flor::Pro::Iterator < Flor::Procedure
 
   protected
 
-  def pre_iterations
+  def pre_iterator
 
     @node['res'] = []
   end
 
-  def iterations_over?
+  def iterator_over?
 
     @node['idx'] == @node['col'].size
+  end
+
+  def end_iterator
+
+    wrap_reply('ret' => iterator_result)
   end
 end
 

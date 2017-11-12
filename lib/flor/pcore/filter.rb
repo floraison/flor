@@ -51,16 +51,13 @@ class Flor::Pro::Filter < Flor::Pro::Iterator
         (heap == 'filter-out' && Flor.false?(payload['ret'])))
   end
 
-  def end_iterations
+  def iterator_result
 
-    ret =
-      if @node['ocol'].is_a?(Hash)
-        Hash[@node['res']]
-      else
-        @node['res']
-      end
-
-    wrap_reply('ret' => ret)
+    if @node['ocol'].is_a?(Hash)
+      Hash[@node['res']]
+    else
+      @node['res']
+    end
   end
 end
 

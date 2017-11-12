@@ -20,7 +20,7 @@ class Flor::Pro::ForEach < Flor::Pro::Iterator
 
   name 'for-each'
 
-  def pre_iterations
+  def pre_iterator
 
     # nothing to do
   end
@@ -30,9 +30,9 @@ class Flor::Pro::ForEach < Flor::Pro::Iterator
     # nothing to do
   end
 
-  def end_iterations
+  def iterator_result
 
-    wrap_reply('ret' => @node['ocol'])
+    @node['ocol']
       # back to the original collection
   end
 end
