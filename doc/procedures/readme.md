@@ -13,6 +13,7 @@
 * [cond](cond.md) - Evaluates all its condition children until one evaluates to true (or it's an else), then executes the corresponding clause child.
 * [cursor](cursor.md) - Executes child expressions in sequence, but may be "guided".
 * [def, fun, define](define.md) - Defines a function.
+* [detect](detect.md) - Detect is a simplified version of [find](find.md).
 * [do-return](do_return.md) - Takes a set of arguments and returns a function that will return those arguments again.
 * [fail, error](fail.md) - Explicitely raises an error.
 * [filter, filter-out](filter.md) - Filters a collection

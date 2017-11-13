@@ -32,7 +32,18 @@ describe 'Flor procedures' do
 
     context 'with objects' do
 
-      it 'finds the first matching element'
+      it 'finds the first matching entry' do
+
+        r = @executor.launch(
+          %q{
+            find { a: 'A', b: 'B', c: 'C' }
+              def key, val
+                val == 'B'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(%w[ b B ])
+      end
     end
   end
 end

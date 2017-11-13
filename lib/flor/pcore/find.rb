@@ -10,6 +10,14 @@ class Flor::Pro::Find < Flor::Pro::Iterator
   # # f.ret --> 2
   # ```
   #
+  # With objects (maps), it returns the first matching entry (pair).
+  # ```
+  # find { a: 'A', b: 'B', c: 'C' }
+  #   def key, val
+  #     val == 'B'
+  # # f.ret --> [ 'b', 'B' ]
+  # ```
+  #
   # ## see also
   #
   # map and detect.
