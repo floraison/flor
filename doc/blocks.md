@@ -61,6 +61,6 @@ inject    do-reduce       reduce        reduce
 detect                    find          detect, find
                           any
                           every         all?
-                          for-each      each
+each                      for-each      each
 ```
 

@@ -15,6 +15,7 @@
 * [def, fun, define](define.md) - Defines a function.
 * [detect](detect.md) - Detect is a simplified version of [find](find.md).
 * [do-return](do_return.md) - Takes a set of arguments and returns a function that will return those arguments again.
+* [each](each.md) - Each is a simplified version of [for-each](for_each.md).
 * [fail, error](fail.md) - Explicitely raises an error.
 * [filter, filter-out](filter.md) - Filters a collection
 * [find](find.md) - Finds the first matching element.
