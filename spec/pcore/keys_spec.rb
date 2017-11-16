@@ -17,7 +17,7 @@ describe 'Flor procedures' do
 
   describe 'keys' do
 
-    it 'returns the keys for an object' do
+    it 'returns the indexes for an array' do
 
       r = @executor.launch(
         %q{
@@ -28,7 +28,7 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([ 0, 1, 2 ])
     end
 
-    it 'returns the indexes for an array' do
+    it 'returns the keys for an object' do
 
       r = @executor.launch(
         %q{
@@ -58,6 +58,57 @@ describe 'Flor procedures' do
       r = @executor.launch(
         %q{
           keys _
+        })
+
+      expect(r['point']
+        ).to eq('failed')
+      expect(r['error']['msg']
+        ).to eq('No argument given')
+    end
+  end
+
+  describe 'values' do
+
+    it 'returns the indexes for an array' do
+
+      r = @executor.launch(
+        %q{
+          values [ 1, 'to', true ]
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 1, 'to', true ])
+    end
+
+    it 'returns the values for an object' do
+
+      r = @executor.launch(
+        %q{
+          values { a: 'A', b: 'B' }
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(%w[ A B ])
+    end
+
+    it 'fails when not array or object' do
+
+      r = @executor.launch(
+        %q{
+          values "x"
+        })
+
+      expect(r['point']
+        ).to eq('failed')
+      expect(r['error']['msg']
+        ).to eq('Received argument of class String, no values')
+    end
+
+    it 'fails when no argument' do
+
+      r = @executor.launch(
+        %q{
+          values _
         })
 
       expect(r['point']

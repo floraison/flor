@@ -21,6 +21,7 @@
 * [find](find.md) - Finds the first matching element.
 * [for-each](for_each.md) - Calls a function for each element in the argument collection.
 * [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidequick)
+* [keys, values](keys.md) - Returns the "keys" or the "values" of an object.
 * [length](length.md) - Returns the length of its last collection argument or the length of the incoming f.ret
 * [and, or](logo.md) - When `and` evaluates the children and returns false as soon as one of returns a falsy value. Returns true else. When `or` evaluates the children and returns true as soon as one of them returns a trueish value. Returns false else.
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
