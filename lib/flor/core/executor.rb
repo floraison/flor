@@ -240,8 +240,13 @@ module Flor
 
       return [ head.rewrite ] if head.is_a?(Flor::Macro)
 
-      head.send("do_#{message['point']}") ||
-      fail(StandardError.new("#{heap}/#{message['point']} returned nil"))
+      messages = head.send("do_#{message['point']}")
+
+      fail StandardError.new(
+        "#{heap}/#{message['point']} did not return an Array"
+      ) unless messages.is_a?(Array)
+
+      messages
     end
 
     def toc_messages(message)
