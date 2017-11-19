@@ -43,6 +43,8 @@ class Flor::Pro::Filter < Flor::Pro::Iterator
 
   names %w[ filter filter-out ]
 
+  protected
+
   def receive_iteration
 
     @node['res'] << @node['col'][@node['idx']] \

@@ -20,6 +20,8 @@ class Flor::Pro::ForEach < Flor::Pro::Iterator
 
   name 'for-each'
 
+  protected
+
   def pre_iterator
 
     # nothing to do

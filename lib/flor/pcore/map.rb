@@ -58,6 +58,8 @@ class Flor::Pro::Map < Flor::Pro::Iterator
 
   name 'map'
 
+  protected
+
   def receive_iteration
 
     @node['res'] << payload['ret']

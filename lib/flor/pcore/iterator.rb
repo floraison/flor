@@ -5,37 +5,43 @@ class Flor::Pro::Iterator < Flor::Procedure
 
     @node['vars'] ||= {}
 
+    @node['args'] = [] # before iterating, arguments are collected
+
     @node['ocol'] = nil # original collection
+    @node['fun'] = nil # function
+
     @node['col'] = nil # collection
     @node['idx'] = -1
-    @node['fun'] = nil
-
-    pre_iterator
 
     unatt_unkeyed_children
   end
 
   def receive_non_att
 
-    unless @node['col']
-      @node['ocol'] = ocol =
-        if Flor.is_func_tree?(payload['ret'])
-          node_payload_ret
-        else
-          payload['ret']
-        end
-      @node['col'] =
-        Flor.to_coll(ocol)
-    end
-
-    return execute_child(@ncid) \
-      if @node['fun'] == nil && children[@ncid] != nil
-
-    if @node['idx'] < 0
-      @node['fun'] = payload['ret']
+    if @node['args']
+      receive_argument
     else
       receive_iteration
+      iterate
     end
+  end
+
+  protected
+
+  def receive_argument
+
+    @node['args'] << payload['ret']
+
+    if children[@ncid]
+      execute_child(@ncid)
+    else
+      iterate
+    end
+  end
+
+  def iterate
+
+    prepare_iterations unless @node['ocol']
 
     @node['idx'] += 1
     @node['mtime'] = Flor.tstamp
@@ -45,7 +51,36 @@ class Flor::Pro::Iterator < Flor::Procedure
     apply_iteration
   end
 
-  protected
+  def prepare_iterations
+
+    prepare_iterator
+
+    @node['args']
+      .each { |a|
+        if Flor.is_func_tree?(a)
+          @node['fun'] ||= a
+        elsif a.is_a?(Array) || a.is_a?(Hash)
+          @node['ocol'] ||= a
+        end }
+
+    @node['ocol'] ||= node_payload_ret
+    ocol = @node['ocol']
+
+    fail Flor::FlorError.new(
+      "Function not given to #{heap.inspect}", self
+    ) unless @node['fun']
+    fail Flor::FlorError.new(
+      "Collection not given to #{heap.inspect}", self
+    ) unless ocol.is_a?(Array) || ocol.is_a?(Hash)
+
+    @node['col'] = Flor.to_coll(@node['ocol'])
+    @node['args'] = nil
+  end
+
+  def prepare_iterator
+
+    @node['res'] = []
+  end
 
   def apply_iteration
 
@@ -67,11 +102,6 @@ class Flor::Pro::Iterator < Flor::Procedure
     else
       { 'key' => elt[0], 'val' => elt[1], 'idx' => idx }
     end
-  end
-
-  def pre_iterator
-
-    @node['res'] = []
   end
 
   def iterator_over?

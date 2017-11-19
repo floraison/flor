@@ -24,6 +24,8 @@ class Flor::Pro::Find < Flor::Pro::Iterator
 
   name 'find'
 
+  protected
+
   def pre_iterator
 
     # nothing to do
