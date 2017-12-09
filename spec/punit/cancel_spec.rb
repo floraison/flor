@@ -120,7 +120,8 @@ describe 'Flor punit' do
               stall tag: 'b'
               stall tag: 'c'
               stall tag: 'd'
-              cancel [ 'a', 'b' ]
+              sequence # give time for a and b tags to be entered
+                cancel [ 'a', 'b' ]
               cancel ref: [ 'c', 'd' ]
           },
           wait: true)
@@ -132,8 +133,8 @@ describe 'Flor punit' do
             .select { |m| m['point'] == 'cancel' }
             .collect { |m| [ m['from'], m['point'], m['nid'] ].join(':') }
         ).to eq(%w[
-          0_4:cancel:0_0
-          0_4:cancel:0_1
+          0_4_0:cancel:0_0
+          0_4_0:cancel:0_1
           0_5:cancel:0_2
           0_5:cancel:0_3
         ])
@@ -153,7 +154,8 @@ describe 'Flor punit' do
               stall tag: 'd'
               stall tag: 'e'
               stall tag: 'f'
-              cancel [ 'a', 'b', '0_2' ]
+              sequence
+                cancel [ 'a', 'b', '0_2' ]
               cancel '0_3', 'e', '0_5'
           },
           wait: true)
@@ -165,9 +167,9 @@ describe 'Flor punit' do
             .select { |m| m['point'] == 'cancel' }
             .collect { |m| [ m['from'], m['point'], m['nid'] ].join(':') }
         ).to eq(%w[
-          0_6:cancel:0_2
-          0_6:cancel:0_0
-          0_6:cancel:0_1
+          0_6_0:cancel:0_2
+          0_6_0:cancel:0_0
+          0_6_0:cancel:0_1
           0_7:cancel:0_3
           0_7:cancel:0_5
           0_7:cancel:0_4

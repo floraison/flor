@@ -83,6 +83,17 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 1, 2 ])
     end
+
+    it 'builds an array (with vars)' do
+
+      r = @executor.launch(%{
+        set b 2
+        [ 1 b "c" * b, "d_$(b)" ]
+      })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 1, 2, 'cc', 'd_2' ])
+    end
   end
 end
 

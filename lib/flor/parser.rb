@@ -222,6 +222,26 @@ module Flor
       s = t.string; [ '_num', s.index('.') ? s.to_f : s.to_i, ln(t) ]
     end
 
+    def literalize(children)
+
+      return false if children == 0
+#p caller[0]
+#p children
+#return false
+
+      names = Flor::Pro::Atom.names - %w[ _func ]
+
+      children.each do |c|
+        head = c[0]
+        return false unless Flor::Pro::Atom.names.include?(head)
+        return false if head == '_dqs' && c[1].index('$(')
+        return false if head == '_rxs' # FIXME
+      end
+
+      children.collect { |c| c[1] }
+#.tap { |x| p x }
+    end
+
     def rewrite_obj(t)
 
       cn =
@@ -239,7 +259,11 @@ module Flor
       cn = t.subgather(nil).collect { |n| rewrite(n) }
       cn = 0 if cn.empty?
 
-      [ '_arr', cn, ln(t) ]
+      if lit = literalize(cn)
+        [ '_lit', lit, ln(t) ]
+      else
+        [ '_arr', cn, ln(t) ]
+      end
     end
 
     def rewrite_val(t)
@@ -347,9 +371,14 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
         atts, non_atts = ta_rework_arr_or_obj(atts, non_atts)
 
-        core = [ @head, atts + non_atts, @line ]
-        core = core[0] if core[0].is_a?(Array) && core[1].empty?
-        core = ta_rework_core(core) if core[0].is_a?(Array)
+        core = [
+          @head, atts + non_atts, @line ]
+        core = core[0] \
+          if core[0].is_a?(Array) && core[1].empty?
+        core = ta_rework_lit(core) \
+          if core[0].is_a?(Array) && core[0][0] == '_lit'
+        core = ta_rework_core(core) \
+          if core[0].is_a?(Array)
 
         return core unless suff
 
@@ -371,6 +400,15 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
         @head = @head[0]
 
         cn.partition { |c| c[0] == '_att' }
+      end
+
+      def ta_rework_lit(core)
+
+        return core unless core[1].all? { |ct| Flor.is_att_tree?(ct) }
+
+        lit = core[0]
+
+        [ lit[0], core[1] + lit[1], lit[1] ]
       end
 
       def ta_rework_core(core)
