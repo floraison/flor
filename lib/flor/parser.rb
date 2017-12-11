@@ -229,11 +229,10 @@ module Flor
 #p children
 #return false
 
-      names = Flor::Pro::Atom.names - %w[ _func ]
-
       children.each do |c|
         head = c[0]
         return false unless Flor::Pro::Atom.names.include?(head)
+        return false if head == '_func'
         return false if head == '_dqs' && c[1].index('$(')
         return false if head == '_rxs' # FIXME
       end
