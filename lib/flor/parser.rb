@@ -222,43 +222,23 @@ module Flor
       s = t.string; [ '_num', s.index('.') ? s.to_f : s.to_i, ln(t) ]
     end
 
-    def literalize(type, children)
+    def literalize(children)
 
-#p [ type, children ]
       return false if children == 0
 #p caller[0]
 #p children
 #return false
 
-      cn = []
-
-      children.each_with_index do |c, i|
-        head, c1 = c[0], c[1]
+      children.each do |c|
+        head = c[0]
+        return false unless Flor::Pro::Atom.names.include?(head)
         return false if head == '_func'
         return false if head == '_dqs' && c[1].index('$(')
         return false if head == '_rxs' # FIXME
-        if type == :obj
-          return false unless (
-            Flor::Pro::Atom.names.include?(head) || i.even? && c1 == [])
-          cn <<
-            if i.even?
-              c1 == [] ? head : c1.to_s
-            else
-              c1
-            end
-        else # :arr
-          return false unless Flor::Pro::Atom.names.include?(head)
-          cn << c1
-        end
       end
 
-      if type == :arr
-        cn
-      else
-p children
-p cn
-        Hash[*cn]
-      end
+      children.collect { |c| c[1] }
+#.tap { |x| p x }
     end
 
     def rewrite_obj(t)
@@ -270,11 +250,7 @@ p cn
         end
       cn = 0 if cn.empty?
 
-      if lit = literalize(:obj, cn)
-        [ '_lit', lit, ln(t) ]
-      else
-        [ '_obj', cn, ln(t) ]
-      end
+      [ '_obj', cn, ln(t) ]
     end
 
     def rewrite_arr(t)
@@ -282,7 +258,7 @@ p cn
       cn = t.subgather(nil).collect { |n| rewrite(n) }
       cn = 0 if cn.empty?
 
-      if lit = literalize(:arr, cn)
+      if lit = literalize(cn)
         [ '_lit', lit, ln(t) ]
       else
         [ '_arr', cn, ln(t) ]
@@ -431,11 +407,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
         lit = core[0]
 
-        if lit[1].is_a?(Hash)
-          [ lit[0], core[1] + [ lit[1] ], lit[2] ]
-        else
-          [ lit[0], core[1] + lit[1], lit[2] ]
-        end
+        [ lit[0], core[1] + lit[1], lit[1] ]
       end
 
       def ta_rework_core(core)
