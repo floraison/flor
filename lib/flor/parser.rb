@@ -407,7 +407,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
         lit = core[0]
 
-        [ lit[0], core[1] + lit[1], lit[1] ]
+        [ lit[0], core[1] + lit[1], lit[2] ]
       end
 
       def ta_rework_core(core)
