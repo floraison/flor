@@ -222,7 +222,7 @@ module Flor
       s = t.string; [ '_num', s.index('.') ? s.to_f : s.to_i, ln(t) ]
     end
 
-    def literalize(children)
+    def literalize(type, children)
 
       return false if children == 0
 #p caller[0]
@@ -231,13 +231,21 @@ module Flor
 
       children.each do |c|
         head = c[0]
-        return false unless Flor::Pro::Atom.names.include?(head)
         return false if head == '_func'
         return false if head == '_dqs' && c[1].index('$(')
         return false if head == '_rxs' # FIXME
+        return false unless Flor::Pro::Atom.names.include?(head)
       end
 
-      children.collect { |c| c[1] }
+      if type == :arr
+        children.collect { |c| c[1] }
+      else
+        [ Hash[
+          *children
+            .each_with_index
+            .collect { |c, i| i.even? ? c[1].to_s : c[1] }
+        ] ]
+      end
 #.tap { |x| p x }
     end
 
@@ -250,7 +258,11 @@ module Flor
         end
       cn = 0 if cn.empty?
 
-      [ '_obj', cn, ln(t) ]
+      if lit = literalize(:obj, cn)
+        [ '_lit', lit, ln(t) ]
+      else
+        [ '_obj', cn, ln(t) ]
+      end
     end
 
     def rewrite_arr(t)
@@ -258,7 +270,7 @@ module Flor
       cn = t.subgather(nil).collect { |n| rewrite(n) }
       cn = 0 if cn.empty?
 
-      if lit = literalize(cn)
+      if lit = literalize(:arr, cn)
         [ '_lit', lit, ln(t) ]
       else
         [ '_arr', cn, ln(t) ]

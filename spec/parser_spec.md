@@ -413,6 +413,29 @@ parses to
     ], 1 ]
   ], 1 ]
 ```
+---
+
+```flor
+  { 'a': 1, "b": 2 }
+```
+parses to
+```ruby
+    [ '_lit', [
+      { 'a' => 1, 'b' => 2 }
+    ], 1 ]
+```
+---
+
+```flor
+  { 'a': 1, 'b': 2 } timeout: '2h' #if c > 1
+```
+parses to
+```ruby
+    [ '_lit', [
+      [ '_att', [ [ 'timeout', [], 1 ], [ '_sqs', '2h', 1 ] ], 1 ],
+      { 'a' => 1, 'b' => 2 }
+    ], 1 ]
+```
 
 ## arithmetical operations
 
