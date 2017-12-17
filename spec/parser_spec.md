@@ -346,6 +346,15 @@ parses to
 ---
 
 ```flor
+  {} tag: 'x'
+```
+parses to
+```ruby
+  [ '_obj', 0, 1 ]
+```
+---
+
+```flor
   { a: A, b: 2, c: true }
 ```
 parses to
