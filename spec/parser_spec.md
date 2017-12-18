@@ -332,6 +332,29 @@ parses to
     [ '_num', 2, 1 ]
   ], 1 ]
 ```
+---
+
+```flor
+  [ 0 ] tag: 'x'
+```
+parses to
+```ruby
+  [ '_lit', [
+    [ '_att', [ [ 'tag', [], 1 ], [ '_sqs', 'x', 1 ] ], 1 ],
+    0
+  ], 1 ]
+```
+---
+
+```flor
+  [] tag: 'x'
+```
+parses to
+```ruby
+  [ '_arr', [
+    [ '_att', [ [ 'tag', [], 1 ], [ '_sqs', 'x', 1 ] ], 1 ],
+  ], 1 ]
+```
 
 
 ## objects
@@ -350,7 +373,9 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_obj', 0, 1 ]
+  [ '_obj', [
+    [ '_att', [ [ 'tag', [], 1 ], [ '_sqs', 'x', 1 ] ], 1 ],
+  ], 1 ]
 ```
 ---
 

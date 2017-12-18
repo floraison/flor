@@ -380,10 +380,14 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
           (suff || atts) << c
         end
 
-        atts, non_atts = ta_rework_arr_or_obj(atts, non_atts)
+        @head, atts = ta_rework_arr_or_obj(atts) \
+          if (
+            @head.is_a?(Array) &&
+            non_atts.empty? &&
+            %w[ _arr _obj ].include?(@head[0]))
 
-        core = [
-          @head, atts + non_atts, @line ]
+        core = [ @head, atts + non_atts, @line ]
+            #
         core = core[0] \
           if core[0].is_a?(Array) && core[1].empty?
         core = ta_rework_lit(core) \
@@ -400,17 +404,9 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
       protected
 
-      def ta_rework_arr_or_obj(atts, non_atts)
+      def ta_rework_arr_or_obj(atts)
 
-        return [ atts, non_atts ] unless (
-          @head.is_a?(Array) &&
-          non_atts.empty? &&
-          %w[ _arr _obj ].include?(@head[0]))
-
-        cn = @head[1] + atts + non_atts
-        @head = @head[0]
-
-        cn.partition { |c| c[0] == '_att' }
+        [ @head[0], @head[1] == 0 ? atts : atts + @head[1] ]
       end
 
       def ta_rework_lit(core)
