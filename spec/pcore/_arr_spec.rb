@@ -25,6 +25,26 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([])
     end
 
+    it 'builds an empty array (with tag)' do
+
+      r = @executor.launch(%{ [] tag: 'x' })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([])
+
+      expect(
+        @executor.journal
+          .select { |m|
+            %w[ entered left ].include?(m['point']) }
+          .collect { |m|
+            [ m['nid'], m['point'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
+      ).to eq(%w[
+        0:entered:x
+        0:left:x
+      ].join("\n"))
+    end
+
     it 'builds an array' do
 
       r = @executor.launch(%{ [ 1, 2, "trois" ] })
