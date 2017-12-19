@@ -205,7 +205,7 @@ class Flor::Pro::Match < Flor::Pro::Case
 
       conditional = false
       t[1][i] = patternize(ct)
-      changed = changed || (t[1][i] != ct)
+      changed = changed || t[1][i] != ct
     end
 
     @node['tree'] = t if changed

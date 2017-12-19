@@ -222,33 +222,6 @@ module Flor
       s = t.string; [ '_num', s.index('.') ? s.to_f : s.to_i, ln(t) ]
     end
 
-    def literalize(type, children)
-
-      return false if children == 0
-#p caller[0]
-#p children
-#return false
-
-      children.each do |c|
-        head = c[0]
-        return false if head == '_func'
-        return false if head == '_dqs' && c[1].index('$(')
-        return false if head == '_rxs' # FIXME
-        return false unless Flor::Pro::Atom.names.include?(head)
-      end
-
-      if type == :arr
-        children.collect { |c| c[1] }
-      else
-        [ Hash[
-          *children
-            .each_with_index
-            .collect { |c, i| i.even? ? c[1].to_s : c[1] }
-        ] ]
-      end
-#.tap { |x| p x }
-    end
-
     def rewrite_obj(t)
 
       cn =
@@ -258,11 +231,7 @@ module Flor
         end
       cn = 0 if cn.empty?
 
-      if lit = literalize(:obj, cn)
-        [ '_lit', lit, ln(t) ]
-      else
-        [ '_obj', cn, ln(t) ]
-      end
+      [ '_obj', cn, ln(t) ]
     end
 
     def rewrite_arr(t)
@@ -270,11 +239,7 @@ module Flor
       cn = t.subgather(nil).collect { |n| rewrite(n) }
       cn = 0 if cn.empty?
 
-      if lit = literalize(:arr, cn)
-        [ '_lit', lit, ln(t) ]
-      else
-        [ '_arr', cn, ln(t) ]
-      end
+      [ '_arr', cn, ln(t) ]
     end
 
     def rewrite_val(t)
@@ -380,20 +345,11 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
           (suff || atts) << c
         end
 
-        @head, atts = ta_rework_arr_or_obj(atts) \
-          if (
-            @head.is_a?(Array) &&
-            non_atts.empty? &&
-            %w[ _arr _obj ].include?(@head[0]))
+        atts, non_atts = ta_rework_arr_or_obj(atts, non_atts)
 
         core = [ @head, atts + non_atts, @line ]
-            #
-        core = core[0] \
-          if core[0].is_a?(Array) && core[1].empty?
-        core = ta_rework_lit(core) \
-          if core[0].is_a?(Array) && core[0][0] == '_lit'
-        core = ta_rework_core(core) \
-          if core[0].is_a?(Array)
+        core = core[0] if core[0].is_a?(Array) && core[1].empty?
+        core = ta_rework_core(core) if core[0].is_a?(Array)
 
         return core unless suff
 
@@ -404,18 +360,17 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
       protected
 
-      def ta_rework_arr_or_obj(atts)
+      def ta_rework_arr_or_obj(atts, non_atts)
 
-        [ @head[0], @head[1] == 0 ? atts : atts + @head[1] ]
-      end
+        return [ atts, non_atts ] unless (
+          @head.is_a?(Array) &&
+          non_atts.empty? &&
+          %w[ _arr _obj ].include?(@head[0]))
 
-      def ta_rework_lit(core)
+        cn = @head[1] + atts + non_atts
+        @head = @head[0]
 
-        return core unless core[1].all? { |ct| Flor.is_att_tree?(ct) }
-
-        lit = core[0]
-
-        [ lit[0], core[1] + lit[1], lit[2] ]
+        cn.partition { |c| c[0] == '_att' }
       end
 
       def ta_rework_core(core)

@@ -89,46 +89,5 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(h)
     end
   end
-
-  describe Flor::Pro::Atom do
-
-    it 'respects tags (_num)' do
-
-      r = @executor.launch(%{ 1 tag: 't' })
-
-      expect(r['point']).to eq('terminated')
-
-      expect(
-        @executor.journal
-          .select { |m|
-            %w[ entered left ].include?(m['point']) }
-          .collect { |m|
-            [ m['nid'], m['point'], (m['tags'] || []).join(',') ].join(':') }
-          .join("\n")
-      ).to eq(%w[
-        0_1:entered:t
-        0_1:left:t
-      ].join("\n"))
-    end
-
-    it 'respects tags (_lit)' do
-
-      r = @executor.launch(%{ { 'a': 0 } tag: 't' })
-
-      expect(r['point']).to eq('terminated')
-
-      expect(
-        @executor.journal
-          .select { |m|
-            %w[ entered left ].include?(m['point']) }
-          .collect { |m|
-            [ m['nid'], m['point'], (m['tags'] || []).join(',') ].join(':') }
-          .join("\n")
-      ).to eq(%w[
-        0:entered:t
-        0:left:t
-      ].join("\n"))
-    end
-  end
 end
 
