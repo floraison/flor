@@ -43,6 +43,8 @@ describe 'Flor procedures' do
         0:entered:x
         0:left:x
       ].join("\n"))
+
+      expect(@executor.journal.size).to eq(13)
     end
 
     it 'builds an array' do
@@ -113,6 +115,50 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 1, 2, 'cc', 'd_2' ])
+    end
+
+    it 'builds an array (computation with tags)' do
+
+      r = @executor.launch(%{ [ 'un', 1 + 1, "trois" ] tag: 't' })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 'un', 2, 'trois' ])
+
+      expect(
+        @executor.journal
+          .select { |m|
+            %w[ entered left ].include?(m['point']) }
+          .collect { |m|
+            [ m['nid'], m['point'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
+      ).to eq(%w[
+        0:entered:t
+        0:left:t
+      ].join("\n"))
+
+      expect(@executor.journal.size).to eq(21)
+    end
+
+    it 'builds an array (with tags)' do
+
+      r = @executor.launch(%{ [ 'un', 2, "trois" ] tag: 't' })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 'un', 2, 'trois' ])
+
+      expect(
+        @executor.journal
+          .select { |m|
+            %w[ entered left ].include?(m['point']) }
+          .collect { |m|
+            [ m['nid'], m['point'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
+      ).to eq(%w[
+        0:entered:t
+        0:left:t
+      ].join("\n"))
+
+      expect(@executor.journal.size).to eq(17)
     end
   end
 end
