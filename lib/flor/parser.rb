@@ -236,10 +236,12 @@ module Flor
 
     def rewrite_arr(t)
 
-      cn = t.subgather(nil).collect { |n| rewrite(n) }
-      cn = 0 if cn.empty?
+      l = ln(t)
 
-      [ '_arr', cn, ln(t) ]
+      cn = t.subgather(nil).collect { |n| rewrite(n) }
+      cn = [ [ '_att', [ [ '_', [], l ] ], l ] ] if cn.empty?
+
+      [ '_arr', cn, l ]
     end
 
     def rewrite_val(t)

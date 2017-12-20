@@ -23,18 +23,9 @@ class Flor::Pro::Arr < Flor::Procedure
     @node['rets'] = []
   end
 
-  def receive
-
-    return wrap_reply('ret' => []) if children == 0
-
-    super
-  end
-
   def receive_last
 
-    payload['ret'] = @node['rets']
-
-    wrap_reply
+    wrap_reply('ret' => @node['rets'])
   end
 end
 
