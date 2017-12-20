@@ -224,14 +224,16 @@ module Flor
 
     def rewrite_obj(t)
 
+      l = ln(t)
+
       cn =
         t.subgather(nil).inject([]) do |a, tt|
           a << rewrite(tt.c0.c0)
           a << rewrite(tt.c4)
         end
-      cn = 0 if cn.empty?
+      cn = [ [ '_att', [ [ '_', [], l ] ], l ] ] if cn.empty?
 
-      [ '_obj', cn, ln(t) ]
+      [ '_obj', cn, l ]
     end
 
     def rewrite_arr(t)
