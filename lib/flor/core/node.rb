@@ -27,6 +27,9 @@ class Flor::Node
     def copy_current
       Flor.dup(current)
     end
+    def dup_current
+      current.dup
+    end
     def merge(h)
       current.merge(h)
     end

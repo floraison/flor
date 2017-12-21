@@ -142,6 +142,7 @@ describe 'Flor procedures' do
     it 'builds an array (with tags)' do
 
       r = @executor.launch(%{ [ 'un', 2, "trois" ] tag: 't' })
+      #r = @executor.launch(%{ [] tag: 't' })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 'un', 2, 'trois' ])
@@ -158,7 +159,7 @@ describe 'Flor procedures' do
         0:left:t
       ].join("\n"))
 
-      expect(@executor.journal.size).to eq(17)
+      expect(@executor.journal.size).to eq(11)
     end
   end
 end

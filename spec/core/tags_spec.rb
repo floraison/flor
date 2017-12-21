@@ -96,10 +96,6 @@ describe 'Flor core' do
         execute:0_2_0_0:
         receive:0_2_0:
         execute:0_2_0_1:
-        execute:0_2_0_1_0:
-        receive:0_2_0_1:
-        execute:0_2_0_1_1:
-        receive:0_2_0_1:
         receive:0_2_0:
         entered:0_2:cc,dd
         receive:0_2:

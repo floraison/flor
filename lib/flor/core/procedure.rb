@@ -444,7 +444,7 @@ class Flor::Procedure < Flor::Node
         :no
       end
 
-    m['payload'] = payload.current
+    m['payload'] = payload.dup_current
 
     m.merge!(h)
 
