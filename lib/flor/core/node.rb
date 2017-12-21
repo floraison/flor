@@ -28,7 +28,7 @@ class Flor::Node
       Flor.dup(current)
     end
     def dup_current
-      current.dup
+      current ? current.dup : nil
     end
     def merge(h)
       current.merge(h)
