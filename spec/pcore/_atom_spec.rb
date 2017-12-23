@@ -76,18 +76,5 @@ describe 'Flor procedures' do
       expect(r['payload']).to eq({ 'ret' => nil })
     end
   end
-
-  describe '_lit' do
-
-    it 'wraps an atom or, hum, a composite' do
-
-      h = { 'a' => 'A', 'b' => [ 0, 1 ], 'c' => false }
-
-      r = @executor.launch([ '_lit', h, 1 ])
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(h)
-    end
-  end
 end
 
