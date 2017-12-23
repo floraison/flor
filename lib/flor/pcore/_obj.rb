@@ -27,8 +27,6 @@ class Flor::Pro::Obj < Flor::Procedure
 
   def execute_child(index=0, sub=nil, h=nil)
 
-    return wrap_reply('ret' => {}) if children == 0
-
     return super if @node['rets'].size.odd?
 
     ct = children[index]
