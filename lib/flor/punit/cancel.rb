@@ -26,8 +26,7 @@ class Flor::Pro::Cancel < Flor::Procedure
         .inject([]) { |a, (k, v)|
           v = Array(v)
           a.concat(v) if v.all? { |e| e.is_a?(String) }
-          a
-        } +
+          a } +
       att_a('nid') +
       att_a('ref')
 
