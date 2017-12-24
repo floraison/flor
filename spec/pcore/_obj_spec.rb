@@ -51,6 +51,30 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eqd({ a: 'A' })
+
+      expect(@executor.journal.size).to eq(3)
+    end
+
+    it 'works  { "a": "A" } tag: t' do
+
+      r = @executor.launch(%{ { 'a': 'A' } tag: 't' })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq({ 'a' => 'A' })
+
+      expect(
+        @executor.journal
+          .select { |m|
+            %w[ entered left ].include?(m['point']) }
+          .collect { |m|
+            [ m['nid'], m['point'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
+      ).to eq(%w[
+        0:entered:t
+        0:left:t
+      ].join("\n"))
+
+      expect(@executor.journal.size).to eq(11)
     end
 
     it 'works  { a: "A" }' do

@@ -44,22 +44,28 @@ class Flor::Pro::Obj < Flor::Pro::Coll
     super
   end
 
-#  def receive_last_att
-##p @ncid
-##tree[1].each_with_index { |c, i| p [ i, c ] }
-##super
-#    cn = tree[1][@ncid..-1]
-#p cn
-#super
-#  end
+  def receive_last_att
+
+    cn = tree[1][@ncid..-1]
+
+    return wrap_object(cn.collect { |c| c[1] }) \
+      if cn.all? { |c| atomic?(c) }
+
+    super
+  end
 
   def receive_last
 
-    payload['ret'] = @node['rets']
-      .each_slice(2)
-      .inject({}) { |h, (k, v)| h[k.to_s] = v; h }
+    wrap_object(@node['rets'])
+  end
 
-    wrap_reply
+  protected
+
+  def wrap_object(arr)
+
+    wrap_reply(
+      'ret' =>
+        arr.each_slice(2).inject({}) { |h, (k, v)| h[k.to_s] = v; h })
   end
 end
 
