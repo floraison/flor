@@ -1,5 +1,8 @@
 
-class Flor::Pro::Obj < Flor::Procedure
+require 'flor/pcore/_coll'
+
+
+class Flor::Pro::Obj < Flor::Pro::Coll
   #
   # "_obj" is the procedure behind objects (maps).
   #
@@ -40,6 +43,15 @@ class Flor::Pro::Obj < Flor::Procedure
 
     super
   end
+
+#  def receive_last_att
+##p @ncid
+##tree[1].each_with_index { |c, i| p [ i, c ] }
+##super
+#    cn = tree[1][@ncid..-1]
+#p cn
+#super
+#  end
 
   def receive_last
 
