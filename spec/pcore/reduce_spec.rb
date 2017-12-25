@@ -17,7 +17,7 @@ describe 'Flor procedures' do
 
   describe 'reduce' do
 
-    it 'reduces' do
+    it 'reduces with a func' do
 
       r = @executor.launch(
         %q{
@@ -30,16 +30,16 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq('01b3')
     end
 
-    it 'reduces' #do
-#
-#      r = @executor.launch(
-#        %q{
-#          reduce [ '0', 1, 'b', 3 ] +
-#        })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['ret']).to eq('01b3')
-#    end
+    it 'reduces with a proc' do
+
+      r = @executor.launch(
+        %q{
+          reduce [ '0', 1, 'b', 3, '3f' ] v.+
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('01b33f')
+    end
   end
 end
 

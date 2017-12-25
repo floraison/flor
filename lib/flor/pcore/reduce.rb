@@ -11,6 +11,8 @@ class Flor::Pro::Reduce < Flor::Pro::Iterator
       .each { |a|
         if Flor.is_func_tree?(a)
           @node['fun'] ||= a
+        elsif Flor.is_proc_tree?(a)
+          @node['fun'] ||= proc_to_fun(a)
         elsif a.is_a?(Array) || a.is_a?(Hash)
           @node['ocol'] ||= a
         else
@@ -54,6 +56,24 @@ class Flor::Pro::Reduce < Flor::Pro::Iterator
   def iterator_result
 
     @node['res']
+  end
+
+  def proc_to_fun(prc)
+
+    h = prc[1]['proc']
+    l = tree[2]
+
+    [ '_func',
+      { 'nid' => "#{nid}_0_1",
+        'tree' =>
+          [ 'def', [
+            [  '_att', [ [ 'r', [], l ] ], l ],
+            [  '_att', [ [ 'x', [], l ] ], l ],
+            [  h, [ [ 'r', [], l ], [ 'x', [], l ] ], l ]
+          ], l ],
+        'cnid' => '0',  #
+        'fun' => 0 },   # TODO really?
+      l ]
   end
 end
 
