@@ -30,6 +30,30 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq('01b3')
     end
 
+    it 'reduces with a func and a start value' do
+
+      r = @executor.launch(
+        %q{
+          reduce [ 0, 1, 2, 3 ] 7
+            def r x \ r + x
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(13)
+    end
+
+    it 'reduces with a func and a start value' do
+
+      r = @executor.launch(
+        %q{
+          reduce 7 [ 1, 2, 3, 4 ]
+            def r x \ r + x
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(17)
+    end
+
     it 'reduces with a proc' do
 
       r = @executor.launch(
@@ -39,6 +63,17 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('01b33f')
+    end
+
+    it 'reduces with a proc and a start value' do
+
+      r = @executor.launch(
+        %q{
+          reduce 4 [ 1, 2, 3 ] v.+
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(10)
     end
   end
 end
