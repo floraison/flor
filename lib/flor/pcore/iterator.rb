@@ -130,6 +130,7 @@ class Flor::Macro::Iterator < Flor::Macro
     if non_att_children.any?
 
       td = [ 'def', [], l ]
+      td[1] << [ '_att', [ [ 'res', [], l ] ], l ] if procedure_name == 'reduce'
       td[1] << [ '_att', [ [ 'elt', [], l ] ], l ]
       non_att_children.each { |nac| td[1] << Flor.dup(nac) }
 
