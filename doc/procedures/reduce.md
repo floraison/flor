@@ -29,7 +29,7 @@ reduce [ 0, 1, 2, 3, 4 ] 10 v.+
 
 ## see also
 
-Inject.
+[Inject](inject.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/reduce.rb)
