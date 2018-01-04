@@ -52,6 +52,21 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(17)
     end
+
+    context 'with objects' do
+
+      it 'reduces' do
+
+         r = @executor.launch(
+           %q{
+             inject 7 { a: 1, b: 2, c: 3 }
+               res + val + idx
+           })
+
+         expect(r['point']).to eq('terminated')
+         expect(r['payload']['ret']).to eq(16)
+      end
+    end
   end
 end
 
