@@ -78,6 +78,37 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ [ 0, 'a' ], [ 1, 'b' ] ])
     end
+
+    context 'with objects' do
+
+      it 'maps object with (key, val)' do
+
+        r = @executor.launch(
+          %q{
+            collect { a: 'A', b: 'B', c: 'C' }
+              [ key val ]
+          })
+
+        expect(r['point']
+          ).to eq('terminated')
+        expect(r['payload']['ret']
+          ).to eq([ [ 'a', 'A' ], [ 'b', 'B' ], [ 'c', 'C' ] ])
+      end
+
+      it 'maps object with (key, val, idx)' do
+
+        r = @executor.launch(
+          %q{
+            collect { a: 'A', b: 'B', c: 'C' }
+              [ idx key val ]
+          })
+
+        expect(r['point']
+          ).to eq('terminated')
+        expect(r['payload']['ret']
+          ).to eq([ [ 0, 'a', 'A' ], [ 1, 'b', 'B' ], [ 2, 'c', 'C' ] ])
+      end
+    end
   end
 end
 
