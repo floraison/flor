@@ -73,6 +73,23 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 1, 3, 5 ])
     end
+
+    context 'with objects' do
+
+      it 'returns an object with filtered entries' do
+
+        r = @executor.launch(
+          %q{
+            reject { a: 'A', b: 'B', c: 'C', d: 'D' }
+              key == 'a' or idx == 3
+          })
+
+        expect(r['point']
+          ).to eq('terminated')
+        expect(r['payload']['ret']
+          ).to eq({ 'b' => 'B', 'c' => 'C' })
+      end
+    end
   end
 end
 
