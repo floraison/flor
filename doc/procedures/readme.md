@@ -32,6 +32,7 @@
 * [move](move.md) - Moves a cursor to a given position, a kind of local goto.
 * [noeval](noeval.md) - Immediately replies, children are not evaluated
 * [noret](noret.md) - executes its children, but doesn't alter the received f.ret
+* [not](not.md) - `not` negates its last child (or its last unkeyed attribute)
 * [push, pushr](push.md) - Pushes a value into an array (in a variable or a field).
 * [rand](rand.md) - Returns a randomly generated number.
 * [range](range.md) - "range" is a procedure to generate ranges of integers.

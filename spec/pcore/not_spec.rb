@@ -21,6 +21,11 @@ describe 'Flor procedures' do
       [ %q{ not _ }, true ],
       [ %q{ not true }, false ],
       [ %q{ not false }, true ],
+      [ %q{ not 0 }, false ],
+      [ %q{ not 1 }, false ],
+      [ %q{ not 'false' }, false ],
+      [ %q{ not 'true' }, false ],
+      [ %q{ not true false }, true ],
     ].each do |flor, ret|
 
       it "returns %-5s for `%s`" % [ ret, flor.strip ] do
