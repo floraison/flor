@@ -44,6 +44,10 @@ cursor
   do-that-other-thing _
 ```
 
+## see also
+
+[Break](break.md), [continue](continue.md), [loop](loop.md).
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/cursor.rb)
 * [cursor spec](https://github.com/floraison/flor/tree/master/spec/pcore/cursor_spec.rb)

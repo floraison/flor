@@ -18,7 +18,7 @@ class Flor::Pro::ToArray < Flor::Procedure
   # and
   #
   # ```
-  # to-object { 'a' 'A' 'b' 'B' 'c' 'C' }
+  # to-object [ 'a' 'A' 'b' 'B' 'c' 'C' ]
   #   # --> { 'a': 'A', b: 'B', c: 'C' }
   # ```
 

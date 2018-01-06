@@ -19,11 +19,25 @@ will yield "less than seven".
 ```
 set a 11
 cond
-  a < 4 ;; "less than four"
-  a < 7 ;; "less than seven"
-  else ;; "ten or bigger"
+  a < 4 ; "less than four"
+  a < 7 ; "less than seven"
+  else ; "ten or bigger"
 ```
 will yield "ten or bigger".
+
+The semicolon is used to place condition and clause on the same line.
+A pipe can be used instead of a semicolon.
+```
+set a 11
+cond
+  a < 4 | "less than four"
+  a < 7 | "less than seven"
+  else | "ten or bigger"
+```
+
+## see also
+
+[If](if.md), [match](match.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/cond.rb)

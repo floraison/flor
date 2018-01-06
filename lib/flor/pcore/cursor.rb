@@ -43,6 +43,10 @@ class Flor::Pro::Cursor < Flor::Procedure
   #   do-that _ # got skipped
   #   do-that-other-thing _
   # ```
+  #
+  # ## see also
+  #
+  # Break, continue, loop.
 
   name 'cursor'
 

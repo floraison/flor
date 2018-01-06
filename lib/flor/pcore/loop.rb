@@ -13,6 +13,10 @@ class Flor::Pro::Loop < Flor::Pro::Cursor
   # ```
   #
   # Accepts `break` and `continue` like `cursor` does.
+  #
+  # ## see also
+  #
+  # Cursor, break, continue.
 
   name 'loop'
 

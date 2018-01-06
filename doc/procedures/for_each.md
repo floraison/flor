@@ -15,6 +15,19 @@ for-each [ 0 1 2 3 4 5 6 7 ]
 the var `l` will yield `[ 0, 4, 8, 12 ]` after the `for-each`
 the field `ret` will yield `[ 0, 1, 2, 3, 4, 5, 6, 7 ]`.
 
+```
+set l []
+for-each { a: 'A', b: 'B', c: 'C' }
+  def k v i
+    pushr l (+ k v i)
+```
+the var `l` will yield `[ 'aA0', 'bB1', 'cC2' ]` after the `for-each`
+the field `ret` will yield `{ 'a': 'A', 'b': 'B', 'c': 'C' }`.
+
+## see also
+
+[each](each.md).
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/for_each.rb)
 
