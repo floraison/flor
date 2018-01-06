@@ -1,5 +1,39 @@
 
 class Flor::Pro::Until < Flor::Procedure
+  #
+  # `until` loops until a condition evaluates to true.
+  # `while` loops while a condition evaluates to true.
+  #
+  # ```
+  # set i 0
+  # until i == 7
+  #   task 'bob' "verify counter ($(i))"
+  #   set i (i + 1)
+  # ```
+  #
+  # ```
+  # set i 0
+  # while i < 7
+  #   task 'bob' "verify counter ($(i))"
+  #   set i (i + 1)
+  # ```
+  #
+  # `until` and `while` understand `break` and `continue`, like `cursor` and
+  # `loop` do.
+  #
+  # ```
+  # until
+  #   false
+  #   push f.l 0
+  #   set outer-break break # alias local break to "outer-break"
+  #   until false
+  #     push f.l 'a'
+  #     outer-break 'x'
+  # ```
+  #
+  # ## see also
+  #
+  # Break, continue, cursor, loop.
 
   names 'until', 'while'
 
