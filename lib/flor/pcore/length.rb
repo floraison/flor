@@ -15,8 +15,10 @@ class Flor::Pro::Length < Flor::Procedure
   #
   # It will fail unless "length" receives a (non-attribute) argument
   # that has a length.
+  #
+  # Has the "size" alias.
 
-  name 'length'
+  names %w[ length size ]
 
   def pre_execute
 

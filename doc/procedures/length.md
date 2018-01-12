@@ -1,5 +1,5 @@
 
-# length
+# length, size
 
 Returns the length of its last collection argument or
 the length of the incoming f.ret
@@ -15,6 +15,8 @@ the length of the incoming f.ret
 
 It will fail unless "length" receives a (non-attribute) argument
 that has a length.
+
+Has the "size" alias.
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/length.rb)

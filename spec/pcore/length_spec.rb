@@ -85,5 +85,35 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(3)
     end
   end
+
+  describe 'size' do
+
+    it 'is an alias to "size"' do
+
+      r = @executor.launch(
+        %q{
+          set f.customers [ 'alice' 'bob' 'charly' 'doug' ]
+          [
+            (size [ 'a' 'b' 'c' ])
+            (size a0)
+            (size a1)
+            (size h0)
+            #(size h0.a)
+            #(size h0.b)
+            ({ a: 'A', b: 'B'}; size _)
+
+            (case (size f.customers)
+              0; 'zero'
+              [ 1 3 ]; 'one to three'
+              [ 4 6 ]; 'four to six'
+              else; 'seven or more')
+          ]
+        },
+        vars: { 'a0' => [], 'a1' => [ 1, 2 ], 'h0' => { 'a' => 0 } })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 3, 0, 2, 1, 2, 'four to six' ])
+    end
+  end
 end
 

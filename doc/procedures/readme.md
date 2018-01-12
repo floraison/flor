@@ -23,7 +23,7 @@
 * [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidequick)
 * [inject](inject.md) - Inject is a simplified version of [reduce](reduce.md).
 * [keys, values](keys.md) - Returns the "keys" or the "values" of an object.
-* [length](length.md) - Returns the length of its last collection argument or the length of the incoming f.ret
+* [length, size](length.md) - Returns the length of its last collection argument or the length of the incoming f.ret
 * [and, or](logo.md) - When `and` evaluates the children and returns false as soon as one of returns a falsy value. Returns true else. When `or` evaluates the children and returns true as soon as one of them returns a trueish value. Returns false else.
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
 * [map](map.md) - This is the classical "map" procedure. It accepts a collection and a function and yields a new collection.
