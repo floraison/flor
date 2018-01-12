@@ -85,6 +85,10 @@ case 'ovomolzin'
 # yields "matched:molzin"
 ```
 
+## see also
+
+[Match](match.md).
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/case.rb)
 * [case spec](https://github.com/floraison/flor/tree/master/spec/pcore/case_spec.rb)

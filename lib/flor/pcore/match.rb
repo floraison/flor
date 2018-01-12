@@ -184,6 +184,10 @@ class Flor::Pro::Match < Flor::Pro::Case
   # (guard {name})
   # (guard {name} {pattern|conditional}*)
   # ```
+  #
+  # ## see also
+  #
+  # Case.
 
   name 'match'
 

@@ -42,6 +42,20 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(1)
     end
+
+    it "works when in a variable" do
+
+      r = @executor.launch(
+        %q{
+          set a 1
+          set head noeval
+          head
+            set a 2
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['a']).to eq(1)
+    end
   end
 
   describe '_' do

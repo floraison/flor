@@ -185,6 +185,10 @@ conditional arguments.
 (guard {name} {pattern|conditional}*)
 ```
 
+## see also
+
+[Case](case.md).
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/match.rb)
 * [match spec](https://github.com/floraison/flor/tree/master/spec/pcore/match_spec.rb)

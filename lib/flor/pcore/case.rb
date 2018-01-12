@@ -84,6 +84,10 @@ class Flor::Pro::Case < Flor::Procedure
   #   else; 'else'
   # # yields "matched:molzin"
   # ```
+  #
+  # ## see also
+  #
+  # Match.
 
   name 'case'
 
