@@ -14,6 +14,10 @@ class Flor::Pro::Skip < Flor::Procedure
   #     _skip 7 # after 7 messages will go on
   #     break ref: 'xx'
   # ```
+  #
+  # ## see also
+  #
+  # Stall.
 
   name '_skip'
 

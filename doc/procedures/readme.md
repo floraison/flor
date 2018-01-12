@@ -41,6 +41,7 @@
 * [select, reject](select.md) - Filters a collection
 * [sequence, _apply, begin](sequence.md) - Executes child expressions in sequence.
 * [set, setr](set.md) - sets a field or a variable.
+* [stall](stall.md) - "stall" is mostly used in flor tests. It simply dead ends.
 * [to-array, to-object](to_array.md) - "to-array", turns an argument into an array, "to-object" turns it into an object.
 * [until, while](until.md) - `until` loops until a condition evaluates to true. `while` loops while a condition evaluates to true.
 

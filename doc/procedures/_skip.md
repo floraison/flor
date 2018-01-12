@@ -15,6 +15,10 @@ concurrence
     break ref: 'xx'
 ```
 
+## see also
+
+[Stall](stall.md).
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/_skip.rb)
 * [_skip spec](https://github.com/floraison/flor/tree/master/spec/pcore/_skip_spec.rb)
