@@ -33,6 +33,29 @@ describe 'Flor procedures' do
       expect(ex['errors']).to eq([])
       expect(ex['counters']).to eq({ 'msgs' => 4 })
     end
+
+    it 'executes its attributes' do
+
+      r = @executor.launch(
+        %q{
+          sequence
+            stall tag: 'dead' + 'end'
+        })
+
+      expect(r).to eq(nil)
+
+      ent = @executor.journal
+        .select { |m| m['point'] == 'entered' }
+        .collect { |m| m['tags'] }
+        .compact
+      lef = @executor.journal
+        .select { |m| m['point'] == 'left' }
+        .collect { |m| m['tags'] }
+        .compact
+
+      expect(ent).to eq([ %w[ deadend ] ])
+      expect(lef).to eq([])
+    end
   end
 end
 
