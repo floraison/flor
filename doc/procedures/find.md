@@ -20,7 +20,7 @@ find { a: 'A', b: 'B', c: 'C' }
 
 ## see also
 
-[map](map.md) and [detect](detect.md).
+[Map](map.md) and [detect](detect.md), any?.
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/find.rb)

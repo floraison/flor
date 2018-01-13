@@ -16,7 +16,7 @@ Could be useful when determining on the fly what the "parent"
 procedure should be.
 ```
 set head
-  case size(f.customers)
+  case (size f.customers)
     0;          noeval
     [ 1, 10 ];  concurrence
     else;       sequence

@@ -1,4 +1,7 @@
 
+require 'flor/pcore/iterator'
+
+
 class Flor::Pro::Find < Flor::Pro::Iterator
   #
   # Finds the first matching element.
@@ -20,7 +23,7 @@ class Flor::Pro::Find < Flor::Pro::Iterator
   #
   # ## see also
   #
-  # map and detect.
+  # Map and detect, any?.
 
   name 'find'
 
