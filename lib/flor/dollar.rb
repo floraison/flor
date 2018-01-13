@@ -148,6 +148,7 @@ module Flor
         when 'c' then o.to_s.capitalize.gsub(/\s[a-z]/) { |c| c.upcase }
         when 'q' then quote(o, false)
         when 'Q' then quote(o, true)
+        when 'l' then o.length.to_s
 
         when 'json' then to_json(o)
 

@@ -251,7 +251,7 @@ describe Flor::Dollar do
         expect(@d.expand("$(ba|s/A/O/gi)")).to eq('blOck Odder')
       end
 
-      it "understands |j," do
+      it "understands |j, (join with a comma)" do
 
         expect(@d.expand("$(brown|j,)")).to eq('fox')
         expect(@d.expand("$(arr|j,)")).to eq('1,2,3')
@@ -261,6 +261,12 @@ describe Flor::Dollar do
 
         expect(@d.expand("$(brown|json)")).to eq('"fox"')
         expect(@d.expand("$(arr|json)")).to eq('[1,2,3]')
+      end
+
+      it "understands |l (length)" do
+
+        expect(@d.expand("$(brown|l)")).to eq('3')
+        expect(@d.expand("$(arr|l)")).to eq('3')
       end
     end
 
