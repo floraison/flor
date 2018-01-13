@@ -38,12 +38,16 @@ class Flor::Pro::Find < Flor::Pro::Iterator
 
   def iterator_over?
 
-    @node['idx'] > 0 && Flor.true?(payload['ret'])
+    super || (@node['idx'] > 0 && Flor.true?(payload['ret']))
   end
 
   def iterator_result
 
-    @node['col'][@node['idx'] - 1]
+    if Flor.true?(payload['ret'])
+      @node['col'][@node['idx'] - 1]
+    else
+      nil
+    end
   end
 end
 
