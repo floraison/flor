@@ -6,7 +6,7 @@
 * [_arr](_arr.md) - "_arr" is the procedure behind arrays.
 * [_obj](_obj.md) - "_obj" is the procedure behind objects (maps).
 * [_skip](_skip.md) - Skips x messages, mostly used for testing flor.
-* [any?](any.md) - ## see also
+* [any?](any.md) - Returns `true` if at least one of the member of a collection returns something trueish for the given function. Returns `false` else.
 * [apply](apply.md) - Applies a function.
 * [break, continue](break.md) - Breaks or continues a "while" or "until".
 * [case](case.md) - The classical case form.

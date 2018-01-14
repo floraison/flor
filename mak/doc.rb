@@ -54,9 +54,10 @@ def make_proc_doc(path, names_and_lines)
 
     (see_also..see_also + count).each do |i|
       lines[i] = lines[i]
-        .gsub(/\w+/) { |w|
+        .gsub(/\w+\??/) { |w|
           dw = w.downcase
-          ALSO_NAMES.include?(dw) ? "[#{w}](#{dw}.md)" : w }
+          fw = dw; fw = dw[0..-2] if dw[-1] == '?'
+          ALSO_NAMES.include?(dw) ? "[#{w}](#{fw}.md)" : w }
     end
     #pp lines
   end
