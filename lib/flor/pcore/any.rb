@@ -23,7 +23,7 @@ class Flor::Pro::Any < Flor::Pro::Find
   #
   # ## see also
   #
-  # Find, every?.
+  # Find, all?.
 
   name 'any?'
 
