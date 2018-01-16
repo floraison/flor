@@ -43,12 +43,19 @@ class Flor::Pro::Iterator < Flor::Procedure
 
     prepare_iterations unless @node['ocol']
 
+    return no_iterate unless @node['fun']
+
     @node['idx'] += 1
     @node['mtime'] = Flor.tstamp
 
     return end_iterator if iterator_over?
 
     apply_iteration
+  end
+
+  def function_mandatory?
+
+    true
   end
 
   def prepare_iterations
@@ -68,7 +75,7 @@ class Flor::Pro::Iterator < Flor::Procedure
 
     fail Flor::FlorError.new(
       "Function not given to #{heap.inspect}", self
-    ) unless @node['fun']
+    ) if function_mandatory? && ( ! @node['fun'])
     fail Flor::FlorError.new(
       "Collection not given to #{heap.inspect}", self
     ) unless ocol.is_a?(Array) || ocol.is_a?(Hash)

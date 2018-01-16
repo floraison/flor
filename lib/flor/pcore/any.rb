@@ -20,6 +20,18 @@ class Flor::Pro::Any < Flor::Pro::Find
   # # yields `true` thanks to entry { b: 'B' }
   # ```
   #
+  # ## without a function
+  #
+  # It's OK to use "any?" without a function, it'll simply return
+  # false if the collection is empty, true else.
+  #
+  # ```
+  # any? []          # yields false
+  # any? [ 1 ]       # yields true
+  # any? {}          # yields false
+  # any? { a: 'A' }  # yields true
+  # ```
+  #
   #
   # ## see also
   #
@@ -28,6 +40,16 @@ class Flor::Pro::Any < Flor::Pro::Find
   name 'any?'
 
   protected
+
+  def function_mandatory?
+
+    false
+  end
+
+  def no_iterate
+
+    wrap_reply('ret' => @node['col'].any?)
+  end
 
   def iterator_result
 

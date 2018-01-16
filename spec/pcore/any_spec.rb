@@ -42,6 +42,31 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(false)
     end
 
+    context 'no function' do
+
+      it 'returns false if the array is empty' do
+
+        r = @executor.launch(
+          %q{
+            any? []
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(false)
+      end
+
+      it 'returns true if the array is not empty' do
+
+        r = @executor.launch(
+          %q{
+            any? [ 'a' 1 ]
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
+      end
+    end
+
     context 'with objects' do
 
       it 'returns true if it finds a matching entry' do
@@ -68,6 +93,31 @@ describe 'Flor procedures' do
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(false)
+      end
+
+      context 'no function' do
+
+        it 'returns false if the object is empty' do
+
+          r = @executor.launch(
+            %q{
+              any? {}
+            })
+
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(false)
+        end
+
+        it 'returns true if the object is not empty' do
+
+          r = @executor.launch(
+            %q{
+              any? { a: 'A' }
+            })
+
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(true)
+        end
       end
     end
   end
