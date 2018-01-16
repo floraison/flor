@@ -48,7 +48,7 @@ class Flor::Pro::Any < Flor::Pro::Find
 
   def no_iterate
 
-    wrap_reply('ret' => @node['col'].any?)
+    wrap_reply('ret' => @node['ocol'].any?)
   end
 
   def iterator_result

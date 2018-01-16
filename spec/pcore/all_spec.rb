@@ -41,6 +41,42 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(false)
     end
 
+    context 'without function' do
+
+      it 'returns true if all the elements are trueish' do
+
+        r = @executor.launch(
+          %q{
+            all? [ 1 2 3 ]
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
+      end
+
+      it 'returns false if at least an element is not trueish' do
+
+        r = @executor.launch(
+          %q{
+            all? [ 1 false 3 ]
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(false)
+      end
+
+      it 'returns true if the array is empty' do
+
+        r = @executor.launch(
+          %q{
+            all? []
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
+      end
+    end
+
     context 'with objects' do
 
       it 'returns true if all the entries match' do
@@ -65,6 +101,42 @@ describe 'Flor procedures' do
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(false)
+      end
+
+      context 'without function' do
+
+        it 'returns true if all the values are trueish' do
+
+          r = @executor.launch(
+            %q{
+              all? { a: 'A', b: 'B', c: 'C' }
+            })
+
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(true)
+        end
+
+        it 'returns false if at least one value is not trueish' do
+
+          r = @executor.launch(
+            %q{
+              all? { a: 'A', f: false, c: 'C' }
+            })
+
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(false)
+        end
+
+        it 'returns true if the object is empty' do
+
+          r = @executor.launch(
+            %q{
+              all? {}
+            })
+
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(true)
+        end
       end
     end
   end

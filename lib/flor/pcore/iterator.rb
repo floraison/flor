@@ -80,7 +80,7 @@ class Flor::Pro::Iterator < Flor::Procedure
       "Collection not given to #{heap.inspect}", self
     ) unless ocol.is_a?(Array) || ocol.is_a?(Hash)
 
-    @node['col'] = Flor.to_coll(@node['ocol'])
+    @node['col'] = Flor.to_coll(@node['ocol']) if @node['fun']
     @node['args'] = nil
   end
 
