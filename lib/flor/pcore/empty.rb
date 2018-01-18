@@ -1,0 +1,44 @@
+
+class Flor::Pro::Empty < Flor::Procedure
+  #
+  # Returns true if the given collection or string is empty.
+  #
+  # Returns true of the given argument is null, returns false for any
+  # other non-collection, non-string argument.
+  #
+  # ```
+  # empty? []           # --> true
+  # empty? {}           # --> true
+  # empty? ''           # --> true
+  # empty? null         # --> true
+  #
+  # empty? [ 1, 2, 3 ]  # --> false
+  # empty? { a: 'A' }   # --> false
+  # empty? 0            # --> false
+  # empty? 'aaa'        # --> false
+  # ```
+  #
+  # ## see also
+  #
+  # any?
+
+  name 'empty?'
+
+  def pre_execute
+
+    unatt_unkeyed_children
+  end
+
+  def receive_last
+
+    ret =
+      case r = payload['ret']
+      when Array, Hash, String then r.empty?
+      when nil then true
+      else false
+      end
+
+    wrap_reply('ret' => ret)
+  end
+end
+
