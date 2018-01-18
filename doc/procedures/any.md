@@ -17,10 +17,22 @@ any? { a: 'A', b: 'B', c: 'C' }
 # yields `true` thanks to entry { b: 'B' }
 ```
 
+## without a function
+
+It's OK to use "any?" without a function, it'll simply return
+false if the collection is empty, true else.
+
+```
+any? []          # yields false
+any? [ 1 ]       # yields true
+any? {}          # yields false
+any? { a: 'A' }  # yields true
+```
+
 
 ## see also
 
-[Find](find.md), every?.
+[Find](find.md), [all?](all.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/any.rb)

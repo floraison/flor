@@ -3,6 +3,32 @@ require 'flor/pcore/iterator'
 
 
 class Flor::Pro::All < Flor::Pro::Iterator
+  #
+  # Returns true if all the elements in a collection return true
+  # for the given function.
+  #
+  # ```
+  # all? [ 1, 2, 3 ]
+  #   def elt \ elt > 0
+  #     #
+  #     # yields true
+  #
+  # all? [ 1, 2, 3 ]
+  #   def elt \ elt > 2
+  #     #
+  #     # yields false
+  # ```
+  #
+  # ```
+  # all? { a: 'A', b: 'B' }
+  #   def key, val \ val == 'A' or val == 'B'
+  #     #
+  #     # yields true
+  # ```
+  #
+  # ## see also
+  #
+  # Any?
 
   name 'all?'
 
