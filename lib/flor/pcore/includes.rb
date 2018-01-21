@@ -13,19 +13,18 @@ class Flor::Pro::Includes < Flor::Procedure
   def receive_last
 
     col = nil
-    elt = nil
+    elt = :nil
 
     @node['rets'].each do |ret|
       if col == nil && (ret.is_a?(Array) || ret.is_a?(Hash))
         col = ret
-      elsif col
+      elsif elt == :nil
         elt = ret
       end
     end
 
-    fail Flor::FlorError.new(
-      "Missing collection", self
-    ) if col == nil
+    fail Flor::FlorError.new('Missing collection', self) if col == nil
+    fail Flor::FlorError.new('Missing element', self) if elt == :nil
 
     wrap_reply('ret' => col.include?(elt))
   end

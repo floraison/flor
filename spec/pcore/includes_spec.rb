@@ -22,6 +22,8 @@ describe 'Flor procedures' do
       %q{ includes? [ 0 ] 0 },
       %q{ includes? [ [ 0 ] ] [ 0 ] },
       %q{ includes? { a: 'A' } 'a' },
+      %q{ includes? 1 [ 1 ] },
+      %q{ includes? 'b' { a: 'A', 'b': 'B' } },
 
     ].each do |code|
 
@@ -39,6 +41,8 @@ describe 'Flor procedures' do
       %q{ includes? [] 0 },
       %q{ includes? [] [] },
       %q{ includes? { a: 'A' } 'b' },
+      %q{ includes? 1 [ 2 ] },
+      %q{ includes? 'c' { a: 'A', 'b': 'B' } },
 
     ].each do |code|
 
@@ -49,6 +53,17 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(false)
       end
+    end
+
+    it 'fails if the element is missing' do
+
+      r = @executor.launch(
+        %q{
+          includes? []
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('Missing element')
     end
 
     it 'fails if the collection is missing' do
