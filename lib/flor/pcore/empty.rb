@@ -18,6 +18,20 @@ class Flor::Pro::Empty < Flor::Procedure
   # empty? 'aaa'        # --> false
   # ```
   #
+  # If the argument is not an array, an object, a string or null, an
+  # error is triggered.
+  #
+  # If there is no argument to the "empty?", the incoming payload['ret']
+  # is considered
+  #
+  # ```
+  # {}
+  # empty? _     # --> true
+  #
+  # [ 1, 2, 3 ]
+  # empty? _     # --> false
+  # ```
+  #
   # ## see also
   #
   # any?
@@ -29,16 +43,20 @@ class Flor::Pro::Empty < Flor::Procedure
     unatt_unkeyed_children
   end
 
-  def receive_last
+  def wrap_reply(h={})
 
-    ret =
+    h['ret'] =
       case r = payload['ret']
-      when Array, Hash, String then r.empty?
-      when nil then true
-      else false
+      when Array, Hash, String
+        r.empty?
+      when nil
+        true
+      else
+        fail Flor::FlorError.new(
+          'Argument is not an array, an object, a string or null', self)
       end
 
-    wrap_reply('ret' => ret)
+    super(h)
   end
 end
 

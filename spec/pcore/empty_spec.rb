@@ -17,21 +17,6 @@ describe 'Flor procedures' do
 
   describe 'empty?' do
 
-    context 'with nothing' do
-
-      it 'leaves the previous ret untouched' do
-
-        r = @executor.launch(
-          %q{
-            1
-            empty? _
-          })
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(1)
-      end
-    end
-
     context 'with array' do
 
       it 'returns true when empty' do
@@ -50,6 +35,18 @@ describe 'Flor procedures' do
         r = @executor.launch(
           %q{
             empty? [ 1, 2, 3 ]
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(false)
+      end
+
+      it 'picks the incoming ret if necessary' do
+
+        r = @executor.launch(
+          %q{
+            [ 1, 2, 3 ]
+            empty? _
           })
 
         expect(r['point']).to eq('terminated')
@@ -80,6 +77,18 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(false)
       end
+
+      it 'picks the incoming ret if necessary' do
+
+        r = @executor.launch(
+          %q{
+            { a: 'A' }
+            empty? _
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(false)
+      end
     end
 
     context 'with strings' do
@@ -100,6 +109,18 @@ describe 'Flor procedures' do
         r = @executor.launch(
           %q{
             empty? 'oh oh oh'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(false)
+      end
+
+      it 'picks the incoming ret if necessary' do
+
+        r = @executor.launch(
+          %q{
+            'oh oh oh'
+            empty? _
           })
 
         expect(r['point']).to eq('terminated')
@@ -130,8 +151,10 @@ describe 'Flor procedures' do
             empty? 1
           })
 
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(false)
+        expect(r['point']
+          ).to eq('failed')
+        expect(r['error']['msg']
+          ).to eq('Argument is not an array, an object or a string')
       end
     end
   end
