@@ -17,29 +17,58 @@ describe 'Flor procedures' do
 
   describe 'any?' do
 
-    it 'returns true if it finds a matching entry' do
+    context 'function' do
 
-      r = @executor.launch(
-        %q{
-          any? [ 1, 2, 3 ]
-            def elt
-              (elt % 2) == 0
-        })
+      it 'returns true if it finds a matching array element' do
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(true)
-    end
+        r = @executor.launch(
+          %q{
+            any? [ 1, 2, 3 ]
+              def elt
+                (elt % 2) == 0
+          })
 
-    it 'returns false if it does not find a matching entry' do
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
+      end
 
-      r = @executor.launch(
-        %q{
-          any? [ 1, 2, 3 ]
-            def elt \ elt == 4
-        })
+      it 'returns false if it does not find a matching array element' do
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(false)
+        r = @executor.launch(
+          %q{
+            any? [ 1, 2, 3 ]
+              def elt \ elt == 4
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(false)
+      end
+
+      it 'returns true if it finds a matching object entry' do
+
+        r = @executor.launch(
+          %q{
+            any? { a: 'A', b: 'B', c: 'C' }
+              def key, val
+                val == 'B'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
+      end
+
+      it 'returns false if it does not find a matching object entry' do
+
+        r = @executor.launch(
+          %q{
+            any? { a: 'A', b: 'B', c: 'C' }
+              def key, val
+                val == 'Z'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(false)
+      end
     end
 
     context 'no function' do
@@ -65,59 +94,27 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(true)
       end
-    end
 
-    context 'with objects' do
-
-      it 'returns true if it finds a matching entry' do
+      it 'returns false if the object is empty' do
 
         r = @executor.launch(
           %q{
-            any? { a: 'A', b: 'B', c: 'C' }
-              def key, val
-                val == 'B'
-          })
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(true)
-      end
-
-      it 'returns false if it does not find a matching entry' do
-
-        r = @executor.launch(
-          %q{
-            any? { a: 'A', b: 'B', c: 'C' }
-              def key, val
-                val == 'Z'
+            any? {}
           })
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(false)
       end
 
-      context 'no function' do
+      it 'returns true if the object is not empty' do
 
-        it 'returns false if the object is empty' do
+        r = @executor.launch(
+          %q{
+            any? { a: 'A' }
+          })
 
-          r = @executor.launch(
-            %q{
-              any? {}
-            })
-
-          expect(r['point']).to eq('terminated')
-          expect(r['payload']['ret']).to eq(false)
-        end
-
-        it 'returns true if the object is not empty' do
-
-          r = @executor.launch(
-            %q{
-              any? { a: 'A' }
-            })
-
-          expect(r['point']).to eq('terminated')
-          expect(r['payload']['ret']).to eq(true)
-        end
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
       end
     end
   end
