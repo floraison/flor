@@ -17,7 +17,7 @@ describe 'Flor procedures' do
 
   describe 'for-each' do
 
-    it 'iterates over each element' do
+    it 'iterates over each array element' do
 
       r = @executor.launch(
         %q{
@@ -32,25 +32,22 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq((0..7).to_a)
     end
 
-    context 'objects' do
+    it 'iterates over each object entry' do
 
-      it 'iterates over each entry' do
+      r = @executor.launch(
+        %q{
+          set l []
+          for-each { a: 'A', b: 'B', c: 'C' }
+            def k v i
+              pushr l (+ k v i)
+        })
 
-        r = @executor.launch(
-          %q{
-            set l []
-            for-each { a: 'A', b: 'B', c: 'C' }
-              def k v i
-                pushr l (+ k v i)
-          })
-
-        expect(r['point']
-          ).to eq('terminated')
-        expect(r['vars']
-          ).to eq({ 'l' => %w[ aA0 bB1 cC2 ] })
-        expect(r['payload']['ret']
-          ).to eq({ 'a' => 'A', 'b' => 'B', 'c' => 'C' })
-      end
+      expect(r['point']
+        ).to eq('terminated')
+      expect(r['vars']
+        ).to eq({ 'l' => %w[ aA0 bB1 cC2 ] })
+      expect(r['payload']['ret']
+        ).to eq({ 'a' => 'A', 'b' => 'B', 'c' => 'C' })
     end
   end
 end
