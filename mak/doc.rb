@@ -120,6 +120,11 @@ def make_procedures_doc
       ) if flavour == 'unit'
     end
     f.puts
+    f.puts
+    f.puts "## core and unit tree"
+    f.puts
+    f.puts `make doct`
+    f.puts
   end
 end
 

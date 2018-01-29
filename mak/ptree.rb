@@ -6,34 +6,40 @@ require 'json'
 require 'flor/unit'
 
 
-p Flor::Pro::Sequence.public_methods.sort
-#p Flor::Pro::Sequence.constants
-
-index = Flor::Pro.constants
+index = (
+  [ Flor::Procedure, Flor::Macro ] +
+  Flor::Pro.constants.collect { |c| Flor::Pro.const_get(c) }
+)
   .inject({}) { |h, c|
-    c = Flor::Pro.const_get(c)
     next h unless c.respond_to?(:names)
     as = (c.ancestors.select { |cl| cl.to_s.match(/^Flor::/) } - [ Flor::Node ])
     ns = c.names
     h[c] = { class: c, ancestors: as, names: c.names }
     h }
-classes = index.values
-  .collect { |p| p[:ancestors] }
-  .flatten
-  .uniq
-#classes = classes - [ Flor::Procedure ]
-parents = index
-  .inject({}) { |h, (k, v)|
-    list = v[:ancestors].reverse
-    loop do
-      parent = list.shift
-      break unless list.any?
-      h[parent] ||= []
-      h[parent] = (h[parent] + [ list.first ]).uniq
-    end
-    h }
+index
+  .each { |k, v|
+    a = v[:ancestors][1]
+    a = index[a]
+    next unless a
+    (a[:children] ||= []) << k }
 
 #pp index
 #pp classes
-pp parents
+#pp parents
+#pp index[Flor::Procedure]
+#pp index[Flor::Macro]
+
+def render(index, level, klass)
+  d = index[klass]
+  print "#{'  ' * level}* #{klass}"
+  if ns = d[:names]
+    print ' '
+    print d[:names].collect { |n| "[#{n}](#{n}.md)" }.join(', ')
+  end
+  puts
+  (d[:children] || [])
+    .sort_by { |c| c.to_s }
+    .each { |c| render(index, level + 1, c) }
+end
+render(index, 0, Flor::Procedure)
 

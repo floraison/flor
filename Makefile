@@ -68,6 +68,8 @@ mk:
 
 doc:
 	$(RUBY) -Imak -r 'doc' -e "make_procedures_doc()"
+doct:
+	@$(RUBY) mak/ptree.rb
 
 shell:
 	$(RUBY) -Ilib -r 'flor/tools/shell' -e 'Flor::Tools::Shell.new'
