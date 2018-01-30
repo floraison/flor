@@ -62,74 +62,74 @@
 
 ## core and unit tree
 
-* Flor::Procedure
-  * Flor::Macro
-    * Flor::Pro::DoReturn [do-return](do-return.md)
-    * Flor::Pro::On [on](on.md)
-  * Flor::Pro::Apply [apply](apply.md)
-  * Flor::Pro::Arith [+](+.md), [-](-.md), [*](*.md), [/](/.md), [%](%.md)
-  * Flor::Pro::Atom [_num](_num.md), [_boo](_boo.md), [_sqs](_sqs.md), [_dqs](_dqs.md), [_rxs](_rxs.md), [_nul](_nul.md), [_func](_func.md)
-  * Flor::Pro::Att [_att](_att.md)
-  * Flor::Pro::Break [break](break.md), [continue](continue.md)
-  * Flor::Pro::Cancel [cancel](cancel.md), [kill](kill.md)
-  * Flor::Pro::Case [case](case.md)
-    * Flor::Pro::Match [match](match.md)
-  * Flor::Pro::Cmap [cmap](cmap.md)
-  * Flor::Pro::Cmp [=](=.md), [==](==.md), [<](<.md), [>](>.md)
-  * Flor::Pro::Coll
-    * Flor::Pro::Arr [_arr](_arr.md)
-    * Flor::Pro::Obj [_obj](_obj.md)
-  * Flor::Pro::Concurrence [concurrence](concurrence.md)
-  * Flor::Pro::Cond [cond](cond.md)
-  * Flor::Pro::Cursor [cursor](cursor.md)
-    * Flor::Pro::Loop [loop](loop.md)
-  * Flor::Pro::Define [def](def.md), [fun](fun.md), [define](define.md)
-  * Flor::Pro::Dump [_dump](_dump.md)
-  * Flor::Pro::Echo [echo](echo.md)
-  * Flor::Pro::Empty [empty?](empty?.md)
-  * Flor::Pro::Err [_err](_err.md)
-  * Flor::Pro::Fail [fail](fail.md), [error](error.md)
-  * Flor::Pro::Graft [graft](graft.md), [import](import.md)
-  * Flor::Pro::If [if](if.md), [unless](unless.md), [ife](ife.md), [unlesse](unlesse.md)
-  * Flor::Pro::Includes [includes?](includes?.md)
-  * Flor::Pro::Iterator
-    * Flor::Pro::All [all?](all?.md)
-    * Flor::Pro::Filter [filter](filter.md), [filter-out](filter-out.md)
-    * Flor::Pro::Find [find](find.md)
-      * Flor::Pro::Any [any?](any?.md)
-    * Flor::Pro::ForEach [for-each](for-each.md)
-    * Flor::Pro::Map [map](map.md)
-    * Flor::Pro::Reduce [reduce](reduce.md)
-  * Flor::Pro::Keys [keys](keys.md), [values](values.md)
-  * Flor::Pro::Length [length](length.md), [size](size.md)
-  * Flor::Pro::Logo [and](and.md), [or](or.md)
-  * Flor::Pro::Matchr [matchr](matchr.md), [match?](match?.md)
-  * Flor::Pro::Move [move](move.md)
-  * Flor::Pro::NoEval [noeval](noeval.md)
-  * Flor::Pro::NoRet [noret](noret.md)
-  * Flor::Pro::Not [not](not.md)
-  * Flor::Pro::PatContainer
-    * Flor::Pro::PatArr [_pat_arr](_pat_arr.md)
-    * Flor::Pro::PatGuard [_pat_guard](_pat_guard.md)
-    * Flor::Pro::PatObj [_pat_obj](_pat_obj.md)
-    * Flor::Pro::PatOr [_pat_or](_pat_or.md)
-    * Flor::Pro::PatRegex [_pat_regex](_pat_regex.md)
-  * Flor::Pro::Push [push](push.md), [pushr](pushr.md)
-  * Flor::Pro::Rand [rand](rand.md)
-  * Flor::Pro::Range [range](range.md)
-  * Flor::Pro::Reverse [reverse](reverse.md)
-  * Flor::Pro::Schedule [schedule](schedule.md)
-  * Flor::Pro::Sequence [sequence](sequence.md), [_apply](_apply.md), [begin](begin.md)
-  * Flor::Pro::Set [set](set.md), [setr](setr.md)
-  * Flor::Pro::Signal [signal](signal.md)
-  * Flor::Pro::Skip [_skip](_skip.md)
-  * Flor::Pro::Sleep [sleep](sleep.md)
-  * Flor::Pro::Stall [stall](stall.md)
-  * Flor::Pro::Task [task](task.md)
-  * Flor::Pro::ToArray [to-array](to-array.md), [to-object](to-object.md)
-  * Flor::Pro::Trace [trace](trace.md)
-  * Flor::Pro::Trap [trap](trap.md)
-  * Flor::Pro::Twig [twig](twig.md)
-  * Flor::Pro::Until [until](until.md), [while](while.md)
-  * Flor::Pro::Val [_val](_val.md)
+* [Flor::Procedure](https://github.com/floraison/flor/blob/master/)
+  * [Flor::Macro](https://github.com/floraison/flor/blob/master/)
+    * [Flor::Pro::DoReturn](https://github.com/floraison/flor/blob/master/lib/flor/pcore/do_return.rb) [do-return](doc/procedures/do_return.md)
+    * [Flor::Pro::On](https://github.com/floraison/flor/blob/master/lib/flor/punit/on.rb) [on](doc/procedures/on.md)
+  * [Flor::Pro::Apply](https://github.com/floraison/flor/blob/master/lib/flor/pcore/apply.rb) [apply](doc/procedures/apply.md)
+  * [Flor::Pro::Arith](https://github.com/floraison/flor/blob/master/lib/flor/pcore/arith.rb) +, -, *, /, %
+  * [Flor::Pro::Atom](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_atom.rb) _num, _boo, _sqs, _dqs, _rxs, _nul, _func
+  * [Flor::Pro::Att](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_att.rb) _att
+  * [Flor::Pro::Break](https://github.com/floraison/flor/blob/master/lib/flor/pcore/break.rb) [break, continue](doc/procedures/break.md)
+  * [Flor::Pro::Cancel](https://github.com/floraison/flor/blob/master/lib/flor/punit/cancel.rb) [cancel, kill](doc/procedures/cancel.md)
+  * [Flor::Pro::Case](https://github.com/floraison/flor/blob/master/lib/flor/pcore/case.rb) [case](doc/procedures/case.md)
+    * [Flor::Pro::Match](https://github.com/floraison/flor/blob/master/lib/flor/pcore/match.rb) [match](doc/procedures/matchr.md)
+  * [Flor::Pro::Cmap](https://github.com/floraison/flor/blob/master/lib/flor/punit/cmap.rb) cmap
+  * [Flor::Pro::Cmp](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cmp.rb) =, ==, <, >
+  * [Flor::Pro::Coll](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_coll.rb)
+    * [Flor::Pro::Arr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_arr.rb) _arr
+    * [Flor::Pro::Obj](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_obj.rb) _obj
+  * [Flor::Pro::Concurrence](https://github.com/floraison/flor/blob/master/lib/flor/punit/concurrence.rb) [concurrence](doc/procedures/concurrence.md)
+  * [Flor::Pro::Cond](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cond.rb) [cond](doc/procedures/cond.md)
+  * [Flor::Pro::Cursor](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cursor.rb) [cursor](doc/procedures/cursor.md)
+    * [Flor::Pro::Loop](https://github.com/floraison/flor/blob/master/lib/flor/pcore/loop.rb) [loop](doc/procedures/loop.md)
+  * [Flor::Pro::Define](https://github.com/floraison/flor/blob/master/lib/flor/pcore/define.rb) [def, fun, define](doc/procedures/define.md)
+  * [Flor::Pro::Dump](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_dump.rb) _dump
+  * [Flor::Pro::Echo](https://github.com/floraison/flor/blob/master/lib/flor/pcore/echo.rb) echo
+  * [Flor::Pro::Empty](https://github.com/floraison/flor/blob/master/lib/flor/pcore/empty.rb) empty?
+  * [Flor::Pro::Err](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_err.rb) _err
+  * [Flor::Pro::Fail](https://github.com/floraison/flor/blob/master/lib/flor/pcore/fail.rb) [fail, error](doc/procedures/fail.md)
+  * [Flor::Pro::Graft](https://github.com/floraison/flor/blob/master/lib/flor/punit/graft.rb) [graft, import](doc/procedures/graft.md)
+  * [Flor::Pro::If](https://github.com/floraison/flor/blob/master/lib/flor/pcore/if.rb) [if, unless, ife, unlesse](doc/procedures/if.md)
+  * [Flor::Pro::Includes](https://github.com/floraison/flor/blob/master/lib/flor/pcore/includes.rb) includes?
+  * [Flor::Pro::Iterator](https://github.com/floraison/flor/blob/master/lib/flor/pcore/iterator.rb)
+    * [Flor::Pro::All](https://github.com/floraison/flor/blob/master/lib/flor/pcore/all.rb) all?
+    * [Flor::Pro::Filter](https://github.com/floraison/flor/blob/master/lib/flor/pcore/filter.rb) [filter, filter-out](doc/procedures/filter.md)
+    * [Flor::Pro::Find](https://github.com/floraison/flor/blob/master/lib/flor/pcore/find.rb) [find](doc/procedures/find.md)
+      * [Flor::Pro::Any](https://github.com/floraison/flor/blob/master/lib/flor/pcore/any.rb) any?
+    * [Flor::Pro::ForEach](https://github.com/floraison/flor/blob/master/lib/flor/pcore/for_each.rb) [for-each](doc/procedures/for_each.md)
+    * [Flor::Pro::Map](https://github.com/floraison/flor/blob/master/lib/flor/pcore/map.rb) [map](doc/procedures/map.md)
+    * [Flor::Pro::Reduce](https://github.com/floraison/flor/blob/master/lib/flor/pcore/reduce.rb) [reduce](doc/procedures/reduce.md)
+  * [Flor::Pro::Keys](https://github.com/floraison/flor/blob/master/lib/flor/pcore/keys.rb) [keys, values](doc/procedures/keys.md)
+  * [Flor::Pro::Length](https://github.com/floraison/flor/blob/master/lib/flor/pcore/length.rb) [length, size](doc/procedures/length.md)
+  * [Flor::Pro::Logo](https://github.com/floraison/flor/blob/master/lib/flor/pcore/logo.rb) [and, or](doc/procedures/logo.md)
+  * [Flor::Pro::Matchr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/matchr.rb) [matchr, match?](doc/procedures/matchr.md)
+  * [Flor::Pro::Move](https://github.com/floraison/flor/blob/master/lib/flor/pcore/move.rb) [move](doc/procedures/move.md)
+  * [Flor::Pro::NoEval](https://github.com/floraison/flor/blob/master/lib/flor/pcore/noeval.rb) [noeval](doc/procedures/noeval.md)
+  * [Flor::Pro::NoRet](https://github.com/floraison/flor/blob/master/lib/flor/pcore/noret.rb) [noret](doc/procedures/noret.md)
+  * [Flor::Pro::Not](https://github.com/floraison/flor/blob/master/lib/flor/pcore/not.rb) [not](doc/procedures/not.md)
+  * [Flor::Pro::PatContainer](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_.rb)
+    * [Flor::Pro::PatArr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_arr.rb) _pat_arr
+    * [Flor::Pro::PatGuard](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_guard.rb) _pat_guard
+    * [Flor::Pro::PatObj](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_obj.rb) _pat_obj
+    * [Flor::Pro::PatOr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_or.rb) _pat_or
+    * [Flor::Pro::PatRegex](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_regex.rb) _pat_regex
+  * [Flor::Pro::Push](https://github.com/floraison/flor/blob/master/lib/flor/pcore/push.rb) [push, pushr](doc/procedures/push.md)
+  * [Flor::Pro::Rand](https://github.com/floraison/flor/blob/master/lib/flor/pcore/rand.rb) [rand](doc/procedures/rand.md)
+  * [Flor::Pro::Range](https://github.com/floraison/flor/blob/master/lib/flor/pcore/range.rb) [range](doc/procedures/range.md)
+  * [Flor::Pro::Reverse](https://github.com/floraison/flor/blob/master/lib/flor/pcore/reverse.rb) [reverse](doc/procedures/reverse.md)
+  * [Flor::Pro::Schedule](https://github.com/floraison/flor/blob/master/lib/flor/punit/schedule.rb) [schedule](doc/procedures/schedule.md)
+  * [Flor::Pro::Sequence](https://github.com/floraison/flor/blob/master/lib/flor/pcore/sequence.rb) [sequence, _apply, begin](doc/procedures/sequence.md)
+  * [Flor::Pro::Set](https://github.com/floraison/flor/blob/master/lib/flor/pcore/set.rb) [set, setr](doc/procedures/set.md)
+  * [Flor::Pro::Signal](https://github.com/floraison/flor/blob/master/lib/flor/punit/signal.rb) signal
+  * [Flor::Pro::Skip](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_skip.rb) _skip
+  * [Flor::Pro::Sleep](https://github.com/floraison/flor/blob/master/lib/flor/punit/sleep.rb) [sleep](doc/procedures/sleep.md)
+  * [Flor::Pro::Stall](https://github.com/floraison/flor/blob/master/lib/flor/pcore/stall.rb) [stall](doc/procedures/stall.md)
+  * [Flor::Pro::Task](https://github.com/floraison/flor/blob/master/lib/flor/punit/task.rb) task
+  * [Flor::Pro::ToArray](https://github.com/floraison/flor/blob/master/lib/flor/pcore/to_array.rb) [to-array, to-object](doc/procedures/to_array.md)
+  * [Flor::Pro::Trace](https://github.com/floraison/flor/blob/master/lib/flor/punit/trace.rb) trace
+  * [Flor::Pro::Trap](https://github.com/floraison/flor/blob/master/lib/flor/punit/trap.rb) trap
+  * [Flor::Pro::Twig](https://github.com/floraison/flor/blob/master/lib/flor/pcore/twig.rb) twig
+  * [Flor::Pro::Until](https://github.com/floraison/flor/blob/master/lib/flor/pcore/until.rb) [until, while](doc/procedures/until.md)
+  * [Flor::Pro::Val](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_val.rb) _val
 
