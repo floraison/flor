@@ -86,17 +86,17 @@
   * [Flor::Pro::Define](https://github.com/floraison/flor/blob/master/lib/flor/pcore/define.rb) : [def, fun, define](define.md)
   * [Flor::Pro::Dump](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_dump.rb) : _dump
   * [Flor::Pro::Echo](https://github.com/floraison/flor/blob/master/lib/flor/pcore/echo.rb) : echo
-  * [Flor::Pro::Empty](https://github.com/floraison/flor/blob/master/lib/flor/pcore/empty.rb) : empty?
+  * [Flor::Pro::Empty](https://github.com/floraison/flor/blob/master/lib/flor/pcore/empty.rb) : [empty?](empty.md)
   * [Flor::Pro::Err](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_err.rb) : _err
   * [Flor::Pro::Fail](https://github.com/floraison/flor/blob/master/lib/flor/pcore/fail.rb) : [fail, error](fail.md)
   * [Flor::Pro::Graft](https://github.com/floraison/flor/blob/master/lib/flor/punit/graft.rb) : [graft, import](graft.md)
   * [Flor::Pro::If](https://github.com/floraison/flor/blob/master/lib/flor/pcore/if.rb) : [if, unless, ife, unlesse](if.md)
   * [Flor::Pro::Includes](https://github.com/floraison/flor/blob/master/lib/flor/pcore/includes.rb) : includes?
   * [Flor::Pro::Iterator](https://github.com/floraison/flor/blob/master/lib/flor/pcore/iterator.rb)
-    * [Flor::Pro::All](https://github.com/floraison/flor/blob/master/lib/flor/pcore/all.rb) : all?
+    * [Flor::Pro::All](https://github.com/floraison/flor/blob/master/lib/flor/pcore/all.rb) : [all?](all.md)
     * [Flor::Pro::Filter](https://github.com/floraison/flor/blob/master/lib/flor/pcore/filter.rb) : [filter, filter-out](filter.md)
     * [Flor::Pro::Find](https://github.com/floraison/flor/blob/master/lib/flor/pcore/find.rb) : [find](find.md)
-      * [Flor::Pro::Any](https://github.com/floraison/flor/blob/master/lib/flor/pcore/any.rb) : any?
+      * [Flor::Pro::Any](https://github.com/floraison/flor/blob/master/lib/flor/pcore/any.rb) : [any?](any.md)
     * [Flor::Pro::ForEach](https://github.com/floraison/flor/blob/master/lib/flor/pcore/for_each.rb) : [for-each](for_each.md)
     * [Flor::Pro::Map](https://github.com/floraison/flor/blob/master/lib/flor/pcore/map.rb) : [map](map.md)
     * [Flor::Pro::Reduce](https://github.com/floraison/flor/blob/master/lib/flor/pcore/reduce.rb) : [reduce](reduce.md)

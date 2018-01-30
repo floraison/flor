@@ -36,7 +36,8 @@ Dir['doc/procedures/*.md']
     next unless m
     names = m[1].split(/, */)
     INDEX.values.each { |h|
-      next unless ((h[:names] || []) & names).any?
+      hnames = (h[:names] || []).collect { |n| n.gsub(/\?/, '') }
+      next unless (hnames & names).any?
       h[:dpath] = path } }
 
 
