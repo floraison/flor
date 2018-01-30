@@ -17,33 +17,60 @@ describe 'Flor procedures' do
 
   describe 'all?' do
 
-    it 'returns true if all the elements match' do
+    context 'with function' do
 
-      r = @executor.launch(
-        %q{
-          all? [ 1, 2, 3 ]
-            def elt \ elt > 0
-        })
+      it 'returns true if all the array elements match' do
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(true)
-    end
+        r = @executor.launch(
+          %q{
+            all? [ 1, 2, 3 ]
+              def elt \ elt > 0
+          })
 
-    it 'returns false if at least one element does not match' do
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
+      end
 
-      r = @executor.launch(
-        %q{
-          all? [ 1, 2, 3 ]
-            def elt \ elt == 1
-        })
+      it 'returns false if at least one array element does not match' do
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(false)
+        r = @executor.launch(
+          %q{
+            all? [ 1, 2, 3 ]
+              def elt \ elt == 1
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(false)
+      end
+
+      it 'returns true if all the object entries match' do
+
+        r = @executor.launch(
+          %q{
+            all? { a: 'A', b: 'B' }
+              def key, val \ val == 'A' or val == 'B'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
+      end
+
+      it 'returns false if at least one object entry does not match' do
+
+        r = @executor.launch(
+          %q{
+            all? { a: 'A', b: 'B', c: 'C' }
+              def key, val \ val == 'A'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(false)
+      end
     end
 
     context 'without function' do
 
-      it 'returns true if all the elements are trueish' do
+      it 'returns true if all the array elements are trueish' do
 
         r = @executor.launch(
           %q{
@@ -54,7 +81,7 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq(true)
       end
 
-      it 'returns false if at least an element is not trueish' do
+      it 'returns false if at least an array element is not trueish' do
 
         r = @executor.launch(
           %q{
@@ -75,68 +102,38 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(true)
       end
-    end
 
-    context 'with objects' do
-
-      it 'returns true if all the entries match' do
+      it 'returns true if all the object values are trueish' do
 
         r = @executor.launch(
           %q{
-            all? { a: 'A', b: 'B' }
-              def key, val \ val == 'A' or val == 'B'
+            all? { a: 'A', b: 'B', c: 'C' }
           })
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(true)
       end
 
-      it 'returns false if at least one entry does not match' do
+      it 'returns false if at least one object value is not trueish' do
 
         r = @executor.launch(
           %q{
-            all? { a: 'A', b: 'B', c: 'C' }
-              def key, val \ val == 'A'
+            all? { a: 'A', f: false, c: 'C' }
           })
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(false)
       end
 
-      context 'without function' do
+      it 'returns true if the object is empty' do
 
-        it 'returns true if all the values are trueish' do
+        r = @executor.launch(
+          %q{
+            all? {}
+          })
 
-          r = @executor.launch(
-            %q{
-              all? { a: 'A', b: 'B', c: 'C' }
-            })
-
-          expect(r['point']).to eq('terminated')
-          expect(r['payload']['ret']).to eq(true)
-        end
-
-        it 'returns false if at least one value is not trueish' do
-
-          r = @executor.launch(
-            %q{
-              all? { a: 'A', f: false, c: 'C' }
-            })
-
-          expect(r['point']).to eq('terminated')
-          expect(r['payload']['ret']).to eq(false)
-        end
-
-        it 'returns true if the object is empty' do
-
-          r = @executor.launch(
-            %q{
-              all? {}
-            })
-
-          expect(r['point']).to eq('terminated')
-          expect(r['payload']['ret']).to eq(true)
-        end
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
       end
     end
   end
