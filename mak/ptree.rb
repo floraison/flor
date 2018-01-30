@@ -32,12 +32,13 @@ Dir['lib/flor/{pcore,punit}/*.rb']
 Dir['doc/procedures/*.md']
   .each { |path|
     s = File.read(path)
-    m = s.match(/^# ([- ,a-z0-9]+)/)
+    m = s.match(/^# ([- ,_a-z0-9]+)/)
     next unless m
     names = m[1].split(/, */)
     INDEX.values.each { |h|
       next unless ((h[:names] || []) & names).any?
       h[:dpath] = path } }
+
 
 def render(level, klass)
 
@@ -47,9 +48,10 @@ def render(level, klass)
 
   print "#{'  ' * level}* [#{klass}](#{GURI}#{d[:spath]})"
   if ns && dp
-    print " [#{ns.join(', ')}](#{dp})"
+    dp = dp.split('/').last
+    print " : [#{ns.join(', ')}](#{dp})"
   elsif ns
-    print " #{ns.join(', ')}"
+    print " : #{ns.join(', ')}"
   end
   puts
 
