@@ -135,6 +135,30 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(true)
       end
+
+      it 'considers the incoming array' do
+
+        r = @executor.launch(
+          %q{
+            []
+            all? _
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
+      end
+
+      it 'considers the incoming object' do
+
+        r = @executor.launch(
+          %q{
+            {}
+            all? _
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
+      end
     end
   end
 end
