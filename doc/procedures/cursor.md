@@ -46,7 +46,7 @@ cursor
 
 ## see also
 
-[Break](break.md), [continue](continue.md), [loop](loop.md).
+[Break](break.md), [continue](break.md), [loop](loop.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/cursor.rb)

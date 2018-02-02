@@ -36,7 +36,7 @@ filter-out [ 1, 2, 3, 4, 5 ]
 
 ## see also
 
-[map](map.md), [select](select.md), and [reject](reject.md).
+[map](map.md), [select](select.md), and [reject](select.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/filter.rb)

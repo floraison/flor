@@ -33,7 +33,7 @@ until
 
 ## see also
 
-[Break](break.md), [continue](continue.md), [cursor](cursor.md), [loop](loop.md).
+[Break](break.md), [continue](break.md), [cursor](cursor.md), [loop](loop.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/until.rb)

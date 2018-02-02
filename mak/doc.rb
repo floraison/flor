@@ -34,6 +34,10 @@ NAMES_AND_LINES = Dir['lib/flor/{pcore,punit}/*.rb']
     names = determine_names(path)
     h[path] = names if names
     h }
+NAMES_AND_FILES = NAMES_AND_LINES
+  .inject({}) { |h, (k, v)|
+    v[0].each { |n| h[n] = File.basename(k, '.rb') + '.md' }
+    h }
 NAMES = NAMES_AND_LINES
   .values
   .collect(&:first)
@@ -56,8 +60,8 @@ def make_proc_doc(path, names_and_lines)
       lines[i] = lines[i]
         .gsub(/\w+\??/) { |w|
           dw = w.downcase
-          fw = dw; fw = dw[0..-2] if dw[-1] == '?'
-          ALSO_NAMES.include?(dw) ? "[#{w}](#{fw}.md)" : w }
+          fw = NAMES_AND_FILES[dw]
+          ALSO_NAMES.include?(dw) ? "[#{w}](#{fw})" : w }
     end
     #pp lines
   end

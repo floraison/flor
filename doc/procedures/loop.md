@@ -16,7 +16,7 @@ Accepts `break` and `continue` like `cursor` does.
 
 ## see also
 
-[Cursor](cursor.md), [break](break.md), [continue](continue.md).
+[Cursor](cursor.md), [break](break.md), [continue](break.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/loop.rb)
