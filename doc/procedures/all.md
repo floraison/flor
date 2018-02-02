@@ -23,6 +23,17 @@ all? { a: 'A', b: 'B' }
     # yields true
 ```
 
+### without a function
+
+```
+all? []                            # yields true
+all? [ 1 2 3 ]                     # yields true
+all? [ 1 false 3 ]                 # yields false
+all? {}                            # yields true
+all? { a: 'A', b: 'B', c: 'C' }    # yields true
+all? { a: 'A', f: false, c: 'C' }  # yields false
+```
+
 ## see also
 
 [Any?](any.md)
