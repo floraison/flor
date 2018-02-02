@@ -103,11 +103,12 @@ class Flor::Pro::Iterator < Flor::Procedure
 
     idx = @node['idx']
     elt = @node['col'][idx]
+    len = @node['col'].length
 
     if @node['ocol'].is_a?(Array)
-      { 'elt' => elt, 'idx' => idx }
+      { 'elt' => elt, 'idx' => idx, 'len' => len }
     else
-      { 'key' => elt[0], 'val' => elt[1], 'idx' => idx }
+      { 'key' => elt[0], 'val' => elt[1], 'idx' => idx, 'len' => len }
     end
   end
 

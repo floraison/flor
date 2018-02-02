@@ -19,12 +19,12 @@ class Flor::Pro::ForEach < Flor::Pro::Iterator
   # the field `ret` will yield `[ 0, 1, 2, 3, 4, 5, 6, 7 ]`.
   #
   # ```
-  # set l []
+  # set r []
   # for-each { a: 'A', b: 'B', c: 'C' }
-  #   def k v i
-  #     pushr l (+ k v i)
+  #   def k v i l  # key, val, idx, len
+  #     pushr r (+ k v (+ i 1) '/' l)
   # ```
-  # the var `l` will yield `[ 'aA0', 'bB1', 'cC2' ]` after the `for-each`
+  # the var `r` will yield `[ 'aA1/3', 'bB2/3', 'cC3/3' ]` after the `for-each`
   # the field `ret` will yield `{ 'a': 'A', 'b': 'B', 'c': 'C' }`.
   #
   # ## see also

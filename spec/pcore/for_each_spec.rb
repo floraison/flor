@@ -36,16 +36,19 @@ describe 'Flor procedures' do
 
       r = @executor.launch(
         %q{
-          set l []
+          set r []
           for-each { a: 'A', b: 'B', c: 'C' }
-            def k v i
-              pushr l (+ k v i)
+            def k v i l
+              #
+              # key, val, idx, len
+              #
+              pushr r (+ k v (+ i 1) '/' l)
         })
 
       expect(r['point']
         ).to eq('terminated')
       expect(r['vars']
-        ).to eq({ 'l' => %w[ aA0 bB1 cC2 ] })
+        ).to eq({ 'r' => %w[ aA1/3 bB2/3 cC3/3 ] })
       expect(r['payload']['ret']
         ).to eq({ 'a' => 'A', 'b' => 'B', 'c' => 'C' })
     end
