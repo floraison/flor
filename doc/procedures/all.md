@@ -25,10 +25,18 @@ all? { a: 'A', b: 'B' }
 
 ### without a function
 
+For an array, yields true if all the elements are "trueish" (not nil,
+not false).
+
 ```
 all? []                            # yields true
 all? [ 1 2 3 ]                     # yields true
 all? [ 1 false 3 ]                 # yields false
+```
+
+For an object, yields true if all the values are trueish.
+
+```
 all? {}                            # yields true
 all? { a: 'A', b: 'B', c: 'C' }    # yields true
 all? { a: 'A', f: false, c: 'C' }  # yields false
