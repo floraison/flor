@@ -20,6 +20,10 @@ class Flor::Pro::PatOr < Flor::Pro::PatContainer
       b = payload.delete('_pat_binding')
       return wrap_match_reply(b) if b
 
+    elsif ct == '_' && val != '_'
+
+      return wrap_no_match_reply
+
     elsif payload['ret'] == val
 
       return wrap_match_reply({})

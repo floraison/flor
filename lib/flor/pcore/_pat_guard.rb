@@ -29,6 +29,9 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
     if ct == nil && @node['key'] == nil && payload['ret'].is_a?(String)
 
       k = payload['ret']
+
+      return wrap_no_match_reply if k == '_'
+
       m = k.match(Flor::SPLAT_REGEX)
       k = m ? k[0] : k
 

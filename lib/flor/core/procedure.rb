@@ -237,7 +237,7 @@ class Flor::Procedure < Flor::Node
 
     unkeyed = unkeyed
       .collect { |c| c[1].first }
-      .reject { |c| c[0] == '_' && c[1] == [] }
+      #.reject { |c| c[0] == '_' && c[1] == [] }
 
     cn = keyed + unkeyed + non_att_children
 

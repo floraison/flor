@@ -43,20 +43,18 @@ class Flor::Pro::Empty < Flor::Procedure
     unatt_unkeyed_children
   end
 
-  def wrap_reply(h={})
+  def receive_last
 
-    h['ret'] =
+    ret =
       case r = payload['ret']
-      when Array, Hash, String
-        r.empty?
-      when nil
-        true
+      when Array, Hash, String then r.empty?
+      when nil then true
       else
         fail Flor::FlorError.new(
           'Argument is not an array, an object, a string or null', self)
       end
 
-    super(h)
+    wrap_reply('ret' => ret)
   end
 end
 
