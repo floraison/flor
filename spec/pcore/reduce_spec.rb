@@ -22,12 +22,12 @@ describe 'Flor procedures' do
       r = @executor.launch(
         %q{
           reduce [ '0', 1, 'b', 3 ]
-            def r x
-              r + x
+            def r x i l
+              + r x '.' (+ i 1) '/' l ','
         })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq('01b3')
+      expect(r['payload']['ret']).to eq('01.1/3,b.2/3,3.3/3,')
     end
 
     it 'reduces with a func and a start value' do

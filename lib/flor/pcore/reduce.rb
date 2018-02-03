@@ -27,6 +27,17 @@ class Flor::Pro::Reduce < Flor::Pro::Iterator
   # # --> 20
   # ```
   #
+  # ## iterating and functions
+  #
+  # Iterating functions accept 0 to 3 arguments when iterating over an
+  # array and 0 to 4 arguments when iterating over an object.
+  #
+  # Those arguments are `[ result, value, index, length ]` for arrays.
+  # They are `[ result, key, value, index, length ]` for objects.
+  #
+  # The corresponding `res`, `key`, `val`, `idx` and `len` variables are also
+  # set in the closure for the function call.
+  #
   # ## see also
   #
   # Inject.
@@ -68,13 +79,17 @@ class Flor::Pro::Reduce < Flor::Pro::Iterator
 
   def determine_iteration_vars
 
+    res = @node['res']
     idx = @node['idx']
     elt = @node['col'][idx]
+    len = @node['col'].length
 
     if @node['ocol'].is_a?(Array)
-      { 'res' => @node['res'], 'elt' => elt, 'idx' => idx }
+      { 'res' => res, 'elt' => elt,
+        'idx' => idx, 'len' => len }
     else
-      { 'res' => @node['res'], 'key' => elt[0], 'val' => elt[1], 'idx' => idx }
+      { 'res' => res, 'key' => elt[0], 'val' => elt[1],
+        'idx' => idx, 'len' => len }
     end
   end
 
