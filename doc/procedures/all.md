@@ -42,6 +42,17 @@ all? { a: 'A', b: 'B', c: 'C' }    # yields true
 all? { a: 'A', f: false, c: 'C' }  # yields false
 ```
 
+## iterating and functions
+
+Iterating functions accept 0 to 3 arguments when iterating over an
+array and 0 to 4 arguments when iterating over an object.
+
+Those arguments are `[ value, index, length ]` for arrays.
+They are `[ key, value, index, length ]` for objects.
+
+The corresponding `key`, `val`, `idx` and `len` variables are also
+set in the closure for the function call.
+
 ## see also
 
 [Any?](any.md)
