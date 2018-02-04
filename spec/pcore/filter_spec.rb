@@ -40,13 +40,11 @@ describe 'Flor procedures' do
               k == 'a' or v == 'C' or i == 3
         })
 
-      expect(r['point']
-        ).to eq('terminated')
-      expect(r['payload']['ret']
-        ).to eq({ 'a' => 'A', 'c' => 'C', 'd' => 'D' })
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq({ 'a' => 'A', 'c' => 'C', 'd' => 'D' })
     end
 
-    it 'filters the incoming ret by default' do
+    it 'filters the incoming ret (array) by default' do
 
       r = @executor.launch(
         %q{
@@ -57,6 +55,43 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 1, 3, 5 ])
+    end
+
+    it 'filters the incoming ret (object) by default' do
+
+      r = @executor.launch(
+        %q{
+          { a: 'A', b: 'B', c: 'C', d: 'D' }
+          filter
+            def k v i l
+              i = (l - 1) or i = (l - 2)
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq({ 'c' => 'C', 'd' => 'D' })
+    end
+
+    it 'fails if not given a collection' do
+
+      r = @executor.launch(
+        %q{
+          filter 1
+            def k v i l
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('Collection not given to "filter"')
+    end
+
+    it 'fails if not given a function' do
+
+      r = @executor.launch(
+        %q{
+          filter [ 0 ]
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('Function not given to "filter"')
     end
   end
 
