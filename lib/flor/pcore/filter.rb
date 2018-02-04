@@ -6,6 +6,11 @@ class Flor::Pro::Filter < Flor::Pro::Iterator
   #
   # Filters a collection
   #
+  # Expects a function in its arguments and a collection to filter
+  # in its arguments or as the incoming "ret".
+  #
+  # Fails if the collection or the function is missing.
+  #
   # ```
   # filter [ 1, 2, 3, 4, 5 ]
   #   def x
@@ -35,6 +40,19 @@ class Flor::Pro::Filter < Flor::Pro::Iterator
   #     = (x % 2) 0
   #
   # # f.ret --> [ 1, 3, 5 ]
+  # ```
+  #
+  # ## incoming ret
+  #
+  # When not given directly a collection, `filter` takes it from the
+  # incoming "ret"
+  #
+  # ```
+  # { a: 'A', b: 'B', c: 'C', d: 'D' }
+  # filter
+  #   def k v i l # key, value, index, length
+  #     i = (l - 1) or i = (l - 2)
+  # # f.ret --> { 'c' => 'C', 'd' => 'D' }
   # ```
   #
   # ## iterating and functions
