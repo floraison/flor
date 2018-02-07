@@ -51,6 +51,19 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(%w[ a b ])
     end
 
+    it 'returns the keys for the last child' do
+
+      r = @executor.launch(
+        %q{
+          keys
+            { a: 'A', b: 'B' }
+            { c: 'C', d: 'D' }
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(%w[ c d ])
+    end
+
     it 'fails when not array or object' do
 
       r = @executor.launch(
