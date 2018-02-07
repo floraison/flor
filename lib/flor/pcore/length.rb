@@ -22,24 +22,24 @@ class Flor::Pro::Length < Flor::Procedure
 
   def pre_execute
 
+    @node['ret'] = receive_payload_ret
+
     unatt_unkeyed_children
   end
 
-  def receive
+  def receive_payload_ret
 
-    determine_fcid_and_ncid
+    r = payload['ret']
+    r.respond_to?(:length) ? r.length : false
+  end
 
-    if ! from_att? && ((r = payload['ret']).respond_to?(:length))
-      @node['result'] = r.length
-    end
+  def receive_last
 
-    if last_receive?
-      payload['ret'] =
-        @node['result'] ||
-        fail(Flor::FlorError.new("Found no argument that has a length", self))
-    end
+    r =
+      @node['ret'] ||
+      fail(Flor::FlorError.new('Found no argument that has a length', self))
 
-    super
+    wrap_reply('ret' => r)
   end
 end
 
