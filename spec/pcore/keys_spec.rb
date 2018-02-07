@@ -128,6 +128,18 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(%w[ A B ])
     end
 
+    it 'returns the values for the incoming ret (even with att)' do
+
+      r = @executor.launch(
+        %q{
+          { a: 'A', b: 'B' }
+          values tag: 'taggy'
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(%w[ A B ])
+    end
+
     it 'fails when not array or object' do
 
       r = @executor.launch(
