@@ -39,6 +39,18 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(%w[ a b ])
     end
 
+    it 'returns the keys for the incoming ret' do
+
+      r = @executor.launch(
+        %q{
+          { a: 'A', b: 'B' }
+          keys _
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(%w[ a b ])
+    end
+
     it 'fails when not array or object' do
 
       r = @executor.launch(
@@ -85,6 +97,18 @@ describe 'Flor procedures' do
       r = @executor.launch(
         %q{
           values { a: 'A', b: 'B' }
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(%w[ A B ])
+    end
+
+    it 'returns the values for the incoming ret' do
+
+      r = @executor.launch(
+        %q{
+          { a: 'A', b: 'B' }
+          values _
         })
 
       expect(r['point']).to eq('terminated')
