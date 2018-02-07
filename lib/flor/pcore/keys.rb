@@ -31,7 +31,7 @@ class Flor::Pro::Keys < Flor::Procedure
 
   def pre_execute
 
-    @node['ret'] = node_payload_ret
+    @node['ret'] = receive_payload_ret
 
     unatt_unkeyed_children
   end
