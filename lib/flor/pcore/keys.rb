@@ -31,38 +31,30 @@ class Flor::Pro::Keys < Flor::Procedure
 
   def pre_execute
 
+    @node['ret'] = node_payload_ret
+
     unatt_unkeyed_children
   end
 
-  def receive
+  def receive_last
 
-    determine_fcid_and_ncid
+    ret = @node['ret']
 
-    if ! from_att? && ((r = payload['ret']).respond_to?(:length))
+    fail Flor::FlorError.new(
+      "No argument given", self
+    ) if ret.nil?
+    fail Flor::FlorError.new(
+      "Received argument of class #{ret.class}, no #{heap}", self
+    ) unless ret.is_a?(Array) || ret.is_a?(Hash)
 
-      @node['result'] =
-        case r
-        when Hash then heap == 'keys' ? r.keys : r.values
-        when Array then heap == 'keys' ? (0..r.length - 1).to_a : r
-        else r.class
-        end
-    end
+    r =
+      if ret.is_a?(Hash)
+        heap == 'keys' ? ret.keys : ret.values
+      else
+        heap == 'keys' ? (0..ret.length - 1).to_a : ret
+      end
 
-    if last_receive?
-
-      r = @node['result']
-
-      fail Flor::FlorError.new(
-        "No argument given", self
-      ) if r.nil?
-      fail Flor::FlorError.new(
-        "Received argument of class #{r}, no #{heap}", self
-      ) unless r.is_a?(Array)
-
-      payload['ret'] = r
-    end
-
-    super
+    wrap_reply('ret' => r)
   end
 end
 

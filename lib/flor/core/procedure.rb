@@ -386,10 +386,21 @@ class Flor::Procedure < Flor::Node
     execute_child(@ncid)
   end
 
+  # Prepare incoming ret for storage in @node['ret'] or @node['rets']
+  #
+  def receive_payload_ret
+
+    Flor.dup(payload['ret'])
+  end
+
   def receive_non_att
 
+    if @node.has_key?('ret')
+      @node['ret'] = receive_payload_ret
+      @node['mtime'] = Flor.tstamp
+    end
     if @node['rets']
-      @node['rets'] << Flor.dup(payload['ret'])
+      @node['rets'] << receive_payload_ret
       @node['mtime'] = Flor.tstamp
     end
 
