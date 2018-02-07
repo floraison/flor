@@ -22,25 +22,25 @@ class Flor::Pro::Reverse < Flor::Procedure
 
   def pre_execute
 
+    @node['ret'] = receive_payload_ret
+
     unatt_unkeyed_children
   end
 
-  def receive
+  def receive_payload_ret
 
-    determine_fcid_and_ncid
+    r = payload['ret']
+    r.respond_to?(:reverse) ? r.reverse : false
+  end
 
-    if ! from_att? && ((r = payload['ret']).respond_to?(:reverse))
-      @node['result'] = r.reverse
-    end
+  def receive_last
 
-    if last_receive?
-      payload['ret'] =
-        @node['result'] ||
-        fail(
-          Flor::FlorError.new('Found no argument that could be reversed', self))
-    end
+    r =
+      @node['ret'] ||
+      fail(
+        Flor::FlorError.new('Found no argument that could be reversed', self))
 
-    super
+    wrap_reply('ret' => r)
   end
 end
 
