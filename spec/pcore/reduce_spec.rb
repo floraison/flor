@@ -76,19 +76,16 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(10)
     end
 
-    context 'with objects' do
+    it 'reduces objects' do
 
-      it 'reduces' do
+       r = @executor.launch(
+         %q{
+           reduce 4 { a: 1, b: 2, c: 3 }
+             def r k v i \ r + v + i
+         })
 
-         r = @executor.launch(
-           %q{
-             reduce 4 { a: 1, b: 2, c: 3 }
-               def r k v i \ r + v + i
-           })
-
-         expect(r['point']).to eq('terminated')
-         expect(r['payload']['ret']).to eq(13)
-      end
+       expect(r['point']).to eq('terminated')
+       expect(r['payload']['ret']).to eq(13)
     end
   end
 end
