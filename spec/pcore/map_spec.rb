@@ -17,7 +17,7 @@ describe 'Flor procedures' do
 
   describe 'map' do
 
-    it 'maps elements' do
+    it 'maps array elements' do
 
       r = @executor.launch(
         %q{
@@ -154,35 +154,32 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([ 0, 7, 14, 21, 28, 35, 42, 49 ])
     end
 
-    context 'with objects' do
+    it 'maps object with (key, value)' do
 
-      it 'maps object with (key, value)' do
+      r = @executor.launch(
+        %q{
+          map { a: 'A', b: 'B', c: 'C' }
+            def k v \ [ k v ]
+        })
 
-        r = @executor.launch(
-          %q{
-            map { a: 'A', b: 'B', c: 'C' }
-              def k v \ [ k v ]
-          })
+      expect(r['point']
+        ).to eq('terminated')
+      expect(r['payload']['ret']
+        ).to eq([ [ 'a', 'A' ], [ 'b', 'B' ], [ 'c', 'C' ] ])
+    end
 
-        expect(r['point']
-          ).to eq('terminated')
-        expect(r['payload']['ret']
-          ).to eq([ [ 'a', 'A' ], [ 'b', 'B' ], [ 'c', 'C' ] ])
-      end
+    it 'maps object with (key, value, index)' do
 
-      it 'maps object with (key, value, index)' do
+      r = @executor.launch(
+        %q{
+          map { a: 'A', b: 'B', c: 'C' }
+            def k v i \ [ i k v ]
+        })
 
-        r = @executor.launch(
-          %q{
-            map { a: 'A', b: 'B', c: 'C' }
-              def k v i \ [ i k v ]
-          })
-
-        expect(r['point']
-          ).to eq('terminated')
-        expect(r['payload']['ret']
-          ).to eq([ [ 0, 'a', 'A' ], [ 1, 'b', 'B' ], [ 2, 'c', 'C' ] ])
-      end
+      expect(r['point']
+        ).to eq('terminated')
+      expect(r['payload']['ret']
+        ).to eq([ [ 0, 'a', 'A' ], [ 1, 'b', 'B' ], [ 2, 'c', 'C' ] ])
     end
   end
 end
