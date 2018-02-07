@@ -17,7 +17,7 @@ describe 'Flor procedures' do
 
   describe 'find' do
 
-    it 'finds the first matching element' do
+    it 'finds the first matching array element' do
 
       r = @executor.launch(
         %q{
@@ -30,7 +30,20 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(2)
     end
 
-    it 'returns null when it does not find' do
+    it 'finds the first matching object entry' do
+
+      r = @executor.launch(
+        %q{
+          find { a: 'A', b: 'B', c: 'C' }
+            def key, val
+              val == 'B'
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(%w[ b B ])
+    end
+
+    it 'returns null when it does not find in an array' do
 
       r = @executor.launch(
         %q{
@@ -42,32 +55,17 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(nil)
     end
 
-    context 'with objects' do
+    it 'returns null when it does not find in an object' do
 
-      it 'finds the first matching entry' do
+      r = @executor.launch(
+        %q{
+          find { a: 'A', b: 'B', c: 'C' }
+            def key, val
+              val == 'Z'
+        })
 
-        r = @executor.launch(
-          %q{
-            find { a: 'A', b: 'B', c: 'C' }
-              def key, val
-                val == 'B'
-          })
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(%w[ b B ])
-      end
-
-      it 'returns null when it does not find' do
-
-        r = @executor.launch(
-          %q{
-            find { a: 'A', b: 'B', c: 'C' }
-              def key, val \ val == 'Z'
-          })
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(nil)
-      end
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
     end
   end
 end
