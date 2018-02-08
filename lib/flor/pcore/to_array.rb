@@ -26,39 +26,26 @@ class Flor::Pro::ToArray < Flor::Procedure
 
   def pre_execute
 
+    @node['ret'] = receive_payload_ret
+
     unatt_unkeyed_children
   end
 
-  def receive
+  def receive_last
 
-    determine_fcid_and_ncid
-
-    if ( ! from_att?) && (r = payload['ret'])
-      @node['result'] = r
-    end
-
-    if last_receive?
-
-      fail Flor::FlorError.new("#{tree[0]} needs an argument", self) \
-        unless @node.has_key?('result')
-
-      payload['ret'] =
-        tree[0] == 'to-object' ? to_object : to_array
-    end
-
-    super
+    wrap_reply('ret' => (heap == 'to-object') ? to_object : to_array)
   end
 
   protected
 
   def to_array
 
-    Flor.to_coll(@node['result'])
+    Flor.to_coll(@node['ret'])
   end
 
   def to_object
 
-    r = @node['result']
+    r = @node['ret']
 
     fail Flor::FlorError.new('to-object wants an array (or an object)', self) \
       unless r.is_a?(Array) || r.is_a?(Hash)
