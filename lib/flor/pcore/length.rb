@@ -5,12 +5,12 @@ class Flor::Pro::Length < Flor::Procedure
   # the length of the incoming f.ret
   #
   # ```
-  #   length [ 0 1 2 3 ]
-  #     # f.ret ==> 4
+  # length [ 0 1 2 3 ]
+  #   # f.ret ==> 4
   #
-  #   { a: 'A', b: 'B', c: 'C' }
-  #   length _
-  #     # f.ret ==> 3
+  # { a: 'A', b: 'B', c: 'C' }
+  # length _
+  #   # f.ret ==> 3
   # ```
   #
   # It will fail unless "length" receives a (non-attribute) argument

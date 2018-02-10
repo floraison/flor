@@ -1,5 +1,29 @@
 
 class Flor::Pro::Arith < Flor::Procedure
+  #
+  # The base implementation for + - + / %
+  #
+  # ```
+  # (+ 1 2 3) # ==> 6
+  #
+  # +
+  #   1
+  #   2
+  #   3 # ==> 6
+  #
+  # + \ 1; 2; 3 # ==> 6
+  # ```
+  #
+  # ```
+  # 1 - 2 - 3 # ==> -4
+  #
+  # -
+  #   1
+  #   2
+  #   3 # ==> -4
+  # ```
+  #
+  # ...
 
   names %w[ + - * / % ]
 
@@ -18,7 +42,6 @@ class Flor::Pro::Arith < Flor::Procedure
     fail Flor::FlorError.new('modulo % requires at least 2 arguments', self) \
       if sign == :% && count < 2
 
-#p @node['rets']
     payload['ret'] =
       if @node['rets'].compact.empty?
         DEFAULTS[sign]
