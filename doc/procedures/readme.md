@@ -10,7 +10,7 @@
 * [any?](any.md) - Returns `true` if at least one of the member of a collection returns something trueish for the given function. Returns `false` else.
 * [apply](apply.md) - Applies a function.
 * [+, -, *, /, %](arith.md) - The base implementation for + - + / %
-* [break, continue](break.md) - Breaks or continues a "while" or "until".
+* [break, continue](break.md) - Breaks or continues a "while", "until", "loop" or an "cursor".
 * [case](case.md) - The classical case form.
 * [collect](collect.md) - Collect is a simplified version of [map](map.md).
 * [cond](cond.md) - Evaluates all its condition children until one evaluates to true (or it's an else), then executes the corresponding clause child.
