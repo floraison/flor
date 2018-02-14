@@ -27,7 +27,7 @@ describe 'Flor punit' do
 
   describe 'signal' do
 
-    it 'emits a signal' do
+    it 'emits a signal `signal "xxx"`' do
 
       r = @unit.launch(
         %q{
@@ -47,6 +47,37 @@ describe 'Flor punit' do
         execute:0:
         execute:0_0:
         execute:0_0_0:
+        receive:0_0:
+        receive:0:
+        signal:0:close
+        receive::
+        terminated::
+        end::
+      ].join("\n"))
+    end
+
+    it 'emits a signal `signal name: "xxx"`' do
+
+      r = @unit.launch(
+        %q{
+          signal name: 'close'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      wait_until { @unit.journal.find { |m| m['point'] == 'end' } }
+
+      expect(
+        @unit.journal
+          .collect { |m| [ m['point'], m['nid'], m['name'] ].join(':') }
+          .join("\n")
+      ).to eq(%w[
+        execute:0:
+        execute:0_0:
+        execute:0_0_0:
+        receive:0_0:
+        execute:0_0_1:
         receive:0_0:
         receive:0:
         signal:0:close
