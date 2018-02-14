@@ -58,6 +58,7 @@
 * [graft, import](graft.md) - Graft a subtree into the current flo
 * [on](on.md) - Traps a signal by name
 * [schedule](schedule.md) - Schedules a function
+* [signal](signal.md) - Used in conjuction with "on".
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
 
 
@@ -122,7 +123,7 @@
   * [Flor::Pro::Schedule](https://github.com/floraison/flor/blob/master/lib/flor/punit/schedule.rb) : [schedule](schedule.md)
   * [Flor::Pro::Sequence](https://github.com/floraison/flor/blob/master/lib/flor/pcore/sequence.rb) : [sequence, _apply, begin](sequence.md)
   * [Flor::Pro::Set](https://github.com/floraison/flor/blob/master/lib/flor/pcore/set.rb) : [set, setr](set.md)
-  * [Flor::Pro::Signal](https://github.com/floraison/flor/blob/master/lib/flor/punit/signal.rb) : signal
+  * [Flor::Pro::Signal](https://github.com/floraison/flor/blob/master/lib/flor/punit/signal.rb) : [signal](signal.md)
   * [Flor::Pro::Skip](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_skip.rb) : [_skip](_skip.md)
   * [Flor::Pro::Sleep](https://github.com/floraison/flor/blob/master/lib/flor/punit/sleep.rb) : [sleep](sleep.md)
   * [Flor::Pro::Stall](https://github.com/floraison/flor/blob/master/lib/flor/pcore/stall.rb) : [stall](stall.md)
