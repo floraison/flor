@@ -86,6 +86,31 @@ describe 'Flor punit' do
         end::
       ].join("\n"))
     end
+
+    it 'emits signals that have payloads' do
+
+      r = @unit.launch(
+        %q{
+          set f.a 'A'
+          signal 'close'
+            set f.b 'B'
+            [ 0 1 2 ]
+          set f.c 'C'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      wait_until { @unit.journal.find { |m| m['point'] == 'end' } }
+
+      m = @unit.journal.find { |m| m['point'] == 'signal' }
+
+      expect(
+        m['payload']
+      ).to eq({
+        'ret' => [ 0, 1, 2 ], 'a' => 'A', 'b' => 'B'
+      })
+    end
   end
 end
 
