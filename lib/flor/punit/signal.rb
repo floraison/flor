@@ -33,11 +33,27 @@ class Flor::Pro::Signal < Flor::Procedure
   #
   # ## signal payloads
   #
-  # TODO
+  # The payload at the point of signalling is transmitted over to the
+  # receiving "on" or "trap".
+  #
+  # ```
+  # set f.a 'A'
+  # signal 'close'
+  #   set f.b 'B'
+  #   [ 0 1 2 ]
+  # set f.c 'C'
+  # ```
+  # passes `{ 'ret' => [ 0, 1, 2 ], 'a' => 'A', 'b' => 'B' }` as payload
+  # to any intercepting "on" or "trap" (`c` is not passed).
+  #
+  # Externally, you can signal with a specific payload thanks to:
+  # ```ruby
+  # flor_unit.signal('close', exid: execution_id, payload: { 'f0' => 'zero' })
+  # ```
   #
   # ## see also
   #
-  # On.
+  # On and trap.
 
   name 'signal'
 
