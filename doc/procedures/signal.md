@@ -53,7 +53,7 @@ flor_unit.signal('close', exid: execution_id, payload: { 'f0' => 'zero' })
 
 ## see also
 
-[On](on.md) and trap.
+[On](on.md) and [trap](trap.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/signal.rb)

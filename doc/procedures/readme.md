@@ -60,6 +60,7 @@
 * [schedule](schedule.md) - Schedules a function
 * [signal](signal.md) - Used in conjuction with "on".
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
+* [trap](trap.md) - Watches the messages emitted in the execution and reacts when a message matches certain criteria.
 
 
 ## core and unit tree
@@ -130,7 +131,7 @@
   * [Flor::Pro::Task](https://github.com/floraison/flor/blob/master/lib/flor/punit/task.rb) : task
   * [Flor::Pro::ToArray](https://github.com/floraison/flor/blob/master/lib/flor/pcore/to_array.rb) : [to-array, to-object](to_array.md)
   * [Flor::Pro::Trace](https://github.com/floraison/flor/blob/master/lib/flor/punit/trace.rb) : trace
-  * [Flor::Pro::Trap](https://github.com/floraison/flor/blob/master/lib/flor/punit/trap.rb) : trap
+  * [Flor::Pro::Trap](https://github.com/floraison/flor/blob/master/lib/flor/punit/trap.rb) : [trap](trap.md)
   * [Flor::Pro::Twig](https://github.com/floraison/flor/blob/master/lib/flor/pcore/twig.rb) : twig
   * [Flor::Pro::Until](https://github.com/floraison/flor/blob/master/lib/flor/pcore/until.rb) : [until, while](until.md)
   * [Flor::Pro::Val](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_val.rb) : _val

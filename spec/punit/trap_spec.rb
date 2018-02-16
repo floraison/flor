@@ -300,7 +300,7 @@ describe 'Flor punit' do
 
         r = @unit.launch(
           %q{
-            concurrence
+            sequence
               trap tag: 'b', count: 2
                 def msg \ trace "A>$(nid)"
               sequence
@@ -339,7 +339,8 @@ describe 'Flor punit' do
         r = @unit.launch(
           %q{
             trap heap: 'sequence'
-              def msg \ trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
+              def msg
+                trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
             sequence
               noret _
           },
