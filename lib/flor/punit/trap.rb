@@ -51,6 +51,9 @@ class Flor::Pro::Trap < Flor::Procedure
   #
   # TODO
   #
+  # ## the signal: short criterion
+  # ## the tag: short criterion
+  #
   # ## the range: limit
   #
   # TODO
@@ -94,6 +97,12 @@ class Flor::Pro::Trap < Flor::Procedure
 
     points = att_a(nil, nil) unless points || tags
     points = [ 'entered' ] if tags && ! points
+
+    att_a('sig', 'signal', 'signals', [])
+      .each { |sig| (points ||= []) << 'signal'; (names ||= []) << sig }
+
+    points = points.uniq if points
+    names = names.uniq if names
 
     msg =
       if fun

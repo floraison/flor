@@ -72,8 +72,13 @@ module Flor
       msg['trap_id'] = self.id
 
       if vs = msg['vars']
+
         k = vs.keys.find { |k| k != 'arguments' } || 'msg'
         vs[k] = message
+
+        if sig = message['point'] == 'signal' && message['name']
+          vs['sig'] = sig
+        end
       end
 
       if dat['pl'] == 'event'
@@ -91,7 +96,9 @@ module Flor
         'message' => msg,
         'sm' => message['m'],
         #'dbg' => xx
-      }#.tap { |m| pp m }
+      }
+        #.tap { |m| pp m['message'] }
+        #.tap { |m| pp m }
     end
 
     def to_hash

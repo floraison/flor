@@ -702,6 +702,66 @@ describe 'Flor punit' do
       end
     end
 
+    context 'signal:' do
+
+      it "traps the 'signal' point with the given name" do
+
+        r = @unit.launch(
+          %q{
+            sequence
+              trace 'a'
+              trap signal: 'S0'
+                def msg \ trace "S0"
+              trace 'b'
+              signal 'S0'
+              trace 'c'
+              signal 'S1'
+              trace 'd'
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 3 }
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          a b c S0 d
+        ])
+      end
+
+      it 'traps an array of signals' do
+
+        r = @unit.launch(
+          %q{
+            sequence
+              trace 'a'
+              trap signal: [ 'S0' 'S1' ]
+                def msg \ trace sig
+              trace 'b'
+              signal 'S0'
+              trace 'c'
+              signal 'S1'
+              trace 'd'
+              trace 'e'
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 3 }
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          a b c S0 d S1 e
+        ])
+      end
+
+      it 'traps a signal by regex'
+    end
+
     context 'payload:' do
 
       it 'uses the trap payload if "trap" (default)' do

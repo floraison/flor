@@ -11,7 +11,6 @@ class Flor::Pro::On < Flor::Macro
   # into
   # ```
   # trap point: 'signal', name: 'approve'
-  #   set sig 'signal'
   #   def msg
   #     task 'bob' mission: 'gather signatures'
   # ```
@@ -37,11 +36,6 @@ class Flor::Pro::On < Flor::Macro
     th[1] << [ '_att', [ [ 'name', [], l ], tname ], l ]
     th[1] << [ '_att', [ [ 'payload', [], l ], [ '_sqs', 'event', l ] ], l ]
     atts.each { |ac| th[1] << Flor.dup(ac) }
-
-    th[1] << [ 'set', [
-      [ '_att', [ [ 'sig', [], l ] ], l ],
-      tname
-    ], l ]
 
     td = [ 'def', [], l ]
     td[1] << [ '_att', [ [ 'msg', [], l ] ], l ]
