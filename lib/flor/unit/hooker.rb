@@ -132,7 +132,14 @@ module Flor
       end
 
       if ns = o(opts, :name, :n)
-        return false unless ns.include?(message['name'])
+        name = message['name']
+        return false \
+          unless ns.find { |n|
+            case n
+            when String then name == n
+            when Array then name.match(Flor.to_regex(n))
+            else false
+            end }
       end
 
       node = nil

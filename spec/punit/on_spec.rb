@@ -64,24 +64,25 @@ describe 'Flor punit' do
       expect(r['vars']['l']).to eq(%w[ a c approve b blue ])
     end
 
-    it 'traps signals by regex'
-#
-#      r = @unit.launch(
-#        %q{
-#          set l []
-#          push l 'in'
-#          on (/^red-.*/)
-#            push l sig
-#          signal 'red-zero'
-#          signal 'blue-zero'
-#          signal 'red-one'
-#          push l 'out'
-#        },
-#        wait: true)
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['vars']['l']).to eq(%w[ a c approve b blue ])
-#    end
+    it 'traps signals by regex' do
+
+      r = @unit.launch(
+        %q{
+          set l []
+          push l 'in'
+          on (/^red-.*/)
+          #on [ /^red-.*/ ]
+            push l sig
+          signal 'red-zero'
+          signal 'blue-zero'
+          signal 'red-one'
+          push l 'out'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['l']).to eq(%w[ in red-zero out red-one ])
+    end
   end
 end
 

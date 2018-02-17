@@ -183,12 +183,16 @@ class Flor::Procedure < Flor::Node
 
   def att_a(*keys)
 
-    if keys.last == nil
-      keys.pop
-      Flor.to_a(att(*keys))
-    else
-      Array(att(*keys))
-    end
+    a =
+      if keys.last == nil
+        keys.pop
+        Flor.to_a(att(*keys))
+      else
+        Array(att(*keys))
+      end
+
+    return [ a ] if Flor.is_regex_tree?(a)
+    a
   end
 
   def tags_to_nids(tags)

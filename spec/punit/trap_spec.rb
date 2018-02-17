@@ -759,7 +759,35 @@ describe 'Flor punit' do
         ])
       end
 
-      it 'traps a signal by regex'
+      it 'traps a signal by regex' do
+
+        r = @unit.launch(
+          %q{
+            sequence
+              trace 'a'
+              #trap signal: [ /^S\d+$/, 'Sx' ]
+              trap signal: /^S\d+$/
+                def msg \ trace sig
+              trace 'b'
+              signal 'S0'
+              trace 'c'
+              signal 'S1'
+              trace 'd'
+              signal 'S2x'
+              trace 'e'
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 3 }
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          a b c S0 d S1 e
+        ])
+      end
     end
 
     context 'payload:' do
