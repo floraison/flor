@@ -511,6 +511,8 @@ module Flor
 
     def commaify(o)
 
+      return nil unless o
+
       s = o.is_a?(Array) ? o.join(',') : o
       s.strip.split(/\s*,\s*/).join(',')
     end
