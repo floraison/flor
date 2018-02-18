@@ -566,7 +566,7 @@ describe 'Flor punit' do
 
     context 'tag:' do
 
-      it 'traps tag entered' do
+      it 'traps tag entered by default' do
 
         r = @unit.launch(
           %q{
@@ -587,6 +587,30 @@ describe 'Flor punit' do
           @unit.traces.collect(&:text).join(' ')
         ).to eq(
           'a c entered'
+        )
+      end
+
+      it 'traps tag left' do
+
+        r = @unit.launch(
+          %q{
+            sequence
+              trace 'a'
+              trap tag: 'x' point: 'left'
+                def msg \ trace msg.point
+              sequence tag: 'x'
+                trace 'c'
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 2 }
+
+        expect(
+          @unit.traces.collect(&:text).join(' ')
+        ).to eq(
+          'a c left'
         )
       end
     end
