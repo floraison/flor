@@ -417,6 +417,11 @@ module Flor
       id =
         synchronize do
 
+    #points = att_a('point', 'points', nil)  ### TODO
+    #tags = att_a('tag', 'tags', nil)        #
+    #heats = att_a('heat', 'heats', nil)     #
+    #heaps = att_a('heap', 'heaps', nil)     #
+    #names = att_a('name', 'names', nil)     #
           @db[:flor_traps]
             .insert(
               domain: dom,
@@ -425,7 +430,7 @@ module Flor
               onid: tra['onid'] || tra['nid'],
               bnid: tra['bnid'],
               trange: tra['range'],
-              tpoints: tra['points'],
+              tpoints: commaify(tra['points']),
               ttags: tra['tags'],
               theats: tra['heats'],
               theaps: tra['heaps'],
@@ -503,6 +508,12 @@ module Flor
     end
 
     protected
+
+    def commaify(o)
+
+      s = o.is_a?(Array) ? o.join(',') : o
+      s.strip.split(/\s*,\s*/).join(',')
+    end
 
     def consume_and_archive(messages)
 

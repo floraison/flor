@@ -724,6 +724,54 @@ describe 'Flor punit' do
           s0:[1,2,3]
         ])
       end
+
+      it 'traps multiple points: (array)' do
+
+        r = @unit.launch(
+          %q{
+            trap point: [ 'left', 'entered' ]
+              def msg \ trace "$(msg.nid)-$(msg.point)"
+            sequence tag: 'x'
+              0
+            sequence tag: 'y'
+              1
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 0 }
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          0_1-entered 0_1-left 0_2-entered 0_2-left
+        ])
+      end
+
+      it 'traps multiple points: (string)' do
+
+        r = @unit.launch(
+          %q{
+            trap point: 'left, entered'
+              def msg \ trace "$(msg.nid)-$(msg.point)"
+            sequence tag: 'x'
+              0
+            sequence tag: 'y'
+              1
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 0 }
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          0_1-entered 0_1-left 0_2-entered 0_2-left
+        ])
+      end
     end
 
     context 'signal:' do
