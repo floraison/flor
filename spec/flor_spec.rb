@@ -414,5 +414,22 @@ describe Flor do
       )
     end
   end
+
+  describe '.to_regex' do
+
+    [
+
+      [ '/car/', /car/ ],
+      [ '/\Acar/i', /\Acar/i ],
+      [ '/car', /\/car/ ],
+
+    ].each do |serialized, regex|
+
+      it "turns #{serialized.inspect} back to #{regex.inspect}" do
+
+        expect(Flor.to_regex(serialized)).to eq(regex)
+      end
+    end
+  end
 end
 
