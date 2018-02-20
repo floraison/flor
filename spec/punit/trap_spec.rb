@@ -360,6 +360,41 @@ describe 'Flor punit' do
           2:receive--0<-0_1
         }.collect(&:strip).join("\n"))
       end
+
+      it 'traps multiple given procedures' do
+
+        r = @unit.launch(
+          %q{
+            trap heap: [ 'sequence' 'concurrence' ]
+              def msg
+                trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
+            concurrence
+              sequence
+                noret _
+              sequence
+                noret _
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 2 }
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:execute-concurrence-0_1<-0
+          1:execute-sequence-0_1_0<-0_1
+          2:execute-sequence-0_1_1<-0_1
+          3:receive--0_1_0<-0_1_0_0
+          4:receive--0_1_1<-0_1_1_0
+          5:receive--0_1<-0_1_0
+          6:receive--0_1<-0_1_1
+          7:receive--0<-0_1
+        }.collect(&:strip).join("\n"))
+      end
     end
 
     context 'heat:' do

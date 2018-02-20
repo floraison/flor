@@ -422,6 +422,10 @@ module Flor
     #heats = att_a('heat', 'heats', nil)     #
     #heaps = att_a('heap', 'heaps', nil)     #
     #names = att_a('name', 'names', nil)     #
+        #
+      #opts[:heap] = theaps.split(',') if theaps
+      #opts[:heat] = theats.split(',') if theats
+            #
           @db[:flor_traps]
             .insert(
               domain: dom,
@@ -433,7 +437,7 @@ module Flor
               tpoints: commaify(tra['points']),
               ttags: tra['tags'],
               theats: tra['heats'],
-              theaps: tra['heaps'],
+              theaps: commaify(tra['heaps']),
               content: to_blob(tra),
               status: 'active',
               ctime: now,
