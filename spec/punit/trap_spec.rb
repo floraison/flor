@@ -395,6 +395,8 @@ describe 'Flor punit' do
           7:receive--0<-0_1
         }.collect(&:strip).join("\n"))
       end
+
+      it 'traps a heap regex'
     end
 
     context 'heat:' do
@@ -456,6 +458,44 @@ describe 'Flor punit' do
           7:t-heat-0_1-5
         }.collect(&:strip).join("\n"))
       end
+
+      it 'traps multiple heat:' do
+
+        r = @unit.launch(
+          %q{
+            trap heat: [ 'fun0' 'fun1' ]
+              def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
+            define fun0 \ trace "c-fun0-$(nid)"
+            define fun1 \ trace "c-fun1-$(nid)"
+            sequence
+              fun0 _
+              fun1 _
+              fun0
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 1 }
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:t-fun0-0_3_0
+          1:c-fun0-0_1_1_0_0-2
+          2:t--0_3_0
+          3:t--0_3_0
+          4:t-fun1-0_3_1
+          5:c-fun1-0_2_1_0_0-6
+          6:t--0_3_1
+          7:t--0_3_1
+          8:t-fun0-0_3_2
+        }.collect(&:strip).join("\n"))
+      end
+
+      it 'traps a heat regex'
     end
 
     context 'range: nid (default)' do

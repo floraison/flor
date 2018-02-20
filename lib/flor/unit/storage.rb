@@ -436,7 +436,7 @@ module Flor
               trange: tra['range'],
               tpoints: commaify(tra['points']),
               ttags: tra['tags'],
-              theats: tra['heats'],
+              theats: commaify(tra['heats']),
               theaps: commaify(tra['heaps']),
               content: to_blob(tra),
               status: 'active',
