@@ -396,7 +396,9 @@ describe 'Flor punit' do
         }.collect(&:strip).join("\n"))
       end
 
-      it 'traps a heap regex'
+      #it 'traps a heap regex'
+        # no, this is not necessary, "heat", on the other side, is
+        # better suited for regexes
     end
 
     context 'heat:' do
