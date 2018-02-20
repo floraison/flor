@@ -690,6 +690,35 @@ describe 'Flor punit' do
           'a c left'
         )
       end
+
+      it 'traps multiple tags' do
+
+        r = @unit.launch(
+          %q{
+            sequence
+              trace 'a'
+              trap tags: [ 'x', 'y' ]
+                def msg \ trace "$(msg.tags.-1)-$(msg.point)"
+              sequence tag: 'x'
+                trace 'c'
+              sequence tag: 'y'
+                trace 'd'
+              trace 'e'
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 2 }
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          a c x-entered d y-entered e
+        ])
+      end
+
+      it 'traps tags by regex'
     end
 
     context 'consumed:' do
