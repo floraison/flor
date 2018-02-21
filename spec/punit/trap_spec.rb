@@ -497,7 +497,47 @@ describe 'Flor punit' do
         }.collect(&:strip).join("\n"))
       end
 
-      it 'traps a heat regex'
+      it 'traps a heat regex' do
+
+        r = @unit.launch(
+          %q{
+            trap heat: [ /^fun\d+$/ 'funx' ]
+              def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
+            define fun0 \ trace "c-fun0-$(nid)"
+            define fun1 \ trace "c-fun1-$(nid)"
+            define funx \ trace "c-funx-$(nid)"
+            sequence
+              fun0 _
+              fun1 _
+              fun0
+              funx _
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 1 }
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:t-fun0-0_4_0
+          1:c-fun0-0_1_1_0_0-2
+          2:t--0_4_0
+          3:t--0_4_0
+          4:t-fun1-0_4_1
+          5:c-fun1-0_2_1_0_0-6
+          6:t--0_4_1
+          7:t--0_4_1
+          8:t-fun0-0_4_2
+          9:t-funx-0_4_3
+          10:c-funx-0_3_1_0_0-11
+          11:t--0_4_3
+          12:t--0_4_3
+        }.collect(&:strip).join("\n"))
+      end
     end
 
     context 'range: nid (default)' do

@@ -10,8 +10,10 @@ module Flor
       opts[:consumed] = tconsumed
 
       opts[:point] = tpoints.split(',') if tpoints
-      opts[:heap] = theaps.split(',') if theaps
-      opts[:heat] = theats.split(',') if theats
+      #opts[:heap] = theaps.split(',') if theaps
+      #opts[:heat] = theats.split(',') if theats
+      opts[:heap] = do_split(theaps) if theaps
+      opts[:heat] = do_split(theats) if theats
 
       opts[:name] = data['names']
 
@@ -103,7 +105,15 @@ module Flor
 
     def to_hash
 
-      values.inject({}) { |h, (k, v)| h[k.to_s ] = v if k != :content; h }
+      values
+        .inject({}) { |h, (k, v)| h[k.to_s ] = v if k != :content; h }
+    end
+
+    def do_split(v)
+
+      v
+        .split(',')
+        .collect { |e| Flor.is_regex_string?(e) ? Flor.to_regex(e) : e }
     end
   end
 end

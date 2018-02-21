@@ -145,6 +145,15 @@ module Flor
       fail ArgumentError.new("cannot turn instance of #{o.class} into an array")
     end
 
+    def is_regex_string?(s)
+
+      !! (
+        s.is_a?(String) &&
+        s[0] == '/' &&
+        s.match(/\/[imx]{0,3}\z/)
+      )
+    end
+
     def to_regex(o)
 
       s =

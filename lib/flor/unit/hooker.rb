@@ -86,6 +86,11 @@ module Flor
       array ? Array(r) : r
     end
 
+    def includes?(arr, value)
+
+      arr.find { |e| e.is_a?(Regexp) ? e.match(value) : e == value }
+    end
+
     def match?(executor, hook, opts, message)
 
       opts = hook.opts if hook.respond_to?(:opts) && opts.empty?
@@ -155,12 +160,12 @@ module Flor
 
       if hps = o(opts, :heap, :hp, [])
         return false unless node ||= executor.node(message['nid'])
-        return false unless hps.include?(node['heap'])
+        return false unless includes?(hps, node['heap'])
       end
 
       if hts = o(opts, :heat, :ht, [])
         return false unless node ||= executor.node(message['nid'])
-        return false unless hts.include?(node['heat0'])
+        return false unless includes?(hts, node['heat0'])
       end
 
       true

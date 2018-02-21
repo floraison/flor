@@ -415,6 +415,22 @@ describe Flor do
     end
   end
 
+  describe '.is_regex_string?' do
+
+    [
+
+      [ '/a/', true ],
+      [ 'a', false ],
+
+    ].each do |string, result|
+
+      it "returns #{result} for #{string.inspect}" do
+
+        expect(Flor.is_regex_string?(string)).to eq(result)
+      end
+    end
+  end
+
   describe '.to_regex' do
 
     [

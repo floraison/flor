@@ -513,12 +513,23 @@ module Flor
 
     protected
 
+    def _commaify(o)
+
+      if Flor.is_regex_tree?(o)
+        o[1].to_s
+      else #if o.is_a?(String)
+        o.split(/\s*,\s*/).join(',')
+      end
+    end
+
     def commaify(o)
 
       return nil unless o
 
-      s = o.is_a?(Array) ? o.join(',') : o
-      s.strip.split(/\s*,\s*/).join(',')
+      o = [ o ] if Flor.is_regex_tree?(o)
+      o = [ o ] unless o.is_a?(Array)
+
+      o.collect { |e| _commaify(e) }.join(',')
     end
 
     def consume_and_archive(messages)
