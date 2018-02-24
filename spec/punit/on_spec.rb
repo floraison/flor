@@ -90,17 +90,19 @@ describe 'Flor punit' do
         %q{
           set l []
           push l 'in'
-          on [ 'red' 'blue' ]
+          on [ /^bl/ 'red' 'white' ]
             push l sig
+          signal 'black'
           signal 'red'
           signal 'green'
           signal 'blue'
+          signal 'white'
           push l 'out'
         },
         wait: true)
 
       expect(r['point']).to eq('terminated')
-      expect(r['vars']['l']).to eq(%w[ in red out blue ])
+      expect(r['vars']['l']).to eq(%w[ in black red blue out white ])
     end
   end
 end
