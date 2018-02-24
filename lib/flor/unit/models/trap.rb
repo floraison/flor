@@ -10,7 +10,7 @@ module Flor
       opts[:consumed] = tconsumed
 
       opts[:point] = tpoints.split(',') if tpoints
-      opts[:tag] = ttags.split(',') if ttags
+      opts[:tag] = do_split(ttags) if ttags
       opts[:heap] = do_split(theaps) if theaps
       opts[:heat] = do_split(theats) if theats
 

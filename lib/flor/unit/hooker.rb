@@ -88,7 +88,8 @@ module Flor
 
     def includes?(arr, value)
 
-      arr.find { |e| e.is_a?(Regexp) ? e.match(value) : e == value }
+      Array(value)
+        .find { |v| arr.find { |e| e.is_a?(Regexp) ? e.match(v) : e == v } }
     end
 
     def match?(executor, hook, opts, message)
@@ -133,7 +134,7 @@ module Flor
 
       if ts = o(opts, :tag, :t, [])
         return false unless %w[ entered left ].include?(message['point'])
-        return false unless (message['tags'] & ts).any?
+        return false unless includes?(ts, message['tags'])
       end
 
       if ns = o(opts, :name, :n)
