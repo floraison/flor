@@ -10,8 +10,7 @@ module Flor
       opts[:consumed] = tconsumed
 
       opts[:point] = tpoints.split(',') if tpoints
-      #opts[:heap] = theaps.split(',') if theaps
-      #opts[:heat] = theats.split(',') if theats
+      opts[:tag] = ttags.split(',') if ttags
       opts[:heap] = do_split(theaps) if theaps
       opts[:heat] = do_split(theats) if theats
 
@@ -88,19 +87,17 @@ module Flor
         msg['payload'] = Flor.dup(message['payload'])
       end
 
-      {
-        'point' => 'trigger',
+      { 'point' => 'trigger',
         'exid' => self.exid,
         'nid' => self.nid,
         'type' => 'trap',
         'trap' => to_hash,
         'trap_id' => self.id,
         'message' => msg,
-        'sm' => message['m'],
-        #'dbg' => xx
-      }
-        #.tap { |m| pp m['message'] }
-        #.tap { |m| pp m }
+        'sm' => message['m'] }
+            #'dbg' => xx
+          #.tap { |m| pp m['message'] }
+          #.tap { |m| pp m }
     end
 
     def to_hash

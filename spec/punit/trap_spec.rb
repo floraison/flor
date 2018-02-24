@@ -736,14 +736,16 @@ describe 'Flor punit' do
         r = @unit.launch(
           %q{
             sequence
-              trace 'a'
+              trace 'in'
               trap tags: [ 'x', 'y' ]
                 def msg \ trace "$(msg.tags.-1)-$(msg.point)"
               sequence tag: 'x'
-                trace 'c'
+                trace 'a'
               sequence tag: 'y'
-                trace 'd'
-              trace 'e'
+                trace 'b'
+              sequence tag: 'z'
+                trace 'c'
+              trace 'out'
           },
           wait: true)
 
@@ -754,7 +756,7 @@ describe 'Flor punit' do
         expect(
           @unit.traces.collect(&:text)
         ).to eq(%w[
-          a c x-entered d y-entered e
+          in a x-entered b y-entered c out
         ])
       end
 
