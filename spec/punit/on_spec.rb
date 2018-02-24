@@ -84,7 +84,24 @@ describe 'Flor punit' do
       expect(r['vars']['l']).to eq(%w[ in red-zero out red-one ])
     end
 
-    it 'traps multiple signals'
+    it 'traps multiple signals' do
+
+      r = @unit.launch(
+        %q{
+          set l []
+          push l 'in'
+          on [ 'red' 'blue' ]
+            push l sig
+          signal 'red'
+          signal 'green'
+          signal 'blue'
+          push l 'out'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['l']).to eq(%w[ in red out blue ])
+    end
   end
 end
 
