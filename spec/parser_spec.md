@@ -237,7 +237,7 @@ parses to
 ```
 ---
 
-(tending)
+(pending)
 ```flor
   [ 'red' /bl/ ]
 ```
