@@ -5,8 +5,8 @@ module Flor
 
     opts = fname if fname.is_a?(Hash) && opts.empty?
 
-    #Raabro.pp(Flor::Parser.parse(input, debug: 2))
-    #Raabro.pp(Flor::Parser.parse(input, debug: 3))
+    #Raabro.pp(Flor::Parser.parse(input, debug: 2), colours: true)
+    #Raabro.pp(Flor::Parser.parse(input, debug: 3), colours: true)
 
     if r = Flor::Parser.parse(input, opts)
       r << fname if fname
@@ -62,6 +62,7 @@ module Flor
     def boolean(i); alt(:boolean, i, :tru, :fls); end
 
     def rf_symbol(i); rex(nil, i, /[^.:;| \b\f\n\r\t"',()\[\]{}#\\]+/); end
+    #def rf_symbol(i); rex(nil, i, /[^.:;| \b\f\n\r\t"',()\[\]{}#\\\/]+/); end
     def rf_square_index(i); alt(nil, i, :rf_symbol, :dqstring, :sqstring); end
     def rf_square(i); seq(nil, i, :sbstart, :rf_square_index, :sbend); end
     def rf_dot(i); seq(nil, i, :dot, :rf_symbol); end
@@ -112,8 +113,12 @@ module Flor
     def comma_qmark_eol(i); seq(nil, i, :comma, '?', :eol); end
     def coll_sep(i); alt(nil, i, :comma_qmark_eol, :ws_star); end
 
-    def ent(i); seq(:ent, i, :key, :postval, :colon, :postval, :exp, :postval); end
-    def ent_qmark(i); rep(nil, i, :ent, 0, 1); end
+    def ent(i)
+      seq(:ent, i, :key, :postval, :colon, :postval, :exp, :postval)
+    end
+    def ent_qmark(i)
+      rep(nil, i, :ent, 0, 1)
+    end
 
     def exp_qmark(i); rep(nil, i, :exp, 0, 1); end
 
@@ -273,6 +278,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
       return rewrite(t.c0) if t.children.size == 1
 
+#Raabro.pp(t, colours: true)
       cn = t.children.collect { |ct| ct.lookup(nil) }
 
       operation = cn.find { |ct| ct.name == :sop }.string
