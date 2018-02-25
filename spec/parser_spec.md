@@ -219,6 +219,43 @@ parses to
 ```
 ---
 
+```flor
+  [ /bl/ 'red' ]
+```
+parses to
+```ruby
+  [ '_arr', [ [ '_rxs', '/bl/', 1 ], [ '_sqs', 'red', 1 ] ], 1 ]
+```
+---
+
+```flor
+  [ 'red', /bl/ ]
+```
+parses to
+```ruby
+  [ '_arr', [ [ '_sqs', 'red', 1 ], [ '_rxs', '/bl/', 1 ] ], 1 ]
+```
+---
+
+(tending)
+```flor
+  [ 'red' /bl/ ]
+```
+parses to
+```ruby
+  [ '_arr', [ [ '_sqs', 'red', 1 ], [ '_rxs', '/bl/', 1 ] ], 1 ]
+```
+---
+
+```flor
+  [ 'red' (/bl/) ]
+```
+parses to
+```ruby
+  [ '_arr', [ [ '_sqs', 'red', 1 ], [ '_rxs', '/bl/', 1 ] ], 1 ]
+```
+---
+
 ### references
 
 ```flor
@@ -965,6 +1002,15 @@ parses to
 
 ```flor
   hello, /world/
+```
+parses to
+```ruby
+  [ 'hello', [ [ '_att', [ [ '_rxs', '/world/', 1 ] ], 1 ], ], 1 ]
+```
+---
+
+```flor
+  hello (/world/)
 ```
 parses to
 ```ruby
