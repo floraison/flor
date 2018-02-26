@@ -40,9 +40,9 @@ module Flor
 
       args.each do |arg|
         case arg
-          when String then name = arg
-          when Hash then opts = arg
-          else hook = arg
+        when String then name = arg
+        when Hash then opts = arg
+        else hook = arg
         end
       end
 

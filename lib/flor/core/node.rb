@@ -48,9 +48,9 @@ class Flor::Node
 
     @executor, @execution =
       case executor
-        when nil then [ nil, nil ] # for some tests
-        when Hash then [ nil, executor ] # from some other tests
-        else [ executor, executor.execution ] # vanilla case
+      when nil then [ nil, nil ] # for some tests
+      when Hash then [ nil, executor ] # from some other tests
+      else [ executor, executor.execution ] # vanilla case
       end
 
     @node =

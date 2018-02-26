@@ -500,14 +500,14 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
       if c == '\\'
         case cn = cs.next
-          when 'u' then sio.print(unescape_u(cs))
-          when '\\', '"', '\'' then sio.print(cn)
-          when 'b' then sio.print("\b")
-          when 'f' then sio.print("\f")
-          when 'n' then sio.print("\n")
-          when 'r' then sio.print("\r")
-          when 't' then sio.print("\t")
-          else sio.print("\\#{cn}")
+        when 'u' then sio.print(unescape_u(cs))
+        when '\\', '"', '\'' then sio.print(cn)
+        when 'b' then sio.print("\b")
+        when 'f' then sio.print("\f")
+        when 'n' then sio.print("\n")
+        when 'r' then sio.print("\r")
+        when 't' then sio.print("\t")
+        else sio.print("\\#{cn}")
         end
       else
         sio.print(c)

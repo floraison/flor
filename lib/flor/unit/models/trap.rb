@@ -17,15 +17,15 @@ module Flor
       opts[:name] = data['names']
 
       case trange
-        when 'execution'
-          opts[:exid] = exid
-        when 'subdomain'
-          opts[:subdomain] = Flor.domain(exid)
-        when 'domain'
-          opts[:domain] = Flor.domain(exid)
-        else #'subnid' # default
-          opts[:exid] = exid
-          opts[:subnid] = true
+      when 'execution'
+        opts[:exid] = exid
+      when 'subdomain'
+        opts[:subdomain] = Flor.domain(exid)
+      when 'domain'
+        opts[:domain] = Flor.domain(exid)
+      else #'subnid' # default
+        opts[:exid] = exid
+        opts[:subnid] = true
       end
 
       [ "trap#{id}", opts, self, nil ]

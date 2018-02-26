@@ -13,9 +13,9 @@ class Flor::Pro::Cmp < Flor::Procedure
     payload['ret'] =
       if @node['rets'].size > 1
         case tree[0]
-          when '=', '==' then check_equal
-          when '<', '>' then check_lesser
-          else true
+        when '=', '==' then check_equal
+        when '<', '>' then check_lesser
+        else true
         end
       else
         true
@@ -36,10 +36,10 @@ class Flor::Pro::Cmp < Flor::Procedure
     a, b = @node['rets'][-2], @node['rets'][-1]
 
     case tree[0]
-      when '<' then return false if a >= b
-      when '<=' then return false if a > b
-      when '>' then return false if a <= b
-      when '>=' then return false if a < b
+    when '<' then return false if a >= b
+    when '<=' then return false if a > b
+    when '>' then return false if a <= b
+    when '>=' then return false if a < b
     end
 
     true

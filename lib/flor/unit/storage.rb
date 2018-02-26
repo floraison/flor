@@ -724,11 +724,11 @@ module Flor
 
       f =
         case type
-          when 'cron' then Fugit.parse_cron(string) || Fugit.parse_nat(string)
-          when 'at' then Fugit.parse_at(string)
-          when 'in' then Fugit.parse_duration(string)
-          #when 'every' then Fugit.parse_duration(string)
-          else Fugit.parse(string)
+        when 'cron' then Fugit.parse_cron(string) || Fugit.parse_nat(string)
+        when 'at' then Fugit.parse_at(string)
+        when 'in' then Fugit.parse_duration(string)
+        #when 'every' then Fugit.parse_duration(string)
+        else Fugit.parse(string)
         end
 
       nt = f.is_a?(Time) ? f : f.next_time(from || Time.now) # local...

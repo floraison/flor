@@ -85,8 +85,8 @@ module Flor
     def stringify(v)
 
       case v
-        when Array, Hash then JSON.dump(v)
-        else v.to_s
+      when Array, Hash then JSON.dump(v)
+      else v.to_s
       end
     end
 
@@ -118,21 +118,21 @@ module Flor
       l = s.length
 
       case cmp
-        when '>' then l > len
-        when '>=' then l >= len
-        when '<' then l < len
-        when '<=' then l <= len
-        when '=', '==' then l == len
-        when '!=', '<>' then l != len
-        else false
+      when '>' then l > len
+      when '>=' then l >= len
+      when '<' then l < len
+      when '<=' then l <= len
+      when '=', '==' then l == len
+      when '!=', '<>' then l != len
+      else false
       end
     end
 
     def to_json(o)
 
       case o
-        when Array, Hash then JSON.dump(o)
-        else JSON.dump([ o ])[1..-2]
+      when Array, Hash then JSON.dump(o)
+      else JSON.dump([ o ])[1..-2]
       end
     end
 
@@ -142,32 +142,32 @@ module Flor
 
       case fun
 
-        when 'u' then o.to_s.upcase
-        when 'd' then o.to_s.downcase
-        when 'r' then o.reverse
-        when 'c' then o.to_s.capitalize.gsub(/\s[a-z]/) { |c| c.upcase }
-        when 'q' then quote(o, false)
-        when 'Q' then quote(o, true)
-        when 'l' then o.length.to_s
+      when 'u' then o.to_s.upcase
+      when 'd' then o.to_s.downcase
+      when 'r' then o.reverse
+      when 'c' then o.to_s.capitalize.gsub(/\s[a-z]/) { |c| c.upcase }
+      when 'q' then quote(o, false)
+      when 'Q' then quote(o, true)
+      when 'l' then o.length.to_s
 
-        when 'json' then to_json(o)
+      when 'json' then to_json(o)
 
-        when /^j(.+)/
-          o.respond_to?(:join) ? o.join($1) : o
+      when /^j(.+)/
+        o.respond_to?(:join) ? o.join($1) : o
 
-        when /\Am\/(.+)\/\z/
-          match($1, o.to_s)
-        when /\As\/(.*[^\\]\/)(.+)\/([gix]*)\z/
-          substitute($1.chop, $2, $3, o.to_s)
+      when /\Am\/(.+)\/\z/
+        match($1, o.to_s)
+      when /\As\/(.*[^\\]\/)(.+)\/([gix]*)\z/
+        substitute($1.chop, $2, $3, o.to_s)
 
-        when /\A-?\d+\z/ then o.to_s[fun.to_i]
-        when /\A(-?\d+), *(-?\d+)\z/ then o.to_s[$1.to_i, $2.to_i]
-        when /\A(-?\d+)\.\.(-?\d+)\z/ then o.to_s[$1.to_i..$2.to_i]
+      when /\A-?\d+\z/ then o.to_s[fun.to_i]
+      when /\A(-?\d+), *(-?\d+)\z/ then o.to_s[$1.to_i, $2.to_i]
+      when /\A(-?\d+)\.\.(-?\d+)\z/ then o.to_s[$1.to_i..$2.to_i]
 
-        when /\A\s*l\s*([><=!]=?|<>)\s*(\d+)\z/
-          lfilter(o.to_s, $1, $2.to_i) ? o.to_s : nil
+      when /\A\s*l\s*([><=!]=?|<>)\s*(\d+)\z/
+        lfilter(o.to_s, $1, $2.to_i) ? o.to_s : nil
 
-        else o
+      else o
       end
     end
 
