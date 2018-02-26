@@ -714,9 +714,11 @@ describe 'Flor punit' do
             sequence
               trace 'a'
               trap tag: 'x' point: 'left'
-                def msg \ trace msg.point
+                def msg \ trace "$(msg.tags.-1)-$(msg.point)"
               sequence tag: 'x'
-                trace 'c'
+                trace 'x'
+              sequence tag: 'y'
+                trace 'y'
           },
           wait: true)
 
@@ -727,7 +729,7 @@ describe 'Flor punit' do
         expect(
           @unit.traces.collect(&:text).join(' ')
         ).to eq(
-          'a c left'
+          'a x x-left y'
         )
       end
 
