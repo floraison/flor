@@ -106,9 +106,38 @@ class Flor::Pro::Trap < Flor::Procedure
   #     trace "$(msg.tags.-1)-$(msg.point)"
   # ```
   #
-  # ## the signal: short criterion
+  # ## the signal: criterion
   #
-  # TODO
+  # `signal:` traps signals directed at the execution. Signals are
+  # directly
+  # ```
+  # trap signal: 'S0'
+  #   def msg
+  #     trace "S0"
+  # # ...
+  # signal 'S0'
+  # ```
+  #
+  # Note that it's OK to trap all signals, whatever their name, directed at
+  # the execution by using `point: 'signal'`, as in:
+  # ```
+  # trap point: 'signal'
+  #   def msg
+  #     trace "caught signal '$(sig)'"
+  # ```
+  #
+  # [on](on.md) is a macro that turns
+  # ```
+  # on 'rejected'
+  #   trace "execution received signal $(sig)"
+  # ```
+  # into
+  # ```
+  # trap signal: 'rejected'
+  #   def msg
+  #     trace "execution received signal $(sig)"
+  # ```
+  # Please note how "on" accepts a block while "trap" accepts a function.
   #
   # ## the tag: short criterion
   #
