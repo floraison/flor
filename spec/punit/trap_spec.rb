@@ -576,10 +576,10 @@ describe 'Flor punit' do
             sequence
               trap tag: 't0' #range: 'subnid'
                 def msg \ trace "in-$(msg.nid)"
-              stall tag: 't0'
+              stall tag: 't0' ### gets trapped
             sequence
               sleep '1s' # give it time to process the trap
-              noret tag: 't0'
+              noret tag: 't0' ### doesn't get trapped
         }, wait: '0_1_1 receive')
 
         expect(r['point']).to eq('receive')
@@ -637,25 +637,33 @@ describe 'Flor punit' do
 
       it 'traps the events in execution domain' do
 
+        # 0
         exid0 = @unit.launch(%q{
           trap tag: 't0' range: 'domain' \ def msg \ trace "t0_$(msg.exid)"
           trace "stalling_$(exid)"
           stall _
         }, domain: 'net.acme')
 
-        sleep 0.5
+        #sleep 0.5
+        wait_until { @unit.traps.count == 1 }
 
-        r = @unit.launch(%{ noret tag: 't0' }, domain: 'org.acme', wait: true)
+        # 1
+        r = @unit.launch("noret tag: 't0'", domain: 'org.acme', wait: true)
         exid1 = r['exid']
         expect(r['point']).to eq('terminated')
+          # completely different domain, not trapped
 
-        r = @unit.launch(%{ noret tag: 't0' }, domain: 'net.acme', wait: true)
+        # 2
+        r = @unit.launch("noret tag: 't0'", domain: 'net.acme', wait: true)
         exid2 = r['exid']
         expect(r['point']).to eq('terminated')
+          # same domain, trapped
 
-        r = @unit.launch(%{ noret tag: 't0' }, domain: 'net.acme.s0', wait: true)
+        # 3
+        r = @unit.launch("noret tag: 't0'", domain: 'net.acme.s0', wait: true)
         exid3 = r['exid']
         expect(r['point']).to eq('terminated')
+          # subdomain, not trapped
 
         wait_until { @unit.traces.count == 2 }
 
@@ -676,25 +684,33 @@ describe 'Flor punit' do
 
       it 'traps the events in range domain and its subdomains' do
 
+        # 0
         exid0 = @unit.launch(%q{
           trap tag: 't0' range: 'subdomain' \ def msg \ trace "t0_$(msg.exid)"
           trace "stalling_$(exid)"
           stall _
         }, domain: 'net.acme')
 
-        sleep 0.5
+        #sleep 0.5
+        wait_until { @unit.traps.count == 1 }
 
-        r = @unit.launch(%{ noret tag: 't0' }, domain: 'org.acme', wait: true)
+        # 1
+        r = @unit.launch("noret tag: 't0'", domain: 'org.acme', wait: true)
         exid1 = r['exid']
         expect(r['point']).to eq('terminated')
+          # completely different domain, not trapped
 
-        r = @unit.launch(%{ noret tag: 't0' }, domain: 'net.acme', wait: true)
+        # 2
+        r = @unit.launch("noret tag: 't0'", domain: 'net.acme', wait: true)
         exid2 = r['exid']
         expect(r['point']).to eq('terminated')
+          # same domain, trapped
 
-        r = @unit.launch(%{ noret tag: 't0' }, domain: 'net.acme.s0', wait: true)
+        # 3
+        r = @unit.launch("noret tag: 't0'", domain: 'net.acme.s0', wait: true)
         exid3 = r['exid']
         expect(r['point']).to eq('terminated')
+          # subdomain of net.acme, trapped
 
         wait_until { @unit.traces.count == 3 }
 
