@@ -143,7 +143,16 @@ class Flor::Pro::Trap < Flor::Procedure
   #
   # TODO
   #
+  # ## the bind: setting
+  #
+  # TODO (is it worth implementing it or is range: sufficient?)
+  #
   # ## the range: limit
+  #
+  # * 'subnid' (default)
+  # * 'execution'
+  # * 'domain'
+  # * 'subdomain'
   #
   # TODO
   #
@@ -155,6 +164,7 @@ class Flor::Pro::Trap < Flor::Procedure
   # ```
   # will trigger when the execution enters the tag 'x', but will trigger only
   # twice.
+  #
   #
   # ## see also
   #

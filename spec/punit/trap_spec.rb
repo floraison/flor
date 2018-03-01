@@ -567,14 +567,15 @@ describe 'Flor punit' do
       end
     end
 
-    context 'range: nid (default)' do
+    context 'range: subnid (default)' do
 
       it 'traps only subnids' do
 
         r = @unit.launch(%q{
           concurrence
             sequence
-              trap tag: 't0' \ def msg \ trace "in-$(msg.nid)"
+              trap tag: 't0' #range: 'subnid'
+                def msg \ trace "in-$(msg.nid)"
               stall tag: 't0'
             sequence
               sleep '1s' # give it time to process the trap
@@ -592,6 +593,8 @@ describe 'Flor punit' do
         ).to eq(%w{
           0:in-0_0_1
         }.collect(&:strip).join("\n"))
+          #
+          # where 1:in-0_1_1 is not trapped
       end
     end
 
@@ -601,8 +604,9 @@ describe 'Flor punit' do
 
         r = @unit.launch(%q{
           concurrence
-            trap tag: 't1' range: 'execution'
-              def msg \ trace "t1_$(msg.exid)"
+            sequence # <--- trap is bound here
+              trap tag: 't1' range: 'execution'
+                def msg \ trace "t1_$(msg.exid)"
             sequence
               sleep '1s'
               sequence tag: 't1'

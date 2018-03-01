@@ -14,6 +14,10 @@ class Flor::Pro::On < Flor::Macro
   #   def msg
   #     task 'bob' mission: 'gather signatures'
   # ```
+  #
+  # ## see also
+  #
+  # Trap and signal.
 
   name 'on'
 
