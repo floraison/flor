@@ -761,6 +761,7 @@ describe 'Flor punit' do
             sequence
               trace 'a'
               trap tag: 'x' point: 'left'
+              #trap tag: 'x' point: [ 'entered' 'left' ]
                 def msg \ trace "$(msg.tags.-1)-$(msg.point)"
               sequence tag: 'x'
                 trace 'x'

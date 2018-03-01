@@ -84,6 +84,10 @@ trap heat: [ /^fun\d+$/ 'funx' ]
 
 ## the tag: criterion
 
+Traps one or multiple tags. Default to trapping on "entered". May trap
+leaving tags with `point: 'left'` or any with
+`point: [ 'entered', 'left' ]`.
+
 ```
 trap tag: 'x'
   def msg
@@ -93,17 +97,6 @@ sequence tag: 'x'
   trace 'c'
 
 # will trace "x-entered" and "c"
-```
-
-Traps one or more tags.
-
-By default traps upon entering, by using `point:`, one can trap upon
-leaving (or both).
-```
-#trap tag: 'x' point: [ 'entered', 'left' ]
-trap tag: 'x' point: 'left'
-  def msg
-    trace "$(msg.tags.-1)-$(msg.point)"
 ```
 
 ## the signal: criterion
@@ -139,22 +132,43 @@ trap signal: 'rejected'
 ```
 Please note how "on" accepts a block while "trap" accepts a function.
 
-## the tag: short criterion
-
-TODO
-
 ## the bind: setting
 
 TODO (is it worth implementing it or is range: sufficient?)
 
 ## the range: limit
 
+The range limit determines what is the range, or scope of the trap.
+By default the trap only care about nodes below its parent. In other words,
+the trap binds itself to its parent and observes the messages occuring
+in the execution in the branch of nodes whose root is the parent.
+
+The possible values for `range:` are:
 * 'subnid' (default)
 * 'execution'
 * 'domain'
 * 'subdomain'
 
-TODO
+With 'execution', the trap observes all the messages emitted within the
+same execution.
+
+With 'domain', all the messages in all the execution of the same domain are
+observed. For example,
+```
+trap point: 'signal', domain: 'net.acme'
+  def msg \ trace "signal '$(sig)' caught"
+```
+once set, will be triggered for each signal received by an execution in the
+'net.acme' domain.
+
+Likewise,
+```
+trap point: 'signal', subdomain: 'org.acme'
+  def msg \ trace "signal '$(sig)' caught"
+```
+Will trap all signals in the domain "org.acme" and its subdomains,
+(org.acme.accounting, org.acme.engineering, org.acme.whatever.x.y.z, ...)
+
 
 ## the count: limit
 
