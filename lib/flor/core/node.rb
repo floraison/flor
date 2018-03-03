@@ -177,6 +177,7 @@ class Flor::Node
 
       return @node.nid if k == 'nid'
       return @node.exid if k == 'exid'
+      return Flor.domain(@node.exid) if k == 'domain'
       return Flor.tstamp if k == 'tstamp'
 
       r = @node.lookup(k, true)

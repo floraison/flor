@@ -305,7 +305,7 @@ describe Flor::Dollar do
         @x =
           Flor::Node::Expander.new(
             Flor::Node.new(
-              { 'exid' => 'eval-u0-20160226.1807.bowageyiba',
+              { 'exid' => 'org.acme-u0-20160226.1807.bowageyiba',
                 'nodes' => {} }, # execution
               { 'nid' => '0_0-7' }, # node
               nil)) # message
@@ -313,21 +313,30 @@ describe Flor::Dollar do
 
       it 'understands $(nid)' do
 
-        expect(@x.expand("$(nid)")).to eq('0_0-7')
-      end
-
-      it 'understands $(exid)' do
-
-        expect(@x.expand("$(exid)")).to eq('eval-u0-20160226.1807.bowageyiba')
+        expect(@x.expand('$(nid)')).to eq('0_0-7')
       end
 
       it 'understands $(tstamp)' do
 
         expect(
-          @x.expand("$(tstamp)")
+          @x.expand('$(tstamp)')
         ).to match(
           /\A2\d{3}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+Z\z/
         )
+      end
+
+      it 'understands $(exid)' do
+
+        expect(
+          @x.expand('$(exid)')
+        ).to eq(
+          'org.acme-u0-20160226.1807.bowageyiba'
+        )
+      end
+
+      it 'understands $(domain)' do
+
+        expect(@x.expand('$(domain)')).to eq('org.acme')
       end
     end
 
