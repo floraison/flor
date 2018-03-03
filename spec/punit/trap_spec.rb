@@ -529,7 +529,7 @@ describe 'Flor punit' do
         r = @unit.launch(
           %q{
             trap heat: [ /^fun\d+$/ 'funx' ]
-              def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
+              def msg \ trace "t-$(msg.point)-$(msg.tree.0)-$(msg.nid)"
             define fun0 \ trace "c-fun0-$(nid)"
             define fun1 \ trace "c-fun1-$(nid)"
             define funx \ trace "c-funx-$(nid)"
@@ -550,19 +550,55 @@ describe 'Flor punit' do
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
-          0:t-fun0-0_4_0
+          0:t-execute-fun0-0_4_0
           1:c-fun0-0_1_1_0_0-2
-          2:t--0_4_0
-          3:t--0_4_0
-          4:t-fun1-0_4_1
+          2:t-receive--0_4_0
+          3:t-receive--0_4_0
+          4:t-execute-fun1-0_4_1
           5:c-fun1-0_2_1_0_0-6
-          6:t--0_4_1
-          7:t--0_4_1
-          8:t-fun0-0_4_2
-          9:t-funx-0_4_3
+          6:t-receive--0_4_1
+          7:t-receive--0_4_1
+          8:t-execute-fun0-0_4_2
+          9:t-execute-funx-0_4_3
           10:c-funx-0_3_1_0_0-11
-          11:t--0_4_3
-          12:t--0_4_3
+          11:t-receive--0_4_3
+          12:t-receive--0_4_3
+        }.collect(&:strip).join("\n"))
+      end
+
+      it 'traps a tree head and a point' do
+
+        r = @unit.launch(
+          %q{
+            trap heat: [ /^fun\d+$/ 'funx' ] point: 'execute'
+              def msg \ trace "t-$(msg.point)-$(msg.tree.0)-$(msg.nid)"
+            define fun0 \ trace "c-fun0-$(nid)"
+            define fun1 \ trace "c-fun1-$(nid)"
+            define funx \ trace "c-funx-$(nid)"
+            sequence
+              fun0 _
+              fun1 _
+              fun0
+              funx _
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count > 1 }
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:t-execute-fun0-0_4_0
+          1:c-fun0-0_1_1_0_0-2
+          2:t-execute-fun1-0_4_1
+          3:c-fun1-0_2_1_0_0-4
+          4:t-execute-fun0-0_4_2
+          5:t-execute-funx-0_4_3
+          6:c-funx-0_3_1_0_0-7
         }.collect(&:strip).join("\n"))
       end
     end
