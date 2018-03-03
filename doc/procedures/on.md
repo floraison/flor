@@ -1,7 +1,7 @@
 
 # on
 
-Traps a signal by name
+Traps a signal by name.
 
 Turns
 ```
@@ -14,6 +14,13 @@ trap point: 'signal', name: 'approve'
   def msg
     task 'bob' mission: 'gather signatures'
 ```
+
+It's OK trapping multiple signal names:
+```
+on [ /^bl/ 'red' 'white' ]
+  task 'bob' mission: "order can of $(sig) paint"
+```
+
 
 ## see also
 

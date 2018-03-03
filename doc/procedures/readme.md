@@ -56,7 +56,7 @@
 * [cron](cron.md) - "cron" is a macro procedure.
 * [every](every.md) - "every" is a macro procedure.
 * [graft, import](graft.md) - Graft a subtree into the current flo
-* [on](on.md) - Traps a signal by name
+* [on](on.md) - Traps a signal by name.
 * [schedule](schedule.md) - Schedules a function
 * [signal](signal.md) - Used in conjuction with "on".
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.

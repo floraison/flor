@@ -132,10 +132,6 @@ trap signal: 'rejected'
 ```
 Please note how "on" accepts a block while "trap" accepts a function.
 
-## the bind: setting
-
-TODO (is it worth implementing it or is range: sufficient?)
-
 ## the range: limit
 
 The range limit determines what is the range, or scope of the trap.

@@ -1,4 +1,6 @@
 
+# Would it be worth the pain implementing bind:?
+
 class Flor::Pro::Trap < Flor::Procedure
   #
   # Watches the messages emitted in the execution and reacts when
@@ -131,10 +133,6 @@ class Flor::Pro::Trap < Flor::Procedure
   #     trace "execution received signal $(sig)"
   # ```
   # Please note how "on" accepts a block while "trap" accepts a function.
-  #
-  # ## the bind: setting
-  #
-  # TODO (is it worth implementing it or is range: sufficient?)
   #
   # ## the range: limit
   #
