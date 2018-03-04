@@ -85,7 +85,7 @@ module Flor
           Flor.to_compact_tree_s(
             msg['rewritten'], msg['nid'],
             ind: 6, title: "rewrote #{msg['exid']} #{msg['nid']}")
-        @out <<
+        @out << "\n" <<
           Flor.to_compact_tree_s(
             msg['tree'], msg['nid'],
             ind: 6, title: "into #{msg['exid']} #{msg['nid']}",
