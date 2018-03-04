@@ -54,6 +54,7 @@
 * [cancel, kill](cancel.md) - Cancels an execution branch
 * [concurrence](concurrence.md) - Executes its children concurrently.
 * [cron](cron.md) - "cron" is a macro procedure.
+* [do-trap](do_trap.md) - A version of trap that accepts a block instead of a function.
 * [every](every.md) - "every" is a macro procedure.
 * [graft, import](graft.md) - Graft a subtree into the current flo
 * [on](on.md) - Traps a signal by name.
@@ -68,6 +69,7 @@
 * [Flor::Procedure](https://github.com/floraison/flor/blob/master/)
   * [Flor::Macro](https://github.com/floraison/flor/blob/master/)
     * [Flor::Pro::DoReturn](https://github.com/floraison/flor/blob/master/lib/flor/pcore/do_return.rb) : [do-return](do_return.md)
+    * [Flor::Pro::DoTrap](https://github.com/floraison/flor/blob/master/lib/flor/punit/do_trap.rb) : [do-trap](do_trap.md)
     * [Flor::Pro::On](https://github.com/floraison/flor/blob/master/lib/flor/punit/on.rb) : [on](on.md)
   * [Flor::Pro::Apply](https://github.com/floraison/flor/blob/master/lib/flor/pcore/apply.rb) : [apply](apply.md)
   * [Flor::Pro::Arith](https://github.com/floraison/flor/blob/master/lib/flor/pcore/arith.rb) : +, -, *, /, %
