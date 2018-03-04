@@ -90,7 +90,7 @@ describe 'Flor punit' do
 
       expect(r['point']).to eq('terminated')
 
-      sleep 0.350
+      wait_until { @unit.traces.count > 1 }
 
       expect(
         @unit.traces.collect(&:text).join(' ')
@@ -162,7 +162,7 @@ describe 'Flor punit' do
 
       expect(r['point']).to eq('terminated')
 
-      sleep 0.350
+      wait_until { @unit.traces.count > 6 }
 
       expect(
         @unit.traces
@@ -198,7 +198,7 @@ describe 'Flor punit' do
 
       expect(r['point']).to eq('terminated')
 
-      sleep 0.5
+      wait_until { @unit.traces.count > 1 }
 
       expect(
         (
@@ -256,14 +256,11 @@ describe 'Flor punit' do
 
       expect(r['point']).to eq('terminated')
 
-      sleep 0.4
+      wait_until {
+        exe = @unit.executions[exid: r['exid']]
+        exe && exe.status == 'terminated'
+      }
 
-      exe = @unit.executions[exid: r['exid']]
-
-#pp exe.data['nodes'].keys
-      expect(exe.status).to eq('terminated')
-
-#@unit.traps.each { |t| pp t.values }
       expect(@unit.traps.count).to eq(0)
     end
 
@@ -277,9 +274,7 @@ describe 'Flor punit' do
 
       exid = r['exid']
 
-      sleep 0.350
-
-      exe = @unit.executions[exid: exid]
+      exe = wait_until { @unit.executions[exid: exid] }
 
       expect(exe.status).to eq('active')
       expect(exe.nodes.keys).to eq(%w[ 0 ])
@@ -625,7 +620,7 @@ describe 'Flor punit' do
 
         expect(r['point']).to eq('receive')
 
-        sleep 0.350
+        wait_until { @unit.traces.count > 0 }
 
         expect(
           @unit.traces
@@ -664,7 +659,7 @@ describe 'Flor punit' do
             trace 'exe1'
         }, wait: true)
 
-        sleep 0.350
+        wait_until { @unit.traces.count > 2 }
 
         expect(
           @unit.traces.collect(&:text).join("\n")
@@ -685,7 +680,6 @@ describe 'Flor punit' do
           stall _
         }, domain: 'net.acme')
 
-        #sleep 0.5
         wait_until { @unit.traps.count == 1 }
 
         # 1
@@ -732,7 +726,6 @@ describe 'Flor punit' do
           stall _
         }, domain: 'net.acme')
 
-        #sleep 0.5
         wait_until { @unit.traps.count == 1 }
 
         # 1
