@@ -147,7 +147,7 @@ class Flor::Pro::Att < Flor::Procedure
     vars = copy_vars
 
     if mode == '-'
-vars # TODO
+      Hash[vars.map { |k, v| [ k, var_match?(vs, k) ? nil : v ] }]
     else
       Hash[vars.map { |k, v| [ k, var_match?(vs, k) ? v : nil ] }]
     end

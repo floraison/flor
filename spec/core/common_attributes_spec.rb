@@ -107,8 +107,48 @@ describe 'Flor core' do
         it 'whitelists deep'
         it 'whitelists deep with regexes'
 
-        it 'blacklists'
-        it 'blacklists with regexes'
+        it 'blacklists' do
+
+          r = @executor.launch(
+            %q{
+              sequence vars: { a: 'A', b: 'B', c: 'C' }
+                push f.l "0|$(a)|$(b)|$(c)"
+                sequence vars: [ '-', 'b', 'c' ]
+                  ############## ^^^ '-', '^', or '!' as first element
+                  push f.l "1|$(a)|$(b)|$(c)"
+            },
+            payload: { 'l' => [] })
+
+          expect(r['point']).to eq('terminated')
+
+          expect(
+            r['payload']['l']
+          ).to eq(%w[
+            0|A|B|C 1|A||
+          ])
+        end
+
+        it 'blacklists with regexes' do
+
+          r = @executor.launch(
+            %q{
+              sequence vars: { a: 'A', b: 'B', c: 'C' }
+                push f.l "0|$(a)|$(b)|$(c)"
+                sequence vars: [ '!', /^[bc]$/ ]
+                  ############## ^^^ '-', '^', or '!' as first element
+                  push f.l "1|$(a)|$(b)|$(c)"
+            },
+            payload: { 'l' => [] })
+
+          expect(r['point']).to eq('terminated')
+
+          expect(
+            r['payload']['l']
+          ).to eq(%w[
+            0|A|B|C 1|A||
+          ])
+        end
+
         it 'blacklists deep'
         it 'blacklists deep with regexes'
       end
