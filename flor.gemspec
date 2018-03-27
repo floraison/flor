@@ -31,7 +31,7 @@ A Ruby workflow engine (ruote next generation)
   s.add_runtime_dependency 'munemo', '>= 1.0.1'
   s.add_runtime_dependency 'raabro', '>= 1.1.5'
   #s.add_runtime_dependency 'rufus-lru', '>= 1.1.0'
-  s.add_runtime_dependency 'fugit', '>= 1.0.0'
+  s.add_runtime_dependency 'fugit', '>= 1.1.0'
   s.add_runtime_dependency 'dense', '>= 1.0.0'
 
   s.add_runtime_dependency 'sequel', '~> 4'
