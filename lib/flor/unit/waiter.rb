@@ -98,7 +98,7 @@ module Flor
       oontimeout = opts[:on_timeout] || opts[:ontimeout] || 'fail'
 
       case owait
-      when true
+      when nil, true
         [ [ [ nil, %w[ failed terminated ] ] ], # serie
           otimeout,
           oontimeout,
