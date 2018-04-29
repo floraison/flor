@@ -174,8 +174,8 @@ describe 'Flor core' do
       r = @executor.launch(%q{ a.0 })
 
       expect(r['point']).to eq('failed')
-      expect(r['error']['kla']).to eq('Dense::Path::NotIndexableError')
-      expect(r['error']['msg']).to eq('variable "a" not found')
+      expect(r['error']['kla']).to eq('KeyError')
+      expect(r['error']['msg']).to eq('Variable "a" not found')
     end
 
     it 'fails when the container does not exist (deeper)' do
@@ -185,7 +185,19 @@ describe 'Flor core' do
         vars: { 'h' => {} })
 
       expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq('no key "a" in variable "h"')
+      expect(r['error']['kla']).to eq('KeyError')
+      expect(r['error']['msg']).to eq('Variable "a" not found at "h"')
+    end
+
+    it 'fails when type error' do
+
+      r = @executor.launch(
+        %q{ a.k },
+        vars: { 'a' => [] })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['kla']).to eq('TypeError')
+      expect(r['error']['msg']).to eq('No key "k" for Array at "a"')
     end
   end
 

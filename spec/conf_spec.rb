@@ -40,7 +40,7 @@ describe Flor::Conf do
       expect {
         p Flor::Conf.prepare(%{\n version: 3.2.1 }, {})
       }.to raise_error(
-        ArgumentError, 'error while reading conf: variable "3" not found'
+        ArgumentError, 'Error while reading conf: Variable "3" not found'
       )
     end
 

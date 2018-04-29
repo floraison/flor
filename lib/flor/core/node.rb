@@ -163,7 +163,7 @@ class Flor::Node
       lookup_field(mod, key_and_path)
     end
 
-  rescue IndexError
+  rescue KeyError, TypeError
 
     raise unless silence_index_error
     nil
@@ -352,16 +352,16 @@ class Flor::Node
 
     Dense.fetch(c, kp)
 
-  rescue Dense::Path::NotIndexableError => nie
+  rescue KeyError => ke
 
-    if nie.fail_path.length == 1
-      fail nie.relabel(
-        "variable #{nie.fail_path.to_s.inspect} not found")
-    else
-      fail nie.relabel(
-        "no key #{nie.fail_path.last.inspect} " +
-        "in variable #{nie.fail_path[0..-2].to_s.inspect}")
-    end
+    return nil if ke.miss[4].empty?
+
+    m = "Variable #{ke.miss[3].inspect} not found"
+    m += " at #{Dense::Path.make(ke.miss[1]).to_s.inspect}" if ke.miss[1].any?
+
+    raise ke.relabel(m)
+
+  #rescue TypeError => te # leave as is
   end
 
   def lookup_var_container(node, mod, key)
