@@ -150,7 +150,7 @@ module Flor
       !! (
         s.is_a?(String) &&
         s[0] == '/' &&
-        s.match(/\/[imx]{0,3}\z/)
+        s.match(/\/[imxouesn]*\z/)
       )
     end
 
@@ -163,16 +163,29 @@ module Flor
         else o.to_s
         end
 
-      m = s.match(/\A\/(.*)\/([a-z]*)\z/)
+      m = s.match(/\A\/(.*)\/([imxouesn]*)\z/)
 
       return Regexp.new(s) unless m
+
+      m1 = m[1]
+      e = (m[2].match(/[uesn]/) || [])[0]
+
+      m1 =
+        case e
+        when 'u' then m1.encode('UTF-8')
+        when 'e' then m1.encode('EUC-JP')
+        when 's' then m1.encode('Windows-31J')
+        when 'n' then m1.encode('ASCII-8BIT')
+        else m1
+        end
 
       flags = 0
       flags = flags | Regexp::EXTENDED if m[2].index('x')
       flags = flags | Regexp::IGNORECASE if m[2].index('i')
       #flags = flags | Regexp::MULTILINE if m[2].index('m')
+      flags = flags | Regexp::FIXEDENCODING if e
 
-      Regexp.new(m[1], flags)
+      Regexp.new(m1, flags)
     end
 
     #
