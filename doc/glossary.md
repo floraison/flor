@@ -144,6 +144,12 @@ Each time an [executor](#executor) is instantiated to run one or more [messages]
 1. The first run reaches the sleep and sets a [timer](#timer) for it;
 2. Then when the timer triggers, a new [executor](#executor) is instantiated and it performs the post-sleep portion which is the final run ending with a "terminated" message ending the execution.
 
+## runner
+
+TODO (may get renamed, as "run" is already an executor concept).
+
+The flor component that reads hook or tasker configurations and runs Ruby classes or external scripts with the incoming messages (hooked messages or task messages).
+
 ## scheduler
 
 The scheduler is the flor component (daemon) that watches for incoming [messages](#message) and instantiates [executors](#executor) to act upon them. It's named after its main responsibility which is to schedule flor [executions](#execution) by instantiating [executors](#executors) to run them. A scheduler is composed of a [storage](#storage), a [hooker](#hooker), a [loader](#loader) and a [ganger](#ganger).
