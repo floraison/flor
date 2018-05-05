@@ -1,11 +1,16 @@
 
 source 'https://rubygems.org'
 
-#gem 'raabro', path: '../raabro/' # temporarily
-#gem 'raabro', git: 'https://github.com/jmettraux/raabro.git' # temporarily
-#gem 'fugit', path: '../fugit/' # temporarily
-#gem 'dense', git: 'https://github.com/floraison/dense.git' # temporarily
-#gem 'dense', path: '../dense/' # temporarily
+#gem 'raabro', git: 'https://github.com/jmettraux/raabro.git'
+#gem 'raabro', path: '../raabro/'
+  #
+#gem 'fugit', git: 'https://github.com/floraison/fugit.git'
+#gem 'fugit', path: '../fugit/'
+  #
+#gem 'dense', git: 'https://github.com/floraison/dense.git'
+#gem 'dense', path: '../dense/'
+  #
+  # temporary redirections
 
 group :test do
   gem 'sqlite3', '1.3.11', :platforms => [ :mri ]
