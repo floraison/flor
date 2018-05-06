@@ -366,14 +366,14 @@ module Flor
       o[1].is_a?(Hash) && (o[1].keys & %w[ nid cnid fun ]).size == 3
     end
 
-    def is_task_tree?(o)
-
-      o.is_a?(Array) &&
-      o[0] == '_task' &&
-      o[2].is_a?(Integer) &&
-      o[1].is_a?(Hash) &&
-      o[1]['task'].is_a?(String)
-    end
+#    def is_task_tree?(o)
+#
+#      o.is_a?(Array) &&
+#      o[0] == '_task' &&
+#      o[2].is_a?(Integer) &&
+#      o[1].is_a?(Hash) &&
+#      o[1]['task'].is_a?(String)
+#    end
 
     def is_regex_tree?(o)
 
