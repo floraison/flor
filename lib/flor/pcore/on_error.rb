@@ -5,12 +5,14 @@ class Flor::Pro::OnError < Flor::Procedure
 
   def pre_execute
 
-    unatt_unkeyed_children
+    @node['rets'] = []
   end
 
-  def receive_non_att
+  def receive_last
 
-    store_on_error
+    on_error = (@node['rets'] || [])
+      .find { |o| Flor.is_proc_tree?(o) || Flor.is_func_tree?(o) }
+    store_on_error(on_error) if on_error
 
     super
   end

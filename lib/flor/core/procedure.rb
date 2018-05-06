@@ -421,11 +421,11 @@ class Flor::Procedure < Flor::Node
   #
   # Has no effect if there is no parent node.
   #
-  def store_on_error
+  def store_on_error(on_error=nil)
 
     pnode = parent_node; return unless pnode
 
-    on_error = payload['ret']
+    on_error ||= payload['ret']
     on_error[1]['on_error'] = true
 
     (pnode['on_error'] ||= []) << on_error
