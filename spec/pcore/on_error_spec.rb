@@ -61,6 +61,28 @@ describe 'Flor procedures' do
     context 'block' do
 
       it 'binds in the parent node'
+#
+#        @executor.launch(
+#          %q{
+#            sequence
+#              on_error
+#                push f.l err
+#              stall _
+#          })
+#
+#        expect(
+#          @executor.execution['nodes']['0']['on_error']
+#        ).to eq(
+#          [ [ '_func',
+#              { 'nid' => '0_0_0_0_0',
+#                'tree' => [ 'def', [ [ '_att', [ [ 'err', [], 3 ] ], 3 ] ], 3 ],
+#                'cnid' => '0',
+#                'fun' => 0,
+#                'on_error' => true },
+#              3 ] ]
+#        )
+#      end
+
       it 'triggers on error'
     end
   end

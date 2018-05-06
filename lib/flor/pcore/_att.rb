@@ -210,7 +210,7 @@ class Flor::Pro::Att < Flor::Procedure
 
   def receive_on_error
 
-    store_on_error
+    store_on(:error)
 
     wrap_reply
   end

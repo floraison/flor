@@ -12,7 +12,7 @@ class Flor::Pro::OnError < Flor::Procedure
 
     on_error = (@node['rets'] || [])
       .find { |o| Flor.is_proc_tree?(o) || Flor.is_func_tree?(o) }
-    store_on_error(on_error) if on_error
+    store_on(:error, on_error) if on_error
 
     super
   end
