@@ -32,7 +32,7 @@ describe 'Flor procedures' do
           @executor.execution['nodes']['0']['on_error']
         ).to eq(
           [ [ '_func',
-              { 'nid' => '0_0_0_0_0',
+              { 'nid' => '0_0_0_0',
                 'tree' => [ 'def', [ [ '_att', [ [ 'err', [], 3 ] ], 3 ] ], 3 ],
                 'cnid' => '0',
                 'fun' => 0,

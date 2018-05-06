@@ -425,9 +425,12 @@ class Flor::Procedure < Flor::Node
 
     pnode = parent_node; return unless pnode
 
+    prc ||= payload['ret']
+
+    return unless Flor.is_func_tree?(prc)
+
     flavour = "on_#{key}"
 
-    prc ||= payload['ret']
     prc[1][flavour] = true
 
     (pnode[flavour] ||= []) << prc
