@@ -62,7 +62,7 @@ class Flor::Procedure < Flor::Node
     close_node('on-error')
 
     @node['on_receive_last'] =
-      apply(@node['on_error'].shift, [ @message ], tree[2])
+      apply(@node['on_error'].shift, [ @message, @message['error'] ], tree[2])
 
     do_wrap_cancel_children ||
     do_receive # which should trigger 'on_receive_last'

@@ -47,7 +47,7 @@ describe 'Flor core' do
 
       r = @executor.launch(
         %q{
-          sequence on_error: (def err \ push f.l err.error.msg)
+          sequence on_error: (def msg \ push f.l msg.error.msg)
             push f.l 0
             push f.l x
             push f.l 1

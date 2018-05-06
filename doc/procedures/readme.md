@@ -37,6 +37,7 @@
 * [noeval](noeval.md) - Immediately replies, children are not evaluated
 * [noret](noret.md) - executes its children, but doesn't alter the received f.ret
 * [not](not.md) - `not` negates its last child (or its last unkeyed attribute)
+* [on](on.md) - Catches signals or errors.
 * [push, pushr](push.md) - Pushes a value into an array (in a variable or a field).
 * [rand](rand.md) - Returns a randomly generated number.
 * [range](range.md) - "range" is a procedure to generate ranges of integers.
@@ -57,7 +58,6 @@
 * [do-trap](do_trap.md) - A version of trap that accepts a block instead of a function.
 * [every](every.md) - "every" is a macro procedure.
 * [graft, import](graft.md) - Graft a subtree into the current flo
-* [on](on.md) - Traps a signal by name.
 * [schedule](schedule.md) - Schedules a function
 * [signal](signal.md) - Used in conjuction with "on".
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
@@ -70,7 +70,7 @@
   * [Flor::Macro](https://github.com/floraison/flor/blob/master/)
     * [Flor::Pro::DoReturn](https://github.com/floraison/flor/blob/master/lib/flor/pcore/do_return.rb) : [do-return](do_return.md)
     * [Flor::Pro::DoTrap](https://github.com/floraison/flor/blob/master/lib/flor/punit/do_trap.rb) : [do-trap](do_trap.md)
-    * [Flor::Pro::On](https://github.com/floraison/flor/blob/master/lib/flor/punit/on.rb) : [on](on.md)
+    * [Flor::Pro::On](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on.rb) : [on](on.md)
   * [Flor::Pro::Apply](https://github.com/floraison/flor/blob/master/lib/flor/pcore/apply.rb) : [apply](apply.md)
   * [Flor::Pro::Arith](https://github.com/floraison/flor/blob/master/lib/flor/pcore/arith.rb) : +, -, *, /, %
   * [Flor::Pro::Atom](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_atom.rb) : _num, _boo, _sqs, _dqs, _rxs, _nul, _func
@@ -113,6 +113,7 @@
   * [Flor::Pro::NoEval](https://github.com/floraison/flor/blob/master/lib/flor/pcore/noeval.rb) : [noeval](noeval.md)
   * [Flor::Pro::NoRet](https://github.com/floraison/flor/blob/master/lib/flor/pcore/noret.rb) : [noret](noret.md)
   * [Flor::Pro::Not](https://github.com/floraison/flor/blob/master/lib/flor/pcore/not.rb) : [not](not.md)
+  * [Flor::Pro::OnError](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_error.rb) : on_error
   * [Flor::Pro::PatContainer](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_.rb)
     * [Flor::Pro::PatArr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_arr.rb) : _pat_arr
     * [Flor::Pro::PatGuard](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_guard.rb) : _pat_guard
