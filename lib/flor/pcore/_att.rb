@@ -210,10 +210,7 @@ class Flor::Pro::Att < Flor::Procedure
 
   def receive_on_error
 
-    oe = payload['ret']
-    oe[1]['on_error'] = true
-
-    (parent_node['on_error'] ||= []) << oe
+    store_on_error
 
     wrap_reply
   end

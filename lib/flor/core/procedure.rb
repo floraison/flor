@@ -417,6 +417,20 @@ class Flor::Procedure < Flor::Node
     wrap_reply
   end
 
+  # Grab on_error proc from incoming payload and stores it into parent node.
+  #
+  # Has no effect if there is no parent node.
+  #
+  def store_on_error
+
+    pnode = parent_node; return unless pnode
+
+    on_error = payload['ret']
+    on_error[1]['on_error'] = true
+
+    (pnode['on_error'] ||= []) << on_error
+  end
+
   # Used by 'cursor' (and 'loop') when
   # ```
   # cursor 'main'
