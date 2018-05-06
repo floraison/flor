@@ -174,22 +174,21 @@ describe 'Flor punit' do
 
       3.times { @unit.wait(exid, 'end') }
 
-      exe = @unit.executions[exid: exid]
+      nkeys0 = @unit.executions[exid: exid].nodes.keys
+
+      @unit.cancel(exid: exid, nid: '0_0')
+      @unit.wait(exid, 'ceased; end')
+
+      nkeys1 = @unit.executions[exid: exid].nodes.keys
 
       expect(
-        exe.nodes.keys
+        nkeys0
       ).to eq(%w[
         0 0_0 0_1 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2
       ])
 
-      @unit.cancel(exid: exid, nid: '0_0')
-
-      @unit.wait(exid, 'ceased; end')
-
-      exe = @unit.executions[exid: exid]
-
       expect(
-        exe.nodes.keys
+        nkeys1
       ).to eq(%w[
         0 0_1 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2
       ])
