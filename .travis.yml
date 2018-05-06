@@ -7,8 +7,8 @@ rvm:
   #- 2.1.1
   - 2.2.2
   - 2.3.1
-  - 2.4.4
-  - 2.5.1
+  - 2.4.2
+  #- 2.5.1 # bundler issues May 2018
   #- jruby-19mode # Travis broken September 2017
   #- jruby-20mode # Travis broken September 2017
   - jruby-9.1.13.0
