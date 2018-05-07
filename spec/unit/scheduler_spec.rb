@@ -428,7 +428,7 @@ describe 'Flor unit' do
         r = @unit.launch(
           %q{
             trap point: 'signal', name: 's0', payload: 'event'
-              def msg; trace "s0:$(msg.payload.ret)"
+              def msg \ trace "s0:$(msg.payload.ret)"
             stall _
           },
           wait: '0_1 receive')
