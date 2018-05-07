@@ -21,7 +21,7 @@ describe 'Flor core' do
 
       r = @executor.launch(
         %q{
-          sequence on_error: (def err; _)
+          sequence on_error: (def err \ _)
             push f.l 0
         },
         payload: { 'l' => [] })
