@@ -412,6 +412,7 @@ module Flor
 
     def cancel(message)
 
+#p message
       if n = @execution['nodes'][message['nid']]
         apply(n, message)
       else
@@ -482,16 +483,21 @@ module Flor
         "node #{message['nid']} is gone, cannot flag it as failed"
       ) unless n
 
-#begin
       n['failure'] = Flor.dup(message)
-#rescue; pp message; exit 0; end
 
-      oep = lookup_on_error_parent(message)
-      return oep.trigger_on_error if oep
-
-      @unit.logger.log_err(self, message)
-
-      []
+      if oep = lookup_on_error_parent(message)
+        #
+        # There is a parent with an 'on_error', trigger it that parent
+        # with its 'on_error' turned on.
+        #
+        oep.trigger_on_error
+      else
+        #
+        # Simply log and don't add further messages ([]) to execute
+        #
+        @unit.logger.log_err(self, message)
+        []
+      end
     end
 
     def signal(message); []; end
