@@ -208,12 +208,8 @@ class Flor::Pro::Att < Flor::Procedure
     wrap_reply
   end
 
-  def receive_on_error
-
-    store_on(:error)
-
-    wrap_reply
-  end
+  def receive_on_error; store_on(:error); wrap_reply; end
+  def receive_on_cancel; store_on(:cancel); wrap_reply; end
 
   def receive_flank
 

@@ -255,7 +255,7 @@ class Flor::Node
     nil
   end
 
-  def to_procedure
+  def to_procedure_node
 
     Flor::Procedure.new(@executor, @node, @message)
   end

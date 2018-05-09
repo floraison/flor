@@ -22,7 +22,7 @@ describe 'Flor procedures' do
       @executor.launch(
         %q{
           sequence
-            on_error (def err; _)
+            on_error (def err \ _)
             stall _
         })
 
@@ -30,8 +30,10 @@ describe 'Flor procedures' do
         @executor.execution['nodes']['0']['on_error']
       ).to eq(
         [ [ '_func',
-            { 'nid' => '0_0_0_0',
-              'tree' => [ 'def', [ [ '_att', [ [ 'err', [], 3 ] ], 3 ] ], 3 ],
+            { 'nid' => '0_0_0',
+              'tree' => [
+                'def', [
+                  [ '_att', [ [ 'err', [], 3 ] ], 3 ], [ '_', [], 3 ] ], 3],
               'cnid' => '0',
               'fun' => 0,
               'on_error' => true },

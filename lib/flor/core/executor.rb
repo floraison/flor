@@ -412,8 +412,8 @@ module Flor
 
     def cancel(message)
 
-#p message
       if n = @execution['nodes'][message['nid']]
+        activate_on_cancel(n, message)
         apply(n, message)
       else
         [] # nothing, node gone
@@ -505,7 +505,21 @@ module Flor
     def lookup_on_error_parent(message)
 
       nd = Flor::Node.new(self, nil, message).on_error_parent
-      nd ? nd.to_procedure : nil
+      nd ? nd.to_procedure_node : nil
+    end
+
+    def activate_on_cancel(node, message)
+
+# TODO don't activate if message['flavour'] == 'kill'
+      return if message['on_receive_last']
+
+      oc = node['on_cancel']
+      return unless oc && oc.any?
+
+      nd = Flor::Procedure.new(self, node, message)
+
+      message['on_receive_last'] =
+        nd.send(:apply, oc.shift, [ Flor.dup(message) ], nd.tree[2])
     end
   end
 end
