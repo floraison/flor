@@ -240,7 +240,10 @@ module Flor
 
       return [ head.rewrite ] if head.is_a?(Flor::Macro)
 
-      messages = head.send("do_#{message['point']}")
+      point = message['point']
+      point = 'kill' if message['flavour'] == 'kill'
+
+      messages = head.send("do_#{point}")
 
       fail StandardError.new(
         "#{heap}/#{message['point']} did not return an Array"
@@ -401,14 +404,28 @@ module Flor
         #
         # FIXME is it in use???
 
-      [
-        { 'point' => 'receive',
+      [ { 'point' => 'receive',
           'exid' => message['exid'],
           'nid' => message['nid'],
           'payload' => message['payload'],
-          'tasker' => message['tasker'] }
-      ]
+          'tasker' => message['tasker'] } ]
     end
+
+###
+    def activate_on_cancel(node, message)
+
+# TODO don't activate if message['flavour'] == 'kill'
+      return if message['on_receive_last']
+
+      oc = node['on_cancel']
+      return unless oc && oc.any?
+
+      nd = Flor::Procedure.new(self, node, message)
+
+      message['on_receive_last'] =
+        nd.send(:apply, oc.shift, [ Flor.dup(message) ], nd.tree[2])
+    end
+###
 
     def cancel(message)
 
@@ -506,20 +523,6 @@ module Flor
 
       nd = Flor::Node.new(self, nil, message).on_error_parent
       nd ? nd.to_procedure_node : nil
-    end
-
-    def activate_on_cancel(node, message)
-
-# TODO don't activate if message['flavour'] == 'kill'
-      return if message['on_receive_last']
-
-      oc = node['on_cancel']
-      return unless oc && oc.any?
-
-      nd = Flor::Procedure.new(self, node, message)
-
-      message['on_receive_last'] =
-        nd.send(:apply, oc.shift, [ Flor.dup(message) ], nd.tree[2])
     end
   end
 end

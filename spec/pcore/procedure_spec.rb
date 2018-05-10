@@ -297,17 +297,17 @@ describe Flor::Procedure do
 
         puts "  \\\\\\ child ms before kill ms" if @executor.conf['log_msg']
 
-        ms = @executor.walk(child_then_kill_ms)
+        m = @executor.walk(child_then_kill_ms)
 
-        expect(F.to_s(ms)).to eq('(msg  terminated from:0)')
+        expect(F.to_s(m)).to eq('(msg  terminated from:0)')
 
         # scenario 1
 
         puts "  \\\\\\ kill ms before child ms" if @executor.conf['log_msg']
 
-        ms = cx.walk(kill_then_child_ms)
+        m = cx.walk(kill_then_child_ms)
 
-        expect(F.to_s(ms)).to eq('(msg  terminated from:0)')
+        expect(F.to_s(m)).to eq('(msg  terminated from:0)')
       end
     end
 

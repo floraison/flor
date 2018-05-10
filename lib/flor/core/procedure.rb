@@ -650,37 +650,56 @@ class Flor::Procedure < Flor::Node
     wrap_cancel_children(h).instance_eval { |ms| ms.any? ? ms : nil }
   end
 
-  # The executor calls #do_cancel, while most procedure implementations
-  # override #cancel...
+  # Called by the executor, in turns call cancel and cancel_when_ methods
+  # which may be overriden.
   #
   def do_cancel
 
-    if @message['flavour'] == 'kill'
+    orl = @message['on_receive_last']
+    @node['on_receive_last'] = orl if orl
 
-      return [] if node_ended?
-      kill
+    return cancel_when_ended if node_ended?
+    return cancel_when_closed if node_closed?
 
-    else
-
-      orl = @message['on_receive_last']
-      @node['on_receive_last'] = orl if orl
-
-      return cancel_when_ended if node_ended?
-      return cancel_when_closed if node_closed?
-      cancel
-    end
+    cancel
   end
 
+  # Called by the executor, in turns call kill and kill_when_ methods
+  # which may be overriden.
+  #
+  def do_kill
+
+    return kill_when_ended if node_ended?
+    #return kill_when_closed if node_closed? # nothing of the sort
+
+    kill
+  end
+
+  # Handle an incoming cancel message when the node has ended.
+  # Open for override.
+  #
   def cancel_when_ended
 
     [] # node has already emitted reply to parent, ignore any later request
   end
 
+  # Handle an incoming cancel message when the node has closed.
+  # Open for override (overridden by "cursor" and "until")
+  #
   def cancel_when_closed
 
     [] # by default, no effect
   end
 
+  # When the node has ended, incoming kill messages are silenced ([] return).
+  #
+  def kill_when_ended
+
+    [] # no effect
+  end
+
+  # The core cancel work, is overriden by some procedure implementations.
+  #
   def cancel
 
     close_node
@@ -690,6 +709,9 @@ class Flor::Procedure < Flor::Node
     wrap_cancelled
   end
 
+  # The core kill work, open for override, but actually no procedure
+  # provides a custom implementation. Kill is kill for every of the procs.
+  #
   def kill
 
     close_node

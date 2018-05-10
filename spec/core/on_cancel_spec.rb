@@ -55,6 +55,32 @@ describe 'Flor core' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 0, 'cancel:0_0', 1 ])
     end
+
+#    it 'xxx' do
+#
+#      flon = %q{
+#        sequence
+#          push f.l 0
+#          sequence on_cancel: (def msg \ push f.l "$(msg.point):$(msg.nid)")
+#            push f.l 1
+#            stall _
+#          push f.l 3
+#      }
+#
+#      ms = @executor.launch(
+#        flon, payload: { 'l' => [] }, until: '0_1_2 execute')
+#puts "---"
+#ms.each { |m| p m }
+#
+#      m = @executor.walk([
+#        { 'point' => 'cancel',
+#          'nid' => '0', 'exid' => @executor.exid,
+#          'payload' => { 'l' => [] } } ])
+#puts "---"
+#p m
+#    end
+
+    it 'is disregarded if the cancel is a "kill"'
   end
 end
 
