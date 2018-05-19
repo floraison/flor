@@ -358,20 +358,18 @@ module Flor
       puts on_start_exc(ex)
     end
 
-    def prepare_on_receive_last(msg, opts)
+    def prepare_re_apply_messages(msg, opts)
 
       fail ArgumentError.new("missing 'payload' to re_apply") \
         unless msg['payload']
 
       t = Flor.parse(opts[:tree], 're_apply', {})
 
-      [
-        { 'point' => 'execute',
+      [ { 'point' => 'execute',
           'exid' => msg['exid'], 'nid' => msg['nid'],
           'from' => 'parent',
           'tree' => t,
-          'payload' => msg['payload'] }
-      ]
+          'payload' => msg['payload'] } ]
     end
 
     def prepare_message(point, args)
@@ -396,7 +394,7 @@ module Flor
       end
 
       if opts[:re_apply]
-        msg['on_receive_last'] = prepare_on_receive_last(msg, opts)
+        msg['on_receive_last'] = prepare_re_apply_messages(msg, opts)
       end
 
       fail ArgumentError.new('missing :exid key') \

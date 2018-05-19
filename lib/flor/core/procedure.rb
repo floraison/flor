@@ -657,6 +657,8 @@ class Flor::Procedure < Flor::Node
 
     orl = @message['on_receive_last']
     @node['on_receive_last'] = orl if orl
+      #
+      # the message on_receive_last is used by the re_apply feature
 
     return cancel_when_ended if node_ended?
     return cancel_when_closed if node_closed?
