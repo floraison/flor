@@ -124,15 +124,15 @@ module Flor
 
       nid = message['nid']
 
-      now = Flor.tstamp
+      n = Flor.tstamp
 
       node = {
         'nid' => nid,
         'parent' => message['from'],
         'payload' => message['payload'],
-        'status' => [ { 'status' => nil, 'point' => 'execute', 'ctime' => now } ],
-        'ctime' => now,
-        'mtime' => now }
+        'status' => [ { 'status' => nil, 'point' => 'execute', 'ctime' => n } ],
+        'ctime' => n,
+        'mtime' => n }
 
       %w[ vars vdomain cnid dbg ].each do |k|
         v = message[k]
@@ -349,13 +349,11 @@ module Flor
 
       ts = node['tags']; return [] unless ts && ts.any?
 
-      [
-        { 'point' => 'left',
+      [ { 'point' => 'left',
           'tags' => ts,
           'exid' => exid,
           'nid' => node['nid'],
-          'payload' => message['payload'] }
-      ]
+          'payload' => message['payload'] } ]
     end
 
     def error_reply(node, message, err)
