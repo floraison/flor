@@ -134,13 +134,22 @@ module Flor
 
         messages.concat(msgs)
 
-        return messages if message_match?(message, opts[:until_after])
-        return messages if message_match?(messages, opts[:until])
+        return messages \
+          if message_match?(message, opts[:until_after])
+        return messages \
+          if message_match?(messages, opts[:until])
+            #
+            # Walk is suspended if options :until_after or :until
+            # are satisfied.
+            # Returns the remaining messages.
 
         return message \
           if message['point'] == 'terminated'
         return message \
           if message['point'] == 'failed' && message['on_error'] == nil
+            #
+            # Walk exits when execution terminates or fails (without on_error).
+            # Returns the last message
       end
     end
 
