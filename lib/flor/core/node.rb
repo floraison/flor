@@ -86,6 +86,9 @@ class Flor::Node
   def node_status
     @node['status'].last
   end
+  def node_status_flavour
+    node_status['flavour']
+  end
   def node_closed?
     node_status['status'] == 'closed'
   end

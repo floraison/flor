@@ -298,7 +298,8 @@ class Flor::Procedure < Flor::Node
     from_child = cnodes.delete(from) if cnodes_any? && remove
 
     if node_closed?
-      return receive_from_child_when_closed if from_child
+      return receive_from_child_when_closed \
+        if from_child || node_status_flavour
       return receive_when_closed
     elsif node_ended?
       return receive_when_ended

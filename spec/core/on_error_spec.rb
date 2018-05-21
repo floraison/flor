@@ -58,17 +58,17 @@ describe 'Flor core' do
       expect(r['payload']['l']).to eq([ 0, "don't know how to apply \"x\"" ])
     end
 
-    it 'triggers when it has an error'# do
-#
-#      r = @executor.launch(
-#        %q{
-#          push f.l x on_error: (def msg \ push f.l msg.error.msg)
-#        },
-#        payload: { 'l' => [ -1 ] })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['l']).to eq([ -1, "don't know how to apply \"x\"" ])
-#    end
+    it 'triggers when it has an error' do
+
+      r = @executor.launch(
+        %q{
+          push f.l x on_error: (def msg \ push f.l msg.error.msg)
+        },
+        payload: { 'l' => [ -1 ] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ -1, "don't know how to apply \"x\"" ])
+    end
 
     it 'accepts the name of a function' do
 
