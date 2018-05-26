@@ -443,7 +443,12 @@ describe Flor do
 
       it "turns #{serialized.inspect} back to #{regex.inspect}" do
 
-        expect(Flor.to_regex(serialized)).to eq(regex)
+        r = Flor.to_regex(serialized)
+
+        expect(r.class).to eq(Regexp)
+        expect(r.to_s).to eq(regex.to_s)
+
+        expect(r).to eq(regex) if RUBY_VERSION >= '2'
       end
     end
   end
