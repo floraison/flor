@@ -181,17 +181,12 @@ describe 'Flor punit' do
 
       nkeys1 = @unit.executions[exid: exid].nodes.keys
 
-      expect(
-        nkeys0
-      ).to eq(%w[
-        0 0_0 0_1 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2
-      ])
+      expect(nkeys0)
+        .to eq(%w[ 0 0_0 0_1 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 ])
 
-      expect(
-        nkeys1
-      ).to eq(%w[
-        0 0_1 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2
-      ])
+      expect(nkeys1)
+        .to eq(%w[ 0 0_1 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 ])
+        .or eq(%w[ 0 0_1 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 0_0_1-3 0_0_1_1-3 ])
     end
 
     context 'cron' do
