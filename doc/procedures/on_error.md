@@ -49,7 +49,7 @@ sequence
 
 ## see also
 
-[On](on.md).
+[On](on.md), [on_cancel](on_cancel.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/on_error.rb)

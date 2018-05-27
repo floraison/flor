@@ -49,7 +49,7 @@ class Flor::Pro::OnError < Flor::Procedure
   #
   # ## see also
   #
-  # On.
+  # On, on_cancel.
 
   name 'on_error'
 
