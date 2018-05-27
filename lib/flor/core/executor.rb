@@ -409,30 +409,12 @@ module Flor
           'tasker' => message['tasker'] } ]
     end
 
-###
-    def activate_on_cancel(node, message)
-
-# TODO don't activate if message['flavour'] == 'kill'
-      return if message['on_receive_last']
-
-      oc = node['on_cancel']
-      return unless oc && oc.any?
-
-      nd = Flor::Procedure.new(self, node, message)
-
-      message['on_receive_last'] =
-        nd.send(:apply, oc.shift, [ Flor.dup(message) ], nd.tree[2])
-    end
-###
-
     def cancel(message)
 
-      if n = @execution['nodes'][message['nid']]
-        activate_on_cancel(n, message)
-        apply(n, message)
-      else
-        [] # nothing, node gone
-      end
+      n = @execution['nodes'][message['nid']]
+      return [] unless n # node gone
+
+      apply(n, message)
     end
 
     def process(message)

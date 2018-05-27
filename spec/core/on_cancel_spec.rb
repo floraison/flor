@@ -56,29 +56,34 @@ describe 'Flor core' do
       expect(r['payload']['l']).to eq([ 0, 'cancel:0_0', 1 ])
     end
 
-#    it 'xxx' do
-#
-#      flon = %q{
-#        sequence
-#          push f.l 0
-#          sequence on_cancel: (def msg \ push f.l "$(msg.point):$(msg.nid)")
-#            push f.l 1
-#            stall _
-#          push f.l 3
-#      }
-#
-#      ms = @executor.launch(
-#        flon, payload: { 'l' => [] }, until: '0_1_2 execute')
-#puts "---"
-#ms.each { |m| p m }
-#
-#      m = @executor.walk([
-#        { 'point' => 'cancel',
-#          'nid' => '0', 'exid' => @executor.exid,
-#          'payload' => { 'l' => [] } } ])
-#puts "---"
-#p m
-#    end
+    it 'runs when the cancel comes from above' do
+
+      flon = %q{
+        sequence
+          push f.l 0
+          sequence on_cancel: (def msg \ push f.l "$(msg.point):$(msg.nid)")
+            push f.l 1
+            stall _
+          push f.l 3
+      }
+
+      ms = @executor.launch(
+        flon, payload: { 'l' => [] }, until: '0_1_2 execute')
+      m = ms.first
+
+      expect(ms.size).to eq(1)
+      expect(m['point']).to eq('execute')
+      expect(m['payload']['l']).to eq([ 0, 1 ])
+
+      m = @executor.walk([
+        { 'point' => 'cancel',
+          'nid' => '0', 'exid' => @executor.exid,
+          'payload' => { 'l' => [] } } ])
+
+      expect(m).not_to eq(nil)
+      expect(m['point']).to eq('terminated')
+      expect(m['payload']['l']).to eq([ 'cancel:0_1' ])
+    end
 
     it 'is disregarded if the cancel is a "kill"'
   end

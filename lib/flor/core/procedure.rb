@@ -55,6 +55,11 @@ class Flor::Procedure < Flor::Node
     # empty default implementation
   end
 
+  def prepare_on_receive_last(tree)
+
+    apply(tree.shift, [ @message ], tree[2])
+  end
+
   def trigger_on_error
 
     @message['on_error'] = true
@@ -315,7 +320,9 @@ class Flor::Procedure < Flor::Node
     return nil unless orl
     return nil if orl.empty?
 
-    open_node unless node_status['flavour'] == 'on-error'
+    open_node \
+      unless node_status_flavour == 'on-error' || @node['on_cancel']
+
     @node['on_receive_last'] = []
 
     @node['mtime'] = Flor.tstamp
@@ -656,10 +663,16 @@ class Flor::Procedure < Flor::Node
   #
   def do_cancel
 
-    orl = @message['on_receive_last']
-    @node['on_receive_last'] = orl if orl
+    if orl = @message['on_receive_last']
       #
       # the message on_receive_last is used by the re_apply feature
+
+      @node['on_receive_last'] = orl
+
+    elsif oc = @node['on_cancel']
+
+      @node['on_receive_last'] = prepare_on_receive_last(oc)
+    end
 
     return cancel_when_ended if node_ended?
     return cancel_when_closed if node_closed?
@@ -706,6 +719,7 @@ class Flor::Procedure < Flor::Node
   def cancel
 
     close_node
+    #close_node(@node['on_cancel'] ? 'on-cancel' : nil)
 
     do_wrap_cancel_children ||
     pop_on_receive_last ||
