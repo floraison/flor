@@ -45,8 +45,11 @@ describe 'Flor procedures' do
 
       r = @executor.launch(
         %q{
+          #define eh err
+          #  push f.l err.error.msg
           sequence
             on_error (def err \ push f.l err.error.msg)
+            #on_error eh
             push f.l 0
             push f.l x
             push f.l 1

@@ -38,6 +38,7 @@
 * [noret](noret.md) - executes its children, but doesn't alter the received f.ret
 * [not](not.md) - `not` negates its last child (or its last unkeyed attribute)
 * [on](on.md) - Catches signals or errors.
+* [on_error](on_error.md) - Counterpart to the on_error: attribute.
 * [push, pushr](push.md) - Pushes a value into an array (in a variable or a field).
 * [rand](rand.md) - Returns a randomly generated number.
 * [range](range.md) - "range" is a procedure to generate ranges of integers.
@@ -113,7 +114,7 @@
   * [Flor::Pro::NoEval](https://github.com/floraison/flor/blob/master/lib/flor/pcore/noeval.rb) : [noeval](noeval.md)
   * [Flor::Pro::NoRet](https://github.com/floraison/flor/blob/master/lib/flor/pcore/noret.rb) : [noret](noret.md)
   * [Flor::Pro::Not](https://github.com/floraison/flor/blob/master/lib/flor/pcore/not.rb) : [not](not.md)
-  * [Flor::Pro::OnError](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_error.rb) : on_error
+  * [Flor::Pro::OnError](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_error.rb) : [on_error](on_error.md)
   * [Flor::Pro::PatContainer](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_.rb)
     * [Flor::Pro::PatArr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_arr.rb) : _pat_arr
     * [Flor::Pro::PatGuard](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_guard.rb) : _pat_guard
