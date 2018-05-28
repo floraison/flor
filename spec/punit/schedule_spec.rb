@@ -207,7 +207,6 @@ describe 'Flor punit' do
 
         exid = m['exid']
 
-        #sleep 0.350
         @unit.wait(exid, 'end')
           # give time to the trigger to write to the database
 
@@ -220,7 +219,7 @@ describe 'Flor punit' do
         expect(tms.size).to be_between(4, 5)
 
         expect(t.schedule).to eq('* * * * * *')
-        expect(t.count).to eq(tms.size)
+        expect(t.count).to be_between(4, 5)
 
         ss = (seconds.first..seconds.first + tms.size - 1)
           .collect { |s| s % 60 }
