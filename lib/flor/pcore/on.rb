@@ -23,7 +23,7 @@ class Flor::Pro::On < Flor::Macro
   #   task 'bob' mission: "order can of $(sig) paint"
   # ```
   #
-  # ## errors
+  # ## error
   #
   # "on" understands `on error` with a block. It in facts turns:
   # ```
@@ -45,6 +45,28 @@ class Flor::Pro::On < Flor::Macro
   # If it were, it would trap the signal named "error".
   #
   #
+  # ## cancel
+  #
+  # "on" understands `on cancel` with a block. It in facts turns:
+  # ```
+  # sequence
+  #   on cancel
+  #     push f.l msg # a block with a `msg` variable
+  #   # ...
+  # ```
+  # into:
+  # ```
+  # sequence
+  #   on_cancel
+  #     def msg # a anonymous function definition with a `msg` argument
+  #       push f.l msg
+  #   # ...
+  # ```
+  #
+  # Please note that "cancel" in `on cancel` is not quoted, nor double quoted.
+  # If it were, it would trap the signal named "cancel".
+  #
+  #
   # ## see also
   #
   # Trap and signal.
@@ -62,7 +84,7 @@ class Flor::Pro::On < Flor::Macro
 
   protected
 
-  CATCHES = %w[ error ]
+  CATCHES = %w[ error cancel ]
   #CATCHES = %w[ error cancel timeout ]
 
   def find_catch

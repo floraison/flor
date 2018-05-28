@@ -14,6 +14,24 @@ push f.l 2
 ```
 Ends up with `[ 0, 'cancel:0_1', 2 ]` in the field `l`.
 
+## on and on_cancel
+
+"on_cancel" is made to allow for `on cancel`, so that:
+```
+sequence
+  on cancel
+    push f.l msg # a block with a `msg` variable
+  # ...
+```
+gets turned into:
+```
+sequence
+  on_cancel
+    def msg # a anonymous function definition with a `msg` argument
+      push f.l msg
+  # ...
+```
+
 
 ## see also
 
