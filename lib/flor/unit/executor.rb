@@ -141,6 +141,7 @@ module Flor
     def trigger(message)
 
       m = message['message']
+      m['triggered'] = message['triggered']
 
       m['nid'] = Flor.sub_nid(m['nid'], counter_next('subs')) \
         if m['point'] == 'execute'

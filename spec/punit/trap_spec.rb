@@ -103,6 +103,48 @@ describe 'Flor punit' do
       m1 = ms.find { |m| m['point'] == 'trigger' }
 
       expect(m1['sm']).to eq(m0['m'])
+
+      expect(
+        @unit.journal
+          .collect { |m|
+            t = m['triggered'] ? "<--t:#{m['triggered']['nid']}" : ''
+            "#{m['point']}:#{m['nid']}#{t}" }
+          .join("\n")
+      ).to eq(%w[
+       execute:0
+       execute:0_0
+       execute:0_0_0
+       execute:0_0_0_0
+       receive:0_0_0
+       receive:0_0
+       execute:0_0_1
+       receive:0_0
+       trap:0_0
+       receive:0
+       execute:0_1
+       execute:0_1_0
+       execute:0_1_0_0
+       receive:0_1_0
+       receive:0_1
+       receive:0
+       receive:
+       cancel:0_0
+       receive:
+       ceased:
+       terminated:
+       trigger:0_0<--t:0_0
+       execute:0_0_1-1<--t:0_0
+       execute:0_0_1_0-1<--t:0_0
+       receive:0_0_1-1<--t:0_0
+       execute:0_0_1_1-1<--t:0_0
+       execute:0_0_1_1_0-1<--t:0_0
+       execute:0_0_1_1_0_0-1<--t:0_0
+       receive:0_0_1_1_0-1<--t:0_0
+       receive:0_0_1_1-1<--t:0_0
+       receive:0_0_1-1<--t:0_0
+       receive:0_0<--t:0_0
+       end:
+      ].join("\n"))
     end
 
     it 'does not cancel its children' do

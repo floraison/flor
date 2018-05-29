@@ -417,12 +417,31 @@ module Flor
       apply(n, message)
     end
 
+    def make_stamp(message)
+
+      { 'nid' => message['nid'],
+        'at' => Flor.tstamp,
+        'type' => message['type'] }
+    end
+
     def process(message)
 
       begin
 
         message['m'] = counter_next('msgs') # number messages
         message['pr'] = counter('runs') # "processing run"
+
+        pt = message['point']
+          #
+        if pt == 'trigger'
+          message['triggered'] ||= make_stamp(message)
+        elsif pt == 'cancel' && message['flavour'] == 'kill'
+          message['killed'] ||= make_stamp(message)
+        elsif pt == 'cancel' && message['flavour'] == 'timeout'
+          message['timedout'] ||= make_stamp(message)
+        elsif pt == 'cancel'
+          message['cancelled'] ||= make_stamp(message)
+        end
 
         determine_heat(message)
 

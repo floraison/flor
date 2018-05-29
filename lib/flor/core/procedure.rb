@@ -321,7 +321,9 @@ class Flor::Procedure < Flor::Node
     return nil if orl.empty?
 
     open_node \
-      unless node_status_flavour == 'on-error' || @node['on_cancel']
+      unless
+        node_status_flavour == 'on-error' ||
+        @node['on_cancel']
 
     @node['on_receive_last'] = []
 
@@ -476,6 +478,9 @@ class Flor::Procedure < Flor::Node
     m['from'] = nid
 
     m['sm'] = @message['m']
+
+    %w[ cancelled timedout killed triggered ]
+      .each { |k| m[k] = @message[k] if @message.has_key?(k) }
 
     ret =
       if @node.has_key?('aret') # from the 'ret' common attribute
@@ -643,9 +648,7 @@ class Flor::Procedure < Flor::Node
 
   def wrap_cancelled
 
-    wrap(
-      'cause' => 'cancel',
-      'payload' => @message['payload'] || @node['payload'])
+    wrap('payload' => @message['payload'] || @node['payload'])
   end
 
   def wrap_cancel_children(h={})
@@ -668,6 +671,10 @@ class Flor::Procedure < Flor::Node
       # the message on_receive_last is used by the re_apply feature
 
       @node['on_receive_last'] = orl
+
+    #elsif @message['flavour'] == 'timeout' && ot = @node['on_timeout']
+    #
+    #  @node['on_receive_last'] = prepare_on_receive_last(ot)
 
     elsif oc = @node['on_cancel']
 
@@ -719,7 +726,6 @@ class Flor::Procedure < Flor::Node
   def cancel
 
     close_node
-    #close_node(@node['on_cancel'] ? 'on-cancel' : nil)
 
     do_wrap_cancel_children ||
     pop_on_receive_last ||
