@@ -47,12 +47,17 @@ describe 'Flor core' do
        expect(
          @executor.journal
            .select { |m|
-             m['cancelled'] }
+             m['cause'] }
            .collect { |m|
-             "#{m['point']} #{m['nid']} cat:#{m['cancelled']['nid']}" }
+             c = m['cause']
+             "#{m['point']} #{m['nid']} cause:#{c['cause']}:#{c['nid']}" }
        ).to eq([
-         'cancel 0_0 cat:0_0', 'cancel 0_0_0 cat:0_0',
-         'receive 0_0 cat:0_0', 'receive 0 cat:0_0', 'receive  cat:0_0' ])
+         'cancel 0_0 cause:cancel:0_0',
+         'cancel 0_0_0 cause:cancel:0_0',
+         'receive 0_0 cause:cancel:0_0',
+         'receive 0 cause:cancel:0_0',
+         'receive  cause:cancel:0_0'
+       ])
      end
 
      it "doesn't over-cancel" do

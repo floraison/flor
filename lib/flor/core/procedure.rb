@@ -479,8 +479,7 @@ class Flor::Procedure < Flor::Node
 
     m['sm'] = @message['m']
 
-    %w[ cancelled timedout killed triggered ]
-      .each { |k| m[k] = @message[k] if @message.has_key?(k) }
+    m['cause'] = @message['cause'] if @message.has_key?('cause')
 
     ret =
       if @node.has_key?('aret') # from the 'ret' common attribute
@@ -672,9 +671,9 @@ class Flor::Procedure < Flor::Node
 
       @node['on_receive_last'] = orl
 
-    #elsif @message['flavour'] == 'timeout' && ot = @node['on_timeout']
-    #
-    #  @node['on_receive_last'] = prepare_on_receive_last(ot)
+    elsif @message['flavour'] == 'timeout' && ot = @node['on_timeout']
+
+      @node['on_receive_last'] = prepare_on_receive_last(ot)
 
     elsif oc = @node['on_cancel']
 

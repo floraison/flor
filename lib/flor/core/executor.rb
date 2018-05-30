@@ -417,9 +417,10 @@ module Flor
       apply(n, message)
     end
 
-    def make_stamp(message)
+    def make_cause(cause, message)
 
-      { 'nid' => message['nid'],
+      { 'cause' => cause,
+        'nid' => message['nid'],
         'at' => Flor.tstamp,
         'type' => message['type'] }
     end
@@ -434,13 +435,13 @@ module Flor
         pt = message['point']
           #
         if pt == 'trigger'
-          message['triggered'] ||= make_stamp(message)
+          message['cause'] ||= make_cause('trigger', message)
         elsif pt == 'cancel' && message['flavour'] == 'kill'
-          message['killed'] ||= make_stamp(message)
+          message['cause'] ||= make_cause('kill', message)
         elsif pt == 'cancel' && message['flavour'] == 'timeout'
-          message['timedout'] ||= make_stamp(message)
+          message['cause'] ||= make_cause('timeout', message)
         elsif pt == 'cancel'
-          message['cancelled'] ||= make_stamp(message)
+          message['cause'] ||= make_cause('cancel', message)
         end
 
         determine_heat(message)

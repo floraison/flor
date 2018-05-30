@@ -73,12 +73,12 @@ describe 'Flor unit' do
 
       expect(@unit.timers.count).to eq(0)
 
-      can = @unit.journal.find { |m| m['point'] == 'cancel' }
+      m = @unit.journal.find { |m| m['point'] == 'cancel' }
 
-      expect(can['nid']).to eq('0_0')
-      expect(can['from']).to eq('0_0_0')
-      expect(can['flavour']).to eq('timeout')
-      expect(can['payload']).to eq({ 'ret' => '1s' })
+      expect(m['nid']).to eq('0_0')
+      expect(m['from']).to eq('0_0_0')
+      expect(m['flavour']).to eq('timeout')
+      expect(m['payload']).to eq({ 'ret' => '1s' })
     end
 
     it 'is removed if the node ends before timing out' do

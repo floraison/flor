@@ -107,43 +107,44 @@ describe 'Flor punit' do
       expect(
         @unit.journal
           .collect { |m|
-            t = m['triggered'] ? "<--t:#{m['triggered']['nid']}" : ''
-            "#{m['point']}:#{m['nid']}#{t}" }
+            c = m['cause']
+            c = c ? "<--cause:#{c['cause']}:#{c['nid']}" : ''
+            "#{m['point']}:#{m['nid']}#{c}" }
           .join("\n")
       ).to eq(%w[
-       execute:0
-       execute:0_0
-       execute:0_0_0
-       execute:0_0_0_0
-       receive:0_0_0
-       receive:0_0
-       execute:0_0_1
-       receive:0_0
-       trap:0_0
-       receive:0
-       execute:0_1
-       execute:0_1_0
-       execute:0_1_0_0
-       receive:0_1_0
-       receive:0_1
-       receive:0
-       receive:
-       cancel:0_0
-       receive:
-       ceased:
-       terminated:
-       trigger:0_0<--t:0_0
-       execute:0_0_1-1<--t:0_0
-       execute:0_0_1_0-1<--t:0_0
-       receive:0_0_1-1<--t:0_0
-       execute:0_0_1_1-1<--t:0_0
-       execute:0_0_1_1_0-1<--t:0_0
-       execute:0_0_1_1_0_0-1<--t:0_0
-       receive:0_0_1_1_0-1<--t:0_0
-       receive:0_0_1_1-1<--t:0_0
-       receive:0_0_1-1<--t:0_0
-       receive:0_0<--t:0_0
-       end:
+        execute:0
+        execute:0_0
+        execute:0_0_0
+        execute:0_0_0_0
+        receive:0_0_0
+        receive:0_0
+        execute:0_0_1
+        receive:0_0
+        trap:0_0
+        receive:0
+        execute:0_1
+        execute:0_1_0
+        execute:0_1_0_0
+        receive:0_1_0
+        receive:0_1
+        receive:0
+        receive:
+        cancel:0_0<--cause:cancel:0_0
+        receive:<--cause:cancel:0_0
+        ceased:
+        terminated:
+        trigger:0_0<--cause:trigger:0_0
+        execute:0_0_1-1<--cause:trigger:0_0
+        execute:0_0_1_0-1<--cause:trigger:0_0
+        receive:0_0_1-1<--cause:trigger:0_0
+        execute:0_0_1_1-1<--cause:trigger:0_0
+        execute:0_0_1_1_0-1<--cause:trigger:0_0
+        execute:0_0_1_1_0_0-1<--cause:trigger:0_0
+        receive:0_0_1_1_0-1<--cause:trigger:0_0
+        receive:0_0_1_1-1<--cause:trigger:0_0
+        receive:0_0_1-1<--cause:trigger:0_0
+        receive:0_0<--cause:trigger:0_0
+        end:
       ].join("\n"))
     end
 
