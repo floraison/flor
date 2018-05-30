@@ -90,7 +90,9 @@ describe 'Flor punit' do
       expect(r['point']).to eq('trigger')
       expect(r['m']).to eq(16)
       expect(r['sm']).to eq(11) # the 'schedule' message
+        #
       expect(r['cause']['cause']).to eq('trigger')
+      expect(r['cause']['m']).to eq(16)
       expect(r['cause']['nid']).to eq('0_0')
       expect(r['cause']['type']).to eq('cron')
     end

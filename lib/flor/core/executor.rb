@@ -420,6 +420,7 @@ module Flor
     def make_cause(cause, message)
 
       { 'cause' => cause,
+        'm' => message['m'],
         'nid' => message['nid'],
         'at' => Flor.tstamp,
         'type' => message['type'] }

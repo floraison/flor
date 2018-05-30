@@ -50,13 +50,14 @@ describe 'Flor core' do
              m['cause'] }
            .collect { |m|
              c = m['cause']
-             "#{m['point']} #{m['nid']} cause:#{c['cause']}:#{c['nid']}" }
+             "#{m['point']} #{m['nid']}" +
+             " cause:#{c['cause']}:#{c['m']}:#{c['nid']}" }
        ).to eq([
-         'cancel 0_0 cause:cancel:0_0',
-         'cancel 0_0_0 cause:cancel:0_0',
-         'receive 0_0 cause:cancel:0_0',
-         'receive 0 cause:cancel:0_0',
-         'receive  cause:cancel:0_0'
+         'cancel 0_0 cause:cancel:18:0_0',
+         'cancel 0_0_0 cause:cancel:18:0_0',
+         'receive 0_0 cause:cancel:18:0_0',
+         'receive 0 cause:cancel:18:0_0',
+         'receive  cause:cancel:18:0_0'
        ])
      end
 
