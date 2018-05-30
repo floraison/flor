@@ -3,7 +3,7 @@
 
 Attributes shared by all the procedures.
 
-# vars:
+## vars:
 
 Vanilla procedures don't have variables set at their level. The `vars` attribute sets a vanilla hash in the targetted procedure.
 
@@ -34,7 +34,7 @@ sequence vars: { a: 'A', b: 'B' }
     # copies locally all the known vars at that point
 ```
 
-# ret:
+## ret:
 
 Sets the `payload: { ret: val }` (the return value).
 
@@ -47,7 +47,23 @@ sequence
   # f.ret is set to 3
 ```
 
-# flank:
+## timeout:
+
+TODO
+
+## on_cancel:
+
+TODO
+
+## on_timeout:
+
+TODO
+
+## on_error:
+
+TODO
+
+## flank:
 
 Explicitely flags a procedure as "flanking".
 
