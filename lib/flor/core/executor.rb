@@ -417,13 +417,28 @@ module Flor
       apply(n, message)
     end
 
-    def make_cause(cause, message)
+    def stack_cause(message)
 
-      { 'cause' => cause,
+      pt = message['point']
+      fl = message['flavour']
+
+      cause = pt # trigger or cancel
+      cause = fl if %w[ kill timeout ].include?(fl) # only for cancel, hopefully
+
+      last = (message['cause'] ||= [])[0]
+
+      c = {
+        'cause' => cause,
         'm' => message['m'],
         'nid' => message['nid'],
-        'at' => Flor.tstamp,
-        'type' => message['type'] }
+        'type' => message['type'],
+        'at' => last && last['at'] }
+
+      return if c == last
+
+      message['cause'] =
+        [ c.tap { |h| h['at'] = Flor.tstamp } ] +
+        message['cause']
     end
 
     def process(message)
@@ -433,17 +448,8 @@ module Flor
         message['m'] = counter_next('msgs') # number messages
         message['pr'] = counter('runs') # "processing run"
 
-        pt = message['point']
-          #
-        if pt == 'trigger'
-          message['cause'] ||= make_cause('trigger', message)
-        elsif pt == 'cancel' && message['flavour'] == 'kill'
-          message['cause'] ||= make_cause('kill', message)
-        elsif pt == 'cancel' && message['flavour'] == 'timeout'
-          message['cause'] ||= make_cause('timeout', message)
-        elsif pt == 'cancel'
-          message['cause'] ||= make_cause('cancel', message)
-        end
+        stack_cause(message) \
+          if %w[ trigger cancel ].include?(message['point'])
 
         determine_heat(message)
 

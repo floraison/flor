@@ -91,10 +91,11 @@ describe 'Flor punit' do
       expect(r['m']).to eq(16)
       expect(r['sm']).to eq(11) # the 'schedule' message
         #
-      expect(r['cause']['cause']).to eq('trigger')
-      expect(r['cause']['m']).to eq(16)
-      expect(r['cause']['nid']).to eq('0_0')
-      expect(r['cause']['type']).to eq('cron')
+      expect(r['cause'].size).to eq(1)
+      expect(r['cause'][0]['cause']).to eq('trigger')
+      expect(r['cause'][0]['m']).to eq(16)
+      expect(r['cause'][0]['nid']).to eq('0_0')
+      expect(r['cause'][0]['type']).to eq('cron')
     end
 
     it 'behaves correctly as root node' do

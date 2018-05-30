@@ -107,11 +107,12 @@ describe 'Flor punit' do
       expect(
         @unit.journal
           .collect { |m|
-            c = m['cause']
-            c = c ? "<--cause:#{c['cause']}:#{c['m']}:#{c['nid']}" : ''
-            "#{m['point']}:#{m['nid']}#{c}" }
+            cs = (m['cause'] || [])
+              .collect { |c| [ c['cause'], c['m'], c['nid'] ].join(':') }
+            cs = cs.any? ? " <-" + cs.join('<-') : ''
+            "#{m['point']}:#{m['nid']}#{cs}" }
           .join("\n")
-      ).to eq(%w[
+      ).to eq(%{
         execute:0
         execute:0_0
         execute:0_0_0
@@ -129,23 +130,23 @@ describe 'Flor punit' do
         receive:0_1
         receive:0
         receive:
-        cancel:0_0<--cause:cancel:18:0_0
-        receive:<--cause:cancel:18:0_0
+        cancel:0_0 <-cancel:18:0_0
+        receive: <-cancel:18:0_0
         ceased:
         terminated:
-        trigger:0_0<--cause:trigger:22:0_0
-        execute:0_0_1-1<--cause:trigger:22:0_0
-        execute:0_0_1_0-1<--cause:trigger:22:0_0
-        receive:0_0_1-1<--cause:trigger:22:0_0
-        execute:0_0_1_1-1<--cause:trigger:22:0_0
-        execute:0_0_1_1_0-1<--cause:trigger:22:0_0
-        execute:0_0_1_1_0_0-1<--cause:trigger:22:0_0
-        receive:0_0_1_1_0-1<--cause:trigger:22:0_0
-        receive:0_0_1_1-1<--cause:trigger:22:0_0
-        receive:0_0_1-1<--cause:trigger:22:0_0
-        receive:0_0<--cause:trigger:22:0_0
+        trigger:0_0 <-trigger:22:0_0
+        execute:0_0_1-1 <-trigger:22:0_0
+        execute:0_0_1_0-1 <-trigger:22:0_0
+        receive:0_0_1-1 <-trigger:22:0_0
+        execute:0_0_1_1-1 <-trigger:22:0_0
+        execute:0_0_1_1_0-1 <-trigger:22:0_0
+        execute:0_0_1_1_0_0-1 <-trigger:22:0_0
+        receive:0_0_1_1_0-1 <-trigger:22:0_0
+        receive:0_0_1_1-1 <-trigger:22:0_0
+        receive:0_0_1-1 <-trigger:22:0_0
+        receive:0_0 <-trigger:22:0_0
         end:
-      ].join("\n"))
+      }.gsub(/\n\s+/, "\n").strip)
     end
 
     it 'does not cancel its children' do
