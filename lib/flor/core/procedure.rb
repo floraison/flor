@@ -313,6 +313,12 @@ class Flor::Procedure < Flor::Node
     receive
   end
 
+  def message_cause
+
+    (@message['cause'] || [])
+      .find { |c| c['nid'] == nid }
+  end
+
   def pop_on_receive_last
 
     orl = @node['on_receive_last']
@@ -320,10 +326,13 @@ class Flor::Procedure < Flor::Node
     return nil unless orl
     return nil if orl.empty?
 
+    c = message_cause
+
     open_node \
       unless
-        node_status_flavour == 'on-error' ||
-        @node['on_cancel']
+        node_status_flavour == 'on-error' ||         # TODO use the cause ???
+        @node['on_cancel'] ||                        # TODO use the cause ???
+        (c && c['cause'] == 'timeout' && @node['on_timeout'])
 
     @node['on_receive_last'] = []
 

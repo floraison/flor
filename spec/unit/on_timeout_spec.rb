@@ -68,7 +68,7 @@ describe 'Flor core' do
         wait: true)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ 0, 'cancel:xxx:timeout', 1 ])
+      expect(r['payload']['l']).to eq([ 'cancel:0_0:timeout', 1 ])
     end
 
     it 'favours the on_timeout:' do
@@ -91,7 +91,7 @@ describe 'Flor core' do
         wait: true)
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ 0, 'oto:cancel:0_2:timeout', 1 ])
+      expect(r['payload']['l']).to eq([ 'oto:cancel:0_2:timeout', 1 ])
     end
 
     it 'does not trigger if it is a regular cancel'

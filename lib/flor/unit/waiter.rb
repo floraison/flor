@@ -68,7 +68,6 @@ module Flor
           end
         end
 
-        #executor, message = @queue.shift
         @queue.shift[1]
       end
     end
