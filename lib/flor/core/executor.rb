@@ -259,6 +259,7 @@ module Flor
       m = message.select { |k, v| %w[ exid nid from payload ].include?(k) }
       m['sm'] = message['m']
       m['point'] = message['from'] == '0' ? 'terminated' : 'ceased'
+      m['cause'] = message['cause'] if message.has_key?('cause')
 
       [ m ]
     end

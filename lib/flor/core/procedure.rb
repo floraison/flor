@@ -328,6 +328,12 @@ class Flor::Procedure < Flor::Node
 
     c = message_cause
 
+#puts "<<<"
+#p @message
+#p @message['cause']
+#p @node['on_cancel']
+##puts caller[0, 3]
+#puts ">>>"
     open_node \
       unless
         node_status_flavour == 'on-error' ||         # TODO use the cause ???

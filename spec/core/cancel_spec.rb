@@ -77,7 +77,7 @@ describe 'Flor core' do
         receive:0_0 <-cancel:20:0_0_0<-cancel:18:0_0
         receive:0 <-cancel:20:0_0_0<-cancel:18:0_0
         receive: <-cancel:20:0_0_0<-cancel:18:0_0
-        terminated:
+        terminated: <-cancel:20:0_0_0<-cancel:18:0_0
       }.gsub(/\n\s+/, "\n").strip)
     end
 

@@ -30,7 +30,6 @@ class Flor::Pro::Cancel < Flor::Procedure
   # But it's kind of brittle compared to using tags.
   #
   # # TODO document "kill"
-  # # TODO document "on_cancel"
 
   name 'cancel', 'kill'
     # ruote had "undo" as well...

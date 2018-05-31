@@ -132,7 +132,7 @@ describe 'Flor punit' do
         receive:
         cancel:0_0 <-cancel:18:0_0
         receive: <-cancel:18:0_0
-        ceased:
+        ceased: <-cancel:18:0_0
         terminated:
         trigger:0_0 <-trigger:22:0_0
         execute:0_0_1-1 <-trigger:22:0_0
