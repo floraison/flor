@@ -57,7 +57,7 @@ The rescue/catch mechanism in flor. Given a node sporting the `on_error:` attrib
 
 ```
 set f.l []
-sequence on_error: (def msg \ push f.l msg.error.msg)
+sequence on_error: (def msg, err \ push f.l err.msg)
   push f.l 0
   push f.l x
   push f.l 1

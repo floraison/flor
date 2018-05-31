@@ -336,7 +336,7 @@ describe Flor::Procedure do
         # preparation
 
         flon = %q{
-          sequence on_error: (def err \ stall _)
+          sequence on_error: (def msg, err \ stall _)
             push l 1
         }
 
@@ -364,7 +364,7 @@ describe Flor::Procedure do
         expect(
           F.to_s(ms)
         ).to eq(%{
-          (msg 0_0_1_1-1 cancel from:0_0_1-1)
+          (msg 0_0_1_2-1 cancel from:0_0_1-1)
           (msg  receive from:0)
         }.ftrim)
 
@@ -382,7 +382,7 @@ describe Flor::Procedure do
         expect(
           F.to_s(ms)
         ).to eq(%{
-          (msg 0_0_1-1 receive from:0_0_1_1-1)
+          (msg 0_0_1-1 receive from:0_0_1_2-1)
         }.ftrim)
 
         ms = @executor.step(ms.first)
