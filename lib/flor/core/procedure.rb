@@ -332,6 +332,7 @@ class Flor::Procedure < Flor::Node
 #p @message
 #p @message['cause']
 #p @node['on_cancel']
+#p c
 ##puts caller[0, 3]
 #puts ">>>"
     open_node \

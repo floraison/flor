@@ -80,6 +80,39 @@ describe 'Flor punit' do
           0_5:cancel:0_3
         ])
       end
+
+      it 'may cancel its parent' do
+
+        r = @unit.launch(
+          %q{
+            concurrence
+              cancel '0'
+          },
+          wait: true)
+
+        sleep 0.35 # ensure "end" gets into the journal
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          @unit.journal
+            .collect { |m| [ m['from'], m['point'], m['nid'] ].join(':') }
+            .join("\n")
+        ).to eq(%w[
+          :execute:0
+          0:execute:0_0
+          0_0:execute:0_0_0
+          0_0_0:execute:0_0_0_0
+          0_0_0_0:receive:0_0_0
+          0_0_0:receive:0_0
+          0_0:cancel:0
+          0:cancel:0_0
+          0_0:receive:0
+          0:receive:
+          0:terminated:
+          :end:
+        ].collect(&:lstrip).join("\n"))
+      end
     end
 
     context 'ref:' do
