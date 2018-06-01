@@ -6,7 +6,6 @@ module Flor
     class Db
       def supports_schema_parsing?; false; end
       def transaction(opts={}); yield; end
-      
     end
 
     def initialize(opts)
