@@ -47,21 +47,61 @@ sequence
   # f.ret is set to 3
 ```
 
-## timeout:
+## tag: / tags:
 
 TODO
+
+Read more on [tags](tags.md).
 
 ## on_cancel:
 
 TODO
 
-## on_timeout:
-
-TODO
-
 ## on_error:
 
-TODO
+The rescue/catch mechanism in flor. Given a node sporting the `on_error:` attribute, whenever an error occurs at that node or a sub-node level, the subtree gets cancelled and then, the function pointed at by `on_error:` gets executed.
+
+```
+set f.l []
+sequence on_error: (def msg, err \ push f.l err.msg)
+  push f.l 0
+  push f.l x
+  push f.l 1
+```
+An execution of this flow ends up with the field l containing `[ 0, "don't know how to apply \"x\"" ]` and the error is silenced.
+
+The on_error attribute has a procedure counterpart [on_error](procedures/on_error.md) and the procedure [on](procedures/on.md) may also be used with the `error` symbol to wrap a on-error block.
+
+## timeout:
+
+A timeout may be set on any node.
+
+```
+sequence timeout: 60 # seconds
+  alice 'perform task a'
+  bob 'perform task b'
+sequence
+  charly 'perform task c' timeout: '2d12h' # two days and twelve hours
+  david 'perform task d'
+```
+
+Alice and Bob have 60 to peform their tasks (they're probably automated) while Charly has 2 days and 12 hours. David has no time constraint.
+
+When a timeout triggers, the subtree rooted in the node with the timeout: attribute gets cancelled
+
+See "on_timeout:" below for calling a function when the timeout cancel completes.
+
+## on_timeout:
+
+One can point the on_timeout: attribute to a function that will be executed when the node times out.
+
+```
+sequence timeout: '3d' on_timeout: (def msg \ alice 'decommission tasks a and b')
+  alice 'perform task a'
+  bob 'perform task b'
+```
+
+TODO continue me (on_timeout and timeout at higher/lower levels)
 
 ## flank:
 

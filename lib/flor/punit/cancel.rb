@@ -30,7 +30,6 @@ class Flor::Pro::Cancel < Flor::Procedure
   # But it's kind of brittle compared to using tags.
   #
   # # TODO document "kill"
-  # # TODO document "on_cancel"
 
   name 'cancel', 'kill'
     # ruote had "undo" as well...
@@ -53,13 +52,18 @@ class Flor::Pro::Cancel < Flor::Procedure
       att_a('ref')
 
     nids, tags = targets.partition { |t| Flor.is_nid?(t) }
-
     nids += tags_to_nids(tags)
+    nids = nids.uniq
 
     fla = @node['heap']
 
-    nids.uniq.map { |nid| wrap_cancel('nid' => nid, 'flavour' => fla)[0] } +
-    wrap_reply
+    messages = nids
+      .collect { |nid| wrap_cancel('nid' => nid, 'flavour' => fla)[0] }
+
+    messages = messages + wrap_reply \
+      unless nids.find { |nid| is_ancestor_node?(nid) }
+
+    messages
   end
 end
 

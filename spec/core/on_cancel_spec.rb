@@ -85,6 +85,34 @@ describe 'Flor core' do
       expect(m['payload']['l']).to eq([ 'cancel:0_1' ])
     end
 
+    it 'runs when nested' do
+
+      flon = %q{
+        set l []
+        sequence on_cancel: (def msg \ push l "A:$(msg.point):$(msg.nid)")
+          sequence on_cancel: (def msg \ push l "B:$(msg.point):$(msg.nid)")
+            push l 1
+            stall _
+        push l 2
+      }
+
+      ms = @executor.launch(
+        flon, until: '0_1_1_2 execute')
+
+      expect(ms.size).to eq(1)
+      expect(ms[0]['point']).to eq('execute')
+
+      m = @executor.walk([
+        { 'point' => 'cancel',
+          'nid' => '0_1',
+          'exid' => @executor.exid,
+          'payload' => {} } ])
+
+      expect(m).not_to eq(nil)
+      expect(m['point']).to eq('terminated')
+      expect(m['vars']['l']).to eq([ 1, 'B:cancel:0_1_1', 'A:cancel:0_1', 2 ])
+    end
+
     it 'is disregarded if the cancel is a "kill"'
   end
 end

@@ -41,7 +41,7 @@ describe 'Flor procedures' do
       )
     end
 
-    it 'triggers on cancel' do
+    it 'triggers on (internal) cancel' do
 
       r = @executor.launch(
         %q{
@@ -56,6 +56,36 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 0, 'cancel:0_0', 2 ])
+    end
+
+    it 'triggers on (external) cancel' do
+
+      r = @executor.launch(
+        %q{
+          sequence
+            on_cancel (def msg \ push f.l "$(msg.point):$(msg.nid)")
+            push f.l 0
+            stall _
+            push f.l 1
+          push f.l 2
+        },
+        payload: { 'l' => [] })
+
+      expect(r).to eq(nil)
+
+      m = @executor.walk([
+        { 'point' => 'cancel',
+          'nid' => '0_0', 'exid' => @executor.exid,
+          'payload' => { 'l' => [ 'c' ] } } ])
+
+      expect(m['point']).to eq('terminated')
+      expect(m['nid']).to eq(nil)
+      expect(m['payload']['l']).to eq([ 'c', 'cancel:0_0', 2 ])
+
+      expect(m['cause'].size).to eq(1)
+      expect(m['cause'][0]['m']).to eq(16)
+      expect(m['cause'][0]['nid']).to eq('0_0')
+      expect(m['cause'][0]['type']).to eq(nil)
     end
   end
 end

@@ -251,7 +251,10 @@ describe 'Flor punit' do
 
         @unit.cancel(exid: r['exid'], nid: '0')
 
-        @unit.wait(exid, 'end'); sleep 0.777
+        #@unit.wait(exid, 'end'); sleep 0.777
+        #@unit.wait(exid, 'terminated'); sleep 0.777
+        #wait_until { @unit.journal.find { |m| m['point'] == 'terminated' } }
+        wait_until { @unit.timers.count == 0 }
 
         j = @unit.journal
 
@@ -260,7 +263,7 @@ describe 'Flor punit' do
         expect(j).to include_msg(point: 'ceased', from: '0_0')
         expect(j).not_to include_msg(point: 'detask')
 
-        expect(@unit.timers.count).to eq(0)
+        expect(@unit.timers.count).to eq(0) # ;-)
 
         exe = @unit.executions[exid: exid]
 

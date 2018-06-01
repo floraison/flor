@@ -21,7 +21,7 @@ describe 'Flor core' do
 
       r = @executor.launch(
         %q{
-          sequence on_error: (def err \ _)
+          sequence on_error: (def msg, err \ _)
             push f.l 0
         },
         payload: { 'l' => [] })
@@ -47,7 +47,7 @@ describe 'Flor core' do
 
       r = @executor.launch(
         %q{
-          sequence on_error: (def msg \ push f.l msg.error.msg)
+          sequence on_error: (def msg, err \ push f.l err.msg)
             push f.l 0
             push f.l x
             push f.l 1
@@ -88,7 +88,7 @@ describe 'Flor core' do
       r = @executor.launch(
         %q{
           define return x
-            def err
+            def msg, err
               x
           sequence on_error: (return 2)
             push f.l 0
