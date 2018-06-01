@@ -80,10 +80,11 @@ module Flor
     a << (m['from'] ? " from #{m['from']}" : '')
 
     if cs = m['cause']
-      a << " cz/" << cs
-        .map { |c|
-          [ c['cause'][0, 2], c['nid'], c['m'], c['type'] ].compact.join(':') }
-        .join('/')
+      a << " <" << cs
+        .collect { |c|
+          [ c['cause'][0, 2], c['nid'], "m#{c['m']}", c['type'] ]
+            .compact.join(':') }
+        .join('<')
     end
 
     rt = ret_to_s(executor, m, _c)
