@@ -6,6 +6,7 @@ module Flor
     class Db
       def supports_schema_parsing?; false; end
       def transaction(opts={}); yield; end
+      
     end
 
     def initialize(opts)
@@ -15,6 +16,11 @@ module Flor
     end
 
     def fetch_rows(sql); yield([]); end
+    #DJV 
+    # add mising methods from dummy adaptor
+    def typecast_value_boolean(opts={});true;end
+    def test_connection();true;end
+    #DJV
 
     DB = Sequel.connect(:adapter => Flor::DummySequelAdapter)
   end

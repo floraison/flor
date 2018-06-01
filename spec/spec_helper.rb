@@ -12,7 +12,7 @@ require 'jruby/synchronized' if RUBY_PLATFORM.match(/java/)
 
 require 'flor'
 require 'flor/unit'
-
+require 'fileutils'
 
 F = Flor
   # quicker access to Flor.to_s and co
