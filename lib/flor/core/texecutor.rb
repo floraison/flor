@@ -122,9 +122,6 @@ module Flor
         message = messages.shift
         return nil unless message
 
-        fail ArgumentError.new("no payload in message: #{message.inspect}") \
-          unless message['payload'].is_a?(Hash)
-
         if message['point'] == 'terminated' && messages.any?
           #
           # try to handle 'terminated' last
