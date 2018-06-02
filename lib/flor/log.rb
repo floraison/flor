@@ -117,8 +117,10 @@ module Flor
 
     o.puts "#{_c.dg}+---#{_c.rs}"
 
-    o.puts "#{_c.dg}| #{launch_opts.inspect}#{_c.rs}" if launch_opts.any?
-      # TODO use Flor.to_d ...
+    if launch_opts.any?
+      o.puts "#{_c.dg}| #{Flor.to_d(launch_opts, compact: true)}#{_c.rs}"
+      o.puts "#{_c.dg}|#{_c.rs}"
+    end
 
     if src.is_a?(String)
       src.split("\n")
