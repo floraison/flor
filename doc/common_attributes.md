@@ -51,19 +51,30 @@ Please note that the blacklist/whitelist mechanisms work by setting local variab
 
 ## vars: '*' or 'copy'
 
-TODO
+Copies all the currently visible variables locally.
 
 ```
 sequence vars: { a: 'A', b: 'B' }
+
+  a # yields 'A'
+
   sequence vars: '*'
+    #
     # copies locally all the known vars at that point
+
+    a # yields 'A'
+
+    set a 'a'
+    a # yields 'a'
+
+  a # yields 'A'
 ```
 
 ## ret:
 
 Sets the `payload: { ret: val }` (the return value).
 
-It may be used to funny effects:
+It may be used to produce funny effects:
 ```
 sequence
   1
