@@ -9,6 +9,8 @@ Vanilla procedures don't have variables set at their level. The `vars` attribute
 
 ## vars: hash
 
+Passing a hash (dictionary) of variables sets those variables at the local level for the node and its sub-nodes. Once the flow leaves the node, the variables previous values (or non-values) get visible again.
+
 ```
 sequence
   set a 0
@@ -24,9 +26,32 @@ sequence
 
 ## vars: array
 
-TODO
+Passing an array whitelists the variables visible to a node and its sub-nodes.
+
+```
+sequence vars: { a: 'A', b: 'B' }
+  # a is set to 'A', b to 'B'
+  sequence vars: [ 'a' ]
+    # a is set to 'A', b is unknown
+```
+
+Regular expressions may be used within such an array:
+```
+sequence vars: { a_0: 'a', a_1: 'A', a_z: 'z', b_0: 'b' }
+  # a_0, a_1, a_z and b_0 are set
+  sequence vars: [ /^a_\d+/ ]
+    # only a_0 and a_1 are visible
+```
+
+If the first element of the array is "-", "^" or "!", the array is a blacklist. The var names explicitely listed are bound to nil values (shadowing the value in the parent node).
+
+An array beginning with a "+" is a whitelist.
+
+Please note that the blacklist/whitelist mechanisms work by setting local variables that shadow upstream variables. Maybe "screening" is a better term than "listing".
 
 ## vars: '*' or 'copy'
+
+TODO
 
 ```
 sequence vars: { a: 'A', b: 'B' }

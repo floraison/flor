@@ -30,7 +30,7 @@ describe 'Flor core' do
         expect(r['payload']['ret']).to eq(nil)
       end
 
-      it 'sets vars locally' do
+      it 'sets variables locally' do
 
         r = @executor.launch(
           %q{
@@ -51,31 +51,31 @@ describe 'Flor core' do
         )
       end
 
+      it 'sets variables locally (2)' do
+
+        r = @executor.launch(
+          %q{
+            sequence
+              set a 0
+              push f.l "0_a:$(a)_b:$(b)"
+              sequence vars: { a: 1, b: 1 }
+                push f.l "1_a:$(a)_b:$(b)"
+                set a 2
+                push f.l "2_a:$(a)_b:$(b)"
+              push f.l "3_a:$(a)_b:$(b)"
+          },
+          payload: { 'l' => [] })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['l']
+        ).to eq(%w[
+          0_a:0_b: 1_a:1_b:1 2_a:2_b:1 3_a:0_b:
+        ])
+      end
+
       context 'array' do
-
-        it 'whitelists' do
-
-          r = @executor.launch(
-            %q{
-              sequence
-                set a 0
-                push f.l "0_a:$(a)_b:$(b)"
-                sequence vars: { a: 1, b: 1 }
-                  push f.l "1_a:$(a)_b:$(b)"
-                  set a 2
-                  push f.l "2_a:$(a)_b:$(b)"
-                push f.l "3_a:$(a)_b:$(b)"
-            },
-            payload: { 'l' => [] })
-
-          expect(r['point']).to eq('terminated')
-
-          expect(
-            r['payload']['l']
-          ).to eq(%w[
-            0_a:0_b: 1_a:1_b:1 2_a:2_b:1 3_a:0_b:
-          ])
-        end
 
         it 'whitelists' do
 
@@ -105,27 +105,21 @@ describe 'Flor core' do
 
           r = @executor.launch(
             %q{
-              sequence vars: { a_0: 'a', a_1: 'A', b_0: 'b' }
-                push f.l [ 0 a_0 ]
-                push f.l [ 0 a_1 ]
-                push f.l [ 0 b_0 ]
-                sequence vars: [ /^a_.+/ ]
-                  push f.l [ 1 a_0 ]
-                  push f.l [ 1 a_1 ]
-                  push f.l [ 1 b_0 ]
+              sequence vars: { a_0: 'a', a_1: 'A', a_z: 'z', b_0: 'b' }
+                push f.l "0__a_0:$(a_0)__a_1:$(a_1)__a_z:$(a_z)__b_0:$(b_0)"
+                sequence vars: [ /^a_\d+/ ]
+                  push f.l "0__a_0:$(a_0)__a_1:$(a_1)__a_z:$(a_z)__b_0:$(b_0)"
             },
             payload: { 'l' => [] })
 
-          expect(r['point']).to eq('failed')
-
-          expect(r['error']['msg']).to eq("don't know how to apply \"b_0\"")
+          expect(r['point']).to eq('terminated')
 
           expect(
             r['payload']['l']
-          ).to eq(
-            [ [ 0, 'a' ], [ 0, 'A' ], [ 0, 'b' ],
-              [ 1, 'a' ], [ 1, 'A' ] ]
-          )
+          ).to eq(%w[
+            0__a_0:a__a_1:A__a_z:z__b_0:b
+            0__a_0:a__a_1:A__a_z:__b_0:
+          ])
         end
 
         it 'whitelists deep'
