@@ -57,6 +57,30 @@ describe 'Flor core' do
 
           r = @executor.launch(
             %q{
+              sequence
+                set a 0
+                push f.l "0_a:$(a)_b:$(b)"
+                sequence vars: { a: 1, b: 1 }
+                  push f.l "1_a:$(a)_b:$(b)"
+                  set a 2
+                  push f.l "2_a:$(a)_b:$(b)"
+                push f.l "3_a:$(a)_b:$(b)"
+            },
+            payload: { 'l' => [] })
+
+          expect(r['point']).to eq('terminated')
+
+          expect(
+            r['payload']['l']
+          ).to eq(%w[
+            0_a:0_b: 1_a:1_b:1 2_a:2_b:1 3_a:0_b:
+          ])
+        end
+
+        it 'whitelists' do
+
+          r = @executor.launch(
+            %q{
               sequence vars: { a: 'A', b: 'B' }
                 push f.l [ 0 a ]
                 push f.l [ 0 b ]

@@ -11,15 +11,15 @@ Vanilla procedures don't have variables set at their level. The `vars` attribute
 
 ```
 sequence
-  set a: 0
-  # a is set to 1, b is unknown
+  set a 0
+  # a is set to 0, b is unknown
 
   sequence vars: { a: 1, b: 1 }
     # a is set to 1, b is set to 1
-    set a: 2
+    set a 2
     # a is set to 2, b is set to 1
 
-  # a is set to 1, b is unknown
+  # a is set to 0, b is unknown
 ```
 
 ## vars: array
