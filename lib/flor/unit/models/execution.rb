@@ -33,7 +33,6 @@ module Flor
       nodes.each do |nid, n|
         next if nid == '0'
         t = n['tree']; next unless t
-# TODO
       end
 
       tree
