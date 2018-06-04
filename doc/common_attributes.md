@@ -85,7 +85,23 @@ sequence
 
 ## tag: / tags:
 
-TODO
+Tags are a way to tag points in flows.
+
+```
+sequence
+  sequence tag: 'first phase'
+    concurrence tag: 'concurrent stage'
+      alice _
+      bob _
+    charly tag: 'initial test stage'
+  sequence tag: 'second phase'
+    doug _
+    eric _
+```
+
+The tag attribute sets one or more tags on a node. The tag can be used with the [cancel](procedures/cancel.md) procedure.
+
+TODO (continue me)
 
 Read more on [tags](tags.md).
 
@@ -148,9 +164,9 @@ In this sample, the `a; b` sequence happens in parallel to the `c; d` parent seq
 ```
 sequence
   sequence flank
-    a
-    b
-  c
-  d
+    a _
+    b _
+  c _
+  d _
 ```
 
