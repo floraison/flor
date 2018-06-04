@@ -66,6 +66,8 @@ class Flor::Pro::Task < Flor::Procedure
 
   protected
 
+  # Returns an array attribute list / attribute dictionary.
+  #
   def determine_atts
 
     attl, attd = [], {}

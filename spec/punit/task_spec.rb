@@ -105,6 +105,35 @@ describe 'Flor punit' do
       expect(r['tasker']).to eq('failfox')
       expect(r['point']).to eq('failed')
     end
+
+    it 'passes information to the tasker' do
+
+      r = @unit.launch(
+        %q{
+          sequence tag: 'a'
+            sequence tags: [ 'b', 'c' ]
+              india 'do this' temperature: 'high'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      td = r['payload']['tasked'][0]
+
+      expect(td['point']).to eq('task')
+      expect(td['nid']).to eq('0_1_1')
+      expect(td['taskname']).to eq(nil)
+      expect(td['attl']).to eq([ 'india', 'do this' ])
+      expect(td['attd']).to eq({ 'temperature' => 'high' })
+      expect(td['er']).to eq(1)
+      expect(td['m']).to eq(32)
+      expect(td['pr']).to eq(1)
+      expect(td['vars']).to eq(nil)
+      expect(td['tconf']['require']).to eq('india.rb')
+      expect(td['tconf']['class']).to eq('IndiaTasker')
+      expect(td['tconf']['root']).to eq('envs/test/lib/taskers/india')
+      expect(td['tconf']['_path']).to match(/\/lib\/taskers\/india\/dot\.json$/)
+    end
   end
 end
 

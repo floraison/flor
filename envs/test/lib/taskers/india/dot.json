@@ -1,0 +1,6 @@
+
+# india tasker
+
+require: 'india.rb'
+class: IndiaTasker
+
