@@ -105,7 +105,6 @@ describe 'Flor punit' do
       expect(r['tasker']).to eq('failfox')
       expect(r['point']).to eq('failed')
     end
-
   end
 end
 

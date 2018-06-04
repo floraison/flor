@@ -42,7 +42,8 @@ describe 'Flor core' do
             matchr "car", /^[bct]ar$/
           push f.l
             matchr "car", "^[bct]ar$"
-        }, payload: { 'l' => [] })
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ %w[ car ], %w[ car ] ])
@@ -54,7 +55,8 @@ describe 'Flor core' do
         %q{
           push f.l "$(node.nid)"
           push f.l "$(node.heat0)"
-        }, payload: { 'l' => [] })
+        },
+        payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ 0_0_1 _dqs ])
