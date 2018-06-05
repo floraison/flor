@@ -9,6 +9,10 @@ Read more at [attributes.md](attributes.md).
 
 TODO
 
+## caller
+
+The flor component that reads hook or tasker configurations and runs Ruby classes or external scripts with the incoming messages (hooked messages or task messages).
+
 ## core
 
 Core contains everything that makes the basic flor language interpreter. It's always executed in a single [run](#run) - always transient. As soon as there is a [timer](#timer) or a [trap](#trap) - something that would not be present in a vanilla interpreter - it goes into [unit](#unit). As such, the [storage](#storage) is not a "core" thing, it belongs to "unit".
@@ -148,9 +152,7 @@ Each time an [executor](#executor) is instantiated to run one or more [messages]
 
 ## runner
 
-TODO (may get renamed, as "run" is already an executor concept).
-
-The flor component that reads hook or tasker configurations and runs Ruby classes or external scripts with the incoming messages (hooked messages or task messages).
+(renamed to [caller](#caller), since "run" is an executor concept)
 
 ## scheduler
 

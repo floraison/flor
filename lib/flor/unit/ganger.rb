@@ -60,7 +60,7 @@ module Flor
 
       message['vars'] = gather_vars(executor, tconf, message)
 
-      r = @unit.runner.run(self, tconf, message)
+      r = @unit.caller.call(self, tconf, message)
 
       if is_a_message_array?(r)
         r

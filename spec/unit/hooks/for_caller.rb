@@ -1,9 +1,9 @@
 
-# for spec/unit/runner_spec.rb
+# for spec/unit/caller_spec.rb
 
 module Romeo
 
-  class Runnee
+  class Callee
 
     def on(message)
 

@@ -32,7 +32,7 @@ module Flor
 
     def notify(executor, message)
 
-      @unit.runner.run(executor, @h, message)
+      @unit.caller.call(executor, @h, message)
     end
 
   # Avoid the proc/cancel problem upstreams in ConfExecutor, by ignoring

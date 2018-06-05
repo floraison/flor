@@ -5,7 +5,7 @@ module Flor
 
     attr_reader :conf, :env
 
-    attr_reader :hooker, :storage, :loader, :ganger, :runner
+    attr_reader :hooker, :storage, :loader, :ganger, :caller
     attr_reader :logger
 
     attr_reader :thread_status
@@ -27,8 +27,8 @@ module Flor
 
       @loader =
         (Flor::Conf.get_class(@conf, 'loader') || Flor::Loader).new(self)
-      @runner =
-        (Flor::Conf.get_class(@conf, 'runner') || Flor::Runner).new(self)
+      @caller =
+        (Flor::Conf.get_class(@conf, 'caller') || Flor::Caller).new(self)
       @hooker =
         (Flor::Conf.get_class(@conf, 'hooker') || Flor::Hooker).new(self)
       @storage =

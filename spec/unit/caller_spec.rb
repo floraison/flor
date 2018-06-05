@@ -8,23 +8,23 @@
 require 'spec_helper'
 
 
-describe Flor::Runner do
+describe Flor::Caller do
 
   before :all do
 
-    @runner = Flor::Runner.new(nil)
+    @caller = Flor::Caller.new(nil)
   end
 
-  describe '#run' do
+  describe '#call' do
 
     context 'ruby' do
 
-      it 'runs basic ruby classes' do
+      it 'calls basic ruby classes' do
 
-        r = @runner.run(
+        r = @caller.call(
           nil,
-          { 'require' => 'unit/hooks/for_runner',
-            'class' => 'Romeo::Runnee',
+          { 'require' => 'unit/hooks/for_caller',
+            'class' => 'Romeo::Callee',
             '_path' => 'spec/' },
           { 'point' => 'execute', 'm' => 1 })
 
@@ -34,7 +34,7 @@ describe Flor::Runner do
 
     context 'external' do
 
-      it 'runs basic scripts'
+      it 'calls basic scripts'
     end
   end
 end

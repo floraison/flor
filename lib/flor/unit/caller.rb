@@ -1,9 +1,9 @@
 
 module Flor
 
-  class Runner
+  class Caller
 
-    # NB: tasker configuration entries start with "rnr_"
+    # NB: tasker configuration entries start with "cal_"
 
     def initialize(unit)
 
@@ -13,12 +13,14 @@ module Flor
     def shutdown
     end
 
-    def run(service, conf, message)
+    def call(service, conf, message)
 
-      return ruby_run(service, conf, message) if conf['class'] || conf['module']
-      return cmd_run(service, conf, message) if conf['cmd']
+      return ruby_call(service, conf, message) \
+        if conf['class'] || conf['module']
+      return cmd_call(service, conf, message) \
+        if conf['cmd']
 
-      fail ArgumentError.new("don't know how to run item at #{conf['_path']}")
+      fail ArgumentError.new("don't know how to call item at #{conf['_path']}")
     end
 
     protected
@@ -28,7 +30,7 @@ module Flor
       root == '.' ? path : File.join(root, path)
     end
 
-    def ruby_run(service, conf, message)
+    def ruby_call(service, conf, message)
 
       root = File.dirname(conf['_path'])
 
@@ -75,7 +77,7 @@ module Flor
       end
     end
 
-    def cmd_run(service, conf, message)
+    def cmd_call(service, conf, message)
 
 fail NotImplementedError
     end
