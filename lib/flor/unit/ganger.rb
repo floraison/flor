@@ -1,6 +1,11 @@
 
 module Flor
 
+  # ganger | ˈɡaNGər | \ noun British \ the foreman of a gang of laborers.
+  #
+  # The ganger receives the tasks from the flor executor, decides what
+  # tasker will be invoked and hands it the task.
+  #
   class Ganger
 
     # NB: tasker configuration entries start with "gan_"

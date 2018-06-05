@@ -49,7 +49,7 @@ A unique identifier for a flor [execution](#execution). For example "test-u-2016
 
 ## fei
 
-TODO
+The combination `{exid}-{nid}`, designates a single node within a flow execution. (The fei concept was more important in ruote).
 
 ## field
 
@@ -72,6 +72,8 @@ A \[business\] process definition or a flow for short. In flor, they are written
 ## ganger
 
 The ganger is a component of the [scheduler](#scheduler). It's the middleman between flor and the taskers. British definition of the word: "the foreman of a gang of labourers."
+
+The ganger receives the tasks from the flor executor, decides what tasker will be invoked and hands it the task.
 
 ## hook
 ## hooker
@@ -184,11 +186,21 @@ The "task" [procedure](#procedure) is used to emit tasks from flor [executions](
 
 A piece of (usually Ruby) code in charge of taking an action based on a flor task handed to it.
 
-Taskers or pointers to them are found (by the [loader](#loader) in the `lib/` directory of a flor [environment](#environment).
+Taskers or pointers to them are found (by the [loader](#loader) in the `lib/` directory of a flor [environment](#environment). There is actually a [ganger](#ganger) between the loader and the tasksers, it ultimately decides which tasker gets handed the task.
 
 ## timer
 ## timeout
 ## trap
+
 ## unit
+
+It could have been named an "engine", it got named an "unit". It's the set of flor services that work together to run flow executions.
+
+It's usually instantatied via something like
+```ruby
+FLOR = Flor::Unit.new('envs/test/etc/conf.json')
+```
+that is pointing to the configuration file for a given flor [environment](#environment).
+
 ## variable
 
