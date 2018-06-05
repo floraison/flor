@@ -328,7 +328,7 @@ class Flor::Node
 
   class PseudoVarContainer < Hash
     #
-    # inherit from Hash so that deep.rb is quietly mislead
+    # inherit from Hash so that Dense is quietly mislead
     #
     def initialize(type); @type = type; end
     #def has_key?(key); true; end
