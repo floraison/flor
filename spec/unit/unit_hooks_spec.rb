@@ -286,7 +286,9 @@ end
         []
       }
       ms1 = new_safe_array
-      @unit.hook(t: %w[ blue yellow ], c: false, p: %w[ entered left ]) { |x, m, o|
+      @unit.hook(
+        t: %w[ blue yellow ], c: false, p: %w[ entered left ]
+      ) { |x, m, o|
         ms1 << Flor.dup(m)
         []
       }
