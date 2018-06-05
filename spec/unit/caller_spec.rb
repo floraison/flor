@@ -34,7 +34,22 @@ describe Flor::Caller do
 
     context 'external' do
 
-      it 'calls basic scripts'
+      it 'calls basic scripts' do
+
+        r = @caller.call(
+          nil,
+          { 'cmd' => 'python $(_path)/unit/hooks/for_caller.py',
+            '_path' => 'spec/' },
+          { 'point' => 'execute',
+            'payload' => { 'items' => 2 } })
+
+        expect(
+          r
+        ).to eq([
+          { 'point' => 'receive',
+            'payload' => { 'items' => 2, 'price' => 'CHF 5.00' } }
+        ])
+      end
     end
   end
 end

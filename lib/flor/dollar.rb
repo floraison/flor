@@ -220,5 +220,11 @@ module Flor
       do_eval(t)
     end
   end
+
+  class HashDollar < Dollar
+
+    def initialize(h); @h = h; end
+    def lookup(k); @h[k]; end
+  end
 end
 

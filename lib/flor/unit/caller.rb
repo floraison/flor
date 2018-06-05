@@ -1,6 +1,8 @@
 
 module Flor
 
+  # The caller calls Ruby or other scripts.
+  #
   class Caller
 
     # NB: tasker configuration entries start with "cal_"
@@ -79,7 +81,27 @@ module Flor
 
     def cmd_call(service, conf, message)
 
-fail NotImplementedError
+      cmd = conf['cmd']
+      cmd = Flor::HashDollar.new(conf).expand(cmd)
+
+      i, o = IO.pipe
+      r, w = IO.pipe
+
+      pid = spawn(cmd, in: r, out: o)
+      w.write(JSON.dump(message))
+      w.close
+      o.close
+      _, status = Process.wait2(pid)
+      r = i.read
+      r = JSON.parse(r)
+
+      if status.exitstatus != 0
+# TODO answer with "point" => "failed" message
+      end
+
+      r['point'] = 'receive'
+
+      [ r ] # TODO really go for multiple messages?
     end
   end
 end
