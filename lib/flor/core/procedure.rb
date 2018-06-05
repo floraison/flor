@@ -571,6 +571,22 @@ class Flor::Procedure < Flor::Node
     nil
   end
 
+  # List all the tags the current node is "included" in.
+  #
+  def list_tags
+
+    r = []
+    n = @node
+
+    while n
+      ts = n['tags']
+      r.concat(ts) if ts
+      n = @execution['nodes'][n['parent']]
+    end
+
+    r
+  end
+
   def set_var(mode, k, v)
 
     fail IndexError.new("Cannot set domain variables") if mode == 'd'

@@ -43,11 +43,11 @@ class Flor::Pro::Task < Flor::Procedure
     wrap(
       'point' => 'task',
       'exid' => exid, 'nid' => nid,
+      'tags' => list_tags,
       'tasker' => tasker,
       'taskname' => taskname,
       'attl' => attl, 'attd' => attd,
       'payload' => determine_payload)
-#.tap { |x| pp x.first }
   end
 
   def cancel
@@ -59,6 +59,7 @@ class Flor::Pro::Task < Flor::Procedure
     wrap(
       'point' => 'detask',
       'exid' => exid, 'nid' => nid,
+      'tags' => list_tags,
       'tasker' => att(nil),
       'attl' => attl, 'attd' => attd,
       'payload' => determine_payload)
