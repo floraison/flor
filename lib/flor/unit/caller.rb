@@ -81,8 +81,14 @@ module Flor
 
     def cmd_call(service, conf, message)
 
+      h = conf.dup # shallow
+      h['m'] = message
+      h['f'] = message['payload']
+      h['v'] = message['vars']
+      h['tag'] = (message['tags'] || []).first
+
       cmd = conf['cmd']
-      cmd = Flor::HashDollar.new(conf).expand(cmd)
+      cmd = Flor::HashDollar.new(h).expand(cmd)
 
       i, o = IO.pipe
       r, w = IO.pipe
@@ -97,6 +103,7 @@ module Flor
 
       if status.exitstatus != 0
 # TODO answer with "point" => "failed" message
+puts ">>> #{status.inspect} <<<"
       end
 
       r['point'] = 'receive'

@@ -224,7 +224,7 @@ module Flor
   class HashDollar < Dollar
 
     def initialize(h); @h = h; end
-    def lookup(k); @h[k]; end
+    def lookup(k); Dense.get(@h, k); end
   end
 end
 
