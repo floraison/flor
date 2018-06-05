@@ -381,7 +381,7 @@ describe 'Flor unit' do
 
   describe 'a ruby tasker' do
 
-    it 'accepts taskers which initializer with tasker, conf, message' do
+    it 'accepts taskers that initialize with tasker, conf, message' do
 
       r = @unit.launch(
         %q{
@@ -424,7 +424,6 @@ describe 'Flor unit' do
 
     it 'reroutes to specific taskers' do
 
-
       r = @unit.launch(
         %q{ acme_alpha _ },
         domain: 'net.acme', wait: true)
@@ -436,7 +435,6 @@ describe 'Flor unit' do
     end
 
     it "fails explicitely if the domain tasker doesn't know where to reroute" do
-
 
       r = @unit.launch(
         %q{ unknown_alpha _ },
