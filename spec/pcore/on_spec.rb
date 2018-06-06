@@ -117,6 +117,39 @@ describe 'Flor pcore' do
         expect(r['payload']['l']).to eq([ 0, 'cancel:0_0', 3 ])
       end
     end
+
+    context 'timeout' do
+
+      it 'sets a timeout handler in its parent' do
+
+        @executor.launch(
+          %q{
+            sequence
+              on timeout
+                push f.l msg
+              stall _
+          })
+
+        expect(
+          @executor.execution['nodes']['0']['on_timeout']
+        ).to eq(
+          [ [ '_func',
+              { 'nid' => '0_0_0',
+                'tree' => [
+                  'def', [
+                    [ '_att', [ [ 'msg', [], 3 ] ], 3 ],
+                    [ 'push', [
+                      [ '_att', [ [ 'f.l', [], 4 ] ], 4 ],
+                      [ '_att', [ [ 'msg', [], 4 ] ], 4 ] ], 4 ] ], 3 ],
+                'cnid' => '0',
+                'fun' => 0,
+                'on_timeout' => true },
+              3 ] ]
+        )
+      end
+
+      it 'catches errors'
+    end
   end
 end
 

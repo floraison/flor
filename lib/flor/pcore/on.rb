@@ -84,8 +84,7 @@ class Flor::Pro::On < Flor::Macro
 
   protected
 
-  CATCHES = %w[ error cancel ]
-  #CATCHES = %w[ error cancel timeout ]
+  CATCHES = %w[ error cancel timeout ]
 
   def find_catch
 
