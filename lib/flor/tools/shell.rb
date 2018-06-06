@@ -927,7 +927,7 @@ fail NotImplementedError
 
       pa = Dir["#{@root}/var/tasks/**/*#{id}*.json"].first
 
-      fail ArgumentError.new("Found no task matching #{id}") unless pa
+      fail ArgumentError.new("found no task matching #{id}") unless pa
 
       ta = JSON.load(File.read(pa))
       tconf = ta['tconf']; ta['tconf'] = '...'

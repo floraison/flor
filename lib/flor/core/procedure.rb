@@ -589,7 +589,7 @@ class Flor::Procedure < Flor::Node
 
   def set_var(mode, k, v)
 
-    fail IndexError.new("Cannot set domain variables") if mode == 'd'
+    fail IndexError.new("cannot set domain variables") if mode == 'd'
 
     begin
 
@@ -601,7 +601,7 @@ class Flor::Procedure < Flor::Node
     rescue IndexError
     end
 
-    fail IndexError.new("Couldn't set var #{mode}v.#{k}")
+    fail IndexError.new("couldn't set var #{mode}v.#{k}")
   end
 
   def set_field(k, v)
@@ -610,7 +610,7 @@ class Flor::Procedure < Flor::Node
 
   rescue IndexError
 
-    fail IndexError.new("Couldn't set field #{k}")
+    fail IndexError.new("couldn't set field #{k}")
   end
 
   def set_value(k, v)
@@ -623,7 +623,7 @@ class Flor::Procedure < Flor::Node
     when 'f' then set_field(key, v)
     when 'v' then set_var(mod, key, v)
     #when 'w' then set_war(key, v)
-    else fail IndexError.new("Don't know how to set #{k.inspect}")
+    else fail IndexError.new("don't know how to set #{k.inspect}")
     end
   end
 

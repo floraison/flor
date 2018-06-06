@@ -64,10 +64,10 @@ class Flor::Pro::Reduce < Flor::Pro::Iterator
     ocol = @node['ocol']
 
     fail Flor::FlorError.new(
-      "Function not given to #{heap.inspect}", self
+      "function not given to #{heap.inspect}", self
     ) unless @node['fun']
     fail Flor::FlorError.new(
-      "Collection not given to #{heap.inspect}", self
+      "collection not given to #{heap.inspect}", self
     ) unless ocol.is_a?(Array) || ocol.is_a?(Hash)
 
     @node['col'] = Flor.to_coll(@node['ocol'])

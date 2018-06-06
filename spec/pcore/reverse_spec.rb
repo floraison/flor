@@ -77,7 +77,7 @@ describe 'Flor procedures' do
       expect(r['error']['kla']
         ).to eq('Flor::FlorError')
       expect(r['error']['msg']
-        ).to eq('Found no argument that could be reversed')
+        ).to eq('found no argument that could be reversed')
       expect(r['error']['lin']
         ).to eq(2)
     end

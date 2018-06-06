@@ -46,7 +46,7 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('failed')
       expect(r['error']['kla']).to eq('Flor::FlorError')
-      expect(r['error']['msg']).to eq('Found no argument that has a length')
+      expect(r['error']['msg']).to eq('found no argument that has a length')
       expect(r['error']['lin']).to eq(2)
     end
 

@@ -37,7 +37,7 @@ class Flor::Pro::Length < Flor::Procedure
 
     r =
       @node['ret'] ||
-      fail(Flor::FlorError.new('Found no argument that has a length', self))
+      fail(Flor::FlorError.new('found no argument that has a length', self))
 
     wrap_reply('ret' => r)
   end

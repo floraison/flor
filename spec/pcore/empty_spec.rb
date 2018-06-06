@@ -154,7 +154,7 @@ describe 'Flor procedures' do
         expect(r['point']
           ).to eq('failed')
         expect(r['error']['msg']
-          ).to eq('Argument is not an array, an object, a string or null')
+          ).to eq('argument is not an array, an object, a string or null')
       end
     end
   end

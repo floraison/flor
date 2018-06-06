@@ -38,7 +38,7 @@ class Flor::Pro::Reverse < Flor::Procedure
     r =
       @node['ret'] ||
       fail(
-        Flor::FlorError.new('Found no argument that could be reversed', self))
+        Flor::FlorError.new('found no argument that could be reversed', self))
 
     wrap_reply('ret' => r)
   end

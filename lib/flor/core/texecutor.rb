@@ -229,7 +229,7 @@ module Flor
       r = (self.new('conf' => c)).launch(s, vars: vs)
 
       unless r['point'] == 'terminated'
-        ae = ArgumentError.new("Error while reading conf: #{r['error']['msg']}")
+        ae = ArgumentError.new("error while reading conf: #{r['error']['msg']}")
         ae.set_backtrace(r['error']['trc'])
         fail ae
       end

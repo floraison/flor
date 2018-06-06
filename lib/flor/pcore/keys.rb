@@ -41,10 +41,10 @@ class Flor::Pro::Keys < Flor::Procedure
     ret = @node['ret']
 
     fail Flor::FlorError.new(
-      "No argument given", self
+      "no argument given", self
     ) if ret.nil?
     fail Flor::FlorError.new(
-      "Received argument of class #{ret.class}, no #{heap}", self
+      "received argument of class #{ret.class}, no #{heap}", self
     ) unless ret.is_a?(Array) || ret.is_a?(Hash)
 
     r =

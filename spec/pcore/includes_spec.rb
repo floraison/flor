@@ -63,7 +63,7 @@ describe 'Flor procedures' do
         })
 
       expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq('Missing element')
+      expect(r['error']['msg']).to eq('missing element')
     end
 
     it 'fails if the collection is missing' do
@@ -74,7 +74,7 @@ describe 'Flor procedures' do
         })
 
       expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq('Missing collection')
+      expect(r['error']['msg']).to eq('missing collection')
     end
   end
 end

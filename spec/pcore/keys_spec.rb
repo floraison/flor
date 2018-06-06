@@ -75,7 +75,7 @@ describe 'Flor procedures' do
       expect(r['point']
         ).to eq('failed')
       expect(r['error']['msg']
-        ).to eq('Received argument of class String, no keys')
+        ).to eq('received argument of class String, no keys')
     end
 
     it 'fails when no argument' do
@@ -88,7 +88,7 @@ describe 'Flor procedures' do
       expect(r['point']
         ).to eq('failed')
       expect(r['error']['msg']
-        ).to eq('No argument given')
+        ).to eq('no argument given')
     end
   end
 
@@ -150,7 +150,7 @@ describe 'Flor procedures' do
       expect(r['point']
         ).to eq('failed')
       expect(r['error']['msg']
-        ).to eq('Received argument of class String, no values')
+        ).to eq('received argument of class String, no values')
     end
 
     it 'fails when no argument' do
@@ -163,7 +163,7 @@ describe 'Flor procedures' do
       expect(r['point']
         ).to eq('failed')
       expect(r['error']['msg']
-        ).to eq('No argument given')
+        ).to eq('no argument given')
     end
   end
 end

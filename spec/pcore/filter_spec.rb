@@ -80,7 +80,7 @@ describe 'Flor procedures' do
         })
 
       expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq('Collection not given to "filter"')
+      expect(r['error']['msg']).to eq('collection not given to "filter"')
     end
 
     it 'fails if not given a function' do
@@ -91,7 +91,7 @@ describe 'Flor procedures' do
         })
 
       expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq('Function not given to "filter"')
+      expect(r['error']['msg']).to eq('function not given to "filter"')
     end
   end
 

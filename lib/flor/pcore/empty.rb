@@ -51,7 +51,7 @@ class Flor::Pro::Empty < Flor::Procedure
       when nil then true
       else
         fail Flor::FlorError.new(
-          'Argument is not an array, an object, a string or null', self)
+          'argument is not an array, an object, a string or null', self)
       end
 
     wrap_reply('ret' => ret)
