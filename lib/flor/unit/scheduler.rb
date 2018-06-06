@@ -257,6 +257,11 @@ module Flor
       queue(*prepare_message('cancel', [ exid, *as ]))
     end
 
+    def kill(exid, *as)
+
+      queue(*prepare_message('kill', [ exid, *as ]))
+    end
+
     def signal(name, h={})
 
       h[:payload] ||= {}
@@ -384,6 +389,11 @@ module Flor
 
       msg = { 'point' => point }
       opts = {}
+
+      if point == 'kill'
+        msg['point'] = 'cancel'
+        msg['flavour'] = 'kill'
+      end
 
       h.each do |k, v|
         if %w[ exid name nid payload on_receive_last ].include?(k)

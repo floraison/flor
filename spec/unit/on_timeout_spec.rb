@@ -120,7 +120,32 @@ describe 'Flor core' do
       expect(r['vars']['l']).to eq([ 0, 1 ])
     end
 
-    it 'does not trigger if it is a kill'
+    it 'does not trigger if it is a kill' do
+
+      r = @unit.launch(
+        %q{
+          set l []
+
+          define oto msg
+            push l "oto:$(msg.point):$(msg.nid):$(msg.flavour)"
+
+          sequence timeout: '1d' on_timeout: oto
+            push l 0
+            stall _
+
+          push l 1
+        },
+        wait: 'end')
+
+      expect(r['point']).to eq('end')
+
+      @unit.kill(exid: r['exid'], nid: '0_2', payload: {})
+
+      r = @unit.wait(r['exid'], 'terminated')
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['l']).to eq([ 0, 1 ])
+    end
   end
 end
 

@@ -395,6 +395,30 @@ describe 'Flor unit' do
       end
     end
 
+    describe '#kill' do
+
+      it 'kills' do
+
+        r = @unit.launch(
+          %q{
+            set l []
+            sequence
+              sequence on_cancel: (def msg \ push l 'oc')
+                stall _
+          },
+          wait: 'end')
+
+        exid = r['exid']
+
+        @unit.kill(exid, '0_1')
+
+        r = @unit.wait(exid)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']).to eq({ 'l' => [] })
+      end
+    end
+
     describe '#signal' do
 
       it 'queues signal messages' do
