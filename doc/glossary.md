@@ -80,8 +80,28 @@ The ganger is a component of the [scheduler](#scheduler). It's the middleman bet
 The ganger receives the tasks from the flor executor, decides what tasker will be invoked and hands it the task.
 
 ## hook
+
+A hook is a pair criteria/code. The [hooker](#hooker) sees each message emitted/consumed in the [executor](#executor) and triggers the matching hooks.
+
+The code is usually Ruby code but it could be an external script (more costly to run).
+
+Hooks can thus be used for specialised logging purposes, FIXME (continue me)
+
 ## hooker
+
+The hooker is a [scheduler](#scheduler) component that gets notified for each message treated in the current [executor](#executor).
+
+The hooker tracks a list of [hooks](#hook). Upon receiving a message, the hooker hands the message to each matching hook. The matching criteria are the message point, the execution domain, the tags, etc...
+
+Hooks are added programmatically to the unit, or the hooker directly, or they are set via the [environment](#environment) with their code and configuration.
+
+The hooker is also responsible for triggering [traps](#trap) (hooks and traps simply share the same hooker infrastructure).
+
+Read more at [hooks.md](hooks.md).
+
 ## launch
+
+TODO
 
 ## loader
 
@@ -191,8 +211,16 @@ A piece of (usually Ruby) code in charge of taking an action based on a flor tas
 Taskers or pointers to them are found (by the [loader](#loader) in the `lib/` directory of a flor [environment](#environment). There is actually a [ganger](#ganger) between the loader and the tasksers, it ultimately decides which tasker gets handed the task.
 
 ## timer
+
+TODO
+
 ## timeout
+
+TODO
+
 ## trap
+
+TODO
 
 ## unit
 
@@ -205,4 +233,6 @@ FLOR = Flor::Unit.new('envs/test/etc/conf.json')
 that is pointing to the configuration file for a given flor [environment](#environment).
 
 ## variable
+
+TODO
 

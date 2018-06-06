@@ -56,7 +56,7 @@ module Flor
       (
         @hooks + executor.traps_and_hooks
       )
-        .inject([]) do |a, (_, opts, hook, block)|
+        .inject([]) { |a, (_, opts, hook, block)|
           # name of hook is piped into "_" oblivion
 
           a.concat(
@@ -68,8 +68,7 @@ module Flor
               executor.trigger_hook(hook, message)
             else
               executor.trigger_block(block, opts, message)
-            end)
-        end
+            end) }
     end
 
     protected

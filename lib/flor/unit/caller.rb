@@ -36,6 +36,7 @@ module Flor
 
       root = File.dirname(conf['_path'])
 
+# TODO Flor.d_fetch_a
       Flor.h_fetch_a(conf, 'require').each { |pa|
         fail ArgumentError.new('".." not allowed in paths') if pa =~ /\.\./
         require(fjoin(root, pa)) }
