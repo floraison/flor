@@ -40,7 +40,8 @@ describe 'Flor punit' do
       expect(r['type']).to eq(nil)
       expect(r['string']).to eq('day at midnight')
 
-      r = @unit.wait(r['exid'], 'end')
+      @unit.wait(r['exid'], 'end', timeout: 0.49) rescue nil
+        # the 'end' might already have happened
 
       expect(@unit.timers.count).to eq(1)
 
