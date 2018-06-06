@@ -123,14 +123,16 @@ module Flor
         o.puts "#{_c.dg}|#{_c.rs}"
       end
 
-      if src.is_a?(String)
-        src.split("\n")
-          .select { |l| l.strip.length > 0 && l.match(/\A\s*[^#]/) }
-          .each { |l| o.puts "#{_c.dg}| #{_c.yl}#{l}#{_c.rs}" }
-      else
-        Flor.to_pretty_s(src).split("\n")
-          .each { |l| o.puts "#{_c.dg}| #{_c.yl}#{l}#{_c.rs}" }
-      end
+      lines =
+        (src.is_a?(String) ? src : Flor.to_pretty_s(src))
+          .split("\n")
+      min = lines
+        .select { |l| l.strip.length > 0 }
+        .collect { |l| l.match(/\A(\s*)/)[1].length }
+        .min
+      lines
+        .each_with_index { |l, i|
+          o.puts "#{_c.dg}|#{"%4d" % (i + 1)} #{_c.yl}#{l[min..-1]}#{_c.rs}" }
 
       o.puts "#{_c.dg}.#{_c.rs}"
 
