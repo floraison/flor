@@ -51,7 +51,7 @@ describe 'Flor core' do
              'cnid' => '0',
              'fun' => 0,
              'on_timeout' => true},
-          2]
+          2 ]
       ])
     end
 
@@ -142,6 +142,25 @@ describe 'Flor core' do
       @unit.kill(exid: r['exid'], nid: '0_2', payload: {})
 
       r = @unit.wait(r['exid'], 'terminated')
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['l']).to eq([ 0, 1 ])
+    end
+
+    it 'does not trigger for an upstream timeout' do
+
+      r = @unit.launch(
+        %q{
+          set l []
+          sequence timeout: '1s'
+            sequence,
+                on_timeout:
+                  (def msg \ push l "$(msg.point):$(msg.nid):$(msg.flavour)")
+              push l 0
+              stall _
+          push l 1
+        },
+        wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq([ 0, 1 ])
