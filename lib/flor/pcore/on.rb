@@ -67,6 +67,28 @@ class Flor::Pro::On < Flor::Macro
   # If it were, it would trap the signal named "cancel".
   #
   #
+  # ## timeout
+  #
+  # `on timeout` turns:
+  # ```
+  # sequence timeout: '1w'
+  #   on timeout
+  #     push f.l msg # a block with a `msg` variable
+  #   # ...
+  # ```
+  # into:
+  # ```
+  # sequence timeout: '1w'
+  #   on_timeout
+  #     def msg # a anonymous function definition with a `msg` argument
+  #       push f.l msg
+  #   # ...
+  # ```
+  #
+  # Please note that "timeout" in `on timeout` is not quoted, nor double quoted.
+  # If it were, it would trap the signal named "timeout".
+  #
+  #
   # ## see also
   #
   # Trap and signal.
