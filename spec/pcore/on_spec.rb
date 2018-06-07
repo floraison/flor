@@ -120,35 +120,7 @@ describe 'Flor pcore' do
 
     context 'timeout' do
 
-      it 'sets a timeout handler in its parent' do
-
-        @executor.launch(
-          %q{
-            sequence
-              on timeout
-                push f.l msg
-              stall _
-          })
-
-        expect(
-          @executor.execution['nodes']['0']['on_timeout']
-        ).to eq(
-          [ [ '_func',
-              { 'nid' => '0_0_0',
-                'tree' => [
-                  'def', [
-                    [ '_att', [ [ 'msg', [], 3 ] ], 3 ],
-                    [ 'push', [
-                      [ '_att', [ [ 'f.l', [], 4 ] ], 4 ],
-                      [ '_att', [ [ 'msg', [], 4 ] ], 4 ] ], 4 ] ], 3 ],
-                'cnid' => '0',
-                'fun' => 0,
-                'on_timeout' => true },
-              3 ] ]
-        )
-      end
-
-      it 'catches errors'
+      # see spec/punit/on_spec.rb
     end
   end
 end
