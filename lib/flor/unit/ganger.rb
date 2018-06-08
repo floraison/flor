@@ -79,8 +79,7 @@ module Flor
     def is_a_message_array?(o)
 
       o.is_a?(Array) &&
-      o.first.is_a?(Hash) &&
-      o.first['point'].is_a?(String)
+      o.all? { |e| e.is_a?(Hash) && e['point'].is_a?(String) }
     end
 
     def var_match(k, filter)
