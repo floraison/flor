@@ -91,25 +91,31 @@ module Flor
       cmd = conf['cmd']
       cmd = Flor::HashDollar.new(h).expand(cmd)
 
-      i, o = IO.pipe
-      r, w = IO.pipe
-
-      pid = spawn(cmd, in: r, out: o)
-      w.write(JSON.dump(message))
-      w.close
-      o.close
-      _, status = Process.wait2(pid)
-      r = i.read
-      r = JSON.parse(r)
+      status, data = spawn(cmd, JSON.dump(message))
+      m = JSON.parse(data)
 
       if status.exitstatus != 0
 # TODO answer with "point" => "failed" message
 puts ">>> #{status.inspect} <<<"
       end
 
-      r['point'] = 'receive'
+      m['point'] = 'receive'
 
-      [ r ] # TODO really go for multiple messages?
+      [ m ] # TODO really go for multiple messages?
+    end
+
+    def spawn(cmd, data)
+
+      i, o = IO.pipe
+      r, w = IO.pipe
+
+      pid = Kernel.spawn(cmd, in: r, out: o)
+      w.write(data)
+      w.close
+      o.close
+      _, status = Process.wait2(pid)
+
+      [ status, i.read ]
     end
   end
 end
