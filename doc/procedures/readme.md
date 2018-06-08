@@ -60,6 +60,7 @@
 * [do-trap](do_trap.md) - A version of trap that accepts a block instead of a function.
 * [every](every.md) - "every" is a macro procedure.
 * [graft, import](graft.md) - Graft a subtree into the current flo
+* [on_timeout](on_timeout.md) - Counterpart to the on_timeout: attribute.
 * [schedule](schedule.md) - Schedules a function
 * [signal](signal.md) - Used in conjuction with "on".
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
@@ -117,6 +118,7 @@
   * [Flor::Pro::Not](https://github.com/floraison/flor/blob/master/lib/flor/pcore/not.rb) : [not](not.md)
   * [Flor::Pro::OnCancel](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_cancel.rb) : [on_cancel](on_cancel.md)
   * [Flor::Pro::OnError](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_error.rb) : [on_error](on_error.md)
+  * [Flor::Pro::OnTimeout](https://github.com/floraison/flor/blob/master/lib/flor/punit/on_timeout.rb) : [on_timeout](on_timeout.md)
   * [Flor::Pro::PatContainer](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_.rb)
     * [Flor::Pro::PatArr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_arr.rb) : _pat_arr
     * [Flor::Pro::PatGuard](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_guard.rb) : _pat_guard

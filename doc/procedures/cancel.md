@@ -30,7 +30,6 @@ concurrence         # 0
 But it's kind of brittle compared to using tags.
 
 # TODO document "kill"
-# TODO document "on_cancel"
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/cancel.rb)
