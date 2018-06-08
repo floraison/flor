@@ -88,11 +88,12 @@ module Flor
       h['v'] = message['vars']
       h['tag'] = (message['tags'] || []).first
 
-      cmd = conf['cmd']
-      cmd = Flor::HashDollar.new(h).expand(cmd)
+      #cmd = conf['cmd']
+      #cmd = Flor::HashDollar.new(h).expand(cmd)
+      cmd = Flor.d_fetch(h, h, 'cmd')
 
-      status, data = spawn(cmd, JSON.dump(message))
-      m = JSON.parse(data)
+      status, data = spawn(cmd, encode(conf, message))
+      m = decode(conf, data)
 
       if status.exitstatus != 0
 # TODO answer with "point" => "failed" message
@@ -102,6 +103,22 @@ puts ">>> #{status.inspect} <<<"
       m['point'] = 'receive'
 
       [ m ] # TODO really go for multiple messages?
+    end
+
+    def encode(context, message)
+
+      coder = Flor.d_fetch(context, 'encoder', 'coder') || '::JSON'
+
+      Flor.const_get(coder)
+        .dump(message)
+    end
+
+    def decode(context, data)
+
+      coder = Flor.d_fetch(context, 'decoder', 'coder', 'encoder') || '::JSON'
+
+      Flor.const_get(coder)
+        .load(data)
     end
 
     def spawn(cmd, data)

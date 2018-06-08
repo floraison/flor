@@ -145,6 +145,25 @@ module Flor
       fail ArgumentError.new("cannot turn instance of #{o.class} into an array")
     end
 
+    # d_fetch(h, k0, k1, ...)
+    # d_fetch(h, k0, k1, ..., default)
+    # d_fetch(h, context, k0, k1, ...)
+    # d_fetch(h, context, k0, k1, ..., default)
+    #
+    def d_fetch(h, *keys)
+
+      context = keys.first.is_a?(Hash) ? keys.shift : h
+      default = keys.last.is_a?(String) ? nil : keys.pop
+
+      k = keys.find { |k| h.has_key?(k) }
+      return default unless k
+
+      v = h[k]
+      return v unless v.is_a?(String)
+
+      Flor::HashDollar.new(context).expand(v)
+    end
+
     def is_regex_string?(s)
 
       !! (
