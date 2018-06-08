@@ -65,6 +65,7 @@ describe 'Flor punit' do
             push l 0
             on_timeout (def msg \ push l "$(msg.point):$(msg.nid)")
             stall _
+            push l 2
           push l 3
         },
         wait: 'terminated')
