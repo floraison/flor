@@ -88,21 +88,20 @@ module Flor
       h['v'] = message['vars']
       h['tag'] = (message['tags'] || []).first
 
-      #cmd = conf['cmd']
-      #cmd = Flor::HashDollar.new(h).expand(cmd)
-      cmd = Flor.d_fetch(h, h, 'cmd')
+      cmd = Flor.d_fetch(h, 'cmd')
 
-      status, data = spawn(cmd, encode(conf, message))
-      m = decode(conf, data)
+      m = encode(conf, message)
+      status, data = spawn(cmd, m)
+      d = decode(conf, data)
 
       if status.exitstatus != 0
 # TODO answer with "point" => "failed" message
 puts ">>> #{status.inspect} <<<"
       end
 
-      m['point'] = 'receive'
+      d['point'] = 'receive'
 
-      [ m ] # TODO really go for multiple messages?
+      [ d ] # TODO really go for multiple messages?
     end
 
     def encode(context, message)

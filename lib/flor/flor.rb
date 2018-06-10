@@ -164,6 +164,11 @@ module Flor
       Flor::HashDollar.new(context).expand(v)
     end
 
+    def d_fetch_a(h, *keys)
+# TODO
+fail NotImplementedError
+    end
+
     def is_regex_string?(s)
 
       !! (
