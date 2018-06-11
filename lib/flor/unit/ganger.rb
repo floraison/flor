@@ -38,10 +38,10 @@ module Flor
       tname = message['tasker']
 
       tconf =
-        ( ! message['routed'] && @unit.loader.tasker(domain, 'tasker')) ||
-        @unit.loader.tasker(domain, tname)
-          #
-          # TODO `.tasker(domain, 'ganger')`
+        ( ! message['routed'] &&
+         (@unit.loader.tasker(domain, 'ganger', message) ||
+          @unit.loader.tasker(domain, 'tasker', message))) ||
+        @unit.loader.tasker(domain, tname, message)
 
       fail ArgumentError.new(
         "tasker #{tname.inspect} not found"
@@ -62,7 +62,7 @@ module Flor
 
       r = @unit.caller.call(self, tconf, message)
 
-      if is_a_message_array?(r)
+      if is_message_array?(r)
         r
       else
         []
@@ -76,7 +76,7 @@ module Flor
 
     protected
 
-    def is_a_message_array?(o)
+    def is_message_array?(o)
 
       o.is_a?(Array) &&
       o.all? { |e| e.is_a?(Hash) && e['point'].is_a?(String) }

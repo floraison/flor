@@ -168,6 +168,7 @@ RSpec::Matchers.define :point_to do |path|
 
   failure_message do |actual|
 
+    actual = '(nil)' if actual == nil
     ppath = ' ' * (apath.length - path.length) + path
 
     "expected\n  #{actual}\n\nto point to\n  #{ppath}\n  #{apath}"

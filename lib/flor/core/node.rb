@@ -359,7 +359,7 @@ class Flor::Node
 
     return nil if ke.miss[4].empty?
 
-    m = "Variable #{ke.miss[3].inspect} not found"
+    m = "variable #{ke.miss[3].inspect} not found"
     m += " at #{Dense::Path.make(ke.miss[1]).to_s.inspect}" if ke.miss[1].any?
 
     raise ke.relabel(m)

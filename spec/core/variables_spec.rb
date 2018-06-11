@@ -175,7 +175,7 @@ describe 'Flor core' do
 
       expect(r['point']).to eq('failed')
       expect(r['error']['kla']).to eq('KeyError')
-      expect(r['error']['msg']).to eq('Variable "a" not found')
+      expect(r['error']['msg']).to eq('variable "a" not found')
     end
 
     it 'fails when the container does not exist (deeper)' do
@@ -186,7 +186,7 @@ describe 'Flor core' do
 
       expect(r['point']).to eq('failed')
       expect(r['error']['kla']).to eq('KeyError')
-      expect(r['error']['msg']).to eq('Variable "a" not found at "h"')
+      expect(r['error']['msg']).to eq('variable "a" not found at "h"')
     end
 
     it 'fails when type error' do
@@ -198,6 +198,7 @@ describe 'Flor core' do
       expect(r['point']).to eq('failed')
       expect(r['error']['kla']).to eq('TypeError')
       expect(r['error']['msg']).to eq('No key "k" for Array at "a"')
+        # error straight out of the 'dense' library
     end
   end
 

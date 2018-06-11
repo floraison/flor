@@ -34,7 +34,7 @@ module Flor
 
     def ruby_call(service, conf, message)
 
-      root = File.dirname(conf['_path'])
+      root = File.dirname(conf['_path'] || '.')
 
 # TODO Flor.d_fetch_a
       Flor.h_fetch_a(conf, 'require').each { |pa|

@@ -67,79 +67,83 @@ module Flor
     #
     #   For example `debug: 'msg,stdout'`
 
-    def self.prepare(conf, over_conf)
+    class << self
 
-      c = conf
-      c = Flor::ConfExecutor.interpret(c) if c.is_a?(String)
+      def prepare(conf, over_conf)
 
-      fail ArgumentError.new(
-        "cannot extract conf out of #{c.inspect} (#{conf.class})"
-      ) unless c.is_a?(Hash)
+        c = conf
+        c = Flor::ConfExecutor.interpret_path_or_source(c) if c.is_a?(String)
 
-      unless c['conf'] == true
-        #
-        # don't read FLOR_DEBUG if this executor is only meant to read the conf
+        fail ArgumentError.new(
+          "cannot extract conf out of #{c.inspect} (#{conf.class})"
+        ) unless c.is_a?(Hash)
 
-        c.merge!(interpret_flor_debug(c))
-        c.merge!(interpret_env)
+        unless c['conf'] == true
+          #
+          # don't read FLOR_DEBUG if this executor is only meant to read
+          # the conf
+
+          c.merge!(interpret_flor_debug(c))
+          c.merge!(interpret_env)
+        end
+
+        c.merge!(over_conf)
       end
 
-      c.merge!(over_conf)
-    end
+      def get_class(conf, key)
 
-    def self.get_class(conf, key)
-
-      if v = conf[key]
-        Flor.const_lookup(v)
-      else
-        nil
+        if v = conf[key]
+          Flor.const_lookup(v)
+        else
+          nil
+        end
       end
-    end
 
-    protected # somehow
+      protected
 
-    LOG_DBG_KEYS = %w[ dbg msg err src tree tree_rw run ]
-    LOG_ALL_KEYS = %w[ all log sto ] + LOG_DBG_KEYS
+      LOG_DBG_KEYS = %w[ dbg msg err src tree tree_rw run ]
+      LOG_ALL_KEYS = %w[ all log sto ] + LOG_DBG_KEYS
 
-    def self.interpret_flor_debug(c)
+      def interpret_flor_debug(c)
 
-      plus, minus = [
-        c['flor_debug'], c[:debug], c['debug'], ENV['FLOR_DEBUG'] ]
-          .collect { |v| (v || '').split(/\s*,\s*/) }
-          .flatten(1)
-          .partition { |v| v[0, 1] != '-' }
-      plus = plus.collect { |v| v[0, 1] == '+' ? v[1..-1] : v }
-      minus = minus.collect { |v| v[0, 1] == '-' ? v[1..-1] : v }
-      a = plus - minus
+        plus, minus = [
+          c['flor_debug'], c[:debug], c['debug'], ENV['FLOR_DEBUG'] ]
+            .collect { |v| (v || '').split(/\s*,\s*/) }
+            .flatten(1)
+            .partition { |v| v[0, 1] != '-' }
+        plus = plus.collect { |v| v[0, 1] == '+' ? v[1..-1] : v }
+        minus = minus.collect { |v| v[0, 1] == '-' ? v[1..-1] : v }
+        a = plus - minus
 
-      h =
-        a.inject({}) { |h, kv|
-          k, v = kv.split(':')
-          k = 'sto' if k == 'db'
-          k = "log_#{k}" if LOG_ALL_KEYS.include?(k)
-          h[k] = v ? JSON.parse(v) : true
-          h
-        }
-      LOG_ALL_KEYS.each { |k| h["log_#{k}"] = 1 } if h['log_all']
-      LOG_DBG_KEYS.each { |k| h["log_#{k}"] = 1 } if h['log_dbg']
+        h =
+          a.inject({}) { |h, kv|
+            k, v = kv.split(':')
+            k = 'sto' if k == 'db'
+            k = "log_#{k}" if LOG_ALL_KEYS.include?(k)
+            h[k] = v ? JSON.parse(v) : true
+            h
+          }
+        LOG_ALL_KEYS.each { |k| h["log_#{k}"] = 1 } if h['log_all']
+        LOG_DBG_KEYS.each { |k| h["log_#{k}"] = 1 } if h['log_dbg']
 
-      h['log_colours'] = true \
-        if a.include?('colours') || a.include?('colors')
-          # LOG_DEBUG=colours forces colors
+        h['log_colours'] = true \
+          if a.include?('colours') || a.include?('colors')
+            # LOG_DEBUG=colours forces colors
 
-      h['log_out'] = 'stdout' if h.delete('stdout')
-      h['log_out'] = 'stderr' if h.delete('stderr')
+        h['log_out'] = 'stdout' if h.delete('stdout')
+        h['log_out'] = 'stderr' if h.delete('stderr')
 
-      h
-    end
+        h
+      end
 
-    def self.interpret_env
+      def interpret_env
 
-      h = {}
-      u = ENV['FLOR_UNIT']
-      h['unit'] = u if u
+        h = {}
+        u = ENV['FLOR_UNIT']
+        h['unit'] = u if u
 
-      h
+        h
+      end
     end
   end
 end

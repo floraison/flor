@@ -25,7 +25,7 @@ module Flor
         .collect { |pa| [ pa, expose_d(pa, {}) ] }
         .select { |pa, d| is_subdomain?(domain, d) }
         .sort_by { |pa, d| d.count('.') }
-        .inject({}) { |vars, (pa, d)| vars.merge!(interpret(pa)) }
+        .inject({}) { |vars, (pa, d)| vars.merge!(eval(pa, nil)) }
     end
 
     #def procedures(path)
@@ -55,7 +55,7 @@ module Flor
       path ? [ Flor.relativize_path(path), File.read(path) ] : nil
     end
 
-    def tasker(domain, name=nil)
+    def tasker(domain, name, message={})
 
       # NB: do not relativize path, because Ruby load path != cwd,
       # stay absolute for `require` and `load`
@@ -73,23 +73,16 @@ module Flor
 
       return nil unless path
 
-      conf = interpret(path)
+      conf = eval(path, Flor.dup(message))
 
       return conf if n == name
 
-      con = conf[name]
+      conf = conf[name]
 
-      return nil unless con
+      (conf.is_a?(Array) ? conf : [ conf ])
+        .each { |h| h['_path'] = path }
 
-      pa = conf['_path']
-
-      if con.is_a?(Array)
-        con.each { |c| c['_path'] = pa }
-      else
-        con['_path'] = pa
-      end
-
-      con
+      conf
     end
 
     def hooks(domain, name=nil)
@@ -103,7 +96,7 @@ module Flor
         .select { |pa, d| is_subdomain?(domain, d) }
         .sort_by { |pa, d| d.count('.') }
         .collect { |pa, d|
-          interpret(pa).each_with_index { |h, i|
+          eval(pa, nil).each_with_index { |h, i|
             h['_path'] = pa + ":#{i}" } }
         .flatten(1)
     end
@@ -166,17 +159,22 @@ module Flor
       end
     end
 
-    def interpret(path)
+    def eval(path, context)
 
-      @mutex.synchronize do
+      src =
+        @mutex.synchronize do
 
-        mt1 = File.mtime(path)
-        val, mt0 = @cache[path]
-        #p [ :cached, path ] if val && mt1 == mt0
-        return val if val && mt1 == mt0
+          mt1 = File.mtime(path)
+          val, mt0 = @cache[path]
 
-        (@cache[path] = [ Flor::ConfExecutor.interpret(path), mt1 ]).first
-      end
+          if val && mt1 == mt0
+            val
+          else
+            (@cache[path] = [ Flor::ConfExecutor.load(path), mt1 ]).first
+          end
+        end
+
+      Flor::ConfExecutor.interpret(path, src, context || {})
     end
   end
 end

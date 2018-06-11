@@ -31,6 +31,7 @@ describe Flor::Conf do
         'version' => '3.2.1',
         'count' => 7,
         'blah' => [ 'a', 'b', 2 ],
+        '_path' => '.',
         'root' => '.'
       })
     end
@@ -40,7 +41,7 @@ describe Flor::Conf do
       expect {
         p Flor::Conf.prepare(%{\n version: 3.2.1 }, {})
       }.to raise_error(
-        ArgumentError, 'error while reading conf: Variable "3" not found'
+        ArgumentError, 'error while reading conf: variable "3" not found'
       )
     end
 
@@ -49,7 +50,7 @@ describe Flor::Conf do
       expect(
         Flor::Conf.prepare(%{\n point: cancel }, {})
       ).to eq({
-        'point' => 'cancel', 'root' => '.'
+        'point' => 'cancel', '_path' => '.', 'root' => '.'
       })
     end
   end

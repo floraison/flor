@@ -190,76 +190,106 @@ module Flor
 
   class ConfExecutor < TransientExecutor
 
-    def self.interpret(path)
+    class << self
 
-      s =
-        if path.match(/[\r\n]/)
-          path.strip
+      def load(path)
+
+        src =
+          if path.match(/[\r\n]/)
+            path.strip
+          else
+            ls = File.readlines(path)
+            ls.reject! { |l| l.strip[0, 1] == '#' }
+            s = ls.join("\n").strip
+          end
+
+        az = "#{src[0, 1]}#{src[-1, 1]}"
+
+        if az == '{}' || az == '[]'
+          src
+        elsif src.match(/[^\r\n{]+:/) || src == ''
+          "{\n#{src}\n}"
         else
-          ls = File.readlines(path)
-          ls.reject! { |l| l.strip[0, 1] == '#' }
-          s = ls.join("\n").strip
+          "[\n#{src}\n]"
+        end
+      end
+
+      def interpret(path, source, context)
+
+        path ||= '.'
+
+        fs = context['payload'] || {}
+
+        vs = Hash.new { |h, k| k }
+          #
+        vs.merge!(context['vars'] || {})
+        vs['root'] = determine_root(path)
+        vs['ruby_version'] = RUBY_VERSION
+        vs['ruby_platform'] = RUBY_PLATFORM
+          #
+        class << vs
+          def has_key?(k)
+            prc = Flor::Procedure[k]
+            ( ! prc) || ( ! prc.core?) # ignore non-core procedures
+          end
         end
 
-      a, b = s[0, 1], s[-1, 1]
+        e = self.new('conf' => ! /conf/.match?(ENV['FLOR_DEBUG']))
+        r = e.launch(source, payload: fs, vars: vs)
 
-      s =
-        if (a == '{' && b == '}') || (a == '[' && b == ']')
-          s
-        elsif s.match(/[^\r\n{]+:/) || s == ''
-          "{\n#{s}\n}"
+        unless r['point'] == 'terminated'
+          ae = ArgumentError.new(
+            "error while reading conf: #{r['error']['msg']}")
+          ae.set_backtrace(r['error']['trc'])
+          fail ae
+        end
+
+        o = Flor.dup(r['payload']['ret'])
+
+        if o.is_a?(Hash)
+          o['_path'] = path
+          o['root'] ||= Flor.relativize_path(vs['root'])
+        elsif o.is_a?(Array)
+          o.each { |e| e['_path'] = path }
+        end
+
+        o
+      end
+
+      def interpret_path(path, context=nil)
+
+        interpret(path, load(path), context || {})
+      end
+
+      def interpret_source(source, context=nil)
+
+        interpret(nil, source, context || {})
+      end
+
+      def interpret_path_or_source(s, context=nil)
+
+        if s.index("\n")
+          interpret_source(load(s), context)
         else
-          "[\n#{s}\n]"
-        end
-
-      vs = Hash.new { |h, k| k }
-      class << vs
-        def has_key?(k)
-          prc = Flor::Procedure[k]
-          ( ! prc) || ( ! prc.core?) # ignore non-core procedures
+          interpret_path(s, context)
         end
       end
 
-      vs['root'] = determine_root(path)
+      def determine_root(path)
 
-      vs['ruby_version'] = RUBY_VERSION
-      vs['ruby_platform'] = RUBY_PLATFORM
+        dir = File.absolute_path(File.dirname(path))
+        ps = dir.split(File::SEPARATOR)
 
-      c = (ENV['FLOR_DEBUG'] || '').match(/conf/) ? false : true
-      r = (self.new('conf' => c)).launch(s, vars: vs)
-
-      unless r['point'] == 'terminated'
-        ae = ArgumentError.new("error while reading conf: #{r['error']['msg']}")
-        ae.set_backtrace(r['error']['trc'])
-        fail ae
+        ps.last == 'etc' ? File.absolute_path(File.join(dir, '..')) : dir
       end
 
-      o = Flor.dup(r['payload']['ret'])
-
-      if o.is_a?(Hash)
-        o['_path'] = path unless path.match(/[\r\n]/)
-        o['root'] ||= Flor.relativize_path(vs['root'])
-      elsif o.is_a?(Array)
-        o.each { |e| e['_path'] = path } unless path.match(/[\r\n]/)
-      end
-
-      o
-    end
-
-    def self.determine_root(path)
-
-      dir = File.absolute_path(File.dirname(path))
-      ps = dir.split(File::SEPARATOR)
-
-      ps.last == 'etc' ? File.absolute_path(File.join(dir, '..')) : dir
-    end
-
-    def self.interpret_line(s)
-
-      r = interpret("\n#{s}")
-      r.delete('root') if r.is_a?(Hash)
-
-      r
+#      def interpret_line(s)
+#
+#        r = interpret("\n#{s}")
+#        r.delete('root') if r.is_a?(Hash)
+#
+#        r
+#      end
     end
   end
 end
