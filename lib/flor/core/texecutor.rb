@@ -234,7 +234,8 @@ module Flor
           end
         end
 
-        e = self.new('conf' => ! /conf/.match?(ENV['FLOR_DEBUG']))
+        c = ! (ENV['FLOR_DEBUG'] || '').match(/conf/)
+        e = self.new('conf' => c)
         r = e.launch(source, payload: fs, vars: vs)
 
         unless r['point'] == 'terminated'
