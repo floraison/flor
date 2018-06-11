@@ -25,7 +25,7 @@ module Flor
         .collect { |pa| [ pa, expose_d(pa, {}) ] }
         .select { |pa, d| is_subdomain?(domain, d) }
         .sort_by { |pa, d| d.count('.') }
-        .inject({}) { |vars, (pa, d)| vars.merge!(eval(pa, nil)) }
+        .inject({}) { |vars, (pa, d)| vars.merge!(eval(pa, {})) }
     end
 
     #def procedures(path)
@@ -73,7 +73,7 @@ module Flor
 
       return nil unless path
 
-      conf = eval(path, Flor.dup(message))
+      conf = eval(path, message)
 
       return conf if n == name
 
@@ -96,7 +96,7 @@ module Flor
         .select { |pa, d| is_subdomain?(domain, d) }
         .sort_by { |pa, d| d.count('.') }
         .collect { |pa, d|
-          eval(pa, nil).each_with_index { |h, i|
+          eval(pa, {}).each_with_index { |h, i|
             h['_path'] = pa + ":#{i}" } }
         .flatten(1)
     end
@@ -174,7 +174,7 @@ module Flor
           end
         end
 
-      Flor::ConfExecutor.interpret(path, src, context || {})
+      Flor::ConfExecutor.interpret(path, src, context)
     end
   end
 end
