@@ -20,121 +20,102 @@ describe Flor::Loader do
 
   describe '#variables' do
 
-    it 'loads variables' do
+    {
+      'net' => { 'car' => 'fiat' },
+      'net.example' => { 'car' => 'alfa romeo', 'flower' => 'rose' },
+      'org.example' => { 'car' => nil, 'flower' => 'lilly' },
+      'net.example.alpha' => { 'car' => 'lancia', 'flower' => 'forget-me-not' }
+    }.each do |d, h|
 
-      n = @loader.variables('net')
+      it "loads variable \"#{d}\"" do
 
-      expect(n['car']).to eq('fiat')
-
-      ne = @loader.variables('net.example')
-
-      expect(ne['car']).to eq('alfa romeo')
-      expect(ne['flower']).to eq('rose')
-
-      oe = @loader.variables('org.example')
-
-      expect(oe['car']).to eq(nil)
-      expect(oe['flower']).to eq('lilly')
-
-      nea = @loader.variables('net.example.alpha')
-
-      expect(nea['car']).to eq('lancia')
-      expect(nea['flower']).to eq('forget-me-not')
+        r = @loader.variables(d)
+        h.each { |k, v| expect(h[k]).to eq(v) }
+      end
     end
   end
 
   describe '#library' do
 
-    it 'loads a lib' do
+    {
+      [ 'net.example', 'flow1' ] => [
+        'envs/uspec_loader/usr/net.example/lib/flows/flow1.flo',
+        "task 'alice'" ],
+      [ 'org.example.flow1' ] => [
+        'envs/uspec_loader/usr/org.example/lib/flows/flow1.flor',
+        "task 'oskar'" ],
+    }.each do |ks, (pa, fn)|
 
-      pa, fn = @loader.library('net.example', 'flow1')
+      it "loads lib at #{ks.inspect}" do
 
-      expect(
-        pa
-      ).to eq(
-        'envs/uspec_loader/usr/net.example/lib/flows/flow1.flo'
-      )
+        p, f = @loader.library(*ks)
 
-      expect(
-        fn.strip
-      ).to eq(%{
-        task 'alice'
-      }.strip)
-
-      pa, fn = @loader.library('org.example.flow1')
-
-      expect(
-        fn.strip
-      ).to eq(%{
-        task 'oskar'
-      }.strip)
+        expect(p).to eq(pa)
+        expect(f.strip).to eq(fn)
+      end
     end
   end
 
   describe '#tasker' do
 
-    it 'loads a tasker configuration' do
+    {
+      [ '', 'alice' ] => [
+        'basic alice', %w[ description a _path root ] ],
 
-      t = @loader.tasker('', 'alice')
+      [ 'net.example', 'alice' ] => [
+        'basic alice', %w[ description a _path root ] ],
 
-      expect(t['description']).to eq('basic alice')
-      expect(t.keys).to eq(%w[ description a _path root ])
+      [ 'org.example', 'alice' ] => [
+        'org.example alice', %w[ description ao _path root ] ],
 
-      t = @loader.tasker('net.example', 'alice')
+      [ '', 'bob' ] => [
+        nil ],
 
-      expect(t['description']).to eq('basic alice')
-      expect(t.keys).to eq(%w[ description a _path root ])
+      [ 'net.example', 'bob' ] => [
+        'usr net.example bob', %w[ description ubn _path root ] ],
 
-      t = @loader.tasker('org.example', 'alice')
+      [ 'org.example', 'bob' ] => [
+        'org.example bob', %w[ description bo _path root ] ],
 
-      expect(t['description']).to eq('org.example alice')
-      expect(t.keys).to eq(%w[ description ao _path root ])
+      [ 'org.example.bob', nil ] => [
+        'org.example bob', %w[ description bo _path root ] ],
 
-      t = @loader.tasker('', 'bob')
+    }.each do |ks, (desc, keys)|
 
-      expect(t).to eq(nil)
+      it "loads tasker conf at #{ks.inspect}" do
 
-      t = @loader.tasker('net.example', 'bob')
+        t = @loader.tasker(*ks)
 
-      expect(t['description']).to eq('usr net.example bob')
-      expect(t.keys).to eq(%w[ description ubn _path root ])
-
-      t = @loader.tasker('org.example', 'bob')
-
-      expect(t['description']).to eq('org.example bob')
-      expect(t.keys).to eq(%w[ description bo _path root ])
-
-      t = @loader.tasker('org.example.bob')
-
-      expect(t['description']).to eq('org.example bob')
-      expect(t.keys).to eq(%w[ description bo _path root ])
+        if desc
+          expect(t['description']).to eq(desc)
+          expect(t.keys).to eq(keys)
+        else
+          expect(t).to eq(nil)
+        end
+      end
     end
 
-    it 'loads a domain tasker configuration' do
+    {
 
-      tc = @loader.tasker('com.example.tasker')
-      expect(tc['description']).to eq('/cet/dot.json')
+      [ 'com.example.tasker', nil ] => '/cet/dot.json',
+      [ 'com.example', 'tasker' ] => '/cet/dot.json',
+      [ 'com.example.alpha.tasker', nil ] => '/usr/ceat/dot.json',
+      [ 'com.example.alpha', 'tasker' ] => '/usr/ceat/dot.json',
+      [ 'com.example.bravo.tasker', nil ] => '/usr/cebt/flor.json',
+      [ 'com.example.bravo', 'tasker' ] => '/usr/cebt/flor.json',
+      [ 'com.example.charly', 'tasker' ] => '/cect.json',
 
-      tc = @loader.tasker('com.example', 'tasker')
-      expect(tc['description']).to eq('/cet/dot.json')
+    }.each do |ks, desc|
 
-      tc = @loader.tasker('com.example.alpha.tasker')
-      expect(tc['description']).to eq('/usr/ceat/dot.json')
+      it "loads the domain tasker conf at #{ks.inspect}" do
 
-      tc = @loader.tasker('com.example.alpha', 'tasker')
-      expect(tc['description']).to eq('/usr/ceat/dot.json')
+        tc = @loader.tasker(*ks)
 
-      tc = @loader.tasker('com.example.bravo.tasker')
-      expect(tc['description']).to eq('/usr/cebt/flor.json')
-
-      tc = @loader.tasker('com.example.bravo', 'tasker')
-      expect(tc['description']).to eq('/usr/cebt/flor.json')
-
-      tc = @loader.tasker('com.example.charly', 'tasker')
-      expect(tc['description']).to eq('/cect.json')
+        expect(tc['description']).to eq(desc)
+      end
     end
 
-    it 'loads a tasker configuration {name}.json' do
+    it 'loads a tasker conf {name}.json' do
 
       tc = @loader.tasker('org.example', 'charly')
       expect(tc['description']).to eq('org.example charly')
@@ -143,22 +124,30 @@ describe Flor::Loader do
         'envs/uspec_loader/lib/taskers/org.example/charly.json')
     end
 
-    it 'loads a tasker configuration do.ma.in.json' do
+    {
 
-      tc = @loader.tasker('mil.example', 'staff')
-      expect(tc['description']).to eq('mil.example.staff')
+      [ 'mil.example', 'staff' ] => [
+        'mil.example.staff',
+        nil ],
+      [ 'mil.example.ground', 'staff' ] => [
+        'mil.example.ground.staff',
+        nil ],
+      [ 'mil.example.air', 'command' ] => [
+        'mil.example.air.command',
+        nil ],
+      [ 'mil.example.air.tactical', 'command' ] => [
+        'mil.example.air.command',
+        'envs/uspec_loader/usr/mil.example/lib/taskers/air.json' ],
 
-      tc = @loader.tasker('mil.example.ground', 'staff')
-      expect(tc['description']).to eq('mil.example.ground.staff')
+    }.each do |ks, (desc, path)|
 
-      tc = @loader.tasker('mil.example.air', 'command')
-      expect(tc['description']).to eq('mil.example.air.command')
+      it "loads the do.main.json tasker conf at #{ks.inspect}" do
 
-      tc = @loader.tasker('mil.example.air.tactical', 'command')
-      expect(tc['description']).to eq('mil.example.air.command')
+        tc = @loader.tasker(*ks)
 
-      expect(tc['_path']).to point_to(
-        'envs/uspec_loader/usr/mil.example/lib/taskers/air.json')
+        expect(tc['description']).to eq(desc)
+        expect(tc['_path']).to point_to(path) if path
+      end
     end
 
     it 'loads a tasker array configuration do.ma.in.json' do
