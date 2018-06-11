@@ -276,6 +276,16 @@ module Flor
         end
       end
 
+      # Used by "flosh" the flor shell
+      #
+      def interpret_line(s)
+
+        r = interpret_source(s)
+        r.delete('root') if r.is_a?(Hash)
+
+        r
+      end
+
       def determine_root(path)
 
         dir = File.absolute_path(File.dirname(path))
@@ -283,14 +293,6 @@ module Flor
 
         ps.last == 'etc' ? File.absolute_path(File.join(dir, '..')) : dir
       end
-
-#      def interpret_line(s)
-#
-#        r = interpret("\n#{s}")
-#        r.delete('root') if r.is_a?(Hash)
-#
-#        r
-#      end
     end
   end
 end
