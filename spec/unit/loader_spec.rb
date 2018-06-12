@@ -175,9 +175,8 @@ describe Flor::Loader do
         'edu.example echo')
       expect(tc['class']).to eq(
         'Edu::Example::Taskers::Vanilla')
-      expect(tc['_path']).to eq(
-        '/Users/jmettraux/w/flor/envs/uspec_loader/lib/taskers/' +
-        'edu.example/echo/dot.json')
+      expect(tc['_path']).to match(
+        /\/envs\/uspec_loader\/lib\/taskers\/edu\.example\/echo\/dot\.json\z/)
       expect(tc['root']).to eq(
         'envs/uspec_loader/lib/taskers/edu.example/echo')
     end
