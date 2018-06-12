@@ -27,6 +27,11 @@ module Flor
 
     protected
 
+    def conf
+
+      @unit ? @unit.conf : {}
+    end
+
     def fjoin(root, path)
 
       root == '.' ? path : File.join(root, path)
@@ -105,8 +110,10 @@ puts ">>> #{status.inspect} <<<"
 
     def encode(context, message)
 
-# TODO fetch cal_
-      coder = Flor.h_fetch(context, 'encoder', 'coder') || '::JSON'
+      coder =
+        Flor.h_fetch(context, 'encoder', 'coder') ||
+        Flor.h_fetch(conf, 'cal_encoder', 'cal_coder') ||
+        '::JSON'
 
       Flor.const_get(coder)
         .dump(message)
@@ -114,8 +121,10 @@ puts ">>> #{status.inspect} <<<"
 
     def decode(context, data)
 
-# TODO fetch cal_
-      coder = Flor.h_fetch(context, 'decoder', 'coder', 'encoder') || '::JSON'
+      coder =
+        Flor.h_fetch(context, 'decoder', 'coder', 'encoder') ||
+        Flor.h_fetch(conf, 'cal_decoder', 'cal_coder', 'cal_encoder') ||
+        '::JSON'
 
       Flor.const_get(coder)
         .load(data)
