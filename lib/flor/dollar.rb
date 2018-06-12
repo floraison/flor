@@ -220,11 +220,5 @@ module Flor
       do_eval(t)
     end
   end
-
-  class HashDollar < Dollar
-
-    def initialize(h); @h = h; end
-    def lookup(k); Dense.get(@h, k); end
-  end
 end
 

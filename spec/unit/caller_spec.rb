@@ -38,7 +38,7 @@ describe Flor::Caller do
 
         r = @caller.call(
           nil,
-          { 'cmd' => 'python $(_path)/unit/hooks/for_caller.py',
+          { 'cmd' => 'python spec/unit/hooks/for_caller.py',
             '_path' => 'spec/' },
           { 'point' => 'execute',
             'payload' => { 'items' => 2 } })
@@ -48,25 +48,6 @@ describe Flor::Caller do
         ).to eq([
           { 'point' => 'receive',
             'payload' => { 'items' => 2, 'price' => 'CHF 5.00' } }
-        ])
-      end
-
-      it 'extrapolates the "cmd" value' do
-
-        r = @caller.call(
-          nil,
-          { 'cmd' => 'python $(_path)/unit/hooks/$(f.for)_$(v.caller).py',
-            '_path' => 'spec/' },
-          { 'point' => 'execute',
-            'vars' => { 'caller' => 'caller' },
-            'payload' => { 'for' => 'for' } })
-
-        expect(
-          r
-        ).to eq([
-          { 'point' => 'receive',
-            'vars' => { 'caller' => 'caller' },
-            'payload' => { 'for' => 'for', 'price' => 'CHF 5.00' } }
         ])
       end
     end

@@ -126,6 +126,12 @@ module Flor
         e.keys.all? { |k| k.is_a?(String) } }
     end
 
+    def h_fetch(h, *keys)
+
+      k = keys.find { |k| h.has_key?(k) }
+      k ? h[k] : nil
+    end
+
     def h_fetch_a(h, *keys)
 
       default = keys.last.is_a?(String) ? [] : keys.pop
@@ -143,30 +149,6 @@ module Flor
       return nil if o.nil?
 
       fail ArgumentError.new("cannot turn instance of #{o.class} into an array")
-    end
-
-    # d_fetch(h, k0, k1, ...)
-    # d_fetch(h, k0, k1, ..., default)
-    # d_fetch(h, context, k0, k1, ...)
-    # d_fetch(h, context, k0, k1, ..., default)
-    #
-    def d_fetch(h, *keys)
-
-      context = keys.first.is_a?(Hash) ? keys.shift : h
-      default = keys.last.is_a?(String) ? nil : keys.pop
-
-      k = keys.find { |k| h.has_key?(k) }
-      return default unless k
-
-      v = h[k]
-      return v unless v.is_a?(String)
-
-      Flor::HashDollar.new(context).expand(v)
-    end
-
-    def d_fetch_a(h, *keys)
-# TODO
-fail NotImplementedError
     end
 
     def is_regex_string?(s)

@@ -36,7 +36,6 @@ module Flor
 
       root = File.dirname(conf['_path'] || '.')
 
-# TODO Flor.d_fetch_a
       Flor.h_fetch_a(conf, 'require').each { |pa|
         fail ArgumentError.new('".." not allowed in paths') if pa =~ /\.\./
         require(fjoin(root, pa)) }
@@ -88,7 +87,7 @@ module Flor
       h['v'] = message['vars']
       h['tag'] = (message['tags'] || []).first
 
-      cmd = Flor.d_fetch(h, 'cmd')
+      cmd = h['cmd']
 
       m = encode(conf, message)
       status, data = spawn(cmd, m)
@@ -106,7 +105,8 @@ puts ">>> #{status.inspect} <<<"
 
     def encode(context, message)
 
-      coder = Flor.d_fetch(context, 'encoder', 'coder') || '::JSON'
+# TODO fetch cal_
+      coder = Flor.h_fetch(context, 'encoder', 'coder') || '::JSON'
 
       Flor.const_get(coder)
         .dump(message)
@@ -114,7 +114,8 @@ puts ">>> #{status.inspect} <<<"
 
     def decode(context, data)
 
-      coder = Flor.d_fetch(context, 'decoder', 'coder', 'encoder') || '::JSON'
+# TODO fetch cal_
+      coder = Flor.h_fetch(context, 'decoder', 'coder', 'encoder') || '::JSON'
 
       Flor.const_get(coder)
         .load(data)

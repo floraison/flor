@@ -28,8 +28,10 @@ module Flor
 
       d = Flor.domain(exid)
 
-      #!! @unit.loader.tasker(d, name)
-      !! (@unit.loader.tasker(d, 'tasker') || @unit.loader.tasker(d, name))
+      !! (
+        @unit.loader.tasker(d, 'ganger') ||
+        @unit.loader.tasker(d, 'tasker') ||
+        @unit.loader.tasker(d, name))
     end
 
     def task(executor, message)

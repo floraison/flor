@@ -13,7 +13,7 @@ describe Flor::Loader do
   before :each do
 
     unit = OpenStruct.new(conf: { 'lod_path' => 'envs/uspec_loader' })
-      # force a specific file hieararchy root on the loader via 'lod_path'
+      # force a specific file hierarchy root on the loader via 'lod_path'
 
     @loader = Flor::Loader.new(unit)
   end
@@ -163,6 +163,23 @@ describe Flor::Loader do
         'envs/uspec_loader/usr/mil.example/lib/taskers/air.json')
       expect(tc[1]['_path']).to point_to(
         'envs/uspec_loader/usr/mil.example/lib/taskers/air.json')
+    end
+
+    it 'uses the message when loading the tasker configuration' do
+
+      tc = @loader.tasker(
+        'edu.example', 'echo',
+        { 'payload' => { 'flavour' => 'vanilla' } })
+
+      expect(tc['description']).to eq(
+        'edu.example echo')
+      expect(tc['class']).to eq(
+        'Edu::Example::Taskers::Vanilla')
+      expect(tc['_path']).to eq(
+        '/Users/jmettraux/w/flor/envs/uspec_loader/lib/taskers/' +
+        'edu.example/echo/dot.json')
+      expect(tc['root']).to eq(
+        'envs/uspec_loader/lib/taskers/edu.example/echo')
     end
   end
 
