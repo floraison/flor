@@ -117,6 +117,45 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq(true)
       end
     end
+
+    context 'incoming ret array' do
+
+      it 'returns false if the object is empty' do
+
+        r = @executor.launch(
+          %q{
+            {}
+            any? _
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(false)
+      end
+
+      it 'returns true if the object is not empty' do
+
+        r = @executor.launch(
+          %q{
+            { a: 'A' }
+            any? _
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(true)
+      end
+
+      it 'returns false if it does not find a matching array element' do
+
+        r = @executor.launch(
+          %q{
+            [ 1, 2, 3 ]
+            any? (def elt \ elt == 4)
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(false)
+      end
+    end
   end
 end
 
