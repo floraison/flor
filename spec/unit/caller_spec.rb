@@ -44,9 +44,13 @@ describe Flor::Caller do
 
           expect(r.class).to eq(Array)
           expect(r.size).to eq(1)
-          expect(r[0].keys.sort).to eq(%w[ cwd kla msg trc ])
-          expect(r[0]['kla']).to eq('NameError')
-          expect(r[0]['msg']).to eq('uninitialized constant Does')
+
+          expect(r[0].keys.sort).to eq(
+            %w[ cwd kla msg trc ])
+          expect(r[0]['kla']).to eq(
+            'NameError')
+          expect(r[0]['msg']).to match(
+            /\Auninitialized constant (Kernel::)?Does\z/)
         end
       end
 
