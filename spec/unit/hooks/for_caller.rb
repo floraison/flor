@@ -10,5 +10,13 @@ module Romeo
       [ { 'point' => 'receive', 'mm' => 2 } ]
     end
   end
+
+  class Failer
+
+    def on(message)
+
+      fail "pure fail at m:#{message['m']}"
+    end
+  end
 end
 

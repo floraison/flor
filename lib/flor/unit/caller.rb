@@ -17,12 +17,17 @@ module Flor
 
     def call(service, conf, message)
 
+
       return ruby_call(service, conf, message) \
         if conf['class'] || conf['module']
       return cmd_call(service, conf, message) \
         if conf['cmd']
 
       fail ArgumentError.new("don't know how to call item at #{conf['_path']}")
+
+    rescue => err
+
+      [ Flor.to_error(err) ]
     end
 
     protected
@@ -94,18 +99,13 @@ module Flor
 
       cmd = h['cmd']
 
-      m = encode(conf, message)
-      status, data = spawn(cmd, m)
-      d = decode(conf, data)
+      m0 = encode(conf, message)
+      out, _ = spawn(cmd, m0)
+      m1 = decode(conf, out)
 
-      if status.exitstatus != 0
-# TODO answer with "point" => "failed" message
-puts ">>> #{status.inspect} <<<"
-      end
+      m1['point'] = 'receive'
 
-      d['point'] = 'receive'
-
-      [ d ] # TODO really go for multiple messages?
+      [ m1 ]
     end
 
     def encode(context, message)
@@ -132,16 +132,36 @@ puts ">>> #{status.inspect} <<<"
 
     def spawn(cmd, data)
 
-      i, o = IO.pipe
-      r, w = IO.pipe
+      i, o = IO.pipe # _ / stdout
+      f, e = IO.pipe # _ / stderr
+      r, w = IO.pipe # stdin / _
 
-      pid = Kernel.spawn(cmd, in: r, out: o)
+      pid = Kernel.spawn(cmd, in: r, out: o, err: e)
       w.write(data)
       w.close
       o.close
+      e.close
       _, status = Process.wait2(pid)
 
-      [ status, i.read ]
+      fail SpawnError.new(status, i.read, f.read) if status.exitstatus != 0
+
+      [ i.read, status ]
+    end
+
+    class SpawnError < StandardError
+
+      attr_reader :status, :out, :err
+
+      def initialize(status, out, err)
+
+        @status = status
+        @out = out
+        @err = err
+
+        msg = err.strip.split("\n").last
+
+        super("(code: #{status.exitstatus}, pid: #{status.pid}) #{msg}")
+      end
     end
   end
 end
