@@ -17,7 +17,6 @@ module Flor
 
     def call(service, conf, message)
 
-
       return ruby_call(service, conf, message) \
         if conf['class'] || conf['module']
       return cmd_call(service, conf, message) \
@@ -79,14 +78,17 @@ module Flor
         "#{k.class.to_s.downcase} #{k} doesn't respond to on, on_#{p} or #{p}"
       ) if ! o.respond_to?(m)
 
-      case o.method(m).arity
-      when 1 then o.send(m, message)
-      when 2 then o.send(m, conf, message)
-      when 3 then o.send(m, executor, conf, message)
-      when -1 then o.send(m, {
-        service: service, configuration: conf, message: message })
-      else o.send(m)
-      end
+      r =
+        case o.method(m).arity
+        when 1 then o.send(m, message)
+        when 2 then o.send(m, conf, message)
+        when 3 then o.send(m, executor, conf, message)
+        when -1 then o.send(m, {
+          service: service, configuration: conf, message: message })
+        else o.send(m)
+        end
+
+      to_messages(r)
     end
 
     def cmd_call(service, conf, message)
@@ -99,13 +101,11 @@ module Flor
 
       cmd = h['cmd']
 
-      m0 = encode(conf, message)
-      out, _ = spawn(cmd, m0)
-      m1 = decode(conf, out)
+      m = encode(conf, message)
+      out, _ = spawn(cmd, m)
+      r = decode(conf, out)
 
-      m1['point'] = 'receive'
-
-      [ m1 ]
+      to_messages(r)
     end
 
     def encode(context, message)
@@ -161,6 +161,15 @@ module Flor
         msg = err.strip.split("\n").last
 
         super("(code: #{status.exitstatus}, pid: #{status.pid}) #{msg}")
+      end
+    end
+
+    def to_messages(o)
+
+      case o
+      when Hash then [ o ]
+      when Array then o
+      else []
       end
     end
   end

@@ -11,7 +11,8 @@ class HoleTasker
   def task(message)
 
     @@message = Flor.dup(message)
-    # do nothing
+
+    []
   end
 
   def cancel(message)

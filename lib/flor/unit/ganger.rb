@@ -62,13 +62,7 @@ module Flor
 
       message['vars'] = gather_vars(executor, tconf, message)
 
-      r = @unit.caller.call(self, tconf, message)
-
-      if is_message_array?(r)
-        r
-      else
-        []
-      end
+      @unit.caller.call(self, tconf, message)
     end
 
     def return(message)
@@ -77,12 +71,6 @@ module Flor
     end
 
     protected
-
-    def is_message_array?(o)
-
-      o.is_a?(Array) &&
-      o.all? { |e| e.is_a?(Hash) && e['point'].is_a?(String) }
-    end
 
     def var_match(k, filter)
 
