@@ -42,6 +42,17 @@ all? { a: 'A', b: 'B', c: 'C' }    # yields true
 all? { a: 'A', f: false, c: 'C' }  # yields false
 ```
 
+## incoming ret
+
+```
+[]
+all?  # yields true
+[ 1 2 3 ]
+all?  # yields true
+[ 1 false 3 ]
+all?  # yields false
+```
+
 ## iterating and functions
 
 Iterating functions accept 0 to 3 arguments when iterating over an

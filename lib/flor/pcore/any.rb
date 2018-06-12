@@ -43,6 +43,20 @@ class Flor::Pro::Any < Flor::Pro::Find
   # The corresponding `key`, `val`, `idx` and `len` variables are also
   # set in the closure for the function call.
   #
+  # ## incoming ret array/object
+  #
+  # If not fed an array or object directly, "any?" will pick it from the
+  # payload "ret" field.
+  #
+  # ```
+  # [ 1, 2, 3 ]
+  # any? _                    # yields true
+  # any? (def elt \ elt == 3) # yields true
+  # []
+  # any? _                    # yields false
+  # any? (def elt \ elt == 3) # yields false
+  # ```
+  #
   # ## see also
   #
   # Find, all?.
