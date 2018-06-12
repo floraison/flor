@@ -99,8 +99,6 @@ module Flor
         end
       end
 
-      protected
-
       LOG_DBG_KEYS = %w[ dbg msg err src tree tree_rw run ]
       LOG_ALL_KEYS = %w[ all log sto ] + LOG_DBG_KEYS
 
@@ -135,6 +133,8 @@ module Flor
 
         h
       end
+
+      protected
 
       def interpret_env
 
