@@ -110,6 +110,34 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq([ 1, 3, 5 ])
       expect(r['payload']['ret']).to eq(0)
     end
+
+    it 'pushes nulls' do
+
+      r = @executor.launch(
+        %q{
+          push f.l null
+          push f.l 0
+          #
+          null
+          push f.l
+          push f.l 1
+          #
+          push f.l
+            null
+          push f.l 2
+          #
+          push f.l f.nada
+          push f.l 3
+          #
+          push f.l
+            f.nada
+        },
+        payload: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ nil, 0, nil, 1, nil, 2, nil, 3, nil ])
+      expect(r['payload']['ret']).to eq(nil)
+    end
   end
 
   describe 'pushr' do
