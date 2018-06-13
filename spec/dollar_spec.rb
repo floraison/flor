@@ -257,6 +257,12 @@ describe Flor::Dollar do
         expect(@d.expand("$(arr|j,)")).to eq('1,2,3')
       end
 
+      it "understands |j; (join with a semicolon)" do
+
+        expect(@d.expand("$(brown|j;)")).to eq('fox')
+        expect(@d.expand("$(arr|j;)")).to eq('1;2;3')
+      end
+
       it "understands |json" do
 
         expect(@d.expand("$(brown|json)")).to eq('"fox"')
