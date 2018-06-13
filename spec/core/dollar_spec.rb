@@ -61,6 +61,20 @@ describe 'Flor core' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ 0_0_1 _dqs ])
     end
+
+    it "indexes arrays" do
+
+      r = @executor.launch(
+        %q{
+          push f.l "$(f.a[1])"
+          push f.l "$(f.a[1,2])"
+          push f.l "$(f.a[:7:2])"
+        },
+        payload: { 'a' => %w[ a b c d e f ], 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ 'b', %w[ b c ], %w[ a c e ] ])
+    end
   end
 end
 
