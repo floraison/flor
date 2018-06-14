@@ -20,12 +20,12 @@ describe 'Flor core' do
     it 'is derefenced upon application' do
 
       r = @executor.launch(%{
-        set a
-          sequence
-        a
-          1
-          2
-      })
+          set a
+            sequence
+          a
+            1
+            2
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)
@@ -34,10 +34,10 @@ describe 'Flor core' do
     it 'triggers an error when missing' do
 
       r = @executor.launch(%{
-        a
-          1
-          2
-      })
+          a
+            1
+            2
+        })
 
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq("don't know how to apply \"a\"")
@@ -46,9 +46,9 @@ describe 'Flor core' do
     it 'yields the value if not a proc or a func' do
 
       r = @executor.launch(%{
-        set a 1
-        a 2
-      })
+          set a 1
+          a 2
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(1)
@@ -57,9 +57,9 @@ describe 'Flor core' do
     it 'yields the value if not a proc or a func (null)'# do
 #
 #      r = @executor.launch(%{
-#        set a null
-#        a 2
-#      })
+#          set a null
+#          a 2
+#        })
 #
 #      expect(r['point']).to eq('terminated')
 #      expect(r['payload']['ret']).to eq(nil)
@@ -89,11 +89,11 @@ describe 'Flor core' do
     it 'is derefenced upon application' do
 
       r = @executor.launch(%{
-        set a { b: sequence }
-        a.b
-          1
-          2
-      })
+          set a { b: sequence }
+          a.b
+            1
+            2
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)
@@ -118,8 +118,8 @@ describe 'Flor core' do
     it 'fails else' do
 
       r = @executor.launch(%{
-        key
-      })
+          key
+        })
 
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq("don't know how to apply \"key\"")
@@ -199,6 +199,23 @@ describe 'Flor core' do
       expect(r['error']['kla']).to eq('TypeError')
       expect(r['error']['msg']).to eq('No key "k" for Array at "a"')
         # error straight out of the 'dense' library
+    end
+
+    it 'indexes an array' do
+
+      r = @executor.launch(
+        %q{
+          push f.l f.a.0
+          push f.l f.a[1,2]
+          push f.l f.a[:7:2]
+          #push f.l f.a[2;4] # TODO
+        },
+        payload: { 'a' => %w[ a b c d e f ], 'l' => []})
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['l']).to eq([
+        'a', %w[ b c ], %w[ a c e ] ])
     end
   end
 

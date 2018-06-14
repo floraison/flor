@@ -61,10 +61,10 @@ module Flor
     def fls(i); str(nil, i, 'false'); end
     def boolean(i); alt(:boolean, i, :tru, :fls); end
 
+    def rf_sq_symbol(i); rex(nil, i, /[^.| \b\f\n\r\t"'()\[\]{}#\\]+/); end
+    def rf_sq_index(i); alt(nil, i, :rf_sq_symbol, :dqstring, :sqstring); end
+    def rf_square(i); seq(nil, i, :sbstart, :rf_sq_index, :sbend); end
     def rf_symbol(i); rex(nil, i, /[^.:;| \b\f\n\r\t"',()\[\]{}#\\]+/); end
-    #def rf_symbol(i); rex(nil, i, /[^.:;| \b\f\n\r\t"',()\[\]{}#\\\/]+/); end
-    def rf_square_index(i); alt(nil, i, :rf_symbol, :dqstring, :sqstring); end
-    def rf_square(i); seq(nil, i, :sbstart, :rf_square_index, :sbend); end
     def rf_dot(i); seq(nil, i, :dot, :rf_symbol); end
     def rf_index(i); alt(nil, i, :rf_dot, :rf_square); end
     def reference(i); seq(:ref, i, :rf_symbol, :rf_index, '*'); end

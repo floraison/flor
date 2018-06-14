@@ -20,13 +20,13 @@ describe 'Flor core' do
     it 'is derefenced upon application' do
 
       r = @executor.launch(%q{
-        set f.a
-          sequence
-        #$(f.a)
-        f.a
-          1
-          2
-      })
+          set f.a
+            sequence
+          #$(f.a)
+          f.a
+            1
+            2
+        })
 
 #if r['point'] != 'terminated'
 #  puts "-" * 80
@@ -42,10 +42,10 @@ describe 'Flor core' do
     it 'triggers an error when missing' do
 
       r = @executor.launch(%q{
-        f.a
-          1
-          2
-      })
+          f.a
+            1
+            2
+        })
 
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq("don't know how to apply \"f.a\"")
@@ -100,9 +100,8 @@ describe 'Flor core' do
     it 'yields null else' do
 
       r = @executor.launch(%q{
-        f.key
-      })
-
+          f.key
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
@@ -128,11 +127,25 @@ describe 'Flor core' do
     it 'yields null if not found' do
 
       r = @executor.launch(%q{
-        f.a.0.b
-      })
+          f.a.0.b
+        })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
+    end
+
+    it 'indexes an array' do
+
+      r = @executor.launch(%q{
+          push f.l f.a.0
+          push f.l f.a[1,2]
+          push f.l f.a[1:5:2]
+          #push f.l f.a[1;3] # TODO
+        },
+        payload: { 'a' => %w[ a b c d e f ], 'l' => []})
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq([ 'a', %w[ b c ], %w[ b d f ] ])
     end
   end
 end

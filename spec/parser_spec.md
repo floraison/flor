@@ -285,6 +285,24 @@ parses to
 ```
 ---
 
+```flor
+  f.a.first[1,3].name
+```
+parses to
+```ruby
+  [ "f.a.first[1,3].name", [], 1 ]
+```
+---
+
+```flor
+  f.a.first[1:3:4]
+```
+parses to
+```ruby
+  [ "f.a.first[1:3:4]", [], 1 ]
+```
+---
+
 ## arrays
 
 ```flor
