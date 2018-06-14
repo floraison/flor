@@ -90,12 +90,13 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        sleep 0.35 # ensure "end" gets into the journal
+        sleep 0.35
 
         expect(r['point']).to eq('terminated')
 
         expect(
           @unit.journal
+            .reject { |m| m['point'] == 'end' }
             .collect { |m| [ m['from'], m['point'], m['nid'] ].join(':') }
             .join("\n")
         ).to eq(%w[
@@ -110,7 +111,6 @@ describe 'Flor punit' do
           0_0:receive:0
           0:receive:
           0:terminated:
-          :end:
         ].collect(&:lstrip).join("\n"))
       end
     end
