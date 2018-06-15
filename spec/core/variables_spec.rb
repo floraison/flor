@@ -197,7 +197,7 @@ describe 'Flor core' do
 
       expect(r['point']).to eq('failed')
       expect(r['error']['kla']).to eq('TypeError')
-      expect(r['error']['msg']).to eq('No key "k" for Array at "a"')
+      expect(r['error']['msg']).to eq('no key "k" for Array at "a"')
         # error straight out of the 'dense' library
     end
 
