@@ -4,7 +4,7 @@
 .rspec.out
 .errors
 .bxsinfo.yaml
-.bxsenvs.yaml
+#.bxsenvs.yaml
 
 *.swp
 

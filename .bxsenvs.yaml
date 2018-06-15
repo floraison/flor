@@ -1,0 +1,6 @@
+
+# a special D flag to activate FLOR_DEBUG
+# see https://github.com/jmettraux/bxs
+
+D: "FLOR_DEBUG=dbg,stdout"
+
