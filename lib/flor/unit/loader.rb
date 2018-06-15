@@ -79,6 +79,8 @@ module Flor
 
       conf = conf[name]
 
+      return nil unless conf
+
       (conf.is_a?(Array) ? conf : [ conf ])
         .each { |h| h['_path'] = path }
 
