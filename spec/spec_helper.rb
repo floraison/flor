@@ -259,11 +259,28 @@ class RSpec::Core::ExampleGroup
             elsif sta == :pending
               pending(title)
             else
-              it(title) { expect(Flor.parse(flor)).to eqt(ru) }
+              it(title) {
+                expect(
+                  RSpec::Core::ExampleGroup.replace_head(Flor.parse(flor))
+                ).to eqt(
+                  ru
+                )
+              }
             end
           end
         end
       end
+    end
+
+    def replace_head(t)
+
+      if t[0].is_a?(String) && t[0].match?(/\A_head_/)
+        t[0] = '_head_XXX'
+      elsif t[1].is_a?(Array)
+        t[1].each { |st| replace_head(st) }
+      end
+
+      t
     end
   end
 end

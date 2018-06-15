@@ -385,14 +385,18 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
       def ta_rework_core(core)
 
+        dig = Digest::SHA256.hexdigest(JSON.dump(core))[0, 7]
+        tsp = Flor.tamp.gsub(/\./, '_')
+        h = "_head_#{dig}_#{tsp}"
+
         l = core[2]
 
         [ 'sequence', [
           [ 'set', [
-            [ 'head_', [], l ],
+            [ h, [], l ],
             core[0]
           ], l ],
-          [ 'head_', core[1], l ]
+          [ h, core[1], l ]
         ], l ]
       end
 
