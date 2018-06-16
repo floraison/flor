@@ -2,10 +2,12 @@
 class Flor::Node
 
   class Payload
+
     def initialize(node, type=:node)
       @node = node
       @type = type
     end
+
     def has_key?(k)
       current.has_key?(k)
     end
@@ -33,7 +35,16 @@ class Flor::Node
     def merge(h)
       current.merge(h)
     end
+
+    def ret
+      self['ret']
+    end
+    def ret=(v)
+      self['ret'] = v
+    end
+
     protected
+
     def container
       @type == :node ? @node.h : @node.message
     end
