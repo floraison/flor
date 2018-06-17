@@ -22,6 +22,11 @@ describe 'Flor procedures' do
       {
 
         '1' => 'b',
+        '14' => nil,
+        '(-1)' => 'm',  # :-(
+        '[ 1 ]' => [ 'b' ],
+        '[ 1, 3 ]' => [ 'b', 'd' ],
+        '[ 1, 14 ]' => [ 'b', nil ],
 
       }.each do |ind, exp|
 
@@ -32,7 +37,7 @@ describe 'Flor procedures' do
               f.a
               index #{ind}
             },
-            payload: { 'a' => %w[ a b c d e f g h i j k l ] })
+            payload: { 'a' => %w[ a b c d e f g h i j k l m ] })
 
           expect(r['point']).to eq('terminated')
           expect(r['payload']['ret']).to eq(exp)
@@ -45,6 +50,10 @@ describe 'Flor procedures' do
       {
 
         '"a"' => 'A',
+        '"z"' => nil,
+        [ 'a' ] => [ 'A' ],
+        [ 'a', 'g' ] => [ 'A', 'G' ],
+        [ 'a', 'h' ] => [ 'A', nil ],
 
       }.each do |ind, exp|
 
