@@ -31,6 +31,10 @@ describe 'Flor procedures' do
         '[ 1, 14 ]' => [ 'b', nil ],
         '[ "*" ]' => INDEX_ARR,
         '[ 1, [ 2, 2 ], [ 3, 7, 2 ] ]' => %w[ b c d d f h ],
+        '[ [ -4, 2 ] ]' => %w[ j k ],
+        '[ [ -6, -3, 1 ] ]' => %w[ h i j k ],
+        '[ [ -6, 0, -1 ] ]' => %w[ h g f e d c b a ],
+        '[ [ -6, 0, -2 ] ]' => %w[ h f d b ],
 
         '"nada0"' => TypeError.new('cannot index array with key "nada0"'),
         '[ "nada1" ]' => TypeError.new('cannot index array with key "nada1"'),

@@ -89,8 +89,19 @@ class Flor::Pro::Index < Flor::Procedure
       else ind[0, 3]
       end
 
-    Range.new(be, en).step(st)
-      .collect { |i| a[i] }
+    l = a.length
+    be = l + be if be < 0
+    en = l + en if en < 0
+
+    r = []
+    i = be
+
+    while i >= 0 && i < l && i != (en + st)
+      r << a[i]
+      i = i + st
+    end
+
+    r
   end
 
   def slice_object(o, inds)
