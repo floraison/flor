@@ -31,7 +31,6 @@ class Flor::Pro::Index < Flor::Procedure
 
   protected
 
-  # TODO star
   # TODO regexes
 
   def slice (coll, inds)
@@ -59,6 +58,8 @@ class Flor::Pro::Index < Flor::Procedure
 
   def index_object(o, ind)
 
+#p o
+#p ind
     o[ind]
   end
 
@@ -66,6 +67,8 @@ class Flor::Pro::Index < Flor::Procedure
 
 #p a
 #p inds
+    return a if inds.include?('*')
+
     inds
       .inject([]) { |r, ind|
         if ind.is_a?(Array)
@@ -79,6 +82,8 @@ class Flor::Pro::Index < Flor::Procedure
 
 #p o
 #p inds
+    return o.values if inds.include?('*')
+
     inds.collect { |ind| o[ind] }
   end
 end

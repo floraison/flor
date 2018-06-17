@@ -7,6 +7,8 @@
 
 require 'spec_helper'
 
+INDEX_ARR = %w[ a b c d e f g h i j k l m ]
+INDEX_OBJ = Hash[*%w[ a A b B c C d D e E f F g G ]]
 
 describe 'Flor procedures' do
 
@@ -27,6 +29,7 @@ describe 'Flor procedures' do
         '[ 1 ]' => [ 'b' ],
         '[ 1, 3 ]' => [ 'b', 'd' ],
         '[ 1, 14 ]' => [ 'b', nil ],
+        '[ "*" ]' => INDEX_ARR,
 
       }.each do |ind, exp|
 
@@ -37,7 +40,7 @@ describe 'Flor procedures' do
               f.a
               index #{ind}
             },
-            payload: { 'a' => %w[ a b c d e f g h i j k l m ] })
+            payload: { 'a' => INDEX_ARR })
 
           expect(r['point']).to eq('terminated')
           expect(r['payload']['ret']).to eq(exp)
@@ -51,9 +54,10 @@ describe 'Flor procedures' do
 
         '"a"' => 'A',
         '"z"' => nil,
-        [ 'a' ] => [ 'A' ],
-        [ 'a', 'g' ] => [ 'A', 'G' ],
-        [ 'a', 'h' ] => [ 'A', nil ],
+        '[ "a" ]' => [ 'A' ],
+        '[ "a", "g" ]' => [ 'A', 'G' ],
+        '[ "a", "h" ]' => [ 'A', nil ],
+        '[ "*" ]' => INDEX_OBJ.values,
 
       }.each do |ind, exp|
 
@@ -64,7 +68,7 @@ describe 'Flor procedures' do
               f.o
               index #{ind}
             },
-            payload: { 'o' => Hash[*%w[ a A b B c C d D e E f F g G ]] })
+            payload: { 'o' => INDEX_OBJ })
 
           expect(r['point']).to eq('terminated')
           expect(r['payload']['ret']).to eq(exp)
