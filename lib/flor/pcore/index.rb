@@ -1,6 +1,9 @@
 
 class Flor::Pro::Index < Flor::Procedure
 
+  # TODO * (star) should follow dense / JSONPath, go deep!
+  # TODO .. (dotdot) (see dense)
+
   name 'index'
 
   def pre_execute
@@ -31,9 +34,7 @@ class Flor::Pro::Index < Flor::Procedure
 
   protected
 
-  # TODO regexes
-
-  def slice (coll, inds)
+  def slice(coll, inds)
 
     if coll.is_a?(Array)
       slice_array(coll, inds)
@@ -61,15 +62,11 @@ class Flor::Pro::Index < Flor::Procedure
 
   def index_object(o, ind)
 
-#p o
-#p ind
     o[ind]
   end
 
   def slice_array(a, inds)
 
-#p a
-#p inds
     return a if inds.include?('*')
 
     inds
@@ -77,16 +74,27 @@ class Flor::Pro::Index < Flor::Procedure
         if Flor.is_regex_tree?(ind)
           fail TypeError.new("cannot index array with regex #{ind[1]}")
         elsif ind.is_a?(Array)
-          r.concat(slice_array_(a, ind))
+          r.concat(do_slice_array(a, ind))
         else
           r.push(index_array(a, ind))
         end }
   end
 
+  def do_slice_array(a, ind)
+
+    be, en, st =
+      case ind.length
+      when 0, 1 then fail TypeError.new("can't index array with #{ind.inspect}")
+      when 2 then [ ind[0], ind[0] + ind[1] - 1, 1 ]
+      else ind[0, 3]
+      end
+
+    Range.new(be, en).step(st)
+      .collect { |i| a[i] }
+  end
+
   def slice_object(o, inds)
 
-#p o
-#p inds
     return o.values if inds.include?('*')
 
     inds
