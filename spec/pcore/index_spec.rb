@@ -31,6 +31,10 @@ describe 'Flor procedures' do
         '[ 1, 14 ]' => [ 'b', nil ],
         '[ "*" ]' => INDEX_ARR,
 
+        '"nada0"' => TypeError.new('cannot index array with key "nada0"'),
+        '[ "nada1" ]' => TypeError.new('cannot index array with key "nada1"'),
+        '[ /^a$/ ]' => TypeError.new('cannot index array with regex /^a$/'),
+
       }.each do |ind, exp|
 
         it "returns #{exp.inspect} for `index #{ind}`" do
@@ -42,8 +46,14 @@ describe 'Flor procedures' do
             },
             payload: { 'a' => INDEX_ARR })
 
-          expect(r['point']).to eq('terminated')
-          expect(r['payload']['ret']).to eq(exp)
+          if exp.is_a?(Exception)
+            expect(r['point']).to eq('failed')
+            expect(r['error']['kla']).to eq(exp.class.to_s)
+            expect(r['error']['msg']).to eq(exp.message)
+          else
+            expect(r['point']).to eq('terminated')
+            expect(r['payload']['ret']).to eq(exp)
+          end
         end
       end
     end
@@ -58,6 +68,7 @@ describe 'Flor procedures' do
         '[ "a", "g" ]' => [ 'A', 'G' ],
         '[ "a", "h" ]' => [ 'A', nil ],
         '[ "*" ]' => INDEX_OBJ.values,
+        '[ /^[aces]$/ ]' => [ 'A', 'C', 'E' ],
 
       }.each do |ind, exp|
 
@@ -70,8 +81,14 @@ describe 'Flor procedures' do
             },
             payload: { 'o' => INDEX_OBJ })
 
-          expect(r['point']).to eq('terminated')
-          expect(r['payload']['ret']).to eq(exp)
+          if exp.is_a?(Exception)
+            expect(r['point']).to eq('failed')
+            expect(r['error']['kla']).to eq(exp.class.to_s)
+            expect(r['error']['msg']).to eq(exp.message)
+          else
+            expect(r['point']).to eq('terminated')
+            expect(r['payload']['ret']).to eq(exp)
+          end
         end
       end
     end

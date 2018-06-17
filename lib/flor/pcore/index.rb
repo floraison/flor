@@ -53,6 +53,9 @@ class Flor::Pro::Index < Flor::Procedure
 
   def index_array(a, ind)
 
+    fail TypeError.new("cannot index array with key #{ind.inspect}") \
+      unless ind.is_a?(Integer)
+
     a[ind]
   end
 
@@ -71,10 +74,12 @@ class Flor::Pro::Index < Flor::Procedure
 
     inds
       .inject([]) { |r, ind|
-        if ind.is_a?(Array)
+        if Flor.is_regex_tree?(ind)
+          fail TypeError.new("cannot index array with regex #{ind[1]}")
+        elsif ind.is_a?(Array)
           r.concat(slice_array_(a, ind))
         else
-          r.push(a[ind])
+          r.push(index_array(a, ind))
         end }
   end
 
@@ -84,7 +89,16 @@ class Flor::Pro::Index < Flor::Procedure
 #p inds
     return o.values if inds.include?('*')
 
-    inds.collect { |ind| o[ind] }
+    inds
+      .inject([]) { |a, ind|
+        if Flor.is_regex_tree?(ind)
+          r = Flor.to_regex(ind)
+          a.concat(
+            o.keys.inject([]) { |aa, k| aa.push(o[k]) if r.match(k); aa })
+        else
+          a.push(
+            o[ind])
+        end }
   end
 end
 
