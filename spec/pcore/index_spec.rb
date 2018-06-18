@@ -10,6 +10,7 @@ require 'spec_helper'
 INDEX_ARR = %w[ a b c d e f g h i j k l m ]
 INDEX_OBJ = Hash[*%w[ a A b B c C d D e E f F g G ]]
 
+
 describe 'Flor procedures' do
 
   before :each do

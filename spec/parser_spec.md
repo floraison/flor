@@ -295,7 +295,26 @@ parses to
 ---
 
 ```flor
+  f.a.first[1:7]
+```
+parses to
+```ruby
+  [ "f.a.first[1:7]", [], 1 ]
+```
+---
+
+```flor
   f.a.first[1:3:4]
+```
+parses to
+```ruby
+  [ "f.a.first[1:3:4]", [], 1 ]
+```
+---
+
+(pending)
+```flor
+  f.a.first[1 :3 : 4 ]
 ```
 parses to
 ```ruby
