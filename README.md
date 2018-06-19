@@ -33,7 +33,7 @@ See [doc/](doc/).
 ## blog posts and presentations
 
 * [Flor, hubristic interpreter](http://rubykaigi.org/2017/presentations/jmettraux.html) - RubyKaigi 2017, Hiroshima - presentation
-* [flor design 0](http://jmettraux.skepti.ch/20171021.html?t=flor_design_0) - running a simple execution, what happens - blog post
+* [flor design 0](http://jmettraux.skepti.ch/20171021.html?t=flor_design_0&f=readme) - running a simple execution, what happens - blog post
 * [flor, branch to branch](https://speakerdeck.com/jmettraux/flor-branch-to-branch) - q1 2017 - very dry deck
 * [flor 2017](https://speakerdeck.com/jmettraux/flor-2017) - q1 2017 - very dry deck
 
