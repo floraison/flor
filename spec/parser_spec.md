@@ -312,13 +312,22 @@ parses to
 ```
 ---
 
-(pending)
 ```flor
-  f.a.first[1 :3 : 4 ]
+  f.a.first[1 :3 :
+4 ]
 ```
 parses to
 ```ruby
-  [ "f.a.first[1:3:4]", [], 1 ]
+  [ "f.a.first[1 :3 :\n4 ]", [], 1 ]
+```
+---
+
+```flor
+  f.a.first[4::;2]
+```
+parses to
+```ruby
+  [ "f.a.first[4::;2]", [], 1 ]
 ```
 ---
 
@@ -339,6 +348,17 @@ parses to
 
 ```flor
   [ 1, 2, 3 ]
+```
+parses to
+```ruby
+  [ '_arr', [
+    [ '_num', 1, 1 ], [ '_num', 2, 1 ], [ '_num', 3, 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  [ 1 , 2, 3 ]
 ```
 parses to
 ```ruby

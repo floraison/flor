@@ -42,7 +42,7 @@ module Flor
     def retnew(i); rex(nil, i, /[\r\n]*/); end
     def dot(i); str(nil, i, '.'); end
     def colon(i); str(nil, i, ':'); end
-    def semico(i); str(nil, i, ';'); end
+    def semicolon(i); str(nil, i, ';'); end
     def comma(i); str(nil, i, ','); end
 
     def pstart(i); str(nil, i, '('); end
@@ -62,23 +62,23 @@ module Flor
     def fls(i); str(nil, i, 'false'); end
     def boolean(i); alt(:boolean, i, :tru, :fls); end
 
+    def colon_eol(i); seq(nil, i, :colon, :eol); end
+    def semicolon_eol(i); seq(nil, i, :semicolon, :eol); end
+      #
     def rf_slice(i)
-      seq(:refsl, i, :exp, :comma, :exp)
-        # FIXME spaces are the comma
+      seq(:refsl, i, :exp, :comma_qmark_eol, :exp)
     end
     def colon_exp(i)
-      seq(nil, i, :colon, :exp)
-        # FIXME spaces around the colons
+      seq(nil, i, :colon_eol, :exp_qmark)
     end
     def rf_steps(i)
-      seq(:refst, i, :exp, :colon_exp, :colon_exp, '?')
-        # FIXME spaces around the colons
+      seq(:refst, i, :exp_qmark, :colon_exp, :colon_exp, '?')
     end
     def rf_sqa_index(i)
       alt(nil, i, :rf_slice, :rf_steps, :exp)
     end
     def rf_sqa_semico_index(i)
-      seq(nil, i, :semico, :rf_sqa_index)
+      seq(nil, i, :semicolon_eol, :rf_sqa_index)
     end
     def rf_sqa_idx(i)
       seq(nil, i, :sbstart, :rf_sqa_index, :rf_sqa_semico_index, '*', :sbend)
@@ -88,6 +88,7 @@ module Flor
     end
     def rf_index(i); alt(nil, i, :rf_dot_idx, :rf_sqa_idx); end
     def rf_symbol(i); rex(:refsym, i, /[^.:;| \b\f\n\r\t"',()\[\]{}#\\]+/); end
+      #
     def reference(i); seq(:ref, i, :rf_symbol, :rf_index, '*'); end
 
     def dqstring(i)
