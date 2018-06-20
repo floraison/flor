@@ -274,11 +274,8 @@ class RSpec::Core::ExampleGroup
 
     def replace_head(t)
 
-      if t[0].is_a?(String) && t[0].match(/\A_head_/)
-        t[0] = '_head_XXX'
-      elsif t[1].is_a?(Array)
-        t[1].each { |st| replace_head(st) }
-      end
+      t[0] = '_head_XXX' if t[0].is_a?(String) && t[0].match(/\A_head_/)
+      t[1].each { |st| replace_head(st) } if t[1].is_a?(Array)
 
       t
     end
