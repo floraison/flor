@@ -62,7 +62,7 @@ module Flor
     def fls(i); str(nil, i, 'false'); end
     def boolean(i); alt(:boolean, i, :tru, :fls); end
 
-    def colon_eol(i); seq(nil, i, :colon, :eol); end
+    def colon_eol(i); seq(:colo, i, :colon, :eol); end
     def semicolon_eol(i); seq(nil, i, :semicolon, :eol); end
       #
     def rf_slice(i)
@@ -81,7 +81,7 @@ module Flor
       seq(nil, i, :semicolon_eol, :rf_sqa_index)
     end
     def rf_sqa_idx(i)
-      seq(nil, i, :sbstart, :rf_sqa_index, :rf_sqa_semico_index, '*', :sbend)
+      seq(:refsq, i, :sbstart, :rf_sqa_index, :rf_sqa_semico_index, '*', :sbend)
     end
     def rf_dot_idx(i)
       seq(nil, i, :dot, :rf_symbol)
@@ -223,10 +223,82 @@ module Flor
       Nod.new(t.lookup(:node), nil).to_a
     end
 
+    def narrow_sqs(t)
+      return t unless t[0] == '_sqs'
+      [ t[1], [], t[2] ]
+    end
+
     def rewrite_ref(t)
 
+      #[ t.string, [], ln(t) ]
+
+#puts "-" * 80
 #Raabro.pp(t, colours: true)
-      [ t.string, [], ln(t) ]
+      tts = t.subgather(nil)
+
+      head = rewrite(tts.shift)
+      return narrow_sqs(head) if tts.empty?
+
+      r = [ 'sequence', [], ln(t) ]
+
+      head = [ head[1], [], head[2] ] if head[0] == '_sqs'
+      r[1] << head
+
+      tts.each do |tt|
+        r[1] << [ 'index', [ rewrite(tt) ], ln(tt) ]
+      end
+
+      r
+    end
+
+    def rewrite_refsym(t)
+
+      s = t.string
+
+      if s.match(/\A\d+\z/)
+        [ '_num', s.to_i, ln(t) ]
+      else
+        [ '_sqs', s, ln(t) ]
+      end
+    end
+
+    def rewrite_refsq(t)
+
+#puts "-" * 80
+#Raabro.pp(t, colours: true)
+      tts = t.subgather(nil)
+      if tts.size > 1
+        [ '_arr', tts.collect { |tt| rewrite(tt) }, ln(t) ]
+      else
+        rewrite(tts.first)
+      end
+    end
+
+    def rewrite_refsl(t)
+
+#puts "-" * 80
+#Raabro.pp(t, colours: true)
+      be, co = t.subgather(nil)
+
+      [ '_arr', [ rewrite(be), rewrite(co) ], ln(t) ]
+    end
+
+    def rewrite_refst(t)
+
+#puts "-" * 80
+#Raabro.pp(t, colours: true)
+      ts = t.subgather(nil).collect { |tt| tt.name == :colo ? ':' : tt }
+      ts.unshift(0) if ts.first == ':'                # begin
+      ts.push(':') if ts.count { |t| t == ':' } < 2   #
+      ts.push(1) if ts.last == ':'                    # step
+      ts.insert(2, -1) if ts[2] == ':'                # end
+
+      be, _, en, _, st = ts
+      be = be.is_a?(Integer) ? [ '_num', be, ln(t) ] : rewrite(be)
+      en = en.is_a?(Integer) ? [ '_num', en, ln(t) ] : rewrite(en)
+      st = st.is_a?(Integer) ? [ '_num', st, ln(t) ] : rewrite(st)
+
+      [ '_arr', [ be, en, st ], ln(t) ]
     end
 
     UNESCAPE = {
