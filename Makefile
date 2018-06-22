@@ -13,11 +13,14 @@ cl: count_lines
 
 gemspec_validate:
 	@echo "---"
-	ruby -e "s = eval(File.read(Dir['*.gemspec'].first)); s.validate"
+	ruby -e "s = eval(File.read(Dir['*.gemspec'].first)); p s.validate"
 	@echo "---"
 
 name: gemspec_validate
 	@echo "$(NAME) $(VERSION)"
+
+cw:
+	find lib -name "*.rb" -exec ruby -cw {} \; | grep lib
 
 syncver:
 	sed -E -i '' "s/VERSION = ['0-9.]+/VERSION = '$(shell grep -E "$(NAME) ([0-9.]+)" CHANGELOG.md | head -1 | sed -E 's/[^0-9\.]//g')'/" lib/$(NAME).rb
@@ -81,5 +84,6 @@ cleanshell:
 	rm -fR envs/shell/var/tasks/*
 	rm -f .log.txt
 
-.PHONY: doc shell cleanshell
+.PHONY: \
+  count_lines gemspec_validate name cw build push spec doc shell cleanshell
 
