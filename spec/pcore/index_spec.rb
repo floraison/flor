@@ -98,6 +98,25 @@ describe 'Flor procedures' do
         end
       end
     end
+
+    context 'pth tracking' do
+
+      it 'adds to the local pth variable if present' do
+
+        r = @executor.launch(
+          %q{
+            sequence vars: { pth: [] }
+              f.o
+              index 'a'
+              index 'b'
+          },
+          payload: { 'o' => { 'a' => { 'b' => 'B' } } })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('B')
+        expect(r['vars']['pth']).to eq(%w[ a b ])
+      end
+    end
   end
 end
 

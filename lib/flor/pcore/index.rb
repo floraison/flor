@@ -22,6 +22,11 @@ class Flor::Pro::Index < Flor::Procedure
 
     inds = @node['index']
 
+    pn = parent_node
+    pth = pn && pn['vars']['pth']
+      #
+    pth << inds if pth
+
     r =
       if inds.is_a?(Array)
         slice(node_payload_ret, inds)
