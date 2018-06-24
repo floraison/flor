@@ -13,116 +13,131 @@ class Flor::Pro::Index < Flor::Procedure
 
   def receive_non_att
 
-    @node['index'] ||= receive_payload_ret
+    @node['indexes'] ||= receive_payload_ret
 
     super
   end
 
   def receive_last
 
-    inds = @node['index']
+    @keys = []
+    @values = []
+
+    node_payload_ret
+      .each { |coll| index(coll) }
+
+    payload['ret'] = @values
 
     pn = parent_node
-    pth = pn && pn['vars']['pth']
-      #
-    pth << inds if pth
+    path = pn && pn['path']
+    path.concat(@keys.uniq) if path
 
-    r =
-      if inds.is_a?(Array)
-        slice(node_payload_ret, inds)
-      else
-        index(node_payload_ret, inds)
-      end
-
-    wrap_reply('ret' => r)
+    wrap
   end
 
   protected
 
-  def slice(coll, inds)
+  def index(coll)
 
-    if coll.is_a?(Array)
-      slice_array(coll, inds)
-    else
-      slice_object(coll, inds)
+    case [ coll.class, @node['indexes'].is_a?(Array) ]
+    when [ Array, false ] then index_array(coll)
+    when [ Array, true ] then slice_array(coll)
+    when [ Hash, false ] then index_object(coll)
+    when [ Hash, true ] then slice_object(coll)
+    else fail TypeError.new("cannot index #{coll.class}")
     end
   end
 
-  def index(coll, ind)
+  def index_array(arr)
 
-    if coll.is_a?(Array)
-      index_array(coll, ind)
+    index = @node['indexes']
+
+    fail TypeError.new("cannot index array with key #{index.inspect}") \
+      unless index.is_a?(Integer)
+
+    @keys << index
+    @values << arr[index]
+  end
+
+  def slice_array(arr)
+
+    @keys << @node['indexes']
+
+    @node['indexes']
+      .each { |index| do_slice_array(arr, index) }
+  end
+
+  def do_slice_array(arr, index)
+
+    if index == '*'
+      @values.concat(arr)
+    elsif index.is_a?(Integer)
+      @values << arr[index]
+    elsif Flor.is_regex_tree?(index)
+      fail TypeError.new(
+        "cannot index array with regex #{Flor.to_regex(index).inspect}")
+    elsif index.is_a?(Array) && index.length == 2
+      @values.concat(array_slice(arr, index[0], index[0] + index[1] - 1, 1))
+    elsif index.is_a?(Array) && index.length == 3
+      @values.concat(array_slice(arr, *index))
     else
-      index_object(coll, ind)
+      fail TypeError.new(
+        "cannot index array with key #{index.inspect}")
     end
   end
 
-  def index_array(a, ind)
+  def array_slice(arr, be, en, st)
 
-    fail TypeError.new("cannot index array with key #{ind.inspect}") \
-      unless ind.is_a?(Integer)
-
-    a[ind]
-  end
-
-  def index_object(o, ind)
-
-    o[ind]
-  end
-
-  def slice_array(a, inds)
-
-    return a if inds.include?('*')
-
-    inds
-      .inject([]) { |r, ind|
-        if Flor.is_regex_tree?(ind)
-          fail TypeError.new("cannot index array with regex #{ind[1]}")
-        elsif ind.is_a?(Array)
-          r.concat(do_slice_array(a, ind))
-        else
-          r.push(index_array(a, ind))
-        end }
-  end
-
-  def do_slice_array(a, ind)
-
-    be, en, st =
-      case ind.length
-      when 0, 1 then fail TypeError.new("can't index array with #{ind.inspect}")
-      when 2 then [ ind[0], ind[0] + ind[1] - 1, 1 ]
-      else ind[0, 3]
-      end
-
-    l = a.length
+    l = arr.length
     be = l + be if be < 0
     en = l + en if en < 0
 
-    r = []
+    #keys = []
+    values = []
     i = be
 
     while i >= 0 && i < l && i != (en + st)
-      r << a[i]
+      #keys << i
+      values << arr[i]
       i = i + st
     end
 
-    r
+    values
   end
 
-  def slice_object(o, inds)
+  def index_object(obj)
 
-    return o.values if inds.include?('*')
+    index = @node['indexes']
 
-    inds
-      .inject([]) { |a, ind|
-        if Flor.is_regex_tree?(ind)
-          r = Flor.to_regex(ind)
-          a.concat(
-            o.keys.inject([]) { |aa, k| aa.push(o[k]) if r.match(k); aa })
-        else
-          a.push(
-            o[ind])
-        end }
+    @keys << index
+    @values << obj[index]
+  end
+
+  def slice_object(obj)
+
+    indexes = @node['indexes']
+
+    if indexes.include?('*')
+      @keys << [ '*' ]
+      @values.concat(obj.values)
+    else
+      @keys << []
+      indexes.each { |index| do_slice_object(obj, index) }
+    end
+  end
+
+  def do_slice_object(obj, index)
+
+    if Flor.is_regex_tree?(index)
+      r = Flor.to_regex(index)
+      obj.each { |k, v|
+        next unless k.match(r)
+        @keys.last << k
+        @values << obj[k] }
+    else
+      @keys.last << index
+      @values << obj[index]
+    end
   end
 end
 

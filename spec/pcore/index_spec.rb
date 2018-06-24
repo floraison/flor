@@ -24,31 +24,47 @@ describe 'Flor procedures' do
 
       {
 
-        '1' => 'b',
-        '14' => nil,
-        '(-1)' => 'm',  # :-(
-        '[ 1 ]' => [ 'b' ],
-        '[ 1, 3 ]' => [ 'b', 'd' ],
-        '[ 1, 14 ]' => [ 'b', nil ],
-        '[ "*" ]' => INDEX_ARR,
-        '[ 1, [ 2, 2 ], [ 3, 7, 2 ] ]' => %w[ b c d d f h ],
-        '[ [ -4, 2 ] ]' => %w[ j k ],
-        '[ [ -6, -3, 1 ] ]' => %w[ h i j k ],
-        '[ [ -6, 0, -1 ] ]' => %w[ h g f e d c b a ],
-        '[ [ -6, 0, -2 ] ]' => %w[ h f d b ],
+        '1' => {
+          ret: 'b', pat: [ 1 ] },
+        '14' => {
+          ret: nil, pat: [ 14 ] },
+        '(-1)' => {
+          ret: 'm', pat: [ -1 ] }, # :-(
+        '[ 1 ]' => {
+          ret: [ 'b' ], pat: [ [ 1 ] ] },
+        '[ 1, 3 ]' => {
+          ret: [ 'b', 'd' ], pat: [ [ 1, 3 ] ] },
+        '[ 1, 14 ]' => {
+          ret: [ 'b', nil ], pat: [ [ 1, 14 ] ] },
+        '[ "*" ]' => {
+          ret: INDEX_ARR, pat: [ [ '*' ] ] },
+        '[ 1, [ 2, 2 ], [ 3, 7, 2 ] ]' => {
+          ret: %w[ b c d d f h ], pat: [ [ 1, [ 2, 2 ], [ 3, 7, 2 ] ] ] },
+        '[ [ -4, 2 ] ]' => {
+          ret: %w[ j k ], pat: [ [ [ -4, 2 ] ] ] },
+        '[ [ -6, -3, 1 ] ]' => {
+          ret: %w[ h i j k ], pat: [ [ [ -6, -3, 1 ] ] ] },
+        '[ [ -6, 0, -1 ] ]' => {
+          ret: %w[ h g f e d c b a ], pat: [ [ [ -6, 0, -1 ] ] ] },
+        '[ [ -6, 0, -2 ] ]' => {
+          ret: %w[ h f d b ], pat: [ [ [ -6, 0, -2 ] ] ] },
 
-        '"nada0"' => TypeError.new('cannot index array with key "nada0"'),
-        '[ "nada1" ]' => TypeError.new('cannot index array with key "nada1"'),
-        '[ /^a$/ ]' => TypeError.new('cannot index array with regex /^a$/'),
+        '"nada0"' =>
+          TypeError.new('cannot index array with key "nada0"'),
+        '[ "nada1" ]' =>
+          TypeError.new('cannot index array with key "nada1"'),
+        '[ /^a$/ ]' =>
+          TypeError.new('cannot index array with regex /^a$/'),
 
       }.each do |ind, exp|
 
-        it "returns #{exp.inspect} for `index #{ind}`" do
+        it "returns #{(exp.is_a?(Exception) ? exp : exp[:ret]).inspect} for `index #{ind}`" do
 
           r = @executor.launch(
             %{
-              f.a
-              index #{ind}
+              path
+                f.a
+                index #{ind}
             },
             payload: { 'a' => INDEX_ARR })
 
@@ -58,7 +74,8 @@ describe 'Flor procedures' do
             expect(r['error']['msg']).to eq(exp.message)
           else
             expect(r['point']).to eq('terminated')
-            expect(r['payload']['ret']).to eq(exp)
+            expect(r['payload']['ret']).to eq(exp[:ret])
+            expect(r['payload']['pat']).to eq(exp[:pat])
           end
         end
       end
@@ -68,44 +85,53 @@ describe 'Flor procedures' do
 
       {
 
-        '"a"' => 'A',
-        '"z"' => nil,
-        '[ "a" ]' => [ 'A' ],
-        '[ "a", "g" ]' => [ 'A', 'G' ],
-        '[ "a", "h" ]' => [ 'A', nil ],
-        '[ "*" ]' => INDEX_OBJ.values,
-        '[ /^[aces]$/ ]' => [ 'A', 'C', 'E' ],
+        '"a"' => {
+          ret: 'A', pat: [ 'a' ] },
+        '"z"' => {
+          ret: nil, pat: [ 'z' ] },
+        '[ "a" ]' => {
+          ret: [ 'A' ], pat: [ [ 'a' ] ] },
+        '[ "a", "g" ]' => {
+          ret: [ 'A', 'G' ], pat: [ [ 'a', 'g' ] ] },
+        '[ "a", "h" ]' => {
+          ret: [ 'A', nil ], pat: [ [ 'a', 'h' ] ] },
+        '[ "*" ]' => {
+          ret: INDEX_OBJ.values, pat: [ [ '*' ] ] },
+        '[ /^[aces]$/ ]' => {
+          ret: [ 'A', 'C', 'E' ], pat: [ [ 'a', 'c', 'e' ] ] },
 
       }.each do |ind, exp|
 
-        it "returns #{exp.inspect} for `index #{ind}`" do
+        it "returns #{(exp.is_a?(Exception) ? exp : exp[:ret]).inspect} for `index #{ind}`" do
 
           r = @executor.launch(
             %{
-              f.o
-              index #{ind}
+              path
+                f.o
+                index #{ind}
             },
             payload: { 'o' => INDEX_OBJ })
 
-          if exp.is_a?(Exception)
-            expect(r['point']).to eq('failed')
-            expect(r['error']['kla']).to eq(exp.class.to_s)
-            expect(r['error']['msg']).to eq(exp.message)
-          else
-            expect(r['point']).to eq('terminated')
-            expect(r['payload']['ret']).to eq(exp)
-          end
+          #if exp.is_a?(Exception)
+          #  expect(r['point']).to eq('failed')
+          #  expect(r['error']['kla']).to eq(exp.class.to_s)
+          #  expect(r['error']['msg']).to eq(exp.message)
+          #else
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(exp[:ret])
+          expect(r['payload']['pat']).to eq(exp[:pat])
+          #end
         end
       end
     end
 
-    context 'pth tracking' do
+    context 'path tracking' do
 
-      it 'adds to the local pth variable if present' do
+      it 'returns a "pat" field' do
 
         r = @executor.launch(
           %q{
-            sequence vars: { pth: [] }
+            path
               f.o
               index 'a'
               index 'b'
@@ -114,7 +140,24 @@ describe 'Flor procedures' do
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq('B')
-        expect(r['vars']['pth']).to eq(%w[ a b ])
+        expect(r['payload']['pat']).to eq(%w[ a b ])
+      end
+
+      it 'returns a "pat" composite field' do
+
+        r = @executor.launch(
+          %q{
+            path
+              f.o
+              index [ 'a', 'b' ]
+              index 'c'
+          },
+          payload: {
+            'o' => { 'a' => { 'c' => 'C0' }, 'b' => { 'c' => 'C1' } } })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq([ 'C0', 'C1' ])
+        expect(r['payload']['pat']).to eq([ [ 'a', 'b' ], 'c' ])
       end
     end
   end
