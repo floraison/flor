@@ -22,7 +22,9 @@ class Flor::Pro::Path < Flor::Procedure
   def receive_last
 
     payload['pat'] = pat = @node['path']
-    payload['ret'] = payload['ret'].first unless pat.any?(Array)
+
+    payload['ret'] = payload['ret'].first \
+      unless pat.any? { |e| e.is_a?(Array) }
 
     super
   end
