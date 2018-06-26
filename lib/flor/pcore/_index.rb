@@ -4,7 +4,7 @@ class Flor::Pro::Index < Flor::Procedure
   # TODO * (star) should follow dense / JSONPath, go deep!
   # TODO .. (dotdot) (see dense)
 
-  name 'index'
+  name '_index'
 
   def pre_execute
 

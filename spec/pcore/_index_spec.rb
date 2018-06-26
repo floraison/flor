@@ -18,7 +18,7 @@ describe 'Flor procedures' do
     @executor = Flor::TransientExecutor.new
   end
 
-  describe 'index' do
+  describe '_index' do
 
     context 'array' do
 
@@ -58,13 +58,13 @@ describe 'Flor procedures' do
 
       }.each do |ind, exp|
 
-        it "returns #{(exp.is_a?(Exception) ? exp : exp[:ret]).inspect} for `index #{ind}`" do
+        it "returns #{(exp.is_a?(Exception) ? exp : exp[:ret]).inspect} for `_index #{ind}`" do
 
           r = @executor.launch(
             %{
-              path
+              _path
                 f.a
-                index #{ind}
+                _index #{ind}
             },
             payload: { 'a' => INDEX_ARR })
 
@@ -102,13 +102,13 @@ describe 'Flor procedures' do
 
       }.each do |ind, exp|
 
-        it "returns #{(exp.is_a?(Exception) ? exp : exp[:ret]).inspect} for `index #{ind}`" do
+        it "returns #{(exp.is_a?(Exception) ? exp : exp[:ret]).inspect} for `_index #{ind}`" do
 
           r = @executor.launch(
             %{
-              path
+              _path
                 f.o
-                index #{ind}
+                _index #{ind}
             },
             payload: { 'o' => INDEX_OBJ })
 
@@ -131,10 +131,10 @@ describe 'Flor procedures' do
 
         r = @executor.launch(
           %q{
-            path
+            _path
               f.o
-              index 'a'
-              index 'b'
+              _index 'a'
+              _index 'b'
           },
           payload: { 'o' => { 'a' => { 'b' => 'B' } } })
 
@@ -147,10 +147,10 @@ describe 'Flor procedures' do
 
         r = @executor.launch(
           %q{
-            path
+            _path
               f.o
-              index [ 'a', 'b' ]
-              index 'c'
+              _index [ 'a', 'b' ]
+              _index 'c'
           },
           payload: {
             'o' => { 'a' => { 'c' => 'C0' }, 'b' => { 'c' => 'C1' } } })

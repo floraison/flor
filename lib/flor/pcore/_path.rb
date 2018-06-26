@@ -1,7 +1,7 @@
 
 class Flor::Pro::Path < Flor::Procedure
 
-  name 'path'
+  name '_path'
 
   def pre_execute
 
