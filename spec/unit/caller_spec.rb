@@ -128,7 +128,7 @@ describe Flor::Caller do
           expect(r[0].keys.sort).to eq(%w[ cwd kla msg trc ])
           expect(r[0]['kla']).to eq('Flor::Caller::SpawnError')
           expect(r[0]['msg']).to match(/\A\(code: 2, pid: \d+\) /)
-          expect(r[0]['msg']).to match(/ python: can't open file 'spec\/unit\//)
+          expect(r[0]['msg']).to match(/: can't open file 'spec\/unit\//)
           expect(r[0]['msg']).to match(/ \[Errno 2\] No such file or directory/)
         end
       end
