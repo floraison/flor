@@ -58,7 +58,9 @@ describe 'Flor procedures' do
 
       }.each do |ind, exp|
 
-        it "returns #{(exp.is_a?(Exception) ? exp : exp[:ret]).inspect} for `_index #{ind}`" do
+        ret = exp.is_a?(Exception) ? exp : exp[:ret]
+
+        it "returns #{ret.inspect} for `_index #{ind}`" do
 
           r = @executor.launch(
             %{
@@ -102,7 +104,9 @@ describe 'Flor procedures' do
 
       }.each do |ind, exp|
 
-        it "returns #{(exp.is_a?(Exception) ? exp : exp[:ret]).inspect} for `_index #{ind}`" do
+        ret = exp.is_a?(Exception) ? exp : exp[:ret]
+
+        it "returns #{ret.inspect} for `_index #{ind}`" do
 
           r = @executor.launch(
             %{
