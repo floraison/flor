@@ -268,7 +268,9 @@ class Flor::Procedure < Flor::Node
     cn = Flor.dup(children)
     cn[ci] = [ '_sqs', c[0], c[2] ]
 
-    @node['tree'] = [ tree[0], cn, tree[2] ]
+    t = tree
+
+    @node['tree'] = [ t[0], cn, t[2] ]
   end
 
   def stringify_first_child
