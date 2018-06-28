@@ -43,16 +43,35 @@ class Flor::Pro::Ref < Flor::Procedure
 #    nil
 #  end
 #
+# # # # #
+#
+#  def key_split(key) # => category, mode, key
+#
 #    m = key.match(
 #      /\A(?:([lgd]?)((?:v|var|variable)|w|f|fld|field|t|tag)\.)?(.+)\z/)
+#            ^mode   ^cat                                        ^key
+#    ca = (m[2] || 'v')[0, 1]
+#    mo = m[1] || ''
+#    ke = m[3]
+#
+#    [ ca, mo, ke ]
+#  end
 
   def lookup(path)
 
+    # TODO adapt path to Dense
+    #      or should that be done in the lookup_ methods themselves?
+
     case path.first
-    when /\Af(?:ld|ield)?\z/ then lookup_field(nil, path[1..-1]) # mod -> nil...
-    when /\A([lgd]?)v(?:ar|ariable)?\z/ then 1
-    when /\At(?:ag)\z/ then 2
-    else 9
+    when /\Af(?:ld|ield)?\z/
+      lookup_field(nil, path[1..-1]) # mod -> nil...
+    when /\A([lgd]?)v(?:ar|ariable)?\z/
+      lookup_var(@node, $1, path[1], path[2..-1])
+    when /\At(?:ag)\z/
+      lookup_tag(nil, path[1..-1])
+    else
+# variable?
+fail NotImplementedError
     end
   end
     #

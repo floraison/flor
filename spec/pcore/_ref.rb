@@ -33,6 +33,22 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 'C0', 'C1' ])
     end
+
+    it 'looks up variables' do
+
+      r = @executor.launch(
+        %q{
+          _ref
+            'v'
+            'a'
+            1
+        },
+        variables: {
+          'a' => [ 'A', 'B', 'C' ] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('B')
+    end
   end
 
   describe '_rep' do
