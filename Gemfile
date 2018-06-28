@@ -7,7 +7,7 @@ source 'https://rubygems.org'
 #gem 'fugit', git: 'https://github.com/floraison/fugit.git'
 #gem 'fugit', path: '../fugit/'
   #
-#gem 'dense', git: 'https://github.com/floraison/dense.git'
+gem 'dense', git: 'https://github.com/floraison/dense.git'
 #gem 'dense', path: '../dense/'
   #
   # temporary redirections
