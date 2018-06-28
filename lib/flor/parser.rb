@@ -223,32 +223,18 @@ module Flor
       Nod.new(t.lookup(:node), nil).to_a
     end
 
-    def narrow_sqs(t)
-      return t unless t[0] == '_sqs'
-      [ t[1], [], t[2] ]
-    end
-
     def rewrite_ref(t)
-
-      #[ t.string, [], ln(t) ]
 
 #puts "-" * 80
 #Raabro.pp(t, colours: true)
       tts = t.subgather(nil)
 
-      head = rewrite(tts.shift)
-      return narrow_sqs(head) if tts.empty?
-
-      r = [ 'sequence', [], ln(t) ]
-
-      head = [ head[1], [], head[2] ] if head[0] == '_sqs'
-      r[1] << head
-
-      tts.each do |tt|
-        r[1] << [ 'index', [ rewrite(tt) ], ln(tt) ]
+      if tts.length == 1
+        tt = tts.first
+        [ tt.string, [], ln(tt) ]
+      else
+        [ '_ref', tts.collect { |tt| rewrite(tt) }, ln(t) ]
       end
-
-      r
     end
 
     def rewrite_refsym(t)
@@ -264,23 +250,18 @@ module Flor
 
     def rewrite_refsq(t)
 
-#puts "-" * 80
-#Raabro.pp(t, colours: true)
       tts = t.subgather(nil)
-      if tts.size > 1
-        [ '_arr', tts.collect { |tt| rewrite(tt) }, ln(t) ]
-      else
+
+      if tts.length == 1
         rewrite(tts.first)
+      else
+        [ '_arr', tts.collect { |tt| rewrite(tt) }, ln(t) ]
       end
     end
 
     def rewrite_refsl(t)
 
-#puts "-" * 80
-#Raabro.pp(t, colours: true)
-      be, co = t.subgather(nil)
-
-      [ '_arr', [ rewrite(be), rewrite(co) ], ln(t) ]
+      [ '_arr', t.subgather(nil).collect { |tt| rewrite(tt) }, ln(t) ]
     end
 
     def rewrite_refst(t)
@@ -374,9 +355,11 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
     def rewrite_exp(t)
 
+#puts "-" * 80
+##puts caller[0, 7]
+#Raabro.pp(t, colours: true)
       return rewrite(t.c0) if t.children.size == 1
 
-#Raabro.pp(t, colours: true)
       cn = t.children.collect { |ct| ct.lookup(nil) }
 
       operation = cn.find { |ct| ct.name == :sop }.string

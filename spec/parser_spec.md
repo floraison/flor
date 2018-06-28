@@ -263,10 +263,7 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'sequence', [
-    [ 'f', [], 1 ],
-    [ 'index', [ [ '_sqs', 'a', 1 ] ], 1 ]
-  ], 1 ]
+  [ '_ref', [ [ '_sqs', 'f', 1 ], [ '_sqs', 'a', 1 ] ], 1 ]
 ```
 ---
 
@@ -275,10 +272,10 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'sequence', [
-    [ 'f', [], 1 ],
-    [ 'index', [ [ '_sqs', 'a', 1 ] ], 1 ],
-    [ 'index', [ [ '_num', 1, 1 ] ], 1 ]
+  [ '_ref', [
+    [ '_sqs', 'f', 1 ],
+    [ '_sqs', 'a', 1 ],
+    [ '_num', 1, 1 ],
   ], 1 ]
 ```
 ---
@@ -288,13 +285,13 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'sequence', [
-    [ 'f', [], 1 ],
-    [ 'index', [ [ '_sqs', 'a', 1 ] ], 1 ],
-    [ 'index', [ [ '_sqs', 'first', 1 ] ], 1 ],
-    [ 'index', [ [ '_num', 1, 1 ] ], 1 ],
-    [ 'index', [ [ '_sqs', 'hair', 1 ] ], 1 ],
-    [ 'index', [ [ '_dqs', 'colour', 1 ] ], 1 ],
+  [ '_ref', [
+    [ '_sqs', 'f', 1 ],
+    [ '_sqs', 'a', 1 ],
+    [ '_sqs', 'first', 1 ],
+    [ '_num', 1, 1 ],
+    [ '_sqs', 'hair', 1 ],
+    [ '_dqs', 'colour', 1 ],
   ], 1 ]
 ```
 ---
@@ -304,12 +301,12 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'sequence', [
-    [ 'f', [], 1 ],
-    [ 'index', [ [ '_sqs', 'a', 1 ] ], 1 ],
-    [ 'index', [ [ '_sqs', 'first', 1 ] ], 1 ],
-    [ 'index', [ [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 3, 1 ] ], 1 ] ], 1 ],
-    [ 'index', [ [ '_sqs', 'name', 1 ] ], 1 ],
+  [ '_ref', [
+    [ '_sqs', 'f', 1 ],
+    [ '_sqs', 'a', 1 ],
+    [ '_sqs', 'first', 1 ],
+    [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 3, 1 ] ], 1 ],
+    [ '_sqs', 'name', 1 ],
   ], 1 ]
 ```
 ---
@@ -319,13 +316,11 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'sequence', [
-    [ 'f', [], 1 ],
-    [ 'index', [ [ '_sqs', 'a', 1 ] ], 1 ],
-    [ 'index', [ [ '_sqs', 'first', 1 ] ], 1 ],
-    [ 'index', [
-      [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 7, 1 ], [ '_num', 1, 1 ] ], 1 ]
-    ], 1 ],
+  [ '_ref', [
+    [ '_sqs', 'f', 1 ],
+    [ '_sqs', 'a', 1 ],
+    [ '_sqs', 'first', 1 ],
+    [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 7, 1 ], [ '_num', 1, 1 ] ], 1 ],
   ], 1 ]
 ```
 ---
@@ -335,13 +330,11 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'sequence', [
-    [ 'f', [], 1 ],
-    [ 'index', [ [ '_sqs', 'a', 1 ] ], 1 ],
-    [ 'index', [ [ '_sqs', 'first', 1 ] ], 1 ],
-    [ 'index', [
-      [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 3, 1 ], [ '_num', 4, 1 ] ], 1 ]
-    ], 1 ],
+  [ '_ref', [
+    [ '_sqs', 'f', 1 ],
+    [ '_sqs', 'a', 1 ],
+    [ '_sqs', 'first', 1 ],
+    [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 3, 1 ], [ '_num', 4, 1 ] ], 1 ],
   ], 1 ]
 ```
 ---
@@ -352,13 +345,11 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'sequence', [
-    [ 'f', [], 1 ],
-    [ 'index', [ [ '_sqs', 'a', 1 ] ], 1 ],
-    [ 'index', [ [ '_sqs', 'first', 1 ] ], 1 ],
-    [ 'index', [
-      [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 3, 1 ], [ '_num', 4, 2 ] ], 1 ]
-    ], 1 ],
+  [ '_ref', [
+    [ '_sqs', 'f', 1 ],
+    [ '_sqs', 'a', 1 ],
+    [ '_sqs', 'first', 1 ],
+    [ '_arr', [ [ '_num', 1, 1 ], [ '_num', 3, 1 ], [ '_num', 4, 2 ] ], 1 ],
   ], 1 ]
 ```
 ---
@@ -368,22 +359,16 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'sequence', [
-    [ 'f', [], 1 ],
-    [ 'index', [ [ '_sqs', 'a', 1 ] ], 1 ],
-    [ 'index', [ [ '_sqs', 'first', 1 ] ], 1 ],
-    [ 'index', [
-      [ '_arr', [
-        [ '_arr', [ [ '_num', 0, 1 ], [ '_num', -1, 1 ], [ '_num', 1, 1 ]
-          ], 1 ],
-        [ '_arr', [ [ '_num', 3, 1 ], [ '_num', -1, 1 ], [ '_num', 1, 1 ]
-          ], 1 ],
-        [ '_arr', [ [ '_num', 4, 1 ], [ '_num', -1, 1 ], [ '_num', 1, 1 ]
-          ], 1 ],
-        [ '_arr', [ [ '_num', 0, 1 ], [ '_num', -1, 1 ], [ '_num', 2, 1 ]
-          ], 1 ],
-      ], 1 ]
-    ], 1 ],
+  [ '_ref', [
+    [ '_sqs', 'f', 1 ],
+    [ '_sqs', 'a', 1 ],
+    [ '_sqs', 'first', 1 ],
+    [ '_arr', [
+      [ '_arr', [ [ '_num', 0, 1 ], [ '_num', -1, 1 ], [ '_num', 1, 1 ] ], 1 ],
+      [ '_arr', [ [ '_num', 3, 1 ], [ '_num', -1, 1 ], [ '_num', 1, 1 ] ], 1 ],
+      [ '_arr', [ [ '_num', 4, 1 ], [ '_num', -1, 1 ], [ '_num', 1, 1 ] ], 1 ],
+      [ '_arr', [ [ '_num', 0, 1 ], [ '_num', -1, 1 ], [ '_num', 2, 1 ] ], 1 ],
+    ], 1 ]
   ], 1 ]
 ```
 ---
@@ -1103,7 +1088,12 @@ parses to
 parses to
 ```ruby
   [ 'match', [
-    [ '_att', [ [ '/', [ ['v.a', [], 1 ], [ 'hello', [], 1 ] ], 1 ] ], 1 ],
+    [ '_att', [
+      [ '/', [
+        [ '_ref', [ [ '_sqs', 'v', 1 ], [ '_sqs', 'a', 1 ], ], 1 ],
+        [ 'hello', [], 1 ]
+      ], 1 ]
+    ], 1 ],
     [ '_att', [ [ 'world/', [], 1 ] ], 1 ]
   ], 1 ]
 ```
@@ -1115,8 +1105,12 @@ parses to
 parses to
 ```ruby
   [ 'match', [
-    [ '_att', [ [ 'v.a', [], 1 ] ], 1 ],
-    [ '_att', [ [ '_rxs', '/hello world/', 1 ] ], 1 ],
+    [ '_att', [
+      [ '_ref', [ [ '_sqs', 'v', 1 ], [ '_sqs', 'a', 1 ], ], 1 ]
+    ], 1 ],
+    [ '_att', [
+      [ '_rxs', '/hello world/', 1 ]
+    ], 1 ],
   ], 1 ]
 ```
 ---
@@ -1416,9 +1410,9 @@ parses to
 parses to
 ```ruby
   [ 'sequence', [
-    [ 'sequence', [
-      [ 'f', [], 2 ],
-      [ 'index', [ [ '_sqs', 'a', 2 ] ], 2 ]
+    [ '_ref', [
+      [ '_sqs', 'f', 2 ],
+      [ '_sqs', 'a', 2 ],
     ], 2 ],
     [ '_dqs', '$(f.a)', 3 ],
     [ 'sequence', [
@@ -1711,7 +1705,10 @@ parses to
 ```ruby
   [ 'set', [
     [ '_att', [
-      [ 'f.d', [], 1 ]
+      [ '_ref', [
+        [ '_sqs', 'f', 1 ],
+        [ '_sqs', 'd', 1 ],
+      ], 1 ]
     ], 1 ],
     [ '_att', [
       [ '_obj', [
