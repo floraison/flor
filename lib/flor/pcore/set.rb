@@ -68,11 +68,25 @@ class Flor::Pro::Set < Flor::Procedure
 
     unatt_unkeyed_children
 
-    nacn = non_att_children.dup
-    sc = @node['single_child'] = nacn.size == 1
-    nacn = non_att_children[0..-2] unless sc
+    t = tree
+    #cl = t[1].length
 
-    nacn.each_with_index { |_, i| stringify_child(i) }
+    children, non_att_count, changed =
+      t[1]
+        .each_with_index
+        .inject([ [], 0, false ]) { |(cn, nac, ced), (t, i)|
+#p [ [ cn, nac, ced ], [ t, i ] ]
+          nac = nac + 1 if t[0] != '_att'
+          if t[0] == '_ref'
+            cn << [ '_rep', t[1], t[2] ]
+            ced = true
+          else
+            cn << t
+          end
+          [ cn, nac, ced ] }
+
+    @node['single_child'] = (non_att_count == 1)
+    @node['tree'] = [ t[0], children, t[2] ] if changed
 
     @node['refs'] = []
   end
@@ -87,32 +101,48 @@ class Flor::Pro::Set < Flor::Procedure
 
   def receive_non_att
 
-    ret = payload['ret']
-    last = ! @node['single_child'] && (@fcid + 1) == children.size
+#    ret = payload['ret']
+#    last = ! @node['single_child'] && (@fcid + 1) == children.size
+#
+#    @node['refs'] << ret if ! last && ret.is_a?(String)
 
-    @node['refs'] << ret if ! last && ret.is_a?(String)
+    fromt = tree[1][@fcid] || []
+    @node['refs'] << payload['ret'] if fromt[0] == '_rep'
 
     super
   end
 
   def receive_last
 
-    ret = @node['single_child'] ? node_payload_ret : payload['ret']
+    ret = payload['ret']
 
-    if @node['refs'].size == 1
-      set_value(@node['refs'].first, ret)
-    else
-      Flor.splat(@node['refs'], ret).each { |k, v| set_value(k, v) }
-    end
+    set_value(@node['refs'].first, ret)
+      # TODO splat!
 
     payload['ret'] =
-      if tree[0] == 'setr' || @node['refs'].last == 'f.ret'
+      if tree[0] == 'setr'# || @node['refs'].last == 'f.ret'
         ret
       else
         node_payload_ret
       end
 
-    wrap_reply
+    wrap
+#    ret = @node['single_child'] ? node_payload_ret : payload['ret']
+#
+#    if @node['refs'].size == 1
+#      set_value(@node['refs'].first, ret)
+#    else
+#      Flor.splat(@node['refs'], ret).each { |k, v| set_value(k, v) }
+#    end
+#
+#    payload['ret'] =
+#      if tree[0] == 'setr' || @node['refs'].last == 'f.ret'
+#        ret
+#      else
+#        node_payload_ret
+#      end
+#
+#    wrap_reply
   end
 end
 
