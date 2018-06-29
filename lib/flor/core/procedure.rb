@@ -610,52 +610,20 @@ class Flor::Procedure < Flor::Node
 
   rescue IndexError
 
-    fail IndexError.new("couldn't set field #{k}")
+    fail IndexError.new("couldn't set field #{Flor.path_to_s(path)}")
   end
-
-#  def set_value(k, v)
-#
-#    return if k == '_'
-#
-#    cat, mod, key = key_split(k)
-#
-#    case cat[0, 1]
-#    when 'f' then set_field(key, v)
-#    when 'v' then set_var(mod, key, v)
-#    #when 'w' then set_war(key, v)
-#    else fail IndexError.new("don't know how to set #{k.inspect}")
-#    end
-#  end
-####
-#  def lookup(path)
-#
-#    # TODO adapt path to Dense
-#    #      or should that be done in the lookup_ methods themselves?
-#
-#    case path.first
-#    when /\Af(?:ld|ield)?\z/
-#      lookup_field(nil, path[1..-1]) # mod -> nil...
-#    when /\A([lgd]?)v(?:ar|ariable)?\z/
-#      lookup_var(@node, $1, path[1], path[2..-1])
-#    when /\At(?:ag)\z/
-#      lookup_tag(nil, path[1..-1])
-#    else
-## variable?
-#fail NotImplementedError
-#    end
-#  end
 
   def set_value(path, value)
 
+#p [ path, '<-', value ]
     case path.first
     when /\Af(?:ld|ield)?\z/
       set_field(path[1..-1], value)
-    #when /\A([lgd]?)v(?:ar|ariable)?\z/
-    #  set_var(@node, $1, path[1], path[2..-1])
-    #else
-    #  set_var(@node, $1, nil, path)
+    when /\A([lgd]?)v(?:ar|ariable)?\z/
+      set_var($1, path[1..-1], value)
     else
 fail NotImplementedError
+      #set_var(@node, $1, nil, path) # FIXME
     end
   end
 

@@ -116,8 +116,12 @@ class Flor::Pro::Set < Flor::Procedure
 
     ret = payload['ret']
 
-    set_value(@node['refs'].first, ret)
-      # TODO splat!
+    case @node['refs'].size
+    when 0 then 0
+    when 1 then set_value(@node['refs'].first, ret)
+    else
+fail NotImplementedError # TODO splat!
+    end
 
     payload['ret'] =
       if tree[0] == 'setr'# || @node['refs'].last == 'f.ret'
@@ -127,6 +131,7 @@ class Flor::Pro::Set < Flor::Procedure
       end
 
     wrap
+
 #    ret = @node['single_child'] ? node_payload_ret : payload['ret']
 #
 #    if @node['refs'].size == 1

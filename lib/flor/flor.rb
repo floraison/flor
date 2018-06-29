@@ -450,6 +450,34 @@ module Flor
 
       POINTS.include?(s)
     end
+
+
+    #
+    # Dense paths
+
+    def path_to_s(path)
+
+      path_to_dense_path(path).to_s
+    end
+
+    def path_to_dense_path(path)
+
+      Dense::Path.make(path.collect { |e| path_elt_to_dense_path_elt(e) })
+    end
+
+    def path_elt_to_dense_path_elt(elt)
+
+      case elt
+      #when String then elt
+      #when Integer then elt
+      when { 'dot' => true } then :dot
+      when { 'star' => true } then :star
+      when { 'dotstar' => true } then :star
+      when Array then elt.collect { |e| path_elt_to_dense_path_elt(e) }
+# TODO regexes
+      else elt
+      end
+    end
   end
 end
 
