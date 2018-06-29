@@ -227,6 +227,8 @@ module Flor
 
 #puts "-" * 80
 #Raabro.pp(t, colours: true)
+#p [ :children, t.subgather(nil).length ]
+
       tts = t.subgather(nil)
 
       if tts.length == 1
@@ -466,19 +468,16 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
       def ta_rework_core(core)
 
+        hd, cn, ln = core
+
         dig = Digest::SHA256.hexdigest(JSON.dump(core))[0, 7]
         tsp = Flor.tamp.gsub(/\./, '_')
-        h = "_head_#{dig}_#{tsp}"
-
-        l = core[2]
+        _hd = "_head_#{dig}_#{tsp}"
 
         [ 'sequence', [
-          [ 'set', [
-            [ h, [], l ],
-            core[0]
-          ], l ],
-          [ h, core[1], l ]
-        ], l ]
+          [ 'set', [ [ _hd, [], ln ], hd ], ln ],
+          [ _hd, cn, ln ]
+        ], ln ]
       end
 
       def read(tree)
