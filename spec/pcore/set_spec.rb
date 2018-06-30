@@ -189,7 +189,43 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(14)
     end
 
+    it 'accepts string keys' do
+
+      r = @executor.launch(
+        %q{
+          set "f.h.name" 'TagUndNacht'
+        },
+        payload: { 'h' => {} })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']
+      ).to eq({
+        'h' => { 'name' => 'TagUndNacht' },
+        'ret' => nil
+      })
+    end
+
     it 'accepts bracketed keys' do
+
+      r = @executor.launch(
+        %q{
+          set f.h["accessory"] 'pipe'
+        },
+        payload: { 'h' => {} })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']
+      ).to eq({
+        'h' => { 'accessory' => 'pipe' },
+        'ret' => nil
+      })
+    end
+
+    it 'accepts string and bracketed keys' do
 
       r = @executor.launch(
         %q{ # <-------------- using q to make the \"pullover\" work

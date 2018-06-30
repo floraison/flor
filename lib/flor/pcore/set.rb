@@ -88,7 +88,7 @@ class Flor::Pro::Set < Flor::Procedure
 
     ft = tree[1][@fcid] || []
 
-    if ft[0] == '_rep'
+    if ft[0] == '_rep' || (Flor.is_string_tree?(ft) && ! last_receive?)
       @node['refs'] << payload['ret']
     elsif ft[0] == '_ref' &&
       ft[1].size == 2 &&

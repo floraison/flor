@@ -617,7 +617,9 @@ class Flor::Procedure < Flor::Node
 
   def set_value(path, value)
 
+    path = Dense::Path.make(path).to_a if path.is_a?(String)
 #p [ path, '<-', value ]
+
     if path.length < 2
       set_var('', path, value)
     else
