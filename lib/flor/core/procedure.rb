@@ -587,21 +587,22 @@ class Flor::Procedure < Flor::Node
     r
   end
 
-  def set_var(mode, k, v)
+  def set_var(mode, path, v)
 
     fail IndexError.new("cannot set domain variables") if mode == 'd'
 
     begin
 
-      node = lookup_var_node(@node, mode, k)
-      node = lookup_var_node(@node, 'l', k) if node.nil? && mode == ''
+      node = lookup_var_node(@node, mode, path)
+      node = lookup_var_node(@node, 'l', path) if node.nil? && mode == ''
 
-      return Dense.set(node['vars'], k, v) if node
+      return Dense.set(node['vars'], path, v) if node
 
     rescue IndexError
     end
 
-    fail IndexError.new("couldn't set var #{mode}v.#{k}")
+    fail IndexError.new(
+      "couldn't set var #{Flor.path_to_s([ "#{mode}v" ] + path)}")
   end
 
   def set_field(path, v)
@@ -610,7 +611,8 @@ class Flor::Procedure < Flor::Node
 
   rescue IndexError
 
-    fail IndexError.new("couldn't set field #{Flor.path_to_s(path)}")
+    fail IndexError.new(
+      "couldn't set field #{Flor.path_to_s(path)}")
   end
 
   def set_value(path, value)

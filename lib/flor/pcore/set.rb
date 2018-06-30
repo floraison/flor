@@ -102,7 +102,12 @@ class Flor::Pro::Set < Flor::Procedure
 
   def receive_last
 
-    ret = payload['ret']
+    ret =
+      if @node['single_child']
+        node_payload_ret
+      else
+        payload['ret']
+      end
 
     refs = @node['refs']
 
@@ -114,47 +119,26 @@ fail NotImplementedError # TODO splat!
     end
 
     payload['ret'] =
-      if tree[0] == 'setr'# || @node['refs'].last == 'f.ret'
+      if tree[0] == 'setr' || refs_include_f_ret?
         ret
       else
         node_payload_ret
       end
 
     wrap
-
-#    ret = @node['single_child'] ? node_payload_ret : payload['ret']
-#
-#    if @node['refs'].size == 1
-#      set_value(@node['refs'].first, ret)
-#    else
-#      Flor.splat(@node['refs'], ret).each { |k, v| set_value(k, v) }
-#    end
-#
-#    payload['ret'] =
-#      if tree[0] == 'setr' || @node['refs'].last == 'f.ret'
-#        ret
-#      else
-#        node_payload_ret
-#      end
-#
-#    wrap_reply
   end
 
   protected
 
-  # Turns
-  #   ["set",
-  #    [["_att", [["tag", [], 3], ["_sqs", "nada", 3]], 3],
-  #     ["a", [], 3],
-  #     ["_ref", [["_sqs", "f", 3], ["_sqs", "ret", 3]], 3]],
-  #    3]
-  # into
-  #   ["set",
-  #    [["_att", [["tag", [], 3], ["_sqs", "nada", 3]], 3],
-  #     ["_ref", [["_sqs", "a", 3]], 3],                      # <---
-  #     ["_ref", [["_sqs", "f", 3], ["_sqs", "ret", 3]], 3]],
-  #    3]
-  #
+  def refs_include_f_ret?
+
+    !! @node['refs']
+      .find { |ref|
+        ref.length == 2 &&
+        ref[1] == 'ret' &&
+        ref[0].match(/\Af(ld|ield)?\z/) }
+  end
+
   def reref_children
 
     t = tree
@@ -175,13 +159,12 @@ fail NotImplementedError # TODO splat!
 
     t = tree
     li = t[1].length - 1
-    nsc = ! @node['single_child']
 
     cn = t[1]
       .each_with_index
       .collect { |ct, i|
         hd, cn, ln = ct
-        if hd == '_ref' && nsc && li != i
+        if hd == '_ref' && (@node['single_child'] || li != i)
           [ '_rep', cn, ln ]
         else
           ct

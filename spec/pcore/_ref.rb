@@ -69,10 +69,6 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 'f', 'o', %w[ a b ], 'c' ])
     end
-
-    [
-      [ 'f', 'o', [ 'a', 'b' ], 'c' ] => 'f.o["a";"b"].c'
-    ]
   end
 end
 
