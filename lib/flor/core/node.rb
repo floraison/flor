@@ -162,6 +162,8 @@ class Flor::Node
     #
     # that might be the way...
 
+    # TODO get rid of that (undense)
+    #
   def lookup(name, silence_index_error=false)
 
     cat, mod, key_and_path = key_split(name)
@@ -181,6 +183,20 @@ class Flor::Node
 
     raise unless silence_index_error
     nil
+  end
+
+  def lookup_value(path)
+
+    case path.first
+    when /\Af(?:ld|ield)?\z/
+      lookup_field(nil, path[1..-1]) # mod -> nil...
+    when /\At(?:ag)\z/
+      lookup_tag(nil, path[1..-1])
+    when /\A([lgd]?)v(?:ar|ariable)?\z/
+      lookup_var(@node, $1, path[1], path[2..-1])
+    else
+      lookup_var(@node, '', path[0], path[1..-1])
+    end
   end
 
   class Expander < Flor::Dollar

@@ -39,7 +39,7 @@ class Flor::Pro::Push < Flor::Procedure
   def pre_execute
 
     unatt_unkeyed_children
-    stringify_first_child
+    rep_first_child
   end
 
   def receive_non_att
@@ -47,7 +47,7 @@ class Flor::Pro::Push < Flor::Procedure
     if ! @node['arr']
       @node['arr'] = payload['ret']
     else
-      @node['to_push'] = payload['ret']
+      @node['val'] = payload['ret']
     end
 
     super
@@ -55,7 +55,7 @@ class Flor::Pro::Push < Flor::Procedure
 
   def receive_last
 
-    push(@node.has_key?('to_push') ? @node['to_push'] : node_payload_ret)
+    push(@node.has_key?('val') ? @node['val'] : node_payload_ret)
 
     payload['ret'] = node_payload_ret \
       unless tree[0] == 'pushr'
@@ -65,14 +65,26 @@ class Flor::Pro::Push < Flor::Procedure
 
   protected
 
+  def rep_first_child
+
+    hd, cn, ln = tree
+    seen = false
+
+    cn1 = cn
+      .collect { |ct|
+        if seen || ct[0] != '_ref'
+          ct
+        else
+          seen = true
+          [ '_rep', ct[1], ct[2] ]
+        end }
+
+    @node['tree'] = [ hd, cn1, ln ] if cn1 != cn
+  end
+
   def push(val)
 
-    arr = @node['arr']
-
-    if arr.is_a?(String)
-      payload.copy if arr[0, 1] == 'f'
-      arr = lookup(arr)
-    end
+    arr = lookup_value(@node['arr'])
 
     fail Flor::FlorError.new(
       "cannot push to given target (#{arr.class})", self
