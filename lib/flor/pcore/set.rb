@@ -67,26 +67,11 @@ class Flor::Pro::Set < Flor::Procedure
   def pre_execute
 
     unatt_unkeyed_children
+    reref_children
 
-    t = tree
-    #cl = t[1].length
+    @node['single_child'] = (non_att_children.count == 1)
 
-    children, non_att_count, changed =
-      t[1]
-        .each_with_index
-        .inject([ [], 0, false ]) { |(cn, nac, ced), (t, i)|
-#p [ [ cn, nac, ced ], [ t, i ] ]
-          nac = nac + 1 if t[0] != '_att'
-          if t[0] == '_ref'
-            cn << [ '_rep', t[1], t[2] ]
-            ced = true
-          else
-            cn << t
-          end
-          [ cn, nac, ced ] }
-
-    @node['single_child'] = (non_att_count == 1)
-    @node['tree'] = [ t[0], children, t[2] ] if changed
+    rep_children
 
     @node['refs'] = []
   end
@@ -101,13 +86,16 @@ class Flor::Pro::Set < Flor::Procedure
 
   def receive_non_att
 
-#    ret = payload['ret']
-#    last = ! @node['single_child'] && (@fcid + 1) == children.size
-#
-#    @node['refs'] << ret if ! last && ret.is_a?(String)
+    ft = tree[1][@fcid] || []
 
-    fromt = tree[1][@fcid] || []
-    @node['refs'] << payload['ret'] if fromt[0] == '_rep'
+    if ft[0] == '_rep'
+      @node['refs'] << payload['ret']
+    elsif ft[0] == '_ref' &&
+      ft[1].size == 2 &&
+      ft[1][0][0, 2] == [ '_sqs', 'f' ] && ft[1][1][0, 2] == [ '_sqs', 'ret' ]
+    then
+      payload['ret'] = node_payload_ret
+    end
 
     super
   end
@@ -116,9 +104,11 @@ class Flor::Pro::Set < Flor::Procedure
 
     ret = payload['ret']
 
-    case @node['refs'].size
+    refs = @node['refs']
+
+    case refs.size
     when 0 then 0
-    when 1 then set_value(@node['refs'].first, ret)
+    when 1 then set_value(refs.first, ret)
     else
 fail NotImplementedError # TODO splat!
     end
@@ -148,6 +138,56 @@ fail NotImplementedError # TODO splat!
 #      end
 #
 #    wrap_reply
+  end
+
+  protected
+
+  # Turns
+  #   ["set",
+  #    [["_att", [["tag", [], 3], ["_sqs", "nada", 3]], 3],
+  #     ["a", [], 3],
+  #     ["_ref", [["_sqs", "f", 3], ["_sqs", "ret", 3]], 3]],
+  #    3]
+  # into
+  #   ["set",
+  #    [["_att", [["tag", [], 3], ["_sqs", "nada", 3]], 3],
+  #     ["_ref", [["_sqs", "a", 3]], 3],                      # <---
+  #     ["_ref", [["_sqs", "f", 3], ["_sqs", "ret", 3]], 3]],
+  #    3]
+  #
+  def reref_children
+
+    t = tree
+
+    cn = t[1]
+      .collect { |ct|
+        hd, cn, ln = ct
+        if Flor.is_single_ref_tree?(ct)
+          [ '_ref', [ [ '_sqs', hd, ln ] ], ln ]
+        else
+          ct
+        end }
+
+    @node['tree'] = [ t[0], cn, t[2] ] if cn != t[1]
+  end
+
+  def rep_children
+
+    t = tree
+    li = t[1].length - 1
+    nsc = ! @node['single_child']
+
+    cn = t[1]
+      .each_with_index
+      .collect { |ct, i|
+        hd, cn, ln = ct
+        if hd == '_ref' && nsc && li != i
+          [ '_rep', cn, ln ]
+        else
+          ct
+        end }
+
+    @node['tree'] = [ t[0], cn, t[2] ] if cn != t[1]
   end
 end
 

@@ -346,6 +346,11 @@ module Flor
       o.all? { |e| Flor.is_tree?(e) }
     end
 
+    def is_single_ref_tree?(t)
+
+      t.is_a?(Array) && t[0].is_a?(String) && t[1] == []
+    end
+
 #  # Array, object or atom tree
 #  #
 #  def is_value_tree?(o)

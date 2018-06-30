@@ -622,8 +622,7 @@ class Flor::Procedure < Flor::Node
     when /\A([lgd]?)v(?:ar|ariable)?\z/
       set_var($1, path[1..-1], value)
     else
-fail NotImplementedError
-      #set_var(@node, $1, nil, path) # FIXME
+      set_var('', path, value)
     end
   end
 
