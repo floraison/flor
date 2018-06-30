@@ -618,13 +618,17 @@ class Flor::Procedure < Flor::Node
   def set_value(path, value)
 
 #p [ path, '<-', value ]
-    case path.first
-    when /\Af(?:ld|ield)?\z/
-      set_field(path[1..-1], value)
-    when /\A([lgd]?)v(?:ar|ariable)?\z/
-      set_var($1, path[1..-1], value)
-    else
+    if path.length < 2
       set_var('', path, value)
+    else
+      case path.first
+      when /\Af(?:ld|ield)?\z/
+        set_field(path[1..-1], value)
+      when /\A([lgd]?)v(?:ar|ariable)?\z/
+        set_var($1, path[1..-1], value)
+      else
+        set_var('', path, value)
+      end
     end
   end
 
