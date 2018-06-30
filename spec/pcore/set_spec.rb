@@ -539,6 +539,7 @@ describe 'Flor procedures' do
       'a b___' => { 'a' => 0, 'b' => [ 1, 2, 3, 4, 5 ] },
       '"a__$(x)" b' => { 'a' => [ 0, 1, 2 ], 'b' => 3 },
       'a b__0 c___' => { 'a' => 0, 'b' => [], 'c' => [ 1, 2, 3, 4, 5 ] },
+      'f.a f.b__2 f.c' => { 'f.a' => 0, 'f.b' => [ 1, 2 ], 'f.c' => 3 },
 
     }.each do |vars, expected|
 
@@ -555,7 +556,17 @@ describe 'Flor procedures' do
 
         expect(r['payload']['ret']).to eq(nil)
 
-        expected.each { |k, v| expect(r['vars'][k]).to eq(v) }
+        h = expected
+          .inject({}) { |h, (k, v)|
+            h[k] =
+              if k.match(/\Af\.(.+)\z/)
+                r['payload'][$1]
+              else
+                r['vars'][k]
+              end
+            h }
+
+        expect(h).to eq(expected)
       end
     end
   end

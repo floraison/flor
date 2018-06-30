@@ -634,33 +634,25 @@ class Flor::Procedure < Flor::Node
     end
   end
 
-#    def splat(keys, array)
-#
-#      ks = keys.dup
-#      a = array.dup
-#      h = {}
-#
-#      while k = ks.shift
-#
-#        if m = SPLAT_REGEX.match(k)
-#          r, l = m[1, 2]
-#          l = (l == '_') ? a.length - ks.length : l.to_i
-#          h[r] = a.take(l) if r.length > 0
-#          a = a.drop(l)
-#        else
-#          h[k] = a.shift
-#        end
-#      end
-#
-#      h
-#    end
-
-  #SPLAT_REGEX = /\A(.*)__(_|\d+)\z/.freeze
+  SPLAT_REGEX = /\A(.*)__(_|\d+)\z/.freeze
 
   def splat_value(paths, value)
 
-    paths
-      .each_with_index { |pa, i| set_value(pa, value[i]) }
+    val = value.dup
+
+    while pa = paths.shift
+
+      pa = Dense::Path.make(pa).to_a if pa.is_a?(String)
+
+      if m = pa.last.match(SPLAT_REGEX)
+        k, u = m[1, 2]
+        l = (u == '_') ? val.length - paths.length : u.to_i
+        set_value(pa[0..-2] + [ k ], val.take(l)) if k.length > 0
+        val = val.drop(l)
+      else
+        set_value(pa, val.shift)
+      end
+    end
   end
 
   def apply(fun, args, line, opts={})
