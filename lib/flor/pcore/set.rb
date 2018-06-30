@@ -114,8 +114,7 @@ class Flor::Pro::Set < Flor::Procedure
     case refs.size
     when 0 then 0
     when 1 then set_value(refs.first, ret)
-    else
-fail NotImplementedError # TODO splat!
+    else splat_value(refs, ret)
     end
 
     payload['ret'] =

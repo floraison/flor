@@ -8,7 +8,7 @@ module Flor
 
   DOMAIN_UNIT_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)-(#{NAME_REX})[-\z]/
 
-  SPLAT_REGEX = /\A(.*)__(_|\d+)\z/.freeze
+#  SPLAT_REGEX = /\A(.*)__(_|\d+)\z/.freeze
 
   POINTS = %w[
     execute receive
