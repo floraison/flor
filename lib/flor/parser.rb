@@ -263,7 +263,12 @@ module Flor
 
     def rewrite_refsl(t)
 
-      [ '_arr', t.subgather(nil).collect { |tt| rewrite(tt) }, ln(t) ]
+      st, co = t.subgather(nil)
+
+      [ '_obj', [
+        [ '_sqs', 'start', ln(st) ], rewrite(st),
+        [ '_sqs', 'count', ln(co) ], rewrite(co),
+      ], ln(t) ]
     end
 
     def rewrite_refst(t)
@@ -281,7 +286,11 @@ module Flor
       en = en.is_a?(Integer) ? [ '_num', en, ln(t) ] : rewrite(en)
       st = st.is_a?(Integer) ? [ '_num', st, ln(t) ] : rewrite(st)
 
-      [ '_arr', [ be, en, st ], ln(t) ]
+      [ '_obj', [
+        [ '_sqs', 'start', be[2] ], be,
+        [ '_sqs', 'end', en[2] ], en,
+        [ '_sqs', 'step', st[2] ], st,
+      ], ln(t) ]
     end
 
     UNESCAPE = {
