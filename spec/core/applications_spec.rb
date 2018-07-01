@@ -49,6 +49,8 @@ describe 'Flor core' do
         execute:0:
         execute:0_0:
         execute:0_0_0:
+        execute:0_0_0_0:
+        receive:0_0_0:
         receive:0_0:
         execute:0_0_1:
         receive:0_0:
