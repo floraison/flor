@@ -187,6 +187,8 @@ class Flor::Node
 
   def lookup_value(path)
 
+    #path = Dense::Path.make(path).to_a if path.is_a?(String) # TODO
+
     case path.first
     when /\Af(?:ld|ield)?\z/
       lookup_field(nil, path[1..-1]) # mod -> nil...
@@ -227,6 +229,7 @@ class Flor::Node
     return o unless o.is_a?(String)
 
     v = lookup(o)
+    #v = lookup_value(o) # TODO
 
     return v unless Flor.is_tree?(v)
     return v unless v[1].is_a?(Hash)
