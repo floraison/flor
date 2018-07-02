@@ -136,8 +136,8 @@ describe 'Flor core' do
       expect(
         F.to_s(seq, :status)
       ).to eq(%{
-        (status ended pt:receive fro:0_1_0 m:30)
-        (status closed pt:cancel fla:cancel fro:0_1_1_1 m:25)
+        (status ended pt:receive fro:0_1_0 m:34)
+        (status closed pt:cancel fla:cancel fro:0_1_1_1 m:29)
         (status o pt:execute)
       }.ftrim)
     end

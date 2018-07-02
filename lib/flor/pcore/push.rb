@@ -68,18 +68,23 @@ class Flor::Pro::Push < Flor::Procedure
   def rep_first_child
 
     hd, cn, ln = tree
-    seen = false
 
-    cn1 = cn
-      .collect { |ct|
-        if seen || ct[0] != '_ref'
-          ct
-        else
-          seen = true
-          [ '_rep', ct[1], ct[2] ]
-        end }
+    ri = cn.index { |ct| ct[0] == '_ref' || Flor.is_single_ref_tree?(ct) }
 
-    @node['tree'] = [ hd, cn1, ln ] if cn1 != cn
+    return unless ri
+
+    cn1 = cn.dup
+    rt = cn[ri]
+
+    cn1[ri] =
+      if rt[0] == '_ref'
+        [ '_rep', rt[1], rt[2] ]
+      else
+        s, _, l = rt
+        [ '_rep', [ [ '_sqs', s, l ] ], l ]
+      end
+
+    @node['tree'] = [ hd, cn1, ln ]
   end
 
   def push(val)
