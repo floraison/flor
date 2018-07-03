@@ -174,7 +174,8 @@ module Flor
       tree = node['tree'] || nt
 
       t0 = tree[0]
-      t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
+      #t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
+        # TODO remove me if unnecessary
 
       node['heat0'] = tree[0]
       node['heat'] = heat = n.deref(t0)

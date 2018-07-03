@@ -455,9 +455,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
         return core unless suff
 
-        iou = suff.shift[1][0][0]
-
-        [ iou, [ suff.first[1].first, core ], @line ]
+        [ suff.shift[1][0][0], [ suff.first[1].first, core ], @line ]
       end
 
       protected
@@ -478,18 +476,18 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
       def ta_rework_core(core)
 
         hd, cn, ln = core
+        s = @tree.lookup(:head).string.strip
 
-        dig = Digest::SHA256.hexdigest(JSON.dump(core))[0, 7]
-        tsp = Flor.tamp.gsub(/\./, '_')
-        _hd = "_head_#{dig}_#{tsp}"
-
-        [ 'sequence', [
-          [ 'set', [ [ _hd, [], ln ], hd ], ln ],
-          [ _hd, cn, ln ]
+        [ '_head', [
+          [ '_sqs', s, ln ],
+          hd,
+          [ '__head', cn, ln ]
         ], ln ]
       end
 
       def read(tree)
+
+        @tree = tree
 
         @indent = tree.lookup(:indent).string.length
 
@@ -507,12 +505,10 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
             if kt
               k = Flor::Parser.rewrite(kt.c0)
-              as << [ '_att', [ k, v ], k[2] ]
+              as.push([ '_att', [ k, v ], k[2] ])
             else
-              as << [ '_att', [ v ], v[2] ]
-            end
-
-            as }
+              as.push([ '_att', [ v ], v[2] ])
+            end }
 
         @children.concat(atts)
 

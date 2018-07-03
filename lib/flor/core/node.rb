@@ -187,7 +187,10 @@ class Flor::Node
 
   def lookup_value(path)
 
-    #path = Dense::Path.make(path).to_a if path.is_a?(String) # TODO
+    path = Dense::Path.make(path).to_a \
+      if path.is_a?(String)
+    path.unshift('') \
+      if path.length < 2
 
     case path.first
     when /\Af(?:ld|ield)?\z/
@@ -196,8 +199,10 @@ class Flor::Node
       lookup_tag(nil, path[1..-1])
     when /\A([lgd]?)v(?:ar|ariable)?\z/
       lookup_var(@node, $1, path[1], path[2..-1])
+    when '__head'
+      @message['__head'][1]
     else
-      lookup_var(@node, '', path[0], path[1..-1])
+      lookup_var(@node, '', path[1], path[2..-1])
     end
   end
 
@@ -228,8 +233,8 @@ class Flor::Node
 
     return o unless o.is_a?(String)
 
-    v = lookup(o)
-    #v = lookup_value(o) # TODO
+    #v = lookup(o)
+    v = lookup_value(o)
 
     return v unless Flor.is_tree?(v)
     return v unless v[1].is_a?(Hash)
