@@ -158,9 +158,7 @@ module Flor
         make_node(message) :
         @execution['nodes'][nid]
 
-      return unless node
-
-      return if node['heat']
+      return if node.nil? || node['heat']
 
       n = Flor::Node.new(self, node, message)
 

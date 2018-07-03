@@ -187,8 +187,12 @@ class Flor::Node
 
   def lookup_value(path)
 
-    path = Dense::Path.make(path).to_a \
-      if path.is_a?(String)
+    path =
+      case path
+      when '*' then [ '*' ]
+      when String then Dense::Path.make(path).to_a
+      else path
+      end
 
     path.unshift('v') \
       if path.length < 2
@@ -237,6 +241,7 @@ class Flor::Node
     return o unless o.is_a?(String)
 
     v = lookup_value(o)
+#p [ o, v ]
 
     return v unless Flor.is_tree?(v)
     return v unless v[1].is_a?(Hash)
