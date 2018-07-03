@@ -162,33 +162,34 @@ class Flor::Node
     #
     # that might be the way...
 
-    # TODO get rid of that (undense)
-    #
-  def lookup(name, silence_index_error=false)
-
-    cat, mod, key_and_path = key_split(name)
-    key, pth = key_and_path.split('.', 2)
-
-    if [ cat, mod, key ] == [ 'v', '', 'node' ]
-      lookup_in_node(pth)
-    elsif cat == 'v'
-      lookup_var(@node, mod, key, pth)
-    elsif cat == 't'
-      lookup_tag(mod, key)
-    else
-      lookup_field(mod, key_and_path)
-    end
-
-  rescue KeyError, TypeError
-
-    raise unless silence_index_error
-    nil
-  end
+#    # TODO get rid of that (undense)
+#    #
+#  def lookup(name, silence_index_error=false)
+#
+#    cat, mod, key_and_path = key_split(name)
+#    key, pth = key_and_path.split('.', 2)
+#
+#    if [ cat, mod, key ] == [ 'v', '', 'node' ]
+#      lookup_in_node(pth)
+#    elsif cat == 'v'
+#      lookup_var(@node, mod, key, pth)
+#    elsif cat == 't'
+#      lookup_tag(mod, key)
+#    else
+#      lookup_field(mod, key_and_path)
+#    end
+#
+#  rescue KeyError, TypeError
+#
+#    raise unless silence_index_error
+#    nil
+#  end
 
   def lookup_value(path)
 
     path = Dense::Path.make(path).to_a \
       if path.is_a?(String)
+
     path.unshift('') \
       if path.length < 2
 
@@ -199,10 +200,14 @@ class Flor::Node
       lookup_tag(nil, path[1..-1])
     when /\A([lgd]?)v(?:ar|ariable)?\z/
       lookup_var(@node, $1, path[1], path[2..-1])
-    when '__head'
-      @message['__head'][1]
+    when 'node'
+      lookup_in_node(path[1..-1])
     else
-      lookup_var(@node, '', path[1], path[2..-1])
+      if path[1] == '__head'
+        @message['__head'][1]
+      else
+        lookup_var(@node, '', path[1], path[2..-1])
+      end
     end
   end
 
@@ -217,7 +222,8 @@ class Flor::Node
       return Flor.domain(@node.exid) if k == 'domain'
       return Flor.tstamp if k == 'tstamp'
 
-      r = @node.lookup(k, true)
+      r = @node.lookup_value(k)
+
       r.is_a?(Symbol) ? nil : r
     end
   end
@@ -233,7 +239,6 @@ class Flor::Node
 
     return o unless o.is_a?(String)
 
-    #v = lookup(o)
     v = lookup_value(o)
 
     return v unless Flor.is_tree?(v)
@@ -474,7 +479,7 @@ class Flor::Node
 
     Dense.fetch(payload.current, key_and_path)
 
-  rescue IndexError
+  rescue IndexError#, TypeError
 
     nil
   end

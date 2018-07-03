@@ -230,9 +230,11 @@ module Flor
           node['failure'] ? '_err' : nil
         end
 
-      return error_reply(
-        node, message, "don't know how to apply #{node['heat0'].inspect}"
-      ) if heap == nil
+      if heap == nil
+        h0 = (message['__head'] || [])[0] || node['heat0']
+        return error_reply(
+          node, message, "don't know how to apply #{h0.inspect}")
+      end
 
       heac = Flor::Procedure[heap]
       fail NameError.new("unknown procedure #{heap.inspect}") unless heac
