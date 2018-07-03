@@ -656,8 +656,6 @@ class Flor::Procedure < Flor::Node
     end
   end
 
-  SPLAT_REGEX = /\A(.*)__(_|\d+)\z/.freeze
-
   def splat_value(paths, value)
 
     val = value.dup
@@ -666,7 +664,7 @@ class Flor::Procedure < Flor::Node
 
       pa = Dense::Path.make(pa).to_a if pa.is_a?(String)
 
-      if m = pa.last.match(SPLAT_REGEX)
+      if m = pa.last.match(Flor::SPLAT_REGEX)
         k, u = m[1, 2]
         l = (u == '_') ? val.length - paths.length : u.to_i
         set_value(pa[0..-2] + [ k ], val.take(l)) if k.length > 0

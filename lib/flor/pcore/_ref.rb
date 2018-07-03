@@ -10,11 +10,15 @@ class Flor::Pro::Ref < Flor::Procedure
 
   def receive_last
 
+    rs = @node['rets']
+
     payload['ret'] =
       if tree[0] == '_rep'
-        @node['rets']
+        rs
+      elsif rs.size == 2 && rs[1] == 'ret' && rs[0].match(/\Af(ld|ield)?\z/)
+        node_payload_ret
       else
-        lookup_value(@node['rets'])
+        lookup_value(rs)
       end
 
     super
