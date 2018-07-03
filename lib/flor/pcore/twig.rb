@@ -6,7 +6,7 @@ class Flor::Pro::Twig < Flor::Procedure
   def pre_execute
 
     unatt_unkeyed_children
-    stringify_first_child
+    rep_first_child
   end
 
   def receive_first

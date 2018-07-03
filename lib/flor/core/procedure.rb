@@ -253,6 +253,28 @@ class Flor::Procedure < Flor::Node
     @node['tree'] = [ tree[0], cn, tree[2] ] if cn != children
   end
 
+  def rep_first_child
+
+    hd, cn, ln = tree
+
+    ri = cn.index { |ct| ct[0] == '_ref' || Flor.is_single_ref_tree?(ct) }
+
+    return unless ri
+
+    cn1 = cn.dup
+    rt = cn[ri]
+
+    cn1[ri] =
+      if rt[0] == '_ref'
+        [ '_rep', rt[1], rt[2] ]
+      else
+        s, _, l = rt
+        [ '_rep', [ [ '_sqs', s, l ] ], l ]
+      end
+
+    @node['tree'] = [ hd, cn1, ln ]
+  end
+
   def unatt_first_unkeyed_child
 
     unatt_unkeyed_children(true)
