@@ -190,24 +190,21 @@ class Flor::Node
     path = Dense::Path.make(path).to_a \
       if path.is_a?(String)
 
-    path.unshift('') \
+    path.unshift('v') \
       if path.length < 2
 
     case path.first
     when /\Af(?:ld|ield)?\z/
       lookup_field(nil, path[1..-1]) # mod -> nil...
-    when /\At(?:ag)\z/
-      lookup_tag(nil, path[1..-1])
+    when /\At(?:ag)?\z/
+      lookup_tag(nil, path[1])
     when /\A([lgd]?)v(?:ar|ariable)?\z/
+      return @message['__head'][1] if path[1] == '__head'
       lookup_var(@node, $1, path[1], path[2..-1])
     when 'node'
       lookup_in_node(path[1..-1])
     else
-      if path[1] == '__head'
-        @message['__head'][1]
-      else
-        lookup_var(@node, '', path[1], path[2..-1])
-      end
+      lookup_var(@node, '', path[0], path[1..-1])
     end
   end
 
@@ -472,7 +469,7 @@ class Flor::Node
         a
       end
 
-    nids.empty? ? [ '_nul', nil, -1 ] : nids
+    nids.any? ? nids : nil
   end
 
   def lookup_field(mod, key_and_path)

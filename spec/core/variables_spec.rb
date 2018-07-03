@@ -201,22 +201,22 @@ describe 'Flor core' do
         # error straight out of the 'dense' library
     end
 
-    it 'indexes an array'# do
+    it 'indexes an array' do
 
-#      r = @executor.launch(
-#        %q{
-#          push f.l f.a.0
-#          push f.l f.a[1,2]
-#          push f.l f.a[:7:2]
-#          #push f.l f.a[2;4] # TODO
-#        },
-#        payload: { 'a' => %w[ a b c d e f ], 'l' => []})
-#
-#      expect(r['point']).to eq('terminated')
-#
-#      expect(r['payload']['l']).to eq([
-#        'a', %w[ b c ], %w[ a c e ] ])
-#    end
+      r = @executor.launch(
+        %q{
+          push f.l f.a.0
+          push f.l f.a[1,2]
+          push f.l f.a[:7:2]
+          push f.l f.a[2;4] # TODO
+        },
+        payload: { 'a' => %w[ a b c d e f ], 'l' => []})
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['l']).to eq([
+        'a', %w[ b c ], %w[ a c e ], %w[ c e ] ])
+    end
   end
 
   describe 'the "node" pseudo-variable' do
@@ -233,7 +233,7 @@ describe 'Flor core' do
         payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq(%w[ 0_0_1 0_1_1 node.heat0 _dqs ])
+      expect(r['payload']['l']).to eq(%w[ 0_0_1 0_1_1 _ref _dqs ])
     end
   end
 end
