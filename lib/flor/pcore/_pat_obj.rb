@@ -61,7 +61,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
     ret = payload['ret']
 
     unless key
-      return wrap_no_match_reply unless Dense.has_key?(val, ret)
+      return wrap_no_match_reply unless Dense.has_key?(val, Array(ret))
       @node['key'] = ret
       @node['keys'] << ret if @node['keys']
       return super
