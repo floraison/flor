@@ -162,29 +162,6 @@ class Flor::Node
     #
     # that might be the way...
 
-#    # TODO get rid of that (undense)
-#    #
-#  def lookup(name, silence_index_error=false)
-#
-#    cat, mod, key_and_path = key_split(name)
-#    key, pth = key_and_path.split('.', 2)
-#
-#    if [ cat, mod, key ] == [ 'v', '', 'node' ]
-#      lookup_in_node(pth)
-#    elsif cat == 'v'
-#      lookup_var(@node, mod, key, pth)
-#    elsif cat == 't'
-#      lookup_tag(mod, key)
-#    else
-#      lookup_field(mod, key_and_path)
-#    end
-#
-#  rescue KeyError, TypeError
-#
-#    raise unless silence_index_error
-#    nil
-#  end
-
   def lookup_value(path)
 
     path =
@@ -226,6 +203,10 @@ class Flor::Node
       r = @node.lookup_value(k)
 
       r.is_a?(Symbol) ? nil : r
+
+    rescue KeyError
+
+      nil
     end
   end
 
@@ -241,7 +222,6 @@ class Flor::Node
     return o unless o.is_a?(String)
 
     v = lookup_value(o)
-#p [ o, v ]
 
     return v unless Flor.is_tree?(v)
     return v unless v[1].is_a?(Hash)
