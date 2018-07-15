@@ -2,6 +2,11 @@
 # flor CHANGELOG.md
 
 
+## flor 1.0.0  not yet released
+
+- Include "undense" work ("_ref" and friends)
+
+
 ## flor 0.15.0  released 2018-06-15
 
 - Many many improvements
