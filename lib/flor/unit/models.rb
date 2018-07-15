@@ -26,6 +26,8 @@ module Flor
 
   class FlorModel < Sequel::Model(DummySequelAdapter::DB)
 
+    self.require_valid_table = false
+
     def _data
 
       d = Flor::Storage.from_blob(content)
