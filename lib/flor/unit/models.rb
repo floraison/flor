@@ -15,8 +15,8 @@ module Flor
     end
 
     def fetch_rows(sql); yield([]); end
-    #DJV 
-    # add mising methods from dummy adaptor
+    #DJV
+    # add missing methods from dummy adaptor
     def typecast_value_boolean(opts={});true;end
     def test_connection();true;end
     #DJV
