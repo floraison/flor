@@ -253,6 +253,28 @@ class Flor::Procedure < Flor::Node
     @node['tree'] = [ tree[0], cn, tree[2] ] if cn != children
   end
 
+  def rep_first_child
+
+    hd, cn, ln = tree
+
+    ri = cn.index { |ct| ct[0] == '_ref' || Flor.is_single_ref_tree?(ct) }
+
+    return unless ri
+
+    cn1 = cn.dup
+    rt = cn[ri]
+
+    cn1[ri] =
+      if rt[0] == '_ref'
+        [ '_rep', rt[1], rt[2] ]
+      else
+        s, _, l = rt
+        [ '_rep', [ [ '_sqs', s, l ] ], l ]
+      end
+
+    @node['tree'] = [ hd, cn1, ln ]
+  end
+
   def unatt_first_unkeyed_child
 
     unatt_unkeyed_children(true)
@@ -589,43 +611,69 @@ class Flor::Procedure < Flor::Node
     r
   end
 
-  def set_var(mode, k, v)
+  def set_var(mode, path, v)
 
     fail IndexError.new("cannot set domain variables") if mode == 'd'
 
     begin
 
-      node = lookup_var_node(@node, mode, k)
-      node = lookup_var_node(@node, 'l', k) if node.nil? && mode == ''
+      node = lookup_var_node(@node, mode, path)
+      node = lookup_var_node(@node, 'l', path) if node.nil? && mode == ''
 
-      return Dense.set(node['vars'], k, v) if node
+      return Dense.set(node['vars'], path, v) if node
 
     rescue IndexError
     end
 
-    fail IndexError.new("couldn't set var #{mode}v.#{k}")
+    fail IndexError.new(
+      "couldn't set var #{Flor.path_to_s([ "#{mode}v" ] + path)}")
   end
 
-  def set_field(k, v)
+  def set_field(path, v)
 
-    Dense.set(payload.copy, k, v)
+    Dense.set(payload.copy, path, v)
 
   rescue IndexError
 
-    fail IndexError.new("couldn't set field #{k}")
+    fail IndexError.new(
+      "couldn't set field #{Flor.path_to_s(path)}")
   end
 
-  def set_value(k, v)
+  def set_value(path, value)
 
-    return if k == '_'
+    path = Dense::Path.make(path).to_a if path.is_a?(String)
+#p [ path, '<-', value ]
 
-    cat, mod, key = key_split(k)
+    if path.length < 2
+      set_var('', path, value)
+    else
+      case path.first
+      when /\Af(?:ld|ield)?\z/
+        set_field(path[1..-1], value)
+      when /\A([lgd]?)v(?:ar|ariable)?\z/
+        set_var($1, path[1..-1], value)
+      else
+        set_var('', path, value)
+      end
+    end
+  end
 
-    case cat[0, 1]
-    when 'f' then set_field(key, v)
-    when 'v' then set_var(mod, key, v)
-    #when 'w' then set_war(key, v)
-    else fail IndexError.new("don't know how to set #{k.inspect}")
+  def splat_value(paths, value)
+
+    val = value.dup
+
+    while pa = paths.shift
+
+      pa = Dense::Path.make(pa).to_a if pa.is_a?(String)
+
+      if m = pa.last.match(Flor::SPLAT_REGEX)
+        k, u = m[1, 2]
+        l = (u == '_') ? val.length - paths.length : u.to_i
+        set_value(pa[0..-2] + [ k ], val.take(l)) if k.length > 0
+        val = val.drop(l)
+      else
+        set_value(pa, val.shift)
+      end
     end
   end
 

@@ -349,7 +349,7 @@ describe Flor::Procedure do
         expect(
           F.to_s(seq, :status)
         ).to eq(%{
-          (status closed pt:failed fla:on-error fro:0_1_1 m:13)
+          (status closed pt:failed fla:on-error fro:0_1_1 m:15)
           (status o pt:execute)
         }.ftrim)
 
@@ -373,7 +373,7 @@ describe Flor::Procedure do
         expect(
           F.to_s(seq, :status)
         ).to eq(%{
-          (status closed pt:failed fla:on-error fro:0_1_1 m:13)
+          (status closed pt:failed fla:on-error fro:0_1_1 m:15)
           (status o pt:execute)
         }.ftrim)
 
@@ -397,7 +397,7 @@ describe Flor::Procedure do
         expect(
           F.to_s(seq, :status)
         ).to eq(%{
-          (status closed pt:failed fla:on-error fro:0_1_1 m:13)
+          (status closed pt:failed fla:on-error fro:0_1_1 m:15)
           (status o pt:execute)
         }.ftrim)
       end

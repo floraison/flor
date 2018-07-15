@@ -162,25 +162,31 @@ class Flor::Node
     #
     # that might be the way...
 
-  def lookup(name, silence_index_error=false)
+  def lookup_value(path)
 
-    cat, mod, key_and_path = key_split(name)
-    key, pth = key_and_path.split('.', 2)
+    path =
+      case path
+      when '*' then [ '*' ]
+      when String then Dense::Path.make(path).to_a
+      else path
+      end
 
-    if [ cat, mod, key ] == [ 'v', '', 'node' ]
-      lookup_in_node(pth)
-    elsif cat == 'v'
-      lookup_var(@node, mod, key, pth)
-    elsif cat == 't'
-      lookup_tag(mod, key)
+    path.unshift('v') \
+      if path.length < 2
+
+    case path.first
+    when /\Af(?:ld|ield)?\z/
+      lookup_field(nil, path[1..-1]) # mod -> nil...
+    when /\At(?:ag)?\z/
+      lookup_tag(nil, path[1])
+    when /\A([lgd]?)v(?:ar|ariable)?\z/
+      return @message['__head'][1] if path[1] == '__head'
+      lookup_var(@node, $1, path[1], path[2..-1])
+    when 'node'
+      lookup_in_node(path[1..-1])
     else
-      lookup_field(mod, key_and_path)
+      lookup_var(@node, '', path[0], path[1..-1])
     end
-
-  rescue KeyError, TypeError
-
-    raise unless silence_index_error
-    nil
   end
 
   class Expander < Flor::Dollar
@@ -194,8 +200,13 @@ class Flor::Node
       return Flor.domain(@node.exid) if k == 'domain'
       return Flor.tstamp if k == 'tstamp'
 
-      r = @node.lookup(k, true)
+      r = @node.lookup_value(k)
+
       r.is_a?(Symbol) ? nil : r
+
+    rescue KeyError
+
+      nil
     end
   end
 
@@ -210,7 +221,7 @@ class Flor::Node
 
     return o unless o.is_a?(String)
 
-    v = lookup(o)
+    v = lookup_value(o)
 
     return v unless Flor.is_tree?(v)
     return v unless v[1].is_a?(Hash)
@@ -443,14 +454,14 @@ class Flor::Node
         a
       end
 
-    nids.empty? ? [ '_nul', nil, -1 ] : nids
+    nids.any? ? nids : nil
   end
 
   def lookup_field(mod, key_and_path)
 
     Dense.fetch(payload.current, key_and_path)
 
-  rescue IndexError
+  rescue IndexError#, TypeError
 
     nil
   end

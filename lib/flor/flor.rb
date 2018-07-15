@@ -346,6 +346,11 @@ module Flor
       o.all? { |e| Flor.is_tree?(e) }
     end
 
+    def is_single_ref_tree?(t)
+
+      t.is_a?(Array) && t[0].is_a?(String) && t[0] != '_' && t[1] == []
+    end
+
 #  # Array, object or atom tree
 #  #
 #  def is_value_tree?(o)
@@ -417,36 +422,39 @@ module Flor
 
 
     #
-    # splat
-
-    def splat(keys, array)
-
-      ks = keys.dup
-      a = array.dup
-      h = {}
-
-      while k = ks.shift
-
-        if m = SPLAT_REGEX.match(k)
-          r, l = m[1, 2]
-          l = (l == '_') ? a.length - ks.length : l.to_i
-          h[r] = a.take(l) if r.length > 0
-          a = a.drop(l)
-        else
-          h[k] = a.shift
-        end
-      end
-
-      h
-    end
-
-
-    #
     # misc
 
     def point?(s)
 
       POINTS.include?(s)
+    end
+
+
+    #
+    # Dense paths
+
+    def path_to_s(path)
+
+      path_to_dense_path(path).to_s
+    end
+
+    def path_to_dense_path(path)
+
+      Dense::Path.make(path.collect { |e| path_elt_to_dense_path_elt(e) })
+    end
+
+    def path_elt_to_dense_path_elt(elt)
+
+      case elt
+      #when String then elt
+      #when Integer then elt
+      when { 'dot' => true } then :dot
+      when { 'star' => true } then :star
+      when { 'dotstar' => true } then :star
+      when Array then elt.collect { |e| path_elt_to_dense_path_elt(e) }
+# TODO regexes
+      else elt
+      end
     end
   end
 end

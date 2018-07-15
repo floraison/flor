@@ -62,7 +62,7 @@ module Flor
     def fls(i); str(nil, i, 'false'); end
     def boolean(i); alt(:boolean, i, :tru, :fls); end
 
-    def colon_eol(i); seq(nil, i, :colon, :eol); end
+    def colon_eol(i); seq(:colo, i, :colon, :eol); end
     def semicolon_eol(i); seq(nil, i, :semicolon, :eol); end
       #
     def rf_slice(i)
@@ -81,7 +81,7 @@ module Flor
       seq(nil, i, :semicolon_eol, :rf_sqa_index)
     end
     def rf_sqa_idx(i)
-      seq(nil, i, :sbstart, :rf_sqa_index, :rf_sqa_semico_index, '*', :sbend)
+      seq(:refsq, i, :sbstart, :rf_sqa_index, :rf_sqa_semico_index, '*', :sbend)
     end
     def rf_dot_idx(i)
       seq(nil, i, :dot, :rf_symbol)
@@ -225,8 +225,72 @@ module Flor
 
     def rewrite_ref(t)
 
+#puts "-" * 80
 #Raabro.pp(t, colours: true)
-      [ t.string, [], ln(t) ]
+#p [ :children, t.subgather(nil).length ]
+
+      tts = t.subgather(nil)
+
+      if tts.length == 1
+        tt = tts.first
+        [ tt.string, [], ln(tt) ]
+      else
+        [ '_ref', tts.collect { |tt| rewrite(tt) }, ln(t) ]
+      end
+    end
+
+    def rewrite_refsym(t)
+
+      s = t.string
+
+      if s.match(/\A\d+\z/)
+        [ '_num', s.to_i, ln(t) ]
+      else
+        [ '_sqs', s, ln(t) ]
+      end
+    end
+
+    def rewrite_refsq(t)
+
+      tts = t.subgather(nil)
+
+      if tts.length == 1
+        rewrite(tts.first)
+      else
+        [ '_arr', tts.collect { |tt| rewrite(tt) }, ln(t) ]
+      end
+    end
+
+    def rewrite_refsl(t)
+
+      st, co = t.subgather(nil)
+
+      [ '_obj', [
+        [ '_sqs', 'start', ln(st) ], rewrite(st),
+        [ '_sqs', 'count', ln(co) ], rewrite(co),
+      ], ln(t) ]
+    end
+
+    def rewrite_refst(t)
+
+#puts "-" * 80
+#Raabro.pp(t, colours: true)
+      ts = t.subgather(nil).collect { |tt| tt.name == :colo ? ':' : tt }
+      ts.unshift(0) if ts.first == ':'                # begin
+      ts.push(':') if ts.count { |t| t == ':' } < 2   #
+      ts.push(1) if ts.last == ':'                    # step
+      ts.insert(2, -1) if ts[2] == ':'                # end
+
+      be, _, en, _, st = ts
+      be = be.is_a?(Integer) ? [ '_num', be, ln(t) ] : rewrite(be)
+      en = en.is_a?(Integer) ? [ '_num', en, ln(t) ] : rewrite(en)
+      st = st.is_a?(Integer) ? [ '_num', st, ln(t) ] : rewrite(st)
+
+      [ '_obj', [
+        [ '_sqs', 'start', be[2] ], be,
+        [ '_sqs', 'end', en[2] ], en,
+        [ '_sqs', 'step', st[2] ], st,
+      ], ln(t) ]
     end
 
     UNESCAPE = {
@@ -302,9 +366,11 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
     def rewrite_exp(t)
 
+#puts "-" * 80
+##puts caller[0, 7]
+#Raabro.pp(t, colours: true)
       return rewrite(t.c0) if t.children.size == 1
 
-#Raabro.pp(t, colours: true)
       cn = t.children.collect { |ct| ct.lookup(nil) }
 
       operation = cn.find { |ct| ct.name == :sop }.string
@@ -389,9 +455,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
         return core unless suff
 
-        iou = suff.shift[1][0][0]
-
-        [ iou, [ suff.first[1].first, core ], @line ]
+        [ suff.shift[1][0][0], [ suff.first[1].first, core ], @line ]
       end
 
       protected
@@ -411,22 +475,19 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
       def ta_rework_core(core)
 
-        dig = Digest::SHA256.hexdigest(JSON.dump(core))[0, 7]
-        tsp = Flor.tamp.gsub(/\./, '_')
-        h = "_head_#{dig}_#{tsp}"
+        hd, cn, ln = core
+        s = @tree.lookup(:head).string.strip
 
-        l = core[2]
-
-        [ 'sequence', [
-          [ 'set', [
-            [ h, [], l ],
-            core[0]
-          ], l ],
-          [ h, core[1], l ]
-        ], l ]
+        [ '_head', [
+          [ '_sqs', s, ln ],
+          hd,
+          [ '__head', cn, ln ]
+        ], ln ]
       end
 
       def read(tree)
+
+        @tree = tree
 
         @indent = tree.lookup(:indent).string.length
 
@@ -444,12 +505,10 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
             if kt
               k = Flor::Parser.rewrite(kt.c0)
-              as << [ '_att', [ k, v ], k[2] ]
+              as.push([ '_att', [ k, v ], k[2] ])
             else
-              as << [ '_att', [ v ], v[2] ]
-            end
-
-            as }
+              as.push([ '_att', [ v ], v[2] ])
+            end }
 
         @children.concat(atts)
 

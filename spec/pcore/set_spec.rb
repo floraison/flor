@@ -189,7 +189,43 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(14)
     end
 
+    it 'accepts string keys' do
+
+      r = @executor.launch(
+        %q{
+          set "f.h.name" 'TagUndNacht'
+        },
+        payload: { 'h' => {} })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']
+      ).to eq({
+        'h' => { 'name' => 'TagUndNacht' },
+        'ret' => nil
+      })
+    end
+
     it 'accepts bracketed keys' do
+
+      r = @executor.launch(
+        %q{
+          set f.h["accessory"] 'pipe'
+        },
+        payload: { 'h' => {} })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']
+      ).to eq({
+        'h' => { 'accessory' => 'pipe' },
+        'ret' => nil
+      })
+    end
+
+    it 'accepts string and bracketed keys' do
 
       r = @executor.launch(
         %q{ # <-------------- using q to make the \"pullover\" work
@@ -495,49 +531,43 @@ describe 'Flor procedures' do
       expect(r['vars']['d']).to eq([ 4, 5, 6 ])
     end
 
-    it 'star-splats' do
+    {
 
-      r = @executor.launch(
-        %q{
-          set a b___ c
-            [ 0 1 2 3 ]
-          set d e__2 f
-            [ 4 5 6 7 8 ]
-          set __2 g h
-            [ 9 10 11 12 13 ]
-          set i j___
-            [ 14 15 16 17 18 19 ]
-          set "k__$(c)" l
-            [ 20 21 22 23 24 ]
+      'a b___ c' => { 'a' => 0, 'b' => [ 1, 2, 3, 4 ], 'c' => 5 },
+      'a b__2 c' => { 'a' => 0, 'b' => [ 1, 2 ], 'c' => 3 },
+      '__2 b c' => { 'b' => 2, 'c' => 3 },
+      'a b___' => { 'a' => 0, 'b' => [ 1, 2, 3, 4, 5 ] },
+      '"a__$(x)" b' => { 'a' => [ 0, 1, 2 ], 'b' => 3 },
+      'a b__0 c___' => { 'a' => 0, 'b' => [], 'c' => [ 1, 2, 3, 4, 5 ] },
+      'f.a f.b__2 f.c' => { 'f.a' => 0, 'f.b' => [ 1, 2 ], 'f.c' => 3 },
 
-          set m n__0 o___
-            [ 25 26 27 28 ]
-        })
+    }.each do |vars, expected|
 
-      expect(r['point']).to eq('terminated')
+      it "splats along #{vars.inspect}" do
 
-      expect(r['payload']['ret']).to eq(nil)
+        r = @executor.launch(
+          %{
+            set #{vars}
+              [ 0 1 2 3 4 5 ]
+          },
+          vars: { 'x' => 3 })
 
-      expect(r['vars']['a']).to eq(0)
-      expect(r['vars']['b']).to eq([ 1, 2 ])
-      expect(r['vars']['c']).to eq(3)
+        expect(r['point']).to eq('terminated')
 
-      expect(r['vars']['d']).to eq(4)
-      expect(r['vars']['e']).to eq([ 5, 6 ])
-      expect(r['vars']['f']).to eq(7)
+        expect(r['payload']['ret']).to eq(nil)
 
-      expect(r['vars']['g']).to eq(11)
-      expect(r['vars']['h']).to eq(12)
+        h = expected
+          .inject({}) { |h, (k, v)|
+            h[k] =
+              if k.match(/\Af\.(.+)\z/)
+                r['payload'][$1]
+              else
+                r['vars'][k]
+              end
+            h }
 
-      expect(r['vars']['i']).to eq(14)
-      expect(r['vars']['j']).to eq([ 15, 16, 17, 18, 19 ])
-
-      expect(r['vars']['k']).to eq([ 20, 21, 22 ])
-      expect(r['vars']['l']).to eq(23)
-
-      expect(r['vars']['m']).to eq(25)
-      expect(r['vars']['n']).to eq([])
-      expect(r['vars']['o']).to eq([ 26, 27, 28 ])
+        expect(h).to eq(expected)
+      end
     end
   end
 end

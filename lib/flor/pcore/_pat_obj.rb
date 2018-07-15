@@ -26,6 +26,15 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
       @node['tree'] = [ t[0], t[1], *t[1][2..-1] ]
     end
 
+    t = tree
+    changed = false
+    t[1].each_with_index do |ct, i|
+      next if i.odd? || ct[0] != '_ref'
+      ct[0] = '_rep'
+      changed = true
+    end
+    @node['tree'] = t if changed
+
     super
   end
 
@@ -52,8 +61,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
     ret = payload['ret']
 
     unless key
-      ret = ret.to_s
-      return wrap_no_match_reply unless Dense.has_key?(val, ret)
+      return wrap_no_match_reply unless Dense.has_key?(val, Array(ret))
       @node['key'] = ret
       @node['keys'] << ret if @node['keys']
       return super
@@ -132,7 +140,8 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
   def lookup_and_quote_key(t)
 
     return t unless t[1] == []
-    [ '_sqs', lookup(t[0], true) || t[0], t[2] ]
+    #[ '_sqs', lookup(t[0], true) || t[0], t[2] ]
+    [ '_sqs', lookup_value(t[0]) || t[0], t[2] ]
   end
 
   def sub_val(child_index)

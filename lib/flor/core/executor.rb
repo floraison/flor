@@ -158,9 +158,7 @@ module Flor
         make_node(message) :
         @execution['nodes'][nid]
 
-      return unless node
-
-      return if node['heat']
+      return if node.nil? || node['heat']
 
       n = Flor::Node.new(self, node, message)
 
@@ -174,7 +172,8 @@ module Flor
       tree = node['tree'] || nt
 
       t0 = tree[0]
-      t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
+      #t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
+        # TODO remove me if unnecessary
 
       node['heat0'] = tree[0]
       node['heat'] = heat = n.deref(t0)
@@ -229,9 +228,11 @@ module Flor
           node['failure'] ? '_err' : nil
         end
 
-      return error_reply(
-        node, message, "don't know how to apply #{node['heat0'].inspect}"
-      ) if heap == nil
+      if heap == nil
+        h0 = (message['__head'] || [])[0] || node['heat0']
+        return error_reply(
+          node, message, "don't know how to apply #{h0.inspect}")
+      end
 
       heac = Flor::Procedure[heap]
       fail NameError.new("unknown procedure #{heap.inspect}") unless heac

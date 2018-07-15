@@ -111,6 +111,19 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(0)
     end
 
+    it 'pushes to vars' do
+
+      r = @executor.launch(
+        %q{
+          push l 123
+          push l 456
+        },
+        vars: { 'l' => [] })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['l']).to eq([ 123, 456 ])
+    end
+
     it 'pushes nulls' do
 
       r = @executor.launch(

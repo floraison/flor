@@ -140,12 +140,17 @@ describe 'Flor core' do
           push f.l f.a.0
           push f.l f.a[1,2]
           push f.l f.a[1:5:2]
-          #push f.l f.a[1;3] # TODO
+          push f.l f.a[1;3]
         },
         payload: { 'a' => %w[ a b c d e f ], 'l' => []})
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ 'a', %w[ b c ], %w[ b d f ] ])
+
+      expect(
+        r['payload']['l']
+      ).to eq([
+        'a', %w[ b c ], %w[ b d f ], %w[ b d ]
+      ])
     end
   end
 end

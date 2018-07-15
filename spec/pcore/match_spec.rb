@@ -387,6 +387,20 @@ describe 'Flor procedures' do
 
       it 'matches' do
 
+        r = @executor.launch(
+          %q{
+            match { player: { name: 'Eldred' } }
+              { player.name: 'Eldred' }; 'USA'
+              { player.name: 'Johnson' }; 'USA'
+              else; 'Japan'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq('USA')
+      end
+
+      it 'matches' do
+
         ret = {}
         ret['player'] = { 'name' => 'Eldred', 'number' => 55 }
 

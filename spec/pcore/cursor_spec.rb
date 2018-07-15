@@ -154,6 +154,10 @@ describe 'Flor pcore' do
         entered:0:main
         execute:0_1:
         execute:0_1_0:
+        execute:0_1_0_0:
+        receive:0_1_0:
+        execute:0_1_0_1:
+        receive:0_1_0:
         receive:0_1:
         execute:0_1_1:
         receive:0_1:
@@ -205,15 +209,7 @@ describe 'Flor pcore' do
             concurrence
               cursor tag: 'x1'
                 push l 'a'
-                sequence
-                  sequence
-                    sequence
-                      sequence
-                        sequence
-                          sequence
-                            sequence
-                              sequence
-                                stall _
+                stall _
               sequence
                 _skip 1
                 push l 'b'
@@ -232,9 +228,8 @@ describe 'Flor pcore' do
         expect(
           F.to_s(cursor, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_1_0 m:99)
-          (status closed pt:cancel fla:break fro:0_1_1_4 m:97)
-          (status closed pt:cancel fla:break fro:0_1_1_2 m:60)
+          (status ended pt:receive fro:0_1_0 m:64)
+          (status closed pt:cancel fla:break fro:0_1_1_2 m:58)
           (status o pt:execute)
         }.ftrim)
         expect(
@@ -252,26 +247,19 @@ describe 'Flor pcore' do
             concurrence
               cursor tag: 'x2'
                 push l 'a'
-                sequence
-                  sequence
-                    sequence
-                      sequence
-                        sequence
-                          sequence
-                            sequence
-                              sequence
-                                stall _
+                stall _
               sequence
                 _skip 1
                 push l 'b'
                 continue 0 ref: 'x2'
                 push l 'c'
                 break 1 ref: 'x2'
+                2
           },
           archive: true)
 
         expect(r['point']).to eq('terminated')
-        expect(r['vars']['l']).to eq(%w[ a b c ])
+        expect(r['vars']['l']).to eq(%w[ a b c a ])
         expect(r['payload']['ret']).to eq(1)
 
         cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
@@ -282,10 +270,10 @@ describe 'Flor pcore' do
         expect(
           F.to_s(cursor, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_1_0 m:100)
-          (status closed pt:cancel fla:break fro:0_1_1_4 m:97)
-          (status o pt:receive fro:0_1_0_2 m:96)
-          (status closed pt:cancel fla:continue fro:0_1_1_2 m:60)
+          (status ended pt:receive fro:0_1_0 m:98)
+          (status closed pt:cancel fla:break fro:0_1_1_4 m:92)
+          (status o pt:receive fro:0_1_0_2 m:62)
+          (status closed pt:cancel fla:continue fro:0_1_1_2 m:58)
           (status o pt:execute)
         }.ftrim)
 
@@ -304,26 +292,20 @@ describe 'Flor pcore' do
             concurrence
               cursor tag: 'x2'
                 push l 'a'
-                sequence
-                  sequence
-                    sequence
-                      sequence
-                        sequence
-                          sequence
-                            sequence
-                                stall _
+                stall _
               sequence
                 _skip 1
                 push l 'b'
                 continue 0 ref: 'x2'
                 push l 'c'
                 break 1 ref: 'x2'
+                2
           },
           archive: true)
 
         expect(r['point']).to eq('terminated')
-        expect(r['vars']['l']).to eq(%w[ a b c ])
-#        expect(r['payload']['ret']).to eq(1)
+        expect(r['vars']['l']).to eq(%w[ a b c a ])
+        expect(r['payload']['ret']).to eq(1)
 
         cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
 
@@ -333,10 +315,10 @@ describe 'Flor pcore' do
         expect(
           F.to_s(cursor, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_1_0 m:105)
-          (status closed pt:cancel fla:break fro:0_1_1_4 m:96)
-          (status o pt:receive fro:0_1_0_2 m:91)
-          (status closed pt:cancel fla:continue fro:0_1_1_2 m:59)
+          (status ended pt:receive fro:0_1_0 m:98)
+          (status closed pt:cancel fla:break fro:0_1_1_4 m:92)
+          (status o pt:receive fro:0_1_0_2 m:62)
+          (status closed pt:cancel fla:continue fro:0_1_1_2 m:58)
           (status o pt:execute)
         }.ftrim)
       end
@@ -349,21 +331,14 @@ describe 'Flor pcore' do
             concurrence
               cursor tag: 'x3'
                 push l 'a'
-                sequence
-                  sequence
-                    sequence
-                      sequence
-                        sequence
-                          sequence
-                            sequence
-                              sequence
-                                stall _
+                stall _
               sequence
                 _skip 1
                 push l 'b'
                 break 0 ref: 'x3'
                 push l 'c'
                 continue 'x' ref: 'x3'
+                2
           },
           archive: true)
 
@@ -379,8 +354,8 @@ describe 'Flor pcore' do
         expect(
           F.to_s(cursor, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_1_0 m:99)
-          (status closed pt:cancel fla:break fro:0_1_1_2 m:60)
+          (status ended pt:receive fro:0_1_0 m:64)
+          (status closed pt:cancel fla:break fro:0_1_1_2 m:58)
           (status o pt:execute)
         }.ftrim)
       end
@@ -393,28 +368,21 @@ describe 'Flor pcore' do
             concurrence
               cursor tag: 'x3'
                 push l 'a'
-                sequence
-                  sequence
-                    sequence
-                      sequence
-                        sequence
-                          sequence ref: 'z'
-                            sequence
-                              sequence
-                                sequence
-                                  stall _
+                sequence ref: 'z'
+                  stall _
               sequence
                 _skip 1
                 push l 'b'
                 break 0 ref: 'x3'
                 push l 'c'
                 move 'x3' to: 'z'
+                2
           },
           archive: true)
 
         expect(r['point']).to eq('terminated')
         expect(r['vars']['l']).to eq(%w[ a b c ])
-        #expect(r['payload']['ret']).to eq(nil)
+        expect(r['payload']['ret']).to eq(0)
 
         cursor = @executor.archive.values.find { |n| n['heap'] == 'cursor' }
 
@@ -424,8 +392,8 @@ describe 'Flor pcore' do
         expect(
           F.to_s(cursor, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_1_0 m:109)
-          (status closed pt:cancel fla:break fro:0_1_1_2 m:61)
+          (status ended pt:receive fro:0_1_0 m:75)
+          (status closed pt:cancel fla:break fro:0_1_1_2 m:65)
           (status o pt:execute)
         }.ftrim)
       end

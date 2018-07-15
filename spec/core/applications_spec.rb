@@ -47,22 +47,18 @@ describe 'Flor core' do
           .join("\n")
       ).to eq(%w[
         execute:0:
-        execute:0_0:
-        execute:0_0_0:
-        receive:0_0:
-        execute:0_0_1:
-        receive:0_0:
-        receive:0:
         execute:0_1:
-        execute:0_1_0:
-        execute:0_1_0_0:
-        receive:0_1_0:
-        execute:0_1_0_1:
-        receive:0_1_0:
-        entered:0_1:xyz
-        receive:0_1:
         receive:0:
-        left:0_1:xyz
+        execute:0_2:
+        execute:0_2_0:
+        execute:0_2_0_0:
+        receive:0_2_0:
+        execute:0_2_0_1:
+        receive:0_2_0:
+        entered:0_2:xyz
+        receive:0_2:
+        receive:0:
+        left:0_2:xyz
         receive::
         terminated::
       ].join("\n"))

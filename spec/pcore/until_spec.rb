@@ -271,20 +271,16 @@ describe 'Flor procedures' do
           %q{
             concurrence
               until tag: 'x0'
-                sequence
-                  sequence
-                    sequence
-                      sequence
-                        sequence
-                          stall _
+                stall _
               sequence
+                _skip 4
                 break 0 ref: 'x0'
                 break 1 ref: 'x0'
           },
           archive: true)
 
         expect(r['point']).to eq('terminated')
-        #expect(r['payload']['ret']).to eq(1)
+        expect(r['payload']['ret']).to eq(0)
 
         expect(
           @executor.journal.select { |m| m['point'] == 'receive' }.size
@@ -299,9 +295,8 @@ describe 'Flor procedures' do
         expect(
           F.to_s(unt, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_0 m:57)
-          (status closed pt:cancel fla:break fro:0_1_1 m:55)
-          (status closed pt:cancel fla:break fro:0_1_0 m:28)
+          (status ended pt:receive fro:0_0 m:40)
+          (status closed pt:cancel fla:break fro:0_1_1 m:34)
           (status o pt:execute)
         }.ftrim)
       end
@@ -314,18 +309,8 @@ describe 'Flor procedures' do
             concurrence
               until false tag: 'x0'
                 push l 'a'
-                sequence
-                  sequence
-                    sequence
-                      sequence
-                        sequence
-                          sequence
-                            sequence
-                              sequence
-                                sequence
-                                  stall _
+                stall _
               sequence
-                _skip 7
                 push l 'b'
                 continue 0 ref: 'x0'
                 push l 'c'
@@ -335,7 +320,7 @@ describe 'Flor procedures' do
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(nil)
-        expect(r['vars']['l']).to eq(%w[ a b c ])
+        expect(r['vars']['l']).to eq(%w[ b a c a ])
 
         unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
 
@@ -345,9 +330,10 @@ describe 'Flor procedures' do
         expect(
           F.to_s(unt, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_1_0 m:112)
-          (status closed pt:cancel fla:break fro:0_1_1_4 m:106)
-          (status closed pt:cancel fla:continue fro:0_1_1_2 m:69)
+          (status ended pt:receive fro:0_1_0 m:95)
+          (status closed pt:cancel fla:break fro:0_1_1_3 m:90)
+          (status o pt:receive fro:0_1_0_3 m:58)
+          (status closed pt:cancel fla:continue fro:0_1_1_1 m:54)
           (status o pt:execute)
         }.ftrim)
       end
@@ -360,16 +346,7 @@ describe 'Flor procedures' do
             concurrence
               until false tag: 'x0'
                 push l 'a'
-                sequence
-                  sequence
-                    sequence
-                      sequence
-                        sequence
-                          sequence
-                            sequence
-                              sequence
-                                sequence
-                                  stall _
+                stall _
               sequence
                 _skip 3
                 push l 'b'
@@ -380,7 +357,7 @@ describe 'Flor procedures' do
           archive: true)
 
         expect(r['point']).to eq('terminated')
-        #expect(r['payload']['ret']).to eq(0) # concurrence takes 1st reply
+        expect(r['payload']['ret']).to eq(0)
         expect(r['vars']['l']).to eq(%w[ a b c ])
 
         unt = @executor.archive.values.find { |n| n['heap'] == 'until' }
@@ -391,8 +368,8 @@ describe 'Flor procedures' do
         expect(
           F.to_s(unt, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_1_0 m:107)
-          (status closed pt:cancel fla:break fro:0_1_1_2 m:65)
+          (status ended pt:receive fro:0_1_0 m:68)
+          (status closed pt:cancel fla:break fro:0_1_1_2 m:62)
           (status o pt:execute)
         }.ftrim)
       end

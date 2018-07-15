@@ -83,7 +83,7 @@ describe 'Flor procedures' do
       expect(m['payload']['l']).to eq([ 'c', 'cancel:0_0', 2 ])
 
       expect(m['cause'].size).to eq(1)
-      expect(m['cause'][0]['m']).to eq(16)
+      expect(m['cause'][0]['m']).to eq(20)
       expect(m['cause'][0]['nid']).to eq('0_0')
       expect(m['cause'][0]['type']).to eq(nil)
     end

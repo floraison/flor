@@ -85,7 +85,7 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['vars']['a']).to eq(2)
 
-      expect(@executor.journal.size).to eq(17)
+      expect(@executor.journal.size).to eq(21)
     end
   end
 end
