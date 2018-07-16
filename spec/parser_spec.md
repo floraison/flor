@@ -1458,6 +1458,23 @@ parses to
 ## dollar
 
 ```flor
+  '$(f.a)'
+  "$(f.b)"
+  "$(f.c)-$(f.d)"
+  "$(1 + 2 + 3)-four"
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ '_sqs', '$(f.a)', 1 ],
+    [ '_dqs', '$(f.b)', 2 ],
+    [ '_dqs', '$(f.c)-$(f.d)', 3 ],
+    [ '_dqs', '$(1 + 2 + 3)-four', 4 ]
+  ], 0 ]
+```
+---
+
+```flor
   sequence
     f.a
     "$(f.a)"
