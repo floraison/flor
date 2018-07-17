@@ -19,7 +19,7 @@ class Flor::Pro::DoubleQuoteString < Flor::Procedure
 
     case result
     when String then result
-    else JSON.stringify(result)
+    else JSON.dump(result)
     end
   end
 end

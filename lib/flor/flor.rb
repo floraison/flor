@@ -117,13 +117,17 @@ module Flor
       path || '.'
     end
 
+    def is_message?(o)
+
+      o.is_a?(Hash) &&
+      o['point'].is_a?(String) &&
+      o.keys.all? { |k| k.is_a?(String) }
+    end
+
     def is_array_of_messages?(o)
 
       o.is_a?(Array) &&
-      o.all? { |e|
-        e.is_a?(Hash) &&
-        e['point'].is_a?(String) &&
-        e.keys.all? { |k| k.is_a?(String) } }
+      o.all? { |e| is_message?(o) }
     end
 
     def h_fetch(h, *keys)

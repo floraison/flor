@@ -89,6 +89,7 @@ class Flor::Node
 
   def cnodes; @node['cnodes']; end
   def cnodes_any?; cnodes && cnodes.any?; end
+  def cnodes_empty?; cnodes.nil? || cnodes.empty?; end
 
   def payload
     @message_payload ||= Payload.new(self, :message)

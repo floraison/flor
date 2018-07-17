@@ -235,8 +235,10 @@ module Flor
       _c = colours(opts)
 
       t = n['tree'] || Node.new(executor, n, nil).lookup_tree(n['nid'])
-      t = Flor.to_d(t, compact: true) if t
-      t = Flor.truncate_string(t, 42);
+      if t
+        t = Flor.to_d(t, compact: true)
+        t = Flor.truncate_string(t, 42)
+      end
 
       h = {}
       %w[ parent cnid noreply dbg ].each do |k|
