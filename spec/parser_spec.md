@@ -1493,6 +1493,7 @@ parses to
   ], 1 ]
 ```
 ---
+
 ```flor
   "abc$(
     d.0
@@ -1507,6 +1508,51 @@ parses to
   ], 1 ]
 ```
 ---
+
+```flor
+  "abc$( d.0 | u | r | m/xx/ || 'x )ef\"'g"
+```
+parses to
+```ruby
+  [ '_dqs', [
+    [ '_sqs', 'abc', 1 ],
+    [ '_dol', [
+      [  '_ref', [ [ '_sqs', 'd', 1 ], [ '_num', 0, 1 ] ], 1 ],
+      [  '_dpipe', 'u', 1 ],
+      [  '_dpipe', 'r', 1 ],
+      [  '_dpipe', 'm/xx/', 1 ],
+      [  '_dor', "'x", 1 ]
+    ], 1 ],
+    [ '_sqs', 'ef"\'g', 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  "abc$(
+    d.0
+      | u
+      | r
+      | m/xx/
+      || 'x
+   )ef\"'g"
+```
+parses to
+```ruby
+  [ '_dqs', [
+    [ '_sqs', 'abc', 1 ],
+    [ '_dol', [
+      [  '_ref', [ [ '_sqs', 'd', 2 ], [ '_num', 0, 2 ] ], 2 ],
+      [  '_dpipe', 'u', 3 ],
+      [  '_dpipe', 'r', 4 ],
+      [  '_dpipe', 'm/xx/', 5 ],
+      [  '_dor', "'x", 6 ]
+    ], 1 ],
+    [ '_sqs', 'ef"\'g', 7 ]
+  ], 1 ]
+```
+---
+
 ```flor
   '$(f.a)'
   "$(f.b)"

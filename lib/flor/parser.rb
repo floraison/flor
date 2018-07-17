@@ -46,6 +46,7 @@ module Flor
     def comma(i); str(nil, i, ','); end
     def dquote(i); str(nil, i, '"'); end
     def dollar(i); str(nil, i, '$'); end
+    def pipe12(i); rex(:pipe12, i, /\|{1,2}/); end
 
     def pstart(i); str(nil, i, '('); end
     def pend(i); str(nil, i, ')'); end
@@ -105,16 +106,30 @@ module Flor
       }x)
     end
 
-    def dpar(i); seq(nil, i, :dollar, :par); end
+    def npipe(i); rex(:npipe, i, /[^|)]+/); end
+
+    def dpipe(i)
+
+      seq(:dpipe, i, :eol, :ws_star, :pipe12, :eol, :ws_star, :npipe)
+    end
+
+    def dpar(i)
+
+      seq(
+        :dpar, i,
+        :dollar, :pstart, :eol, :ws_star,
+        :node,
+        :dpipe, '*',
+        :eol, :ws_star, :pend)
+    end
+
     def dpar_or_dqsc(i); alt(nil, i, :dpar, :dqsc); end
 
     def dqstring(i)
-
       seq(:dqstring, i, :dquote, :dpar_or_dqsc, '*', :dquote)
     end
 
     def sqstring(i)
-
       rex(:sqstring, i, %r{
         '(
           \\['\\\/bfnrt] |
@@ -236,6 +251,11 @@ module Flor
       Nod.new(t.lookup(:node), nil).to_a
     end
 
+    def rewrite_node(t)
+
+      Nod.new(t, nil).to_a
+    end
+
     def rewrite_ref(t)
 
 #puts "-" * 80
@@ -319,6 +339,25 @@ module Flor
     end
 
     def rewrite_dqsc(t); [ '_sqs', restring(t.string), ln(t) ]; end
+
+    def rewrite_dpipe(t)
+
+      n = (t.lookup(:pipe12).string == '|') ? '_dpipe' : '_dor'
+      s = t.lookup(:npipe).string.strip
+
+      [ n, s, ln(t) ]
+    end
+
+    def rewrite_dpar(t)
+
+      cn = t.subgather(nil).collect { |tt| rewrite(tt) }
+
+      if cn.size == 1
+        cn[0]
+      else
+        [ '_dol', t.subgather(nil).collect { |tt| rewrite(tt) }, ln(t) ]
+      end
+    end
 
     def rewrite_dqstring(t)
 
