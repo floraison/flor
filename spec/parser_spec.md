@@ -1510,6 +1510,19 @@ parses to
 ---
 
 ```flor
+  "abc$(nid)efg"
+```
+parses to
+```ruby
+  [ '_dqs', [
+    [ '_sqs', 'abc', 1 ],
+    [ '_dvar', 'nid', 1 ],
+    [ '_sqs', 'efg', 1 ]
+  ], 1 ]
+```
+---
+
+```flor
   "abc$( d.0 | u | r | m/xx/ || 'x )ef\"'g"
 ```
 parses to
