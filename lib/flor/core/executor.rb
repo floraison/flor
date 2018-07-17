@@ -193,7 +193,7 @@ module Flor
         #
         # tag: et al
 
-        node['tree'] = message['tree'] = t = [ '_dqs', tree[0], tree[2] ]
+        node['tree'] = message['tree'] = t = [ '_sqs', tree[0], tree[2] ]
 
         node['heat0'] = t[0]
         node['heat'] = h = n.deref(t[0])
