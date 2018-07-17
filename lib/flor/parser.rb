@@ -354,13 +354,7 @@ module Flor
 
     def rewrite_dpar(t)
 
-      cn = t.subgather(nil).collect { |tt| rewrite(tt) }
-
-      if cn.size == 1
-        cn[0]
-      else
-        [ '_dol', t.subgather(nil).collect { |tt| rewrite(tt) }, ln(t) ]
-      end
+      [ '_dol', t.subgather(nil).collect { |tt| rewrite(tt) }, ln(t) ]
     end
 
     def rewrite_dqstring(t)
