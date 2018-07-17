@@ -131,8 +131,8 @@ describe 'Flor core' do
           sequence
             define sub i
               push f.l
-                #val $(nid)
-                [ i, "$(nid)" ]
+                #val $(node.nid)
+                [ i, node.nid ]
               + i 1
             sub 0
             sub 1

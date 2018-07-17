@@ -49,17 +49,17 @@ describe 'Flor core' do
       expect(r['payload']['l']).to eq([ %w[ car ], %w[ car ] ])
     end
 
-    it "substitutes $(node)" do
+    it "substitutes $(node) (not really useful)" do
 
       r = @executor.launch(
         %q{
-          push f.l "$(node.nid)"
-          push f.l "$(node.heat0)"
+          push f.l "nid:$(node.nid)"
+          push f.l "heat0:$(node.heat0)"
         },
         payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq(%w[ 0_0_1 _dqs ])
+      expect(r['payload']['l']).to eq(%w[ nid:0_0_1_1_0 heat0:_ref ])
     end
 
     it "indexes arrays" do
@@ -73,7 +73,7 @@ describe 'Flor core' do
         payload: { 'a' => %w[ a b c d e f ], 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ 'b', %w[ b c ], %w[ a c e ] ])
+      expect(r['payload']['l']).to eq([ 'b', '["b","c"]', '["a","c","e"]' ])
     end
   end
 end

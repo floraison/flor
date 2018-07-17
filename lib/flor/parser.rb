@@ -113,16 +113,12 @@ module Flor
       seq(:dpipe, i, :eol, :ws_star, :pipe12, :eol, :ws_star, :npipe)
     end
 
-    def dvar(i); rex(:dvar, i, /nid/); end # only "nid" for now
-    def dvar_or_node(i); alt(nil, i, :dvar, :node); end
-
     def dpar(i)
 
       seq(
         :dpar, i,
         :dollar, :pstart, :eol, :ws_star,
-        :dvar_or_node,
-        :dpipe, '*',
+        :node, :dpipe, '*',
         :eol, :ws_star, :pend)
     end
 
@@ -342,7 +338,6 @@ module Flor
     end
 
     def rewrite_dqsc(t); [ '_sqs', restring(t.string), ln(t) ]; end
-    def rewrite_dvar(t); [ '_dvar', t.string, ln(t) ]; end
 
     def rewrite_dpipe(t)
 

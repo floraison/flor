@@ -233,7 +233,7 @@ describe 'Flor core' do
         payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq(%w[ 0_0_1 0_1_1 _ref _dqs ])
+      expect(r['payload']['l']).to eq(%w[ 0_0_1 0_1_1_0_0 _ref _ref ])
     end
   end
 end

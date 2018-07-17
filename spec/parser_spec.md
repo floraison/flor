@@ -1510,13 +1510,15 @@ parses to
 ---
 
 ```flor
-  "abc$(nid)efg"
+  "abc$(node.nid)efg"
 ```
 parses to
 ```ruby
   [ '_dqs', [
     [ '_sqs', 'abc', 1 ],
-    [ '_dol', [ [ '_dvar', 'nid', 1 ] ], 1 ],
+    [ '_dol', [
+      [ '_ref', [ [ '_sqs', 'node', 1 ], [ '_sqs', 'nid', 1 ] ], 1 ]
+    ], 1 ],
     [ '_sqs', 'efg', 1 ]
   ], 1 ]
 ```
