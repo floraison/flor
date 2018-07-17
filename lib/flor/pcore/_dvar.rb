@@ -10,7 +10,7 @@ class Flor::Pro::DoubleQuoteVar < Flor::Procedure
 
     payload['ret'] =
       case tree[1]
-      when 'nid' then parent_node['nid']
+      when 'nid' then parent_node['parent']
       else ''
       end
 
