@@ -1403,6 +1403,30 @@ parses to
 ---
 
 ```flor
+  sequence timeout: (
+    + 7 8 "h"
+  )
+    a
+    b
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ '_att', [
+      [ 'timeout', [], 1 ],
+      [ '+', [
+        [ '_num', 7, 2 ],
+        [ '_num', 8, 2 ],
+        [ '_sqs', 'h', 2 ]
+      ], 2 ],
+    ], 1 ],
+    [ 'a', [], 4 ],
+    [ 'b', [], 5 ]
+  ], 1 ]
+```
+---
+
+```flor
   (sleep '3h') timeout: '2h'
 ```
 parses to
@@ -1466,6 +1490,20 @@ parses to
     [ '_sqs', 'abc', 1 ],
     [ '_ref', [ [ '_sqs', 'd', 1 ], [ '_num', 0, 1 ] ], 1 ],
     [ '_sqs', 'ef"\'g', 1 ]
+  ], 1 ]
+```
+---
+```flor
+  "abc$(
+    d.0
+  )ef\"'g"
+```
+parses to
+```ruby
+  [ '_dqs', [
+    [ '_sqs', 'abc', 1 ],
+    [ '_ref', [ [ '_sqs', 'd', 2 ], [ '_num', 0, 2 ] ], 2 ],
+    [ '_sqs', 'ef"\'g', 3 ]
   ], 1 ]
 ```
 ---

@@ -158,7 +158,9 @@ module Flor
     def obj(i); eseq(:obj, i, :pbstart, :ent_qmark, :coll_sep, :pbend); end
     def arr(i); eseq(:arr, i, :sbstart, :exp_qmark, :coll_sep, :sbend); end
 
-    def par(i); seq(:par, i, :pstart, :eol, :ws_star, :node, :eol, :pend); end
+    def par(i)
+      seq(:par, i, :pstart, :eol, :ws_star, :node, :eol, :ws_star, :pend)
+    end
 
     def val(i)
       altg(:val, i,
