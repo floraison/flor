@@ -44,6 +44,8 @@ module Flor
     def colon(i); str(nil, i, ':'); end
     def semicolon(i); str(nil, i, ';'); end
     def comma(i); str(nil, i, ','); end
+    def dquote(i); str(nil, i, '"'); end
+    def dollar(i); str(nil, i, '$'); end
 
     def pstart(i); str(nil, i, '('); end
     def pend(i); str(nil, i, ')'); end
@@ -91,15 +93,24 @@ module Flor
       #
     def reference(i); seq(:ref, i, :rf_symbol, :rf_index, '*'); end
 
-    def dqstring(i)
+    def dqsc(i)
 
-      rex(:dqstring, i, %r{
-        "(
+      rex(:dqsc, i, %r{
+        (
           \\["\\\/bfnrt] |
           \\u[0-9a-fA-F]{4} |
-          [^"\\\b\f\n\r\t]
-        )*"
+          \$(?!\() |
+          [^\$"\\\b\f\n\r\t]
+        )+
       }x)
+    end
+
+    def dpar(i); seq(nil, i, :dollar, :par); end
+    def dpar_or_dqsc(i); alt(nil, i, :dpar, :dqsc); end
+
+    def dqstring(i)
+
+      seq(:dqstring, i, :dquote, :dpar_or_dqsc, '*', :dquote)
     end
 
     def sqstring(i)
@@ -305,7 +316,19 @@ module Flor
       }
     end
 
-    def rewrite_dqstring(t); [ '_dqs', restring(t.string[1..-2]), ln(t) ]; end
+    def rewrite_dqsc(t); [ '_sqs', restring(t.string), ln(t) ]; end
+
+    def rewrite_dqstring(t)
+
+      cn = t.subgather(nil).collect { |tt| rewrite(tt) }
+
+      if cn.size == 1 && cn[0][0] == '_sqs'
+        cn[0]
+      else
+        [ '_dqs', cn, ln(t) ]
+      end
+    end
+
     def rewrite_sqstring(t); [ '_sqs', restring(t.string[1..-2]), ln(t) ]; end
     def rewrite_rxstring(t); [ '_rxs', t.string, ln(t) ]; end
 
