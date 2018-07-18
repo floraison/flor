@@ -46,7 +46,7 @@ module Flor
     def comma(i); str(nil, i, ','); end
     def dquote(i); str(nil, i, '"'); end
     def dollar(i); str(nil, i, '$'); end
-    def pipe12(i); rex(:pipe12, i, /\|{1,2}/); end
+    def pipe(i); str(nil, i, '|'); end
 
     def pstart(i); str(nil, i, '('); end
     def pend(i); str(nil, i, ')'); end
@@ -106,11 +106,16 @@ module Flor
       }x)
     end
 
-    def npipe(i); rex(:npipe, i, /[^|)]+/); end
+    def dpips(i); rex(:dpips, i, /[^|)]+/); end
 
     def dpipe(i)
-
-      seq(:dpipe, i, :eol, :ws_star, :pipe12, :eol, :ws_star, :npipe)
+      seq(:dpipe, i, :eol, :ws_star, :pipe, :eol, :dpips)
+    end
+    def dor(i)
+      seq(:dor, i, :eol, :ws_star, :pipe, :pipe, :eol, :ws_star, :node)
+    end
+    def dor_or_dpipe(i)
+      alt(nil, i, :dor, :dpipe)
     end
 
     def dpar(i)
@@ -118,7 +123,7 @@ module Flor
       seq(
         :dpar, i,
         :dollar, :pstart, :eol, :ws_star,
-        :node, :dpipe, '*',
+        :node, :dor_or_dpipe, '*',
         :eol, :ws_star, :pend)
     end
 
@@ -341,10 +346,12 @@ module Flor
 
     def rewrite_dpipe(t)
 
-      n = (t.lookup(:pipe12).string == '|') ? '_dpipe' : '_dor'
-      s = t.lookup(:npipe).string.strip
+      [ '_dpipe', t.lookup(:dpips).string.strip, ln(t) ]
+    end
 
-      [ n, s, ln(t) ]
+    def rewrite_dor(t)
+
+      [ '_dor', [ rewrite(t.lookup(:node)) ], ln(t) ]
     end
 
     def rewrite_dpar(t)
