@@ -11,8 +11,19 @@ class Flor::Pro::Dol < Flor::Procedure
       'point' => 'receive',
       'nid' => nid,
       'from' => Flor.child_nid(nid, 1),
-      'payload' => @message['payload'].merge('ret' => '')
-    } ]
+      'payload' => @message['payload'].merge('ret' => '') } ]
   end
+
+#  def receive
+#
+#    determine_fcid_and_ncid
+#
+#p Flor.child_nid(nid, @ncid)
+#    #ntree = lookup_tree(
+#
+#pp @message
+#p [ @fcid, @ncid ]
+#    super
+#  end
 end
 
