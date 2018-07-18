@@ -55,35 +55,73 @@ describe 'Flor pcore' do
       r = @executor.launch(
         %q{
           loop
-            break _ if node.nid == "0_0_0_0-3"
+            break _ if node.nid == '0_0_0_0-3'
         })
 
       expect(
         @executor.journal
-          .collect { |m| m['nid'] }
-          .compact
-          .uniq
+          .collect { |m|
+            [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':') }
           .join("\n")
       ).to eq(%w[
-        0
-        0_0
-        0_0_0
-        0_0_0_0
-        0_0_0_1
-        0_0-1
-        0_0_0-1
-        0_0_0_0-1
-        0_0_0_1-1
-        0_0-2
-        0_0_0-2
-        0_0_0_0-2
-        0_0_0_1-2
-        0_0-3
-        0_0_0-3
-        0_0_0_0-3
-        0_0_0_1-3
-        0_0_1-3
-        0_0_1_0-3
+        execute:0:
+        execute:0_0:
+        execute:0_0_0:
+        execute:0_0_0_0:
+        execute:0_0_0_0_0:
+        receive:0_0_0_0:
+        execute:0_0_0_0_1:
+        receive:0_0_0_0:
+        receive:0_0_0:
+        execute:0_0_0_1:
+        receive:0_0_0:
+        receive:0_0:
+        receive:0:
+        execute:0_0-1:
+        execute:0_0_0-1:
+        execute:0_0_0_0-1:
+        execute:0_0_0_0_0-1:
+        receive:0_0_0_0-1:
+        execute:0_0_0_0_1-1:
+        receive:0_0_0_0-1:
+        receive:0_0_0-1:
+        execute:0_0_0_1-1:
+        receive:0_0_0-1:
+        receive:0_0-1:
+        receive:0:
+        execute:0_0-2:
+        execute:0_0_0-2:
+        execute:0_0_0_0-2:
+        execute:0_0_0_0_0-2:
+        receive:0_0_0_0-2:
+        execute:0_0_0_0_1-2:
+        receive:0_0_0_0-2:
+        receive:0_0_0-2:
+        execute:0_0_0_1-2:
+        receive:0_0_0-2:
+        receive:0_0-2:
+        receive:0:
+        execute:0_0-3:
+        execute:0_0_0-3:
+        execute:0_0_0_0-3:
+        execute:0_0_0_0_0-3:
+        receive:0_0_0_0-3:
+        execute:0_0_0_0_1-3:
+        receive:0_0_0_0-3:
+        receive:0_0_0-3:
+        execute:0_0_0_1-3:
+        receive:0_0_0-3:
+        receive:0_0-3:
+        execute:0_0_1-3:
+        execute:0_0_1_0-3:
+        receive:0_0_1-3:
+        cancel:0:
+        cancel:0_0-3:
+        cancel:0_0_1-3:
+        receive:0_0-3:
+        receive:0:
+        receive::
+        terminated::
       ].join("\n"))
     end
 
@@ -92,7 +130,7 @@ describe 'Flor pcore' do
       r = @executor.launch(
         %q{
           loop 'xyz'
-            break _ if node.nid == "0_1_0_0-2"
+            break _ if node.nid == '0_1_0_0-2'
             #fail "hard"
         })
 
@@ -113,6 +151,10 @@ describe 'Flor pcore' do
         execute:0_1:
         execute:0_1_0:
         execute:0_1_0_0:
+        execute:0_1_0_0_0:
+        receive:0_1_0_0:
+        execute:0_1_0_0_1:
+        receive:0_1_0_0:
         receive:0_1_0:
         execute:0_1_0_1:
         receive:0_1_0:
@@ -121,6 +163,10 @@ describe 'Flor pcore' do
         execute:0_1-1:
         execute:0_1_0-1:
         execute:0_1_0_0-1:
+        execute:0_1_0_0_0-1:
+        receive:0_1_0_0-1:
+        execute:0_1_0_0_1-1:
+        receive:0_1_0_0-1:
         receive:0_1_0-1:
         execute:0_1_0_1-1:
         receive:0_1_0-1:
@@ -129,6 +175,10 @@ describe 'Flor pcore' do
         execute:0_1-2:
         execute:0_1_0-2:
         execute:0_1_0_0-2:
+        execute:0_1_0_0_0-2:
+        receive:0_1_0_0-2:
+        execute:0_1_0_0_1-2:
+        receive:0_1_0_0-2:
         receive:0_1_0-2:
         execute:0_1_0_1-2:
         receive:0_1_0-2:
