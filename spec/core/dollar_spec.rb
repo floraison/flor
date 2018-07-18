@@ -59,7 +59,7 @@ describe 'Flor core' do
         payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq(%w[ nid:0_0_1_1_0 heat0:_ref ])
+      expect(r['payload']['l']).to eq(%w[ nid:0_0_1_1_0_0 heat0:_ref ])
     end
 
     it "indexes arrays" do
@@ -74,6 +74,57 @@ describe 'Flor core' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 'b', '["b","c"]', '["a","c","e"]' ])
+    end
+
+    {
+
+      '$(brown)' => 'fox',
+      '.$(brown).' => '.fox.',
+      '$(brown) $(lazy)' => 'fox dog',
+      '$( "$(l)$(z)" )' => 'lazy',
+      '$( v["$(l)$(z)"] )' => 'dog',
+      '<$(blue)>' => '<>',
+      '$(arr)' => '[1,2,3]',
+      '$(hsh)' => JSON.dump({ 'a' => 'A', 'b' => 'B' }),
+      'a$(arr)z' => 'a[1,2,3]z',
+      'a$(hsh)z' => 'a{"a":"A","b":"B"}z',
+      'a)b' => 'a)b',
+      '$xxx' => '$xxx',
+      'x$xxx' => 'x$xxx',
+      '$(hsh["a"])' => 'A',
+      '^[bct]ar$\"' => '^[bct]ar$"',
+      '$(nada||"$(lazy)")' => 'dog',
+      '$(nada||\'$(lazy)\')' => '$(lazy)',
+
+    }.each do |dqs, ret|
+
+      it "extrapolates \"#{dqs}\" to #{ret.inspect}" do
+
+        vars = {
+          'brown' => 'fox',
+          'lazy' => 'dog',
+          'quick' => 'jump',
+          'l' => 'la',
+          'z' => 'zy',
+          'black' => 'PuG',
+          'func' => 'u',
+          'ba' => 'black adder',
+          'bs' => 'bLACK shEEp',
+          'msg' => '"hello world"',
+          'msg1' => 'hello "le monde"',
+          'arr' => [ 1, 2, 3 ],
+          'hsh' => { 'a' => 'A', 'b' => 'B' },
+          'amount' => 1234 }
+
+        r = @executor.launch(
+          %{
+            "#{dqs}"
+          },
+          vars: vars)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(ret)
+      end
     end
   end
 end

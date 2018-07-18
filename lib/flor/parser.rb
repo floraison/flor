@@ -351,12 +351,19 @@ module Flor
 
     def rewrite_dor(t)
 
-      [ '_dor', [ rewrite(t.lookup(:node)) ], ln(t) ]
+      l = ln(t)
+
+      [ '_dor', [ [ '_dmute', [ rewrite(t.lookup(:node)) ], l ] ], l ]
     end
 
     def rewrite_dpar(t)
 
-      [ '_dol', t.subgather(nil).collect { |tt| rewrite(tt) }, ln(t) ]
+      l = ln(t)
+
+      cn = t.subgather(nil).collect { |tt| rewrite(tt) }
+      cn[0] = [ '_dmute', [ cn[0] ], l ]
+
+      [ '_dol', cn, l ]
     end
 
     def rewrite_dqstring(t)
