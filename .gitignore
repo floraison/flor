@@ -20,6 +20,8 @@ tmp/*.log
 
 Gemfile.lock
 
+pkg/
+
 envs/shell/home/scratch.flo
 envs/shell/home/payload.json
 envs/shell/home/variables.json
