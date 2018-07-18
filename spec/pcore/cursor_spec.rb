@@ -41,10 +41,10 @@ describe 'Flor pcore' do
       r = @executor.launch(
         %q{
           cursor
-            push f.l "$(nid)"
+            push f.l node.nid
             break _
-            push f.l "$(nid)"
-          push f.l "$(nid)"
+            push f.l node.nid
+          push f.l node.nid
         },
         payload: { 'l' => [] })
 
@@ -59,9 +59,9 @@ describe 'Flor pcore' do
       r = @executor.launch(
         %q{
           cursor
-            push f.l "$(nid)"
-            continue _ if "$(nid)" == '0_1_0_0'
-            push f.l "$(nid)"
+            push f.l node.nid
+            continue _ if node.nid == '0_1_0_0'
+            push f.l node.nid
         }, payload: { 'l' => [] })
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
@@ -76,10 +76,10 @@ describe 'Flor pcore' do
         %q{
           cursor
             set outer-continue continue
-            push f.l "$(nid)"
+            push f.l node.nid
             cursor
-              push f.l "$(nid)"
-              outer-continue _ if "$(nid)" == '0_2_1_0_0'
+              push f.l node.nid
+              outer-continue _ if node.nid == '0_2_1_0_0'
         },
         payload: { 'l' => [] })
 
@@ -94,39 +94,93 @@ describe 'Flor pcore' do
       r = @executor.launch(
         %q{
           cursor
-            continue _ if "$(nid)" == '0_0_0_0'
-            continue _ if "$(nid)" == '0_1_0_0-1'
+            continue _ if node.nid == '0_0_0_0'
+            continue _ if node.nid == '0_1_0_0-1'
         })
 
       expect(
         @executor.journal
-          .collect { |m| m['nid'] }.compact.uniq.join("\n")
+          .collect { |m|
+            [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':') }
+          .join("\n")
       ).to eq(%w[
-        0
-        0_0
-        0_0_0
-        0_0_0_0
-        0_0_0_1
-        0_0_1
-        0_0_1_0
-        0_0-1
-        0_0_0-1
-        0_0_0_0-1
-        0_0_0_1-1
-        0_1-1
-        0_1_0-1
-        0_1_0_0-1
-        0_1_0_1-1
-        0_1_1-1
-        0_1_1_0-1
-        0_0-2
-        0_0_0-2
-        0_0_0_0-2
-        0_0_0_1-2
-        0_1-2
-        0_1_0-2
-        0_1_0_0-2
-        0_1_0_1-2
+        execute:0:
+        execute:0_0:
+        execute:0_0_0:
+        execute:0_0_0_0:
+        execute:0_0_0_0_0:
+        receive:0_0_0_0:
+        execute:0_0_0_0_1:
+        receive:0_0_0_0:
+        receive:0_0_0:
+        execute:0_0_0_1:
+        receive:0_0_0:
+        receive:0_0:
+        execute:0_0_1:
+        execute:0_0_1_0:
+        receive:0_0_1:
+        cancel:0:
+        cancel:0_0:
+        cancel:0_0_1:
+        receive:0_0:
+        receive:0:
+        execute:0_0-1:
+        execute:0_0_0-1:
+        execute:0_0_0_0-1:
+        execute:0_0_0_0_0-1:
+        receive:0_0_0_0-1:
+        execute:0_0_0_0_1-1:
+        receive:0_0_0_0-1:
+        receive:0_0_0-1:
+        execute:0_0_0_1-1:
+        receive:0_0_0-1:
+        receive:0_0-1:
+        receive:0:
+        execute:0_1-1:
+        execute:0_1_0-1:
+        execute:0_1_0_0-1:
+        execute:0_1_0_0_0-1:
+        receive:0_1_0_0-1:
+        execute:0_1_0_0_1-1:
+        receive:0_1_0_0-1:
+        receive:0_1_0-1:
+        execute:0_1_0_1-1:
+        receive:0_1_0-1:
+        receive:0_1-1:
+        execute:0_1_1-1:
+        execute:0_1_1_0-1:
+        receive:0_1_1-1:
+        cancel:0:
+        cancel:0_1-1:
+        cancel:0_1_1-1:
+        receive:0_1-1:
+        receive:0:
+        execute:0_0-2:
+        execute:0_0_0-2:
+        execute:0_0_0_0-2:
+        execute:0_0_0_0_0-2:
+        receive:0_0_0_0-2:
+        execute:0_0_0_0_1-2:
+        receive:0_0_0_0-2:
+        receive:0_0_0-2:
+        execute:0_0_0_1-2:
+        receive:0_0_0-2:
+        receive:0_0-2:
+        receive:0:
+        execute:0_1-2:
+        execute:0_1_0-2:
+        execute:0_1_0_0-2:
+        execute:0_1_0_0_0-2:
+        receive:0_1_0_0-2:
+        execute:0_1_0_0_1-2:
+        receive:0_1_0_0-2:
+        receive:0_1_0-2:
+        execute:0_1_0_1-2:
+        receive:0_1_0-2:
+        receive:0_1-2:
+        receive:0:
+        receive::
+        terminated::
       ].join("\n"))
     end
 
