@@ -22,8 +22,8 @@ describe 'Flor pcore' do
       r = @executor.launch(
         %q{
           loop
-            push f.l "$(nid)"
-            break _ if "$(nid)" == "0_1_0_0-2"
+            push f.l node.nid
+            break _ if node.nid == "0_1_0_0-2"
         },
         payload: { 'l' => [] })
 
@@ -38,9 +38,9 @@ describe 'Flor pcore' do
       r = @executor.launch(
         %q{
           loop
-            continue _ if "$(nid)" == "0_0_0_0-1"
-            push f.l "$(nid)"
-            break _ if "$(nid)" == "0_2_0_0-2"
+            continue _ if node.nid == "0_0_0_0-1"
+            push f.l node.nid
+            break _ if node.nid == "0_2_0_0-2"
         },
         payload: { 'l' => [] })
 
@@ -55,7 +55,7 @@ describe 'Flor pcore' do
       r = @executor.launch(
         %q{
           loop
-            break _ if "$(nid)" == "0_0_0_0-3"
+            break _ if node.nid == "0_0_0_0-3"
         })
 
       expect(
@@ -92,7 +92,7 @@ describe 'Flor pcore' do
       r = @executor.launch(
         %q{
           loop 'xyz'
-            break _ if "$(nid)" == "0_1_0_0-2"
+            break _ if node.nid == "0_1_0_0-2"
             #fail "hard"
         })
 

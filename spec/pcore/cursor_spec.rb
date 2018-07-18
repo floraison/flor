@@ -190,7 +190,7 @@ describe 'Flor pcore' do
         %q{
           cursor
             push f.l 'a' tag: 'a'
-            break _ if "$(nid)" == '0_1_0_0-1'
+            break _ if node.nid == '0_1_0_0-1'
             move to: 'a'
         },
         payload: { 'l' => [] })
