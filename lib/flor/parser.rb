@@ -358,6 +358,8 @@ module Flor
 
       if cn.size == 1 && cn[0][0] == '_sqs'
         cn[0]
+      elsif cn.size == 0
+        [ '_sqs', '', ln(t) ]
       else
         [ '_dqs', cn, ln(t) ]
       end

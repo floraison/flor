@@ -46,7 +46,9 @@ class Flor::Pro::Arith < Flor::Procedure
       if @node['rets'].compact.empty?
         DEFAULTS[sign]
       elsif sign == :+
-        @node['rets'].reduce { |r, e| r + (r.is_a?(String) ? e.to_s : e) }
+        @node['rets'].reduce { |r, e|
+          # TODO use djan instead of #to_s ?
+          r + (r.is_a?(String) ? e.to_s : e) }
       else
         @node['rets'].reduce(&sign)
       end
