@@ -11,14 +11,16 @@ class Flor::Pro::Ref < Flor::Procedure
   def receive_last
 
     rs = @node['rets']
+    rs = rs[0] if rs.size == 1 && rs[0].match(/[.\[]/)
+    pa = Dense::Path.make(rs).to_a
 
     payload['ret'] =
       if tree[0] == '_rep'
-        rs
-      elsif rs.size == 2 && rs[1] == 'ret' && rs[0].match(/\Af(ld|ield)?\z/)
+        pa
+      elsif pa.size == 2 && pa[1] == 'ret' && pa[0].match(/\Af(ld|ield)?\z/)
         node_payload_ret
       else
-        lookup_value(rs)
+        lookup_value(pa)
       end
 
     super

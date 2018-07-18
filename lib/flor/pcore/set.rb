@@ -145,7 +145,9 @@ class Flor::Pro::Set < Flor::Procedure
     cn = t[1]
       .collect { |ct|
         hd, cn, ln = ct
-        if Flor.is_single_ref_tree?(ct)
+        if hd == '_dqs'
+          [ '_ref', [ ct ], ln ]
+        elsif Flor.is_single_ref_tree?(ct)
           [ '_ref', [ [ '_sqs', hd, ln ] ], ln ]
         else
           ct
