@@ -93,6 +93,8 @@ describe 'Flor core' do
       'x$xxx' => 'x$xxx',
       '$(hsh["a"])' => 'A',
       '^[bct]ar$\"' => '^[bct]ar$"',
+      '$(brown||lazy)' => 'fox',
+      '$(nada||lazy)' => 'dog',
       '$(nada||"$(lazy)")' => 'dog',
       '$(nada||\'$(lazy)\')' => '$(lazy)',
 

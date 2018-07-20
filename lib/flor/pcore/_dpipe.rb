@@ -2,12 +2,11 @@
 class Flor::Pro::Dpipe < Flor::Procedure
 
   name '_dpipe'
+end
 
-  def execute
 
-#p payload['ret']
-#pp tree
-    super
-  end
+class Flor::Pro::Dor < Flor::Procedure
+
+  name '_dor'
 end
 
