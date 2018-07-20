@@ -1,5 +1,5 @@
 
-class Flor::Pro::Logo < Flor::Procedure
+class Flor::Pro::Andor < Flor::Procedure
   #
   # When `and` evaluates the children and returns false as soon
   # as one of returns a falsy value. Returns true else.

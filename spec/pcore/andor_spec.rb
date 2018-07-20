@@ -109,7 +109,7 @@ describe 'Flor procedures' do
 #
 #      r = @executor.launch(
 #        %q{
-#          and true or false 2 FIXME
+#          and true or false 2 FIXME TODO
 #        })
 #
 #      expect(r['point']).to eq('terminated')
