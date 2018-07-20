@@ -99,12 +99,14 @@ RSpec::Matchers.define :eqt do |o|
 
   failure_message do |actual|
 
-    so = StringIO.new
-      .tap { |io| PP.pp(o, io, 67) }.string.gsub(/^/, ' ' * 2)
-    sactual = StringIO.new
-      .tap { |io| PP.pp(actual, io, 67) }.string.gsub(/^/, ' ' * 2)
+    #so = StringIO.new
+    #  .tap { |io| PP.pp(o, io, 67) }.string.gsub(/^/, ' ' * 2)
+    #sactual = StringIO.new
+    #  .tap { |io| PP.pp(actual, io, 67) }.string.gsub(/^/, ' ' * 2)
+    so = Flor.tree_to_pp_s(o).gsub(/^/, ' ' * 2)
+    sactual = Flor.tree_to_pp_s(actual).gsub(/^/, ' ' * 2)
 
-    "expected:\n" + so + "\ngot:\n" + sactual
+    "expected:\n" + so + "\n\ngot:\n" + sactual
   end
 end
 
