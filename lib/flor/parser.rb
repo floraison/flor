@@ -3,10 +3,9 @@ module Flor
 
   def self.parse(input, fname=nil, opts={})
 
+#Raabro.pp(Flor::Parser.parse(input, debug: 2), colours: true)
+#Raabro.pp(Flor::Parser.parse(input, debug: 3), colours: true)
     opts = fname if fname.is_a?(Hash) && opts.empty?
-
-    #Raabro.pp(Flor::Parser.parse(input, debug: 2), colours: true)
-    #Raabro.pp(Flor::Parser.parse(input, debug: 3), colours: true)
 
     if r = Flor::Parser.parse(input, opts)
       r << fname if fname
@@ -38,7 +37,8 @@ module Flor
 
     # parsing
 
-    def ws_star(i); rex(nil, i, /[ \t]*/); end
+    def wstar(i); rex(nil, i, /[ \t]*/); end
+
     def retnew(i); rex(nil, i, /[\r\n]*/); end
     def dot(i); str(nil, i, '.'); end
     def colon(i); str(nil, i, ':'); end
@@ -46,7 +46,7 @@ module Flor
     def comma(i); str(nil, i, ','); end
     def dquote(i); str(nil, i, '"'); end
     def dollar(i); str(nil, i, '$'); end
-    def pipe(i); str(nil, i, '|'); end
+    def pipepipe(i); str(nil, i, '||'); end
 
     def pstart(i); str(nil, i, '('); end
     def pend(i); str(nil, i, ')'); end
@@ -95,7 +95,6 @@ module Flor
     def reference(i); seq(:ref, i, :rf_symbol, :rf_index, '*'); end
 
     def dqsc(i)
-
       rex(:dqsc, i, %r{
         (
           \\["\\\/bfnrt] |
@@ -106,25 +105,17 @@ module Flor
       }x)
     end
 
-    def dpips(i); rex(:dpips, i, /[^|)]+/); end
-
-    def dpipe(i)
-      seq(:dpipe, i, :eol, :ws_star, :pipe, :eol, :dpips)
+    def dor_lines(i)
+      seq(:dpar_lines, i, :pipepipe, :eol_wstar, :line, '+')
     end
-    def dor(i)
-      seq(:dor, i, :eol, :ws_star, :pipe, :pipe, :eol, :ws_star, :node)
-    end
-    def dor_or_dpipe(i)
-      alt(nil, i, :dor, :dpipe)
+    def dpar_lines(i)
+      seq(:dpar_lines, i, :eol_wstar, :line, '+')
     end
 
     def dpar(i)
-
       seq(
         :dpar, i,
-        :dollar, :pstart, :eol, :ws_star,
-        :node, :dor_or_dpipe, '*',
-        :eol, :ws_star, :pend)
+        :dollar, :pstart, :dpar_lines, :dor_lines, '?', :eol_wstar, :pend)
     end
 
     def dpar_or_dqsc(i); alt(nil, i, :dpar, :dqsc); end
@@ -144,7 +135,6 @@ module Flor
     end
 
     def rxstring(i)
-
       rex(:rxstring, i, %r{
         /(
           \\[\/bfnrt] |
@@ -156,14 +146,15 @@ module Flor
 
     def comment(i); rex(nil, i, /#[^\r\n]*/); end
 
-    def eol(i); seq(nil, i, :ws_star, :comment, '?', :retnew); end
+    def eol(i); seq(nil, i, :wstar, :comment, '?', :retnew); end
+    def eol_wstar(i); seq(nil, i, :wstar, :comment, '?', :retnew, :wstar); end
     def postval(i); rep(nil, i, :eol, 0); end
 
-    def comma_eol(i); seq(nil, i, :comma, :eol, :ws_star); end
-    def sep(i); alt(nil, i, :comma_eol, :ws_star); end
+    def comma_eol(i); seq(nil, i, :comma, :eol, :wstar); end
+    def sep(i); alt(nil, i, :comma_eol, :wstar); end
 
     def comma_qmark_eol(i); seq(nil, i, :comma, '?', :eol); end
-    def coll_sep(i); alt(nil, i, :comma_qmark_eol, :ws_star); end
+    def coll_sep(i); alt(nil, i, :comma_qmark_eol, :wstar); end
 
     def ent(i)
       seq(:ent, i, :key, :postval, :colon, :postval, :exp, :postval)
@@ -178,7 +169,7 @@ module Flor
     def arr(i); eseq(:arr, i, :sbstart, :exp_qmark, :coll_sep, :sbend); end
 
     def par(i)
-      seq(:par, i, :pstart, :eol, :ws_star, :node, :eol, :ws_star, :pend)
+      seq(:par, i, :pstart, :eol_wstar, :node, :eol_wstar, :pend)
     end
 
     def val(i)
@@ -188,7 +179,7 @@ module Flor
         :arr, :obj,
         :number, :boolean, :null)
     end
-    def val_ws(i); seq(nil, i, :val, :ws_star); end
+    def val_ws(i); seq(nil, i, :val, :wstar); end
 
     # precedence
     #  %w[ or or ], %w[ and and ],
@@ -221,23 +212,24 @@ module Flor
     alias exp eor
 
     def key(i); seq(:key, i, :exp); end
-    def keycol(i); seq(nil, i, :key, :ws_star, :colon, :eol, :ws_star); end
+    def keycol(i); seq(nil, i, :key, :wstar, :colon, :eol_wstar); end
 
     def att(i); seq(:att, i, :sep, :keycol, '?', :exp); end
     def head(i); seq(:head, i, :exp); end
     def indent(i); rex(:indent, i, /[ \t]*/); end
     def node(i); seq(:node, i, :indent, :head, :att, '*'); end
 
-    def linjoin(i); rex(nil, i, /[ \t]*[\\|;][ \t]*/); end
+    #def linjoin(i); rex(nil, i, /[ \t]*[\\|;][ \t]*/); end
+    def linjoin(i); rex(nil, i, /[ \t]*(\\|\|(?!\|)|;)[ \t]*/); end
     def outjnl(i); seq(nil, i, :linjoin, :comment, '?', :retnew); end
-    def outnlj(i); seq(nil, i, :ws_star, :comment, '?', :retnew, :linjoin); end
+    def outnlj(i); seq(nil, i, :wstar, :comment, '?', :retnew, :linjoin); end
     def outdent(i); alt(:outdent, i, :outjnl, :outnlj, :eol); end
 
     def line(i)
       seq(:line, i, :node, '?', :outdent)
     end
     def panode(i)
-      seq(:panode, i, :pstart, :eol, :ws_star, :line, '*', :eol, :pend)
+      seq(:panode, i, :pstart, :eol_wstar, :line, '*', :eol, :pend)
     end
 
     def flor(i); rep(:flor, i, :line, 0); end
@@ -344,26 +336,16 @@ module Flor
 
     def rewrite_dqsc(t); [ '_sqs', restring(t.string), ln(t) ]; end
 
-    def rewrite_dpipe(t)
+    def rewrite_dpar_lines(t)
 
-      [ '_dpipe', t.lookup(:dpips).string.strip, ln(t) ]
-    end
-
-    def rewrite_dor(t)
-
-      l = ln(t)
-
-      [ '_dor', [ [ '_dmute', [ rewrite(t.lookup(:node)) ], l ] ], l ]
+#Raabro.pp(t, colours: true); p t.string
+      [ '_dmute', t.subgather(:node).collect { |ct| rewrite(ct) }, ln(t) ]
     end
 
     def rewrite_dpar(t)
 
-      l = ln(t)
-
-      cn = t.subgather(nil).collect { |tt| rewrite(tt) }
-      cn[0] = [ '_dmute', [ cn[0] ], l ]
-
-      [ '_dol', cn, l ]
+#Raabro.pp(t, colours: true); p t.string
+      [ '_dol', t.subgather(nil).collect { |ct| rewrite(ct) }, ln(t) ]
     end
 
     def rewrite_dqstring(t)

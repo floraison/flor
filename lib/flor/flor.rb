@@ -463,10 +463,11 @@ module Flor
 
     def tree_to_pp_s(t, out=StringIO.new, indent='')
 
-      out.print("#{indent}[ '#{t[0]}', [")
+      out.print("#{indent}[ '#{t[0]}', ")
       if t[1] == []
+        out.print("[]")
       elsif t[1].is_a?(Array)
-        out.print("\n")
+        out.print("[\n")
         t[1].each_with_index do |ct, i|
           tree_to_pp_s(ct, out, indent + '  ')
           if i < t[1].length - 1
@@ -475,10 +476,11 @@ module Flor
             out.print("\n#{indent}")
           end
         end
+        out.print("]")
       else
-        out.print(" #{t[1].inspect} ")
+        out.print(t[1].inspect)
       end
-      out.print("], #{t[2]}")
+      out.print(", #{t[2]}")
       out.print(", '#{t[3]}'") if t[3]
       out.print(" ]")
 
