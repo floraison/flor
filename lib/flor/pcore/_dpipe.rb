@@ -2,11 +2,18 @@
 class Flor::Pro::Dpipe < Flor::Procedure
 
   name '_dpipe'
-end
 
+  def execute
 
-class Flor::Pro::Dor < Flor::Procedure
+    ret = payload['ret']
 
-  name '_dor'
+    payload['ret'] =
+      case tree[1]
+      when 'd' then ret.downcase
+      else ret
+      end
+
+    wrap
+  end
 end
 

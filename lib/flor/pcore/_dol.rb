@@ -13,15 +13,15 @@ class Flor::Pro::Dol < Flor::Procedure
     ntree = lookup_tree(ncnid)
 
     case ntree && ntree[0]
-    when '_dor' then hand_to_dor
-    when '_dpipe' then hand_to_dpipe
+    when '_dor' then hand_to_dor(ntree)
+    #when '_dpipe' then super
     else super
     end
   end
 
   protected
 
-  def hand_to_dor
+  def hand_to_dor(_)
 
     ret = payload['ret']
 
