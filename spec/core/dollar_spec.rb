@@ -101,7 +101,7 @@ describe 'Flor core' do
       '$(nada||\'$(lazy)\')' => '$(lazy)',
 
       # pipe
-      '$(bs|d)' => 'black sheep',
+      '$( bs | downcase _ )' => 'black sheep',
 
     }.each do |dqs, ret|
 
