@@ -102,6 +102,8 @@ describe 'Flor core' do
 
       # pipe
       '$( bs | downcase _ )' => 'black sheep',
+      '$( bs | upcase _ )' => 'black sheep'.upcase,
+      '$( ba | reverse _ )' => 'black adder'.reverse,
 
     }.each do |dqs, ret|
 

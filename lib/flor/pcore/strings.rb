@@ -1,7 +1,9 @@
 
 class Flor::Pro::Strings < Flor::Procedure
 
-  names %w[ downcase uppercase lowercase capitalize ]
+  names %w[
+    downcase lowercase upcase uppercase
+    capitalize ]
 
   # TODO snake_case, CamelCase, etc
 
