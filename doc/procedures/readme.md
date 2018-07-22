@@ -7,6 +7,7 @@
 * [_obj](_obj.md) - "_obj" is the procedure behind objects (maps).
 * [_skip](_skip.md) - Skips x messages, mostly used for testing flor.
 * [all?](all.md) - Returns true if all the elements in a collection return true for the given function.
+* [and, or](andor.md) - When `and` evaluates the children and returns false as soon as one of returns a falsy value. Returns true else. When `or` evaluates the children and returns true as soon as one of them returns a trueish value. Returns false else.
 * [any?](any.md) - Returns `true` if at least one of the member of a collection returns something trueish for the given function. Returns `false` else.
 * [apply](apply.md) - Applies a function.
 * [+, -, *, /, %](arith.md) - The base implementation for + - + / %
@@ -28,11 +29,10 @@
 * [inject](inject.md) - Inject is a simplified version of [reduce](reduce.md).
 * [keys, values](keys.md) - Returns the "keys" or the "values" of an object.
 * [length, size](length.md) - Returns the length of its last collection argument or the length of the incoming f.ret
-* [and, or](logo.md) - When `and` evaluates the children and returns false as soon as one of returns a falsy value. Returns true else. When `or` evaluates the children and returns true as soon as one of them returns a trueish value. Returns false else.
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
 * [map](map.md) - This is the classical "map" procedure. It accepts a collection and a function and yields a new collection.
 * [match](match.md) - "match" can be thought of as a "destructuring [case](case.md)".
-* [matchr, match?](matchr.md) - Matches a string against a regular expression.
+* [matchr, match?, pmatch](matchr.md) - Matches a string against a regular expression.
 * [move](move.md) - Moves a cursor to a given position, a kind of local goto.
 * [noeval](noeval.md) - Immediately replies, children are not evaluated
 * [noret](noret.md) - executes its children, but doesn't alter the received f.ret
@@ -74,9 +74,10 @@
     * [Flor::Pro::DoReturn](https://github.com/floraison/flor/blob/master/lib/flor/pcore/do_return.rb) : [do-return](do_return.md)
     * [Flor::Pro::DoTrap](https://github.com/floraison/flor/blob/master/lib/flor/punit/do_trap.rb) : [do-trap](do_trap.md)
     * [Flor::Pro::On](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on.rb) : [on](on.md)
+  * [Flor::Pro::Andor](https://github.com/floraison/flor/blob/master/lib/flor/pcore/andor.rb) : [and, or](andor.md)
   * [Flor::Pro::Apply](https://github.com/floraison/flor/blob/master/lib/flor/pcore/apply.rb) : [apply](apply.md)
   * [Flor::Pro::Arith](https://github.com/floraison/flor/blob/master/lib/flor/pcore/arith.rb) : +, -, *, /, %
-  * [Flor::Pro::Atom](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_atom.rb) : _num, _boo, _sqs, _dqs, _rxs, _nul, _func
+  * [Flor::Pro::Atom](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_atom.rb) : _num, _boo, _sqs, _rxs, _nul, _func
   * [Flor::Pro::Att](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_att.rb) : _att
   * [Flor::Pro::Break](https://github.com/floraison/flor/blob/master/lib/flor/pcore/break.rb) : [break, continue](break.md)
   * [Flor::Pro::Cancel](https://github.com/floraison/flor/blob/master/lib/flor/punit/cancel.rb) : [cancel, kill](cancel.md)
@@ -92,12 +93,16 @@
   * [Flor::Pro::Cursor](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cursor.rb) : [cursor](cursor.md)
     * [Flor::Pro::Loop](https://github.com/floraison/flor/blob/master/lib/flor/pcore/loop.rb) : [loop](loop.md)
   * [Flor::Pro::Define](https://github.com/floraison/flor/blob/master/lib/flor/pcore/define.rb) : [def, fun, define](define.md)
+  * [Flor::Pro::Dmute](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_dmute.rb) : _dmute
+  * [Flor::Pro::Dol](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_dol.rb) : _dol
+  * [Flor::Pro::DoubleQuoteString](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_dqs.rb) : _dqs
   * [Flor::Pro::Dump](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_dump.rb) : _dump
   * [Flor::Pro::Echo](https://github.com/floraison/flor/blob/master/lib/flor/pcore/echo.rb) : echo
   * [Flor::Pro::Empty](https://github.com/floraison/flor/blob/master/lib/flor/pcore/empty.rb) : [empty?](empty.md)
   * [Flor::Pro::Err](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_err.rb) : _err
   * [Flor::Pro::Fail](https://github.com/floraison/flor/blob/master/lib/flor/pcore/fail.rb) : [fail, error](fail.md)
   * [Flor::Pro::Graft](https://github.com/floraison/flor/blob/master/lib/flor/punit/graft.rb) : [graft, import](graft.md)
+  * [Flor::Pro::Head](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_head.rb) : _head
   * [Flor::Pro::If](https://github.com/floraison/flor/blob/master/lib/flor/pcore/if.rb) : [if, unless, ife, unlesse](if.md)
   * [Flor::Pro::Includes](https://github.com/floraison/flor/blob/master/lib/flor/pcore/includes.rb) : includes?
   * [Flor::Pro::Iterator](https://github.com/floraison/flor/blob/master/lib/flor/pcore/iterator.rb)
@@ -110,8 +115,7 @@
     * [Flor::Pro::Reduce](https://github.com/floraison/flor/blob/master/lib/flor/pcore/reduce.rb) : [reduce](reduce.md)
   * [Flor::Pro::Keys](https://github.com/floraison/flor/blob/master/lib/flor/pcore/keys.rb) : [keys, values](keys.md)
   * [Flor::Pro::Length](https://github.com/floraison/flor/blob/master/lib/flor/pcore/length.rb) : [length, size](length.md)
-  * [Flor::Pro::Logo](https://github.com/floraison/flor/blob/master/lib/flor/pcore/logo.rb) : [and, or](logo.md)
-  * [Flor::Pro::Matchr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/matchr.rb) : [matchr, match?](matchr.md)
+  * [Flor::Pro::Matchr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/matchr.rb) : [matchr, match?, pmatch](matchr.md)
   * [Flor::Pro::Move](https://github.com/floraison/flor/blob/master/lib/flor/pcore/move.rb) : [move](move.md)
   * [Flor::Pro::NoEval](https://github.com/floraison/flor/blob/master/lib/flor/pcore/noeval.rb) : [noeval](noeval.md)
   * [Flor::Pro::NoRet](https://github.com/floraison/flor/blob/master/lib/flor/pcore/noret.rb) : [noret](noret.md)
@@ -128,6 +132,7 @@
   * [Flor::Pro::Push](https://github.com/floraison/flor/blob/master/lib/flor/pcore/push.rb) : [push, pushr](push.md)
   * [Flor::Pro::Rand](https://github.com/floraison/flor/blob/master/lib/flor/pcore/rand.rb) : [rand](rand.md)
   * [Flor::Pro::Range](https://github.com/floraison/flor/blob/master/lib/flor/pcore/range.rb) : [range](range.md)
+  * [Flor::Pro::Ref](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_ref.rb) : _ref, _rep
   * [Flor::Pro::Reverse](https://github.com/floraison/flor/blob/master/lib/flor/pcore/reverse.rb) : [reverse](reverse.md)
   * [Flor::Pro::Schedule](https://github.com/floraison/flor/blob/master/lib/flor/punit/schedule.rb) : [schedule](schedule.md)
   * [Flor::Pro::Sequence](https://github.com/floraison/flor/blob/master/lib/flor/pcore/sequence.rb) : [sequence, _apply, begin](sequence.md)
@@ -135,7 +140,9 @@
   * [Flor::Pro::Signal](https://github.com/floraison/flor/blob/master/lib/flor/punit/signal.rb) : [signal](signal.md)
   * [Flor::Pro::Skip](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_skip.rb) : [_skip](_skip.md)
   * [Flor::Pro::Sleep](https://github.com/floraison/flor/blob/master/lib/flor/punit/sleep.rb) : [sleep](sleep.md)
+  * [Flor::Pro::Slice](https://github.com/floraison/flor/blob/master/lib/flor/pcore/slice.rb) : slice, index
   * [Flor::Pro::Stall](https://github.com/floraison/flor/blob/master/lib/flor/pcore/stall.rb) : [stall](stall.md)
+  * [Flor::Pro::Strings](https://github.com/floraison/flor/blob/master/lib/flor/pcore/strings.rb) : downcase, lowercase, upcase, uppercase, capitalize
   * [Flor::Pro::Task](https://github.com/floraison/flor/blob/master/lib/flor/punit/task.rb) : task
   * [Flor::Pro::ToArray](https://github.com/floraison/flor/blob/master/lib/flor/pcore/to_array.rb) : [to-array, to-object](to_array.md)
   * [Flor::Pro::Trace](https://github.com/floraison/flor/blob/master/lib/flor/punit/trace.rb) : trace

@@ -20,5 +20,5 @@ and (check_this _) (check_that _)
 Gives priority to `and` over `or`.
 
 
-* [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/logo.rb)
+* [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/andor.rb)
 

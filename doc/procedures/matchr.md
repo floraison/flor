@@ -1,5 +1,5 @@
 
-# matchr, match?
+# matchr, match?, pmatch
 
 Matches a string against a regular expression.
 
@@ -8,6 +8,10 @@ expression `r`.
 
 `match? s r` will return true if string `s` matches regular expression `r`.
 It returns false else.
+
+`pmatch s r` will return false it it doesn't match, it will return the
+string matched else. If there is a capture group (parentheses) in the
+pattern, it will return its content instead of the whole match.
 
 ```
 matchr "alpha", /bravo/
@@ -41,6 +45,15 @@ match? 'blue moon'
 'blue'
 match? (/black/)
   # => false
+```
+
+```
+# pmatch
+pmatch 'string', /^str/                     # ==> 'str'
+pmatch 'string', /^str(.+)$/                # ==> 'ing'
+pmatch 'string', /^str(?:.+)$/              # ==> 'string'
+pmatch 'strogonoff', /^str(?:.{0,3})(.*)$/  # ==> 'noff'
+pmatch 'sutoringu', /^str/                  # ==> false
 ```
 
 
