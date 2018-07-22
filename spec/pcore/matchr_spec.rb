@@ -115,13 +115,22 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq(%w[ a d f ])
     end
-  end
 
-  #describe 'starts_with' do
-  #  it 'works'
-  #end
-  #describe 'ends_with' do
-  #  it 'works'
-  #end
+    it 'returns true when matching' do
+
+      r = @executor.launch(%q{ match? "stuff", "^stuf*$" })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(true)
+    end
+
+    it 'returns false when not matching' do
+
+      r = @executor.launch(%q{ match? "stuff", "^Stuf*$" })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(false)
+    end
+  end
 end
 
