@@ -8,6 +8,14 @@ class Flor::Pro::DoubleQuoteString < Flor::Procedure
     @node['rets'] = []
   end
 
+  def execute_child(index=0, sub=nil, h=nil)
+
+    payload['ret'] = node_payload_ret
+      # always pass the noe_payload_ret to children
+
+    super
+  end
+
   def receive_last
 
     wrap('ret' => @node['rets'].collect { |e| to_string(e) }.join)

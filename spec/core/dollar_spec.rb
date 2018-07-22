@@ -125,6 +125,9 @@ describe 'Flor core' do
       %{"$( msg1 | pmatch, /"([^"]+)"/ )"} => 'le monde',
       %{"$( msg1 | pmatch, /something/ )"} => '',
 
+      # f.ret
+      %{"DEF" ; "abc$(f.ret)ghi"} => 'abcDEFghi',
+
     }.each do |dqs, ret|
 
       it "extrapolates \"#{dqs}\" to #{ret.inspect}" do
