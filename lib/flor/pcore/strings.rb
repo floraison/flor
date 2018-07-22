@@ -10,11 +10,12 @@ class Flor::Pro::Strings < Flor::Procedure
   def receive_last
 
     met =
-      case @node['heat0']
+      case h0 = @node['heat0']
       when 'downcase', 'lowercase' then :downcase
       when 'upcase', 'uppercase' then :upcase
       when 'capitalize' then :capitalize
-      else :to_s
+      #else :to_s
+      else fail NotImplementedError.new("#{h0.inspect} not implemented")
       end
 
     payload['ret'] = process(payload['ret'], met)

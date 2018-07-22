@@ -105,6 +105,20 @@ describe 'Flor core' do
       '$( bs | upcase _ )' => 'black sheep'.upcase,
       '$( ba | reverse _ )' => 'black adder'.reverse,
 
+      # slice
+      '$( quick | slice 1, -1 )' => 'ump',
+      '$( quick | slice from: 1 to: -1 )' => 'ump',
+      '$( quick | slice 1 count: 2 )' => 'um',
+      '$( quick | slice from: 1 count: 2 )' => 'um',
+      '$( quick | slice from: 100 count: 2 )' => '',
+
+      # index
+      '$( quick | index 2 )' => 'm',
+      '$( quick | index ,-3 )' => 'u',
+      '$( quick | index (-3) )' => 'u',
+      '$( quick | index at: -3 )' => 'u',
+      '$( quick | index 100 )' => '',
+
     }.each do |dqs, ret|
 
       it "extrapolates \"#{dqs}\" to #{ret.inspect}" do
