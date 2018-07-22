@@ -14,8 +14,13 @@ def determine_names(path)
   nline = lines.index { |l| l.match(/^ +names?/) }
   return nil unless nline
 
-  names = lines[nline][7..-1]
+  nl = nline
+  names = lines[nl][7..-1]
   names = "[ #{names} ]" if names.index(',')
+  while ! names.index(']')
+    nl = nl + 1
+    names = names + "\n" + (lines[nl][3..-1] || '')
+  end if names.index('[')
   names = Array(eval(names))
   #names = names.select { |n| n[0, 1] != '_' }
   return nil if names.empty?
