@@ -104,6 +104,7 @@ describe 'Flor core' do
       '$( bs | downcase _ )' => 'black sheep',
       '$( bs | upcase _ )' => 'black sheep'.upcase,
       '$( ba | reverse _ )' => 'black adder'.reverse,
+      '$( ba | capitalize _ )' => 'Black adder',
 
       # slice
       '$( quick | slice 1, -1 )' => 'ump',
