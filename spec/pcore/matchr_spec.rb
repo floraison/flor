@@ -132,5 +132,27 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(false)
     end
   end
+
+  describe 'pmatch' do
+
+    {
+
+      [ 'string', /^str/ ] => 'str',
+      [ 'string', /^str(.+)$/ ] => 'ing',
+      [ 'string', /^str(?:.+)$/ ] => 'string',
+      [ 'strogonoff', /^str(?:.{0,3})(.*)$/ ] => 'noff',
+      [ 'sutoringu', /^str/ ] => false,
+
+    }.each do |(str, rex), ret|
+
+      it "yields #{ret.inspect} for `pmatch #{str.inspect}, #{rex.inspect}`" do
+
+        r = @executor.launch(%{ pmatch #{str.inspect}, #{rex.inspect} })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(ret)
+      end
+    end
+  end
 end
 

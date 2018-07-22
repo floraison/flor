@@ -9,6 +9,10 @@ class Flor::Pro::Matchr < Flor::Procedure
   # `match? s r` will return true if string `s` matches regular expression `r`.
   # It returns false else.
   #
+  # `pmatch s r` will return false it it doesn't match, it will return the
+  # string matched else. If there is a capture group (parentheses) in the
+  # pattern, it will return its content instead of the whole match.
+  #
   # ```
   # matchr "alpha", /bravo/
   #   # yields an empty array []
@@ -42,8 +46,17 @@ class Flor::Pro::Matchr < Flor::Procedure
   # match? (/black/)
   #   # => false
   # ```
+  #
+  # ```
+  # # pmatch
+  # pmatch 'string', /^str/                     # ==> 'str'
+  # pmatch 'string', /^str(.+)$/                # ==> 'ing'
+  # pmatch 'string', /^str(?:.+)$/              # ==> 'string'
+  # pmatch 'strogonoff', /^str(?:.{0,3})(.*)$/  # ==> 'noff'
+  # pmatch 'sutoringu', /^str/                  # ==> false
+  # ```
 
-  names %w[ matchr match? ]
+  names %w[ matchr match? pmatch ]
 
   def pre_execute
 
@@ -57,10 +70,10 @@ class Flor::Pro::Matchr < Flor::Procedure
     m = rex.match(str)
 
     payload['ret'] =
-      if @node['heap'] == 'match?'
-        !! m
-      else
-        m ? m.to_a : []
+      case @node['heap']
+      when 'match?' then !! m
+      when 'pmatch' then (m && (m[1] || m[0])) || false
+      else m ? m.to_a : []
       end
 
     wrap_reply
