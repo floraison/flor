@@ -53,7 +53,7 @@ pmatch 'string', /^str/                     # ==> 'str'
 pmatch 'string', /^str(.+)$/                # ==> 'ing'
 pmatch 'string', /^str(?:.+)$/              # ==> 'string'
 pmatch 'strogonoff', /^str(?:.{0,3})(.*)$/  # ==> 'noff'
-pmatch 'sutoringu', /^str/                  # ==> false
+pmatch 'sutoringu', /^str/                  # ==> ''
 ```
 
 

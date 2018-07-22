@@ -120,6 +120,11 @@ describe 'Flor core' do
       '$( quick | index at: -3 )' => 'u',
       '$( quick | index 100 )' => '',
 
+      # pmatch
+      %{"$( msg1 | pmatch(/"([^"]+)"/) )"} => 'le monde',
+      %{"$( msg1 | pmatch, /"([^"]+)"/ )"} => 'le monde',
+      %{"$( msg1 | pmatch, /something/ )"} => '',
+
     }.each do |dqs, ret|
 
       it "extrapolates \"#{dqs}\" to #{ret.inspect}" do
@@ -140,11 +145,9 @@ describe 'Flor core' do
           'hsh' => { 'a' => 'A', 'b' => 'B' },
           'amount' => 1234 }
 
-        r = @executor.launch(
-          %{
-            "#{dqs}"
-          },
-          vars: vars)
+        flow = dqs.match(/\A["']/) ? dqs : "\"#{dqs}\""
+
+        r = @executor.launch(flow, vars: vars)
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(ret)

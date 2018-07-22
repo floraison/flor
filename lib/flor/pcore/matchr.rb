@@ -53,7 +53,7 @@ class Flor::Pro::Matchr < Flor::Procedure
   # pmatch 'string', /^str(.+)$/                # ==> 'ing'
   # pmatch 'string', /^str(?:.+)$/              # ==> 'string'
   # pmatch 'strogonoff', /^str(?:.{0,3})(.*)$/  # ==> 'noff'
-  # pmatch 'sutoringu', /^str/                  # ==> false
+  # pmatch 'sutoringu', /^str/                  # ==> ''
   # ```
 
   names %w[ matchr match? pmatch ]
@@ -72,7 +72,7 @@ class Flor::Pro::Matchr < Flor::Procedure
     payload['ret'] =
       case @node['heap']
       when 'match?' then !! m
-      when 'pmatch' then (m && (m[1] || m[0])) || false
+      when 'pmatch' then (m && (m[1] || m[0])) || ''
       else m ? m.to_a : []
       end
 

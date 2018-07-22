@@ -141,7 +141,7 @@ describe 'Flor procedures' do
       [ 'string', /^str(.+)$/ ] => 'ing',
       [ 'string', /^str(?:.+)$/ ] => 'string',
       [ 'strogonoff', /^str(?:.{0,3})(.*)$/ ] => 'noff',
-      [ 'sutoringu', /^str/ ] => false,
+      [ 'sutoringu', /^str/ ] => '',
 
     }.each do |(str, rex), ret|
 
