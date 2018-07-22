@@ -196,7 +196,7 @@ describe 'Flor procedures' do
           case 6
             5; 'cinq'
             7; 'sept'
-            6; "six $(f.ret|u)"
+            6; "six $( f.ret | upcase _ )"
             else; 'je ne sais pas'
         })
 

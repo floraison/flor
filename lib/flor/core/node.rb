@@ -190,33 +190,33 @@ class Flor::Node
     end
   end
 
-  class Expander < Flor::Dollar
-
-    def initialize(n); @node = n; end
-
-    def lookup(k)
-
-      return @node.nid if k == 'nid'
-      return @node.exid if k == 'exid'
-      return Flor.domain(@node.exid) if k == 'domain'
-      return Flor.tstamp if k == 'tstamp'
-
-      r = @node.lookup_value(k)
-
-      r.is_a?(Symbol) ? nil : r
-
-    rescue KeyError
-
-      nil
-    end
-  end
-
-  def expand(s)
-
-    return s unless s.is_a?(String)
-
-    Expander.new(self).expand(s)
-  end
+#  class Expander < Flor::Dollar
+#
+#    def initialize(n); @node = n; end
+#
+#    def lookup(k)
+#
+#      return @node.nid if k == 'nid'
+#      return @node.exid if k == 'exid'
+#      return Flor.domain(@node.exid) if k == 'domain'
+#      return Flor.tstamp if k == 'tstamp'
+#
+#      r = @node.lookup_value(k)
+#
+#      r.is_a?(Symbol) ? nil : r
+#
+#    rescue KeyError
+#
+#      nil
+#    end
+#  end
+#
+#  def expand(s)
+#
+#    return s unless s.is_a?(String)
+#
+#    Expander.new(self).expand(s)
+#  end
 
   def deref(o)
 
