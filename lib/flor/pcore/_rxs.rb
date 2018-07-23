@@ -6,6 +6,7 @@ class Flor::Pro::RegularExpressionString < Flor::Procedure
   def pre_execute
 
     @node['rets'] = []
+    @node['atts'] = []
   end
 
   def execute_child(index=0, sub=nil, h=nil)
@@ -18,8 +19,9 @@ class Flor::Pro::RegularExpressionString < Flor::Procedure
 
   def receive_last
 
-p @node['rets']
-    wrap('ret' => @node['rets'].collect(&:to_s).join)
+    rex = [ '_rxs', "/#{@node['rets'].join}/#{att('rxopts')}", tree[2] ]
+
+    wrap('ret' => rex)
   end
 end
 

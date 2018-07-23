@@ -17,12 +17,23 @@ describe 'Flor procedures' do
 
   describe '_rxs' do
 
-    it 'builds a regular expression' do
+    it 'builds a /hello world/i' do
 
       r = @executor.launch(%{ /hello world/i })
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ '_rxs', '/hello world/i', 1 ])
+    end
+
+    it 'builds a /hello world/ix' do
+
+      r = @executor.launch(%{
+        set i 'i'
+        /hello world/$(i)x
+      })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ '_rxs', '/hello world/ix', 3 ])
     end
 
     it 'expands the expression' do
