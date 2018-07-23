@@ -15,46 +15,6 @@ describe 'Flor procedures' do
     @executor = Flor::TransientExecutor.new
   end
 
-  describe '_dqs' do
-
-    it 'works with strings' do
-
-      r = @executor.launch(%{ "abc def" })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq('abc def')
-    end
-
-    it 'works with strings with backslash escapes' do
-
-      r = @executor.launch(%{ "abc\\ndef" })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq("abc\ndef")
-    end
-
-    it 'works with strings with backslash escapes for unicode characters'
-  end
-
-  describe '_rxs' do
-
-    it 'builds a regular expression' do
-
-      r = @executor.launch(%{ /hello world/i })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ '_rxs', '/hello world/i', 1 ])
-    end
-
-    it 'expands the expression' do
-
-      r = @executor.launch(%{ /hello $(f.to)/i }, payload: { 'to' => 'mundo' })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ '_rxs', '/hello mundo/i', 1 ])
-    end
-  end
-
   describe '_num' do
 
     it 'works with numbers' do

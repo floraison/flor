@@ -22,10 +22,7 @@ module Flor
 
     def initialize(error_array, fname)
 
-#puts "-" * 80
-#p error_array
-#puts error_array.last
-#puts "-" * 80
+#puts "-" * 80; p error_array; puts error_array.last; puts "-" * 80
       @line, @column, @offset, @msg, @visual = error_array
       @fname = fname
 
@@ -45,6 +42,7 @@ module Flor
     def semicolon(i); str(nil, i, ';'); end
     def comma(i); str(nil, i, ','); end
     def dquote(i); str(nil, i, '"'); end
+    def slash(i); str(nil, i, '/'); end
     def dollar(i); str(nil, i, '$'); end
     def pipepipe(i); str(nil, i, '||'); end
 
@@ -105,6 +103,19 @@ module Flor
       }x)
     end
 
+    def rxoc(i); rex(:rxoc, i, /[imxouesn]/); end
+
+    def rxsc(i)
+      rex(:rxsc, i, %r{
+        (
+          \\[\/bfnrt] |
+          \\u[0-9a-fA-F]{4} |
+          \$(?!\() |
+          [^\$/\b\f\n\r\t]
+        )+
+      }x)
+    end
+
     def dor_lines(i)
       seq(:dpar_lines, i, :pipepipe, :eol_wstar, :line, '+')
     end
@@ -118,10 +129,19 @@ module Flor
         :dollar, :pstart, :dpar_lines, :dor_lines, '?', :eol_wstar, :pend)
     end
 
+    def dpar_or_rxoc(i); alt(nil, i, :dpar, :rxoc); end
+
+    def rxopts(i); rep(:rxopts, i, :dpar_or_rxoc, 0); end
+
     def dpar_or_dqsc(i); alt(nil, i, :dpar, :dqsc); end
+    def dpar_or_rxsc(i); alt(nil, i, :dpar, :rxsc); end
 
     def dqstring(i)
       seq(:dqstring, i, :dquote, :dpar_or_dqsc, '*', :dquote)
+    end
+
+    def rxstring(i)
+      seq(:rxstring, i, :slash, :dpar_or_rxsc, '*', :slash, :rxopts)
     end
 
     def sqstring(i)
@@ -131,16 +151,6 @@ module Flor
           \\u[0-9a-fA-F]{4} |
           [^'\\\b\f\n\r\t]
         )*'
-      }x)
-    end
-
-    def rxstring(i)
-      rex(:rxstring, i, %r{
-        /(
-          \\[\/bfnrt] |
-          \\u[0-9a-fA-F]{4} |
-          [^/\b\f\n\r\t]
-        )*/[a-z]*
       }x)
     end
 
@@ -254,10 +264,6 @@ module Flor
 
     def rewrite_ref(t)
 
-#puts "-" * 80
-#Raabro.pp(t, colours: true)
-#p [ :children, t.subgather(nil).length ]
-
       tts = t.subgather(nil)
 
       if tts.length == 1
@@ -335,6 +341,7 @@ module Flor
     end
 
     def rewrite_dqsc(t); [ '_sqs', restring(t.string), ln(t) ]; end
+    alias rewrite_rxsc rewrite_dqsc
 
     def rewrite_dpar_lines(t)
 
@@ -344,7 +351,6 @@ module Flor
 
     def rewrite_dpar(t)
 
-#Raabro.pp(t, colours: true); p t.string
       [ '_dol', t.subgather(nil).collect { |ct| rewrite(ct) }, ln(t) ]
     end
 
@@ -361,9 +367,25 @@ module Flor
       end
     end
 
-    def rewrite_sqstring(t); [ '_sqs', restring(t.string[1..-2]), ln(t) ]; end
-    def rewrite_rxstring(t); [ '_rxs', t.string, ln(t) ]; end
+    alias rewrite_rxopts rewrite_dqstring
 
+    def rewrite_rxoc(t); [ '_sqs', t.string, ln(t) ]; end
+
+    def rewrite_rxstring(t)
+
+      l = ln(t)
+      cts = t.subgather(nil)
+      rot = cts.pop
+
+      cn = cts.collect(&method(:rewrite))
+
+      cn.unshift([ '_att', [ [ 'rxopts', [], l ], rewrite(rot) ], l ]) \
+        if rot.length > 0
+
+      [ '_rxs', cn, l ]
+    end
+
+    def rewrite_sqstring(t); [ '_sqs', restring(t.string[1..-2]), ln(t) ]; end
     def rewrite_boolean(t); [ '_boo', t.string == 'true', line_number(t) ]; end
     def rewrite_null(t); [ '_nul', nil, line_number(t) ]; end
 

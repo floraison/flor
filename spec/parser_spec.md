@@ -167,7 +167,9 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_rxs', '/jkl/', 1 ]
+  [ '_rxs', [
+    [ '_sqs', "jkl", 1 ]
+  ], 1 ]
 ```
 ---
 
@@ -176,7 +178,13 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_rxs', '/jkl/i', 1 ]
+  [ '_rxs', [
+    [ '_att', [
+      [ 'rxopts', [], 1 ],
+      [ '_sqs', "i", 1 ]
+    ], 1 ],
+    [ '_sqs', "jkl", 1 ]
+  ], 1 ]
 ```
 ---
 
@@ -185,7 +193,13 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_rxs', '/jkl\/3/i', 1 ]
+  [ '_rxs', [
+    [ '_att', [
+      [ 'rxopts', [], 1 ],
+      [ '_sqs', "i", 1 ]
+    ], 1 ],
+    [ '_sqs', "jkl/3", 1 ]
+  ], 1 ]
 ```
 ---
 
@@ -195,7 +209,13 @@ parses to
 parses to
 ```ruby
   [ '/', [
-    [ '_rxs', '/jkl/i', 1 ],
+    [ '_rxs', [
+      [ '_att', [
+        [ 'rxopts', [], 1 ],
+        [ '_sqs', "i", 1 ]
+      ], 1 ],
+      [ '_sqs', "jkl", 1 ]
+    ], 1 ],
     [ '_num', 1, 1 ]
   ], 1 ]
 ```
@@ -206,7 +226,9 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_rxs', '/^$\A\Z\z\G\b\Bmno/', 1 ]
+  [ '_rxs', [
+    [ '_sqs', "^$\\A\\Z\\z\\G\b\\Bmno", 1 ]
+  ], 1 ]
 ```
 ---
 
@@ -215,7 +237,10 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_rxs', '/\u5929\u6C17/', 1 ]
+  #[ '_rxs', '/\u5929\u6C17/', 1 ]
+  [ '_rxs', [
+    [ '_sqs', "天気", 1 ]
+  ], 1 ]
 ```
 ---
 
@@ -224,7 +249,12 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_arr', [ [ '_rxs', '/bl/', 1 ], [ '_sqs', 'red', 1 ] ], 1 ]
+  [ '_arr', [
+    [ '_rxs', [
+      [ '_sqs', "bl", 1 ]
+    ], 1 ],
+    [ '_sqs', "red", 1 ]
+  ], 1 ]
 ```
 ---
 
@@ -233,7 +263,57 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_arr', [ [ '_sqs', 'red', 1 ], [ '_rxs', '/bl/', 1 ] ], 1 ]
+  [ '_arr', [
+    [ '_sqs', "red", 1 ],
+    [ '_rxs', [
+      [ '_sqs', "bl", 1 ]
+    ], 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  /abc$(def)ghi/
+```
+parses to
+```ruby
+  [ '_rxs', [
+    [ '_sqs', "abc", 1 ],
+    [ '_dol', [
+      [ '_dmute', [
+        [ 'def', [], 1 ]
+      ], 1 ]
+    ], 1 ],
+    [ '_sqs', "ghi", 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  /jkl$(mno)pqr/$(i)m
+```
+parses to
+```ruby
+  [ '_rxs', [
+    [ '_att', [
+      [ 'rxopts', [], 1 ],
+      [ '_dqs', [
+        [ '_dol', [
+          [ '_dmute', [
+            [ 'i', [], 1 ]
+          ], 1 ]
+        ], 1 ],
+        [ '_sqs', "m", 1 ]
+      ], 1 ]
+    ], 1 ],
+    [ '_sqs', "jkl", 1 ],
+    [ '_dol', [
+      [ '_dmute', [
+        [ 'mno', [], 1 ]
+      ], 1 ]
+    ], 1 ],
+    [ '_sqs', "pqr", 1 ]
+  ], 1 ]
 ```
 ---
 
@@ -243,7 +323,12 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_arr', [ [ '_sqs', 'red', 1 ], [ '_rxs', '/bl/', 1 ] ], 1 ]
+  [ '_arr', [
+    [ '_sqs', "red", 1 ],
+    [ '_rxs', [
+      [ '_sqs', "bl", 1 ]
+    ], 1 ]
+  ], 1 ]
 ```
 ---
 
@@ -252,7 +337,12 @@ parses to
 ```
 parses to
 ```ruby
-  [ '_arr', [ [ '_sqs', 'red', 1 ], [ '_rxs', '/bl/', 1 ] ], 1 ]
+  [ '_arr', [
+    [ '_sqs', "red", 1 ],
+    [ '_rxs', [
+      [ '_sqs', "bl", 1 ]
+    ], 1 ]
+  ], 1 ]
 ```
 ---
 
@@ -1170,11 +1260,11 @@ parses to
 ```ruby
   [ 'match', [
     [ '_att', [
-      [ '_ref', [ [ '_sqs', 'v', 1 ], [ '_sqs', 'a', 1 ], ], 1 ]
+      [ '_ref', [ [ '_sqs', "v", 1 ], [ '_sqs', "a", 1 ] ], 1 ]
     ], 1 ],
     [ '_att', [
-      [ '_rxs', '/hello world/', 1 ]
-    ], 1 ],
+      [ '_rxs', [ [ '_sqs', "hello world", 1 ] ], 1 ]
+    ], 1 ]
   ], 1 ]
 ```
 ---
@@ -1194,7 +1284,11 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'hello', [ [ '_att', [ [ '_rxs', '/world/', 1 ] ], 1 ], ], 1 ]
+  [ 'hello', [
+    [ '_att', [
+      [ '_rxs', [ [ '_sqs', "world", 1 ] ], 1 ]
+    ], 1 ]
+  ], 1 ]
 ```
 ---
 
@@ -1203,7 +1297,11 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'hello', [ [ '_att', [ [ '_rxs', '/world/', 1 ] ], 1 ], ], 1 ]
+  [ 'hello', [
+    [ '_att', [
+      [ '_rxs', [ [ '_sqs', "world", 1 ] ], 1 ]
+    ], 1 ]
+  ], 1 ]
 ```
 ---
 
@@ -1213,8 +1311,8 @@ parses to
 parses to
 ```ruby
   [ '/', [
-    [ '_rxs', "/hello/", 1 ],
-    [ '_sqs', 'world', 1 ]
+    [ '_rxs', [ [ '_sqs', "hello", 1 ] ], 1 ],
+    [ '_sqs', "world", 1 ]
   ], 1 ]
 ```
 
