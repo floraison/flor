@@ -1237,11 +1237,11 @@ parses to
 ## lines with regexes
 
 ```flor
-  match v.a /hello world/
+  matchr v.a /hello world/
 ```
 parses to
 ```ruby
-  [ 'match', [
+  [ 'matchr', [
     [ '_att', [
       [ '/', [
         [ '_ref', [ [ '_sqs', 'v', 1 ], [ '_sqs', 'a', 1 ], ], 1 ],
@@ -1254,11 +1254,11 @@ parses to
 ---
 
 ```flor
-  match v.a, /hello world/
+  matchr v.a, /hello world/
 ```
 parses to
 ```ruby
-  [ 'match', [
+  [ 'matchr', [
     [ '_att', [
       [ '_ref', [ [ '_sqs', "v", 1 ], [ '_sqs', "a", 1 ] ], 1 ]
     ], 1 ],
