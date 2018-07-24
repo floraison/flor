@@ -1,4 +1,4 @@
 
 description: 'edu.example echo'
-class: "Edu::Example::Taskers::$(f.flavour|c)"
+class: "Edu::Example::Taskers::$(f.flavour|capitalize _)"
 

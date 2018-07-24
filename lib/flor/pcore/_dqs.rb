@@ -27,6 +27,7 @@ class Flor::Pro::DoubleQuoteString < Flor::Procedure
 
     case result
     when String then result
+    when nil then ''
     else JSON.dump(result)
     end
   end

@@ -34,7 +34,7 @@ describe 'Flor punit' do
           sequence
             do-trap 'terminated'
               trace "terminated(f:$(msg.from))"
-            trace "here($(nid))"
+            trace "here($(node.nid))"
         },
         wait: true)
 
@@ -45,7 +45,7 @@ describe 'Flor punit' do
       expect(
         @unit.traces.collect(&:text).join("\n")
       ).to eq(%w[
-        here(0_1_0_0)
+        here(0_1_0_0_1_0_0)
         terminated(f:0)
       ].collect(&:strip).join("\n"))
 

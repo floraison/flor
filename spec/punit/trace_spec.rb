@@ -97,10 +97,20 @@ describe 'Flor punit' do
       expect(
         r['payload']['ret'][1]['tree']
       ).to eq(
-        [ 'def', [
-          [ '_att', [ ['msg', [], 3 ] ], 3 ],
+        [ 'def', [ [ '_att', [ [ 'msg', [], 3 ] ], 3 ],
           [ 'trace', [
-            [ '_att', [ [ '_dqs', '$(msg.point):x', 3 ] ], 3 ]
+            [ '_att', [
+              [ '_dqs', [
+                [ '_dol', [
+                  [ '_dmute', [
+                    [ '_ref', [
+                      [ '_sqs', 'msg', 3 ], [ '_sqs', 'point', 3 ]
+                    ], 3 ]
+                  ], 3 ]
+                ], 3 ],
+                [ '_sqs', ':x', 3 ]
+              ], 3 ]
+            ], 3 ]
           ], 3 ]
         ], 3 ]
       )

@@ -84,7 +84,7 @@ describe 'Flor punit' do
           sequence
             trap 'terminated'
               def msg \ trace "terminated(f:$(msg.from))"
-            trace "here($(nid))"
+            trace "here($(node.nid))"
         },
         wait: true)
 
@@ -95,7 +95,7 @@ describe 'Flor punit' do
       expect(
         @unit.traces.collect(&:text).join(' ')
       ).to eq(
-        'here(0_1_0_0) terminated(f:0)'
+        'here(0_1_0_0_1_0_0) terminated(f:0)'
       )
 
       ms = @unit.journal
@@ -126,25 +126,53 @@ describe 'Flor punit' do
         execute:0_1
         execute:0_1_0
         execute:0_1_0_0
+        execute:0_1_0_0_0
+        receive:0_1_0_0
+        execute:0_1_0_0_1
+        execute:0_1_0_0_1_0
+        execute:0_1_0_0_1_0_0
+        execute:0_1_0_0_1_0_0_0
+        receive:0_1_0_0_1_0_0
+        execute:0_1_0_0_1_0_0_1
+        receive:0_1_0_0_1_0_0
+        receive:0_1_0_0_1_0
+        receive:0_1_0_0_1
+        receive:0_1_0_0
+        execute:0_1_0_0_2
+        receive:0_1_0_0
         receive:0_1_0
         receive:0_1
         receive:0
         receive:
-        cancel:0_0 <-cancel:18:0_0
-        receive: <-cancel:18:0_0
-        ceased: <-cancel:18:0_0
+        cancel:0_0 <-cancel:32:0_0
+        receive: <-cancel:32:0_0
+        ceased: <-cancel:32:0_0
         terminated:
-        trigger:0_0 <-trigger:22:0_0
-        execute:0_0_1-1 <-trigger:22:0_0
-        execute:0_0_1_0-1 <-trigger:22:0_0
-        receive:0_0_1-1 <-trigger:22:0_0
-        execute:0_0_1_1-1 <-trigger:22:0_0
-        execute:0_0_1_1_0-1 <-trigger:22:0_0
-        execute:0_0_1_1_0_0-1 <-trigger:22:0_0
-        receive:0_0_1_1_0-1 <-trigger:22:0_0
-        receive:0_0_1_1-1 <-trigger:22:0_0
-        receive:0_0_1-1 <-trigger:22:0_0
-        receive:0_0 <-trigger:22:0_0
+        trigger:0_0 <-trigger:36:0_0
+        execute:0_0_1-1 <-trigger:36:0_0
+        execute:0_0_1_0-1 <-trigger:36:0_0
+        receive:0_0_1-1 <-trigger:36:0_0
+        execute:0_0_1_1-1 <-trigger:36:0_0
+        execute:0_0_1_1_0-1 <-trigger:36:0_0
+        execute:0_0_1_1_0_0-1 <-trigger:36:0_0
+        execute:0_0_1_1_0_0_0-1 <-trigger:36:0_0
+        receive:0_0_1_1_0_0-1 <-trigger:36:0_0
+        execute:0_0_1_1_0_0_1-1 <-trigger:36:0_0
+        execute:0_0_1_1_0_0_1_0-1 <-trigger:36:0_0
+        execute:0_0_1_1_0_0_1_0_0-1 <-trigger:36:0_0
+        execute:0_0_1_1_0_0_1_0_0_0-1 <-trigger:36:0_0
+        receive:0_0_1_1_0_0_1_0_0-1 <-trigger:36:0_0
+        execute:0_0_1_1_0_0_1_0_0_1-1 <-trigger:36:0_0
+        receive:0_0_1_1_0_0_1_0_0-1 <-trigger:36:0_0
+        receive:0_0_1_1_0_0_1_0-1 <-trigger:36:0_0
+        receive:0_0_1_1_0_0_1-1 <-trigger:36:0_0
+        receive:0_0_1_1_0_0-1 <-trigger:36:0_0
+        execute:0_0_1_1_0_0_2-1 <-trigger:36:0_0
+        receive:0_0_1_1_0_0-1 <-trigger:36:0_0
+        receive:0_0_1_1_0-1 <-trigger:36:0_0
+        receive:0_0_1_1-1 <-trigger:36:0_0
+        receive:0_0_1-1 <-trigger:36:0_0
+        receive:0_0 <-trigger:36:0_0
         end:
       }.gsub(/\n\s+/, "\n").strip)
     end
@@ -341,15 +369,15 @@ describe 'Flor punit' do
           %q{
             sequence
               trap tag: 'b', count: 2
-                def msg \ trace "A>$(nid)"
+                def msg \ trace "A>$(node.nid)"
               sequence
                 sleep 0.8
                 noret tag: 'b'
-                trace "B>$(nid)"
+                trace "B>$(node.nid)"
                 noret tag: 'b'
-                trace "B>$(nid)"
+                trace "B>$(node.nid)"
                 noret tag: 'b'
-                trace "B>$(nid)"
+                trace "B>$(node.nid)"
           },
           wait: true)
 
@@ -362,11 +390,11 @@ describe 'Flor punit' do
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
-          0:B>0_1_2_0_0
-          1:A>0_0_2_1_0_0-1
-          2:B>0_1_4_0_0
-          3:A>0_0_2_1_0_0-2
-          4:B>0_1_6_0_0
+          0:B>0_1_2_0_0_1_0_0
+          1:A>0_0_2_1_0_0_1_0_0-1
+          2:B>0_1_4_0_0_1_0_0
+          3:A>0_0_2_1_0_0_1_0_0-2
+          4:B>0_1_6_0_0_1_0_0
         }.collect(&:strip).join("\n"))
       end
     end
@@ -479,7 +507,7 @@ describe 'Flor punit' do
         r = @unit.launch(
           %q{
             trap heat: 'fun0' \ def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
-            define fun0 \ trace "c-fun0-$(nid)"
+            define fun0 \ trace "c-fun0-$(node.nid)"
             sequence
               fun0 # not a call
               fun0 # not a call
@@ -505,7 +533,7 @@ describe 'Flor punit' do
         r = @unit.launch(
           %q{
             trap heat: '_apply' \ def msg \ trace "t-heat-$(msg.nid)"
-            define fun0 \ trace "c-fun0-$(nid)"
+            define fun0 \ trace "c-fun0-$(node.nid)"
             sequence
               fun0 _
               fun0 _
@@ -521,11 +549,11 @@ describe 'Flor punit' do
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
-          0:c-fun0-0_1_1_0_0-1
+          0:c-fun0-0_1_1_0_0_1_0_0-1
           1:t-heat-0_1-1
           2:t-heat-0_1-1
           3:t-heat-0_1-1
-          4:c-fun0-0_1_1_0_0-5
+          4:c-fun0-0_1_1_0_0_1_0_0-5
           5:t-heat-0_1-5
           6:t-heat-0_1-5
           7:t-heat-0_1-5
@@ -538,8 +566,8 @@ describe 'Flor punit' do
           %q{
             trap heat: [ 'fun0' 'fun1' ]
               def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
-            define fun0 \ trace "c-fun0-$(nid)"
-            define fun1 \ trace "c-fun1-$(nid)"
+            define fun0 \ trace "c-fun0-$(node.nid)"
+            define fun1 \ trace "c-fun1-$(node.nid)"
             sequence
               fun0 _
               fun1 _
@@ -574,9 +602,9 @@ describe 'Flor punit' do
           %q{
             trap heat: [ /^fun\d+$/ 'funx' ]
               def msg \ trace "t-$(msg.point)-$(msg.tree.0)-$(msg.nid)"
-            define fun0 \ trace "c-fun0-$(nid)"
-            define fun1 \ trace "c-fun1-$(nid)"
-            define funx \ trace "c-funx-$(nid)"
+            define fun0 \ trace "c-fun0-$(node.nid)"
+            define fun1 \ trace "c-fun1-$(node.nid)"
+            define funx \ trace "c-funx-$(node.nid)"
             sequence
               fun0 _
               fun1 _
@@ -616,9 +644,9 @@ describe 'Flor punit' do
           %q{
             trap heat: [ /^fun\d+$/ 'funx' ] point: 'execute'
               def msg \ trace "t-$(msg.point)-$(msg.tree.0)-$(msg.nid)"
-            define fun0 \ trace "c-fun0-$(nid)"
-            define fun1 \ trace "c-fun1-$(nid)"
-            define funx \ trace "c-funx-$(nid)"
+            define fun0 \ trace "c-fun0-$(node.nid)"
+            define fun1 \ trace "c-fun1-$(node.nid)"
+            define funx \ trace "c-funx-$(node.nid)"
             sequence
               fun0 _
               fun1 _
@@ -636,13 +664,13 @@ describe 'Flor punit' do
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
-          0:t-execute-fun0-0_4_0
-          1:c-fun0-0_1_1_0_0-2
-          2:t-execute-fun1-0_4_1
-          3:c-fun1-0_2_1_0_0-4
-          4:t-execute-fun0-0_4_2
-          5:t-execute-funx-0_4_3
-          6:c-funx-0_3_1_0_0-7
+          0:c-fun0-0_1_1_0_0_1_0_0-2
+          1:t-execute-fun0-0_4_0
+          2:c-fun1-0_2_1_0_0_1_0_0-4
+          3:t-execute-fun1-0_4_1
+          4:c-funx-0_3_1_0_0_1_0_0-7
+          5:t-execute-fun0-0_4_2
+          6:t-execute-funx-0_4_3
         }.collect(&:strip).join("\n"))
       end
     end
@@ -855,7 +883,7 @@ describe 'Flor punit' do
         expect(
           @unit.traces.collect(&:text).join(' ')
         ).to eq(
-          'a x x-left y'
+          'a x y x-left'
         )
       end
 
@@ -884,7 +912,7 @@ describe 'Flor punit' do
         expect(
           @unit.traces.collect(&:text)
         ).to eq(%w[
-          in a x-entered b y-entered c out
+          in a b x-entered c out y-entered
         ])
       end
 
@@ -910,7 +938,7 @@ describe 'Flor punit' do
         expect(
           @unit.traces.collect(&:text)
         ).to eq(%w[
-          in a x-0-entered b c x-1-entered out
+          in a b x-0-entered c out x-1-entered
         ])
       end
     end
@@ -1185,7 +1213,7 @@ describe 'Flor punit' do
           @unit.traces.first.text
         ).to eq(%w[
           s0
-          ["_func",{"nid":"0_0_3","tree":["def",[["_att",[["msg",[],3]],3],["trace",[["_att",[["_dqs","s0:$(f.ret):$(msg.payload.ret)",3]],3]],3]],3],"cnid":"0_0","fun":0},3]
+          ["_func",{"nid":"0_0_3","tree":["def",[["_att",[["msg",[],3]],3],["trace",[["_att",[["_dqs",[["_sqs","s0:",3],["_dol",[["_dmute",[["_ref",[["_sqs","f",3],["_sqs","ret",3]],3]],3]],3],["_sqs",":",3],["_dol",[["_dmute",[["_ref",[["_sqs","msg",3],["_sqs","payload",3],["_sqs","ret",3]],3]],3]],3]],3]],3]],3]],3],"cnid":"0_0","fun":0},3]
           [1,2,3]
         ].join(':'))
       end
@@ -1220,7 +1248,7 @@ describe 'Flor punit' do
         expect(
           ts[1].text
         ).to eq(%{
-          s0:["_func",{"nid":"0_0_3","tree":["def",[["_att",[["msg",[],3]],3],["trace",[["_att",[["_dqs","s0:$(f.ret):$(msg.payload.ret)",4]],4]],4],["trace",[["_att",[["_dqs","s0:$(payload.ret)",5]],5]],5]],3],"cnid":"0_0","fun":0},3]
+          s0:["_func",{"nid":"0_0_3","tree":["def",[["_att",[["msg",[],3]],3],["trace",[["_att",[["_dqs",[["_sqs","s0:",4],["_dol",[["_dmute",[["_ref",[["_sqs","f",4],["_sqs","ret",4]],4]],4]],4],["_sqs",":",4],["_dol",[["_dmute",[["_ref",[["_sqs","msg",4],["_sqs","payload",4],["_sqs","ret",4]],4]],4]],4]],4]],4]],4],["trace",[["_att",[["_dqs",[["_sqs","s0:",5],["_dol",[["_dmute",[["_ref",[["_sqs","payload",5],["_sqs","ret",5]],5]],5]],5]],5]],5]],5]],3],"cnid":"0_0","fun":0},3]
         }.strip)
       end
     end
@@ -1277,7 +1305,7 @@ describe 'Flor punit' do
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
-          0:B>0_1_3_0_0
+          0:B>0_1_3_0_0_1_0_0
         }.collect(&:strip).join("\n"))
       end
     end

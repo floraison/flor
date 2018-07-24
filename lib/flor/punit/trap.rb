@@ -253,6 +253,7 @@ class Flor::Pro::Trap < Flor::Procedure
   def receive
 
     return [] if @node['trapped']
+
     super
   end
 
