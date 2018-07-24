@@ -167,10 +167,16 @@ module Flor
     def to_regex(o)
 
       s =
-        case o
-        when String then o
-        when Array then o[1].to_s # hopefully regex tree
-        else o.to_s
+        if o.is_a?(String)
+          o
+        elsif o.is_a?(Array)
+          if o[0] == '_rxs' && o[2].is_a?(Integer)
+            o[1].to_s
+          else
+            "/#{o[0..-2].join}/#{o[-1]}"
+          end
+        else
+          o.to_s
         end
 
       m = s.match(/\A\/(.*)\/([imxouesn]*)\z/)

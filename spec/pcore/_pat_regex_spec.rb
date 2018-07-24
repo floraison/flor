@@ -17,7 +17,6 @@ describe 'Flor procedures' do
 
   describe '_pat_regex' do
 
-#["_pat_regex", "/^(J.+)son$/", 4]
     [
 
       [ "/o/", 'nada',
@@ -29,7 +28,7 @@ describe 'Flor procedures' do
 
     ].each do |code, val, expected|
 
-      code = [ '_pat_regex', code, 1 ]
+      code = [ '_pat_regex', [ [ '_sqs', code[1..-2], 1 ] ], 1 ]
       c = code.inspect
 
       it(

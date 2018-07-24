@@ -265,9 +265,9 @@ describe 'Flor procedures' do
 
         r = @executor.launch(
           [ '_pat_arr', [
-            [ '_dqs', 'one', 1 ],
-            [ '_pat_regex', "/^[tz][a-z]+$/", 1 ],
-            [ '_pat_regex', "/^t[a-z]+$/", 1 ]
+            [ '_sqs', 'one', 1 ],
+            [ '_pat_regex', [ [ '_sqs', '^[tz][a-z]+$' ] ], 1 ],
+            [ '_pat_regex', [ [ '_sqs', '^t[a-z]+$' ] ], 1 ]
           ], 1 ],
           payload: { 'ret' => [ 'one', 'two', 'three' ] })
 
@@ -286,12 +286,12 @@ describe 'Flor procedures' do
 
         r = @executor.launch(
           [ '_pat_arr', [
-            [ '_dqs', 'one', 1 ],
+            [ '_sqs', 'one', 1 ],
             [ '_pat_guard', [
-              [ '_dqs', 'two', 1 ],
-              [ '_pat_regex', "/^[tz]([a-z]+)$/", 1 ]
+              [ '_sqs', 'two', 1 ],
+              [ '_pat_regex', [ [ '_sqs', '^[tz]([a-z]+)$', 1 ] ], 1 ]
             ], 1 ],
-            [ '_pat_regex', "/^t[a-z]+$/", 1 ]
+            [ '_pat_regex', [ [ '_sqs', '^t[a-z]+$', 1 ] ], 1 ]
           ], 1 ],
           payload: { 'ret' => [ 'one', 'two', 'three' ] })
 

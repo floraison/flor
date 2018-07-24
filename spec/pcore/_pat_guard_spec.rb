@@ -211,7 +211,7 @@ describe 'Flor procedures' do
         r = @executor.launch(
           [ '_pat_guard', [
             [ '_att', [ [ 'x', [], 1 ] ] ],
-            [ '_pat_regex', '/^([a-z]{0,3})\d*$/', 1 ]
+            [ '_pat_regex', [ [ '_sqs', '^([a-z]{0,3})\d*$', 1 ] ], 1 ]
           ], 1 ],
           payload: { 'ret' => 'abc123' })
 

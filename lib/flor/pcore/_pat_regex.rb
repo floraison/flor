@@ -6,11 +6,25 @@ class Flor::Pro::PatRegex < Flor::Pro::PatContainer
 
   name '_pat_regex'
 
-  def execute
+  def pre_execute
+
+    @node['rets'] = []
+    @node['atts'] = []
+  end
+
+  def execute_child(index=0, sub=nil, h=nil)
+
+    payload['ret'] = node_payload_ret
+      # always pass the noe_payload_ret to children
+
+    super
+  end
+
+  def receive_last
 
     return wrap_no_match_reply unless val.is_a?(String)
 
-    rex = Flor.to_regex(tree[1])
+    rex = Flor.to_regex(@node['rets'] + [ att('rxopts') ])
     m = rex.match(val)
 
     return wrap_no_match_reply unless m
