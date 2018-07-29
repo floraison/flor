@@ -236,5 +236,36 @@ describe 'Flor core' do
       expect(r['payload']['l']).to eq(%w[ 0_0_1 0_1_1_0_0_0 _ref _ref ])
     end
   end
+
+  describe 'the "exe" pseudo-variable' do
+
+    it 'gives access to the node' do
+
+      r = @executor.launch(
+        %{
+          set f.nid node.nid
+          set f.exid exe.exid
+          set f.domain exe.domain
+          set f.counters exe.counters
+          set f.node_count (length exe.nodes)
+          set f.error_count (length execution.errors)
+          set f.start execution.start
+        })
+        #domain: 'gevrey_chambertin')
+
+      expect(r['point']).to eq('terminated')
+
+      n = Time.now
+
+      expect(r['payload']['ret']).to eq(nil)
+      expect(r['payload']['nid']).to eq('0_0_1')
+      expect(r['payload']['exid']).to eq(r['exid'])
+      expect(r['payload']['domain']).to eq(Flor.domain(r['exid']))
+      expect(r['payload']['counters']).to eq({ 'msgs' => 58 })
+      expect(r['payload']['node_count']).to eq(3)
+      expect(r['payload']['error_count']).to eq(0)
+      expect(r['payload']['start']).to match(/\A#{n.year}-[^ ]+\dZ/)
+    end
+  end
 end
 

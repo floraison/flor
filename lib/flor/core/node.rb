@@ -189,6 +189,8 @@ class Flor::Node
       lookup_var(@node, $1, path[1], path[2..-1])
     when 'node'
       lookup_in_node(path[1..-1])
+    when 'exe', 'execution'
+      lookup_in_execution(path[1..-1])
     else
       lookup_var(@node, '', path[0], path[1..-1])
     end
@@ -320,9 +322,15 @@ class Flor::Node
   #  @execution['nodes'][node['cnid']]
   #end
 
-  def lookup_in_node(pth)
+  def lookup_in_node(path)
 
-    Dense.fetch(@node, pth)
+    Dense.fetch(@node, path)
+  end
+
+  def lookup_in_execution(path)
+
+    return Flor.domain(@execution['exid']) if path == %w[ domain ]
+    Dense.fetch(@execution, path)
   end
 
   class PseudoVarContainer < Hash
