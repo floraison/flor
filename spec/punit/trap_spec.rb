@@ -256,7 +256,7 @@ describe 'Flor punit' do
       exid0 = @unit.launch(%q{
         trap tag: 't0' \ def msg \ trace "t0_$(msg.exid)"
         noret tag: 't0'
-        trace "stalling_$(exid)"
+        trace "stalling_$(exe.exid)"
         stall _
       })
 
@@ -748,7 +748,7 @@ describe 'Flor punit' do
         # 0
         exid0 = @unit.launch(%q{
           trap tag: 't0' range: 'domain' \ def msg \ trace "t0_$(msg.exid)"
-          trace "stalling_$(exid)"
+          trace "stalling_$(exe.exid)"
           stall _
         }, domain: 'net.acme')
 
@@ -794,7 +794,7 @@ describe 'Flor punit' do
         # 0
         exid0 = @unit.launch(%q{
           trap tag: 't0' range: 'subdomain' \ def msg \ trace "t0_$(msg.exid)"
-          trace "stalling_$(exid)"
+          trace "stalling_$(exe.exid)"
           stall _
         }, domain: 'net.acme')
 
@@ -1292,7 +1292,7 @@ describe 'Flor punit' do
                 sleep 0.8
                 noret tag: 'b'
                 noret tag: 'b'
-                trace "B>$(nid)"
+                trace "B>$(node.nid)"
           },
           wait: true)
 
