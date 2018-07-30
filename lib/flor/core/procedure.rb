@@ -619,7 +619,8 @@ class Flor::Procedure < Flor::Node
 
   def set_var(mode, path, v)
 
-    fail IndexError.new("cannot set domain variables") if mode == 'd'
+    fail IndexError.new(
+      'cannot set domain variables') if mode == 'd'
 
     begin
 

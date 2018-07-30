@@ -172,10 +172,6 @@ class Flor::Node
       else path
       end
 
-    return @node['nid'] if path == [ 'nid' ]
-    return @message['exid'] if path == [ 'exid' ]
-    return Flor.domain(@message['exid']) if path == [ 'domain' ]
-
     path.unshift('v') \
       if path.length < 2
 

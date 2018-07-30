@@ -79,8 +79,8 @@ describe 'Flor unit' do
       r = @unit.wait('idle')
 
       expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ execute ])
-      expect($seen.collect { |m| m['nid'] }.uniq).to eq(%w[ 0 0_0 0_0_0 0_1 ])
-      expect($seen.size).to eq(16) # 8 + 8 consumed
+      expect($seen.collect { |m| m['nid'] }.uniq).to eq(%w[ 0 ])
+      expect($seen.size).to eq(4) # 2 + 2 consumed
     end
 
     it 'intercepts return messages' do
