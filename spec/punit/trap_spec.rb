@@ -411,11 +411,11 @@ describe 'Flor punit' do
             sequence
               noret _
           },
-          wait: true)
+          wait: 'terminated')
 
         expect(r['point']).to eq('terminated')
 
-        wait_until { @unit.traces.count > 2 }
+        wait_until { @unit.traces.count >= 2 }
 
         expect(
           @unit.traces
@@ -425,6 +425,33 @@ describe 'Flor punit' do
           0:execute-sequence-0_1<-0
           1:receive--0_1<-0_1_0
           2:receive--0<-0_1
+        }.collect(&:strip).join("\n"))
+      end
+
+      it 'is OK with $(dollar) failing' do
+
+        r = @unit.launch(
+          %q{
+            trap heap: 'sequence'
+              def msg
+                trace "$(msg.nid):$(msg.tree.0)"
+            sequence
+              noret _
+          },
+          wait: 'terminated')
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.traces.count >= 2 }
+
+        expect(
+          @unit.traces
+            .each_with_index
+            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+        ).to eq(%w{
+          0:0_1:sequence
+          1:0_1:
+          2:0:
         }.collect(&:strip).join("\n"))
       end
 
@@ -573,7 +600,7 @@ describe 'Flor punit' do
               fun1 _
               fun0
           },
-          wait: true)
+          wait: 'terminated')
 
         expect(r['point']).to eq('terminated')
 
@@ -584,15 +611,15 @@ describe 'Flor punit' do
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%w{
-          0:t-fun0-0_3_0
-          1:c-fun0-0_1_1_0_0-2
+          0:c-fun0-0_1_1_0_0_1_0_0-2
+          1:t-fun0-0_3_0
           2:t--0_3_0
-          3:t--0_3_0
+          3:c-fun1-0_2_1_0_0_1_0_0-6
           4:t-fun1-0_3_1
-          5:c-fun1-0_2_1_0_0-6
+          5:t--0_3_0
           6:t--0_3_1
-          7:t--0_3_1
-          8:t-fun0-0_3_2
+          7:t-fun0-0_3_2
+          8:t--0_3_1
         }.collect(&:strip).join("\n"))
       end
 
@@ -611,11 +638,11 @@ describe 'Flor punit' do
               fun0
               funx _
           },
-          wait: true)
+          wait: 'terminated')
 
         expect(r['point']).to eq('terminated')
 
-        wait_until { @unit.traces.count > 1 }
+        wait_until { @unit.traces.count >= 1 }
 
         expect(
           @unit.traces
