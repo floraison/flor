@@ -15,6 +15,16 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
   s.summary = 'A Ruby workflow engine'
 
+  s.metadata = {
+    'changelog_uri' => s.homepage + '/flor/blob/master/CHANGELOG.md',
+    'documentation_uri' => s.homepage + '/flor/tree/master/doc',
+    'bug_tracker_uri' => s.homepage + '/flor/issues',
+    'mailing_list_uri' => 'https://groups.google.com/forum/#!forum/floraison',
+    'homepage_uri' =>  s.homepage + '/flor',
+    'source_code_uri' => s.homepage + '/flor',
+    #'wiki_uri' => s.homepage + '/flor/wiki',
+  }
+
   s.description = %{
 A Ruby workflow engine (ruote next generation)
   }.strip

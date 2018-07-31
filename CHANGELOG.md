@@ -1,5 +1,5 @@
 
-# flor CHANGELOG.md
+# CHANGELOG.md
 
 
 ## flor 1.0.0  not yet released
