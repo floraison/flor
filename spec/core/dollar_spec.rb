@@ -49,7 +49,7 @@ describe 'Flor core' do
       expect(r['payload']['l']).to eq([ %w[ car ], %w[ car ] ])
     end
 
-    it "substitutes $(node) (not really useful)" do
+    it 'substitutes $(node)' do
 
       r = @executor.launch(
         %q{
@@ -62,7 +62,7 @@ describe 'Flor core' do
       expect(r['payload']['l']).to eq(%w[ nid:0_0_1_1_0_0 heat0:_ref ])
     end
 
-    it "indexes arrays" do
+    it 'indexes arrays' do
 
       r = @executor.launch(
         %q{
@@ -155,6 +155,34 @@ describe 'Flor core' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq(ret)
       end
+    end
+
+    it 'silences errors' do
+
+      r = @executor.launch(
+        %q{
+          set f.l []
+          push f.l "abc-$(nada.0.xxx)-ghi"
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ abc--ghi ])
+    end
+
+    it 'silences errors inside of functions' do
+
+      r = @executor.launch(
+        %q{
+          set f.l []
+          define fun i
+            push f.l "$(i)-abc-$(nada.0.xxx)-ghi"
+          fun 0
+          fun 1
+          fun 2
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l']).to eq(%w[ 0-abc--ghi 1-abc--ghi 2-abc--ghi ])
     end
   end
 end
