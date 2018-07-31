@@ -333,14 +333,20 @@ class Flor::Procedure < Flor::Node
     from_child = cnodes.delete(from) if cnodes_any? && remove
 
     if node_closed?
+
       return receive_from_child_when_closed \
         if from_child || node_status_flavour
-      return receive_when_closed
-    elsif node_ended?
-      return receive_when_ended
-    end
 
-    receive
+      receive_when_closed
+
+    elsif node_ended?
+
+      receive_when_ended
+
+    else
+
+      receive
+    end
   end
 
   def message_cause
@@ -358,14 +364,6 @@ class Flor::Procedure < Flor::Node
 
     c = message_cause
 
-#puts "<<<"
-##p @message
-##p @message['cause']
-#p node_status
-##p @node['on_error']
-#p c
-##puts caller[0, 3]
-#puts ">>>"
     open_node \
       unless
         (node_status_flavour == 'on-error') || # TODO use the cause ???
