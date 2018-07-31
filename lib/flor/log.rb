@@ -227,7 +227,7 @@ module Flor
 
       ret = (m['payload'] || {})['ret']
       s = Flor.to_d(ret, compact: true)
-      Flor.truncate_string(s, 35, Proc.new { |x| "#{c.dg}... (L#{x})#{c.rs}" })
+      Flor.truncate_string(s, 35, Proc.new { |x| "#{c.dg}... (ln#{x})#{c.rs}" })
     end
 
     def nod_to_s(executor, n, opts, here=false)
