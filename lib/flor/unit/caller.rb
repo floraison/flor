@@ -52,6 +52,9 @@ module Flor
         fail ArgumentError.new('".." not allowed in paths') if pa =~ /\.\./
         load(fjoin(root, pa)) }
 
+      #
+      # initialize
+
       k = Flor.const_lookup(conf['class'] || conf['module'])
 
       o =
@@ -68,15 +71,18 @@ module Flor
           end
         end
 
+      #
+      # call
+
       p = message['point']
-      m = :on
-      m = "on_#{p}" if ! o.respond_to?(m)
-      m = p if ! o.respond_to?(m)
-      m = :cancel if m == 'detask' && ! o.respond_to?(m)
+      ms = [ "on_#{p}", :on_message, :on, p ]
+      ms = ms + [ :on_cancel, :cancel ] if p == 'detask'
+      m = ms.find { |mm| o.respond_to?(mm) }
 
       fail(
-        "#{k.class.to_s.downcase} #{k} doesn't respond to on, on_#{p} or #{p}"
-      ) if ! o.respond_to?(m)
+        "#{k.class.to_s.downcase} #{k} doesn't respond to " +
+        ms[0..-2].collect { |e| "##{e}" }.join(', ') + ", or ##{ms[-1]}"
+      ) unless m
 
       r =
         case o.method(m).arity
@@ -87,6 +93,9 @@ module Flor
           service: service, configuration: conf, message: message })
         else o.send(m)
         end
+
+      #
+      # reply
 
       to_messages(r)
     end
