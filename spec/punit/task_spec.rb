@@ -93,7 +93,7 @@ describe 'Flor punit' do
       expect(ret['tasker']).to eq('alpha')
     end
 
-    it "can reply with an error" do
+    it 'can reply with an error' do
 
       r = @unit.launch(
         %q{
@@ -104,6 +104,21 @@ describe 'Flor punit' do
       expect(r['nid']).to eq('0_0')
       expect(r['tasker']).to eq('failfox')
       expect(r['point']).to eq('failed')
+    end
+
+    it 'can reply with an error (BasicTasker#reply_with_error)' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            task 'failfox2'
+        },
+        wait: true)
+
+sleep 1; pp r
+      expect(r['point']).to eq('failed')
+      expect(r['nid']).to eq('0')
+      expect(r['tasker']).to eq('failfox2')
     end
 
     it 'passes information to the tasker' do

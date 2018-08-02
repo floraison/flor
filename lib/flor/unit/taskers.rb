@@ -62,19 +62,21 @@ module Flor
         ]
       end
     end
-  end
 
-  def reply_with_error(error)
+    def reply_with_error(error)
 
-    m = @message
-      .select { |k, v| %w[ sm exid nid from payload tree ].include?(k) }
+pp @message
+      m = @message
+        .select { |k, v|
+          %w[ sm exid nid from payload tree ].include?(k) }
 
-    m['point'] = 'failed'
-    m['fpoint'] = @message['point']
-    m['fm'] = @message['m']
-    m['error'] = Flor.to_error(error)
+      m['point'] = 'failed'
+      m['fpoint'] = @message['point']
+      m['fm'] = @message['m']
+      m['error'] = Flor.to_error(error)
 
-    reply(m)
+      reply(m)
+    end
   end
 end
 
