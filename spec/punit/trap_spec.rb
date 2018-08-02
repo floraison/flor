@@ -222,6 +222,15 @@ describe 'Flor punit' do
 
     it 'traps multiple times' do
 
+      @unit.hooker.add('spec_hook') do |m|
+
+        nid = m['nid'] || '_'
+        if m['consumed'] && nid.index(/-/).nil?
+          #p m.keys
+          p m.select { |k, v| %w[ point nid from type m sm ].include?(k) }
+        end
+      end
+
       r = @unit.launch(
         %q{
           trap point: 'receive'

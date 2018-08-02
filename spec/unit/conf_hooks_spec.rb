@@ -185,8 +185,6 @@ describe 'Flor unit' do
       require 'unit/hooks/bravo'
         # require here, since this path is outside of envs/test/
 
-      $seen = []
-
       hooks = [
         { point: 'return', consumed: false, class: 'BravoHook' }
       ]

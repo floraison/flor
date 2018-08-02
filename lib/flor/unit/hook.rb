@@ -1,6 +1,8 @@
 
 module Flor
 
+  # Used by Flor::Loader to prepare hooks from hooks.json files.
+  #
   class Hook
 
     def initialize(unit, exid, h)
@@ -28,7 +30,6 @@ module Flor
 
       [ "hook#{object_id}", opts, self, nil ]
     end
-
 
     def notify(executor, message)
 

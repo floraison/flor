@@ -63,7 +63,8 @@ module Flor
 
           if @queue.empty?
             fail RuntimeError.new(
-              "timeout for #{self.to_s}") if @on_timeout == 'fail'
+              "timeout for #{self.to_s}"
+            ) if @on_timeout == 'fail'
             return { 'exid' => @exid, 'timed_out' => @on_timeout }
           end
         end

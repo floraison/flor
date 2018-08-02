@@ -61,10 +61,9 @@ module Flor
         if k.class == Module
           k
         else
-          case k.instance_method(:initialize).arity
-          when 1 then k.new(service)
-          when 2 then k.new(service, conf)
-          when 3 then k.new(service, conf, message)
+          case i = k.instance_method(:initialize).arity
+          when 1, 2, 3 then k.new(
+            *[ service, conf, message ][0, i])
           when -1 then k.new({
             service: service, configuration: conf, message: message })
           else k.new
