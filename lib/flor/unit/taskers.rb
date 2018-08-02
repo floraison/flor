@@ -14,9 +14,9 @@ module Flor
 
     protected
 
-    def return(force=false)
+    def return(message=@message, force=false)
 
-      @ganger.return(@message) if force || @ganger
+      @ganger.return(message) if force || @ganger
     end
     alias reply return
 
