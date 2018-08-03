@@ -25,7 +25,7 @@ describe 'Flor unit' do
     @unit.shutdown
   end
 
-  describe 'error' do
+  describe 'error / fail' do
 
     it 'lets the execution be saved to storage' do
 
@@ -36,7 +36,7 @@ describe 'Flor unit' do
         }, wait: true)
 
       expect(r['point']).to eq('failed')
-      sleep 0.3
+      sleep 0.350
 
       expect(@unit.executions.count).to eq(1)
 

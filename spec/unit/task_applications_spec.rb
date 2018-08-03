@@ -14,7 +14,7 @@ describe 'Flor unit' do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf['unit'] = 'u_taskapp'
-    #@unit.hook('journal', Flor::Journal)
+    @unit.hook('journal', Flor::Journal)
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
@@ -446,6 +446,50 @@ describe 'Flor unit' do
       expect(
         r['error']['msg']
       ).to eq("don't know how to apply \"unknown_alpha\"")
+    end
+  end
+
+  context 'tasker error replies vs on_error' do
+
+    it 'works' do
+
+      r = @unit.launch(
+        %q{
+          cursor
+            on_error \ break _
+            task 'failfox2'
+          "broken"
+        },
+        wait: true)
+
+#sleep 1; pp r
+      expect(r['point']).to eq('terminated')
+      expect(r['pr']).to eq(1)
+      expect(r['payload']['ret']).to eq('broken')
+
+      expect(
+        @unit.journal
+          .each_with_index
+          .collect { |m, i| "#{i}:#{m['point']}:#{m['from']}->#{m['nid']}" }
+          .join("\n")
+      ).to eq(%{
+        0:execute:->0
+        1:execute:0->0_0
+        2:execute:0_0->0_0_0
+        3:execute:0_0_0->0_0_0_0
+        4:execute:0_0_0_0->0_0_0_0_0
+        5:receive:0_0_0_0_0->0_0_0_0
+        6:cancel:0_0_0_0->0_0
+        7:cancel:0_0->0_0_0
+        8:cancel:0_0_0->0_0_0_0
+        9:receive:0_0_0_0->0_0_0
+        10:receive:0_0_0->0_0
+        11:receive:0_0->0
+        12:execute:0->0_1
+        13:receive:0_1->0
+        14:receive:0->
+        15:terminated:0->
+      }.ftrim)
     end
   end
 end
