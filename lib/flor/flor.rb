@@ -38,6 +38,8 @@ module Flor
       v = ENV[k]; (v && v.match(/\A\d+\z/)) ? v.to_i : nil
     end
 
+    # Returns a new, complete (not shallow), copy of the target instance.
+    #
     def dup(o)
 
       Marshal.load(Marshal.dump(o))
@@ -45,7 +47,7 @@ module Flor
 
     def dup_and_merge(h, hh)
 
-      self.dup(h).merge(hh)
+      self.dup(h).merge!(hh)
     end
     def dupm(h, hh); self.dup_and_merge(h, hh); end
 

@@ -101,10 +101,18 @@ describe 'Flor punit' do
         },
         wait: 'failed')
 
-sleep 1; pp r
+#sleep 1; pp r
       expect(r['nid']).to eq('0_0')
       expect(r['tasker']).to eq('failfox')
       expect(r['point']).to eq('failed')
+      expect(r['pr']).to eq(2) # processing run is the second run
+
+      #expect(
+      #  @unit.journal
+      #    .select
+      #).to eq(%{
+      #  xxx
+      #})
     end
 
     it 'can reply with an error (BasicTasker#reply_with_error)' do

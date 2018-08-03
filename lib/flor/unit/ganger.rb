@@ -36,6 +36,12 @@ module Flor
 
     def task(executor, message)
 
+      message = message.dup
+        #
+        # work with a shallow copy of the message, the original message
+        # will get passed to the "post" hooks, while this shallow copy
+        # gets passed to the tasker
+
       domain = message['exid'].split('-', 2).first
       tname = message['tasker']
 
