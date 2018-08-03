@@ -11,5 +11,10 @@ class FailfoxTwoTasker < Flor::BasicTasker
 
     reply_with_error(err)
   end
+
+  def detask
+
+    reply
+  end
 end
 

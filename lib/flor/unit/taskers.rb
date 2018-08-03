@@ -63,7 +63,7 @@ module Flor
     def reply_with_error(error)
 
       reply(
-        to_error_message(@message, error))
+        Flor.to_error_message(@message, error))
     end
   end
 end
