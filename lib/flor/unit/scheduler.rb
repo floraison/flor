@@ -242,12 +242,16 @@ module Flor
 
     def return(message)
 
-      queue({
-        'point' => 'return',
-        'exid' => message['exid'],
-        'nid' => message['nid'],
-        'payload' => message['payload'],
-        'tasker' => message['tasker'] })
+      m =
+        if message['point'] == 'failed'
+          message
+        else
+          message
+            .select { |k, _| %w[ exid nid payload tasker ].include?(k) }
+            .merge!('point' => 'return')
+        end
+
+      queue(m)
 
       nil
     end

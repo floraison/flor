@@ -1,0 +1,6 @@
+
+# echo tasker
+
+require: 'tasker.rb'
+class: FailfoxTwoTasker
+

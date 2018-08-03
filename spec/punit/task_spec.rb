@@ -93,17 +93,73 @@ describe 'Flor punit' do
       expect(ret['tasker']).to eq('alpha')
     end
 
-    it "can reply with an error" do
+    it 'can reply with an error' do
 
       r = @unit.launch(
         %q{
           sequence \ task 'failfox'
         },
-        wait: true)
+        wait: 'failed')
+
+      sleep 0.7
 
       expect(r['nid']).to eq('0_0')
       expect(r['tasker']).to eq('failfox')
       expect(r['point']).to eq('failed')
+      expect(r['pr']).to eq(2) # processing run is the second run
+
+      expect(
+        @unit.journal
+          .each_with_index
+          .collect { |m, i| "#{i}:#{m['point']}:#{m['from']}->#{m['nid']}" }
+          .join("\n")
+      ).to eq(%{
+        0:execute:->0
+        1:execute:0->0_0
+        2:execute:0_0->0_0_0
+        3:execute:0_0_0->0_0_0_0
+        4:receive:0_0_0_0->0_0_0
+        5:receive:0_0_0->0_0
+        6:task:0_0->0_0
+        7:end:->
+        8:failed:0_0->0_0
+        9:end:->
+      }.ftrim)
+    end
+
+    it 'can reply with an error (BasicTasker#reply_with_error)' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            task 'failfox2'
+        },
+        wait: 'failed')
+
+      sleep 0.7
+
+      expect(r['point']).to eq('failed')
+      expect(r['nid']).to eq('0_0')
+      expect(r['tasker']).to eq('failfox2')
+      expect(r['pr']).to eq(2) # processing run is the second run
+
+      expect(
+        @unit.journal
+          .each_with_index
+          .collect { |m, i| "#{i}:#{m['point']}:#{m['from']}->#{m['nid']}" }
+          .join("\n")
+      ).to eq(%{
+        0:execute:->0
+        1:execute:0->0_0
+        2:execute:0_0->0_0_0
+        3:execute:0_0_0->0_0_0_0
+        4:receive:0_0_0_0->0_0_0
+        5:receive:0_0_0->0_0
+        6:task:0_0->0_0
+        7:end:->
+        8:failed:0_0->0_0
+        9:end:->
+      }.ftrim)
     end
 
     it 'passes information to the tasker' do
