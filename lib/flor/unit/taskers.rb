@@ -17,6 +17,8 @@ module Flor
     def reply(message=@message, force=false)
 
       @ganger.return(message) if force || @ganger
+
+      [] # very important, return no further messages
     end
 
     def exid; @message['exid']; end

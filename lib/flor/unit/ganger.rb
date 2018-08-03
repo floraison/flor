@@ -63,6 +63,9 @@ module Flor
       message['vars'] = gather_vars(executor, tconf, message)
 
       @unit.caller.call(self, tconf, message)
+        #
+        # might return a re-routing message,
+        # especially if it's a domain tasker
     end
 
     def return(message)
