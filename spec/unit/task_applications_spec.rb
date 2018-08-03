@@ -373,6 +373,7 @@ describe 'Flor unit' do
           },
           wait: 'task')
 
+        expect(r['point']).to eq('task')
         expect(r['vars']['x']).to eq(0)
         expect(r['vars']['y']).to eq(1)
       end
