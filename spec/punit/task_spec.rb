@@ -99,7 +99,7 @@ describe 'Flor punit' do
         %q{
           sequence \ task 'failfox'
         },
-        wait: true)
+        wait: 'failed')
 
 sleep 1; pp r
       expect(r['nid']).to eq('0_0')
@@ -114,12 +114,12 @@ sleep 1; pp r
           sequence
             task 'failfox2'
         },
-        wait: true)
+        wait: 'failed')
 
-sleep 1; pp r
       expect(r['point']).to eq('failed')
-      expect(r['nid']).to eq('0')
+      expect(r['nid']).to eq('0_0')
       expect(r['tasker']).to eq('failfox2')
+      expect(r['pr']).to eq(2) # processing run is the second run
     end
 
     it 'passes information to the tasker' do

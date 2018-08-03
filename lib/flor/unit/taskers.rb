@@ -14,13 +14,6 @@ module Flor
 
     protected
 
-    def reply(message=@message, force=false)
-
-      @ganger.return(message) if force || @ganger
-
-      [] # very important, return no further messages
-    end
-
     def exid; @message['exid']; end
     def nid; @message['nid']; end
 
@@ -47,28 +40,31 @@ module Flor
 
       if name.is_a?(String)
 
-        [
-          Flor.dup_and_merge(
+        [ Flor.dup_and_merge(
             @message,
             'tasker' => name, 'original_tasker' => @message['tasker'],
-            'routed' => true)
-        ]
+            'routed' => true) ]
 
       else
 
-        [
-          Flor.dup_and_merge(
+        [ Flor.dup_and_merge(
             @message,
-            'routed' => !! name)
-        ]
+            'routed' => !! name) ]
       end
+    end
+
+    def reply(message=@message, force=false)
+
+      @ganger.return(message) if force || @ganger
+
+      [] # very important, return no further messages
     end
 
     def reply_with_error(error)
 
       m = @message
         .select { |k, v|
-          %w[ sm exid nid from payload tree ].include?(k) }
+          %w[ sm exid nid from payload tree er tasker ].include?(k) }
 
       m['point'] = 'failed'
       m['fpoint'] = @message['point']
