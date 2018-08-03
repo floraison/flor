@@ -46,10 +46,10 @@ describe Flor::Caller do
           expect(r.size).to eq(1)
 
           expect(r[0].keys.sort).to eq(
-            %w[ cwd kla msg trc ])
-          expect(r[0]['kla']).to eq(
+            %w[ error fm fpoint point ])
+          expect(r[0]['error']['kla']).to eq(
             'NameError')
-          expect(r[0]['msg']).to match(
+          expect(r[0]['error']['msg']).to match(
             /\Auninitialized constant (Kernel::)?Does\z/)
         end
       end
@@ -67,9 +67,9 @@ describe Flor::Caller do
 
           expect(r.class).to eq(Array)
           expect(r.size).to eq(1)
-          expect(r[0].keys.sort).to eq(%w[ cwd kla msg trc ])
-          expect(r[0]['kla']).to eq('RuntimeError')
-          expect(r[0]['msg']).to eq('pure fail at m:67')
+          expect(r[0].keys.sort).to eq(%w[ error fm fpoint point ])
+          expect(r[0]['error']['kla']).to eq('RuntimeError')
+          expect(r[0]['error']['msg']).to eq('pure fail at m:67')
         end
       end
     end
@@ -106,9 +106,11 @@ describe Flor::Caller do
 
           expect(r.class).to eq(Array)
           expect(r.size).to eq(1)
-          expect(r[0].keys.sort).to eq(%w[ cwd kla msg trc ])
-          expect(r[0]['kla']).to eq('Errno::ENOENT')
-          expect(r[0]['msg']).to eq('No such file or directory - cobra')
+          expect(r[0].keys.sort).to eq(%w[ error fm fpoint payload point ])
+
+          e = r[0]['error']
+          expect(e['kla']).to eq('Errno::ENOENT')
+          expect(e['msg']).to eq('No such file or directory - cobra')
         end
       end
 
@@ -125,11 +127,13 @@ describe Flor::Caller do
 
           expect(r.class).to eq(Array)
           expect(r.size).to eq(1)
-          expect(r[0].keys.sort).to eq(%w[ cwd kla msg trc ])
-          expect(r[0]['kla']).to eq('Flor::Caller::SpawnError')
-          expect(r[0]['msg']).to match(/\A\(code: 2, pid: \d+\) /)
-          expect(r[0]['msg']).to match(/: can't open file 'spec\/unit\//)
-          expect(r[0]['msg']).to match(/ \[Errno 2\] No such file or directory/)
+          expect(r[0].keys.sort).to eq(%w[ error fm fpoint payload point ])
+
+          e = r[0]['error']
+          expect(e['kla']).to eq('Flor::Caller::SpawnError')
+          expect(e['msg']).to match(/\A\(code: 2, pid: \d+\) /)
+          expect(e['msg']).to match(/[Pp]ython: can't open file 'spec\/unit\//)
+          expect(e['msg']).to match(/ \[Errno 2\] No such file or directory/)
         end
       end
     end

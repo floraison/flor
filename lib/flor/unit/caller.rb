@@ -26,7 +26,7 @@ module Flor
 
     rescue => err
 
-      [ Flor.to_error(err) ] # FIXME it's not a list of messages !!!!
+      [ Flor.to_error_message(message, err) ]
     end
 
     protected

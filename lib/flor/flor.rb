@@ -97,6 +97,20 @@ module Flor
       h
     end
 
+    def to_error_message(message, err)
+
+      m = message
+        .select { |k, v|
+          %w[ sm exid nid from payload tree er tasker ].include?(k) }
+
+      m['point'] = 'failed'
+      m['fpoint'] = message['point']
+      m['fm'] = message['m']
+      m['error'] = to_error(err)
+
+      m
+    end
+
     def const_lookup(s)
 
       s.split('::')
