@@ -101,6 +101,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
+sleep 1; pp r
       expect(r['nid']).to eq('0_0')
       expect(r['tasker']).to eq('failfox')
       expect(r['point']).to eq('failed')

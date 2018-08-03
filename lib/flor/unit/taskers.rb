@@ -14,11 +14,10 @@ module Flor
 
     protected
 
-    def return(message=@message, force=false)
+    def reply(message=@message, force=false)
 
       @ganger.return(message) if force || @ganger
     end
-    alias reply return
 
     def exid; @message['exid']; end
     def nid; @message['nid']; end
@@ -65,7 +64,6 @@ module Flor
 
     def reply_with_error(error)
 
-pp @message
       m = @message
         .select { |k, v|
           %w[ sm exid nid from payload tree ].include?(k) }
