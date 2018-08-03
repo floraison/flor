@@ -456,7 +456,7 @@ describe 'Flor unit' do
       r = @unit.launch(
         %q{
           cursor
-            on_error \ break _
+            on error \ break _
             task 'failfox2'
           "broken"
         },

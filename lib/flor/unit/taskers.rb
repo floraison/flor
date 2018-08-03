@@ -62,16 +62,8 @@ module Flor
 
     def reply_with_error(error)
 
-      m = @message
-        .select { |k, v|
-          %w[ sm exid nid from payload tree er tasker ].include?(k) }
-
-      m['point'] = 'failed'
-      m['fpoint'] = @message['point']
-      m['fm'] = @message['m']
-      m['error'] = Flor.to_error(error)
-
-      reply(m)
+      reply(
+        to_error_message(@message, error))
     end
   end
 end
