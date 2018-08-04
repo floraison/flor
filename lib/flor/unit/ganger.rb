@@ -62,7 +62,16 @@ module Flor
 
       message['vars'] = gather_vars(executor, tconf, message)
 
-      @unit.caller.call(self, tconf, message)
+      m = Flor.dup(message)
+        #
+        # the tasker gets a copy of the message (and it can play with it
+        # to its heart content), meanwhile the message is handed to the
+        # "post" notifiers.
+
+      @unit.caller.call(self, tconf, m)
+        #
+        # might return a re-routing message,
+        # especially if it's a domain tasker
     end
 
     def return(message)

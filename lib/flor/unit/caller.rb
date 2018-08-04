@@ -26,7 +26,7 @@ module Flor
 
     rescue => err
 
-      [ Flor.to_error(err) ]
+      [ Flor.to_error_message(message, err) ]
     end
 
     protected

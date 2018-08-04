@@ -38,6 +38,8 @@ module Flor
       v = ENV[k]; (v && v.match(/\A\d+\z/)) ? v.to_i : nil
     end
 
+    # Returns a new, complete (not shallow), copy of the target instance.
+    #
     def dup(o)
 
       Marshal.load(Marshal.dump(o))
@@ -45,7 +47,7 @@ module Flor
 
     def dup_and_merge(h, hh)
 
-      self.dup(h).merge(hh)
+      self.dup(h).merge!(hh)
     end
     def dupm(h, hh); self.dup_and_merge(h, hh); end
 
@@ -93,6 +95,20 @@ module Flor
       h['rlp'] = $: if o.is_a?(::LoadError)
 
       h
+    end
+
+    def to_error_message(message, err)
+
+      m = message
+        .select { |k, v|
+          %w[ sm exid nid from payload tree er tasker ].include?(k) }
+
+      m['point'] = 'failed'
+      m['fpoint'] = message['point']
+      m['fm'] = message['m']
+      m['error'] = to_error(err)
+
+      m
     end
 
     def const_lookup(s)
