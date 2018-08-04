@@ -58,9 +58,10 @@ module Flor
 
       (@unit.conf['exe_max_messages'] || 77).times do |i|
 
+        break if @shutdown
+
         m = @messages.shift
         break unless m
-        break if @shutdown # FIXME shouldn't that go above?
 
         m = (@messages << m).shift \
           if m['point'] == 'terminated' && @messages.any?
