@@ -8,9 +8,9 @@ class Flor::Pro::Trap < Flor::Procedure
   #
   # Once the trap is set (once the execution interprets its branch), it
   # will trigger for any matching message, unless the `count:` attribute
-  # is set.
+  # is set (it will trigger for the first {count} matching messages).
   #
-  # When the execution terminates, the trap is removed as well.
+  # When the execution terminates, the trap is removed.
   #
   # By default, the observation range is the execution, only messages
   # in the execution where the trap was set are considered.

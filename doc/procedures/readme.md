@@ -77,7 +77,7 @@
   * [Flor::Pro::Andor](https://github.com/floraison/flor/blob/master/lib/flor/pcore/andor.rb) : [and, or](andor.md)
   * [Flor::Pro::Apply](https://github.com/floraison/flor/blob/master/lib/flor/pcore/apply.rb) : [apply](apply.md)
   * [Flor::Pro::Arith](https://github.com/floraison/flor/blob/master/lib/flor/pcore/arith.rb) : +, -, *, /, %
-  * [Flor::Pro::Atom](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_atom.rb) : _num, _boo, _sqs, _rxs, _nul, _func
+  * [Flor::Pro::Atom](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_atom.rb) : _num, _boo, _sqs, _nul, _func
   * [Flor::Pro::Att](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_att.rb) : _att
   * [Flor::Pro::Break](https://github.com/floraison/flor/blob/master/lib/flor/pcore/break.rb) : [break, continue](break.md)
   * [Flor::Pro::Cancel](https://github.com/floraison/flor/blob/master/lib/flor/punit/cancel.rb) : [cancel, kill](cancel.md)
@@ -133,6 +133,7 @@
   * [Flor::Pro::Rand](https://github.com/floraison/flor/blob/master/lib/flor/pcore/rand.rb) : [rand](rand.md)
   * [Flor::Pro::Range](https://github.com/floraison/flor/blob/master/lib/flor/pcore/range.rb) : [range](range.md)
   * [Flor::Pro::Ref](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_ref.rb) : _ref, _rep
+  * [Flor::Pro::RegularExpressionString](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_rxs.rb) : _rxs
   * [Flor::Pro::Reverse](https://github.com/floraison/flor/blob/master/lib/flor/pcore/reverse.rb) : [reverse](reverse.md)
   * [Flor::Pro::Schedule](https://github.com/floraison/flor/blob/master/lib/flor/punit/schedule.rb) : [schedule](schedule.md)
   * [Flor::Pro::Sequence](https://github.com/floraison/flor/blob/master/lib/flor/pcore/sequence.rb) : [sequence, _apply, begin](sequence.md)
