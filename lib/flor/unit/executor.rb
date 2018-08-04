@@ -60,15 +60,12 @@ module Flor
 
         m = @messages.shift
         break unless m
-        break if @shutdown
+        break if @shutdown # FIXME shouldn't that go above?
 
-        if m['point'] == 'terminated' && @messages.any?
-          #
-          # try to handle 'terminated' last
-          #
-          @messages << m
-          m = @messages.shift
-        end
+        m = (@messages << m).shift \
+          if m['point'] == 'terminated' && @messages.any?
+            #
+            # handle 'terminated' messages last
 
         ms = process(m)
 

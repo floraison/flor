@@ -227,7 +227,8 @@ describe 'Flor punit' do
         nid = m['nid'] || '_'
         if m['consumed'] && nid.index(/-/).nil?
           #p m.keys
-          p m.select { |k, v| %w[ point nid from type m sm ].include?(k) }
+          p m.select { |k, v|
+            %w[ point nid from type m sm flavour ].include?(k) }
         end
       end
 
@@ -236,8 +237,7 @@ describe 'Flor punit' do
           trap point: 'receive'
             def msg \ trace "$(msg.nid)<-$(msg.from)"
           sequence
-            sequence
-              trace '*'
+            trace '*'
         },
         wait: true)
 
