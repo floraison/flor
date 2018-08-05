@@ -174,7 +174,7 @@ describe 'Flor punit' do
         receive:0_0_1-1 <-trigger:36:0_0
         receive:0_0 <-trigger:36:0_0
         end:
-      }.gsub(/\n\s+/, "\n").strip)
+      }.ftrim)
     end
 
     it 'does not cancel its children' do
@@ -222,22 +222,22 @@ describe 'Flor punit' do
 
     it 'traps multiple times' do
 
-      @unit.hooker.add('spec_hook') do |m|
-
-        nid = m['nid'] || '_'
-        if m['consumed'] && nid.index(/-/).nil?
-          #p m.keys
-          p m.select { |k, v|
-            %w[ point nid from type m sm flavour ].include?(k) }
-        end
-      end
+      #@unit.hooker.add('spec_hook') do |m|
+      #  nid = m['nid'] || '_'
+      #  if m['consumed'] && nid.index(/-/).nil?
+      #    #p m.keys
+      #    p m.select { |k, v|
+      #      %w[ point nid from type m sm flavour ].include?(k) }
+      #  end
+      #end
 
       r = @unit.launch(
         %q{
           trap point: 'receive'
             def msg \ trace "$(msg.nid)<-$(msg.from)"
           sequence
-            trace '*'
+            sequence
+              trace '*'
         },
         wait: true)
 
@@ -249,7 +249,7 @@ describe 'Flor punit' do
         @unit.traces
           .each_with_index
           .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-      ).to eq(%w{
+      ).to eq(%{
         0:*
         1:0_1_0_0_0<-0_1_0_0_0_0
         2:0_1_0_0<-0_1_0_0_0
@@ -257,7 +257,7 @@ describe 'Flor punit' do
         4:0_1<-0_1_0
         5:0<-0_1
         6:<-0
-      }.collect(&:strip).join("\n"))
+      }.ftrim)
     end
 
     it 'traps in the current execution only by default' do
@@ -398,13 +398,13 @@ describe 'Flor punit' do
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
+        ).to eq(%{
           0:B>0_1_2_0_0_1_0_0
           1:A>0_0_2_1_0_0_1_0_0-1
           2:B>0_1_4_0_0_1_0_0
           3:A>0_0_2_1_0_0_1_0_0-2
           4:B>0_1_6_0_0_1_0_0
-        }.collect(&:strip).join("\n"))
+        }.ftrim)
       end
     end
 
@@ -430,11 +430,11 @@ describe 'Flor punit' do
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
+        ).to eq(%{
           0:execute-sequence-0_1<-0
           1:receive--0_1<-0_1_0
           2:receive--0<-0_1
-        }.collect(&:strip).join("\n"))
+        }.ftrim)
       end
 
       it 'is OK with $(dollar) failing' do
@@ -457,11 +457,11 @@ describe 'Flor punit' do
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
+        ).to eq(%{
           0:0_1:sequence
           1:0_1:
           2:0:
-        }.collect(&:strip).join("\n"))
+        }.ftrim)
       end
 
       it 'traps multiple given procedures' do
@@ -477,7 +477,7 @@ describe 'Flor punit' do
               sequence
                 noret _
           },
-          wait: true)
+          wait: 'terminated')
 
         expect(r['point']).to eq('terminated')
 
@@ -487,7 +487,7 @@ describe 'Flor punit' do
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
+        ).to eq(%{
           0:execute-concurrence-0_1<-0
           1:execute-sequence-0_1_0<-0_1
           2:execute-sequence-0_1_1<-0_1
@@ -496,7 +496,7 @@ describe 'Flor punit' do
           5:receive--0_1<-0_1_0
           6:receive--0_1<-0_1_1
           7:receive--0<-0_1
-        }.collect(&:strip).join("\n"))
+        }.ftrim)
       end
 
       it 'traps a procedure and a point' do
@@ -512,7 +512,7 @@ describe 'Flor punit' do
               sequence
                 noret _
           },
-          wait: true)
+          wait: 'terminated')
 
         expect(r['point']).to eq('terminated')
 
@@ -522,13 +522,13 @@ describe 'Flor punit' do
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
+        ).to eq(%{
           0:receive--0_1_0<-0_1_0_0
           1:receive--0_1_1<-0_1_1_0
           2:receive--0_1<-0_1_0
           3:receive--0_1<-0_1_1
           4:receive--0<-0_1
-        }.collect(&:strip).join("\n"))
+        }.ftrim)
       end
 
       #it 'traps a heap regex'
@@ -558,10 +558,10 @@ describe 'Flor punit' do
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
+        ).to eq(%{
           0:t-fun0-0_2_0
           1:t-fun0-0_2_1
-        }.collect(&:strip).join("\n"))
+        }.ftrim)
       end
 
       it 'traps given functions' do
@@ -584,7 +584,7 @@ describe 'Flor punit' do
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
+        ).to eq(%{
           0:c-fun0-0_1_1_0_0_1_0_0-1
           1:t-heat-0_1-1
           2:t-heat-0_1-1
@@ -593,7 +593,7 @@ describe 'Flor punit' do
           5:t-heat-0_1-5
           6:t-heat-0_1-5
           7:t-heat-0_1-5
-        }.collect(&:strip).join("\n"))
+        }.ftrim)
       end
 
       it 'traps multiple heat:' do
@@ -619,7 +619,7 @@ describe 'Flor punit' do
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
+        ).to eq(%{
           0:c-fun0-0_1_1_0_0_1_0_0-2
           1:t-fun0-0_3_0
           2:t--0_3_0
@@ -629,7 +629,7 @@ describe 'Flor punit' do
           6:t--0_3_1
           7:t-fun0-0_3_2
           8:t--0_3_1
-        }.collect(&:strip).join("\n"))
+        }.ftrim)
       end
 
       it 'traps a heat regex' do
@@ -657,21 +657,21 @@ describe 'Flor punit' do
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
-          0:t-execute-fun0-0_4_0
-          1:c-fun0-0_1_1_0_0-2
-          2:t-receive--0_4_0
+        ).to eq(%{
+          0:c-fun0-0_1_1_0_0_1_0_0-2
+          1:t-execute-fun0-0_4_0
+          2:c-fun1-0_2_1_0_0_1_0_0-6
           3:t-receive--0_4_0
           4:t-execute-fun1-0_4_1
-          5:c-fun1-0_2_1_0_0-6
-          6:t-receive--0_4_1
+          5:t-receive--0_4_0
+          6:c-funx-0_3_1_0_0_1_0_0-11
           7:t-receive--0_4_1
           8:t-execute-fun0-0_4_2
-          9:t-execute-funx-0_4_3
-          10:c-funx-0_3_1_0_0-11
+          9:t-receive--0_4_1
+          10:t-execute-funx-0_4_3
           11:t-receive--0_4_3
           12:t-receive--0_4_3
-        }.collect(&:strip).join("\n"))
+        }.ftrim)
       end
 
       it 'traps a tree head and a point' do
@@ -699,7 +699,7 @@ describe 'Flor punit' do
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
+        ).to eq(%{
           0:c-fun0-0_1_1_0_0_1_0_0-2
           1:t-execute-fun0-0_4_0
           2:c-fun1-0_2_1_0_0_1_0_0-4
@@ -707,7 +707,7 @@ describe 'Flor punit' do
           4:c-funx-0_3_1_0_0_1_0_0-7
           5:t-execute-fun0-0_4_2
           6:t-execute-funx-0_4_3
-        }.collect(&:strip).join("\n"))
+        }.ftrim)
       end
     end
 
@@ -1340,9 +1340,9 @@ describe 'Flor punit' do
           @unit.traces
             .each_with_index
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
+        ).to eq(%{
           0:B>0_1_3_0_0_1_0_0
-        }.collect(&:strip).join("\n"))
+        }.ftrim)
       end
     end
   end
