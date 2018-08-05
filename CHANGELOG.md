@@ -5,6 +5,8 @@
 ## flor 1.0.0  not yet released
 
 - Include "undense" work ("_ref" and friends)
+- Include "undense" work (killing the dollar subsystem)
+- Fix dereserving delayed messages
 
 
 ## flor 0.15.1  not yet released
