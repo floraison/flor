@@ -309,14 +309,29 @@ module Flor
 
       synchronize(syn) do
 
+        stored, unstored = ms.partition { |m| m['mid'] }
+
+        #
+        # de-reserve any previously stored message, might happen
+        # for "terminated" messages that got queued back to let
+        # other messages get processed
+
+        @db[:flor_messages]
+          .where(id: stored.collect { |m| m['mid'] })
+          .update(status: 'created', mtime: n, munit: u) \
+            if stored.any?
+
+        #
+        # store new messages
+
         @db[:flor_messages]
           .import(
             [ :domain, :exid, :point, :content,
               :status, :ctime, :mtime, :cunit, :munit ],
-            ms.map { |m|
+            unstored.map { |m|
               [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
-                'created', n, n, u, u ]
-            })
+                'created', n, n, u, u ] }) \
+                  if unstored.any?
       end
 
       @unit.wake_up
