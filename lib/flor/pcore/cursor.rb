@@ -92,7 +92,8 @@ class Flor::Pro::Cursor < Flor::Procedure
 
   def cancel_when_closed
 
-    return [] unless @message['flavour'] == 'break'
+    return cancel if node_status_flavour == 'on-error'
+    return [] if @message['flavour'] != 'break'
 
     cancel
   end
@@ -117,7 +118,7 @@ class Flor::Pro::Cursor < Flor::Procedure
       @node['on_receive_last'] = nil
     end
 
-    super#.tap { |ms| pp ms }
+    super
   end
 
   protected
