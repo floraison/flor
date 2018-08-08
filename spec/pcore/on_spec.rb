@@ -85,6 +85,22 @@ describe 'Flor pcore' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['l']).to eq([ 'a', 'b', 'b' ])
       end
+
+      it 'works in conjunction with a cursor (2)' do
+
+        r = @executor.launch(
+          %q{
+            set f.l [ 'a' ]
+            cursor
+              push f.l 'b'
+              sequence on_error: (def msg \ continue _)
+                fail 'badly' if (length f.l) < 3
+          })
+
+        expect(r).not_to eq(nil)
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['l']).to eq([ 'a', 'b', 'b' ])
+      end
     end
 
     context 'cancel' do
