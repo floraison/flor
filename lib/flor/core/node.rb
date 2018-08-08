@@ -291,7 +291,7 @@ class Flor::Node
     return nil unless cid
       # maybe failing would be better
 
-    cid.split('_').each { |cid| tree = tree[1][cid.to_i] }
+    cid.split('_').each { |id| tree = tree[1][id.to_i] }
 
     tree
   end
@@ -421,7 +421,7 @@ class Flor::Node
     return nil unless node
 
     vars = node['vars']
-    k, _ = vars && vars.find { |k, v| v == val }
+    k, _ = vars && vars.find { |_, v| v == val }
     return k if k
 
     lookup_var_name(parent_node(node), val)

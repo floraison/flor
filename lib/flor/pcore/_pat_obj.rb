@@ -28,8 +28,8 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
 
     t = tree
     changed = false
-    t[1].each_with_index do |ct, i|
-      next if i.odd? || ct[0] != '_ref'
+    t[1].each_with_index do |ct, j|
+      next if j.odd? || ct[0] != '_ref'
       ct[0] = '_rep'
       changed = true
     end

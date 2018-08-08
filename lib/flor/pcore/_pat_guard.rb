@@ -67,7 +67,7 @@ class Flor::Pro::PatGuard < Flor::Pro::PatContainer
 
   def execute_child(index=0, sub=nil, h=nil)
 
-    if (key = @node['key']) && child_type(index) == nil
+    if @node['key'] && child_type(index) == nil
       h ||= {}
       (h['vars'] ||= {}).merge!(@node['binding'])
     end

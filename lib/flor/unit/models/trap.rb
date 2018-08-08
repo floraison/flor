@@ -74,7 +74,7 @@ module Flor
 
       if vs = msg['vars']
 
-        k = vs.keys.find { |k| k != 'arguments' } || 'msg'
+        k = vs.keys.find { |kk| kk != 'arguments' } || 'msg'
         vs[k] = message
 
         if sig = message['point'] == 'signal' && message['name']

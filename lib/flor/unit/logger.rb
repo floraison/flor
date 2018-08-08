@@ -68,7 +68,6 @@ module Flor
       line = "#{stp} #{@uni} #{lvl} #{txt}"
 
       if err
-        sts = ' ' * stp.length
         dig = lvl[0, 1] + Digest::MD5.hexdigest(line)[0, 4]
         @out.puts("#{stp} #{@uni} #{lvl} #{dig} #{txt}")
         err.backtrace.each { |lin| @out.puts("  #{dig} #{@uni} #{lin}") }

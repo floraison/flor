@@ -72,7 +72,7 @@ module Flor
 
         @consumed << m
 
-        ims, oms = ms.partition { |m| m['exid'] == @exid }
+        ims, oms = ms.partition { |mm| mm['exid'] == @exid }
           # qui est "in", qui est "out"?
 
         counter_add('omsgs', oms.size)

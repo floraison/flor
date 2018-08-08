@@ -114,13 +114,12 @@ module Flor
         a = plus - minus
 
         h =
-          a.inject({}) { |h, kv|
+          a.inject({}) { |hh, kv|
             k, v = kv.split(':')
             k = 'sto' if k == 'db'
             k = "log_#{k}" if LOG_ALL_KEYS.include?(k)
-            h[k] = v ? JSON.parse(v) : true
-            h
-          }
+            hh[k] = v ? JSON.parse(v) : true
+            hh }
         LOG_ALL_KEYS.each { |k| h["log_#{k}"] = 1 } if h['log_all']
         LOG_DBG_KEYS.each { |k| h["log_#{k}"] = 1 } if h['log_dbg']
 

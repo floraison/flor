@@ -124,8 +124,8 @@ module Flor
       return s if s.is_a?(Array) && s.collect(&:class).uniq == [ Array ]
 
       (s.is_a?(String) ? s.split(';') : s)
-        .collect { |s|
-          ni, pt = s.strip.match(/\A([0-9_\-]+)? *([a-z|, ]+)\z/)[1, 2]
+        .collect { |ss|
+          ni, pt = ss.strip.match(/\A([0-9_\-]+)? *([a-z|, ]+)\z/)[1, 2]
           [ ni, pt.split(/[|,]/).collect(&:strip) ]
         }
     end

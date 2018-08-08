@@ -25,7 +25,7 @@ module Flor
         .collect { |pa| [ pa, expose_d(pa, {}) ] }
         .select { |pa, d| is_subdomain?(domain, d) }
         .sort_by { |pa, d| d.count('.') }
-        .inject({}) { |vars, (pa, d)| vars.merge!(eval(pa, {})) }
+        .inject({}) { |vars, (pa, _)| vars.merge!(eval(pa, {})) }
     end
 
     #def procedures(path)
@@ -45,7 +45,7 @@ module Flor
         name = name[0..m[1].length - 1]
       end
 
-      path, d, n = (Dir[File.join(@root, '**/*.{flo,flor}')])
+      path, _, _ = (Dir[File.join(@root, '**/*.{flo,flor}')])
         .select { |f| f.index('/lib/') }
         .collect { |pa| [ pa, *expose_dn(pa, opts) ] }
         .select { |pa, d, n| n == name && is_subdomain?(domain, d) }
@@ -62,7 +62,7 @@ module Flor
 
       domain, name = split_dn(domain, name)
 
-      path, d, n = Dir[File.join(@root, '**/*.json')]
+      pat, _, nam = Dir[File.join(@root, '**/*.json')]
         .select { |pa| pa.index('/lib/taskers/') }
         .collect { |pa| [ pa, *expose_dn(pa, {}) ] }
         .select { |pa, d, n|
@@ -71,18 +71,18 @@ module Flor
         .sort_by { |pa, d, n| d.count('.') }
         .last
 
-      return nil unless path
+      return nil unless pat
 
-      conf = eval(path, message)
+      conf = eval(pat, message)
 
-      return conf if n == name
+      return conf if nam == name
 
       conf = conf[name]
 
       return nil unless conf
 
       (conf.is_a?(Array) ? conf : [ conf ])
-        .each { |h| h['_path'] = path }
+        .each { |h| h['_path'] = pat }
 
       conf
     end

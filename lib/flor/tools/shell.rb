@@ -480,7 +480,7 @@ fail NotImplementedError
               o.puts "   #{@c.dark_gray(l)}"
             end
           end
-        rescue => err
+        rescue
           fail ArgumentError.new("no 'manual' for #{cmd.inspect}")
         end
 
@@ -489,9 +489,9 @@ fail NotImplementedError
         o.puts
         o.puts "## available commands:"
         o.puts
-        COMMANDS.each do |cmd|
-          o.print "* #{@c.yellow(cmd)}"
-          if hlp = (send("hlp_#{cmd}") rescue nil)
+        COMMANDS.each do |c|
+          o.print "* #{@c.yellow(c)}"
+          if hlp = (send("hlp_#{c}") rescue nil)
             o.print " - #{hlp.strip}"
           end
           o.puts
@@ -583,7 +583,7 @@ fail NotImplementedError
     def cmd_cat(line)
 
       puts "  # #{@flow_path}\n"
-      File.readlines(@flow_path).each { |line| puts "  #{line}" }
+      File.readlines(@flow_path).each { |l| puts "  #{l}" }
     end
 
     def hlp_conf
@@ -829,7 +829,7 @@ fail NotImplementedError
     def cmd_hook(line)
 
       @hook =
-        case (a = arg(line))
+        case arg(line)
         when 'true', 'on'
           'on'
         when 'false', 'off'
@@ -1140,7 +1140,7 @@ Once edited (or not), a nato tasker task can be returned to flor (to the schedul
         }
       #Readline.completion_append_character =
       #  " "
-    rescue LoadError => le
+    rescue LoadError
       def prompt_and_read
         print(prompt)
         ($stdin.readline rescue false)

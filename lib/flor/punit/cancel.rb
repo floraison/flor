@@ -43,8 +43,8 @@ class Flor::Pro::Cancel < Flor::Procedure
 
     targets =
       @node['atts']
-        .select { |k, v| k == nil }
-        .inject([]) { |a, (k, v)|
+        .select { |k, _| k == nil }
+        .inject([]) { |a, (_, v)|
           v = Array(v)
           a.concat(v) if v.all? { |e| e.is_a?(String) }
           a } +

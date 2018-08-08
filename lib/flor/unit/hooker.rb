@@ -22,7 +22,7 @@ module Flor
 
     def [](name)
 
-      h = @hooks.find { |n, o, h, b| n == name }
+      h = @hooks.find { |n, _, _, _| n == name }
 
       h ? h[2] || h[3] : nil
     end

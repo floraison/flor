@@ -132,9 +132,9 @@ module Flor
           end
         end
 
-      x.each_with_index do |(k, v), i|
+      x.each_with_index do |(k, v), ii|
 
-        kl = string_to_d(k, out, indent(opts, first: i == 0))
+        kl = string_to_d(k, out, indent(opts, first: ii == 0))
         c_inf(':', out, opts)
 
         kt = key_max_len ? key_max_len - kl : nil
@@ -142,7 +142,7 @@ module Flor
 
         to_d(v, out, indent(opts, inc: 2, keytab: kt))
 
-        if i < x.size - 1
+        if ii < x.size - 1
           c_inf(',', out, opts)
           newline_or_space(out, opts)
         end

@@ -245,8 +245,8 @@ module Flor
         h[k] = n[k] if n.has_key?(k)
       end
 
-      dbg = n['dbg'] ? "dbg:#{n['dbg']}" : nil
-      nr = n.has_key?('noreply') ? "nr:#{n['noreply']}" : nil
+      #dbg = n['dbg'] ? "dbg:#{n['dbg']}" : nil
+      #nr = n.has_key?('noreply') ? "nr:#{n['noreply']}" : nil
       h = h.collect { |k, v| "#{k}:#{v}" }.join(' ')
 
       vs = n['vars']
@@ -282,9 +282,8 @@ module Flor
       nodes = nodes.inject({}) { |h, n| h[n['nid']] = [ n, [] ]; h }
       nodes.values.each { |ncn|
         pa = ncn.first['parent']; next unless pa
-        pan, pacn = nodes[pa]
-        pacn << ncn if pacn
-      }
+        _, pacn = nodes[pa]
+        pacn << ncn if pacn }
 
       sio = StringIO.new
       seen = []

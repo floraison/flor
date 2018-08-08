@@ -270,7 +270,7 @@ module Flor
         tt = tts.first
         [ tt.string, [], ln(tt) ]
       else
-        [ '_ref', tts.collect { |tt| rewrite(tt) }, ln(t) ]
+        [ '_ref', tts.collect { |ct| rewrite(ct) }, ln(t) ]
       end
     end
 
@@ -311,10 +311,10 @@ module Flor
 #puts "-" * 80
 #Raabro.pp(t, colours: true)
       ts = t.subgather(nil).collect { |tt| tt.name == :colo ? ':' : tt }
-      ts.unshift(0) if ts.first == ':'                # begin
-      ts.push(':') if ts.count { |t| t == ':' } < 2   #
-      ts.push(1) if ts.last == ':'                    # step
-      ts.insert(2, -1) if ts[2] == ':'                # end
+      ts.unshift(0) if ts.first == ':'                 # begin
+      ts.push(':') if ts.count { |ct| ct == ':' } < 2  #
+      ts.push(1) if ts.last == ':'                     # step
+      ts.insert(2, -1) if ts[2] == ':'                 # end
 
       be, _, en, _, st = ts
       be = be.is_a?(Integer) ? [ '_num', be, ln(t) ] : rewrite(be)
@@ -614,7 +614,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
       def rework_addition
 
-        katts, atts, cn = @children
+        katts, atts, children = @children
           .inject([ [], [], [] ]) { |cn, ct|
             if ct[0] == '_att'
               cn[ct[1].size == 2 ? 0 : 1] << ct
@@ -624,7 +624,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
             cn }
 
         @children =
-          katts + atts.collect { |ct| ct[1].first } + cn
+          katts + atts.collect { |ct| ct[1].first } + children
       end
     end
 

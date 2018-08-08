@@ -148,7 +148,7 @@ module Flor
 
     def h_fetch(h, *keys)
 
-      k = keys.find { |k| h.has_key?(k) }
+      k = keys.find { |kk| h.has_key?(kk) }
       k ? h[k] : nil
     end
 
@@ -156,7 +156,7 @@ module Flor
 
       default = keys.last.is_a?(String) ? [] : keys.pop
 
-      k = keys.find { |k| h.has_key?(k) }
+      k = keys.find { |kk| h.has_key?(kk) }
       v = k ? h[k] : nil
 
       v_to_a(v) || default
@@ -428,10 +428,10 @@ module Flor
 
       return nil if t == nil
 
-      n, i, d = nid.split('_', 3)
+      _, i, d = nid.split('_', 3)
 
       return [ t, nil ] if i == nil
-      return [ t, i.to_i ] if ! d
+      return [ t, i.to_i ] if d == nil
       parent_tree_locate(t[1][i.to_i], [ i, d ].join('_'))
     end
 

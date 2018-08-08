@@ -198,9 +198,10 @@ module Flor
           if path.match(/[\r\n]/)
             path.strip
           else
-            ls = File.readlines(path)
-            ls.reject! { |l| l.strip[0, 1] == '#' }
-            s = ls.join("\n").strip
+            File.readlines(path)
+              .reject { |l| l.strip[0, 1] == '#' }
+              .join("\n")
+              .strip
           end
 
         az = "#{src[0, 1]}#{src[-1, 1]}"
@@ -251,7 +252,7 @@ module Flor
           o['_path'] = path
           o['root'] ||= Flor.relativize_path(vs['root'])
         elsif o.is_a?(Array)
-          o.each { |e| e['_path'] = path }
+          o.each { |ee| ee['_path'] = path }
         end
 
         o
