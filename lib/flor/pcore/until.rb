@@ -104,7 +104,8 @@ class Flor::Pro::Until < Flor::Procedure
 
   def cancel_when_closed
 
-    return [] unless @message['flavour'] == 'break'
+    return cancel if node_status_flavour == 'on-error'
+    return [] if @message['flavour'] != 'break'
 
     cancel
   end
