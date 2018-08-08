@@ -164,6 +164,26 @@ describe 'Flor punit' do
         expect(r['vars']['l']).to eq([ 0, 'cancel:0_1', 3 ])
       end
     end
+
+    context 'error' do
+
+      it 'works in conjunction with a cursor' do
+
+        r = @unit.launch(
+          %q{
+            set f.l [ 'a' ]
+            cursor
+              on error
+                continue _
+              push f.l 'b'
+              failfox2 _ if (length f.l) < 3
+          },
+          wait: 'terminated')
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['l']).to eq([ 'a', 'b', 'b' ])
+      end
+    end
   end
 end
 

@@ -11,6 +11,9 @@
 
 ## flor 0.15.1  not yet released
 
+- allow for cancel behaviour when "cursor", "sequence", and "until"
+  node_status flavour is "on-error"
+
 
 ## flor 0.15.0  released 2018-06-15
 

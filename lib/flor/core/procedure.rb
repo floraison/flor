@@ -794,7 +794,7 @@ class Flor::Procedure < Flor::Node
   end
 
   # Handle an incoming cancel message when the node has closed.
-  # Open for override (overridden by "cursor" and "until")
+  # Open for override (overridden by "sequence", "cursor", and "until")
   #
   def cancel_when_closed
 

@@ -11,5 +11,12 @@ class Flor::Pro::Sequence < Flor::Procedure
   # ```
 
   names %w[ sequence _apply begin ]
+
+  def cancel_when_closed
+
+    return cancel if node_status_flavour == 'on-error'
+
+    []
+  end
 end
 
