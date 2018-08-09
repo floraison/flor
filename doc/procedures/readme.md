@@ -48,6 +48,7 @@
 * [select, reject](select.md) - Filters a collection
 * [sequence, _apply, begin](sequence.md) - Executes child expressions in sequence.
 * [set, setr](set.md) - sets a field or a variable.
+* [slice, index](slice.md) - "slice" takes an array or a string and returns a slice of it (a new array or a new string.
 * [stall](stall.md) - "stall" is mostly used in flor tests. It simply dead ends.
 * [to-array, to-object](to_array.md) - "to-array", turns an argument into an array, "to-object" turns it into an object.
 * [until, while](until.md) - `until` loops until a condition evaluates to true. `while` loops while a condition evaluates to true.
@@ -69,8 +70,8 @@
 
 ## core and unit tree
 
-* [Flor::Procedure](https://github.com/floraison/flor/blob/master/)
-  * [Flor::Macro](https://github.com/floraison/flor/blob/master/)
+* [Flor::Procedure](https://github.com/floraison/flor/blob/master/) : 
+  * [Flor::Macro](https://github.com/floraison/flor/blob/master/) : 
     * [Flor::Pro::DoReturn](https://github.com/floraison/flor/blob/master/lib/flor/pcore/do_return.rb) : [do-return](do_return.md)
     * [Flor::Pro::DoTrap](https://github.com/floraison/flor/blob/master/lib/flor/punit/do_trap.rb) : [do-trap](do_trap.md)
     * [Flor::Pro::On](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on.rb) : [on](on.md)
@@ -85,7 +86,7 @@
     * [Flor::Pro::Match](https://github.com/floraison/flor/blob/master/lib/flor/pcore/match.rb) : [match](matchr.md)
   * [Flor::Pro::Cmap](https://github.com/floraison/flor/blob/master/lib/flor/punit/cmap.rb) : cmap
   * [Flor::Pro::Cmp](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cmp.rb) : =, ==, <, >
-  * [Flor::Pro::Coll](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_coll.rb)
+  * [Flor::Pro::Coll](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_coll.rb) : 
     * [Flor::Pro::Arr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_arr.rb) : [_arr](_arr.md)
     * [Flor::Pro::Obj](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_obj.rb) : [_obj](_obj.md)
   * [Flor::Pro::Concurrence](https://github.com/floraison/flor/blob/master/lib/flor/punit/concurrence.rb) : [concurrence](concurrence.md)
@@ -105,7 +106,7 @@
   * [Flor::Pro::Head](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_head.rb) : _head
   * [Flor::Pro::If](https://github.com/floraison/flor/blob/master/lib/flor/pcore/if.rb) : [if, unless, ife, unlesse](if.md)
   * [Flor::Pro::Includes](https://github.com/floraison/flor/blob/master/lib/flor/pcore/includes.rb) : includes?
-  * [Flor::Pro::Iterator](https://github.com/floraison/flor/blob/master/lib/flor/pcore/iterator.rb)
+  * [Flor::Pro::Iterator](https://github.com/floraison/flor/blob/master/lib/flor/pcore/iterator.rb) : 
     * [Flor::Pro::All](https://github.com/floraison/flor/blob/master/lib/flor/pcore/all.rb) : [all?](all.md)
     * [Flor::Pro::Filter](https://github.com/floraison/flor/blob/master/lib/flor/pcore/filter.rb) : [filter, filter-out](filter.md)
     * [Flor::Pro::Find](https://github.com/floraison/flor/blob/master/lib/flor/pcore/find.rb) : [find](find.md)
@@ -123,7 +124,7 @@
   * [Flor::Pro::OnCancel](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_cancel.rb) : [on_cancel](on_cancel.md)
   * [Flor::Pro::OnError](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_error.rb) : [on_error](on_error.md)
   * [Flor::Pro::OnTimeout](https://github.com/floraison/flor/blob/master/lib/flor/punit/on_timeout.rb) : [on_timeout](on_timeout.md)
-  * [Flor::Pro::PatContainer](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_.rb)
+  * [Flor::Pro::PatContainer](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_.rb) : 
     * [Flor::Pro::PatArr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_arr.rb) : _pat_arr
     * [Flor::Pro::PatGuard](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_guard.rb) : _pat_guard
     * [Flor::Pro::PatObj](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_obj.rb) : _pat_obj
@@ -141,7 +142,7 @@
   * [Flor::Pro::Signal](https://github.com/floraison/flor/blob/master/lib/flor/punit/signal.rb) : [signal](signal.md)
   * [Flor::Pro::Skip](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_skip.rb) : [_skip](_skip.md)
   * [Flor::Pro::Sleep](https://github.com/floraison/flor/blob/master/lib/flor/punit/sleep.rb) : [sleep](sleep.md)
-  * [Flor::Pro::Slice](https://github.com/floraison/flor/blob/master/lib/flor/pcore/slice.rb) : slice, index
+  * [Flor::Pro::Slice](https://github.com/floraison/flor/blob/master/lib/flor/pcore/slice.rb) : [slice, index](slice.md)
   * [Flor::Pro::Stall](https://github.com/floraison/flor/blob/master/lib/flor/pcore/stall.rb) : [stall](stall.md)
   * [Flor::Pro::Strings](https://github.com/floraison/flor/blob/master/lib/flor/pcore/strings.rb) : downcase, lowercase, upcase, uppercase, capitalize
   * [Flor::Pro::Task](https://github.com/floraison/flor/blob/master/lib/flor/punit/task.rb) : task
