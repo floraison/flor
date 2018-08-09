@@ -221,8 +221,8 @@ describe Flor::Procedure do
 
         n = @executor.node('0_0')
 
-        ms0 = @executor.step({
-          'point' => 'cancel', 'nid' => '0_0', 'from' => '0' });
+        @executor.step({
+          'point' => 'cancel', 'nid' => '0_0', 'from' => '0' })
 
         n = @executor.node('0_0')
 

@@ -6,7 +6,8 @@ module Flor
   DOMAIN_NAME_REX = /\A#{NAME_REX}(\.#{NAME_REX})*\z/
   FLOW_NAME_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)\.([a-zA-Z0-9_-]+)\z/
 
-  DOMAIN_UNIT_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)-(#{NAME_REX})[-\z]/
+  #DOMAIN_UNIT_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)-(#{NAME_REX})[-\z]/
+  DOMAIN_UNIT_REX = /\A(#{NAME_REX}(?:\.#{NAME_REX})*)-(#{NAME_REX})[-$]/
 
   SPLAT_REGEX = /\A(.*)__(_|\d+)\z/.freeze
 

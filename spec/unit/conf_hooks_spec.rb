@@ -74,12 +74,13 @@ describe 'Flor unit' do
         f.puts(Flor.to_djan(hooks, color: false))
       end
 
-      exid0 = @unit.launch(%{ sequence \ noret _ })
-      exid1 = @unit.launch(%{ sequence \ noret _ })
-      r = @unit.wait('idle')
+      e0 = @unit.launch(%{ sequence \ noret _ })
+      e1 = @unit.launch(%{ sequence \ noret _ })
+      @unit.wait('idle')
 
       expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ execute ])
       expect($seen.collect { |m| m['nid'] }.uniq).to eq(%w[ 0 ])
+      expect($seen.collect { |m| m['exid'] }.uniq.sort).to eq([ e0, e1 ].sort)
       expect($seen.size).to eq(4) # 2 + 2 consumed
     end
 
@@ -98,7 +99,7 @@ describe 'Flor unit' do
         f.puts(Flor.to_djan(hooks, color: false))
       end
 
-      exid0 = @unit.launch(%q{ sequence \ task 'emil' }, wait: true)
+      @unit.launch(%q{ sequence \ task 'emil' }, wait: true)
 
       expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ return ])
       expect($seen.collect { |m| m['nid'] }.uniq).to eq([ '0_0' ])
@@ -120,12 +121,13 @@ describe 'Flor unit' do
         f.puts(Flor.to_djan(hooks, color: false))
       end
 
-      exid0 = @unit.launch(%{ sequence \ noret _ })
-      exid1 = @unit.launch(%{ sequence \ noret _ })
-      r = @unit.wait('idle')
+      e0 = @unit.launch(%{ sequence \ noret _ })
+      e1 = @unit.launch(%{ sequence \ noret _ })
+      @unit.wait('idle')
 
       expect($seen.collect { |m| m['point'] }.uniq).to eq(%w[ terminated ])
       expect($seen.collect { |m| m['nid'] }.uniq).to eq([ nil ])
+      expect($seen.collect { |m| m['exid'] }.uniq.sort).to eq([ e0, e1 ].sort)
       expect($seen.size).to eq(4) # 2 + 2 consumed
     end
 
@@ -170,7 +172,7 @@ describe 'Flor unit' do
         f.puts(Flor.to_djan(hooks, color: false))
       end
 
-      r = @unit.launch(%q{ sequence \ fail 'arghh' }, wait: true)
+      @unit.launch(%q{ sequence \ fail 'arghh' }, wait: true)
 
       sleep 0.350
 

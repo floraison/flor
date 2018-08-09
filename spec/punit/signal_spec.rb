@@ -103,7 +103,7 @@ describe 'Flor punit' do
 
       wait_until { @unit.journal.find { |m| m['point'] == 'end' } }
 
-      m = @unit.journal.find { |m| m['point'] == 'signal' }
+      m = @unit.journal.find { |mm| mm['point'] == 'signal' }
 
       expect(
         m['payload']

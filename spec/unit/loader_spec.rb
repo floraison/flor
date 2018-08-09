@@ -30,7 +30,7 @@ describe Flor::Loader do
       it "loads variable \"#{d}\"" do
 
         r = @loader.variables(d)
-        h.each { |k, v| expect(h[k]).to eq(v) }
+        h.each { |k, v| expect(r[k]).to eq(v) }
       end
     end
   end

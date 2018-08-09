@@ -557,14 +557,14 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq(nil)
 
         h = expected
-          .inject({}) { |h, (k, v)|
-            h[k] =
+          .inject({}) { |hh, (k, _)|
+            hh[k] =
               if k.match(/\Af\.(.+)\z/)
                 r['payload'][$1]
               else
                 r['vars'][k]
               end
-            h }
+            hh }
 
         expect(h).to eq(expected)
       end

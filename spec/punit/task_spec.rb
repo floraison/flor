@@ -73,6 +73,8 @@ describe 'Flor punit' do
         },
         wait: true)
 
+      expect(r['point']).to eq('terminated')
+
       ret = @unit.journal.find { |m| m['point'] == 'return' }
 
       expect(ret['nid']).to eq('0_0')
@@ -86,6 +88,8 @@ describe 'Flor punit' do
           sequence \ task 'alpha'
         },
         wait: true)
+
+      expect(r['point']).to eq('terminated')
 
       ret = @unit.journal.find { |m| m['point'] == 'return' }
 

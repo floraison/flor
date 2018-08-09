@@ -219,8 +219,8 @@ describe 'Flor punit' do
         t = @unit.timers.first
         ms = Flor.dup(@unit.journal)
 
-        tms = ms.select { |m| m['point'] == 'trigger' }
-        seconds = tms.collect { |m| Fugit.parse(m['consumed']).sec }
+        tms = ms.select { |mm| mm['point'] == 'trigger' }
+        seconds = tms.collect { |mm| Fugit.parse(mm['consumed']).sec }
 
         expect(tms.size).to be_between(4, 5)
 

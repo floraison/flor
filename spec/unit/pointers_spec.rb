@@ -82,7 +82,6 @@ describe 'Flor unit' do
             alpha task: 'wipe table'
             stall _
         }, wait: '0_1 receive')
-      exid = r['exid']
 
       expect(r['point']).to eq('receive')
 
@@ -97,7 +96,6 @@ describe 'Flor unit' do
         @unit.launch(%{
           alpha task: 'wipe table'
         }, wait: true)
-      exid = r['exid']
 
       expect(r['point']).to eq('terminated')
 
@@ -175,7 +173,6 @@ describe 'Flor unit' do
         @unit.launch(%{
           sequence tag: 'a'
         }, wait: true)
-      exid = r['exid']
 
       expect(r['point']).to eq('terminated')
 
@@ -195,7 +192,6 @@ describe 'Flor unit' do
               sleep 1
               alpha task: 'c'
         }, wait: '0_2_1 task')
-      exid = r['exid']
 
       expect(r['point']).to eq('task')
 

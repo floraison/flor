@@ -74,7 +74,6 @@ end
 
 RSpec::Matchers.define :eqd do |o|
 
-  o0 = o
   o = Flor.to_d(o) unless o.is_a?(String)
   o = o.strip
 
@@ -244,26 +243,26 @@ class RSpec::Core::ExampleGroup
 
       contexts << [ con, current ]
 
-      contexts.each do |con, li_ra_ru_pn_s|
+      contexts.each do |c, li_ra_ru_pn_s|
 
-        context(con) do
+        context(c) do
 
-          li_ra_ru_pn_s.each do |lin, flor, rub, sta|
+          li_ra_ru_pn_s.each do |li, fl, ru, st|
 
-            ra = flor.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
+            ra = fl.strip.gsub(/\n/, '\n').gsub(/ +/, ' ')
             ra = "#{ra[0, 60]}..." if ra.length > 60
-            title = "parses li#{lin} `#{ra}`"
+            title = "parses li#{li} `#{ra}`"
 
-            ru = Kernel.eval(rub)
+            ru = Kernel.eval(ru)
 
-            if sta == :hidden
+            if st == :hidden
               # do nothing
-            elsif sta == :pending
+            elsif st == :pending
               pending(title)
             else
               it(title) {
                 expect(
-                  RSpec::Core::ExampleGroup.replace_head(Flor.parse(flor))
+                  RSpec::Core::ExampleGroup.replace_head(Flor.parse(fl))
                 ).to eqt(
                   ru
                 )

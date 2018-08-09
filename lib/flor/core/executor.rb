@@ -15,6 +15,8 @@ module Flor
 
       @hooks = hooks # raw hooks if any, fresh from the loader
       @traps = traps # array of Trap instances
+
+      @htraps = nil
     end
 
     def conf; @unit.conf; end

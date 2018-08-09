@@ -207,7 +207,7 @@ describe 'Flor unit' do
 
         it 'sets the flow path in the launch tree' do
 
-          r = @unit.launch('com.acme.flow1', wait: true)
+          @unit.launch('com.acme.flow1', wait: true)
 
           wait_until { @unit.executions.first }
 

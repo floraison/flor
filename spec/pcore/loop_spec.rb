@@ -58,6 +58,8 @@ describe 'Flor pcore' do
             break _ if node.nid == '0_0_0_0-3'
         })
 
+      expect(r['point']).to eq('terminated')
+
       expect(
         @executor.journal
           .collect { |m|

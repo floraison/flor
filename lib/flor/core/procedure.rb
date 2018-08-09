@@ -20,9 +20,12 @@ class Flor::Procedure < Flor::Node
 
     def names(*names)
 
-      names = names.flatten
-      @names = names if names.any?
-      @core = !! caller.find { |l| l.match(/flor\/pcore/) } if names.any?
+      @names = [] unless defined?(@names)
+
+      if (names = names.flatten).any?
+        @names = names
+        @core = !! caller.find { |l| l.match(/flor\/pcore/) }
+      end
 
       @names
     end

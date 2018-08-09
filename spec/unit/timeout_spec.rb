@@ -60,8 +60,6 @@ describe 'Flor unit' do
 
     it 'triggers after the given time' do
 
-      t0 = Time.now
-
       r = @unit.launch(
         %q{
           sequence
@@ -73,7 +71,7 @@ describe 'Flor unit' do
 
       expect(@unit.timers.count).to eq(0)
 
-      m = @unit.journal.find { |m| m['point'] == 'cancel' }
+      m = @unit.journal.find { |mm| mm['point'] == 'cancel' }
 
       expect(m['nid']).to eq('0_0')
       expect(m['from']).to eq('0_0_0')

@@ -124,7 +124,7 @@ describe 'Flor unit' do
         @unit.executions.first(exid: exid).data['nodes'].keys
       ).to eq(%w[ 0 0_0 0_0_0 ])
 
-      r = @unit.queue({
+      @unit.queue({
         'point' => 'cancel',
         'exid' => exid, 'nid' => '0_1',
         'payload' => {} })

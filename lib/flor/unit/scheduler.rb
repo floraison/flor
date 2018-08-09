@@ -150,7 +150,7 @@ module Flor
       @thread_status = :running
 
       @thread =
-        if @thread
+        if defined?(@thread) && @thread
           @thread.run
         else
           Thread.new do

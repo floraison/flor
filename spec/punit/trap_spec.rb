@@ -274,8 +274,7 @@ describe 'Flor punit' do
       r = @unit.launch(%{
         noret tag: 't0'
       }, wait: true)
-
-      exid1 = r['exid']
+      #exid1 = r['exid']
 
       expect(r['point']).to eq('terminated')
 
@@ -762,17 +761,18 @@ describe 'Flor punit' do
 
         exid0 = r['exid']
 
-        exid1 = @unit.launch(%{
-          sequence tag: 't1'
-            trace 'exe1'
-        }, wait: true)
+        @unit.launch(
+          %{
+            sequence tag: 't1'
+              trace 'exe1'
+          }, wait: true)
 
         wait_until { @unit.traces.count > 2 }
 
         expect(
           @unit.traces.collect(&:text).join("\n")
         ).to eq([
-          "exe0", "t1_#{exid0}", "exe1"
+          'exe0', "t1_#{exid0}", 'exe1'
         ].join("\n"))
       end
     end
@@ -792,7 +792,7 @@ describe 'Flor punit' do
 
         # 1
         r = @unit.launch("noret tag: 't0'", domain: 'org.acme', wait: true)
-        exid1 = r['exid']
+        #exid1 = r['exid']
         expect(r['point']).to eq('terminated')
           # completely different domain, not trapped
 
@@ -804,7 +804,7 @@ describe 'Flor punit' do
 
         # 3
         r = @unit.launch("noret tag: 't0'", domain: 'net.acme.s0', wait: true)
-        exid3 = r['exid']
+        #exid3 = r['exid']
         expect(r['point']).to eq('terminated')
           # subdomain, not trapped
 
@@ -838,7 +838,7 @@ describe 'Flor punit' do
 
         # 1
         r = @unit.launch("noret tag: 't0'", domain: 'org.acme', wait: true)
-        exid1 = r['exid']
+        #exid1 = r['exid']
         expect(r['point']).to eq('terminated')
           # completely different domain, not trapped
 
