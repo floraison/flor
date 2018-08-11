@@ -9,11 +9,28 @@ class Flor::Pro::Slice < Flor::Procedure
   #
   # ## slice
   #
-  # TODO
+  # ```
+  # set a [ 'alpha' 'bravo' 'charly' ]
+  #
+  # slice a 1 -1            # sets [ 'bravo', 'charly' ] into the field 'ret'
+  # slice a from: 1 to: -1  # same as above
+  #
+  # a
+  # slice 1 -1  # sets [ 'bravo', 'charly' ] into the field 'ret'
+  # slice 1 -1  # sets [ 'charly' ] into the field 'ret'
+  #
+  # a
+  # slice 1 count: 2  # sets [ 'bravo', 'charly' ] into the field 'ret'
+  # ```
   #
   # ## index
   #
-  # TODO
+  # ```
+  # set a [ 'alpha' 'bravo' 'charly' ]
+  #
+  # index a (-2)    # sets 'bravo' into the field 'ret'
+  # index a at: -2  # sets 'bravo' into the field 'ret'
+  # ```
 
   names 'slice', 'index'
 
