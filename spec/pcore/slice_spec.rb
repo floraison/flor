@@ -41,17 +41,19 @@ describe 'Flor procedures' do
         end
       end
 
-      it 'slices' #do
-#
-#        r =
-#          @executor.launch(%{
-#            slice a 1 count: 2
-#          },
-#          vars: { 'a' => %w[ a b c d e f g ] })
-#
-#        expect(r['point']).to eq('terminated')
-#        expect(r['payload']['ret']).to eq(%w[ b c ])
-#      end
+      it 'slices' do
+
+        r =
+          @executor.launch(%{
+            [ (slice a 1 count: 2)
+              (slice 1 a count: 2)
+              (slice 1 count: 2 a) ]
+          },
+          vars: { 'a' => %w[ a b c d e f g ] })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq([ %w[ b c ] ] * 3)
+      end
     end
 
     context 'with string' do
@@ -78,7 +80,19 @@ describe 'Flor procedures' do
         end
       end
 
-      it 'slices'
+      it 'slices' do
+
+        r =
+          @executor.launch(%{
+            [ (slice s 1 count: 2)
+              (slice 1 s count: 2)
+              (slice 1 count: 2 s) ]
+          },
+          vars: { 's' => 'abcdefg' })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq([ 'bc' ] * 3)
+      end
     end
   end
 

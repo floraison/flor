@@ -51,7 +51,7 @@ class Flor::Pro::Slice < Flor::Procedure
 
     coll = collection
 
-    ints = @node['rets'].select(&:integer?)
+    ints = @node['rets'].select { |e| e.is_a?(Integer) }
 
     st = att('from', 'start') || ints.shift || 0
     en = att('to', 'end') || ints.shift
