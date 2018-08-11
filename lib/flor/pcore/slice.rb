@@ -95,7 +95,7 @@ class Flor::Pro::Slice < Flor::Procedure
   def index
 
     coll = collection
-    index = att('at') || @node['rets'].find(&:integer?)
+    index = att('at') || @node['rets'].find { |e| e.is_a?(Integer) }
 
     wrap('ret' => coll[index] || '')
   end

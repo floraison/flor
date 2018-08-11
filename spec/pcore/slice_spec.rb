@@ -100,12 +100,66 @@ describe 'Flor procedures' do
 
     context 'with array' do
 
-      it 'works'
+      {
+
+        '2' => 'c',
+        ',-3' => 'e',
+        '(-3)' => 'e',
+        'at: -3' => 'e',
+        '100' => '',
+
+      }.each do |args, ret|
+
+        it "indexes #{args}" do
+
+          r =
+            @executor.launch(%{
+              a; index #{args}
+            },
+            vars: { 'a' => %w[ a b c d e f g ] })
+
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(ret)
+        end
+      end
     end
 
     context 'with string' do
 
-      it 'works'
+      {
+
+        '2' => 'c',
+        ',-3' => 'e',
+        '(-3)' => 'e',
+        'at: -3' => 'e',
+        '100' => '',
+
+      }.each do |args, ret|
+
+        it "indexes #{args}" do
+
+          r =
+            @executor.launch(%{
+              a; index #{args}
+            },
+            vars: { 'a' => 'abcdefg' })
+
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(ret)
+        end
+      end
+
+      it 'indexes' do
+
+        r =
+          @executor.launch(%{
+            [ (index s 2) (index 2 s) ]
+          },
+          vars: { 's' => 'abcdefg' })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(%w[ c c ])
+      end
     end
   end
 end
