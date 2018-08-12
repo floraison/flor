@@ -73,6 +73,45 @@ There is a special `ret` field, it carries the result of a [procedure](#procedur
 
 A \[business\] process definition or a flow for short. In flor, they are written in the flor language.
 
+## function
+
+A function groups a subtree in a reusable unit, generally available behind a name.
+
+A function is defined with `define`. An anonymous function is defined with `def`.
+
+```
+define f x  #
+  x * 3     #
+f 5         # yields 8 in f.ret
+```
+
+```
+find [ 1, 2, 3 ]    #
+  def elt           # anonymous function as argument to "find"
+    (elt % 2) == 1  #
+                    #
+                    # this "find" yields [ 1, 3 ] in f.ret
+```
+
+The backslash helps when making a function more compact:
+```
+find [ 1, 2, 3 ] (def elt \ (elt % 2) == 1)
+```
+
+```
+set f
+  def x
+    x * 3
+```
+is equivalent to:
+```
+define f x
+  x * 3
+```
+("def" sets the reference of the new fucntion in f.ret, it gets picked by "set" and placed in the variable 'f')
+
+Flor wants [functions](#function), [procedures](#procedure), and [taskers](#tasker) calls to look similar. A single way to call.
+
 ## ganger
 
 The ganger is a component of the [scheduler](#scheduler). It's the middleman between flor and the taskers. British definition of the word: "the foreman of a gang of labourers."
