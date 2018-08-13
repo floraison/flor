@@ -239,5 +239,36 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('failed')
     end
   end
+
+  describe '!= and <>' do
+
+    %w[ != <> ].each do |op|
+
+      {
+
+        [ '"alpha"', '"alpha"' ] => false,
+        [ '"alpha"', '"bravo"' ] => true,
+        [ '1', '1' ] => false,
+        [ '1', '"bravo"' ] => true,
+        [ 'true', 'true' ] => false,
+        [ 'true', 'false' ] => true,
+
+      }.each do |(a, b), ret|
+
+        it "(#{op} #{a} #{b}) yields #{ret}" do
+
+          r = @executor.launch(
+            %{
+              #{op}
+                #{a}
+                #{b}
+            })
+
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']['ret']).to eq(ret)
+        end
+      end
+    end
+  end
 end
 

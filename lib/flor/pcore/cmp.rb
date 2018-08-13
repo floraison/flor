@@ -1,7 +1,7 @@
 
 class Flor::Pro::Cmp < Flor::Procedure
 
-  names %w[ = == < > ]
+  names %w[ = == < > != <> ]
 
   def pre_execute
 
@@ -15,6 +15,7 @@ class Flor::Pro::Cmp < Flor::Procedure
         case tree[0]
         when '=', '==' then check_equal
         when '<', '>' then check_lesser
+        when '!=', '<>' then ! check_equal
         else true
         end
       else

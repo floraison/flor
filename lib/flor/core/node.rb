@@ -167,7 +167,7 @@ class Flor::Node
 
     path =
       case path
-      when '*' then [ '*' ]
+      when '*' then [ path ]
       when String then Dense::Path.make(path).to_a
       else path
       end
