@@ -48,7 +48,7 @@ class Flor::Pro::ToArray < Flor::Procedure
     r = @node['ret']
 
     fail Flor::FlorError.new('to-object wants an array (or an object)', self) \
-      unless r.is_a?(Array) || r.is_a?(Hash)
+      unless Flor.is_collection?(r)
 
     fail Flor::FlorError.new('to-object expects array with even length', self) \
       if r.is_a?(Array) && r.length.odd?

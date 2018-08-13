@@ -66,7 +66,7 @@ class Flor::Pro::Iterator < Flor::Procedure
       .each { |a|
         if Flor.is_func_tree?(a)
           @node['fun'] ||= a
-        elsif a.is_a?(Array) || a.is_a?(Hash)
+        elsif Flor.is_collection?(a)
           @node['ocol'] ||= a
         end }
 
@@ -78,7 +78,7 @@ class Flor::Pro::Iterator < Flor::Procedure
     ) if function_mandatory? && ( ! @node['fun'])
     fail Flor::FlorError.new(
       "collection not given to #{heap.inspect}", self
-    ) unless ocol.is_a?(Array) || ocol.is_a?(Hash)
+    ) unless Flor.is_collection?(ocol)
 
     @node['col'] = Flor.to_coll(@node['ocol']) if @node['fun']
     @node['args'] = nil

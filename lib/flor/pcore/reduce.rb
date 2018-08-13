@@ -54,7 +54,7 @@ class Flor::Pro::Reduce < Flor::Pro::Iterator
           @node['fun'] ||= a
         elsif Flor.is_proc_tree?(a)
           @node['fun'] ||= proc_to_fun(a)
-        elsif a.is_a?(Array) || a.is_a?(Hash)
+        elsif Flor.is_collection?(a)
           @node['ocol'] ||= a
         else
           @node['res'] ||= a
@@ -68,7 +68,7 @@ class Flor::Pro::Reduce < Flor::Pro::Iterator
     ) unless @node['fun']
     fail Flor::FlorError.new(
       "collection not given to #{heap.inspect}", self
-    ) unless ocol.is_a?(Array) || ocol.is_a?(Hash)
+    ) unless Flor.is_collection?(ocol)
 
     @node['col'] = Flor.to_coll(@node['ocol'])
 

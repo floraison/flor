@@ -45,7 +45,7 @@ class Flor::Pro::Keys < Flor::Procedure
     ) if ret.nil?
     fail Flor::FlorError.new(
       "received argument of class #{ret.class}, no #{heap}", self
-    ) unless ret.is_a?(Array) || ret.is_a?(Hash)
+    ) unless Flor.is_collection?(ret)
 
     r =
       if ret.is_a?(Hash)
