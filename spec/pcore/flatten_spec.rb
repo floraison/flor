@@ -50,6 +50,18 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([ 1, 2, 3, 4 ])
     end
 
+    it 'flattens f.ret' do
+
+      r =
+        @executor.launch(%{
+          [ 1, [ 2, [ 3 ] ], 4 ]
+          flatten 1
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 1, 2, [ 3 ], 4 ])
+    end
+
     it 'fails if it is not given an array' do
 
       r =

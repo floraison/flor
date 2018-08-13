@@ -25,8 +25,11 @@ class Flor::Pro::Flatten < Flor::Procedure
 
   def receive_last
 
-    col = (@node['rets'] + [ payload['ret'] ]).find { |r| r.is_a?(Array) }
-    lvl = @node['rets'].find { |r| r.is_a?(Integer) } || -1
+    col = (@node['rets'] + [ node_payload_ret ])
+      .find { |r| r.is_a?(Array) }
+
+    lvl = @node['rets']
+      .find { |r| r.is_a?(Integer) } || -1
 
     fail Flor::FlorError.new('missing collection', self) if col == nil
 
