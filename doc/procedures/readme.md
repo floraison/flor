@@ -24,6 +24,7 @@
 * [fail, error](fail.md) - Explicitely raises an error.
 * [filter, filter-out](filter.md) - Filters a collection
 * [find](find.md) - Finds the first matching element.
+* [flatten](flatten.md) - Flattens the given array
 * [for-each](for_each.md) - Calls a function for each element in the argument collection.
 * [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidequick)
 * [inject](inject.md) - Inject is a simplified version of [reduce](reduce.md).
@@ -103,6 +104,7 @@
   * [Flor::Pro::Empty](https://github.com/floraison/flor/blob/master/lib/flor/pcore/empty.rb) : [empty?](empty.md)
   * [Flor::Pro::Err](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_err.rb) : _err
   * [Flor::Pro::Fail](https://github.com/floraison/flor/blob/master/lib/flor/pcore/fail.rb) : [fail, error](fail.md)
+  * [Flor::Pro::Flatten](https://github.com/floraison/flor/blob/master/lib/flor/pcore/flatten.rb) : [flatten](flatten.md)
   * [Flor::Pro::Graft](https://github.com/floraison/flor/blob/master/lib/flor/punit/graft.rb) : [graft, import](graft.md)
   * [Flor::Pro::Head](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_head.rb) : _head
   * [Flor::Pro::If](https://github.com/floraison/flor/blob/master/lib/flor/pcore/if.rb) : [if, unless, ife, unlesse](if.md)
