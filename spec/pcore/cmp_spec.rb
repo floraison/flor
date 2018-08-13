@@ -240,6 +240,48 @@ describe 'Flor procedures' do
     end
   end
 
+  describe '<= and >=' do
+
+    {
+
+      '<= 1 2' => true,
+      '<= 1 1' => true,
+      '<= 2 1' => false,
+      '>= 1 2' => false,
+      '>= 1 1' => true,
+      '>= 2 1' => true,
+
+      '<= "alpha" "alpha"' => true,
+      '<= "alpha" "alphab"' => true,
+      '<= "bravo" "alpha"' => false,
+      '>= "alpha" "alpha"' => true,
+      '>= "alpha" "alphab"' => false,
+      '>= "bravo" "alpha"' => true,
+
+    }.each do |exp, ret|
+
+      it "#{ret ? 'tru' : 'fls'} (#{exp})" do
+
+        r = @executor.launch(exp)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(ret)
+      end
+    end
+
+    it 'fails when arguments are not comparable' do
+
+      r = @executor.launch(%{ <= 'a' 1 })
+      expect(r['point']).to eq('failed')
+
+      r = @executor.launch(%{ >= 'a' true })
+      expect(r['point']).to eq('failed')
+
+      r = @executor.launch(%{ <= true true })
+      expect(r['point']).to eq('failed')
+    end
+  end
+
   describe '!= and <>' do
 
     %w[ != <> ].each do |op|
@@ -253,9 +295,11 @@ describe 'Flor procedures' do
         [ 'true', 'true' ] => false,
         [ 'true', 'false' ] => true,
 
+        [ 'true', 1 ] => true,
+
       }.each do |(a, b), ret|
 
-        it "(#{op} #{a} #{b}) yields #{ret}" do
+        it "#{ret ? 'tru' : 'fls'} (#{op} #{a} #{b})" do
 
           r = @executor.launch(
             %{
