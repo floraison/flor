@@ -50,6 +50,7 @@
 * [set, setr](set.md) - sets a field or a variable.
 * [slice, index](slice.md) - "slice" takes an array or a string and returns a slice of it (a new array or a new string.
 * [stall](stall.md) - "stall" is mostly used in flor tests. It simply dead ends.
+* [timestamp](timestamp.md) - Places the current UTC timestamp into `f.ret`.
 * [to-array, to-object](to_array.md) - "to-array", turns an argument into an array, "to-object" turns it into an object.
 * [until, while](until.md) - `until` loops until a condition evaluates to true. `while` loops while a condition evaluates to true.
 
@@ -85,7 +86,7 @@
   * [Flor::Pro::Case](https://github.com/floraison/flor/blob/master/lib/flor/pcore/case.rb) : [case](case.md)
     * [Flor::Pro::Match](https://github.com/floraison/flor/blob/master/lib/flor/pcore/match.rb) : [match](matchr.md)
   * [Flor::Pro::Cmap](https://github.com/floraison/flor/blob/master/lib/flor/punit/cmap.rb) : cmap
-  * [Flor::Pro::Cmp](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cmp.rb) : =, ==, <, >
+  * [Flor::Pro::Cmp](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cmp.rb) : =, ==, <, >, <=, >=, !=, <>
   * [Flor::Pro::Coll](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_coll.rb) : 
     * [Flor::Pro::Arr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_arr.rb) : [_arr](_arr.md)
     * [Flor::Pro::Obj](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_obj.rb) : [_obj](_obj.md)
@@ -146,6 +147,7 @@
   * [Flor::Pro::Stall](https://github.com/floraison/flor/blob/master/lib/flor/pcore/stall.rb) : [stall](stall.md)
   * [Flor::Pro::Strings](https://github.com/floraison/flor/blob/master/lib/flor/pcore/strings.rb) : downcase, lowercase, upcase, uppercase, capitalize
   * [Flor::Pro::Task](https://github.com/floraison/flor/blob/master/lib/flor/punit/task.rb) : task
+  * [Flor::Pro::TimeStamp](https://github.com/floraison/flor/blob/master/lib/flor/pcore/timestamp.rb) : [timestamp](timestamp.md)
   * [Flor::Pro::ToArray](https://github.com/floraison/flor/blob/master/lib/flor/pcore/to_array.rb) : [to-array, to-object](to_array.md)
   * [Flor::Pro::Trace](https://github.com/floraison/flor/blob/master/lib/flor/punit/trace.rb) : trace
   * [Flor::Pro::Trap](https://github.com/floraison/flor/blob/master/lib/flor/punit/trap.rb) : [trap](trap.md)
