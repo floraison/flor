@@ -76,6 +76,30 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq('missing collection')
     end
+
+    it 'uses the incoming f.ret' do
+
+      r = @executor.launch(
+        %q{
+          []
+          includes? 1
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(false)
+    end
+
+    it 'uses the incoming f.ret' do
+
+      r = @executor.launch(
+        %q{
+          [ 0 1 2 ]
+          includes? 1
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(true)
+    end
   end
 end
 

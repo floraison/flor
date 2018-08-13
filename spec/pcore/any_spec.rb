@@ -118,7 +118,7 @@ describe 'Flor procedures' do
       end
     end
 
-    context 'incoming ret array' do
+    context 'incoming ret collection' do
 
       it 'returns false if the object is empty' do
 

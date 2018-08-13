@@ -119,6 +119,11 @@ module Flor
         .inject(Kernel) { |k, sk| k.const_get(sk, k == Kernel) }
     end
 
+    def is_collection?(o)
+
+      o.is_a?(Array) || o.is_a?(Hash)
+    end
+
     def to_coll(o)
 
       #o.respond_to?(:to_a) ? o.to_a : [ a ]
