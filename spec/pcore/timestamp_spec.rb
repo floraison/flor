@@ -35,5 +35,26 @@ describe 'Flor procedures' do
       )
     end
   end
+
+  describe 'ltimestamp' do
+
+    it 'returns the current local timestamp' do
+
+      r = @executor.launch(
+        %q{
+          ltimestamp _
+        })
+
+      n = Time.now
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']['ret']
+      ).to match(
+        /\A#{n.strftime('%Y-%m-%dT%H')}:\d{2}:\d{2}\z/
+      )
+    end
+  end
 end
 
