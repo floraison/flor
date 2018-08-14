@@ -91,7 +91,6 @@ describe 'Flor procedures' do
         })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret'].class).to eq(Integer)
       expect(r['payload']['ret']).to be_between(-1, 11)
     end
   end
