@@ -49,6 +49,7 @@
 * [select, reject](select.md) - Filters a collection
 * [sequence, _apply, begin](sequence.md) - Executes child expressions in sequence.
 * [set, setr](set.md) - sets a field or a variable.
+* [shuffle, sample](shuffle.md) - Returns a shuffled version of an array.
 * [slice, index](slice.md) - "slice" takes an array or a string and returns a slice of it (a new array or a new string.
 * [stall](stall.md) - "stall" is mostly used in flor tests. It simply dead ends.
 * [timestamp, ltimestamp](timestamp.md) - Places a string timestamp in f.ret.
@@ -142,6 +143,7 @@
   * [Flor::Pro::Schedule](https://github.com/floraison/flor/blob/master/lib/flor/punit/schedule.rb) : [schedule](schedule.md)
   * [Flor::Pro::Sequence](https://github.com/floraison/flor/blob/master/lib/flor/pcore/sequence.rb) : [sequence, _apply, begin](sequence.md)
   * [Flor::Pro::Set](https://github.com/floraison/flor/blob/master/lib/flor/pcore/set.rb) : [set, setr](set.md)
+  * [Flor::Pro::Shuffle](https://github.com/floraison/flor/blob/master/lib/flor/pcore/shuffle.rb) : [shuffle, sample](shuffle.md)
   * [Flor::Pro::Signal](https://github.com/floraison/flor/blob/master/lib/flor/punit/signal.rb) : [signal](signal.md)
   * [Flor::Pro::Skip](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_skip.rb) : [_skip](_skip.md)
   * [Flor::Pro::Sleep](https://github.com/floraison/flor/blob/master/lib/flor/punit/sleep.rb) : [sleep](sleep.md)

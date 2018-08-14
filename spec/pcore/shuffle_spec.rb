@@ -67,6 +67,33 @@ describe 'Flor procedures' do
       expect(r['payload']['ret'].class).to eq(Array)
       expect(r['payload']['ret'].length).to eq(5)
     end
+
+    it 'accepts the array as argument' do
+
+      r = @executor.launch(
+        %q{
+          shuffle [ 0 1 2 3 4 5 6 7 8 9 10 ] 4
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret'].class).to eq(Array)
+      expect(r['payload']['ret'].length).to eq(4)
+    end
+  end
+
+  describe 'sample' do
+
+    it 'returns only one element of the array' do
+
+      r = @executor.launch(
+        %q{
+          sample [ 0 1 2 3 4 5 6 7 8 9 10 ]
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret'].class).to eq(Integer)
+      expect(r['payload']['ret']).to be_between(-1, 11)
+    end
   end
 end
 
