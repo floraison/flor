@@ -42,19 +42,31 @@ describe 'Flor procedures' do
       expect(r['error']['msg']).to eq('no array to shuffle')
     end
 
-    it 'accepts a count for the sample size' #do
-#
-#      r = @executor.launch(
-#        %q{
-#          [ 0 1 2 3 4 5 6 7 8 9 10 ]
-#          shuffle 4
-#        })
-#
-#      expect(r['point']).to eq('terminated')
-#p r['payload']['ret']
-#      expect(r['payload']['ret'].class).to eq(Array)
-#      expect(r['payload']['ret'].length).to eq(11)
-#    end
+    it 'accepts a count for the sample size' do
+
+      r = @executor.launch(
+        %q{
+          [ 0 1 2 3 4 5 6 7 8 9 10 ]
+          shuffle 4
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret'].class).to eq(Array)
+      expect(r['payload']['ret'].length).to eq(4)
+    end
+
+    it 'accepts a count: for the sample size' do
+
+      r = @executor.launch(
+        %q{
+          [ 0 1 2 3 4 5 6 7 8 9 10 ]
+          shuffle count: 5
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret'].class).to eq(Array)
+      expect(r['payload']['ret'].length).to eq(5)
+    end
   end
 end
 

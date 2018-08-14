@@ -3,23 +3,28 @@ class Flor::Pro::Shuffle < Flor::Procedure
 
   names %w[ shuffle ]
 
-  def receive
+  def pre_execute
 
-    ret = payload['ret']
-    @node['arr'] = ret if ret.is_a?(Array)
+    unatt_unkeyed_children
 
-    super
+    @node['atts'] = []
+    @node['rets'] = []
   end
 
   def receive_last
 
-    arr = @node['arr']
+    arr =
+      (@node['rets'] + [ node_payload_ret ])
+        .find { |r| r.is_a?(Array) }
 
     fail Flor::FlorError.new("no array to #{@node['heat0']}") unless arr
 
-    ret = arr.shuffle
+    cnt =
+      att('count', nil) ||
+      @node['rets'].find { |r| r.is_a?(Integer) } ||
+      arr.size
 
-    wrap('ret' => arr.shuffle)
+    wrap('ret' => arr.sample(cnt))
   end
 end
 
