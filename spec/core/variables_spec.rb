@@ -267,5 +267,26 @@ describe 'Flor core' do
       expect(r['payload']['start']).to match(/\A#{n.year}-[^ ]+\dZ/)
     end
   end
+
+  describe 'aliasing variables' do
+
+    it 'works' do
+
+      r = @executor.launch(
+        %q{
+          setr a [ 0 1 2 3 ]
+          set f.l0 (length a)
+          set olength length
+          define length \ -1
+          set f.l1 (length a)
+          set f.l2 (olength a)
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['l0']).to eq(4)
+      expect(r['payload']['l1']).to eq(-1)
+      expect(r['payload']['l2']).to eq(4)
+    end
+  end
 end
 
