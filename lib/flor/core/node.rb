@@ -416,16 +416,16 @@ class Flor::Node
     {}
   end
 
-  def lookup_var_name(node, val)
-
-    return nil unless node
-
-    vars = node['vars']
-    k, _ = vars && vars.find { |_, v| v == val }
-    return k if k
-
-    lookup_var_name(parent_node(node), val)
-  end
+#  def lookup_var_name(node, val)
+#
+#    return nil unless node
+#
+#    vars = node['vars']
+#    k, _ = vars && vars.find { |_, v| v == val }
+#    return k if k
+#
+#    lookup_var_name(parent_node(node), val)
+#  end
 
   def lookup_tag(mod, key)
 
@@ -445,18 +445,6 @@ class Flor::Node
   rescue IndexError#, TypeError
 
     nil
-  end
-
-  def key_split(key) # => category, mode, key
-
-    m = key.match(
-      /\A(?:([lgd]?)((?:v|var|variable)|w|f|fld|field|t|tag)\.)?(.+)\z/)
-
-    ca = (m[2] || 'v')[0, 1]
-    mo = m[1] || ''
-    ke = m[3]
-
-    [ ca, mo, ke ]
   end
 end
 
