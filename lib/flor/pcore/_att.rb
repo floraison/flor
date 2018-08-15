@@ -79,9 +79,6 @@ class Flor::Pro::Att < Flor::Procedure
 
   def unref(k, flavour=:key)
 
-    #return lookup_var_name(@node, k) if Flor.is_func_tree?(k)
-      # old style
-
     return k unless Flor.is_tree?(k)
     return k unless k[1].is_a?(Hash)
     return k unless %w[ _proc _task _func ].include?(k[0])

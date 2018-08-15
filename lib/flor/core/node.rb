@@ -416,17 +416,6 @@ class Flor::Node
     {}
   end
 
-#  def lookup_var_name(node, val)
-#
-#    return nil unless node
-#
-#    vars = node['vars']
-#    k, _ = vars && vars.find { |_, v| v == val }
-#    return k if k
-#
-#    lookup_var_name(parent_node(node), val)
-#  end
-
   def lookup_tag(mod, key)
 
     nids =
