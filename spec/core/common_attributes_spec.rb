@@ -122,9 +122,6 @@ describe 'Flor core' do
           ])
         end
 
-        it 'whitelists deep'
-        it 'whitelists deep with regexes'
-
         it 'blacklists' do
 
           r = @executor.launch(
@@ -166,9 +163,6 @@ describe 'Flor core' do
             0|A|B|C 1|A||
           ])
         end
-
-        it 'blacklists deep'
-        it 'blacklists deep with regexes'
       end
 
       context '"copy"' do
