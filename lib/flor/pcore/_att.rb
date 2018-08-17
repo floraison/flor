@@ -118,9 +118,7 @@ class Flor::Pro::Att < Flor::Procedure
 
     (parent_node['vars'] ||= {}).merge!(vars)
 
-    payload['ret'] = @node['ret']
-
-    wrap_reply
+    wrap('ret' => @node['ret'])
   end
 
   def copy_vars
