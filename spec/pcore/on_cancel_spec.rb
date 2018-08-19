@@ -28,8 +28,9 @@ describe 'Flor procedures' do
 
       expect(
         @executor.execution['nodes']['0']['on_cancel']
-      ).to eq(
-        [ [ '_func',
+      ).to eq([
+        [ [ '*' ],
+          [ '_func',
             { 'nid' => '0_0_0',
               'tree' => [
                 'def', [
@@ -38,7 +39,7 @@ describe 'Flor procedures' do
               'fun' => 0,
               'on_cancel' => true },
             3 ] ]
-      )
+      ])
     end
 
     it 'triggers on (internal) cancel' do

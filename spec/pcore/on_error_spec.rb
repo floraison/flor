@@ -28,8 +28,9 @@ describe 'Flor procedures' do
 
       expect(
         @executor.execution['nodes']['0']['on_error']
-      ).to eq(
-        [ [ '_func',
+      ).to eq([
+        [ [ '*' ],
+          [ '_func',
             { 'nid' => '0_0_0',
               'tree' => [
                 'def', [
@@ -38,7 +39,7 @@ describe 'Flor procedures' do
               'fun' => 0,
               'on_error' => true },
             3 ] ]
-      )
+      ])
     end
 
     it 'triggers on error' do

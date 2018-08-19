@@ -244,17 +244,6 @@ class Flor::Node
     "#{exid}-#{nid}"
   end
 
-  def on_error_parent
-
-    oe = @node['on_error']
-    return self if oe && oe.any?
-
-    pn = parent_node
-    return Flor::Node.new(@executor, pn, @message).on_error_parent if pn
-
-    nil
-  end
-
   def to_procedure_node
 
     Flor::Procedure.new(@executor, @node, @message)
@@ -274,6 +263,19 @@ class Flor::Node
     end
 
     false
+  end
+
+  def on_error_parent
+
+    if (@node['on_error'] || []).find { |criteria, _| match_on?(criteria) }
+      return self
+    end
+
+    if pn = parent_node
+      return Flor::Node.new(@executor, pn, @message).on_error_parent
+    end
+
+    nil
   end
 
   protected
@@ -434,6 +436,18 @@ class Flor::Node
   rescue IndexError#, TypeError
 
     nil
+  end
+
+  # Return true if the current @message matches on the given array of
+  # criteria.
+  #
+  def match_on?(criteria)
+
+    criteria
+      .each { |k|
+        }
+
+    true
   end
 end
 

@@ -31,8 +31,9 @@ describe 'Flor pcore' do
 
         expect(
           @executor.execution['nodes']['0']['on_error']
-        ).to eq(
-          [ [ '_func',
+        ).to eq([
+          [ [ '*' ],
+            [ '_func',
               { 'nid' => '0_0_0',
                 'tree' => [
                   'def', [
@@ -53,7 +54,7 @@ describe 'Flor pcore' do
                 'fun' => 0,
                 'on_error' => true },
               3 ] ]
-        )
+        ])
       end
 
       it 'catches errors' do
@@ -125,8 +126,9 @@ describe 'Flor pcore' do
 
         expect(
           @executor.execution['nodes']['0']['on_cancel']
-        ).to eq(
-          [ [ '_func',
+        ).to eq([
+          [ [ '*' ],
+            [ '_func',
               { 'nid' => '0_0_0',
                 'tree' => [
                   'def', [
@@ -142,7 +144,7 @@ describe 'Flor pcore' do
                 'fun' => 0,
                 'on_cancel' => true },
               3 ] ]
-        )
+        ])
       end
 
       it 'catches cancels' do

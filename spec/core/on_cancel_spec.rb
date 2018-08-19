@@ -28,16 +28,17 @@ describe 'Flor core' do
       expect(
         @executor.execution['nodes']['0']['on_cancel']
       ).to eq([
-        [ '_func',
-          {  'nid' => '0_0_1',
-             'tree' => [
-               'def', [
-                 [ '_att', [ [ 'msg', [], 2 ] ], 2 ], [ '_', [], 2 ]
-                ], 2],
-             'cnid' => '0',
-             'fun' => 0,
-             'on_cancel' => true},
-          2]
+        [ [ '*' ],
+          [ '_func',
+            {  'nid' => '0_0_1',
+               'tree' => [
+                 'def', [
+                   [ '_att', [ [ 'msg', [], 2 ] ], 2 ], [ '_', [], 2 ]
+                  ], 2],
+               'cnid' => '0',
+               'fun' => 0,
+               'on_cancel' => true},
+            2 ] ]
       ])
     end
 

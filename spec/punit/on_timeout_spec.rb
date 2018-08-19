@@ -40,8 +40,9 @@ describe 'Flor punit' do
 
       expect(
         exe.data['nodes']['0']['on_timeout']
-      ).to eq(
-        [ [ '_func',
+      ).to eq([
+        [ [ '*' ],
+          [ '_func',
             { 'nid' => '0_0_0',
               'tree' => [
                 'def', [
@@ -57,7 +58,7 @@ describe 'Flor punit' do
               'fun' => 0,
               'on_timeout' => true },
             3 ] ]
-      )
+      ])
     end
 
     it 'catches triggers on timeout' do

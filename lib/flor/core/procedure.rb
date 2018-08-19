@@ -58,9 +58,23 @@ class Flor::Procedure < Flor::Node
     # empty default implementation
   end
 
-  def prepare_on_receive_last(tree)
+  def prepare_on_receive_last(on_x)
 
-    apply(tree.shift, [ @message ], tree[2])
+    on_x
+      .inject([]) { |a, (criteria, mop)|
+
+        next a unless match_on?(criteria)
+
+        msg = Flor.dup(@message)
+
+        a.concat(
+          if Flor.is_message?(mop)
+            [ Flor.dup(mop).merge!('msg' => msg) ]
+          else # procedure
+            err = msg['error']
+            args = [ msg, err ].compact
+            apply(mop, args, mop[2])
+          end) }
   end
 
   def trigger_on_error
@@ -69,14 +83,7 @@ class Flor::Procedure < Flor::Node
 
     close_node('on-error')
 
-    on_error = @node['on_error'].shift
-
-    @node['on_receive_last'] =
-      if Flor.is_message?(on_error)
-        [ on_error.merge!('msg' => @message) ]
-      else
-        apply(on_error, [ @message, @message['error'] ], tree[2])
-      end
+    @node['on_receive_last'] = prepare_on_receive_last(@node['on_error'])
 
     do_wrap_cancel_children ||
     do_receive # which should trigger 'on_receive_last'
@@ -479,7 +486,7 @@ class Flor::Procedure < Flor::Node
   #
   # Has no effect if there is no parent node.
   #
-  def store_on(key)
+  def store_on(key, criteria=[ '*' ])
 
     pnode = parent_node
 
@@ -493,7 +500,7 @@ class Flor::Procedure < Flor::Node
 
     prc[1][flavour] = true
 
-    (pnode[flavour] ||= []) << prc
+    (pnode[flavour] ||= []) << [ criteria, prc ]
   end
 
   # Used by 'cursor' (and 'loop') when
@@ -710,7 +717,7 @@ class Flor::Procedure < Flor::Node
 
     vars = opts[:vars] || {}
       #
-    vars['arguments'] = args # should I dup?
+    vars['arguments'] = args # Should I dup? Dup upstream?
       #
     sig.each_with_index do |att, i|
       key = att[1].first[0]
