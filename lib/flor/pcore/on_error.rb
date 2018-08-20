@@ -47,6 +47,10 @@ class Flor::Pro::OnError < Flor::Procedure
   #   # ...
   # ```
   #
+  # ## on_error kriteria
+  #
+  # TODO
+  #
   # ## see also
   #
   # On, on_cancel.
@@ -56,11 +60,30 @@ class Flor::Pro::OnError < Flor::Procedure
   def pre_execute
 
     unatt_unkeyed_children
+
+    @node['atts'] = []
+    @node['rets'] = []
   end
 
-  def receive_non_att
+  def receive_last
 
-    store_on(:error)
+    prc = @node['rets'].find { |r| Flor.is_func_tree?(r) }
+
+    line = tree[2]
+
+    cri = []
+    if cla = att('class', 'klass')
+      cri << [ 'class', cla, line ]
+    end
+    if str = @node['rets'].find { |r| r.is_a?(String) }
+      cri << [ 'string', str, line ]
+    end
+    if rex = @node['rets'].find { |r| Flor.is_regex_tree?(r) }
+      cri << rex
+    end
+    cri << '*' if cri.empty?
+
+    store_on(:error, prc, cri)
 
     super
   end

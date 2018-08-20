@@ -486,15 +486,13 @@ class Flor::Procedure < Flor::Node
   #
   # Has no effect if there is no parent node.
   #
-  def store_on(key, criteria=[ '*' ])
+  def store_on(key, prc=payload['ret'], criteria=[ '*' ])
+
+    return unless Flor.is_func_tree?(prc)
 
     pnode = parent_node
 
     return unless pnode
-
-    prc = payload['ret']
-
-    return unless Flor.is_func_tree?(prc)
 
     flavour = "on_#{key}"
 
