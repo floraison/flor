@@ -86,6 +86,34 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['l']).to eq([ 0, "don't know how to apply \"x\"" ])
     end
+
+    it 'triggers on error (class criteria match)' do
+
+      r = @executor.launch(
+        %q{
+          sequence
+            set f.l []
+            on_error class: 'FlorError'
+              def err \ push f.l [ 'n', err.error.msg ]
+            on_error
+              def err \ push f.l [ '*', err.error.msg ]
+            push f.l 0
+            push f.l x
+            push f.l 1
+        })
+
+      expect(
+        r['point']
+      ).to eq('terminated')
+      expect(
+        r['payload']['l']
+      ).to eq([ 0, [ 'n', "don't know how to apply \"x\"" ] ])
+    end
+
+    it 'triggers on error (string criteria match)'
+    it 'triggers on error (regex criteria match)'
+
+    it 'does not trigger on error (criteria mismatch)'
   end
 end
 

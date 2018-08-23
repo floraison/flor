@@ -443,11 +443,23 @@ class Flor::Node
   #
   def match_on?(criteria)
 
+    # AND, not OR, hence the true at the bottom
+
     criteria
-      .each { |k|
-        }
+      .each { |c|
+        next if c == '*'
+        return false unless send("match_on_#{c[0]}?", c) }
 
     true
+  end
+
+  def match_on_class?(criterion)
+
+    c1 = criterion[1]
+    kla = @message['error']['kla']
+    la = kla.split('::').last
+
+    kla == c1 || la == c1
   end
 end
 

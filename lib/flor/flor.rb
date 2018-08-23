@@ -76,7 +76,7 @@ module Flor
     def to_error(o)
 
       h = {}
-      h['kla'] = o.class.to_s
+      h['kla'] = o.class == String ? 'Flor::FlorError' : o.class.to_s
 
       m, t =
         if o.is_a?(::Exception)

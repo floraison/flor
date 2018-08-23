@@ -58,11 +58,12 @@ class Flor::Procedure < Flor::Node
     # empty default implementation
   end
 
-  def prepare_on_receive_last(on_x)
+  def prepare_on_receive_last(on_x, max=-1)
 
     on_x
       .inject([]) { |a, (criteria, mop)|
 
+        next a if max > 0 && a.size >= max
         next a unless match_on?(criteria)
 
         msg = Flor.dup(@message)
@@ -83,7 +84,8 @@ class Flor::Procedure < Flor::Node
 
     close_node('on-error')
 
-    @node['on_receive_last'] = prepare_on_receive_last(@node['on_error'])
+    @node['on_receive_last'] =
+      prepare_on_receive_last(@node['on_error'], 1)
 
     do_wrap_cancel_children ||
     do_receive # which should trigger 'on_receive_last'
