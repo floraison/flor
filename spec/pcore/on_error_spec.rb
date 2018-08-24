@@ -91,14 +91,15 @@ describe 'Flor procedures' do
 
       r = @executor.launch(
         %q{
+          define on_err x
+            def err \ push f.l [ x, err.error.msg ]
           sequence
             set f.l []
-            on_error class: 'FlorError'
-              def err \ push f.l [ 'n', err.error.msg ]
-            on_error
-              def err \ push f.l [ '*', err.error.msg ]
+            on_error class: 'NadaError' (on_err 'n')  # no
+            on_error class: 'FlorError' (on_err 'F')  # YES
+            on_error (on_err '*')                     # no
             push f.l 0
-            push f.l x
+            push f.l x                                # FAILS! ^^^
             push f.l 1
         })
 
@@ -107,7 +108,7 @@ describe 'Flor procedures' do
       ).to eq('terminated')
       expect(
         r['payload']['l']
-      ).to eq([ 0, [ 'n', "don't know how to apply \"x\"" ] ])
+      ).to eq([ 0, [ 'F', "don't know how to apply \"x\"" ] ])
     end
 
     it 'triggers on error (string criteria match)'
