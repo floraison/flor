@@ -255,8 +255,8 @@ describe 'Flor punit' do
 
       expect(
         @unit.journal
-          .collect { |m|
-            [ m['nid'], m['point'], m['flavour'].to_s ].join(':') }
+          .reject { |m| m['point'] == 'end' }
+          .collect { |m| [ m['nid'], m['point'], m['flavour'].to_s ].join(':') }
           .join("\n")
       ).to eq(%w[
         0:execute:
@@ -285,7 +285,6 @@ describe 'Flor punit' do
         0_0_0:cancel:
         :receive:
         :terminated:
-        :end:
       ].join("\n"))
     end
   end
