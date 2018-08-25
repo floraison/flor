@@ -55,7 +55,7 @@ describe 'Flor procedures' do
         @executor.execution['nodes']['0']['on_error']
       ).to eq([
         [ [ [ 'class', 'RuntimeError', 3 ],
-            [ '_rxs', '/it failed/', 3 ] ],
+            [ 'regex', '/it failed/', 3 ] ],
           [ '_func',
             { 'nid' => '0_0_1',
               'tree' => [
@@ -111,15 +111,58 @@ describe 'Flor procedures' do
       ).to eq([ 0, [ 'F', "don't know how to apply \"x\"" ] ])
     end
 
-    it 'triggers on error (string criteria match)'
-    it 'triggers on error (regex criteria match)'
-
-    it 'does not trigger on error (criteria mismatch)' do
+    it 'triggers on error (string criteria match)' do
 
       r = @executor.launch(
         %q{
           define on_err x
             def err \ push f.l [ x, err.error.msg ]
+          sequence
+            set f.l []
+            on_error 'NadaError' (on_err 'n')  # no
+            on_error 'FlorError' (on_err 'F')  # YES
+            on_error (on_err '*')              # no
+            push f.l 0
+            push f.l x                         # FAILS! ^^^
+            push f.l 1
+        })
+
+      expect(
+        r['point']
+      ).to eq('terminated')
+      expect(
+        r['payload']['l']
+      ).to eq([ 0, [ 'F', "don't know how to apply \"x\"" ] ])
+    end
+
+    it 'triggers on error (regex criteria match)' do
+
+      r = @executor.launch(
+        %q{
+          define on_err x
+            def err \ push f.l [ x, err.error.msg ]
+          sequence
+            set f.l []
+            on_error (/failed to write/) (on_err 'w')  # no
+            on_error (/how to apply/) (on_err 'A')     # YES
+            on_error (on_err '*')                    # no
+            push f.l 0
+            push f.l x                               # FAILS! ^^^
+            push f.l 1
+        })
+
+      expect(
+        r['point']
+      ).to eq('terminated')
+      expect(
+        r['payload']['l']
+      ).to eq([ 0, [ 'A', "don't know how to apply \"x\"" ] ])
+    end
+
+    it 'does not trigger on error (criteria mismatch)' do
+
+      r = @executor.launch(
+        %q{
           sequence
             set f.l []
             on_error class: 'SomeError'

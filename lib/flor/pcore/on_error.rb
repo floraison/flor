@@ -79,7 +79,7 @@ class Flor::Pro::OnError < Flor::Procedure
       cri << [ 'string', str, line ]
     end
     if rex = @node['rets'].find { |r| Flor.is_regex_tree?(r) }
-      cri << rex
+      cri << [ 'regex', *rex[1..-1] ]
     end
     cri << '*' if cri.empty?
 

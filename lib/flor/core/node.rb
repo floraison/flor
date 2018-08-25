@@ -453,13 +453,37 @@ class Flor::Node
     true
   end
 
+  def extract_on_info
+
+    kla = @message['error']['kla']
+    msg = @message['error']['msg']
+    la = kla.split('::').last
+
+    [ kla, la, msg ]
+  end
+
   def match_on_class?(criterion)
 
     c1 = criterion[1]
-    kla = @message['error']['kla']
-    la = kla.split('::').last
+    kla, la, _ = extract_on_info
 
     kla == c1 || la == c1
+  end
+
+  def match_on_string?(criterion)
+
+    c1 = criterion[1]
+    kla, la, msg = extract_on_info
+
+    msg == c1 || kla == c1 || la == c1
+  end
+
+  def match_on_regex?(criterion)
+
+    c1 = Flor.to_regex(criterion)
+    kla, _, msg = extract_on_info
+
+    msg =~ c1 || kla =~ c1
   end
 end
 

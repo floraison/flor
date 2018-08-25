@@ -192,7 +192,7 @@ module Flor
         if o.is_a?(String)
           o
         elsif o.is_a?(Array)
-          if o[0] == '_rxs' && o[2].is_a?(Integer)
+          if (o[0] == '_rxs' || o[0] == 'regex') && o[2].is_a?(Integer)
             o[1].to_s
           else
             "/#{o[0..-2].join}/#{o[-1]}"
