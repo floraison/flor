@@ -78,7 +78,7 @@ describe 'Flor procedures' do
             on_error (def err \ push f.l err.error.msg)
             #on_error eh
             push f.l 0
-            push f.l x
+            push f.l x  # FAILS!
             push f.l 1
         },
         payload: { 'l' => [] })
@@ -114,7 +114,25 @@ describe 'Flor procedures' do
     it 'triggers on error (string criteria match)'
     it 'triggers on error (regex criteria match)'
 
-    it 'does not trigger on error (criteria mismatch)'
+    it 'does not trigger on error (criteria mismatch)' do
+
+      r = @executor.launch(
+        %q{
+          define on_err x
+            def err \ push f.l [ x, err.error.msg ]
+          sequence
+            set f.l []
+            on_error class: 'SomeError'
+              def err \ push f.l [ 'F', err.error.msg ]
+            push f.l 0
+            push f.l x  # FAILS!
+            push f.l 1
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['kla']).to eq('Flor::FlorError')
+      expect(r['error']['msg']).to eq('don\'t know how to apply "x"')
+    end
   end
 end
 
