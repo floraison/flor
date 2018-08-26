@@ -131,32 +131,54 @@ describe 'Flor pcore' do
             [ '_func',
               { 'nid' => '0_1_1',
                 'tree' =>
-                 [ 'def', [
-                   [ '_att', [ [ 'msg', [], 4 ] ], 4 ],
-                   [ '_att', [ [ 'err', [], 4 ] ], 4 ],
-                   [ 'push', [ [ '_att', [
-                     [ '_ref', [
-                       [ '_sqs', 'f', 5 ],
-                       [ '_sqs', 'l', 5 ]
-                     ], 5 ]
-                   ], 5 ],
-                   [ '_att', [
-                     [ '_arr', [
+                  [ 'def', [
+                    [ '_att', [ [ 'msg', [], 4 ] ], 4 ],
+                    [ '_att', [ [ 'err', [], 4 ] ], 4 ],
+                    [ 'push', [
+                      [ '_att', [
                         [ '_ref', [
-                          [ '_sqs', 'msg', 5 ], [ '_sqs', 'nid', 5 ]
-                        ], 5 ],
-                        [ '_ref', [
-                          [ '_sqs', 'err', 5 ], [ '_sqs', 'msg', 5 ]
+                          [ '_sqs', 'f', 5 ], [ '_sqs', 'l', 5 ]
                         ], 5 ]
-                     ], 5 ]
-                   ], 5 ]
-                 ], 5 ] ],
-                4],
+                      ], 5 ],
+                      [ '_att', [
+                        [ '_arr', [
+                           [ '_ref', [
+                             [ '_sqs', 'msg', 5 ], [ '_sqs', 'nid', 5 ]
+                           ], 5 ],
+                           [ '_ref', [
+                             [ '_sqs', 'err', 5 ], [ '_sqs', 'msg', 5 ]
+                           ], 5 ]
+                        ], 5 ]
+                      ], 5 ]
+                    ], 5 ]
+                  ], 4 ],
                 'cnid' => '0',
                 'fun' => 0,
-                'on_error' => true},
-             4 ] ]
+                'on_error' => true },
+            4 ] ]
         ])
+      end
+
+      it 'filters by criteria' do
+
+        r = @executor.launch(
+          %q{
+            sequence
+              set f.l []
+              on error class: 'FlorError'
+                push f.l [ msg.nid err.msg ]
+              push f.l 0
+              push f.l x
+              push f.l 1
+          })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['l']
+        ).to eq(
+          [ 0, [ '0_3_1', 'don\'t know how to apply "x"' ] ]
+        )
       end
     end
 
