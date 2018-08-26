@@ -110,6 +110,54 @@ describe 'Flor pcore' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['l']).to eq([ 'a', 'b', 'b' ])
       end
+
+      it 'accepts criteria' do
+
+        @executor.launch(
+          %q{
+            sequence
+              set f.l []
+              on error class: 'FlorError'
+                push f.l [ msg.nid err.msg ]
+              stall _
+          })
+
+        node0 = @executor.execution['nodes']['0']
+
+        expect(
+          node0['on_error']
+        ).to eq([
+          [ [ [ 'class', 'FlorError', 4 ] ],
+            [ '_func',
+              { 'nid' => '0_1_1',
+                'tree' =>
+                 [ 'def', [
+                   [ '_att', [ [ 'msg', [], 4 ] ], 4 ],
+                   [ '_att', [ [ 'err', [], 4 ] ], 4 ],
+                   [ 'push', [ [ '_att', [
+                     [ '_ref', [
+                       [ '_sqs', 'f', 5 ],
+                       [ '_sqs', 'l', 5 ]
+                     ], 5 ]
+                   ], 5 ],
+                   [ '_att', [
+                     [ '_arr', [
+                        [ '_ref', [
+                          [ '_sqs', 'msg', 5 ], [ '_sqs', 'nid', 5 ]
+                        ], 5 ],
+                        [ '_ref', [
+                          [ '_sqs', 'err', 5 ], [ '_sqs', 'msg', 5 ]
+                        ], 5 ]
+                     ], 5 ]
+                   ], 5 ]
+                 ], 5 ] ],
+                4],
+                'cnid' => '0',
+                'fun' => 0,
+                'on_error' => true},
+             4 ] ]
+        ])
+      end
     end
 
     context 'cancel' do
