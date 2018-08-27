@@ -49,7 +49,45 @@ class Flor::Pro::OnError < Flor::Procedure
   #
   # ## on_error kriteria
   #
-  # TODO
+  # Similarly to Ruby, one may catch certain types of errors.
+  #
+  # In the follow example, Charly is tasked with "it failed" and the err
+  # if there is a Ruby error of class `RuntimeError` happens in the sequence:
+  # ```
+  # sequence
+  #   on_error class: 'RuntimeError' (def err \ charly "it failed", err)
+  #   alice 'do this'
+  #   bob 'do that'
+  # ```
+  #
+  # One can shorten it to:
+  # ```
+  # sequence
+  #   on_error 'RuntimeError' (def err \ charly "it failed", err)
+  #   alice 'do this'
+  #   bob 'do that'
+  # ```
+  # But this short version will check the Ruby class name and then the error
+  # message.
+  #
+  # In the next example, Charly is tasked with "it timed out" if the error
+  # class or the error message match the regex `/timeout/`:
+  # ```
+  # sequence
+  #   on_error (/timeout/) (def err \ charly "it timed out")
+  #   on_error (def err \ charly "it failed", err)
+  #   alice 'do this'
+  #   bob 'do that'
+  # ```
+  # Order matters.
+  #
+  # Please note that you can't set a criteria when you're using the `on_error:`
+  # attribute, as in:
+  # ```
+  # sequence on_error: (def err \ charly "it failed", err)
+  #   alice 'do this'
+  #   bob 'do that'
+  # ```
   #
   # ## see also
   #

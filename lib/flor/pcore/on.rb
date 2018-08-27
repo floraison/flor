@@ -44,6 +44,17 @@ class Flor::Pro::On < Flor::Macro
   # Please note that "error" in `on error` is not quoted, nor double quoted.
   # If it were, it would trap the signal named "error".
   #
+  # `on error` accepts the same criteria as [on_error](on_error.md), as in:
+  # ```
+  # sequence
+  #   on error (/timeout/)
+  #     charly "it timed out"
+  #   on error
+  #     charly "it failed", err
+  #   alice 'do this'
+  #   bob 'do that'
+  # ```
+  #
   #
   # ## cancel
   #
