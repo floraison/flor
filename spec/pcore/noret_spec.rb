@@ -43,6 +43,18 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(2)
     end
+
+    it "doesn't mind attributes and children (2)" do
+
+      r = @executor.launch(
+        %q{
+          0
+          noret \ (+ 1 f.ret)
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(0)
+    end
   end
 end
 
