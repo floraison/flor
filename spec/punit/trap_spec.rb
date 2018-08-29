@@ -958,7 +958,7 @@ describe 'Flor punit' do
           %q{
             sequence
               trace 'in'
-              trap tags: (/^x-/)
+              trap tags: r/^x-/
                 def msg \ trace "$(msg.tags.-1)-$(msg.point)"
               sequence tag: 'x-0' \ trace 'a'
               sequence tag: 'y' \ trace 'b'

@@ -461,8 +461,8 @@ describe 'Flor procedures' do
         r = @executor.launch(
           %q{
             match [ 1 'bravo' ]
-              [ 1 (bind a (/^a.+/)) ]; "match a:$(a)"
-              [ 1 (bind b (/^b(.+)/)) ]; "match b:$(b):$(b__match.1)"
+              [ 1 (bind a r/^a.+/) ]; "match a:$(a)"
+              [ 1 (bind b r/^b(.+)/) ]; "match b:$(b):$(b__match.1)"
               else; 'no-match'
           })
 

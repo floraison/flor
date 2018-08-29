@@ -72,7 +72,7 @@ describe 'Flor punit' do
           %q{
             set l []
             push l 'in'
-            on (/^red-.*/)
+            on r/^red-.*/
             #on [ /^red-.*/ ]
               push l sig
             signal 'red-zero'

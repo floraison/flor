@@ -76,7 +76,7 @@ describe 'Flor procedures' do
 
         r = @executor.launch(
           %q{
-            "blue moon" | matchr (/blue/) | push l
+            "blue moon" | matchr r/blue/ | push l
             "blue moon" | matchr 'moon' | push l
             "blue moon" | match? 'moon' | push l
             "blue moon" | match? 'x' | push l

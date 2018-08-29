@@ -123,7 +123,12 @@ describe 'Flor core' do
       # pmatch
       %{"$( msg1 | pmatch(/"([^"]+)"/) )"} => 'le monde',
       %{"$( msg1 | pmatch, /"([^"]+)"/ )"} => 'le monde',
+      %{"$( msg1 | pmatch r/"([^"]+)"/ )"} => 'le monde',
+      %{"$( msg1 | pmatch (/"([^"]+)"/) )"} => 'le monde',
+      %{"$( msg1 | pmatch(/something/) )"} => '',
       %{"$( msg1 | pmatch, /something/ )"} => '',
+      %{"$( msg1 | pmatch r/something/ )"} => '',
+      %{"$( msg1 | pmatch (/something/) )"} => '',
 
       # f.ret
       %{"DEF" ; "abc$(f.ret)ghi"} => 'abcDEFghi',

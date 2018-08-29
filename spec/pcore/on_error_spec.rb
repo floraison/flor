@@ -47,7 +47,7 @@ describe 'Flor procedures' do
       @executor.launch(
         %q{
           sequence
-            on_error (def err \ _) (/it failed/) class: 'RuntimeError'
+            on_error (def err \ _) r/it failed/ class: 'RuntimeError'
             stall _
         })
 
@@ -143,11 +143,11 @@ describe 'Flor procedures' do
             def err \ push f.l [ x, err.error.msg ]
           sequence
             set f.l []
-            on_error (/failed to write/) (on_err 'w')  # no
-            on_error (/how to apply/) (on_err 'A')     # YES
-            on_error (on_err '*')                    # no
+            on_error r/failed to write/ (on_err 'w')  # no
+            on_error r/how to apply/ (on_err 'A')     # YES
+            on_error (on_err '*')                     # no
             push f.l 0
-            push f.l x                               # FAILS! ^^^
+            push f.l x                                # FAILS! ^^^
             push f.l 1
         })
 

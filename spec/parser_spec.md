@@ -1293,6 +1293,55 @@ parses to
 ---
 
 ```flor
+  hello r/worl$( "d" )/i
+```
+parses to
+```ruby
+  [ 'hello', [
+    [ '_att', [
+      [ '_rxs', [
+        [ '_att', [
+          [ 'rxopts', [], 1 ],
+          [ '_sqs', "i", 1 ]
+        ], 1 ],
+        [ '_sqs', "worl", 1 ],
+        [ '_dol', [
+          [ '_dmute', [
+            [ '_sqs', "d", 1 ]
+          ], 1 ]
+        ], 1 ]
+      ], 1 ]
+    ], 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  hello r/world/ 12.0
+  r / 12.0
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ 'hello', [
+      [ '_att', [
+        [ '_rxs', [
+          [ '_sqs', "world", 1 ]
+        ], 1 ]
+      ], 1 ],
+      [ '_att', [
+        [ '_num', 12.0, 1 ]
+      ], 1 ]
+    ], 1 ],
+    [ '/', [
+      [ 'r', [], 2 ],
+      [ '_num', 12.0, 2 ]
+    ], 2 ]
+  ], 0 ]
+```
+---
+
+```flor
   hello (/world/)
 ```
 parses to

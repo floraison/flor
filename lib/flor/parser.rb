@@ -140,8 +140,12 @@ module Flor
       seq(:dqstring, i, :dquote, :dpar_or_dqsc, '*', :dquote)
     end
 
+    def rxr(i) # used to break ambiguity against / (infix division)
+      rex(nil, i, /(regex|rex|rx|re|r)/)
+    end
+
     def rxstring(i)
-      seq(:rxstring, i, :slash, :dpar_or_rxsc, '*', :slash, :rxopts)
+      seq(:rxstring, i, :rxr, '?', :slash, :dpar_or_rxsc, '*', :slash, :rxopts)
     end
 
     def sqstring(i)
