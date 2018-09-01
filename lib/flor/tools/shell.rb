@@ -442,8 +442,8 @@ fail NotImplementedError
     def cmd_launch(line)
 
       flow = File.read(@flow_path)
-      variables = Flor::ConfExecutor.interpret(@variables_path)
-      payload = Flor::ConfExecutor.interpret(@payload_path)
+      variables = Flor::ConfExecutor.interpret_path(@variables_path)
+      payload = Flor::ConfExecutor.interpret_path(@payload_path)
       domain = 'shell'
 
       vars = Flor::ConfExecutor.interpret_line("\n" + line[6..-1]) rescue {}
