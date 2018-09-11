@@ -110,6 +110,24 @@ describe 'Flor punit' do
       expect(r['payload']['ret']).to eq([ [ 0, 10 ], [ 1, 11 ], [ 2, 12 ] ])
     end
 
+    it 'passes the length as third function arg if possible' do
+
+      r = @unit.launch(
+        %q{
+          cmap [ 10 11 12 ]
+            def x i l \ [ i l x ]
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']['ret']
+      ).to eq([
+        [ 0, 3, 10 ], [ 1, 3, 11 ], [ 2, 3, 12 ]
+      ])
+    end
+
     it 'preserves the children order' do
 
       r = @unit.launch(
