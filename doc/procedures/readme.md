@@ -59,6 +59,7 @@
 ## unit
 
 * [cancel, kill](cancel.md) - Cancels an execution branch
+* [ccollect](ccollect.md) - ccollect is a concurrent version of [collect](collect.md).
 * [concurrence](concurrence.md) - Executes its children concurrently.
 * [cron](cron.md) - "cron" is a macro procedure.
 * [do-trap](do_trap.md) - A version of trap that accepts a block instead of a function.
