@@ -182,6 +182,44 @@ describe 'Flor punit' do
         'drink:coffee:2:3/drink:coffee:2:3'
       ])
     end
+
+    it 'iterates over the incoming f.ret (array)' do
+
+      r = @unit.launch(
+        %q{
+          [ 0 1 2 3 4 5 6 ]
+          cmap
+            def e, i, l \ "$(e):$(i):$(l)"
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']['ret']
+      ).to eq(%w[
+        0:0:7 1:1:7 2:2:7 3:3:7 4:4:7 5:5:7 6:6:7
+      ])
+    end
+
+    it 'iterates over the incoming f.ret (object)' do
+
+      r = @unit.launch(
+        %q{
+          { name: 'joe' age: 45 drink: 'coffee' }
+          cmap
+            def k, v, i, l \ "$(k):$(v):$(i):$(l)"
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']['ret']
+      ).to eq([
+        'name:joe:0:3', 'age:45:1:3', 'drink:coffee:2:3'
+      ])
+    end
   end
 end
 

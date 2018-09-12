@@ -41,7 +41,7 @@ class Flor::Pro::Cmap < Flor::Procedure
 
     @node['fun'] = fun
 
-    (col = att(nil))
+    (col = att(nil) || node_payload_ret)
       .collect
       .with_index { |e, i|
         vars = determine_iteration_vars(col, i)
