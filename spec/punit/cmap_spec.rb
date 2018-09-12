@@ -142,6 +142,46 @@ describe 'Flor punit' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 1, 2, 3 ])
     end
+
+    it 'iterates over objects' do
+
+      r = @unit.launch(
+        %q{
+          cmap { name: 'joe' age: 45 drink: 'coffee' }
+            def key, val, idx, len
+              "$(key):$(val):$(idx):$(len)"
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']['ret']
+      ).to eq([
+        'name:joe:0:3', 'age:45:1:3', 'drink:coffee:2:3'
+      ])
+    end
+
+    it 'iterates over objects (and sets vars)' do
+
+      r = @unit.launch(
+        %q{
+          cmap { name: 'joe' age: 45 drink: 'coffee' }
+            def k, v, i, l
+              "$(k):$(v):$(i):$(l)/$(key):$(val):$(idx):$(len)"
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        r['payload']['ret']
+      ).to eq([
+        'name:joe:0:3/name:joe:0:3',
+        'age:45:1:3/age:45:1:3',
+        'drink:coffee:2:3/drink:coffee:2:3'
+      ])
+    end
   end
 end
 

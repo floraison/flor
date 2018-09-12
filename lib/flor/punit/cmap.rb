@@ -22,6 +22,16 @@ class Flor::Pro::Cmap < Flor::Procedure
 
   protected
 
+  def determine_iteration_vars(col, idx)
+
+    if col.is_a?(Array)
+      { 'elt' => col[idx], 'idx' => idx, 'len' => col.length }
+    else
+      key, val = col.to_a[idx]
+      { 'key' => key, 'val' => val, 'idx' => idx, 'len' => col.length }
+    end
+  end
+
   def receive_fun
 
     fun = payload['ret']
@@ -31,13 +41,11 @@ class Flor::Pro::Cmap < Flor::Procedure
 
     @node['fun'] = fun
 
-    coll = att(nil)
-    l = coll.length
-
-    coll
+    (col = att(nil))
       .collect
       .with_index { |e, i|
-        apply(fun, [ e, i, l ], tree[2], vars: { 'idx' => i, 'len' => l }) }
+        vars = determine_iteration_vars(col, i)
+        apply(fun, vars.values, tree[2], vars: vars) }
       .flatten(1)
   end
 
