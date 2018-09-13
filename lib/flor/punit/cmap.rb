@@ -5,18 +5,25 @@ class Flor::Pro::Cmap < Flor::Procedure
 
   def pre_execute
 
-    @node['atts'] = []
+    @node['args'] = []
+    @node['result'] = nil
 
-    @node['fun'] = nil
-    @node['col'] = []
+    unatt_unkeyed_children
   end
 
   def receive_non_att
 
-    if @node['fun']
-      receive_elt
+    @node['args'] << payload['ret']
+
+    super
+  end
+
+  def receive_last
+
+    if @node['result']
+      receive_ret
     else
-      receive_fun
+      receive_last_argument
     end
   end
 
@@ -32,16 +39,28 @@ class Flor::Pro::Cmap < Flor::Procedure
     end
   end
 
-  def receive_fun
+  def receive_last_argument
 
-    fun = payload['ret']
+    col = nil
+    fun = nil
+    @node['args'].each do |a|
+      if Flor.is_func_tree?(a)
+        fun = a
+      elsif Flor.is_collection?(a)
+        col = a
+      end
+    end
+    col ||= node_payload_ret
 
-    fail Flor::FlorError.new("'#{tree[0]}' expects a function", self) \
+    fail Flor::FlorError.new("function not given to #{heap.inspect}", self) \
       unless Flor.is_func_tree?(fun)
+    fail Flor::FlorError.new("collection not given to #{heap.inspect}", self) \
+      unless Flor.is_collection?(col)
 
-    @node['fun'] = fun
+    @node['cnt'] = col.size
+    @node['result'] = []
 
-    (col = att(nil) || node_payload_ret)
+    col
       .collect
       .with_index { |e, i|
         vars = determine_iteration_vars(col, i)
@@ -49,19 +68,18 @@ class Flor::Pro::Cmap < Flor::Procedure
       .flatten(1)
   end
 
-  def receive_elt
+  def receive_ret
 
-    idx =
-      (message['rvars'] && message['rvars']['idx']) ||
-      Flor.sub_nid(message['from']) - 1 # fall back :-(
+    i = from.split('-').last.to_i - 1
 
-    @node['col'][idx] = payload['ret']
+    @node['result'][i] = payload['ret']
+    @node['cnt'] = @node['cnt'] - 1
 
-    return [] if cnodes_any?
-
-    payload['ret'] = @node['col']
-
-    wrap
+    if @node['cnt'] < 1
+      wrap('ret' => @node['result']) # over
+    else
+      [] # still waiting for answers
+    end
   end
 end
 
