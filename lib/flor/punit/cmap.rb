@@ -52,10 +52,10 @@ class Flor::Pro::Cmap < Flor::Procedure
     end
     col ||= node_payload_ret
 
-    fail Flor::FlorError.new("function not given to #{heap.inspect}", self) \
-      unless Flor.is_func_tree?(fun)
     fail Flor::FlorError.new("collection not given to #{heap.inspect}", self) \
       unless Flor.is_collection?(col)
+    return wrap('ret' => col) \
+      unless Flor.is_func_tree?(fun)
 
     @node['cnt'] = col.size
     @node['result'] = []

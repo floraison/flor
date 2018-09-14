@@ -27,41 +27,6 @@ describe 'Flor punit' do
 
   describe 'cmap' do
 
-    it 'has no effect when empty' #do
-#
-#      r = @unit.launch(
-#        %q{
-#          cmap _
-#        }, wait: true)
-#
-#      expect(r['point']).to eq('terminated')
-#    end
-
-    it 'has no effect when empty (2)' #do
-#
-#      r = @unit.launch(
-#        %q{
-#          cmap tag: 'z'
-#        },
-#        wait: true)
-#
-#      expect(r['point']).to eq('terminated')
-#
-#      wait_until { @unit.journal.find { |m| m['point'] == 'left' } }
-#
-#      expect(
-#        @unit.journal
-#          .select { |m|
-#            %w[ entered left ].include?(m['point']) }
-#          .collect { |m|
-#            [ m['point'], m['nid'], (m['tags'] || []).join(',') ].join(':') }
-#          .join("\n")
-#      ).to eq(%w[
-#        entered:0:z
-#        left:0:z
-#      ].join("\n"))
-#    end
-
     it 'executes atts in sequence then children in concurrence' do
 
       r = @unit.launch(
@@ -238,6 +203,33 @@ describe 'Flor punit' do
       ).to eq([
         'name:Jocko:0:3', 'age:45:1:3', 'drink:tea:2:3'
       ])
+    end
+
+    it 'fails if it is not given a collection' do
+
+      r = @unit.launch(
+        %q{
+          1
+          cmap
+            def k v i \ [ i k v ]
+        },
+        wait: true)
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('collection not given to "cmap"')
+    end
+
+    it 'returns the collection if it is not given a function' do
+
+      r = @unit.launch(
+        %q{
+          [ 0 1 2 3 ]
+          cmap _
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 0, 1, 2, 3 ])
     end
   end
 end
