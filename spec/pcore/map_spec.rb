@@ -181,6 +181,31 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']
         ).to eq([ [ 0, 'a', 'A' ], [ 1, 'b', 'B' ], [ 2, 'c', 'C' ] ])
     end
+
+    it 'fails if it is not given a collection' do
+
+      r = @executor.launch(
+        %q{
+          1
+          map
+            def k v i \ [ i k v ]
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('collection not given to "map"')
+    end
+
+    it 'returns the collection if it is not given a function' do
+
+      r = @executor.launch(
+        %q{
+          [ 0 1 2 3 ]
+          map _
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 0, 1, 2, 3 ])
+    end
   end
 end
 

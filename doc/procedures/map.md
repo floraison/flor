@@ -63,9 +63,17 @@ They are `[ key, value, index, length ]` for objects.
 The corresponding `key`, `val`, `idx` and `len` variables are also
 set in the closure for the function call.
 
+## missing collection
+
+"map" fails if it is not given a collection.
+
+## missing function
+
+"map" returns the collection as is if it is not given a function.
+
 ## see also
 
-[Collect](collect.md).
+[Collect](collect.md), cmap.
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/map.rb)

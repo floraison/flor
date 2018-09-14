@@ -63,9 +63,17 @@ class Flor::Pro::Map < Flor::Pro::Iterator
   # The corresponding `key`, `val`, `idx` and `len` variables are also
   # set in the closure for the function call.
   #
+  # ## missing collection
+  #
+  # "map" fails if it is not given a collection.
+  #
+  # ## missing function
+  #
+  # "map" returns the collection as is if it is not given a function.
+  #
   # ## see also
   #
-  # Collect.
+  # Collect, cmap.
 
   name 'map'
 
@@ -79,6 +87,16 @@ class Flor::Pro::Map < Flor::Pro::Iterator
   def iterator_result
 
     @node['res']
+  end
+
+  def function_mandatory?
+
+    false
+  end
+
+  def no_iterate
+
+    wrap('ret' => @node['ocol'])
   end
 end
 
