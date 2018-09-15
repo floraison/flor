@@ -423,6 +423,12 @@ class Flor::Procedure < Flor::Node
     @fcid && (c = children[@fcid]) && c[0] == '_att'
   end
 
+  def from_sub_nid
+
+    i = from.split('-')[1]
+    i ? i.to_i : false
+  end
+
   def last_receive?
 
     children[@ncid] == nil

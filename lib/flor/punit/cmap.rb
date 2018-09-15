@@ -13,15 +13,18 @@ class Flor::Pro::Cmap < Flor::Procedure
 
   def receive_non_att
 
-    @node['args'] << payload['ret']
-
-    super
+    if @node['result']
+      receive_ret
+    else
+      @node['args'] << payload['ret']
+      super
+    end
   end
 
   def receive_last
 
     if @node['result']
-      receive_ret
+      super
     else
       receive_last_argument
     end
@@ -70,16 +73,12 @@ class Flor::Pro::Cmap < Flor::Procedure
 
   def receive_ret
 
-    i = from.split('-').last.to_i - 1
-
-    @node['result'][i] = payload['ret']
+    @node['result'] << [ from_sub_nid, payload['ret'] ]
     @node['cnt'] = @node['cnt'] - 1
 
-    if @node['cnt'] < 1
-      wrap('ret' => @node['result']) # over
-    else
-      [] # still waiting for answers
-    end
+    return [] if @node['cnt'] > 0 # still waiting for answers
+
+    wrap('ret' => @node['result'].sort_by(&:first).collect(&:last)) # over
   end
 end
 

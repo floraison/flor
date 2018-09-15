@@ -231,6 +231,22 @@ describe 'Flor punit' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq([ 0, 1, 2, 3 ])
     end
+
+    it 'does not mind attributes and non-coll, non-fun children' do
+
+      r = @unit.launch(
+        %q{
+          [ 0 1 2 3 ]
+          cmap [ 0 1 2 ]
+            "and so it goes"
+            def elt \ + elt 3
+            true
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ 3, 4, 5 ])
+    end
   end
 end
 

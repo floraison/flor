@@ -36,9 +36,11 @@ describe 'Flor unit' do
               cmap [ 'x' 'y' ]
                 def c
                   trace "$(i):$(c)"
+                  "$(i):$(c)"
         }, wait: true)
 
       expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ %w[ 1:x 1:y ], %w[ 2:x 2:y ] ])
 
       sleep 0.210
 
