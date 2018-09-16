@@ -60,6 +60,7 @@
 
 * [cancel, kill](cancel.md) - Cancels an execution branch
 * [ccollect](ccollect.md) - ccollect is a concurrent version of [collect](collect.md).
+* [cmap](cmap.md) - Concurrent version of "map". Spins a concurrent child for each element of the incoming/argument collection.
 * [concurrence](concurrence.md) - Executes its children concurrently.
 * [cron](cron.md) - "cron" is a macro procedure.
 * [do-trap](do_trap.md) - A version of trap that accepts a block instead of a function.
@@ -88,7 +89,7 @@
   * [Flor::Pro::Cancel](https://github.com/floraison/flor/blob/master/lib/flor/punit/cancel.rb) : [cancel, kill](cancel.md)
   * [Flor::Pro::Case](https://github.com/floraison/flor/blob/master/lib/flor/pcore/case.rb) : [case](case.md)
     * [Flor::Pro::Match](https://github.com/floraison/flor/blob/master/lib/flor/pcore/match.rb) : [match](matchr.md)
-  * [Flor::Pro::Cmap](https://github.com/floraison/flor/blob/master/lib/flor/punit/cmap.rb) : cmap
+  * [Flor::Pro::Cmap](https://github.com/floraison/flor/blob/master/lib/flor/punit/cmap.rb) : [cmap](cmap.md)
   * [Flor::Pro::Cmp](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cmp.rb) : =, ==, <, >, <=, >=, !=, <>
   * [Flor::Pro::Coll](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_coll.rb) : 
     * [Flor::Pro::Arr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_arr.rb) : [_arr](_arr.md)

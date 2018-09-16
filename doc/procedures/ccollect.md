@@ -28,7 +28,7 @@ When iterating over an object (a hash), the variables will be `key`, `val`,
 
 ## see also
 
-[Collect](collect.md), [map](map.md), cmap.
+[Collect](collect.md), [map](map.md), [cmap](cmap.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/ccollect.rb)

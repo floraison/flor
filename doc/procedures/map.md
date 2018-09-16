@@ -73,7 +73,7 @@ set in the closure for the function call.
 
 ## see also
 
-[Collect](collect.md), cmap.
+[Collect](collect.md), [cmap](cmap.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/map.rb)
