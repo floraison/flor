@@ -108,6 +108,24 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']
           ).to eq([ [ 0, 'a', 'A' ], [ 1, 'b', 'B' ], [ 2, 'c', 'C' ] ])
       end
+
+      it 'collects' do
+
+        r = @executor.launch(
+          %q{
+            set users [
+              { name: 'Alfred' mail: 'al@yahoo.com' }
+              { name: 'Boris' mail: 'bo@hotmail.com' }
+              { name: 'Carla' mail: 'cara@gmail.com' } ]
+            # ...
+            collect users \ elt.mail
+          })
+
+        expect(r['point']
+          ).to eq('terminated')
+        expect(r['payload']['ret']
+          ).to eq(%w[ al@yahoo.com bo@hotmail.com cara@gmail.com ])
+      end
     end
   end
 end
