@@ -81,7 +81,7 @@ A function is defined with `define`. An anonymous function is defined with `def`
 
 ```
 define f x  #
-  x * 3     #
+  x + 3     #
 f 5         # yields 8 in f.ret
 ```
 
