@@ -3,6 +3,7 @@
 
 ## Contributors
 
+* Jeffrey Hicks - https://github.com/jrhicks
 * David Verrier - https://github.com/dverrier
 * Tsunehisa Doi - https://github.com/dmicky0419
 * Jean-François Rioux - https://github.com/jfrioux
