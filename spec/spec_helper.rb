@@ -51,8 +51,11 @@ module Helpers
   end
 end
 
-RSpec.configure { |c| c.include(Helpers) }
+RSpec.configure do |c|
 
+  c.alias_example_to(:they)
+  c.include(Helpers)
+end
 
 RSpec::Matchers.define :eqj do |o|
 
@@ -175,7 +178,6 @@ RSpec::Matchers.define :point_to do |path|
     "expected\n  #{actual}\n\nto point to\n  #{ppath}\n  #{apath}"
   end
 end
-
 
 class RSpec::Core::ExampleGroup
   #
