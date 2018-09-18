@@ -40,7 +40,7 @@ describe 'Flor unit' do
       expect(
         r['payload']['ret']
       ).to eq(
-        [ '_task', { 'task' => 'alpha' }, -1 ]
+        [ '_tasker', { 'tasker' => 'alpha' }, -1 ]
       )
     end
 

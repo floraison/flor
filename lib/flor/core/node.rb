@@ -201,13 +201,13 @@ class Flor::Node
     return v unless Flor.is_tree?(v)
     return v unless v[1].is_a?(Hash)
 
-    return v unless %w[ _proc _task _func ].include?(v[0])
+    return v unless %w[ _proc _tasker _func ].include?(v[0])
 
     ref =
       case v[0]
       when '_func' then true
       when '_proc' then v[1]['proc'] != o
-      when '_task' then v[1]['task'] != o
+      when '_tasker' then v[1]['tasker'] != o
       else false
       end
 
@@ -227,7 +227,7 @@ class Flor::Node
       heat[1]['proc']
     elsif heat[0] == '_func'
       'apply'
-    elsif heat[0] == '_task'
+    elsif heat[0] == '_tasker'
       'task'
     else
       '_val'
@@ -341,7 +341,7 @@ class Flor::Node
   end
     #
   PROC_VAR_CONTAINER = PseudoVarContainer.new('proc')
-  TASKER_VAR_CONTAINER = PseudoVarContainer.new('task')
+  TASKER_VAR_CONTAINER = PseudoVarContainer.new('tasker')
 
   def escape(k)
 

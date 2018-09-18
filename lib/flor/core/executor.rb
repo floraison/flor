@@ -201,7 +201,7 @@ module Flor
         node['heat'] = h = n.deref(t[0])
         node['heap'] = n.reheap(t, h)
 
-      elsif heap == 'task' && heat[0] == '_task'
+      elsif heap == 'task' && heat[0] == '_tasker'
         #
         # rewrite `alpha` into `task alpha`
 
@@ -212,7 +212,7 @@ module Flor
         message['tree'][0] =
           'task'
         message['tree'][1].unshift(
-          [ '_att', [ [ '_sqs', heat[1]['task'], l ] ], l ])
+          [ '_att', [ [ '_sqs', heat[1]['tasker'], l ] ], l ])
       end
     end
 

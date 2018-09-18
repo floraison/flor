@@ -260,26 +260,30 @@ describe 'Flor punit' do
         ])
       end
 
-      they 'accept a tasker directly' #do
-#
-#        r = @unit.launch(
-#          %q{
-#            task 'one' by: alpha
-#            task 'two' for: alpha
-#            task 'three' assign: alpha
-#            task alpha with: 'four'
-#            alpha task: 'five'
-#          },
-#          wait: true)
-#
-#        expect(r['point']).to eq('terminated')
-#
-#        expect(
-#          r['payload']['seen'].collect { |e| e[0, 2] }
-#        ).to eq([
-#          [ 'alpha', 'one' ]
-#        ])
-#      end
+      they 'accept a tasker directly' do
+
+        r = @unit.launch(
+          %q{
+            task 'one' by: alpha
+            task 'two' for: alpha
+            task 'three' assign: alpha
+            task alpha with: 'four'
+            alpha task: 'five'
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['seen'].collect { |e| e[0, 2] }
+        ).to eq([
+          [ 'alpha', 'one' ],
+          [ 'alpha', 'two' ],
+          [ 'alpha', 'three' ],
+          [ 'alpha', 'four' ],
+          [ 'alpha', 'five' ],
+        ])
+      end
     end
   end
 end

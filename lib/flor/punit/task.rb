@@ -52,6 +52,8 @@ class Flor::Pro::Task < Flor::Procedure
     elsif taskname == nil
       taskname = ni
     end
+      #
+    tasker = tasker[1]['tasker'] if Flor.is_tasker_tree?(tasker)
 
     attl, attd = determine_atts
 

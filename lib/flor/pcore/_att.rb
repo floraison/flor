@@ -81,11 +81,11 @@ class Flor::Pro::Att < Flor::Procedure
 
     return k unless Flor.is_tree?(k)
     return k unless k[1].is_a?(Hash)
-    return k unless %w[ _proc _task _func ].include?(k[0])
+    return k unless %w[ _proc _tasker _func ].include?(k[0])
 
     (flavour == :key ? nil : k[1]['oref']) ||
     k[1]['ref'] ||
-    k[1]['proc'] || k[1]['task']
+    k[1]['proc'] || k[1]['tasker']
   end
 
   def receive_att(key)
