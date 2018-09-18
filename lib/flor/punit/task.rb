@@ -1,5 +1,15 @@
 
 class Flor::Pro::Task < Flor::Procedure
+  #
+  # Tasks a tasker with a task. Argh.
+  #
+  # ```
+  # task 'clean up' by: 'alan'
+  # task 'clean up' for: 'alan'
+  # task 'clean up' assign: 'alan'
+  # task 'alan' with: 'clean up'
+  # alan task: 'clean up'
+  # ```
 
   name 'task'
 
@@ -25,18 +35,23 @@ class Flor::Pro::Task < Flor::Procedure
     # task 'clean up' for: 'alan'
     # task 'clean up' assign: 'alan'
     # task 'alan' with: 'clean up'
+    # alan task: 'clean up'
+      #
     # clean_up assign: 'alan'
     # "clean up" assign: 'alan'
-    # alan task: 'clean up'
 
     ni = att(nil)
     ta = att('by', 'for', 'assign')
     tn = att('with', 'task')
 
-    tasker = ta || ni
-
-    taskname = tn || ni
-    taskname = nil if ta == nil && tasker == ni
+    tasker = ta
+    taskname = tn
+      #
+    if tasker == nil
+      tasker = ni
+    elsif taskname == nil
+      taskname = ni
+    end
 
     attl, attd = determine_atts
 

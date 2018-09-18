@@ -223,6 +223,64 @@ describe 'Flor punit' do
       expect(td['vars']).to eq(nil)
       expect(td['tags']).to eq(%w[ b c a ])
     end
+
+    context 'by:/for:/assign:/with:/task:' do
+
+        # task 'clean up' by: 'alan'
+        # task 'clean up' for: 'alan'
+        # task 'clean up' assign: 'alan'
+        # task 'alan' with: 'clean up'
+        # alan task: 'clean up'
+          #
+        # clean_up assign: 'alan'
+        # "clean up" assign: 'alan'
+          #
+      they 'make assignation more readable' do
+
+        r = @unit.launch(
+          %q{
+            task 'one' by: 'alpha'
+            task 'two' for: 'alpha'
+            task 'three' assign: 'alpha'
+            task 'alpha' with: 'four'
+            alpha task: 'five'
+          },
+          wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['seen'].collect { |e| e[0, 2] }
+        ).to eq([
+          [ 'alpha', 'one' ],
+          [ 'alpha', 'two' ],
+          [ 'alpha', 'three' ],
+          [ 'alpha', 'four' ],
+          [ 'alpha', 'five' ],
+        ])
+      end
+
+      they 'accept a tasker directly' #do
+#
+#        r = @unit.launch(
+#          %q{
+#            task 'one' by: alpha
+#            task 'two' for: alpha
+#            task 'three' assign: alpha
+#            task alpha with: 'four'
+#            alpha task: 'five'
+#          },
+#          wait: true)
+#
+#        expect(r['point']).to eq('terminated')
+#
+#        expect(
+#          r['payload']['seen'].collect { |e| e[0, 2] }
+#        ).to eq([
+#          [ 'alpha', 'one' ]
+#        ])
+#      end
+    end
   end
 end
 
