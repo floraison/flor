@@ -70,6 +70,7 @@
 * [schedule](schedule.md) - Schedules a function
 * [signal](signal.md) - Used in conjuction with "on".
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
+* [task](task.md) - Tasks a tasker with a task.
 * [trap](trap.md) - Watches the messages emitted in the execution and reacts when a message matches certain criteria.
 
 
@@ -152,7 +153,7 @@
   * [Flor::Pro::Slice](https://github.com/floraison/flor/blob/master/lib/flor/pcore/slice.rb) : [slice, index](slice.md)
   * [Flor::Pro::Stall](https://github.com/floraison/flor/blob/master/lib/flor/pcore/stall.rb) : [stall](stall.md)
   * [Flor::Pro::Strings](https://github.com/floraison/flor/blob/master/lib/flor/pcore/strings.rb) : downcase, lowercase, upcase, uppercase, capitalize
-  * [Flor::Pro::Task](https://github.com/floraison/flor/blob/master/lib/flor/punit/task.rb) : task
+  * [Flor::Pro::Task](https://github.com/floraison/flor/blob/master/lib/flor/punit/task.rb) : [task](task.md)
   * [Flor::Pro::TimeStamp](https://github.com/floraison/flor/blob/master/lib/flor/pcore/timestamp.rb) : [timestamp, ltimestamp](timestamp.md)
   * [Flor::Pro::ToArray](https://github.com/floraison/flor/blob/master/lib/flor/pcore/to_array.rb) : [to-array, to-object](to_array.md)
   * [Flor::Pro::Trace](https://github.com/floraison/flor/blob/master/lib/flor/punit/trace.rb) : trace

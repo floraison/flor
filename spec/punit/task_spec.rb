@@ -244,6 +244,7 @@ describe 'Flor punit' do
             task 'three' assign: 'alpha'
             task 'alpha' with: 'four'
             alpha task: 'five'
+            task 'alpha'
           },
           wait: true)
 
@@ -257,6 +258,7 @@ describe 'Flor punit' do
           [ 'alpha', 'three' ],
           [ 'alpha', 'four' ],
           [ 'alpha', 'five' ],
+          [ 'alpha', nil ],
         ])
       end
 
@@ -269,6 +271,7 @@ describe 'Flor punit' do
             task 'three' assign: alpha
             task alpha with: 'four'
             alpha task: 'five'
+            task alpha
           },
           wait: true)
 
@@ -282,6 +285,7 @@ describe 'Flor punit' do
           [ 'alpha', 'three' ],
           [ 'alpha', 'four' ],
           [ 'alpha', 'five' ],
+          [ 'alpha', nil ],
         ])
       end
     end
