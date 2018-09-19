@@ -64,20 +64,14 @@ class Flor::Pro::Task < Flor::Procedure
     # clean_up assign: 'alan'
     # "clean up" assign: 'alan'
 
-    ni = att(nil)
+    nis = atts(nil)
     ta = att('by', 'for', 'assign')
     tn = att('with', 'task')
 
-    tasker = ta
-    taskname = tn
-      #
-    if tasker == nil
-      tasker = ni
-    elsif taskname == nil
-      taskname = ni
-    end
-      #
+    tasker = ta || nis.shift
     tasker = tasker[1]['tasker'] if Flor.is_tasker_tree?(tasker)
+      #
+    taskname = tn || nis.shift
 
     attl, attd = determine_atts
 

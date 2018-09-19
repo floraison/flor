@@ -199,6 +199,15 @@ class Flor::Procedure < Flor::Node
     nil
   end
 
+  def atts(*keys)
+
+    return nil unless @node['atts']
+
+    @node['atts']
+      .select { |k, _| keys.include?(k == nil ? nil : k.to_s) }
+      .collect { |_, v| v }
+  end
+
   def has_att?(k)
 
     @node['atts'].collect(&:first).include?(k)

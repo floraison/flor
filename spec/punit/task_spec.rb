@@ -184,7 +184,7 @@ describe 'Flor punit' do
 
       expect(td['point']).to eq('task')
       expect(td['nid']).to eq('0_0')
-      expect(td['taskname']).to eq(nil)
+      expect(td['taskname']).to eq('one')
       expect(td['attl']).to eq([ 'india', 'one' ])
       expect(td['attd']).to eq({})
       expect(td['er']).to eq(1) # execution run
@@ -201,7 +201,7 @@ describe 'Flor punit' do
 
       expect(td['point']).to eq('task')
       expect(td['nid']).to eq('0_1_1')
-      expect(td['taskname']).to eq(nil)
+      expect(td['taskname']).to eq('two')
       expect(td['attl']).to eq([ 'india', 'two' ])
       expect(td['attd']).to eq({})
       expect(td['er']).to eq(2)
@@ -214,7 +214,7 @@ describe 'Flor punit' do
 
       expect(td['point']).to eq('task')
       expect(td['nid']).to eq('0_1_2_1')
-      expect(td['taskname']).to eq(nil)
+      expect(td['taskname']).to eq('three')
       expect(td['attl']).to eq([ 'india', 'three' ])
       expect(td['attd']).to eq({ 'temperature' => 'high' })
       expect(td['er']).to eq(3)
@@ -245,6 +245,7 @@ describe 'Flor punit' do
             task 'alpha' with: 'four'
             alpha task: 'five'
             task 'alpha'
+            alpha 'six'
           },
           wait: true)
 
@@ -259,6 +260,7 @@ describe 'Flor punit' do
           [ 'alpha', 'four' ],
           [ 'alpha', 'five' ],
           [ 'alpha', nil ],
+          [ 'alpha', 'six' ],
         ])
       end
 
