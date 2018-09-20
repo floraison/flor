@@ -154,6 +154,10 @@ module Flor
       fail SpawnError.new(status, i.read, f.read) if status.exitstatus != 0
 
       [ i.read, status ]
+
+    ensure
+
+      [ i, o, f, e, r, w ].each { |x| x.close rescue nil }
     end
 
     class SpawnError < StandardError
