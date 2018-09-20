@@ -224,6 +224,21 @@ describe 'Flor punit' do
       expect(td['tags']).to eq(%w[ b c a ])
     end
 
+    #it 'does not alter the incoming f.ret' do
+    #
+    #  r = @unit.launch(
+    #    %q{
+    #      1234
+    #      task 'alpha'
+    #    },
+    #    wait: true)
+    #
+    #  expect(r['point']).to eq('terminated')
+    #  expect(r['payload']['ret']).to eq(1234)
+    #end
+      #
+      # No. Let's leave it as is, last f.ret wins.
+
     context 'by:/for:/assign:/with:/task:' do
 
         # task 'clean up' by: 'alan'

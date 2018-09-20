@@ -44,11 +44,15 @@ class Flor::Pro::Task < Flor::Procedure
 
   def receive
 
-    return wrap_reply('payload' => determine_reply_payload) \
-      if point == 'receive' && from == nil
-
-    super
+    return super if point != 'receive' || from != nil
       # which goes to #receive or #receive_when_status
+
+    pl = determine_reply_payload
+    #pl['ret'] = node_payload_ret
+      # No, let's leave it at last f.ret wins...
+
+    wrap_reply('payload' => pl)
+      # "task" done, reply to parent node
   end
 
   alias receive_when_closed receive_from_child_when_closed
