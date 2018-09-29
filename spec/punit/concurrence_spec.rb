@@ -204,6 +204,23 @@ describe 'Flor punit' do
       end
     end
 
+    context 'merger:' do
+
+      it 'hands each incoming workitem to the merger' do
+
+        @unit.launch(
+          %q{
+            concurrence,
+              merger:
+                (def resulting_payload
+              set f.a 0
+              set f.a 1
+              set f.a 2
+          },
+          wait: true)
+      end
+    end
+
     context 'upon cancelling' do
 
       it 'cancels all its children' do

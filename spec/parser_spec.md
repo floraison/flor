@@ -1199,21 +1199,42 @@ parses to
 ```
 parses to
 ```ruby
-  [ 'sequence',
-    [ [ '_att', [
+  [ 'sequence', [
+    [ '_att', [
       [ 'timeout', [], 1 ],
       [ '_sqs', '1h', 1 ]
     ], 1 ],
-      [ '_att', [
-        [ 'vars', [], 2 ],
-        [ '_obj', [
-          [ '_att', [
-            [ '_', [], 2 ]
-          ], 2 ]
-        ], 2 ]
-      ], 2 ] ],
-    1 ]
+    [ '_att', [
+      [ 'vars', [], 2 ],
+      [ '_obj', [ [ '_att', [ [ '_', [], 2 ] ], 2 ] ], 2 ]
+    ], 2 ]
+  ], 1 ]
 ```
+---
+
+```flor
+  sequence,
+    timeout:
+      '1h',
+    vars:
+      {}
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ '_att', [
+      [ 'timeout', [], 2 ],
+      [ '_sqs', '1h', 3 ]
+    ], 2 ],
+    [ '_att', [
+      [ 'vars', [], 4 ],
+      [ '_obj', [
+        [ '_att', [ [ '_', [], 5 ] ], 5 ]
+      ], 5 ]
+    ], 4 ]
+  ], 1 ]
+```
+---
 
 ```flor
   task 'bob',
