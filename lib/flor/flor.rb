@@ -463,6 +463,19 @@ module Flor
       POINTS.include?(s)
     end
 
+    def type(o)
+
+      case o
+      when Array then :array
+      when Hash then :object
+      when String then :string
+      when true, false then :boolean
+      when Numeric then :number
+      when nil then :null
+      else nil
+      end
+    end
+
 
     #
     # Dense paths

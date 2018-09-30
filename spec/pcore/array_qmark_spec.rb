@@ -63,7 +63,7 @@ describe 'Flor procedures' do
 
     }.each do |k, v|
 
-      it "yields #{v ? 'true ' : 'false'} for #{k.inspect}" do
+      it "yields #{v ? 'true ' : 'false'} for `#{k}`" do
 
         r = @executor.launch(k)
 
