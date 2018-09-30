@@ -22,12 +22,22 @@ class Flor::Pro::TypeOf < Flor::Procedure
 
   def pre_execute
 
+    @node['ret'] = receive_payload_ret
+
     unatt_unkeyed_children
+  end
+
+  def receive_payload_ret
+
+    # the default #receive_payload_ret dups the ret
+    # don't dup it here, it's not necessary
+
+    payload['ret']
   end
 
   def receive_last
 
-    wrap('ret' => Flor.type(payload['ret']).to_s)
+    wrap('ret' => Flor.type(@node['ret']).to_s)
   end
 end
 

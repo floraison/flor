@@ -25,9 +25,17 @@ describe 'Flor procedures' do
       'type-of "hell"' => :string,
       'type-of []' => :array,
       'type-of {}' => :object,
+      'type-of { a: 1 }' => :object,
       'type-of true' => :boolean,
       'type-of false' => :boolean,
       'type-of null' => :null,
+
+      '0; type _' => :number,
+      '"alpha"; type _' => :string,
+      "'alpha'; type-of _" => :string,
+
+      'type-of null tag: "check"' => :null,
+      'null; type-of tag: "check"' => :null,
 
     }.each do |k, v|
 
