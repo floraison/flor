@@ -27,13 +27,7 @@ class Flor::Pro::TypeOf < Flor::Procedure
     unatt_unkeyed_children
   end
 
-  def receive_payload_ret
-
-    # the default #receive_payload_ret dups the ret
-    # don't dup it here, it's not necessary
-
-    payload['ret']
-  end
+  def receive_payload_ret; payload['ret']; end # don't duplicate the ret
 
   def receive_last
 

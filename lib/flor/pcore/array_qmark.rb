@@ -9,13 +9,14 @@ class Flor::Pro::ArrayQmark < Flor::Procedure
 
   def pre_execute
 
+    @node['ret'] = receive_payload_ret
+
     unatt_unkeyed_children
   end
 
   def receive_last
 
-    ret = payload['ret']
-    t = Flor.type(ret)
+    t = Flor.type(@node['ret'])
 
     r =
       case h0 = @node['heat0']
@@ -27,16 +28,18 @@ class Flor::Pro::ArrayQmark < Flor::Procedure
       when 'string?' then t == :string
       when 'null?', 'nil?' then t == :null
 
-      when 'false?' then ret == false
-      when 'true?' then ret == true
+      when 'false?' then @node['ret'] == false
+      when 'true?' then @node['ret'] == true
 
-      when 'pair?' then t == :array && ret.length == 2
-      when 'float?' then t == :number && ret.to_s.index('.') != nil
+      when 'pair?' then t == :array && @node['ret'].length == 2
+      when 'float?' then t == :number && @node['ret'].to_s.index('.') != nil
 
       else fail(Flor::FlorError.new("#{h0.inspect} not yet implemented", self))
       end
 
     wrap_reply('ret' => r)
   end
+
+  def receive_payload_ret; payload['ret']; end # don't duplicate the ret
 end
 

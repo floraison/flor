@@ -61,6 +61,11 @@ describe 'Flor procedures' do
       'float? 1' => false,
       'float? {}' => false,
 
+      'boolean? true tag: "xxx"' => true,
+      'true; boolean? tag: "xxx"' => true,
+      'string? {} tag: "xxx"' => false,
+      '{}; string? tag: "xxx"' => false,
+
     }.each do |k, v|
 
       it "yields #{v ? 'true ' : 'false'} for `#{k}`" do
