@@ -54,6 +54,7 @@
 * [stall](stall.md) - "stall" is mostly used in flor tests. It simply dead ends.
 * [timestamp, ltimestamp](timestamp.md) - Places a string timestamp in f.ret.
 * [to-array, to-object](to_array.md) - "to-array", turns an argument into an array, "to-object" turns it into an object.
+* [type-of, type](type_of.md) - returns the type of argument or the incoming f.ret.
 * [until, while](until.md) - `until` loops until a condition evaluates to true. `while` loops while a condition evaluates to true.
 
 ## unit
@@ -84,6 +85,7 @@
   * [Flor::Pro::Andor](https://github.com/floraison/flor/blob/master/lib/flor/pcore/andor.rb) : [and, or](andor.md)
   * [Flor::Pro::Apply](https://github.com/floraison/flor/blob/master/lib/flor/pcore/apply.rb) : [apply](apply.md)
   * [Flor::Pro::Arith](https://github.com/floraison/flor/blob/master/lib/flor/pcore/arith.rb) : +, -, *, /, %
+  * [Flor::Pro::ArrayQmark](https://github.com/floraison/flor/blob/master/lib/flor/pcore/array_qmark.rb) : array?, object?, boolean?, number?, string?, null?, list?, dict?, hash?, nil?, false?, true?, pair?, float?
   * [Flor::Pro::Atom](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_atom.rb) : _num, _boo, _sqs, _nul, _func
   * [Flor::Pro::Att](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_att.rb) : _att
   * [Flor::Pro::Break](https://github.com/floraison/flor/blob/master/lib/flor/pcore/break.rb) : [break, continue](break.md)
@@ -159,6 +161,7 @@
   * [Flor::Pro::Trace](https://github.com/floraison/flor/blob/master/lib/flor/punit/trace.rb) : trace
   * [Flor::Pro::Trap](https://github.com/floraison/flor/blob/master/lib/flor/punit/trap.rb) : [trap](trap.md)
   * [Flor::Pro::Twig](https://github.com/floraison/flor/blob/master/lib/flor/pcore/twig.rb) : twig
+  * [Flor::Pro::TypeOf](https://github.com/floraison/flor/blob/master/lib/flor/pcore/type_of.rb) : [type-of, type](type_of.md)
   * [Flor::Pro::Until](https://github.com/floraison/flor/blob/master/lib/flor/pcore/until.rb) : [until, while](until.md)
   * [Flor::Pro::Val](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_val.rb) : _val
 
