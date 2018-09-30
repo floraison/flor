@@ -16,7 +16,7 @@ type true  # ==> 'boolean'
 
 ## see also
 
-array?, number?, ...
+[array?](array_qmark.md), [number?](array_qmark.md), ...
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/type_of.rb)

@@ -11,6 +11,7 @@
 * [any?](any.md) - Returns `true` if at least one of the member of a collection returns something trueish for the given function. Returns `false` else.
 * [apply](apply.md) - Applies a function.
 * [+, -, *, /, %](arith.md) - The base implementation for + - + / %
+* [array?, object?, boolean?, number?, string?, null?, list?, dict?, hash?, nil?, false?, true?, pair?, float?](array_qmark.md) - Returns true if the argument or the incoming ret matches in type.
 * [break, continue](break.md) - Breaks or continues a "while", "until", "loop" or an "cursor".
 * [case](case.md) - The classical case form.
 * [collect](collect.md) - Collect is a simplified version of [map](map.md).
@@ -85,7 +86,7 @@
   * [Flor::Pro::Andor](https://github.com/floraison/flor/blob/master/lib/flor/pcore/andor.rb) : [and, or](andor.md)
   * [Flor::Pro::Apply](https://github.com/floraison/flor/blob/master/lib/flor/pcore/apply.rb) : [apply](apply.md)
   * [Flor::Pro::Arith](https://github.com/floraison/flor/blob/master/lib/flor/pcore/arith.rb) : +, -, *, /, %
-  * [Flor::Pro::ArrayQmark](https://github.com/floraison/flor/blob/master/lib/flor/pcore/array_qmark.rb) : array?, object?, boolean?, number?, string?, null?, list?, dict?, hash?, nil?, false?, true?, pair?, float?
+  * [Flor::Pro::ArrayQmark](https://github.com/floraison/flor/blob/master/lib/flor/pcore/array_qmark.rb) : [array?, object?, boolean?, number?, string?, null?, list?, dict?, hash?, nil?, false?, true?, pair?, float?](array_qmark.md)
   * [Flor::Pro::Atom](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_atom.rb) : _num, _boo, _sqs, _nul, _func
   * [Flor::Pro::Att](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_att.rb) : _att
   * [Flor::Pro::Break](https://github.com/floraison/flor/blob/master/lib/flor/pcore/break.rb) : [break, continue](break.md)
