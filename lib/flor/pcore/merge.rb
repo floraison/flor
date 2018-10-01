@@ -1,5 +1,5 @@
 
-class Flor::Pro::Arith < Flor::Procedure
+class Flor::Pro::Merge < Flor::Procedure
 
   name 'merge'
 
