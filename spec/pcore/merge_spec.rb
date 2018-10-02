@@ -23,11 +23,13 @@ describe 'Flor procedures' do
         { 'a' => 0, 'b' => 'B', 'c' => 'C' },
       "merge { b: 'B' c: 'C' } { a: 0 b: 1 }" =>
         { 'a' => 0, 'b' => 1, 'c' => 'C' },
-      "merge { a: 0 } { b: 1 } 'nada' { c: 2 }" =>
+      "merge { a: 0 } { b: 1 } 'nada' { c: 2 } lax: true" =>
+        { 'a' => 0, 'b' => 1, 'c' => 2 },
+      "merge { a: 0 } { b: 1 } 'nada' { c: 2 } strict: false" =>
         { 'a' => 0, 'b' => 1, 'c' => 2 },
       "merge { a: 0 } { b: 1 } { c: 2 }" =>
         { 'a' => 0, 'b' => 1, 'c' => 2 },
-      "merge { a: 0 } { b: 1 } 'nada' { c: 2 } tags: 'xxx'" =>
+      "merge { a: 0 } { b: 1 } 'nada' { c: 2 } tags: 'xxx' loose: true" =>
         { 'a' => 0, 'b' => 1, 'c' => 2 },
 
       "{ a: 0 }; merge { b: 1 } { c: 2 }" =>
@@ -66,12 +68,30 @@ describe 'Flor procedures' do
 
     ].each do |c|
 
-      it "fails for `#{c}`" do
+      it "fails (nothing to merge) for `#{c}`" do
 
         r = @executor.launch(c)
 
         expect(r['point']).to eq('failed')
         expect(r['error']['msg']).to eq('found no array or object to merge')
+      end
+    end
+
+    [
+
+      "merge {} []",
+      "merge { a: 0 } { b: 1 } 'nada' { c: 2 }",
+      "merge { a: 0 } { b: 1 } [ 2 ]",
+      "merge { a: 0 } { b: 1 } 'nada' { c: 2 } tags: 'xxx'",
+
+    ].each do |c|
+
+      it "fails (strict) for `#{c}`" do
+
+        r = @executor.launch(c)
+
+        expect(r['point']).to eq('failed')
+        expect(r['error']['msg']).to match(/\Afound a non-/)
       end
     end
   end

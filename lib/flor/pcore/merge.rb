@@ -32,6 +32,23 @@ class Flor::Pro::Merge < Flor::Procedure
   #
   # It fails if the arguments are not all objects or not all arrays.
   #
+  # If the attribute `lax:` (or `loose:`) is set to `true`, it doesn't care
+  # about non matching arguments and merges anyway:
+  # ```
+  # merge { a: 0 } { b: 1 } 'nada' { c: 2 } lax: true
+  #   # => { 'a' => 0, 'b' => 1, 'c' => 2 }
+  # merge { a: 0 } { b: 1 } { c: 2 }
+  #   # => { 'a' => 0, 'b' => 1, 'c' => 2 }
+  # merge { a: 0 } { b: 1 } 'nada' { c: 2 } tags: 'xxx' loose: true
+  #   # => { 'a' => 0, 'b' => 1, 'c' => 2 }
+  # ```
+  #
+  # `strict: false` is OK as well:
+  # ```
+  # merge { a: 0 } { b: 1 } 'nada' { c: 2 } strict: false
+  #   # => { 'a' => 0, 'b' => 1, 'c' => 2 }
+  # ```
+  #
   #
   # ## see also
   #
@@ -41,37 +58,49 @@ class Flor::Pro::Merge < Flor::Procedure
 
   def pre_execute
 
+    @node['atts'] = []
     @node['rets'] = []
+
+    unatt_unkeyed_children
   end
 
   def receive_last
 
-    c0 = rets.find { |e| e.is_a?(Array) || e.is_a?(Hash) }
+    rets =
+      ([ node_payload_ret ] + @node['rets'])
+        .select { |e| e.is_a?(Array) || e.is_a?(Hash) }
 
     fail Flor::FlorError.new('found no array or object to merge', self) \
-      unless c0
+      if rets.empty?
 
-    wrap('ret' => c0.is_a?(Array) ? merge_arrays : merge_objects)
+    kla = rets[0].is_a?(Array) ? Array : Hash
+    kln = Flor.type(rets[0])
+
+    unless att('lax', 'loose') == true || att('strict') == false
+      if (orets = @node['rets'].reject { |e| e.is_a?(kla) }).any?
+        fail Flor::FlorError.new(
+          "found a non-#{kln} item (#{Flor.type(orets[0])} item)", self)
+      end
+    end
+
+    r = send(
+      kla == Array ? :merge_arrays : :merge_objects,
+      rets.select { |e| e.is_a?(kla) })
+
+    wrap('ret' => r)
   end
 
   protected
 
-  def rets
-
-    @rets ||= [ node_payload_ret ] + @node['rets']
-  end
-
-  def merge_arrays
+  def merge_arrays(rets)
 
     rets
-      .select { |e| e.is_a?(Array) }
       .inject([]) { |r, a| a.each_with_index { |e, i| r[i] = e }; r }
   end
 
-  def merge_objects
+  def merge_objects(rets)
 
     rets
-      .select { |e| e.is_a?(Hash) }
       .inject({}) { |r, h| r.merge(h) }
   end
 end

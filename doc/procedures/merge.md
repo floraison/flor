@@ -32,6 +32,23 @@ first argument (not the incoming ret).
 
 It fails if the arguments are not all objects or not all arrays.
 
+If the attribute `lax:` (or `loose:`) is set to `true`, it doesn't care
+about non matching arguments and merges anyway:
+```
+merge { a: 0 } { b: 1 } 'nada' { c: 2 } lax: true
+  # => { 'a' => 0, 'b' => 1, 'c' => 2 }
+merge { a: 0 } { b: 1 } { c: 2 }
+  # => { 'a' => 0, 'b' => 1, 'c' => 2 }
+merge { a: 0 } { b: 1 } 'nada' { c: 2 } tags: 'xxx' loose: true
+  # => { 'a' => 0, 'b' => 1, 'c' => 2 }
+```
+
+`strict: false` is OK as well:
+```
+merge { a: 0 } { b: 1 } 'nada' { c: 2 } strict: false
+  # => { 'a' => 0, 'b' => 1, 'c' => 2 }
+```
+
 
 ## see also
 
