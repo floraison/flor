@@ -27,14 +27,16 @@ class Flor::Pro::Merge < Flor::Procedure
 
   def merge_arrays
 
-fail 'implement me!'
+    rets
+      .select { |e| e.is_a?(Array) }
+      .inject([]) { |r, a| a.each_with_index { |e, i| r[i] = e }; r }
   end
 
   def merge_objects
 
     rets
       .select { |e| e.is_a?(Hash) }
-      .inject { |h, h1| h.merge(h1) }
+      .inject({}) { |r, h| r.merge(h) }
   end
 end
 

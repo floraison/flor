@@ -33,6 +33,19 @@ describe 'Flor procedures' do
       "{ a: 0 }; merge { b: 1 } { c: 2 }" =>
         { 'a' => 0, 'b' => 1, 'c' => 2 },
 
+      "merge {}" => {},
+      "merge { a: 0 }" => { 'a' => 0 },
+      "{}; merge _" => {},
+      "{ a: 0 }; merge _" => { 'a' => 0 },
+
+      "merge [ 0 1 2 3 ] [ 'a' 'b' 'c' ]" =>
+        [ 'a', 'b', 'c', 3 ],
+
+      "merge []" => [],
+      "merge [ 0 1 2 ]" => [ 0, 1, 2 ],
+      "[]; merge _" => [],
+      "[ 0 1 2 ]; merge _" => [ 0, 1, 2 ],
+
     }.each do |k, v|
 
       it "succeeds for `#{k}`" do
@@ -44,7 +57,23 @@ describe 'Flor procedures' do
       end
     end
 
-    it 'fails if it cannot merge'
+    [
+
+      "merge _",
+      "merge null",
+      "merge 0",
+      "merge 'string'",
+
+    ].each do |c|
+
+      it "fails for `#{c}`" do
+
+        r = @executor.launch(c)
+
+        expect(r['point']).to eq('failed')
+        expect(r['error']['msg']).to eq('found no array or object to merge')
+      end
+    end
   end
 end
 
