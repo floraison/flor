@@ -25,3 +25,19 @@ Equivalent to Ruby's:
   .collect { |v| v + v }
 ```
 
+Procedures able to "chain":
+
+* [all?](procedures/all.md)
+* [any?](procedures/any.md)
+* [empty?](procedures/empty.md)
+* [each](procedures/each.md) and [for-each](procedures/for_each.md)
+* [includes?](procedures/includes.md)
+* [keys](procedures/keys.md) and [values](procedures/keys.md)
+* [filter](procedures/filter.md) and [select](procedures/select.md)
+* [map](procedures/map.md) and [collect](procedures/select.md)
+* [cmap](procedures/cmap.md) and [ccollect](procedures/ccollect.md)
+* [reduce](procedures/reduce.md) and [inject](procedures/inject.md)
+* [reverse](procedures/reverse.md)
+* [slice](procedures/slice.md) and [index](procedures/slice.md)
+* [length](procedures/length.md)
+

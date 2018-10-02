@@ -27,7 +27,7 @@ class Flor::Pro::Keys < Flor::Procedure
   #
   # length
 
-  names %w{ keys values }
+  names %w[ keys values ]
 
   def pre_execute
 
