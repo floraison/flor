@@ -17,7 +17,7 @@ describe 'Flor procedures' do
 
   describe 'each' do
 
-    it 'iterates over each element' do
+    it 'iterates over arrays' do
 
       r = @executor.launch(
         %q{
@@ -31,24 +31,39 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq((0..7).to_a)
     end
 
-    context 'objects' do
+    it 'iterates over objects' do
 
-      it 'iterates over each entry' do
+      r = @executor.launch(
+        %q{
+          set l []
+          each { a: 'A', b: 'B', c: 'C' }
+            pushr l (+ key val idx)
+        })
 
-        r = @executor.launch(
-          %q{
-            set l []
-            each { a: 'A', b: 'B', c: 'C' }
-              pushr l (+ key val idx)
-          })
+      expect(r['point']
+        ).to eq('terminated')
+      expect(r['vars']
+        ).to eq({ 'l' => %w[ aA0 bB1 cC2 ] })
+      expect(r['payload']['ret']
+        ).to eq({ 'a' => 'A', 'b' => 'B', 'c' => 'C' })
+    end
 
-        expect(r['point']
-          ).to eq('terminated')
-        expect(r['vars']
-          ).to eq({ 'l' => %w[ aA0 bB1 cC2 ] })
-        expect(r['payload']['ret']
-          ).to eq({ 'a' => 'A', 'b' => 'B', 'c' => 'C' })
-      end
+    it 'iterates over the incoming ret object' do
+
+      r = @executor.launch(
+        %q{
+          set l []
+          { a: 'A', b: 'B', c: 'C' }
+          each
+            pushr l (+ key val idx)
+        })
+
+      expect(r['point']
+        ).to eq('terminated')
+      expect(r['vars']
+        ).to eq({ 'l' => %w[ aA0 bB1 cC2 ] })
+      expect(r['payload']['ret']
+        ).to eq({ 'a' => 'A', 'b' => 'B', 'c' => 'C' })
     end
   end
 end
