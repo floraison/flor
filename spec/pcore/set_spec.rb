@@ -332,166 +332,227 @@ describe 'Flor procedures' do
       expect(ent['tags']).to eq(%w[ here ])
       expect(lef['tags']).to eq(%w[ here ])
     end
-  end
 
-  describe 'set a' do
+    describe 'set a' do
 
-    it 'sets locally if there is no a in the lookup chain' do
+      it 'sets locally if there is no a in the lookup chain' do
 
-      r = @executor.launch(
-        %q{
-          sequence
-            sequence vars: {}
-              set a
-                1
+        r = @executor.launch(
+          %q{
+            sequence
+              sequence vars: {}
+                set a
+                  1
+                push f.l
+                  a
               push f.l
                 a
-            push f.l
-              a
-        },
-        payload: { 'l' => [] })
+          },
+          payload: { 'l' => [] })
 
-      expect(r['point']).to eq('failed')
-      expect(r['payload']['l']).to eq([ 1 ])
-      expect(r['error']['msg']).to eq("don't know how to apply \"a\"")
-    end
+        expect(r['point']).to eq('failed')
+        expect(r['payload']['l']).to eq([ 1 ])
+        expect(r['error']['msg']).to eq("don't know how to apply \"a\"")
+      end
 
-    it 'overwrites an already set a (locally)' do
+      it 'overwrites an already set a (locally)' do
 
-      r = @executor.launch(
-        %q{
-          sequence
-            set a
-              0
-            set a
-              1
-        })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['vars']['a']).to eq(1)
-    end
-
-    it 'overwrites an already set a (above)' do
-
-      r = @executor.launch(
-        %q{
-          sequence
-            set a
-              0
-            sequence vars: {}
+        r = @executor.launch(
+          %q{
+            sequence
+              set a
+                0
               set a
                 1
-        })
+          })
 
-      expect(r['point']).to eq('terminated')
-      expect(r['vars']['a']).to eq(1)
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']['a']).to eq(1)
+      end
+
+      it 'overwrites an already set a (above)' do
+
+        r = @executor.launch(
+          %q{
+            sequence
+              set a
+                0
+              sequence vars: {}
+                set a
+                  1
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']['a']).to eq(1)
+      end
     end
-  end
 
-  describe 'set v.a' do
+    describe 'set v.a' do
 
-    it 'sets locally if there is no a in the lookup chain' do
+      it 'sets locally if there is no a in the lookup chain' do
 
-      r = @executor.launch(
-        %q{
-          sequence
-            sequence vars: {}
-              set v.a
-                1
+        r = @executor.launch(
+          %q{
+            sequence
+              sequence vars: {}
+                set v.a
+                  1
+                push f.l
+                  a
               push f.l
                 a
-            push f.l
-              a
-        },
-        payload: { 'l' => [] })
+          },
+          payload: { 'l' => [] })
 
-      expect(r['point']).to eq('failed')
-      expect(r['payload']['l']).to eq([ 1 ])
-      expect(r['error']['msg']).to eq("don't know how to apply \"a\"")
-    end
+        expect(r['point']).to eq('failed')
+        expect(r['payload']['l']).to eq([ 1 ])
+        expect(r['error']['msg']).to eq("don't know how to apply \"a\"")
+      end
 
-    it 'overwrites an already set a (locally)' do
+      it 'overwrites an already set a (locally)' do
 
-      r = @executor.launch(
-        %q{
-          sequence
-            set v.a
-              0
-            set v.a
-              1
-        })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['vars']['a']).to eq(1)
-    end
-
-    it 'overwrites an already set a (above)' do
-
-      r = @executor.launch(
-        %q{
-          sequence
-            set v.a
-              0
-            sequence vars: {}
+        r = @executor.launch(
+          %q{
+            sequence
+              set v.a
+                0
               set v.a
                 1
-        })
+          })
 
-      expect(r['point']).to eq('terminated')
-      expect(r['vars']['a']).to eq(1)
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']['a']).to eq(1)
+      end
+
+      it 'overwrites an already set a (above)' do
+
+        r = @executor.launch(
+          %q{
+            sequence
+              set v.a
+                0
+              sequence vars: {}
+                set v.a
+                  1
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']['a']).to eq(1)
+      end
     end
-  end
 
-  describe 'set lv.a' do
+    describe 'set lv.a' do
 
-    it 'always sets locally' do
+      it 'always sets locally' do
 
-      r = @executor.launch(
-        %q{
-          sequence
-            set lv.a
-              0
-            set b
-              10
-            set lv.a
-              1
-            set lv.b
-              11
-        })
+        r = @executor.launch(
+          %q{
+            sequence
+              set lv.a
+                0
+              set b
+                10
+              set lv.a
+                1
+              set lv.b
+                11
+          })
 
-      expect(r['point']).to eq('terminated')
-      expect(r['vars']).to eq({ 'a' => 1, 'b' => 11 })
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']).to eq({ 'a' => 1, 'b' => 11 })
+      end
     end
-  end
 
-  describe 'set f.a' do
+    describe 'set f.a' do
 
-    it 'sets a field' do
+      it 'sets a field' do
 
-      r = @executor.launch(
-        %q{
-          sequence
-            set f.a
-              0
-            set f.b 1
-            set f.c (-2)
-            set f.d { a: 0, b: 1 }
-            set f.e
-              { c: 2, d: 3 }
-            set f 'f'; set "f.$(f)" true
+        r = @executor.launch(
+          %q{
+            sequence
+              set f.a
+                0
+              set f.b 1
+              set f.c (-2)
+              set f.d { a: 0, b: 1 }
+              set f.e
+                { c: 2, d: 3 }
+              set f 'f'; set "f.$(f)" true
+          })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']
+        ).to eq({
+          'a' => 0, 'b' => 1, 'c' => -2,
+          'd' => { 'a' => 0, 'b' => 1 },
+          'e' => { 'c' => 2, 'd' => 3 },
+          'f' => true,
+          'ret' => nil
         })
+      end
+    end
 
-      expect(r['point']).to eq('terminated')
+    context 'and splat' do
 
-      expect(
-        r['payload']
-      ).to eq({
-        'a' => 0, 'b' => 1, 'c' => -2,
-        'd' => { 'a' => 0, 'b' => 1 },
-        'e' => { 'c' => 2, 'd' => 3 },
-        'f' => true,
-        'ret' => nil
-      })
+      it 'splats arrays' do
+
+        r = @executor.launch(
+          %q{
+            set a b c
+              [ 0 1 2 3 ]
+            set d
+              [ 4 5 6 ]
+          })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(r['payload']['ret']).to eq(nil)
+
+        expect(r['vars']['a']).to eq(0)
+        expect(r['vars']['c']).to eq(2)
+        expect(r['vars']['d']).to eq([ 4, 5, 6 ])
+      end
+
+      {
+
+        'a b___ c' => { 'a' => 0, 'b' => [ 1, 2, 3, 4 ], 'c' => 5 },
+        'a b__2 c' => { 'a' => 0, 'b' => [ 1, 2 ], 'c' => 3 },
+        '__2 b c' => { 'b' => 2, 'c' => 3 },
+        'a b___' => { 'a' => 0, 'b' => [ 1, 2, 3, 4, 5 ] },
+        '"a__$(x)" b' => { 'a' => [ 0, 1, 2 ], 'b' => 3 },
+        'a b__0 c___' => { 'a' => 0, 'b' => [], 'c' => [ 1, 2, 3, 4, 5 ] },
+        'f.a f.b__2 f.c' => { 'f.a' => 0, 'f.b' => [ 1, 2 ], 'f.c' => 3 },
+
+      }.each do |vars, expected|
+
+        it "splats along #{vars.inspect}" do
+
+          r = @executor.launch(
+            %{
+              set #{vars}
+                [ 0 1 2 3 4 5 ]
+            },
+            vars: { 'x' => 3 })
+
+          expect(r['point']).to eq('terminated')
+
+          expect(r['payload']['ret']).to eq(nil)
+
+          h = expected
+            .inject({}) { |hh, (k, _)|
+              hh[k] =
+                if k.match(/\Af\.(.+)\z/)
+                  r['payload'][$1]
+                else
+                  r['vars'][k]
+                end
+              hh }
+
+          expect(h).to eq(expected)
+        end
+      end
     end
   end
 
@@ -507,67 +568,6 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']).to eq({ 'a' => 0, 'ret' => 0 })
-    end
-  end
-
-  context 'and splat' do
-
-    it 'splats arrays' do
-
-      r = @executor.launch(
-        %q{
-          set a b c
-            [ 0 1 2 3 ]
-          set d
-            [ 4 5 6 ]
-        })
-
-      expect(r['point']).to eq('terminated')
-
-      expect(r['payload']['ret']).to eq(nil)
-
-      expect(r['vars']['a']).to eq(0)
-      expect(r['vars']['c']).to eq(2)
-      expect(r['vars']['d']).to eq([ 4, 5, 6 ])
-    end
-
-    {
-
-      'a b___ c' => { 'a' => 0, 'b' => [ 1, 2, 3, 4 ], 'c' => 5 },
-      'a b__2 c' => { 'a' => 0, 'b' => [ 1, 2 ], 'c' => 3 },
-      '__2 b c' => { 'b' => 2, 'c' => 3 },
-      'a b___' => { 'a' => 0, 'b' => [ 1, 2, 3, 4, 5 ] },
-      '"a__$(x)" b' => { 'a' => [ 0, 1, 2 ], 'b' => 3 },
-      'a b__0 c___' => { 'a' => 0, 'b' => [], 'c' => [ 1, 2, 3, 4, 5 ] },
-      'f.a f.b__2 f.c' => { 'f.a' => 0, 'f.b' => [ 1, 2 ], 'f.c' => 3 },
-
-    }.each do |vars, expected|
-
-      it "splats along #{vars.inspect}" do
-
-        r = @executor.launch(
-          %{
-            set #{vars}
-              [ 0 1 2 3 4 5 ]
-          },
-          vars: { 'x' => 3 })
-
-        expect(r['point']).to eq('terminated')
-
-        expect(r['payload']['ret']).to eq(nil)
-
-        h = expected
-          .inject({}) { |hh, (k, _)|
-            hh[k] =
-              if k.match(/\Af\.(.+)\z/)
-                r['payload'][$1]
-              else
-                r['vars'][k]
-              end
-            hh }
-
-        expect(h).to eq(expected)
-      end
     end
   end
 end
