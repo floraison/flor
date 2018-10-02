@@ -35,6 +35,7 @@
 * [map](map.md) - This is the classical "map" procedure. It accepts a collection and a function and yields a new collection.
 * [match](match.md) - "match" can be thought of as a "destructuring [case](case.md)".
 * [matchr, match?, pmatch](matchr.md) - Matches a string against a regular expression.
+* [merge](merge.md) - Merges objects or arrays.
 * [move](move.md) - Moves a cursor to a given position, a kind of local goto.
 * [noeval](noeval.md) - Immediately replies, children are not evaluated
 * [noret](noret.md) - executes its children, but doesn't alter the received f.ret
@@ -127,6 +128,7 @@
   * [Flor::Pro::Keys](https://github.com/floraison/flor/blob/master/lib/flor/pcore/keys.rb) : [keys, values](keys.md)
   * [Flor::Pro::Length](https://github.com/floraison/flor/blob/master/lib/flor/pcore/length.rb) : [length, size](length.md)
   * [Flor::Pro::Matchr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/matchr.rb) : [matchr, match?, pmatch](matchr.md)
+  * [Flor::Pro::Merge](https://github.com/floraison/flor/blob/master/lib/flor/pcore/merge.rb) : [merge](merge.md)
   * [Flor::Pro::Move](https://github.com/floraison/flor/blob/master/lib/flor/pcore/move.rb) : [move](move.md)
   * [Flor::Pro::NoEval](https://github.com/floraison/flor/blob/master/lib/flor/pcore/noeval.rb) : [noeval](noeval.md)
   * [Flor::Pro::NoRet](https://github.com/floraison/flor/blob/master/lib/flor/pcore/noret.rb) : [noret](noret.md)
