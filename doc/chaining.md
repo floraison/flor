@@ -43,4 +43,5 @@ Procedures able to "chain":
 * [reduce](procedures/reduce.md) and [inject](procedures/inject.md)
 * [reverse](procedures/reverse.md)
 * [slice](procedures/slice.md) and [index](procedures/slice.md)
+* [downcase, lowercase, lowcase, upcase, uppercase, capitalize](procedures/strings.md)
 
