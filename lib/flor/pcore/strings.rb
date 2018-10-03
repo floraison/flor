@@ -35,6 +35,15 @@ class Flor::Pro::Strings < Flor::Procedure
   # TODO snake_case, CamelCase, etc
   # TODO `capitalize "banana republic" all: true` => 'Banana Republic',
 
+  def pre_execute
+
+    @node['ret'] = nil
+
+    unatt_unkeyed_children
+  end
+
+  def receive_payload_ret; payload['ret']; end # don't duplicate the ret
+
   def receive_last
 
     met =
@@ -45,20 +54,20 @@ class Flor::Pro::Strings < Flor::Procedure
       #else :to_s
       else fail NotImplementedError.new("#{h0.inspect} not implemented")
       end
+    ret =
+      process(met, @node['ret'])
 
-    payload['ret'] = process(payload['ret'], met)
-
-    wrap
+    wrap('ret' => ret)
   end
 
   protected
 
-  def process(o, met)
+  def process(met, o)
 
     case o
     when String then o.send(met)
-    when Array then o.collect { |e| process(e, met) }
-    when Hash then o.inject({}) { |h, (k, v)| h[k] = process(v, met); h }
+    when Array then o.collect { |e| process(met, e) }
+    when Hash then o.inject({}) { |h, (k, v)| h[k] = process(met, v); h }
     else o
     end
   end

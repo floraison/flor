@@ -32,6 +32,8 @@ describe 'Flor procedures' do
       'downcase [ "A" "BC" "DE" ]' => %w[ a bc de ],
       'downcase { a: "A" b: "B" }' => { 'a' => 'a', 'b' => 'b' },
 
+      'downcase "NADA" tag: "XXx"' => 'nada',
+
     }.each do |k, v|
 
       it "returns #{v.inspect} for `#{k}`" do
