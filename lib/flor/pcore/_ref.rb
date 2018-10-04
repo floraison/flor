@@ -18,7 +18,9 @@ class Flor::Pro::Ref < Flor::Procedure
       if tree[0] == '_rep'
         pa
       elsif pa.size == 2 && pa[1] == 'ret' && pa[0].match(/\Af(ld|ield)?\z/)
-        node_payload_ret
+        parent ?
+          parent_node_procedure.node_payload_ret :
+          node_payload_ret
       else
         lookup_value(pa)
       end
