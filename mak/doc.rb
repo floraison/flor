@@ -108,7 +108,7 @@ def make_procedures_doc
     .compact
   #pp procs
 
-  File.open('doc/procedures/readme.md', 'wb') do |f|
+  File.open('doc/procedures/README.md', 'wb') do |f|
 
     f.puts
     f.puts '# procedures'
