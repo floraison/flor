@@ -308,6 +308,11 @@ class Flor::Node
     lookup_tree(node['parent'])
   end
 
+  def parent_node_procedure(node=@node)
+
+    Flor::Procedure.make(@executor, parent_node(node), @message)
+  end
+
   def is_ancestor_node?(nid, node=@node)
 
     return false unless node

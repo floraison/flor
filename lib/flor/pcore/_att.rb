@@ -212,7 +212,7 @@ class Flor::Pro::Att < Flor::Procedure
     return wrap_reply unless Flor.true?(payload['ret'])
     return wrap_reply unless parent_node
 
-    Flor::Procedure.make(@executor, parent_node, @message).flank +
+    parent_node_procedure.flank +
     wrap_reply
   end
 end
