@@ -35,6 +35,8 @@ describe 'Flor procedures' do
       'downcase "NADA" tag: "XXx"' => 'nada',
       '"Jocko"; downcase tag: "XXx"' => 'jocko',
 
+      'downcase "NADA" tag: "XXx" cap: true' => 'Nada',
+
     }.each do |k, v|
 
       it "returns #{v.inspect} for `#{k}`" do

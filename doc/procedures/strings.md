@@ -1,5 +1,5 @@
 
-# downcase, lowercase, lowcase, upcase, uppercase, capitalize, snakecase, snake_case
+# downcase, lowercase, lowcase, upcase, uppercase, capitalize, snakecase, snake_case, camelcase, camelCase
 
 "downcase", "upcase", "capitalize", etc.
 
@@ -13,7 +13,15 @@ downcase 'HELLO'           # => 'hello'
 'HELLO'; downcase _        # => 'hello'
 'HELLO'; downcase 'WORLD'  # => 'world'
 # ...
+downcase 'WORLD'            # => 'world'
+downcase 'WORLD' cap: true  # => 'World'
+# ...
+capitalize 'hello world'  # => 'Hello World'
 ```
+
+The `cap:` attribute, when set to something trueish, will make sure the
+resulting string(s) first char is capitalized. Not that "capitalize" itself
+will capitalize all the words (unlike Ruby's `String#capitalize`).
 
 ## objects and arrays
 

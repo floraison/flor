@@ -54,7 +54,7 @@
 * [shuffle, sample](shuffle.md) - Returns a shuffled version of an array.
 * [slice, index](slice.md) - Takes an array or a string and returns a slice of it (a new array or a new string).
 * [stall](stall.md) - Mostly used in flor tests. Stalls the current branch of execution.
-* [downcase, lowercase, lowcase, upcase, uppercase, capitalize, snakecase, snake_case](strings.md) - "downcase", "upcase", "capitalize", etc.
+* [downcase, lowercase, lowcase, upcase, uppercase, capitalize, snakecase, snake_case, camelcase, camelCase](strings.md) - "downcase", "upcase", "capitalize", etc.
 * [timestamp, ltimestamp](timestamp.md) - Places a string timestamp in f.ret.
 * [to-array, to-object](to_array.md) - Turns the argument into an array or an object.
 * [type-of, type](type_of.md) - returns the type of argument or the incoming f.ret.
@@ -158,7 +158,7 @@
   * [Flor::Pro::Sleep](https://github.com/floraison/flor/blob/master/lib/flor/punit/sleep.rb) : [sleep](sleep.md)
   * [Flor::Pro::Slice](https://github.com/floraison/flor/blob/master/lib/flor/pcore/slice.rb) : [slice, index](slice.md)
   * [Flor::Pro::Stall](https://github.com/floraison/flor/blob/master/lib/flor/pcore/stall.rb) : [stall](stall.md)
-  * [Flor::Pro::Strings](https://github.com/floraison/flor/blob/master/lib/flor/pcore/strings.rb) : [downcase, lowercase, lowcase, upcase, uppercase, capitalize, snakecase, snake_case](strings.md)
+  * [Flor::Pro::Strings](https://github.com/floraison/flor/blob/master/lib/flor/pcore/strings.rb) : [downcase, lowercase, lowcase, upcase, uppercase, capitalize, snakecase, snake_case, camelcase, camelCase](strings.md)
   * [Flor::Pro::Task](https://github.com/floraison/flor/blob/master/lib/flor/punit/task.rb) : [task](task.md)
   * [Flor::Pro::TimeStamp](https://github.com/floraison/flor/blob/master/lib/flor/pcore/timestamp.rb) : [timestamp, ltimestamp](timestamp.md)
   * [Flor::Pro::ToArray](https://github.com/floraison/flor/blob/master/lib/flor/pcore/to_array.rb) : [to-array, to-object](to_array.md)

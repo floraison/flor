@@ -13,7 +13,15 @@ class Flor::Pro::Strings < Flor::Procedure
   # 'HELLO'; downcase _        # => 'hello'
   # 'HELLO'; downcase 'WORLD'  # => 'world'
   # # ...
+  # downcase 'WORLD'            # => 'world'
+  # downcase 'WORLD' cap: true  # => 'World'
+  # # ...
+  # capitalize 'hello world'  # => 'Hello World'
   # ```
+  #
+  # The `cap:` attribute, when set to something trueish, will make sure the
+  # resulting string(s) first char is capitalized. Not that "capitalize" itself
+  # will capitalize all the words (unlike Ruby's `String#capitalize`).
   #
   # ## objects and arrays
   #
@@ -35,12 +43,10 @@ class Flor::Pro::Strings < Flor::Procedure
     snakecase snake_case
     camelcase camelCase ]
 
-  # TODO CamelCase, etc
-  # TODO `capitalize "banana republic" all: true` => 'Banana Republic',
-
   def pre_execute
 
     @node['ret'] = nil
+    @node['atts'] = []
 
     unatt_unkeyed_children
   end
@@ -56,25 +62,32 @@ class Flor::Pro::Strings < Flor::Procedure
       when 'capitalize' then :capitalize
       when 'snakecase', 'snake_case' then :snakecase
       when 'camelcase', 'camelCase' then :camelcase
-      #else :to_s
       else fail NotImplementedError.new("#{h0.inspect} not implemented")
       end
     ret =
-      process(met, @node['ret'] || node_payload_ret)
+      process(
+        met,
+        @node['ret'] || node_payload_ret,
+        att('cap', 'capitalize'))
 
     wrap('ret' => ret)
   end
 
   protected
 
-  def process(met, o)
+  def process(met, o, cap)
 
-    case o
-    when String then StringWrapper.new(o).send(met)
-    when Array then o.collect { |e| process(met, e) }
-    when Hash then o.inject({}) { |h, (k, v)| h[k] = process(met, v); h }
-    else o
-    end
+    r =
+      case o
+      when String then StringWrapper.new(o).send(met)
+      when Array then o.collect { |e| process(met, e, cap) }
+      when Hash then o.inject({}) { |h, (k, v)| h[k] = process(met, v, cap); h }
+      else o
+      end
+
+    cap ?
+      r.capitalize :
+      r
   end
 
   class StringWrapper
