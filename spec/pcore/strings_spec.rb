@@ -33,6 +33,7 @@ describe 'Flor procedures' do
       'downcase { a: "A" b: "B" }' => { 'a' => 'a', 'b' => 'b' },
 
       'downcase "NADA" tag: "XXx"' => 'nada',
+      '"Jocko"; downcase tag: "XXx"' => 'jocko',
 
     }.each do |k, v|
 
@@ -77,6 +78,25 @@ describe 'Flor procedures' do
       '{ a: "al" b: "bob" }; capitalize _' => { 'a' => 'Al', 'b' => 'Bob' },
 
       'capitalize "banana republic"' => 'Banana republic',
+
+    }.each do |k, v|
+
+      it "returns #{v.inspect} for `#{k}`" do
+
+        r = @executor.launch(k)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(v)
+      end
+    end
+  end
+
+  describe 'snakecase, snake_case' do
+
+    {
+
+      'snakecase "OnBoard or OffLine"' => 'on_board or off_line',
+      '"MessageBoard"; snake_case tag: "y"' => 'message_board',
 
     }.each do |k, v|
 

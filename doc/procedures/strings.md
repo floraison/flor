@@ -1,11 +1,12 @@
 
-# downcase, lowercase, lowcase, upcase, uppercase, capitalize
+# downcase, lowercase, lowcase, upcase, uppercase, capitalize, snakecase, snake_case
 
 Functions that deal with strings
 
 "downcase", "lowercase", "lowcase",
 "upcase", "uppercase",
-"capitalize"
+"capitalize",
+"snakecase", "snake_case"
 
 ```
 downcase 'HELLO'           # => 'hello'
