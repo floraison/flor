@@ -1,7 +1,7 @@
 
 # if, unless, ife, unlesse
 
-The classical "if" (and its "unless" sidequick)
+The classical "if" (and its "unless" sidekick)
 
 ```
 if

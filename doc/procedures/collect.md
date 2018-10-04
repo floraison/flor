@@ -1,7 +1,7 @@
 
 # collect
 
-Collect is a simplified version of [map](map.md).
+A simplified version of [map](map.md).
 
 ```
 map [ 1, 2, 3 ]

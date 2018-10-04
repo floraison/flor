@@ -1,7 +1,7 @@
 
 class Flor::Pro::Range < Flor::Procedure
   #
-  # "range" is a procedure to generate ranges of integers.
+  # Generates ranges of integers.
   #
   # ```
   # # range {end}

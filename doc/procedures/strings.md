@@ -1,7 +1,7 @@
 
 # downcase, lowercase, lowcase, upcase, uppercase, capitalize, snakecase, snake_case
 
-Functions that deal with strings
+"downcase", "upcase", "capitalize", etc.
 
 "downcase", "lowercase", "lowcase",
 "upcase", "uppercase",

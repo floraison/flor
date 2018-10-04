@@ -1,7 +1,7 @@
 
 class Flor::Pro::Ccollect < Flor::Macro::Iterator
   #
-  # ccollect is a concurrent version of [collect](collect.md).
+  # A concurrent version of [collect](collect.md).
   #
   # Whereas "collect" executes its children one by one and then yields
   # an array with the result of each child, "ccollect" executes the children

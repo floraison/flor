@@ -1,7 +1,7 @@
 
 # set, setr
 
-sets a field or a variable.
+Sets a field or a variable.
 
 ```
 sequence

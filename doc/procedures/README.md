@@ -14,7 +14,7 @@
 * [array?, object?, boolean?, number?, string?, null?, list?, dict?, hash?, nil?, false?, true?, pair?, float?](array_qmark.md) - Returns true if the argument or the incoming ret matches in type.
 * [break, continue](break.md) - Breaks or continues a "while", "until", "loop" or an "cursor".
 * [case](case.md) - The classical case form.
-* [collect](collect.md) - Collect is a simplified version of [map](map.md).
+* [collect](collect.md) - A simplified version of [map](map.md).
 * [cond](cond.md) - Evaluates all its condition children until one evaluates to true (or it's an else), then executes the corresponding clause child.
 * [cursor](cursor.md) - Executes child expressions in sequence, but may be "guided".
 * [def, fun, define](define.md) - Defines a function.
@@ -27,51 +27,51 @@
 * [find](find.md) - Finds the first matching element.
 * [flatten](flatten.md) - Flattens the given array
 * [for-each](for_each.md) - Calls a function for each element in the argument collection.
-* [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidequick)
-* [inject](inject.md) - Inject is a simplified version of [reduce](reduce.md).
+* [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidekick)
+* [inject](inject.md) - A simplified version of [reduce](reduce.md).
 * [keys, values](keys.md) - Returns the "keys" or the "values" of an object.
 * [length, size](length.md) - Returns the length of its last collection argument or the length of the incoming f.ret
 * [loop](loop.md) - Executes child expressions in sequence, then loops around.
 * [map](map.md) - This is the classical "map" procedure. It accepts a collection and a function and yields a new collection.
-* [match](match.md) - "match" can be thought of as a "destructuring [case](case.md)".
+* [match](match.md) - A kind of "destructuring [case](case.md)".
 * [matchr, match?, pmatch](matchr.md) - Matches a string against a regular expression.
 * [merge](merge.md) - Merges objects or arrays.
 * [move](move.md) - Moves a cursor to a given position, a kind of local goto.
 * [noeval](noeval.md) - Immediately replies, children are not evaluated
-* [noret](noret.md) - executes its children, but doesn't alter the received f.ret
-* [not](not.md) - `not` negates its last child (or its last unkeyed attribute)
+* [noret](noret.md) - Executes its children, but doesn't alter the received f.ret
+* [not](not.md) - Negates its last child (or its last unkeyed attribute)
 * [on](on.md) - Catches signals or errors.
 * [on_cancel](on_cancel.md) - Counterpart to the on_cancel: attribute.
 * [on_error](on_error.md) - Counterpart to the on_error: attribute.
 * [push, pushr](push.md) - Pushes a value into an array (in a variable or a field).
 * [rand](rand.md) - Returns a randomly generated number.
-* [range](range.md) - "range" is a procedure to generate ranges of integers.
-* [reduce](reduce.md) - Reduce takes a collection and a function. It reduces the collection to a single result thanks to the function.
+* [range](range.md) - Generates ranges of integers.
+* [reduce](reduce.md) - Takes a collection and a function, reduces the collection to a single result thanks to the function.
 * [reverse](reverse.md) - Reverses an array or a string.
 * [select, reject](select.md) - Filters a collection
 * [sequence, _apply, begin](sequence.md) - Executes child expressions in sequence.
-* [set, setr](set.md) - sets a field or a variable.
+* [set, setr](set.md) - Sets a field or a variable.
 * [shuffle, sample](shuffle.md) - Returns a shuffled version of an array.
-* [slice, index](slice.md) - "slice" takes an array or a string and returns a slice of it (a new array or a new string.
-* [stall](stall.md) - "stall" is mostly used in flor tests. It simply dead ends.
-* [downcase, lowercase, lowcase, upcase, uppercase, capitalize, snakecase, snake_case](strings.md) - Functions that deal with strings
+* [slice, index](slice.md) - Takes an array or a string and returns a slice of it (a new array or a new string).
+* [stall](stall.md) - Mostly used in flor tests. Stalls the current branch of execution.
+* [downcase, lowercase, lowcase, upcase, uppercase, capitalize, snakecase, snake_case](strings.md) - "downcase", "upcase", "capitalize", etc.
 * [timestamp, ltimestamp](timestamp.md) - Places a string timestamp in f.ret.
-* [to-array, to-object](to_array.md) - "to-array", turns an argument into an array, "to-object" turns it into an object.
+* [to-array, to-object](to_array.md) - Turns the argument into an array or an object.
 * [type-of, type](type_of.md) - returns the type of argument or the incoming f.ret.
-* [until, while](until.md) - `until` loops until a condition evaluates to true. `while` loops while a condition evaluates to true.
+* [until, while](until.md) - Loops until or while a condiation evalutates to true.
 
 ## unit
 
 * [cancel, kill](cancel.md) - Cancels an execution branch
-* [ccollect](ccollect.md) - ccollect is a concurrent version of [collect](collect.md).
+* [ccollect](ccollect.md) - A concurrent version of [collect](collect.md).
 * [cmap](cmap.md) - Concurrent version of "map". Spins a concurrent child for each element of the incoming/argument collection.
 * [concurrence](concurrence.md) - Executes its children concurrently.
-* [cron](cron.md) - "cron" is a macro procedure.
+* [cron](cron.md) - A macro-procedure, rewriting itself to `schedule cron: ...`.
 * [do-trap](do_trap.md) - A version of trap that accepts a block instead of a function.
-* [every](every.md) - "every" is a macro procedure.
-* [graft, import](graft.md) - Graft a subtree into the current flo
+* [every](every.md) - A macro-procedure, rewriting itself to `schedule every: ...`.
+* [graft, import](graft.md) - Graft a subtree into the current execution.
 * [on_timeout](on_timeout.md) - Counterpart to the on_timeout: attribute.
-* [schedule](schedule.md) - Schedules a function
+* [schedule](schedule.md) - Schedules a function in time.
 * [signal](signal.md) - Used in conjuction with "on".
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
 * [task](task.md) - Tasks a tasker with a task.

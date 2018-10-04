@@ -4,7 +4,7 @@ require 'flor/punit/schedule'
 
 class Flor::Pro::Cron < Flor::Macro::Schedule
   #
-  # "cron" is a macro procedure.
+  # A macro-procedure, rewriting itself to `schedule cron: ...`.
   #
   # ```
   # cron '0 0 1 jan *'

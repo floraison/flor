@@ -1,7 +1,7 @@
 
 # match
 
-"match" can be thought of as a "destructuring [case](case.md)".
+A kind of "destructuring [case](case.md)".
 
 "match", like "case", matches its first argument or the incoming `f.ret`.
 

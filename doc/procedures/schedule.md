@@ -1,7 +1,7 @@
 
 # schedule
 
-Schedules a function
+Schedules a function in time.
 
 ```
 schedule cron: '0 0 1 jan *'  # every 1st day of the year, check systems

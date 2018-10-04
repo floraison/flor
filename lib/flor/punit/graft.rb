@@ -1,7 +1,7 @@
 
 class Flor::Pro::Graft < Flor::Procedure
   #
-  # Graft a subtree into the current flo
+  # Graft a subtree into the current execution.
   #
   # Given
   # ```

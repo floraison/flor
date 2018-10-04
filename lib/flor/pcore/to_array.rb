@@ -1,8 +1,7 @@
 
 class Flor::Pro::ToArray < Flor::Procedure
   #
-  # "to-array", turns an argument into an array, "to-object" turns it into
-  # an object.
+  # Turns the argument into an array or an object.
   #
   # ```
   # to-array [ 0 1 2 ]

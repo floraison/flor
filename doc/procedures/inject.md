@@ -1,7 +1,7 @@
 
 # inject
 
-Inject is a simplified version of [reduce](reduce.md).
+A simplified version of [reduce](reduce.md).
 
 Inject takes a collection and a block. It reduces the collection
 to a single result thanks to the block.

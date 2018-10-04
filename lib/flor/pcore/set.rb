@@ -1,7 +1,7 @@
 
 class Flor::Pro::Set < Flor::Procedure
   #
-  # sets a field or a variable.
+  # Sets a field or a variable.
   #
   # ```
   # sequence

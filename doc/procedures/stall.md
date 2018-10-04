@@ -1,7 +1,7 @@
 
 # stall
 
-"stall" is mostly used in flor tests. It simply dead ends.
+Mostly used in flor tests. Stalls the current branch of execution.
 
 It receives its execution message, executes all its attributes but
 does not answer to its parent procedure, effectively stalling

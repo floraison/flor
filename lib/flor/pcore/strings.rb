@@ -1,7 +1,7 @@
 
 class Flor::Pro::Strings < Flor::Procedure
   #
-  # Functions that deal with strings
+  # "downcase", "upcase", "capitalize", etc.
   #
   # "downcase", "lowercase", "lowcase",
   # "upcase", "uppercase",

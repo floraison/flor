@@ -1,7 +1,7 @@
 
 # graft, import
 
-Graft a subtree into the current flo
+Graft a subtree into the current execution.
 
 Given
 ```

@@ -4,7 +4,7 @@ require 'flor/punit/schedule'
 
 class Flor::Pro::Every < Flor::Macro::Schedule
   #
-  # "every" is a macro procedure.
+  # A macro-procedure, rewriting itself to `schedule every: ...`.
   #
   # ```
   # every 'day at midnight'

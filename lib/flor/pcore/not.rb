@@ -1,7 +1,7 @@
 
 class Flor::Pro::Not < Flor::Procedure
   #
-  # `not` negates its last child (or its last unkeyed attribute)
+  # Negates its last child (or its last unkeyed attribute)
   #
   # ```
   # not _      # --> true

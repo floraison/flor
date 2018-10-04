@@ -1,7 +1,7 @@
 
 class Flor::Pro::Reduce < Flor::Pro::Iterator
   #
-  # Reduce takes a collection and a function. It reduces the collection
+  # Takes a collection and a function, reduces the collection
   # to a single result thanks to the function.
   #
   # ```

@@ -1,7 +1,7 @@
 
 # noret
 
-executes its children, but doesn't alter the received f.ret
+Executes its children, but doesn't alter the received f.ret
 
 ```
 sequence

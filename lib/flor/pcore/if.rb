@@ -1,7 +1,7 @@
 
 class Flor::Pro::If < Flor::Procedure
   #
-  # The classical "if" (and its "unless" sidequick)
+  # The classical "if" (and its "unless" sidekick)
   #
   # ```
   # if
