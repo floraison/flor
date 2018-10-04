@@ -80,21 +80,27 @@ class Flor::Pro::Strings < Flor::Procedure
   class StringWrapper
     extend ::Forwardable
 
-    def_delegators :@s, :downcase, :upcase, :capitalize
+    def_delegators :@s, :downcase, :upcase
 
     def initialize(s); @s = s; end
+
+    def camelcase
+
+      @s
+        .gsub(/_(.)/) { |_| $1.upcase }
+    end
+
+    def capitalize
+
+      @s
+        .gsub(/\b[a-z]/) { |c| c.upcase }
+    end
 
     def snakecase
 
       @s
         .gsub(/([a-z])([A-Z])/) { |_| $1 + '_' + $2.downcase }
         .gsub(/([A-Z])/) { |c| c.downcase }
-    end
-
-    def camelcase
-
-      @s
-        .gsub(/_(.)/) { |_| $1.upcase }
     end
   end
 end

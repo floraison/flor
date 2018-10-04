@@ -77,7 +77,7 @@ describe 'Flor procedures' do
       '[ "fox" "bros" "wool" ]; capitalize _' => %w[ Fox Bros Wool ],
       '{ a: "al" b: "bob" }; capitalize _' => { 'a' => 'Al', 'b' => 'Bob' },
 
-      'capitalize "banana republic"' => 'Banana republic',
+      'capitalize "banana republic"' => 'Banana Republic',
 
     }.each do |k, v|
 
