@@ -32,7 +32,8 @@ class Flor::Pro::Strings < Flor::Procedure
     downcase lowercase lowcase
     upcase uppercase
     capitalize
-    snakecase snake_case ]
+    snakecase snake_case
+    camelcase camelCase ]
 
   # TODO CamelCase, etc
   # TODO `capitalize "banana republic" all: true` => 'Banana Republic',
@@ -54,6 +55,7 @@ class Flor::Pro::Strings < Flor::Procedure
       when 'upcase', 'uppercase' then :upcase
       when 'capitalize' then :capitalize
       when 'snakecase', 'snake_case' then :snakecase
+      when 'camelcase', 'camelCase' then :camelcase
       #else :to_s
       else fail NotImplementedError.new("#{h0.inspect} not implemented")
       end
@@ -80,16 +82,19 @@ class Flor::Pro::Strings < Flor::Procedure
 
     def_delegators :@s, :downcase, :upcase, :capitalize
 
-    def initialize(s)
-
-      @s = s
-    end
+    def initialize(s); @s = s; end
 
     def snakecase
 
       @s
         .gsub(/([a-z])([A-Z])/) { |_| $1 + '_' + $2.downcase }
         .gsub(/([A-Z])/) { |c| c.downcase }
+    end
+
+    def camelcase
+
+      @s
+        .gsub(/_(.)/) { |_| $1.upcase }
     end
   end
 end

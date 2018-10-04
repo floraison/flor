@@ -109,5 +109,24 @@ describe 'Flor procedures' do
       end
     end
   end
+
+  describe 'camelcase, camelCase' do
+
+    {
+
+      'camelcase "on_line or off_line"' => 'onLine or offLine',
+      '"off_limits"; camelcase tag: "y"' => 'offLimits',
+
+    }.each do |k, v|
+
+      it "returns #{v.inspect} for `#{k}`" do
+
+        r = @executor.launch(k)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(v)
+      end
+    end
+  end
 end
 
