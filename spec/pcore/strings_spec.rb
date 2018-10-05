@@ -130,5 +130,26 @@ describe 'Flor procedures' do
       end
     end
   end
+
+  describe 'strip, trim' do
+
+    {
+
+      'strip " orly "' => 'orly',
+      '" orly "; strip _' => 'orly',
+      '" orly "; strip cap: 1' => 'Orly',
+      '" orly "; trim _' => 'orly',
+
+    }.each do |k, v|
+
+      it "returns #{v.inspect} for `#{k}`" do
+
+        r = @executor.launch(k)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq(v)
+      end
+    end
+  end
 end
 

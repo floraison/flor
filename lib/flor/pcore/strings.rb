@@ -6,7 +6,8 @@ class Flor::Pro::Strings < Flor::Procedure
   # "downcase", "lowercase", "lowcase",
   # "upcase", "uppercase",
   # "capitalize",
-  # "snakecase", "snake_case"
+  # "snakecase", "snake_case",
+  # "trim", "strip"
   #
   # ```
   # downcase 'HELLO'           # => 'hello'
@@ -40,6 +41,7 @@ class Flor::Pro::Strings < Flor::Procedure
     downcase lowercase lowcase
     upcase uppercase
     capitalize
+    trim strip
     snakecase snake_case
     camelcase camelCase ]
 
@@ -60,6 +62,7 @@ class Flor::Pro::Strings < Flor::Procedure
       when 'downcase', 'lowercase', 'lowcase' then :downcase
       when 'upcase', 'uppercase' then :upcase
       when 'capitalize' then :capitalize
+      when 'strip', 'trim' then :strip
       when 'snakecase', 'snake_case' then :snakecase
       when 'camelcase', 'camelCase' then :camelcase
       else fail NotImplementedError.new("#{h0.inspect} not implemented")
@@ -93,7 +96,7 @@ class Flor::Pro::Strings < Flor::Procedure
   class StringWrapper
     extend ::Forwardable
 
-    def_delegators :@s, :downcase, :upcase
+    def_delegators :@s, :downcase, :upcase, :strip
 
     def initialize(s); @s = s; end
 
