@@ -50,10 +50,17 @@ describe 'Flor procedures' do
 
       '{ a: 0 }; merge { b: 1 }' =>
         { 'a' => 0, 'b' => 1 },
-      #'{ a: 0 }; merge { b: 1 } { c: 2 }' =>
-      #  { 'b' => 1, 'c' => 2 },
+      '{ a: 0 }; merge { b: 1 } { c: 2 }' =>
+        { 'b' => 1, 'c' => 2 },
       '{ a: 0 }; merge f.ret { b: 1 } { c: 2 }' =>
         { 'a' => 0, 'b' => 1, 'c' => 2 },
+
+      "[ 0 1 2 ]; merge [ 0 1 'deux' 'trois' ]" => [ 0, 1, 'deux', 'trois' ],
+      "[ 0 1 2 ]; merge [ 0 1 'deux' 3 ]" => [ 0, 1, 'deux', 3 ],
+      "[ 0 1 2 3 4 ]; merge [ 0 1 2 3 ] [ 0 'un' 2 ]" => [ 0, 'un', 2, 3 ],
+      "[ 0 1 2 3 4 ]; merge f.ret [ 0 1 2 3 ] [ 0 'un' 2 ]" => [ 0, 'un', 2, 3, 4 ],
+      "[ 0 1 2 3 4 ]; merge [ 0 1 2 3 ] [ 0 'un' 2 ] f.ret" => [ 0, 1, 2, 3, 4 ],
+      "[ 0 ]; merge { a: 1 } { a: 'one' }" => { 'a' => 'one' },
 
     }.each do |k, v|
 
@@ -72,6 +79,7 @@ describe 'Flor procedures' do
       "merge null",
       "merge 0",
       "merge 'string'",
+      "[]; merge 'string'",
 
     ].each do |c|
 

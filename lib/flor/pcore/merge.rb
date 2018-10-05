@@ -49,6 +49,20 @@ class Flor::Pro::Merge < Flor::Procedure
   #   # => { 'a' => 0, 'b' => 1, 'c' => 2 }
   # ```
   #
+  # ## incoming ret
+  #
+  # "merge" only draws in the incoming ret if necessary. If there are
+  # enough arguments to perform a merge, the incoming ret will not be taken
+  # into account.
+  # You can add the incoming to the merge simply with `f.ret`.
+  #
+  # ```
+  # [ 0 1 2 ]; merge [ 0 1 'deux' 3 ]                    # => [ 0 1 'deux' 3 ]
+  # [ 0 1 2 3 4 ]; merge [ 0 1 2 3 ] [ 0 'un' 2 ]        # => [ 0 'un' 2 3 ]
+  # [ 0 1 2 3 4 ]; merge f.ret [ 0 1 2 3 ] [ 0 'un' 2 ]  # => [ 0 'un' 2 3 ]
+  # [ 0 1 2 3 4 ]; merge [ 0 1 2 3 ] [ 0 'un' 2 ] f.ret  # => [ 0 1 2 3 4 ]
+  # [ 0 ]; merge { a: 1 } { a: 'one' }                   # => { a: 'one' }
+  # ```
   #
   # ## see also
   #
@@ -66,42 +80,55 @@ class Flor::Pro::Merge < Flor::Procedure
 
   def receive_last
 
-    rets =
-      ([ node_payload_ret ] + @node['rets'])
-        .select { |e| e.is_a?(Array) || e.is_a?(Hash) }
+    indexes = @node['rets']
+      .each_with_index
+      .inject({ array: [], object: [], other: [] }) { |is, (e, i)|
+        case e
+        when Array then is[:array]
+        when Hash then is[:object]
+        else is[:other]
+        end << i
+        is }
+
+    a0 = indexes[:array].first || @node['rets'].length
+    o0 = indexes[:object].first || @node['rets'].length
+
+    kln = a0 < o0 ? :array : :object
+    okln = kln == :array ? :object : :array
+
+    cols = indexes[kln].collect { |i| @node['rets'][i] }
+
+    cols.unshift(node_payload_ret) \
+      if cols.length == 1 && Flor.type(node_payload_ret) == kln
 
     fail Flor::FlorError.new('found no array or object to merge', self) \
-      if rets.empty?
-
-    kla = rets[0].is_a?(Array) ? Array : Hash
-    kln = Flor.type(rets[0])
+      if cols.empty?
 
     unless att('lax', 'loose') == true || att('strict') == false
-      if (orets = @node['rets'].reject { |e| e.is_a?(kla) }).any?
-        fail Flor::FlorError.new(
-          "found a non-#{kln} item (#{Flor.type(orets[0])} item)", self)
-      end
+
+      others = (indexes[:other] + indexes[okln]).sort
+
+      fail Flor::FlorError.new(
+        "found a non-#{kln} item (#{Flor.type(@node['rets'][others[0]])} item)",
+        self
+      ) if others.any?
     end
 
-    r = send(
-      kla == Array ? :merge_arrays : :merge_objects,
-      rets.select { |e| e.is_a?(kla) })
-
-    wrap('ret' => r)
+    wrap('ret' => send(kln == :array ? :merge_arrays : :merge_objects, cols))
   end
 
   protected
 
-  def merge_arrays(rets)
+  def merge_arrays(as)
 
-    rets
+    as
       .inject([]) { |r, a| a.each_with_index { |e, i| r[i] = e }; r }
   end
 
-  def merge_objects(rets)
+  def merge_objects(os)
 
-    rets
-      .inject({}) { |r, h| r.merge(h) }
+    os
+      .inject({}) { |r, o| r.merge(o) }
   end
 end
 
