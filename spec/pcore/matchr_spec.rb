@@ -17,73 +17,29 @@ describe 'Flor procedures' do
 
   describe 'matchr' do
 
-    it "returns empty array when it doesn't match" do
+    {
 
-      r = @executor.launch(
-        %q{
-          matchr "alpha", /bravo/
-        })
+      'matchr "alpha", /bravo/' => [],
+      'matchr "stuff", /stuf*/' => %w[ stuff ],
+      'matchr "stuff", /s(tu)(f*)/' => %w[ stuff tu ff ],
+      'matchr "stuff", "stuf*"' => %w[ stuff ],
+      'matchr "stUff", /stuff/i' => %w[ stUff ],
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']).to eq({ 'ret' => [] })
-    end
+      '"blue moon" | matchr r/blue/' => %w[ blue ],
+      '"blue moon" | matchr "moon"' => %w[ moon ],
+      '"blue moon"; matchr r/blue/' => %w[ blue ],
+      '"blue moon"; matchr "moon"' => %w[ moon ],
 
-    it 'returns the array of matches' do
+      'r/blue/ | matchr "blue moon"' => %w[ blue ],
 
-      r = @executor.launch(
-        %q{
-          push f.l
-            matchr "stuff", /stuf*/
-          push f.l
-            matchr "stuff", /s(tu)(f*)/
-        },
-        payload: { 'l' => [] })
+    }.each do |k, v|
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ %w[ stuff ], %w[ stuff tu ff ] ])
-    end
+      so "`#{k}` yields #{v.inspect}" do
 
-    it 'turns the second argument into a regular expression' do
-
-      r = @executor.launch(
-        %q{
-          push f.l
-            #match? "stuff", "^stuf*$"
-            matchr "stuff", "stuf*"
-        },
-        payload: { 'l' => [] })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ %w[ stuff ] ])
-    end
-
-    it 'respects regex flags' do
-
-      r = @executor.launch(
-        %q{
-          push f.l
-            matchr "stUff", /stuff/i
-        },
-        payload: { 'l' => [] })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ %w[ stUff ] ])
-    end
-
-    context 'single argument' do
-
-      it 'takes $(f.ret) as the string' do
-
-        r = @executor.launch(
-          %q{
-            "blue moon" | matchr r/blue/ | push l
-            "blue moon" | matchr 'moon' | push l
-            "blue moon" | match? 'moon' | push l
-            "blue moon" | match? 'x' | push l
-          }, vars: { 'l' => [] })
+        r = @executor.launch(k)
 
         expect(r['point']).to eq('terminated')
-        expect(r['vars']['l']).to eq([ %w[ blue ], %w[ moon ], true, false ])
+        expect(r['payload']).to eq({ 'ret' => v })
       end
     end
   end
@@ -116,20 +72,25 @@ describe 'Flor procedures' do
       expect(r['payload']['l']).to eq(%w[ a d f ])
     end
 
-    it 'returns true when matching' do
+    {
 
-      r = @executor.launch(%q{ match? "stuff", "^stuf*$" })
+      'match? "stuff", "^stuf*$"' => true,
+      'match? "stuff", "^Stuf*$"' => false,
+      '"blue moon" | match? "moon"' => true,
+      '"blue moon" | match? "x"' => false,
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(true)
-    end
+      'r/x/ | match? "blue moon"' => false,
+      'r/x/ | match? "x moon"' => true,
 
-    it 'returns false when not matching' do
+    }.each do |k, v|
 
-      r = @executor.launch(%q{ match? "stuff", "^Stuf*$" })
+      so "`#{k}` yields #{v.inspect}" do
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(false)
+        r = @executor.launch(k)
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']).to eq({ 'ret' => v })
+      end
     end
   end
 
@@ -137,20 +98,25 @@ describe 'Flor procedures' do
 
     {
 
-      [ 'string', /^str/ ] => 'str',
-      [ 'string', /^str(.+)$/ ] => 'ing',
-      [ 'string', /^str(?:.+)$/ ] => 'string',
-      [ 'strogonoff', /^str(?:.{0,3})(.*)$/ ] => 'noff',
-      [ 'sutoringu', /^str/ ] => '',
+      "pmatch 'string', /^str/" => 'str',
+      "pmatch 'string', /^str(.+)$/" => 'ing',
+      "pmatch 'string', /^str(?:.+)$/" => 'string',
+      "pmatch 'strogonoff', /^str(?:.{0,3})(.*)$/" => 'noff',
+      "pmatch 'sutoringu', /^str/" => '',
 
-    }.each do |(str, rex), ret|
+      "r/^str/ | pmatch 'sutoringu'" => '',
+      "r/^str/ | pmatch 'string'" => 'str',
+      "'sutoringu'; pmatch r/^str/" => '',
+      "'string'; pmatch r/^str/" => 'str',
 
-      it "yields #{ret.inspect} for `pmatch #{str.inspect}, #{rex.inspect}`" do
+    }.each do |k, v|
 
-        r = @executor.launch(%{ pmatch #{str.inspect}, #{rex.inspect} })
+      so "`#{k}` yields #{v.inspect}" do
+
+        r = @executor.launch(k)
 
         expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(ret)
+        expect(r['payload']['ret']).to eq(v)
       end
     end
   end
