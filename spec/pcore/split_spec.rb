@@ -10,11 +10,6 @@ require 'spec_helper'
 
 describe 'Flor procedures' do
 
-  before :each do
-
-    @executor = Flor::TransientExecutor.new
-  end
-
   describe 'split' do
 
     {
@@ -27,16 +22,7 @@ describe 'Flor procedures' do
       '"ab,cd,ef"; split r/,/' => %w[ ab cd ef ],
       '"ab cd ef"; split tag: "x"' => %w[ ab cd ef ],
 
-    }.each do |k, v|
-
-      it "yields #{v.inspect} for `#{k}`" do
-
-        r = @executor.launch(k)
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(v)
-      end
-    end
+    }.test_each(self)
 
     [
 
@@ -45,16 +31,7 @@ describe 'Flor procedures' do
       'r/,/; split _',
       '123; split _',
 
-    ].each do |c|
-
-      it "fails for `#{c}`" do
-
-        r = @executor.launch(c)
-
-        expect(r['point']).to eq('failed')
-        expect(r['error']['msg']).to eq('found no string to split')
-      end
-    end
+    ].test_each_fail(self, 'found no string to split')
   end
 end
 

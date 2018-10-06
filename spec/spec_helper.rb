@@ -310,10 +310,32 @@ class Hash
       context
         .so "%-#{max}.#{max}s yields #{v.inspect}" % [ "`#{k}`", v.inspect ] do
 
+          @executor ||= Flor::TransientExecutor.new
+
           r = @executor.launch(k)
 
           expect(r['point']).to eq('terminated')
           expect(r['payload']).to eq({ 'ret' => v })
+        end
+    end
+  end
+end
+
+class Array
+
+  def test_each_fail(context, error_message)
+
+    self.each do |c|
+
+      context
+        .it "fails for `#{c}`" do
+
+          @executor ||= Flor::TransientExecutor.new
+
+          r = @executor.launch(c)
+
+          expect(r['point']).to eq('failed')
+          expect(r['error']['msg']).to eq(error_message)
         end
     end
   end
