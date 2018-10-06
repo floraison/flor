@@ -10,11 +10,6 @@ require 'spec_helper'
 
 describe 'Flor procedures' do
 
-  before :each do
-
-    @executor = Flor::TransientExecutor.new
-  end
-
   describe 'merge' do
 
     {
@@ -29,7 +24,7 @@ describe 'Flor procedures' do
         { 'a' => 0, 'b' => 1, 'c' => 2 },
       "merge { a: 0 } { b: 1 } { c: 2 }" =>
         { 'a' => 0, 'b' => 1, 'c' => 2 },
-      "merge { a: 0 } { b: 1 } 'nada' { c: 2 } tags: 'xxx' loose: true" =>
+      "merge { a: 0 } { b: 1 } 'y' { c: 2 } tag: 'x' loose: true" =>
         { 'a' => 0, 'b' => 1, 'c' => 2 },
 
       '{ a: 0 }; merge { b: 1 } { c: 2 }' =>
@@ -62,16 +57,7 @@ describe 'Flor procedures' do
       "[ 0 1 2 3 4 ]; merge [ 0 1 2 3 ] [ 0 'un' 2 ] f.ret" => [ 0, 1, 2, 3, 4 ],
       "[ 0 ]; merge { a: 1 } { a: 'one' }" => { 'a' => 'one' },
 
-    }.each do |k, v|
-
-      it "succeeds for `#{k}`" do
-
-        r = @executor.launch(k)
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(v)
-      end
-    end
+    }.test_each(self)
 
     [
 
@@ -81,16 +67,7 @@ describe 'Flor procedures' do
       "merge 'string'",
       "[]; merge 'string'",
 
-    ].each do |c|
-
-      it "fails (nothing to merge) for `#{c}`" do
-
-        r = @executor.launch(c)
-
-        expect(r['point']).to eq('failed')
-        expect(r['error']['msg']).to eq('found no array or object to merge')
-      end
-    end
+    ].test_each_fail(self, 'found no array or object to merge')
 
     [
 
@@ -99,16 +76,7 @@ describe 'Flor procedures' do
       "merge { a: 0 } { b: 1 } [ 2 ]",
       "merge { a: 0 } { b: 1 } 'nada' { c: 2 } tags: 'xxx'",
 
-    ].each do |c|
-
-      it "fails (strict) for `#{c}`" do
-
-        r = @executor.launch(c)
-
-        expect(r['point']).to eq('failed')
-        expect(r['error']['msg']).to match(/\Afound a non-/)
-      end
-    end
+    ].test_each_fail(self, /\Afound a non-/)
   end
 end
 

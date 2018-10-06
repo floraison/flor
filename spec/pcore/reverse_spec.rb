@@ -10,77 +10,22 @@ require 'spec_helper'
 
 describe 'Flor procedures' do
 
-  before :each do
-
-    @executor = Flor::TransientExecutor.new
-  end
-
   describe 'reverse' do
 
-    it 'reverses the f.ret array' do
+    {
 
-      r = @executor.launch(
-        %q{
-          [ 1, 2, 3 ]
-          reverse _
-        })
+      %q{ reverse [ 1, 2, 3 ] } => [ 3, 2, 1 ],
+      %q{ [ 1, 2, 3 ]; reverse _ } => [ 3, 2, 1 ],
+      %q{ reverse 'melimelo' } => 'melimelo'.reverse,
+      %q{ (reverse 'onegin' tag: 'a') } => 'onegin'.reverse,
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ 3, 2, 1 ])
-    end
+    }.test_each(self)
 
-    it 'reverses arrays' do
+    [
 
-      r = @executor.launch(
-        %q{
-          reverse [ 1, 2, 3 ]
-        })
+      %q{ reverse _ },
 
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq([ 3, 2, 1 ])
-    end
-
-    it 'reverses strings' do
-
-      r = @executor.launch(
-        %q{
-          reverse 'melimelo'
-        })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq('olemilem')
-    end
-
-    it 'does not reverse attributes' do
-
-      r = @executor.launch(
-        %q{
-          [
-            (reverse 'onegin' tag: 'a')
-            ('pushkin'; reverse tag: 'b')
-          ]
-        })
-
-      expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq(%w[ nigeno nikhsup ])
-    end
-
-    it 'fails if there is nothing to reverse' do
-
-      r = @executor.launch(
-        %q{
-          reverse _
-        })
-
-      expect(r['point']
-        ).to eq('failed')
-      expect(r['error']['kla']
-        ).to eq('Flor::FlorError')
-      expect(r['error']['msg']
-        ).to eq('found no argument that could be reversed')
-      expect(r['error']['lin']
-        ).to eq(2)
-    end
+    ].test_each_fail(self, 'found no argument that could be reversed', lin: 1)
   end
 end
 

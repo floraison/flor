@@ -10,11 +10,6 @@ require 'spec_helper'
 
 describe 'Flor procedures' do
 
-  before :each do
-
-    @executor = Flor::TransientExecutor.new
-  end
-
   describe 'array?, object?, boolean?, number?, ...' do
 
     {
@@ -66,16 +61,7 @@ describe 'Flor procedures' do
       'string? {} tag: "xxx"' => false,
       '{}; string? tag: "xxx"' => false,
 
-    }.each do |k, v|
-
-      it "yields #{v ? 'true ' : 'false'} for `#{k}`" do
-
-        r = @executor.launch(k)
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(v)
-      end
-    end
+    }.test_each(self)
   end
 end
 

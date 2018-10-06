@@ -303,9 +303,11 @@ class Hash
 
   def test_each(context)
 
-    max = self.keys.collect(&:length).max + 2
+    max = self.keys.collect { |k| k.strip.length }.max + 2
 
     self.each do |k, v|
+
+      k = k.strip
 
       context
         .so "%-#{max}.#{max}s yields #{v.inspect}" % [ "`#{k}`", v.inspect ] do
@@ -323,9 +325,11 @@ end
 
 class Array
 
-  def test_each_fail(context, error_message)
+  def test_each_fail(context, error_message, opts={})
 
     self.each do |c|
+
+      c = c.strip
 
       context
         .it "fails for `#{c}`" do
@@ -335,7 +339,16 @@ class Array
           r = @executor.launch(c)
 
           expect(r['point']).to eq('failed')
-          expect(r['error']['msg']).to eq(error_message)
+
+          if error_message.is_a?(Regexp)
+            expect(r['error']['msg']).to match(error_message)
+          else
+            expect(r['error']['msg']).to eq(error_message)
+          end
+
+          if lin = opts[:lin]
+            expect(r['error']['lin']).to eq(lin)
+          end
         end
     end
   end
