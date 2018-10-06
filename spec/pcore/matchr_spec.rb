@@ -32,16 +32,7 @@ describe 'Flor procedures' do
 
       'r/blue/ | matchr "blue moon"' => %w[ blue ],
 
-    }.each do |k, v|
-
-      so "`#{k}` yields #{v.inspect}" do
-
-        r = @executor.launch(k)
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']).to eq({ 'ret' => v })
-      end
-    end
+    }.test_each(self)
   end
 
   describe 'match?' do
@@ -82,16 +73,7 @@ describe 'Flor procedures' do
       'r/x/ | match? "blue moon"' => false,
       'r/x/ | match? "x moon"' => true,
 
-    }.each do |k, v|
-
-      so "`#{k}` yields #{v.inspect}" do
-
-        r = @executor.launch(k)
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']).to eq({ 'ret' => v })
-      end
-    end
+    }.test_each(self)
   end
 
   describe 'pmatch' do
@@ -109,16 +91,7 @@ describe 'Flor procedures' do
       "'sutoringu'; pmatch r/^str/" => '',
       "'string'; pmatch r/^str/" => 'str',
 
-    }.each do |k, v|
-
-      so "`#{k}` yields #{v.inspect}" do
-
-        r = @executor.launch(k)
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(v)
-      end
-    end
+    }.test_each(self)
   end
 end
 

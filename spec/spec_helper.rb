@@ -299,3 +299,23 @@ class String
   end
 end
 
+class Hash
+
+  def test_each(context)
+
+    max = self.keys.collect(&:length).max + 2
+
+    self.each do |k, v|
+
+      context
+        .so "%-#{max}.#{max}s yields #{v.inspect}" % [ "`#{k}`", v.inspect ] do
+
+          r = @executor.launch(k)
+
+          expect(r['point']).to eq('terminated')
+          expect(r['payload']).to eq({ 'ret' => v })
+        end
+    end
+  end
+end
+
