@@ -145,6 +145,29 @@ describe 'Flor unit' do
       ])
     end
 
+    it 'is kept track of' do
+
+      r = @unit.launch(
+        %q{
+          concurrence
+            task 'bravo' 'investigate venue'
+            task 'bravo' 'investigate transportation'
+        },
+        #wait: '0_1 task')
+        wait: 'end') # wait until end of session
+
+      sleep 0.350
+
+      e = @unit.executions.first(exid: r['exid'])
+
+      expect(
+        e._data['tasks']
+      ).to eq(
+        '0_0' => { 'tasker' => 'bravo', 'name' => 'investigate venue' },
+        '0_1' => { 'tasker' => 'bravo', 'name' => 'investigate transportation' }
+      )
+    end
+
     it 'can be cancelled' do
 
       r = @unit.launch(
