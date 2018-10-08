@@ -151,7 +151,7 @@ describe 'Flor unit' do
         %q{
           concurrence
             task 'bravo' 'investigate venue'
-            task 'bravo' 'investigate transportation'
+            bravo 'investigate transportation'
         },
         #wait: '0_1 task')
         wait: 'end') # wait until end of session
