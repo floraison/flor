@@ -383,36 +383,6 @@ module Flor
       [ m ]
     end
 
-    def task(message)
-
-      return error_reply(
-        node(message['nid']),
-        message,
-        "don't know how to apply #{message['tasker'].inspect}"
-      ) if message['routed'] == false
-
-      @execution['tasks'][message['nid']] =
-        { 'tasker' => message['tasker'], 'name' => message['taskname'] }
-          #
-          # FIXME is it in use???
-
-      @unit.ganger.task(self, message)
-    end
-    alias detask task
-
-    def return(message)
-
-      @execution['tasks'].delete(message['nid'])
-        #
-        # FIXME is it in use???
-
-      [ { 'point' => 'receive',
-          'exid' => message['exid'],
-          'nid' => message['nid'],
-          'payload' => message['payload'],
-          'tasker' => message['tasker'] } ]
-    end
-
     def cancel(message)
 
       n = @execution['nodes'][message['nid']]
