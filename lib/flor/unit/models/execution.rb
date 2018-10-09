@@ -58,63 +58,64 @@ module Flor
       zero_node['vars']
     end
 
-    # class methods
+    class << self
 
-    def self.by_status(s)
+      def by_status(s)
 
-      self.where(status: s)
-    end
-
-    def self.terminated
-
-      by_status('terminated')
-    end
-
-    def self.by_tag(name)
-
-      _exids = self.db[:flor_pointers]
-        .where(type: 'tag', name: name, value: nil)
-        .select(:exid)
-        .distinct
-
-      self.where(status: 'active', exid: _exids)
-    end
-
-    def self.by_var(name, value=:no)
-
-      w = { type: 'var', name: name }
-
-      case value; when nil
-        w[:value] = nil
-      when :no
-        # no w[:value] "constraining"
-      else
-        w[:value] = value.to_s
+        where(status: s)
       end
 
-      _exids = self.db[:flor_pointers]
-        .where(w)
-        .select(:exid)
-        .distinct
+      def terminated
 
-      self.where(status: 'active', exid: _exids)
+        by_status('terminated')
+      end
+
+      def by_tag(name)
+
+        _exids = db[:flor_pointers]
+          .where(type: 'tag', name: name, value: nil)
+          .select(:exid)
+          .distinct
+
+        where(status: 'active', exid: _exids)
+      end
+
+      def by_var(name, value=:no)
+
+        w = { type: 'var', name: name }
+
+        case value; when nil
+          w[:value] = nil
+        when :no
+          # no w[:value] "constraining"
+        else
+          w[:value] = value.to_s
+        end
+
+        _exids = db[:flor_pointers]
+          .where(w)
+          .select(:exid)
+          .distinct
+
+        where(status: 'active', exid: _exids)
+      end
+
+      def by_tasker(name, taskname=:no)
+
+        w = { type: 'tasker', name: name }
+        w[:value] = taskname if taskname != :no
+
+        _exids = db[:flor_pointers]
+          .where(w)
+          .select(:exid)
+          .distinct
+
+        where(status: 'active', exid: _exids)
+      end
+
+#      def by_task(name)
+#      end
     end
-
-    def self.by_tasker(name, taskname=:no)
-
-      w = { type: 'tasker', name: name }
-      w[:value] = taskname if taskname != :no
-
-      _exids = self.db[:flor_pointers]
-        .where(w)
-        .select(:exid)
-        .distinct
-
-      self.where(status: 'active', exid: _exids)
-    end
-
-#    def self.by_task(name)
-#    end
   end
 end
 
