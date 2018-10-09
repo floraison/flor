@@ -3,6 +3,21 @@ module Flor
 
   class Execution < FlorModel
 
+    #create_table :flor_executions do
+    #
+    #  primary_key :id, type: :Bignum
+    #  String :domain, null: false
+    #  String :exid, null: false
+    #  File :content # JSON
+    #  String :status, null: false # 'active' or something else like 'archived'
+    #  String :ctime, null: false
+    #  String :mtime, null: false
+    #  String :cunit
+    #  String :munit
+    #
+    #  index :exid
+    #end
+
     def nodes; data['nodes']; end
     def zero_node; nodes['0']; end
 

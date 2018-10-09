@@ -3,6 +3,36 @@ module Flor
 
   class Trap < FlorModel
 
+    #create_table :flor_traps do
+    #
+    #  primary_key :id, type: :Bignum
+    #  String :domain, null: false
+    #  String :exid, null: false
+    #  String :onid, null: false
+    #  String :nid, null: false
+    #  #
+    #  TrueClass :tconsumed, null: false, default: false
+    #  String :trange, null: false
+    #  String :tpoints, null: true
+    #  String :ttags, null: true
+    #  String :theats, null: true
+    #  String :theaps, null: true
+    #  #
+    #  File :content # JSON msg to trigger
+    #  #
+    #  String :status, null: false
+    #  String :ctime, null: false
+    #  String :mtime, null: false
+    #
+    #  String :cunit
+    #  String :munit
+    #
+    #  String :bnid, null: false
+    #
+    #  index :exid
+    #  index [ :exid, :nid ]
+    #end
+
     def to_hook
 
       opts = {}
