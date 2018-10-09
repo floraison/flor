@@ -239,7 +239,7 @@ describe 'Flor punit' do
       #
       # No. Let's leave it as is, last f.ret wins.
 
-    context 'by:/for:/assign:/with:/task:' do
+    context 'by:/for:/assign:/with:/task: attributes' do
 
         # task 'clean up' by: 'alan'
         # task 'clean up' for: 'alan'
