@@ -103,7 +103,7 @@ module Flor
     def to_hash
 
       values
-        .inject({}) { |h, (k, v)| h[k.to_s ] = v if k != :content; h }
+        .inject({}) { |h, (k, v)| h[k.to_s] = v if k != :content; h }
     end
 
     def do_split(v)
