@@ -107,9 +107,8 @@ module Flor
           .first(exid: exid) # status active or terminated doesn't matter
 
         return {
-          'exid' => exid, 'nodes' => {}, 'errors' => [],
-          'counters' => {}, 'start' => Flor.tstamp,
-          'size' => -1
+          'exid' => exid, 'nodes' => {}, 'counters' => {},
+          'start' => Flor.tstamp, 'size' => -1
         } unless e
 
         ex = from_blob(e[:content])

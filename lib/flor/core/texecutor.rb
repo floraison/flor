@@ -90,9 +90,7 @@ module Flor
         [], # no traps
         {
           'exid' => Flor.generate_exid('eval', 'u0'),
-          'nodes' => {}, 'errors' => [], 'counters' => {},
-          #'ashes' => {},
-          'start' => Flor.tstamp
+          'nodes' => {}, 'counters' => {}, 'start' => Flor.tstamp
         })
 
       @unit.archive = {} if conf['archive']
