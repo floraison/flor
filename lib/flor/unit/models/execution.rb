@@ -58,6 +58,26 @@ module Flor
       zero_node['vars']
     end
 
+    def to_h
+
+      h = super
+      m = h[:meta] = {}
+      c = m[:counts] = {}
+
+      ns = nodes.count
+      fs = 0
+      ts = 0
+      nodes.each do |k, v|
+        ts += 1 if v['task']
+        fs += 1 if v['failure']
+      end
+      c[:nodes] = ns
+      c[:failures] = fs
+      c[:tasks] = ts
+
+      h
+    end
+
     class << self
 
       def by_status(s)
