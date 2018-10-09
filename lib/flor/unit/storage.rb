@@ -661,7 +661,8 @@ module Flor
 
     def update_pointers(exe, status, now)
 
-# TODO archive old pointers???
+# TODO should we archive old pointers?
+
       exid = exe['exid']
 
       if status == 'terminated'
@@ -682,22 +683,23 @@ module Flor
       u = @unit.identifier
 
       pointers =
-        exe['nodes'].inject([]) { |a, (nid, node)|
-          ts = node['tags']
-          ts.each { |t| a << [ dom, exid, nid, 'tag', t, nil, now, u ] } if ts
-          a
-        }
+        exe['nodes']
+          .inject([]) { |a, (nid, node)|
+            ts = node['tags']
+            ts.each { |t| a << [ dom, exid, nid, 'tag', t, nil, now, u ] } if ts
+            a }
 
       pointers +=
-        (exe['nodes']['0'] || { 'vars' => {} })['vars'].collect { |k, v|
-          case v; when Integer, String, TrueClass, FalseClass
-            [ dom, exid, '0', 'var', k, v.to_s, now, u ]
-          when NilClass
-            [ dom, exid, '0', 'var', k, nil, now, u ]
-          else
-            nil
-          end
-        }.compact
+        (exe['nodes']['0'] || { 'vars' => {} })['vars']
+          .collect { |k, v|
+            case v; when Integer, String, TrueClass, FalseClass
+              [ dom, exid, '0', 'var', k, v.to_s, now, u ]
+            when NilClass
+              [ dom, exid, '0', 'var', k, nil, now, u ]
+            else
+              nil
+            end }
+          .compact
 
       pointers +=
         exe['tasks']
