@@ -159,13 +159,17 @@ describe 'Flor unit' do
       sleep 0.350
 
       e = @unit.executions.first(exid: r['exid'])
+      ps = @unit.pointers.where(exid: r['exid']).all
+
+      expect(e._data['tasks']).to eq(nil)
+        # legacy check
 
       expect(
-        e._data['tasks']
-      ).to eq(
-        '0_0' => { 'tasker' => 'bravo', 'name' => 'investigate venue' },
-        '0_1' => { 'tasker' => 'bravo', 'name' => 'investigate transportation' }
-      )
+        ps.collect { |p| [ p[:nid], p[:type], p[:name], p[:value] ] }
+      ).to eq([
+        [ '0_0', 'tasker', 'bravo', 'investigate venue' ],
+        [ '0_1', 'tasker', 'bravo', 'investigate transportation' ]
+      ])
     end
 
     it 'can be cancelled' do

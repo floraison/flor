@@ -137,20 +137,11 @@ module Flor
         "don't know how to apply #{message['tasker'].inspect}"
       ) if message['routed'] == false
 
-      @execution['tasks'][message['nid']] =
-        { 'tasker' => message['tasker'], 'name' => message['taskname'] }
-          #
-          # FIXME is it in use???
-
       @unit.ganger.task(self, message)
     end
     alias detask task
 
     def return(message)
-
-      @execution['tasks'].delete(message['nid'])
-        #
-        # FIXME is it in use???
 
       [ { 'point' => 'receive',
           'exid' => message['exid'],

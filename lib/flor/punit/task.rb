@@ -79,6 +79,9 @@ class Flor::Pro::Task < Flor::Procedure
 
     attl, attd = determine_atts
 
+    @node['task'] =
+      { 'tasker' => tasker, 'name' => taskname }
+
     wrap(
       'point' => 'task',
       'exid' => exid, 'nid' => nid,

@@ -107,7 +107,7 @@ module Flor
           .first(exid: exid) # status active or terminated doesn't matter
 
         return {
-          'exid' => exid, 'nodes' => {}, 'errors' => [], 'tasks' => {},
+          'exid' => exid, 'nodes' => {}, 'errors' => [],
           'counters' => {}, 'start' => Flor.tstamp,
           'size' => -1
         } unless e
@@ -682,31 +682,27 @@ module Flor
       dom = Flor.domain(exid)
       u = @unit.identifier
 
-      pointers =
-        exe['nodes']
-          .inject([]) { |a, (nid, node)|
-            ts = node['tags']
-            ts.each { |t| a << [ dom, exid, nid, 'tag', t, nil, now, u ] } if ts
-            a }
+      pointers = exe['nodes']
+        .inject([]) { |a, (nid, node)|
 
-      pointers +=
-        (exe['nodes']['0'] || { 'vars' => {} })['vars']
-          .collect { |k, v|
+          ts = node['tags']
+          ts.each { |t|
+            a << [ dom, exid, nid, 'tag', t, nil, now, u ] } if ts
+
+          vs = nid == '0' ? node['vars'] : nil
+          vs.each { |k, v|
             case v; when Integer, String, TrueClass, FalseClass
-              [ dom, exid, '0', 'var', k, v.to_s, now, u ]
+              a << [ dom, exid, '0', 'var', k, v.to_s, now, u ]
             when NilClass
-              [ dom, exid, '0', 'var', k, nil, now, u ]
-            else
-              nil
-            end }
-          .compact
+              a << [ dom, exid, '0', 'var', k, nil, now, u ]
+            end } if vs
 
-      pointers +=
-        exe['tasks']
-          .reject { |_, v|
-            v['tasker'] == nil }
-          .collect { |nid, v|
-            [ dom, exid, nid, 'tasker', v['tasker'], v['name'], now, u ] }
+          #ta = node['heap'] == 'task' ? node['task'] : nil
+          ta = node['task']
+          a << [ dom, exid, nid, 'tasker', ta['tasker'], ta['name'], now, u ] \
+            if ta
+
+          a }
 
       cps = @db[:flor_pointers] # current pointers
         .where(exid: exid)
