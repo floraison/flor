@@ -44,7 +44,10 @@ describe 'Flor unit' do
           @unit.executions.first(exid: exid) }
 
         h = execution.to_h
+        d = h[:data]
         m = h[:meta]
+
+        expect(h[:size]).to be_between(770, 910)
 
         expect(m[:counts][:nodes]).to eq(5)
         expect(m[:counts][:tasks]).to eq(1)

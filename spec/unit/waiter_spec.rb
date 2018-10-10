@@ -171,7 +171,8 @@ describe Flor::Waiter do
       expect(r['exid']).not_to eq(nil)
 
       expect(r.keys).to eq(%w[
-        point exid start duration consumed counters nodes size er pr ])
+        point exid start duration consumed counters
+        nodes execution_size er pr ])
     end
 
 #    it 'understands timeout:' do

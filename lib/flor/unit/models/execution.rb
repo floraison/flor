@@ -61,6 +61,9 @@ module Flor
     def to_h
 
       h = super
+
+      h[:size] = self[:content].size
+
       m = h[:meta] = {}
       c = m[:counts] = {}
 

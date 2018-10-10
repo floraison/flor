@@ -133,7 +133,7 @@ module Flor
       s << {
         counters: execution['counters'],
         nodes: execution['nodes'].size,
-        size: execution['size']
+        execution_size: execution['size']
       }.inspect
       s << _c.rs
 
@@ -162,7 +162,7 @@ module Flor
         #own_traps: @traps.reject { |t| t.texid == nil }.size, # FIXME
         counters: execution['counters'],
         nodes: execution['nodes'].size,
-        size: execution['size']
+        execution_size: execution['size']
       }.inspect
       if @unit.archive
         s << "\n    |   "

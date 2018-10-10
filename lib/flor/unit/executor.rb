@@ -93,7 +93,7 @@ module Flor
       t0 = Flor.tstamp(t0)
 
       @unit.logger.log_run_end(self, t0, du)
-      @unit.hooker.notify(self, make_end_message(t0, du))
+      @unit.hooker.notify(self, make_end_message(t0, du, @execution['size']))
 
       @consumed.clear
 
@@ -205,7 +205,7 @@ module Flor
       io.string
     end
 
-    def make_end_message(start, duration)
+    def make_end_message(start, duration, execution_size)
 
       m = {}
       m['point'] = 'end'
@@ -215,7 +215,7 @@ module Flor
       m['consumed'] = @consumed.size
       m['counters'] = Flor.dup(@execution['counters'])
       m['nodes'] = @execution['nodes'].size
-      m['size'] = @execution['size']
+      m['execution_size'] = execution_size
       m['archive_size'] = @unit.archive[@exid].size if @unit.archive
       m['er'] = @execution['counters']['runs'] # "emitting run"
       m['pr'] = m['er'] # "processing run"

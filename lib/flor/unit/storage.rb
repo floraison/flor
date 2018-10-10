@@ -108,7 +108,7 @@ module Flor
 
         return {
           'exid' => exid, 'nodes' => {}, 'counters' => {},
-          'start' => Flor.tstamp, 'size' => -1
+          'start' => Flor.tstamp, 'size' => 0
         } unless e
 
         ex = from_blob(e[:content])
@@ -116,7 +116,7 @@ module Flor
         fail("couldn't parse execution (db id #{e[:id].to_i})") unless ex
 
         ex['id'] = e[:id].to_i
-        ex['size'] = e[:content].length
+        ex['size'] = e[:content].size
 
         ex
       end
@@ -140,7 +140,8 @@ module Flor
       end
 
       data = to_blob(exe)
-      exe['size'] = data.length
+      exe['size'] = data.size
+
       u = @unit.identifier
 
       transync do
@@ -178,6 +179,7 @@ module Flor
       end
 
       exe
+        # return the execution hash
 
     rescue => err
 
