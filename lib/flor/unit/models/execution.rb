@@ -65,18 +65,24 @@ module Flor
       h[:size] = self[:content].size
 
       m = h[:meta] = {}
-      c = m[:counts] = {}
+      cs = m[:counts] = {}
+      is = m[:nids] = { tasks: [], failures: [] }
 
-      ns = nodes.count
       fs = 0
       ts = 0
       nodes.each do |k, v|
-        ts += 1 if v['task']
-        fs += 1 if v['failure']
+        if v['task']
+          ts += 1
+          is[:tasks] << k
+        end
+        if v['failure']
+          fs += 1
+          is[:failures] << k
+        end
       end
-      c[:nodes] = ns
-      c[:failures] = fs
-      c[:tasks] = ts
+      cs[:nodes] = nodes.count
+      cs[:failures] = fs
+      cs[:tasks] = ts
 
       h
     end

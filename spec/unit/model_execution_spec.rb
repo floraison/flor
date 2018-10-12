@@ -52,6 +52,8 @@ describe 'Flor unit' do
         expect(m[:counts][:nodes]).to eq(5)
         expect(m[:counts][:tasks]).to eq(1)
         expect(m[:counts][:failures]).to eq(2)
+        expect(m[:nids][:tasks]).to eq(%w[ 0_2 ])
+        expect(m[:nids][:failures]).to eq(%w[ 0 0_3 ])
       end
     end
   end
