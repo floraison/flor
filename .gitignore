@@ -10,6 +10,8 @@
 
 .vimrc
 .viminfo
+.vimgrep
+#.vimshorts
 
 tmp/*.db
 tmp/*.log

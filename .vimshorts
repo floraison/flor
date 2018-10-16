@@ -1,0 +1,14 @@
+
+# shortcuts for my Vim filelist
+
+lib/flor/pcore/
+lib/flor/punit/
+lib/flor/migrations/
+spec/pcore/
+spec/punit/
+doc/
+doc/procedures/
+
+# vimgreps are OK too, for example:
+#  / "concurrence" lib/
+
