@@ -14,7 +14,7 @@ class Flor::Pro::If < Flor::Procedure
   #     set f.designation 'child'
   #   sequence # else
   #     set f.designation 'baby'
-  #     order_baby_food
+  #     order_baby_food _
   # ```
   #
   # Warning, the direct children are relevant. In the following snip,
@@ -22,7 +22,7 @@ class Flor::Pro::If < Flor::Procedure
   # ```
   # if (f.age > 3)
   #   set f.designation 'child'
-  #   order_child_seat
+  #   order_child_seat _
   # ```
   #
   # ## postfix `if` and `unless`

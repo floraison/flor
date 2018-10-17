@@ -14,12 +14,12 @@ This is a self-evaluation. For an authoritative source, see the [workflow patter
 * [Parallel Split](#bcf-parallel-split)
 * [Synchronization](#bcf-synchronization)
 * [Exclusive Choice](#bcf-exclusive-choice)
-* simple merge
+* Simple Merge
 
 ### Advanced Branching and Synchronization Patterns
-* multi choice
+* multi-choice
 * structured synchronizing merge
-* multi merge
+* multi-merge
 * structured discriminator
 * Structural Patterns
 * arbitrary cycles
@@ -74,7 +74,7 @@ concurrence
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp2.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp2_animation.php) | [top](#top)
 
 ### Synchronization
-<a id="bcf-synchronization" />The [concurrence](procedures/concurrence.md) by waiting (by default) for all its children to reply is usual flor synchronization tool.
+<a id="bcf-synchronization" />The [concurrence](procedures/concurrence.md) by waiting (by default) for all its children to reply is the simplest flor synchronization tool.
 
 ```
 sequence
@@ -82,16 +82,32 @@ sequence
   concurrence
     task 'bravo'
     task 'charly'
-    #
-    # task 'delta' will be reached once 'bravo' and 'charly' have replied
-    #
-  task 'delta'
+  task 'delta' # task 'delta' will be reached once 'bravo' and 'charly' both have replied
 ```
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp3.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp3_animation.php) | [top](#top)
 
 ### Exclusive Choice
-<a id="bcf-exclusive-choice" />The simplest flor procedure to use to support this pattern is [if](procedures/if.md)
+<a id="bcf-exclusive-choice" />The simplest flor procedure to use to support this pattern is [if](procedures/if.md).
+
+```
+  sequence
+
+    # ...
+
+    if
+      f.customer.age > 21 # condition
+      sequence # then
+        set f.customer.type 'adult'
+        order_kit _
+      sequence # else
+        set f.customer.type 'non-adult'
+        order_teenager_kit _
+
+    # ...
+```
+
+The [case](procedures/case.md) and [match](procedures/match.md) are the other two contenders for exclusive choice.
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp4.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp4_animation.php) | [top](#top)
 
