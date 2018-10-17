@@ -49,6 +49,20 @@ merge { a: 0 } { b: 1 } 'nada' { c: 2 } strict: false
   # => { 'a' => 0, 'b' => 1, 'c' => 2 }
 ```
 
+## incoming ret
+
+"merge" only draws in the incoming ret if necessary. If there are
+enough arguments to perform a merge, the incoming ret will not be taken
+into account.
+You can add the incoming to the merge simply with `f.ret`.
+
+```
+[ 0 1 2 ]; merge [ 0 1 'deux' 3 ]                    # => [ 0 1 'deux' 3 ]
+[ 0 1 2 3 4 ]; merge [ 0 1 2 3 ] [ 0 'un' 2 ]        # => [ 0 'un' 2 3 ]
+[ 0 1 2 3 4 ]; merge f.ret [ 0 1 2 3 ] [ 0 'un' 2 ]  # => [ 0 'un' 2 3 ]
+[ 0 1 2 3 4 ]; merge [ 0 1 2 3 ] [ 0 'un' 2 ] f.ret  # => [ 0 1 2 3 4 ]
+[ 0 ]; merge { a: 1 } { a: 'one' }                   # => { a: 'one' }
+```
 
 ## see also
 

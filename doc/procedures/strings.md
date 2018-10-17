@@ -1,12 +1,13 @@
 
-# downcase, lowercase, lowcase, upcase, uppercase, capitalize, snakecase, snake_case, camelcase, camelCase
+# downcase, lowercase, lowcase, upcase, uppercase, capitalize, trim, strip, snakecase, snake_case, camelcase, camelCase
 
 "downcase", "upcase", "capitalize", etc.
 
 "downcase", "lowercase", "lowcase",
 "upcase", "uppercase",
 "capitalize",
-"snakecase", "snake_case"
+"snakecase", "snake_case",
+"trim", "strip"
 
 ```
 downcase 'HELLO'           # => 'hello'
