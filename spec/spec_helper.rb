@@ -188,7 +188,7 @@ class RSpec::Core::ExampleGroup
 
     def compare_flor_to_ruby(fpath)
 
-      lines = File.readlines(fpath)
+      lines = File.readlines(fpath, encoding: 'UTF-8')
 
       contexts = []
       current = nil
