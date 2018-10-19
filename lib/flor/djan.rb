@@ -9,6 +9,8 @@ module Flor
   def self.to_d(x, opts={})
 
     out = StringIO.new
+    out.set_encoding('UTF-8')
+
     opts[:c] = Flor.colours(opts)
 
     if [ :console, true ].include?(opts[:width])
@@ -192,10 +194,11 @@ module Flor
         x.to_i.to_s == x ||
         x.to_f.to_s == x
       ) then
+        s = x.gsub(/"/, '\"')
         c_inf('"', out, opts)
-        c_str(x.inspect[1..-2], out, opts)
+        c_str(s, out, opts)
         c_inf('"', out, opts)
-        x.inspect[1..-2].length + 2
+        s.length + 2
       else
         c_str(x, out, opts)
         x.length
@@ -222,7 +225,12 @@ module Flor
     def c_nil(s, out, opts); out << opts[:c].dark_gray(s); end
     def c_tru(s, out, opts); out << opts[:c].green(s); end
     def c_fal(s, out, opts); out << opts[:c].red(s); end
-    def c_str(s, out, opts); out << opts[:c].brown(s); end
+    #def c_str(s, out, opts); out << opts[:c].brown(s); end
+    def c_str(s, out, opts)
+      out << opts[:c].brown(s)
+      #out << opts[:c].brown(s).tap { |x| p [ x, x.encoding ] }
+      #out << opts[:c].brown(s).encode('UTF-8')
+    end
     def c_num(s, out, opts); out << opts[:c].light_blue(s); end
   end
 end

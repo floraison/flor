@@ -28,7 +28,7 @@ module Flor
       if v.match(/\A\d/)
         class_eval(%{
           def #{k}(s=nil)
-           s ? "[#{v}m" + s + "[0;9m": "[#{v}m"
+           s ? "[#{v}m" + s + "[0;9m" : "[#{v}m"
            end })
       else
         class_eval(
