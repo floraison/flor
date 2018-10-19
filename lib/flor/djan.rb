@@ -194,7 +194,7 @@ module Flor
         x.to_i.to_s == x ||
         x.to_f.to_s == x
       ) then
-        s = x.gsub(/"/, '\"')
+        s = x.gsub(/(?<!\\)"/, '\"')
         c_inf('"', out, opts)
         c_str(s, out, opts)
         c_inf('"', out, opts)

@@ -99,7 +99,9 @@ describe Flor do
           true,
           false,
           12345.67,
-          "the long chemin est un chemin d'automne au travers de l'île"
+          "the long chemin est un chemin d'automne au travers de l'île",
+          'this is a "double-quote"',
+          'already \" escaped'
         ],
         'stuff' => 'nada',
         "'branding'" => 'fail',
@@ -131,7 +133,9 @@ describe Flor do
       true,
       false,
       12345.67,
-      "the long chemin est un chemin d'automne au travers de l'île" ],
+      "the long chemin est un chemin d'automne au travers de l'île",
+      "this is a \"double-quote\"",
+      "already \" escaped" ],
   "stuff":
     "nada",
   "'branding'":
