@@ -27,9 +27,6 @@ describe 'Flor procedures' do
       "merge { a: 0 } { b: 1 } 'y' { c: 2 } tag: 'x' loose: true" =>
         { 'a' => 0, 'b' => 1, 'c' => 2 },
 
-      '{ a: 0 }; merge { b: 1 } { c: 2 }' =>
-        { 'a' => 0, 'b' => 1, 'c' => 2 },
-
       'merge {}' => {},
       'merge { a: 0 }' => { 'a' => 0 },
       '{}; merge _' => {},
