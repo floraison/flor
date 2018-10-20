@@ -73,7 +73,15 @@ module Flor
       end
     end
 
-    def migrate(to=nil, from=nil)
+    def migrate(to=nil, from=nil, opts=nil)
+
+      opts = [ to, from, opts ].find { |e| e.is_a?(Hash) } || {}
+      opts[:target] ||= to if to.is_a?(Integer)
+      opts[:current] ||= from if from.is_a?(Integer)
+        #
+        # defaults for the migration version table:
+        #:table => :schema_info
+        #:column => :version
 
       dir =
         @unit.conf['db_migrations'] ||
@@ -83,13 +91,7 @@ module Flor
 
       synchronize do
 
-        Sequel::Migrator.run(
-          @db, dir,
-          :target => to, :current => from)
-
-        # defaults for the migration version table:
-        #:table => :schema_info
-        #:column => :version
+        Sequel::Migrator.run(@db, dir, opts)
       end
     end
 
