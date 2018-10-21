@@ -5,7 +5,7 @@ Sequel.migration do
 
     create_table :flor_messages do
 
-      primary_key :id, type: :Bignum
+      primary_key :id, type: :Integer
       String :domain, null: false
       String :exid, null: false
       String :point, null: false # 'execute', 'task', 'receive', 'schedule', ...
@@ -19,7 +19,7 @@ Sequel.migration do
 
     create_table :flor_executions do
 
-      primary_key :id, type: :Bignum
+      primary_key :id, type: :Integer
       String :domain, null: false
       String :exid, null: false
       File :content # JSON
@@ -32,7 +32,7 @@ Sequel.migration do
 
     create_table :flor_timers do
 
-      primary_key :id, type: :Bignum
+      primary_key :id, type: :Integer
       String :domain, null: false
       String :exid, null: false
       String :nid, null: false
@@ -40,7 +40,7 @@ Sequel.migration do
       String :schedule, null: false # '20141128.103239' or '00 23 * * *'
       String :ntime # next time
       File :content # JSON msg to trigger
-      Bignum :count, null: false
+      Integer :count, null: false
       String :status, null: false
       String :ctime, null: false
       String :mtime, null: false
@@ -51,7 +51,7 @@ Sequel.migration do
 
     create_table :flor_traps do
 
-      primary_key :id, type: :Bignum
+      primary_key :id, type: :Integer
       String :domain, null: false
       String :exid, null: false
       String :onid, null: false
@@ -76,7 +76,7 @@ Sequel.migration do
 
     create_table :flor_pointers do
 
-      primary_key :id, type: :Bignum
+      primary_key :id, type: :Integer
       String :domain, null: false
       String :exid, null: false
       String :nid, null: false
@@ -97,7 +97,7 @@ Sequel.migration do
 
     create_table :flor_traces do
 
-      primary_key :id, type: :Bignum
+      primary_key :id, type: :Integer
       String :domain, null: false
       String :exid, null: false
       String :nid, null: true

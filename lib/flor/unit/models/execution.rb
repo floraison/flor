@@ -5,7 +5,7 @@ module Flor
 
     #create_table :flor_executions do
     #
-    #  primary_key :id, type: :Bignum
+    #  primary_key :id, type: :Integer
     #  String :domain, null: false
     #  String :exid, null: false
     #  File :content # JSON
