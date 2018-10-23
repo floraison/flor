@@ -17,25 +17,18 @@ describe 'Flor procedures' do
 
   describe 'not' do
 
-    [
-      [ %q{ not _ }, true ],
-      [ %q{ not true }, false ],
-      [ %q{ not false }, true ],
-      [ %q{ not 0 }, false ],
-      [ %q{ not 1 }, false ],
-      [ %q{ not 'false' }, false ],
-      [ %q{ not 'true' }, false ],
-      [ %q{ not true false }, true ],
-    ].each do |flor, ret|
+    {
 
-      it "returns %-5s for `%s`" % [ ret, flor.strip ] do
+      %q{ not _ } => true,
+      %q{ not true } => false,
+      %q{ not false } => true,
+      %q{ not 0 } => false,
+      %q{ not 1 } => false,
+      %q{ not 'false' } => false,
+      %q{ not 'true' } => false,
+      %q{ not true false } => true,
 
-        r = @executor.launch(flor)
-
-        expect(r['point']).to eq('terminated')
-        expect(r['payload']['ret']).to eq(ret)
-      end
-    end
+    }.test_each(self)
 
     it 'negates its last child' do
 
