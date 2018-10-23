@@ -14,7 +14,7 @@ This is a self-evaluation. For an authoritative source, see the [workflow patter
 * [Parallel Split](#bcf-parallel-split)
 * [Synchronization](#bcf-synchronization)
 * [Exclusive Choice](#bcf-exclusive-choice)
-* Simple Merge
+* [Simple Merge](#bcf-simple-merge)
 
 ### Advanced Branching and Synchronization Patterns
 * multi-choice
@@ -110,6 +110,11 @@ sequence
 The [case](procedures/case.md) and [match](procedures/match.md) are the other two contenders for exclusive choice.
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp4.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp4_animation.php) | [top](#top)
+
+### Simple Merge
+<a id="bcf-simple-merge" />A simple merge occur when two (or more) exclusive branch converge. As seen in exclusive choice this pattern is implicitely supported. It simply occurs when the ‘then’ or the ‘else’ clause of an [if](procedures/if.md) terminates and the flow resumes.
+
+[wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp5.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp5_animation.php) | [top](#top)
 
 <!-- --------------------------------------------------------------------- -->
 ## Advanced Branching and Synchronization Patterns
