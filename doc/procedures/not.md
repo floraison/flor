@@ -17,6 +17,20 @@ not
   false  # --> true
 ```
 
+```
+not true false  # --> true
+```
+
+## Warning
+
+```
+and not(false) not(false)  # --> false
+```
+It is recommended to use:
+```
+and (not false) (not false)  # --> true
+```
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/not.rb)
 * [not spec](https://github.com/floraison/flor/tree/master/spec/pcore/not_spec.rb)

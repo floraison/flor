@@ -16,6 +16,20 @@ class Flor::Pro::Not < Flor::Procedure
   #   true
   #   false  # --> true
   # ```
+  #
+  # ```
+  # not true false  # --> true
+  # ```
+  #
+  # ## Warning
+  #
+  # ```
+  # and not(false) not(false)  # --> false
+  # ```
+  # It is recommended to use:
+  # ```
+  # and (not false) (not false)  # --> true
+  # ```
 
   name 'not'
 

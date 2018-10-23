@@ -28,6 +28,12 @@ describe 'Flor procedures' do
       %q{ not 'true' } => false,
       %q{ not true false } => true,
 
+      'not(false)' => true,
+      'not(false) true' => false,
+      'not(true)' => false,
+      '(not false)' => true,
+      '(not true)' => false,
+
     }.test_each(self)
 
     it 'negates its last child' do
@@ -50,6 +56,21 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(true)
+    end
+
+    context 'with "and" and "or"' do
+
+      {
+
+        'and (not false) (not true)' => false,
+        'and (not false) (not false)' => true,
+        '(not false) and (not true)' => false,
+        '(not false) and (not false)' => true,
+
+        'and not(false) not(true)' => false,   # /!\
+        'and not(false) not(false)' => false,  #
+
+      }.test_each(self)
     end
   end
 end
