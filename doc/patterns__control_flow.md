@@ -17,7 +17,7 @@ This is a self-evaluation. For an authoritative source, see the [workflow patter
 * [Simple Merge](#bcf-simple-merge)
 
 ### Advanced Branching and Synchronization Patterns
-* Multi-Choice
+* [Multi-Choice](#abs-multi-choice)
 * Structured Synchronizing Merge
 * Multi-Merge
 * Structured Discriminator
@@ -144,15 +144,34 @@ The [case](procedures/case.md) and [match](procedures/match.md) are the other tw
 <!-- --------------------------------------------------------------------- -->
 ## Advanced Branching and Synchronization Patterns
 
+### Multi-Choice
+<a id="abs-multi-choice" />[concurrence](procedures/concurrence.md) and [if](procedures/if.md) can be combined to support this workflow control pattern.
+
+```python
+sequence
+  # ...
+  concurrence
+    if f.traffic or f.crime
+      task "despatch police"
+    if f.fire
+      task "despatch fire engine and ambulance"
+    if f.wounded
+      task "despatch ambulance"
+  # ...
+```
+
+The concurrence may result in 0 to 3 tasks being "emitted", in case of 0, the flow will immediately resume after the concurrence. Else, the flow will wait until the 1 to 3 tasks have completed.
+
+[wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp6.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp6_animation.php) | [top](#top)
+
 <!-- --------------------------------------------------------------------- -->
 ## Multiple Instance Patterns
 
 <!-- --------------------------------------------------------------------- -->
 ## State-based Patterns
 
-<a id="sb-milestone" />
 ### Milestone
-A task is only enabled when in a specific state (typically a parallel branch).
+<a id="sb-milestone" />A task is only enabled when in a specific state (typically a parallel branch).
 
 Flor's workflow definition might be paraphrased as: "E is tasked only if the execution has the tag 'bravo'":
 ```python
