@@ -150,7 +150,8 @@ The [case](procedures/case.md) and [match](procedures/match.md) are the other tw
 <!-- --------------------------------------------------------------------- -->
 ## State-based Patterns
 
-### Milestone<a id="sb-milestone" />
+<a id="sb-milestone" />
+### Milestone
 A task is only enabled when in a specific state (typically a parallel branch).
 
 Flor's workflow definition might be paraphrased as: "E is tasked only if the execution has the tag 'bravo'":
