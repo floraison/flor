@@ -17,31 +17,56 @@ This is a self-evaluation. For an authoritative source, see the [workflow patter
 * [Simple Merge](#bcf-simple-merge)
 
 ### Advanced Branching and Synchronization Patterns
-* multi-choice
-* structured synchronizing merge
-* multi-merge
-* structured discriminator
-* Structural Patterns
-* arbitrary cycles
-* implicit termination
+* Multi-Choice
+* Structured Synchronizing Merge
+* Multi-Merge
+* Structured Discriminator
+* Blocking Discriminator
+* Cancelling Discriminator
+* Structured Partial Join
+* Blocking Partial Join
+* Cancelling Partial Join
+* Generalised AND-Join
+* Local Synchronizing Merge
+* General Synchronizing Merge
+* Thread Merge
+* Thread Split
 
 ### Multiple Instance Patterns
-* multiple instances without synchronization
-* multiple instances with a priori design time knowledge
-* multiple instances with a priori run time knowledge
-* multiple instances without a priori run time knowledge
+* Multiple Instances without Synchronization
+* Multiple Instances with a Priori Design-Time Knowledge
+* Multiple Instances with a Priori Run-Time Knowledge
+* Multiple Instances without a Priori Run-Time Knowledge
+* Static Partial Join for Multiple Instances
+* Cancelling Partial Join for Multiple Instances
+* Dynamic Partial Join for Multiple Instances
 
 ### State-based Patterns
-* deferred choice
-* interleaved parallel routing
+* Deferred Choice
+* Interleaved Parallel Routing
 * [Milestone](#sb-milestone)
+* Critical Section
+* Interleaved Routing
 
 ### Cancellation Patterns
-* cancel task
-* cancel case
+* Cancel Task
+* Cancel Case
+* Cancel Region
+* Cancel Multiple Instance Activity
+* Complete Multiple Instance Activity
 
-### New Control Flow Patterns
-(coming soon)
+### Iteration Patterns
+* Arbitrary Cycles
+* Structured Loop
+* Recursion
+
+### Termination Patterns
+* Implicit Termination
+* Explicit Termination
+
+### Trigger Patterns
+* Transient Trigger
+* Persistent Trigger
 
 <!-- --------------------------------------------------------------------- -->
 ## Basic Control Flow Patterns
@@ -51,7 +76,7 @@ This is a self-evaluation. For an authoritative source, see the [workflow patter
 
 Use the [sequence](procedures/sequence.md) or [cursor](procedures/cursor.md).
 
-```
+```python
 sequence
   task 'alpha'
   task 'bravo'
@@ -62,7 +87,7 @@ sequence
 ### Parallel Split
 <a id="bcf-parallel-split" />The [concurrence](procedures/concurrence.md) is the main tool for the parallel split.
 
-```
+```python
 concurrence
   #
   # alpha and bravo will be tasked concurrently
@@ -76,7 +101,7 @@ concurrence
 ### Synchronization
 <a id="bcf-synchronization" />The [concurrence](procedures/concurrence.md) by waiting (by default) for all its children to reply is the simplest flor synchronization tool.
 
-```
+```python
 sequence
   task 'alpha'
   concurrence
@@ -90,7 +115,7 @@ sequence
 ### Exclusive Choice
 <a id="bcf-exclusive-choice" />The simplest flor procedure to use to support this pattern is [if](procedures/if.md).
 
-```
+```python
   sequence
 
     # ...
@@ -126,19 +151,19 @@ The [case](procedures/case.md) and [match](procedures/match.md) are the other tw
 ## State-based Patterns
 
 ### Milestone
-A task is only enabled when in a specific state (typically a parallel branch).
+<a id="sb-milestone" />A task is only enabled when in a specific state (typically a parallel branch).
 
 Flor's workflow definition might be paraphrased as: "E is tasked only if the execution has the tag 'bravo'":
-```
-  concurrence
-    sequence
-      task 'A'
-      task 'B' tag: 'bravo'
-      task 'C'
-    sequence
-      task 'D'
-      task 'E' if tag.bravo
-      task 'F'
+```python
+concurrence
+  sequence
+    task 'A'
+    task 'B' tag: 'bravo'
+    task 'C'
+  sequence
+    task 'D'
+    task 'E' if tag.bravo
+    task 'F'
 ```
 
 The predecessor to Flor (Ruote) was proposing a syntax a bit more [convoluted](http://ruote.io/patterns.html#sa_milestone).
@@ -149,5 +174,11 @@ The predecessor to Flor (Ruote) was proposing a syntax a bit more [convoluted](h
 ## Cancellation Patterns
 
 <!-- --------------------------------------------------------------------- -->
-## New Control Flow Patterns
+## Iteration Patterns
+
+<!-- --------------------------------------------------------------------- -->
+## Termination Patterns
+
+<!-- --------------------------------------------------------------------- -->
+## Trigger Patterns
 
