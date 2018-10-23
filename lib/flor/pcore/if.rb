@@ -37,6 +37,15 @@ class Flor::Pro::If < Flor::Procedure
   #   a > b
   #   task 'bob'
   # ```
+  #
+  # ## else-if
+  #
+  # Currently, if an "else if" is needed, it's better to use [cond](cond.md).
+  #
+  #
+  # ## see also
+  #
+  # Cond, case, match.
 
   names %w[ if unless ife unlesse ]
     #

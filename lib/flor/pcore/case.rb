@@ -87,7 +87,7 @@ class Flor::Pro::Case < Flor::Procedure
   #
   # ## see also
   #
-  # Match.
+  # Match, cond, if.
 
   name 'case'
 

@@ -38,6 +38,15 @@ if
   task 'bob'
 ```
 
+## else-if
+
+Currently, if an "else if" is needed, it's better to use [cond](cond.md).
+
+
+## see also
+
+[Cond](cond.md), [case](case.md), [match](match.md).
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/if.rb)
 * [if spec](https://github.com/floraison/flor/tree/master/spec/pcore/if_spec.rb)

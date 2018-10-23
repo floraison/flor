@@ -187,7 +187,7 @@ class Flor::Pro::Match < Flor::Pro::Case
   #
   # ## see also
   #
-  # Case.
+  # Case, if, cond.
 
   name 'match'
 

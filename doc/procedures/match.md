@@ -187,7 +187,7 @@ conditional arguments.
 
 ## see also
 
-[Case](case.md).
+[Case](case.md), [if](if.md), [cond](cond.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/match.rb)

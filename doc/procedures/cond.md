@@ -35,9 +35,27 @@ cond
   else | "ten or bigger"
 ```
 
+Please note that, as for [if](if.md), composite consequences have to be
+"packaged":
+```
+cond
+  a < 4
+    sequence
+      do_this
+      do_that
+  a < 7
+    concurrence
+      do_this
+      do_that
+  else
+    sequence
+      do_this 'default'
+      do_that 'default'
+```
+
 ## see also
 
-[If](if.md), [match](match.md).
+[If](if.md), [match](match.md), [case](case.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/cond.rb)

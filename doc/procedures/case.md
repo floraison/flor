@@ -87,7 +87,7 @@ case 'ovomolzin'
 
 ## see also
 
-[Match](match.md).
+[Match](match.md), [cond](cond.md), [if](if.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/case.rb)

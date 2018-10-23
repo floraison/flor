@@ -35,9 +35,27 @@ class Flor::Pro::Cond < Flor::Procedure
   #   else | "ten or bigger"
   # ```
   #
+  # Please note that, as for [if](if.md), composite consequences have to be
+  # "packaged":
+  # ```
+  # cond
+  #   a < 4
+  #     sequence
+  #       do_this
+  #       do_that
+  #   a < 7
+  #     concurrence
+  #       do_this
+  #       do_that
+  #   else
+  #     sequence
+  #       do_this 'default'
+  #       do_that 'default'
+  # ```
+  #
   # ## see also
   #
-  # If, match.
+  # If, match, case.
 
   name 'cond'
 
