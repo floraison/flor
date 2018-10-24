@@ -101,7 +101,7 @@ describe Flor do
           12345.67,
           "the long chemin est un chemin d'automne au travers de l'île",
           'this is a "double-quote"',
-          'already \" escaped'
+          "already \" escaped"
         ],
         'stuff' => 'nada',
         "'branding'" => 'fail',
