@@ -7,6 +7,9 @@ This document describe Flor implementation for each of the [Control-Flow Pattern
 
 This is a self-evaluation. For an authoritative source, see the [workflow patterns website](http://www.workflowpatterns.com/) and its [mailing list](http://groups.google.com/group/workflow-patterns).
 
+If you disagree with a solution proposed here, you are much welcome to [raise an issue](https://github.com/floraison/flor/issues) pointing at why the solution doesn't match and potentially include a better solution.
+
+
 ## index
 
 ### Basic Control Flow Patterns
@@ -18,7 +21,7 @@ This is a self-evaluation. For an authoritative source, see the [workflow patter
 
 ### Advanced Branching and Synchronization Patterns
 * [Multi-Choice](#abs-multi-choice)
-* Structured Synchronizing Merge
+* [Structured Synchronizing Merge](#abs-structured-synchronizing-merge)
 * Multi-Merge
 * Structured Discriminator
 * Blocking Discriminator
@@ -163,6 +166,25 @@ sequence
 The concurrence may result in 0 to 3 tasks being "emitted", in case of 0, the flow will immediately resume after the concurrence. Else, the flow will wait until the 1 to 3 tasks have completed.
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp6.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp6_animation.php) | [top](#top)
+
+### Structured Synchronizing Merge
+<a id="abs-structured-synchronizing-merge" />The [explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp7.php) for this pattern sports an example stating:
+
+> Depending on the type of emergency, either or both of the despatch-police and despatch-ambulance tasks are initiated simultaneously. When all emergency vehicles arrive at the accident, the transfer-patient task commences.
+
+Here is a naive flor translation (see previous pattern for its origin):
+```python
+sequence
+  # ...
+  concurrence
+    task "despatch police" if f.traffic or f.crime
+    task "despatch ambulance" if f.wounded
+  task "transfer-patient"
+  # ...
+```
+The [concurrence](procedures/concurrence.md) procedure, by default, waits for all its children to respond before ending and replying to its parent procedure (here a [sequence](procecures/sequence.md). The sequence then hands the flow to the `task "transfer-patient"` followup.
+
+[wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp7.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp7_animation.php) | [top](#top)
 
 <!-- --------------------------------------------------------------------- -->
 ## Multiple Instance Patterns
