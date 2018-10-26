@@ -22,7 +22,7 @@ If you disagree with a solution proposed here, you are much welcome to [raise an
 ### Advanced Branching and Synchronization Patterns
 * [Multi-Choice](#abs-multi-choice)
 * [Structured Synchronizing Merge](#abs-structured-synchronizing-merge)
-* Multi-Merge
+* [Multi-Merge](#abs-multi-merge)
 * Structured Discriminator
 * Blocking Discriminator
 * Cancelling Discriminator
@@ -185,6 +185,27 @@ sequence
 The [concurrence](procedures/concurrence.md) procedure, by default, waits for all its children to respond before ending and replying to its parent procedure (here a [sequence](procecures/sequence.md). The sequence then hands the flow to the `task "transfer-patient"` followup.
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp7.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp7_animation.php) | [top](#top)
+
+### Multi-Merge
+<a id="abs-multi-merge" />Here is the given example for this merge:
+
+> The lay_foundations, order_materials and book_labourer tasks occur in parallel as separate process branches. After each of them completes the quality_review task is run before that branch of the process finishes.
+
+Here is a naive flor translation (tasks are expressed directly, so "lay_foundations" could refer on the tasker "lay_foundations" or the function "lay_foundations", depending on your setting:
+```python
+sequence
+  # ...
+  concurrence
+    lay_foundations _
+    order_materials _
+    book_labourer _
+  quality_review _
+  # ...
+```
+
+TODO: alternatives...
+
+[wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp8.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp8_animation.php) | [top](#top)
 
 <!-- --------------------------------------------------------------------- -->
 ## Multiple Instance Patterns
