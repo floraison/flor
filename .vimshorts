@@ -4,6 +4,8 @@
 lib/flor/pcore/
 lib/flor/punit/
 lib/flor/migrations/
+lib/flor/core/procedure.rb
+lib/flor/core/executor.rb
 spec/pcore/
 spec/punit/
 doc/
