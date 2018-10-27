@@ -286,10 +286,10 @@ module Flor
 
     def leave_node(message)
 
+      return [] if message['flavour'] == 'flank'
+
       fnid = message['from']; return [] unless fnid
       fnode = @execution['nodes'][fnid]; return [] unless fnode
-
-      return [] if message['flavour'] == 'flank'
 
       remove_node(message, fnode) +
       leave_tags(message, fnode)
