@@ -41,7 +41,7 @@ module Flor
       a << " #{_c.lg}#{fla}#{_c.dg}" if fla
 
       st = nd && nd['status'].last
-      a << " #{_c.dim}#{_c.lg}#{st['status']}:#{st['flavour']}#{_c.rs}#{_c.dg}" \
+      a << " #{_c.dim}#{_c.lg}#{st['status']}:#{st['flavour']}#{_c.rs}#{_c.dg}"\
         if st && st['status']
 
       t = m['tree']
@@ -155,11 +155,14 @@ module Flor
       c = t1.is_a?(Array) ? '' : " #{_c.yl}#{t1}"
       l = " #{_c.dg}L#{t2}"
 
-      o.puts "#{ind}#{_c.dg}+--- #{opts[:title]}#{_c.rs}" if headers && nid == '0'
+      o.puts "#{ind}#{_c.dg}+--- #{opts[:title]}#{_c.rs}" \
+        if headers && nid == '0'
       o.puts "#{ind}#{_c.dg}| #{nid} #{h}#{c}#{l}#{_c.rs}"
       t1.each_with_index { |ct, i|
-        o.puts tree_to_s(ct, Flor.child_nid(nid, i), opts) } if t1.is_a?(Array)
-      o.puts "#{ind}#{_c.dg}.#{_c.rs}" if headers && nid == '0'
+        o.puts tree_to_s(ct, Flor.child_nid(nid, i), opts) } \
+          if t1.is_a?(Array)
+      o.puts "#{ind}#{_c.dg}.#{_c.rs}" \
+        if headers && nid == '0'
 
       o.string
     end
