@@ -127,14 +127,11 @@ module Flor
       s << _c.dg
       s << "    /--- #{_c.lg}run starts#{_c.dg} "
       s << "#{executor.class} #{executor.object_id} #{execution['exid']}"
-      s << "\n    |   "
-      s << { thread: Thread.current.object_id }.inspect
-      s << "\n    |   "
-      s << {
+      s << "\n    |   "; s << Flor.to_dnc(thread: Thread.current.object_id)
+      s << "\n    |   "; s << Flor.to_dnc(
         counters: execution['counters'],
         nodes: execution['nodes'].size,
-        execution_size: execution['size']
-      }.inspect
+        execution_size: execution['size'])
       s << _c.rs
 
       @out.puts(s.string)
@@ -152,23 +149,20 @@ module Flor
 
       s << _c.dg
       s << "    |   run ends #{self.class} #{self.object_id} #{exid}"
-      s << "\n    |   "; s << { started: tstamp, took: duration }.inspect
-      s << "\n    |   "; s << {
+      #s << "\n    |   "; s << Flor.to_dnc(started: tstamp, took: duration)
+      s << "\n    |   "; s << Flor.to_dnc(started: tstamp, took: duration)
+      s << "\n    |   "; s << Flor.to_dnc(
         thread: Thread.current.object_id,
         consumed: executor.consumed.count,
-        traps: executor.traps.count,
-      }.inspect
-      s << "\n    |   "; s << {
+        traps: executor.traps.count)
+      s << "\n    |   "; s << Flor.to_dnc(
         #own_traps: @traps.reject { |t| t.texid == nil }.size, # FIXME
         counters: execution['counters'],
         nodes: execution['nodes'].size,
-        execution_size: execution['size']
-      }.inspect
+        execution_size: execution['size'])
       if @unit.archive
         s << "\n    |   "
-        s << {
-          archive_size: (@unit.archive[exid].size rescue '???')
-        }.inspect
+        s << Flor.to_dnc(archive_size: (@unit.archive[exid].size rescue '???'))
       end
       s << "\n    \\--- ."
       s << _c.rs

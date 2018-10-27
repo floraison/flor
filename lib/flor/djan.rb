@@ -27,6 +27,13 @@ module Flor
     out.string
   end
 
+  # to_d, but without colours
+  #
+  def self.to_dnc(x)
+
+    to_d(x, colours: false)
+  end
+
   module Djan
     extend self
 
