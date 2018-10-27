@@ -1976,6 +1976,28 @@ parses to
     ], 2 ]
   ], 0 ]
 ```
+---
+
+(pending)
+```flor
+  sequence
+    flank \ sequence \
+      a
+      b
+    c
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ 'flank', [
+      [ 'sequence', [
+        [ 'a', [], 3 ],
+        [ 'b', [], 4 ]
+      ], 2 ]
+    ], 2 ],
+    [ 'c', [], 5 ]
+  ], 1 ]
+```
 
 
 ## semicolon and pipe
