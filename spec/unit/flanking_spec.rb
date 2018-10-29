@@ -47,7 +47,8 @@ describe 'Flor unit' do
 
       expect(n_0_0).not_to eq(nil)
       expect(n_0_0['parent']).to eq('0')
-      expect(n_0_0['noreply']).to eq(true)
+      expect(n_0_0).to have_key('replyto')
+      expect(n_0_0['replyto']).to eq(nil)
       expect(n_0_0['tree'][0]).to eq('sequence')
       expect(n_0_0['tree'][1][0]).to eq([ '_att', [ [ 'flank', [], 3 ] ], 3 ])
 

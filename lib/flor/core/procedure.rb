@@ -112,7 +112,7 @@ class Flor::Procedure < Flor::Node
   def flank
 
     @node['tree'] = Flor.dup(tree)
-    @node['noreply'] = true
+    @node['replyto'] = nil
 
     wrap('nid' => parent, 'flavour' => 'flank')
   end
@@ -546,8 +546,16 @@ class Flor::Procedure < Flor::Node
     m = {}
     m['point'] = 'receive'
     m['exid'] = exid
-    m['nid'] = @node['noreply'] ? nil : parent
     m['from'] = nid
+
+    m['nid'] = # what node should receive this reply?
+      if @node['noreply'] # for backward compatibility 2018-10-29
+        nil
+      elsif @node.has_key?('replyto')
+        @node['replyto'] # nil or something like '0_1' or '0_2-4'
+      else
+        parent
+      end
 
     m['sm'] = @message['m']
 

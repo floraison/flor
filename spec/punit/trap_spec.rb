@@ -56,7 +56,9 @@ describe 'Flor punit' do
 
       expect(n_0_0['status'].last['status']).to eq(nil) # open
       expect(n_0_0['parent']).to eq('0')
-      expect(n_0_0['noreply']).to eq(true) # since it's flanking
+
+      expect(n_0_0).to have_key('replyto') # since it's flanking
+      expect(n_0_0['replyto']).to eq(nil) # since it's flanking
 
       # check trap record
 

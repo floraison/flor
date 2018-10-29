@@ -243,10 +243,11 @@ module Flor
         t = Flor.truncate_string(t, 42)
       end
 
-      h = {}
-      %w[ parent cnid noreply dbg ].each do |k|
-        h[k] = n[k] if n.has_key?(k)
-      end
+      h =
+        n.select { |k, _| [
+          'parent' 'cnid' 'dbg' 'replyto',
+          'noreply' # "for backward compatibility
+        ].include?(k) }
 
       #dbg = n['dbg'] ? "dbg:#{n['dbg']}" : nil
       #nr = n.has_key?('noreply') ? "nr:#{n['noreply']}" : nil
