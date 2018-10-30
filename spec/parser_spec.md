@@ -1982,7 +1982,7 @@ parses to
 ```flor
   sequence
     flank \ sequence \
-      a
+      a; # <-- awkward to put a semicolon after each of those...
       b
     c
 ```
