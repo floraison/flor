@@ -17,11 +17,8 @@ class Flor::Pro::Fork < Flor::Procedure
     @node['tree'] = Flor.dup(tree)
     @node['replyto'] = nil
 
-    ms = super
-    nid = ms.any? ? ms.first['nid'] : nil
-
     wrap('flavour' => 'fork', 'nid' => parent, 'ret' => nid) +
-    ms
+    super
   end
 end
 

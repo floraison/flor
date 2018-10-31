@@ -52,7 +52,7 @@ describe 'Flor punit' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
-      expect(r['payload']['forked']).to eq('0_0_0_1_0')
+      expect(r['payload']['forked']).to eq('0_0_0_1')
 
       expect(
         @unit.traces.collect(&:text).join(' ')
