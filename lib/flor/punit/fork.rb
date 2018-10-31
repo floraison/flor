@@ -19,7 +19,6 @@ class Flor::Pro::Fork < Flor::Procedure
 
     ms = super
     nid = ms.any? ? ms.first['nid'] : nil
-p nid
 
     wrap('flavour' => 'fork', 'nid' => parent, 'ret' => nid) +
     ms

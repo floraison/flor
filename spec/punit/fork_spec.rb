@@ -45,14 +45,14 @@ describe 'Flor punit' do
               fork
                 _skip 4
                 trace 'a'
-              trace 'b'
+            trace 'b'
           trace 'c'
         },
         wait: true)
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
-      #expect(r['payload']['forked']).to eq('0_0_1')
+      expect(r['payload']['forked']).to eq('0_0_0_1_0')
 
       expect(
         @unit.traces.collect(&:text).join(' ')
