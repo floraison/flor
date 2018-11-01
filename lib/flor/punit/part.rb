@@ -1,8 +1,7 @@
 
 class Flor::Pro::Part < Flor::Procedure
 
-  name 'part'
-  #names %w[ part flunk flank norep ]
+  names %w[ part flunk flank norep ]
 
   #                  +-------------------+--------------------+
   #                  | replies to parent | cancellable        |
@@ -20,7 +19,19 @@ class Flor::Pro::Part < Flor::Procedure
     @node['tree'] = Flor.dup(tree)
     @node['replyto'] = nil
 
-    wrap('flavour' => 'fork', 'nid' => parent, 'ret' => nid) +
+    rep, can =
+      case heap
+      when 'part' then [ true, false ]
+      when 'flunk' then [ false, false ]
+      when 'flank' then [ true, true ]
+      else [ false, true ] # when 'norep'
+      end
+#p att('reply', 'rep', 'r')
+#p att('cancellable', 'can', 'c')
+
+    fla = can ? 'flank' : 'part'
+
+    (rep ? wrap('flavour' => fla, 'nid' => parent, 'ret' => nid) : []) +
     super
   end
 end

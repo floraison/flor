@@ -286,7 +286,7 @@ module Flor
 
     def leave_node(message)
 
-      return [] if %w[ flank fork ].include?(message['flavour'])
+      return [] if %w[ flank part ].include?(message['flavour'])
 
       fnid = message['from']; return [] unless fnid
       fnode = @execution['nodes'][fnid]; return [] unless fnode
