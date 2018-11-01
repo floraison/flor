@@ -25,24 +25,15 @@ describe 'Flor punit' do
     @unit.shutdown
   end
 
-  describe 'fork' do
+  describe 'part' do
 
-    #                         +-------------------+--------------------+
-    #                         | replies to parent | cancellable        |
-    # +-----------------------+-------------------+--------------------+
-    # | fork, forget, fire    | immediately       | no (not reachable) |
-    # | lose                  | never             | yes                |
-    # | flank (o)             | immediately       | yes                |
-    # | xxx                   | never             | no (not reachable) |
-    # +-----------------------+-------------------+--------------------+
-
-    it 'forks' do
+    it 'parts' do
 
       r = @unit.launch(
         %q{
           sequence
-            set f.forked
-              fork
+            set f.parted
+              part
                 _skip 4
                 trace 'a'
             trace 'b'
@@ -52,7 +43,7 @@ describe 'Flor punit' do
 
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq(nil)
-      expect(r['payload']['forked']).to eq('0_0_0_1')
+      expect(r['payload']['parted']).to eq('0_0_0_1')
 
       expect(
         @unit.traces.collect(&:text).join(' ')
@@ -60,6 +51,9 @@ describe 'Flor punit' do
         'b c a'
       )
     end
+
+    it 'may be cancelled explicitely'
+    it 'does not get cancelled when its parent gets cancelled'
   end
 end
 
