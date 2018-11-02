@@ -1,18 +1,20 @@
 
 class Flor::Pro::Part < Flor::Procedure
 
-  names %w[ part flunk flank norep ]
+  names %w[ part flank ]
 
-  #                  +-------------------+--------------------+
-  #                  | replies to parent | cancellable        |
-  # +-------+--------+-------------------+--------------------+
-  # | fork  | part   | immediately       | no (not reachable) |
-  # |       | flunk  | never             | no (not reachable) |
-  # | flank | flank  | immediately       | yes                |
-  # | lose  | norep  | never             | yes                |
-  # +-------+--------+-------------------+--------------------+
+  #                              +-------------------+--------------------+
+  #   ruote           flor       | replies to parent | cancellable        |
+  # +-------+-------+------------+-------------------+--------------------+
+  # | fork  | part  | part       | immediately       | no (not reachable) |
+  # |       | flunk |   r: false | never             | no (not reachable) |
+  # | flank | flank | flank      | immediately       | yes                |
+  # | lose  | norep |   r: false | never             | yes                |
+  # +-------+-------+------------+-------------------+--------------------+
   #
   # reply/r: false, cancellable/c: false
+  #
+  # to part, to flank, the subject is the diverging branch
 
   def receive_last_att
 
@@ -20,12 +22,9 @@ class Flor::Pro::Part < Flor::Procedure
     @node['replyto'] = nil
 
     rep, can =
-      case heap
-      when 'part' then [ true, false ]
-      when 'flunk' then [ false, false ]
-      when 'flank' then [ true, true ]
-      else [ false, true ] # when 'norep'
-      end
+      heap == 'part' ?
+      [ true, false ] :
+      [ true, true ]
 #p att('reply', 'rep', 'r')
 #p att('cancellable', 'can', 'c')
 

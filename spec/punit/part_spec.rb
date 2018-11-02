@@ -25,14 +25,14 @@ describe 'Flor punit' do
     @unit.shutdown
   end
 
-  #                  +-------------------+--------------------+
-  #                  | replies to parent | cancellable        |
-  # +-------+--------+-------------------+--------------------+
-  # | fork  | part   | immediately       | no (not reachable) |
-  # |       | flunk  | never             | no (not reachable) |
-  # | flank | flank  | immediately       | yes                |
-  # | lose  | norep  | never             | yes                |
-  # +-------+--------+-------------------+--------------------+
+  #              +-------------------+--------------------+
+  #              | replies to parent | cancellable        |
+  # +------------+-------------------+--------------------+
+  # | part       | immediately       | no (not reachable) |
+  # |   r: false | never             | no (not reachable) |
+  # | flank      | immediately       | yes                |
+  # |   r: false | never             | yes                |
+  # +------------+-------------------+--------------------+
   #
   # reply/r: false, cancellable/c: false
 
@@ -67,14 +67,14 @@ describe 'Flor punit' do
     it 'does not get cancelled when its parent gets cancelled'
   end
 
-  describe 'flunk' do
+  describe 'part r:false' do
 
     it 'does not reply to its parent'# do
 #
 #      r = @unit.launch(
 #        %q{
 #          concurrence count: 1
-#            flunk
+#            part r: false
 #              _skip 4
 #              trace 'a'
 #            trace 'b'
