@@ -147,5 +147,54 @@ describe 'Flor unit' do
       end
     end
   end
+
+  describe 'sequence flank: {boolean}' do
+
+    it 'flanks when true' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            sequence flank: true
+              trace 'a'
+              _skip 1
+              trace 'b'
+            trace 'c'
+          trace 'd'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'c a d'
+      )
+    end
+
+    it 'does not flank when false' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            sequence flank: false
+              trace 'a'
+              _skip 1
+              trace 'b'
+            trace 'c'
+          trace 'd'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'a b c d'
+      )
+    end
+  end
 end
 
