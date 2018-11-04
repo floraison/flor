@@ -16,22 +16,38 @@ class Flor::Pro::Part < Flor::Procedure
   #
   # to part, to flank, the subject is the diverging branch
 
+  def pre_execute
+
+    @node['atts'] = []
+  end
+
   def receive_last_att
 
     @node['tree'] = Flor.dup(tree)
     @node['replyto'] = nil
 
-    rep, can =
-      heap == 'part' ?
-      [ true, false ] :
-      [ true, true ]
-#p att('reply', 'rep', 'r')
-#p att('cancellable', 'can', 'c')
+    rep = true
+    @node['can'] = heap != 'part'
 
-    fla = can ? 'flank' : 'part'
+    if (r = att('reply', 'rep', 'r')) != nil
+      rep = r
+    end
+    if (c = att('cancellable', 'can', 'c')) != nil
+      @node['can'] = c
+    end
+
+    fla = @node['can'] ? 'flank' : 'part'
 
     (rep ? wrap('flavour' => fla, 'nid' => parent, 'ret' => nid) : []) +
     super
+  end
+
+  def cancel
+
+    # if the node is cancellable, let the cancel messages flow
+    # else silence them
+
+    @node['can'] ? super : []
   end
 end
 

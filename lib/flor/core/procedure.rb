@@ -343,7 +343,7 @@ class Flor::Procedure < Flor::Node
     receive
   end
 
-  # The executor calls #do_receive, while most procedure implementations
+  # The executor calls #do_receive, while procedure implementations
   # override #receive...
   #
   def do_receive

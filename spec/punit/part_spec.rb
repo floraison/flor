@@ -67,34 +67,43 @@ describe 'Flor punit' do
     it 'does not get cancelled when its parent gets cancelled'
   end
 
-  describe 'part r:false' do
+  describe 'part r: false' do
 
-    it 'does not reply to its parent'# do
-#
-#      r = @unit.launch(
-#        %q{
-#          concurrence count: 1
-#            part r: false
-#              _skip 4
-#              trace 'a'
-#            trace 'b'
-#          trace 'c'
-#        },
-#        wait: true)
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['ret']).to eq(nil)
-#      expect(r['payload']['parted']).to eq('0_0_0_1')
-#
-#      expect(
-#        @unit.traces.collect(&:text).join(' ')
-#      ).to eq(
-#        'b c a'
-#      )
-#    end
+    it 'does not reply to its parent' do
+
+      r = @unit.launch(
+        %q{
+          concurrence expect: 1
+            part r: false
+              _skip 4
+              trace 'a'
+            trace 'b'
+          trace 'c'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'b c a'
+      )
+    end
 
     it 'may be cancelled explicitely'
     it 'does not get cancelled when its parent gets cancelled'
+  end
+
+  describe 'flank' do
+
+    it 'replies immediately to its parent'
+  end
+
+  describe 'flank r: false' do
+
+    it 'does not reply to its parent'
   end
 end
 
