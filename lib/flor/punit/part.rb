@@ -27,7 +27,7 @@ class Flor::Pro::Part < Flor::Procedure
     @node['replyto'] = nil
 
     rep = true
-    @node['can'] = heap != 'part'
+    @node['can'] = (heap == 'flank')
 
     if (r = att('reply', 'rep', 'r')) != nil
       rep = r
@@ -37,6 +37,7 @@ class Flor::Pro::Part < Flor::Procedure
     end
 
     fla = @node['can'] ? 'flank' : 'part'
+      # so it is possible to have `flank r: true c: false` (iow: `part`)...
 
     (rep ? wrap('flavour' => fla, 'nid' => parent, 'ret' => nid) : []) +
     super

@@ -14,7 +14,7 @@ describe 'Flor punit' do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf['unit'] = 'parttest'
-    #@unit.hooker.add('journal', Flor::Journal)
+    @unit.hooker.add('journal', Flor::Journal)
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
@@ -37,6 +37,39 @@ describe 'Flor punit' do
   # reply/r: false, cancellable/c: false
 
   describe 'part' do
+
+    it 'works' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            part
+              trace 'a'
+            trace 'b'
+          trace 'c'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('0_0_0')
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'a b c'
+      )
+
+      expect(
+        @unit.journal
+          .find { |m| m['point'] == 'ceased' && m['from'] == '0_0_0' }
+      ).not_to be_nil
+
+      expect(
+        @unit.journal
+          .find { |m| m['point'] == 'receive' && m['nid'] == '0_0' }
+          .fetch('flavour')
+      ).to eq('part')
+    end
 
     it 'replies immediately to its parent' do
 
@@ -61,6 +94,11 @@ describe 'Flor punit' do
       ).to eq(
         'b c a'
       )
+
+      expect(
+        @unit.journal
+          .find { |m| m['point'] == 'ceased' && m['from'] == '0_0_0_1' }
+      ).not_to be_nil
     end
 
     it 'may be cancelled explicitely'
@@ -98,12 +136,57 @@ describe 'Flor punit' do
 
   describe 'flank' do
 
-    it 'replies immediately to its parent'
+    it 'replies immediately to its parent' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            flank
+              trace 'a'
+              #_skip 1
+              trace 'b'
+            trace 'c'
+          trace 'd'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('0_0_0')
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'a c d'
+      )
+    end
   end
 
   describe 'flank r: false' do
 
-    it 'does not reply to its parent'
+    it 'does not reply to its parent' do
+
+      r = @unit.launch(
+        %q{
+          concurrence expect: 1
+            flank r: false
+              trace 'a'
+              trace 'b'
+            sequence
+              _skip 1
+              trace 'c'
+          trace 'd'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq(nil)
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'a c d'
+      )
+    end
   end
 end
 
