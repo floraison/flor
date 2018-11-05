@@ -31,6 +31,8 @@ class Flor::Pro::Att < Flor::Procedure
   #
   # execute phase
 
+  # For example, turns `sequence flank` into `sequence flank: true`
+  #
   def pre_execute_boolean_attribute
 
     return unless children.size == 1
