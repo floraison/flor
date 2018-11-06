@@ -173,17 +173,13 @@ module Flor
       node['tree'] = mt if mt && (mt != nt)
       tree = node['tree'] || nt
 
-      t0 = tree[0]
-      #t0 = (t0.is_a?(Array) && t0[0] == '_dqs') ? n.expand(t0[1]) : t0
-        # TODO remove me if unnecessary
-
-      node['heat0'] = tree[0]
+      node['heat0'] = t0 = tree[0]
       node['heat'] = heat = n.deref(t0)
       node['heap'] = heap = n.reheap(tree, heat)
 
       # "exceptions"
 
-      if heat == nil && tree[0].index('.') && tree[1].empty?
+      if heat == nil && t0.index('.') && tree[1].empty?
         #
         # a field reference that points to nothing returns null
 
@@ -224,7 +220,7 @@ module Flor
     def apply(node, message)
 
       heap =
-        if node['heat']
+        if node['heat'] # != nil ...
           node['heap']
         else
           node['failure'] ? '_err' : nil
