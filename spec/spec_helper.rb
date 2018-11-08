@@ -317,7 +317,7 @@ class Hash
           r = @executor.launch(k)
 
           expect(r['point']).to eq('terminated')
-          expect(r['payload']).to eq({ 'ret' => v })
+          expect(r['payload']['ret']).to eq(v)
         end
     end
   end

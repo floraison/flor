@@ -140,27 +140,21 @@ describe 'Flor core' do
 #      expect(r['payload']['ret']).to eq(nil)
 #    end
 
-    it 'yields the value for boolean variables'# do
+  # TODO bring me back!
+  #
+#    {
 #
-#      r =
-#        @executor.launch(%{
+#      'set a false; v.a' => false,
+#      'set a true; v.a' => true,
+#      'set a null; v.a' => nil,
+#      'set a false; a' => false,
+#      'set a true; a' => true,
+#      'set a null; a' => nil,
+#      'set a false; [ a ]' => [ false ],
+#      'set a true; [ a ]' => [ true ],
+#      'set a null; [ a ]' => [ nil ],
 #
-#          set a false
-#          set b 'B'
-#          set c true
-#
-#          set f.a a
-#          set f.b b
-#          set f.c c
-#          set f.d [ a b c ]
-#        })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['a']).to eq(false)
-#      expect(r['payload']['b']).to eq('B')
-#      expect(r['payload']['c']).to eq(true)
-#      expect(r['payload']['d']).to eq([ false, 'B', true ])
-#    end
+#    }.test_each(self)
   end
 
   describe 'a variable deep reference' do

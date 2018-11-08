@@ -152,6 +152,17 @@ describe 'Flor core' do
         'a', %w[ b c ], %w[ b d f ], %w[ b d ]
       ])
     end
+
+    {
+
+      'set f.a false; f.a' => false,
+      'set f.a true; f.a' => true,
+      'set f.a null; f.a' => nil,
+      'set f.a false; [ f.a ]' => [ false ],
+      'set f.a true; [ f.a ]' => [ true ],
+      'set f.a null; [ f.a ]' => [ nil ],
+
+    }.test_each(self)
   end
 end
 
