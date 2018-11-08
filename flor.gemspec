@@ -42,7 +42,7 @@ A Ruby workflow engine (ruote next generation)
   s.add_runtime_dependency 'raabro', '~> 1.1', '>= 1.1.5'
   #s.add_runtime_dependency 'rufus-lru', '~> 1.1'
   s.add_runtime_dependency 'fugit', '~> 1.1', '>= 1.1.5'
-  s.add_runtime_dependency 'dense', '~> 1.1', '>= 1.1.3'
+  s.add_runtime_dependency 'dense', '~> 1.1', '>= 1.1.4'
 
   s.add_runtime_dependency 'sequel', '~> 4'
 
