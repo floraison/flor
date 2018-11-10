@@ -51,6 +51,8 @@ class Flor::Pro::Att < Flor::Procedure
 
     return if t[1][1][1] == 0 # [ '_obj', 0, 123 ]
 
+    # add `quote: 'keys'` to the _obj so that they may be `k0:` or `'k0':`
+
     t = @node['tree'] = Flor.dup(t)
 
     t[1][1][1].unshift([
@@ -111,25 +113,32 @@ class Flor::Pro::Att < Flor::Procedure
   #
   def receive_vars
 
-    vars =
-      case (vs = payload['ret'])
-      when 'copy', '*' then copy_vars
-      when Array then wlist_vars(vs)
-      else vs
-      end
+    vs = payload['ret']
 
-    (parent_node['vars'] ||= {}).merge!(vars)
+    if vs.is_a?(Array)
+      key, list = vlist(vs) # 'vwlist' var white iist, 'vblist' black list
+      parent_node[key] = list
+    else
+      (parent_node['vars'] ||= {}).merge!(vdict(vs))
+    end
 
     wrap('ret' => @node['ret'])
   end
 
-  def copy_vars
+  def vdict(vs)
 
-    @executor.vars(nid)
-      # Returns a hash of all the vars known at point `nid` of the execution
+    case vs
+    when Hash
+      vs
+    when 'copy', '*'
+      @executor.vars(nid) # all the vars known at that point
+    else
+      fail Flor::FlorError.new(
+        "vars: doesn't know how to deal with #{vs.inspect}", self)
+    end
   end
 
-  def wlist_vars(vs)
+  def vlist(vs)
 
     mode =
       case vs.first
@@ -138,25 +147,10 @@ class Flor::Pro::Att < Flor::Procedure
       #else nil
       end
     vs.shift if mode
+    mode = mode || '+'
 
-    vs = vs.collect { |v| Flor.is_regex_tree?(v) ? Flor.to_regex(v) : v }
-    vars = copy_vars
-
-    if mode == '-'
-      Hash[vars.map { |k, v| [ k, var_match?(vs, k) ? nil : v ] }]
-    else
-      Hash[vars.map { |k, v| [ k, var_match?(vs, k) ? v : nil ] }]
-    end
-  end
-
-  def var_match?(vs, key)
-
-    vs.each do |v|
-      return true if v == key
-      return true if v.is_a?(Regexp) && v =~ key
-    end
-
-    false
+    [ mode == '+' ? 'vwlist' : 'vblist',
+      vs.collect { |v| Flor.is_regex_tree?(v) ? Flor.to_regex(v) : v } ]
   end
 
   def parent_is_trap?

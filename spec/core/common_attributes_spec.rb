@@ -163,6 +163,8 @@ describe 'Flor core' do
             0|A|B|C 1|A||
           ])
         end
+
+        it 'fails on composite keys' # TODO really?
       end
 
       context '"copy"' do

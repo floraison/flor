@@ -375,9 +375,27 @@ class Flor::Node
   #rescue TypeError => te # leave as is
   end
 
+  def var_match?(vs, key)
+
+    vs.each do |v|
+      return true if v == key
+      return true if v.is_a?(Regexp) && v =~ key
+      # TODO fun call
+    end
+
+    false
+  end
+
   def lookup_var_container(node, mod, key)
 
     return lookup_dvar_container(mod, key) if node == nil || mod == 'd'
+
+    if vwl = node['vwlist']
+      return lookup_dvar_container(mod, key) unless var_match?(vwl, key)
+    end
+    if vbl = node['vblist']
+      return lookup_dvar_container(mod, key) if var_match?(vbl, key)
+    end
 
     pnode = parent_node(node)
     vars = node['vars']
