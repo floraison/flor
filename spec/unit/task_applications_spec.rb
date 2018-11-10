@@ -489,7 +489,7 @@ describe 'Flor unit' do
         },
         wait: 'terminated')
 
-      sleep 0.350
+      #sleep 0.350
 
       expect(r['point']).to eq('terminated')
       expect(r['pr']).to eq(3)
@@ -499,6 +499,7 @@ describe 'Flor unit' do
         @unit.journal
           .each_with_index
           .collect { |m, i| "#{i}:#{m['point']}:#{m['from']}->#{m['nid']}" }
+          .slice(0, 37) # trim out the last 'end'
           .join("\n")
       ).to eq(%{
         0:execute:->0
@@ -538,7 +539,6 @@ describe 'Flor unit' do
         34:receive:0_0_0-1->0
         35:receive:0->
         36:terminated:0->
-        37:end:->
       }.ftrim)
     end
   end
