@@ -36,18 +36,11 @@ class Flor::Procedure < Flor::Node
 
     def make(executor, node, message)
 
-      heap = node['heat'] ? node['heap'] : nil
-
-      fail ArgumentError.new(
-        "cannot determine procedure " +
-        "#{{ heat: node['heat'], heap: node['heap'] }.inspect}"
-      ) unless heap
-
+      heap = node['heap']
       heac = self[heap]
 
-      fail NameError.new(
-        "unknown procedure #{heap.inspect}"
-      ) unless heac
+      fail NameError.new("unknown procedure #{heap.inspect}") \
+        unless heac
 
       heac.new(executor, node, message)
     end
