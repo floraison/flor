@@ -217,18 +217,13 @@ class Flor::Node
 
   def reheap(tree, heat)
 
-    if ! heat.is_a?(Array)
-      '_val'
-    elsif tree && tree[1] == []
-      '_val'
-    elsif heat[0] == '_proc'
-      heat[1]['proc']
-    elsif heat[0] == '_func'
-      'apply'
-    elsif heat[0] == '_tasker'
-      'task'
-    else
-      '_val'
+    case
+    when ! heat.is_a?(Array) then '_val'
+    when tree && tree[1] == [] then '_val'
+    when heat[0] == '_proc' then heat[1]['proc']
+    when heat[0] == '_func' then 'apply'
+    when heat[0] == '_tasker' then 'task'
+    else '_val'
     end
   end
 
