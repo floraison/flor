@@ -82,6 +82,8 @@ class Flor::Node
   def nid; @node['nid']; end
   def parent; @node['parent']; end
 
+  def child_id; Flor.child_id(@node['nid']); end
+
   def domain; Flor.domain(@execution['exid']); end
 
   def point; @message['point']; end
@@ -165,6 +167,8 @@ class Flor::Node
 
   def lookup_value(path)
 
+    original_path = path
+
     path =
       case path
       when '*' then [ path ]
@@ -190,29 +194,46 @@ class Flor::Node
     else
       lookup_var(@node, '', path[0], path[1..-1])
     end
+
+  rescue KeyError => ke
+
+    class << ke; attr_accessor :original_path, :work_path; end
+    ke.original_path = original_path
+    ke.work_path = path
+
+    raise
   end
 
+  # Returns the referenced tree.
+  # Returns nil if not found.
+  #
   def deref(s)
 
     v = lookup_value(s)
 
-    return v unless Flor.is_tree?(v)
-    return v unless v[1].is_a?(Hash)
+    if Flor.is_tree?(v)
 
-    return v unless %w[ _proc _tasker _func ].include?(v[0])
+      ref =
+        case v[0]
+        when '_func' then true
+        when '_proc' then v[1]['proc'] != s
+        when '_tasker' then v[1]['tasker'] != s
+        else false
+        end
 
-    ref =
-      case v[0]
-      when '_func' then true
-      when '_proc' then v[1]['proc'] != s
-      when '_tasker' then v[1]['tasker'] != s
-      else false
-      end
+      v[1]['oref'] ||= v[1]['ref'] if ref && v[1]['ref']
+      v[1]['ref'] = s if ref
 
-    v[1]['oref'] ||= v[1]['ref'] if ref && v[1]['ref']
-    v[1]['ref'] = s if ref
+      v
 
-    v
+    else
+
+      [ '_val', v, tree[2] ]
+    end
+
+  rescue KeyError => ke
+
+    nil
   end
 
   def reheap(tree, heat)
@@ -325,8 +346,11 @@ class Flor::Node
 
   def lookup_in_execution(path)
 
-    return Flor.domain(@execution['exid']) if path == %w[ domain ]
-    Dense.fetch(@execution, path)
+    if path == %w[ domain ]
+      Flor.domain(@execution['exid'])
+    else
+      Dense.fetch(@execution, path)
+    end
   end
 
   class PseudoVarContainer < Hash
@@ -359,8 +383,6 @@ class Flor::Node
     Dense.fetch(c, kp)
 
   rescue KeyError => ke
-
-    return nil if ke.miss[4].empty?
 
     m = "variable #{ke.miss[3].inspect} not found"
     m += " at #{Dense::Path.make(ke.miss[1]).to_s.inspect}" if ke.miss[1].any?
@@ -448,10 +470,6 @@ class Flor::Node
   def lookup_field(mod, key_and_path)
 
     Dense.fetch(payload.current, key_and_path)
-
-  rescue IndexError#, TypeError
-
-    nil
   end
 
   # Return true if the current @message matches on the given array of

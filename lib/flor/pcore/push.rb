@@ -67,7 +67,7 @@ class Flor::Pro::Push < Flor::Procedure
 
   def push(val)
 
-    arr = lookup_value(@node['arr'])
+    arr = lookup_value(@node['arr']) rescue nil
 
     fail Flor::FlorError.new(
       "cannot push to given target (#{arr.class})", self

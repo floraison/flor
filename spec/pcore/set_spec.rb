@@ -352,7 +352,7 @@ describe 'Flor procedures' do
 
         expect(r['point']).to eq('failed')
         expect(r['payload']['l']).to eq([ 1 ])
-        expect(r['error']['msg']).to eq("don't know how to apply \"a\"")
+        expect(r['error']['msg']).to eq("cannot find \"a\"")
       end
 
       it 'overwrites an already set a (locally)' do
@@ -406,7 +406,7 @@ describe 'Flor procedures' do
 
         expect(r['point']).to eq('failed')
         expect(r['payload']['l']).to eq([ 1 ])
-        expect(r['error']['msg']).to eq("don't know how to apply \"a\"")
+        expect(r['error']['msg']).to eq("cannot find \"a\"")
       end
 
       it 'overwrites an already set a (locally)' do

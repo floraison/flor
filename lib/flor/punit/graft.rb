@@ -65,8 +65,7 @@ class Flor::Pro::Graft < Flor::Procedure
     # graft subtree into parent node
 
     parent_tree = lookup_tree(parent)
-    cid = Flor.child_id(nid)
-    parent_tree[1][cid] = tree
+    parent_tree[1][child_id] = tree
 
     # re-apply self with subtree
 

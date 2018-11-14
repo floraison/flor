@@ -84,7 +84,7 @@ describe 'Flor procedures' do
         payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ 0, "don't know how to apply \"x\"" ])
+      expect(r['payload']['l']).to eq([ 0, "cannot find \"x\"" ])
     end
 
     it 'triggers on error (class criteria match)' do
@@ -108,7 +108,7 @@ describe 'Flor procedures' do
       ).to eq('terminated')
       expect(
         r['payload']['l']
-      ).to eq([ 0, [ 'F', "don't know how to apply \"x\"" ] ])
+      ).to eq([ 0, [ 'F', "cannot find \"x\"" ] ])
     end
 
     it 'triggers on error (string criteria match)' do
@@ -132,7 +132,7 @@ describe 'Flor procedures' do
       ).to eq('terminated')
       expect(
         r['payload']['l']
-      ).to eq([ 0, [ 'F', "don't know how to apply \"x\"" ] ])
+      ).to eq([ 0, [ 'F', "cannot find \"x\"" ] ])
     end
 
     it 'triggers on error (regex criteria match)' do
@@ -144,7 +144,7 @@ describe 'Flor procedures' do
           sequence
             set f.l []
             on_error r/failed to write/ (on_err 'w')  # no
-            on_error r/how to apply/ (on_err 'A')     # YES
+            on_error r/cannot find/ (on_err 'A')      # YES
             on_error (on_err '*')                     # no
             push f.l 0
             push f.l x                                # FAILS! ^^^
@@ -156,7 +156,7 @@ describe 'Flor procedures' do
       ).to eq('terminated')
       expect(
         r['payload']['l']
-      ).to eq([ 0, [ 'A', "don't know how to apply \"x\"" ] ])
+      ).to eq([ 0, [ 'A', "cannot find \"x\"" ] ])
     end
 
     it 'does not trigger on error (criteria mismatch)' do
@@ -174,7 +174,7 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('failed')
       expect(r['error']['kla']).to eq('Flor::FlorError')
-      expect(r['error']['msg']).to eq('don\'t know how to apply "x"')
+      expect(r['error']['msg']).to eq('cannot find "x"')
     end
   end
 end

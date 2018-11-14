@@ -122,39 +122,44 @@ describe 'Flor core' do
         })
 
       expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq("don't know how to apply \"key\"")
+      expect(r['error']['msg']).to eq("cannot find \"key\"")
     end
 
-      # not super sure about this one
-      # regular interpreters fail on this one
-      # limiting this behaviour to fields is better, probably
-      #
-    it 'yields null if referenced with a v. prefix'# do
-#
-#      r = @executor.launch(
-#        %q{
-#          v.a
-#        })
-#
-#      expect(r['point']).to eq('terminated')
-#      expect(r['payload']['ret']).to eq(nil)
-#    end
+    it 'fails if a missing variable is the head' do
 
-  # TODO bring me back!
-  #
-#    {
-#
-#      'set a false; v.a' => false,
-#      'set a true; v.a' => true,
-#      'set a null; v.a' => nil,
-#      'set a false; a' => false,
-#      'set a true; a' => true,
-#      'set a null; a' => nil,
-#      'set a false; [ a ]' => [ false ],
-#      'set a true; [ a ]' => [ true ],
-#      'set a null; [ a ]' => [ nil ],
-#
-#    }.test_each(self)
+      r = @executor.launch(
+        %q{
+          v.a _
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq("don't know how to apply \"v.a\"")
+    end
+
+    it 'fails if the variable is missing' do
+
+      r = @executor.launch(
+        %q{
+          v.a
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('variable "a" not found')
+    end
+
+    {
+
+      'set a false; v.a' => false,
+      'set a true; v.a' => true,
+      'set a null; v.a' => nil,
+      'set a false; a' => false,
+      'set a true; a' => true,
+      'set a null; a' => nil,
+      'set a false; [ a ]' => [ false ],
+      'set a true; [ a ]' => [ true ],
+      'set a null; [ a ]' => [ nil ],
+
+    }.test_each(self)
   end
 
   describe 'a variable deep reference' do

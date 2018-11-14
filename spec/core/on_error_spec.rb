@@ -40,7 +40,7 @@ describe 'Flor core' do
         payload: { 'l' => [] })
 
       expect(r['point']).to eq('failed')
-      expect(r['error']['msg']).to eq('don\'t know how to apply "nada"')
+      expect(r['error']['msg']).to eq('cannot find "nada"')
     end
 
     it 'triggers when a child has an error' do
@@ -55,7 +55,7 @@ describe 'Flor core' do
         payload: { 'l' => [] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ 0, "don't know how to apply \"x\"" ])
+      expect(r['payload']['l']).to eq([ 0, "cannot find \"x\"" ])
     end
 
     it 'triggers when it has an error' do
@@ -67,7 +67,7 @@ describe 'Flor core' do
         payload: { 'l' => [ -1 ] })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['l']).to eq([ -1, "don't know how to apply \"x\"" ])
+      expect(r['payload']['l']).to eq([ -1, "cannot find \"x\"" ])
     end
 
     it 'accepts the name of a function' do

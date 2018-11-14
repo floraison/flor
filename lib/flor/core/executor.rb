@@ -175,19 +175,21 @@ module Flor
 
       node['heat0'] = t0 = tree[0]
       node['heat'] = heat = n.deref(t0)
+
+      if heat == nil && ! message['accept_symbol']
+
+        node['heat'] = '(none)'
+
+        fail FlorError.new("cannot find #{t0.inspect}", n) if tree[1].empty?
+        fail FlorError.new("don't know how to apply #{t0.inspect}", n)
+# TODO how about _ref and letting that procedure fail
+      end
+
       node['heap'] = heap = n.reheap(tree, heat)
 
       # "exceptions"
 
-      if heat == nil && t0.index('.') && tree[1].empty?
-        #
-        # a field reference that points to nothing returns null
-
-        node['heat0'] = '_nul'
-        node['heat'] = '_nul'
-        node['heap'] = '_nul'
-
-      elsif message['accept_symbol'] && heat == nil
+      if heat == nil #&& message['accept_symbol']
         #
         # tag: et al
 
@@ -219,18 +221,7 @@ module Flor
 
     def apply(node, message)
 
-      heap =
-        if node['heat'] # != nil ...
-          node['heap']
-        else
-          node['failure'] ? '_err' : nil
-        end
-
-      if heap == nil
-        h0 = (message['__head'] || [])[0] || node['heat0']
-        return error_reply(
-          node, message, "don't know how to apply #{h0.inspect}")
-      end
+      heap = node['heap']
 
       heac = Flor::Procedure[heap]
       fail NameError.new("unknown procedure #{heap.inspect}") unless heac

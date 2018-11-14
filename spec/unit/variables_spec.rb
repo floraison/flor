@@ -61,7 +61,7 @@ describe 'Flor unit' do
           }, vdomain: false, domain: 'com.acme', wait: true)
 
         expect(r['point']).to eq('failed')
-        expect(r['error']['msg']).to eq("don't know how to apply \"company\"")
+        expect(r['error']['msg']).to eq("cannot find \"company\"")
       end
     end
 

@@ -91,8 +91,7 @@ describe 'Flor core' do
             payload: { 'l' => [] })
 
           expect(r['point']).to eq('failed')
-
-          expect(r['error']['msg']).to eq("don't know how to apply \"b\"")
+          expect(r['error']['msg']).to eq("cannot find \"b\"")
 
           expect(
             r['payload']['l']

@@ -75,7 +75,7 @@ describe 'Flor pcore' do
 
         expect(
           r['payload']['l']
-        ).to eq([ 0, '0_2_1', 'don\'t know how to apply "x"' ])
+        ).to eq([ 0, '0_2_1', 'cannot find "x"' ])
       end
 
       it 'works in conjunction with a cursor' do
@@ -177,7 +177,7 @@ describe 'Flor pcore' do
         expect(
           r['payload']['l']
         ).to eq(
-          [ 0, [ '0_3_1', 'don\'t know how to apply "x"' ] ]
+          [ 0, [ '0_3_1', 'cannot find "x"' ] ]
         )
       end
     end

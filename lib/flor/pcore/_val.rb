@@ -5,15 +5,20 @@ class Flor::Pro::Val < Flor::Procedure
 
   def wrap_reply
 
-    if node_open?
-
-      heat = @node['heat']
-      heat = nil if heat[0] == '_nul'
-
-      payload['ret'] = heat
-    end
+    payload['ret'] = tree_to_value(@node['heat']) \
+      if node_open?
 
     super
+  end
+
+  protected
+
+  def tree_to_value(t)
+
+    case t[0]
+    when '_func', '_proc', '_tasker' then t
+    else t[1]
+    end
   end
 end
 

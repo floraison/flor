@@ -140,8 +140,7 @@ class Flor::Pro::PatObj < Flor::Pro::PatContainer
   def lookup_and_quote_key(t)
 
     return t unless t[1] == []
-    #[ '_sqs', lookup(t[0], true) || t[0], t[2] ]
-    [ '_sqs', lookup_value(t[0]) || t[0], t[2] ]
+    [ '_sqs', (lookup_value(t[0]) rescue t[0]), t[2] ]
   end
 
   def sub_val(child_index)
