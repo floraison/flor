@@ -489,7 +489,7 @@ describe 'Flor unit' do
         },
         wait: 'terminated')
 
-      #sleep 0.350
+      sleep 0.350 # ensure the 'terminatd' gets logged in the journal
 
       expect(r['point']).to eq('terminated')
       expect(r['pr']).to eq(3)
