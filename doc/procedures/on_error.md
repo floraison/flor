@@ -16,7 +16,7 @@ sequence
   push f.l 1
 ```
 Where the field `l` ends up containing
-`[ 0, "don't know how to apply \"x\"" ]`.
+`[ 0, "cannot find \"x\"" ]`.
 
 ```
 set f.l []
