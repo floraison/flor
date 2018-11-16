@@ -136,6 +136,8 @@ module Flor
         message,
         "don't know how to apply #{message['tasker'].inspect}"
       ) if message['routed'] == false
+        #
+        # use an error message similar to what the core executor would emit
 
       @unit.ganger.task(self, message)
     end
