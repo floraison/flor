@@ -147,10 +147,21 @@ class Flor::Pro::Att < Flor::Procedure
       #else nil
       end
     vs.shift if mode
-    mode = mode || '+'
 
-    [ mode == '+' ? 'vwlist' : 'vblist',
-      vs.collect { |v| Flor.is_regex_tree?(v) ? Flor.to_regex(v) : v } ]
+    vs = vs
+      .collect { |v|
+        if Flor.is_regex_tree?(v)
+          Flor.to_regex(v)
+        else
+          fail Flor::FlorError.new(
+            "vars: is limited to 1st level, #{v.inspect} doesn't comply", self
+          ) if v.index('.')
+          v
+        end }
+
+    mode = (mode || '+') == '+' ? 'vwlist' : 'vblist'
+
+    [ mode, vs ]
   end
 
   def parent_is_trap?

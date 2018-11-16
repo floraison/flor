@@ -163,7 +163,24 @@ describe 'Flor core' do
           ])
         end
 
-        it 'fails on composite keys' # TODO really?
+        # Since the vars: attribute only cares about '1st level' vars
+        #
+        it 'fails on deep keys' do
+
+          r = @executor.launch(
+            %q{
+              sequence vars: [ 'a' 'b.c' 'd' ]
+                _
+            })
+
+          expect(r['point']).to eq('failed')
+
+          expect(
+            r['error']['msg']
+          ).to eq(
+            'vars: is limited to 1st level, "b.c" doesn\'t comply'
+          )
+        end
       end
 
       context '"copy"' do
