@@ -101,8 +101,64 @@ describe 'Flor punit' do
       ).not_to be_nil
     end
 
-    it 'may be cancelled explicitely'
-    it 'does not get cancelled when its parent gets cancelled'
+    it 'may be cancelled explicitely' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            trace 'main0'
+            set f.parted
+              part
+                trace 'parted0'
+                _skip 2
+                trace 'parted1'
+                _skip 5
+                trace 'parted2'
+            trace 'main1'
+            _skip 1
+            trace 'main2'
+            cancel f.parted
+          trace 'main3'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('0_0_1_1')
+      expect(r['payload']['parted']).to eq('0_0_1_1')
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'main0 parted0 main1 parted1 main2 main3'
+      )
+    end
+
+    it 'does not get cancelled when its parent gets cancelled' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            trace 'main0'
+            part
+              trace 'parted0'
+              _skip 10
+              trace 'parted1'
+            trace 'main1'
+            cancel '0_0'
+            trace 'main2'
+          trace 'main3'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('0_0')
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'main0 parted0 main1 main3 parted1'
+      )
+    end
   end
 
   describe 'part r: false' do

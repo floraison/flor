@@ -45,10 +45,19 @@ class Flor::Pro::Part < Flor::Procedure
 
   def cancel
 
-    # if the node is cancellable, let the cancel messages flow
-    # else silence them
+    if @node['can'] || from != parent
+      #
+      # if the node is cancellable or the cancel comes not from the parent
+      # the cancelling goes on...
+      #
+      super
 
-    @node['can'] ? super : []
+    else
+      #
+      # else the cancelling does not proceed further (down)
+      #
+      []
+    end
   end
 end
 
