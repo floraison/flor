@@ -5,6 +5,8 @@
 
 Read more at [attributes.md](attributes.md).
 
+Throughout documentation (and commit messages), attributes are suffixed with a colon, like in `vars:` while procedures are surrounded by double quotes, like in `"sequence"`, simply "sequence".
+
 ## branch
 
 TODO
@@ -201,6 +203,8 @@ sequence
 ```
 
 In this example, "sequence", "task" and "sleep" are procedures.
+
+Throughout documentation (and commit messages), attributes are suffixed with a colon, like in `vars:` while procedures are surrounded by double quotes, like in `"sequence"`, simply "sequence".
 
 ## run
 
