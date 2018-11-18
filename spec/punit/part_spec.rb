@@ -186,8 +186,8 @@ describe 'Flor punit' do
       )
     end
 
-    it 'may be cancelled explicitely'
-    it 'does not get cancelled when its parent gets cancelled'
+    #it 'may be cancelled explicitely'
+    #it 'does not get cancelled when its parent gets cancelled'
   end
 
   describe 'flank' do
@@ -234,7 +234,7 @@ describe 'Flor punit' do
         wait: true)
 
       expect(r['point']).to eq('terminated')
-      #expect(r['payload']['ret']).to eq('0_0_1_1')
+      expect(r['payload']['ret']).to eq('0_0_1')
 
       expect(
         @unit.traces.collect(&:text).join(' ')
@@ -243,7 +243,42 @@ describe 'Flor punit' do
       )
     end
 
-    it 'gets cancelled when its parent gets cancelled'
+    it 'gets cancelled when its parent gets cancelled' do
+
+      r = @unit.launch(
+        %q{
+          concurrence
+            sequence tag: 'seqa'
+              trace 'seqa0'
+              flank
+                trace 'flan0'
+                _skip 7
+                trace 'flan1'
+              trace 'seqa1'
+              _skip 10
+              trace 'seqa2'
+            sequence
+              trace 'seqb0'
+              _skip 10
+              trace 'seqb1'
+              cancel 'seqa'
+              trace 'seqb2'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['ret']).to eq('seqa')
+        #
+        # FIXME at some point "concurrence" merge vs cancelled children
+        #       might change...
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(%w[
+        seqb0 seqa0 flan0 seqa1 seqb1 seqb2
+      ].join(' '))
+    end
   end
 
   describe 'flank r: false' do
@@ -273,8 +308,8 @@ describe 'Flor punit' do
       )
     end
 
-    it 'may be cancelled explicitely'
-    it 'gets cancelled when its parent gets cancelled'
+    #it 'may be cancelled explicitely'
+    #it 'gets cancelled when its parent gets cancelled'
   end
 end
 
