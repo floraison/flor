@@ -215,6 +215,35 @@ describe 'Flor punit' do
         'a c d'
       )
     end
+
+    it 'may be cancelled explicitely' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            trace 'main0'
+            flank
+              trace 'flanked0'
+              _skip 1
+              trace 'flanked1'
+            trace 'main1'
+            cancel '0_0_1'
+            trace 'main2'
+          trace 'main3'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      #expect(r['payload']['ret']).to eq('0_0_1_1')
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'main0 flanked0 main1 main2 main3'
+      )
+    end
+
+    it 'gets cancelled when its parent gets cancelled'
   end
 
   describe 'flank r: false' do
@@ -243,6 +272,9 @@ describe 'Flor punit' do
         'a c d'
       )
     end
+
+    it 'may be cancelled explicitely'
+    it 'gets cancelled when its parent gets cancelled'
   end
 end
 
