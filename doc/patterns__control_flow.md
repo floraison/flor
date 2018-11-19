@@ -202,6 +202,7 @@ sequence
   quality_review _
   # ...
 ```
+FIXME: "this is naive, it's a "after all of them", not "after each of them"
 
 TODO: alternatives...
 
