@@ -99,7 +99,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
     @node['over'] ||= just_over
 
     @node['merged_payload'] ||= just_over ? invoke_merger : nil
-    rem = just_over ? (att(:remaining, :rem) || 'cancel') : nil
+    rem = just_over ? determine_remainder : nil
 
     cancel_children(rem) + reply_to_parent(rem)
   end
@@ -130,6 +130,11 @@ class Flor::Pro::Concurrence < Flor::Procedure
   end
 
   protected
+
+  def determine_remainder
+
+    att(:remaining, :rem) || 'cancel'
+  end
 
   def determine_receiver
 
