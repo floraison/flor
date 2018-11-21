@@ -297,6 +297,40 @@ ms-e3p3-end-
         ].join("\n"))
       end
     end
+
+    describe 'on_merge:' do
+
+      it 'hands each child reply to a function'# do
+#
+#        msg = @unit.launch(
+#          %q{
+#            #define m payload, rank, reply_order, reply_count
+#            define m from, replies
+#            concurrence on_merge: m
+#              a _
+#              b _
+#          },
+#          wait: true)
+#
+#        expect(msg['point']).to eq('terminated')
+#        #expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
+#      end
+    end
+
+    describe 'on merge' do
+
+      it 'hands each child reply to a block'
+    end
+
+    describe 'on_post_merge:' do
+
+      it 'runs a function after each merge'
+    end
+
+    describe 'on post_merge' do
+
+      it 'runs a block after each merge'
+    end
   end
 end
 
