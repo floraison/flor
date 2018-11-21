@@ -195,8 +195,6 @@ class Flor::Pro::Trap < Flor::Procedure
 
   def receive_non_att
 
-    return execute_child(@ncid) if children[@ncid]
-
     fun = @fcid > 0 ? payload['ret'] : nil
 
     points = att_a('point', 'points', nil)

@@ -179,6 +179,33 @@ describe 'Flor punit' do
       }.ftrim)
     end
 
+    it 'traps messages (one-liner)' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            trap 'terminated' (def msg \ trace "terminated(f:$(msg.from))")
+            trace "here($(node.nid))"
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      wait_until { @unit.traces.count > 1 }
+
+      expect(
+        @unit.traces.collect(&:text).join(' ')
+      ).to eq(
+        'here(0_1_0_0_1_0_0) terminated(f:0)'
+      )
+
+      ms = @unit.journal
+      m0 = ms.find { |m| m['point'] == 'terminated' }
+      m1 = ms.find { |m| m['point'] == 'trigger' }
+
+      expect(m1['sm']).to eq(m0['m'])
+    end
+
     it 'does not cancel its children' do
 
       r = @unit.launch(
