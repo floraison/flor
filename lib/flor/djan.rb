@@ -199,7 +199,8 @@ module Flor
         opts[:json] ||
         x.match(/\A[^: \b\f\n\r\t"',()\[\]{}#\\+%\/><^!=-]+\z/) == nil ||
         x.to_i.to_s == x ||
-        x.to_f.to_s == x
+        x.to_f.to_s == x ||
+        (opts[:str_escape] || []).include?(x)
       ) then
         s = x.inspect
         c_str(s, out, opts)

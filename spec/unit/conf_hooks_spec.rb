@@ -96,7 +96,10 @@ describe 'Flor unit' do
       ]
 
       File.open('envs/test/lib/hooks/dot.json', 'wb') do |f|
-        f.puts(Flor.to_djan(hooks, color: false))
+        #
+        # Ensure "return" is escaped!
+        #
+        f.puts(Flor.to_djan(hooks, color: false, str_escape: %w[ return ]))
       end
 
       @unit.launch(%q{ sequence \ task 'emil' }, wait: true)
@@ -192,7 +195,10 @@ describe 'Flor unit' do
       ]
 
       File.open('envs/test/lib/hooks/dot.json', 'wb') do |f|
-        f.puts(Flor.to_djan(hooks, color: false))
+        #
+        # Ensure "return" is escaped!
+        #
+        f.puts(Flor.to_djan(hooks, color: false, str_escape: %w[ return ]))
       end
 
       r = @unit.launch(%q{ sequence \ task 'emil' }, wait: 'terminated')
