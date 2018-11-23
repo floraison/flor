@@ -17,7 +17,8 @@ class Flor::Pro::Return < Flor::Procedure
         n = pn
       end
 
-    fail 'FIXME!' unless target
+    fail Flor::FlorError.new('"return" outside of function', self) \
+      unless target
 
     wrap_cancel('nid' => target, 'flavour' => 'return')
   end
