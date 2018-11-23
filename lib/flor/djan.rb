@@ -4,34 +4,39 @@ require 'io/console'
 
 module Flor
 
-  def self.to_djan(x, opts={}); to_d(x, opts); end
+  class << self
 
-  def self.to_d(x, opts={})
+    def to_djan(x, opts={})
 
-    out = StringIO.new
-    out.set_encoding('UTF-8')
+      out = StringIO.new
+      out.set_encoding('UTF-8')
 
-    opts[:c] = Flor.colours(opts)
+      opts[:c] = Flor.colours(opts)
 
-    if [ :console, true ].include?(opts[:width])
-      opts[:width] = IO.console.winsize[1] rescue 80
-    #elsif opts[:width].is_a?(Integer)
-      # let it go
-    elsif mw = (opts[:mw] || opts[:maxwidth] || opts[:max_width])
-      opts[:width] = [ (IO.console.winsize[1] rescue 80), mw ].min
+      if [ :console, true ].include?(opts[:width])
+        opts[:width] = IO.console.winsize[1] rescue 80
+      #elsif opts[:width].is_a?(Integer)
+        # let it go
+      elsif mw = (opts[:mw] || opts[:maxwidth] || opts[:max_width])
+        opts[:width] = [ (IO.console.winsize[1] rescue 80), mw ].min
+      end
+      opts[:indent] ||= 0 if opts[:width]
+
+      opts[:str_escape] ||= []
+
+      Djan.to_d(x, out, opts)
+
+      out.string
     end
-    opts[:indent] ||= 0 if opts[:width]
 
-    Djan.to_d(x, out, opts)
+    alias to_d to_djan
 
-    out.string
-  end
+    # to_d, but without colours
+    #
+    def to_dnc(x)
 
-  # to_d, but without colours
-  #
-  def self.to_dnc(x)
-
-    to_d(x, colours: false)
+      to_d(x, colours: false)
+    end
   end
 
   module Djan
@@ -200,7 +205,7 @@ module Flor
         x.match(/\A[^: \b\f\n\r\t"',()\[\]{}#\\+%\/><^!=-]+\z/) == nil ||
         x.to_i.to_s == x ||
         x.to_f.to_s == x ||
-        (opts[:str_escape] || []).include?(x)
+        opts[:str_escape].include?(x)
       ) then
         s = x.inspect
         c_str(s, out, opts)
