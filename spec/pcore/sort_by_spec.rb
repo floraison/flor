@@ -71,6 +71,25 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([
        { 'n' => 0 }, { 'n' => 1 }, { 'n' => 4 }, { 'n' => 7 } ])
     end
+
+    it 'fails if given no collection' do
+
+      r = @executor.launch( %q{
+        1
+        sort_by (def e \ e)
+      })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('collection not given to "sort_by"')
+    end
+
+    it 'fails if given no function' do
+
+      r = @executor.launch( %q{ sort_by [] })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('function not given to "sort_by"')
+    end
   end
 end
 
