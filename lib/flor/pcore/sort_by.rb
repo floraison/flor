@@ -12,7 +12,10 @@ class Flor::Pro::SortBy < Flor::Pro::Iterator
 
   def iterator_result
 
-    @node['res'].zip(@node['ocol'])
+    res = @node['res']
+    res = res.collect(&:to_s) if res.collect(&:class).uniq.count > 1
+
+    res.zip(@node['ocol'])
       .sort_by(&:first)
       .collect(&:last)
   end

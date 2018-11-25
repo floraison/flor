@@ -90,6 +90,49 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq('function not given to "sort_by"')
     end
+
+    it 'sorts numbers' do
+
+      r = @executor.launch(
+        %q{
+          [ { n: 1.1 } { n: 1.0 } { n: 1.4 } { n: 0 } ]
+          sort_by (def e \ e.n)
+        })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['ret']).to eq([
+       { 'n' => 0 }, { 'n' => 1.0 }, { 'n' => 1.1 }, { 'n' => 1.4 } ])
+    end
+
+    it 'sorts strings' do
+
+      r = @executor.launch(
+        %q{
+          [ { s: 'zzz' } { s: 'xxx' } { s: 'yyy' } { s: 'aaa' } ]
+          sort_by (def e \ e.s)
+        })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['ret']).to eq([
+       { 's' => 'aaa' }, { 's' => 'xxx' }, { 's' => 'yyy' }, { 's' => 'zzz' } ])
+    end
+
+    it 'sorts heterogeneous items (as strings)' do
+
+      r = @executor.launch(
+        %q{
+          sort_by
+            [ { d: 'zzz' } { d: -1.5 } { d: true } { d: null } ]
+            (def e \ e.d)
+        })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['ret']).to eq([
+       { 'd' => 'aaa' }, { 'd' => 'xxx' }, { 'd' => 'yyy' }, { 'd' => 'zzz' } ])
+    end
   end
 end
 
