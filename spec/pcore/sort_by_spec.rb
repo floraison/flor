@@ -124,14 +124,14 @@ describe 'Flor procedures' do
       r = @executor.launch(
         %q{
           sort_by
-            [ { d: 'zzz' } { d: -1.5 } { d: true } { d: null } ]
+            [ { d: 'zzz' } { d: -1.5 } { d: true } { d: null } { d: 'alpha' } ]
             (def e \ e.d)
         })
 
       expect(r['point']).to eq('terminated')
 
-      expect(r['payload']['ret']).to eq([
-       { 'd' => 'aaa' }, { 'd' => 'xxx' }, { 'd' => 'yyy' }, { 'd' => 'zzz' } ])
+      expect(r['payload']['ret']).to eq(
+       [ nil, -1.5, 'alpha', true, 'zzz' ].map { |e| { 'd' => e } })
     end
   end
 end
