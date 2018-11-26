@@ -26,7 +26,7 @@ class Flor::Pro::Sort < Flor::Procedure
 
   def receive_last
 
-    wrap('ret' => @node['ocol'].sort)
+    wrap('ret' => simple_sort)
   end
 
   protected
@@ -40,6 +40,18 @@ class Flor::Pro::Sort < Flor::Procedure
     else
       iterate
     end
+  end
+
+  def simple_sort
+
+    col =
+      @node['ocol']
+    f =
+      col.collect(&:class).uniq.count < 2 ?
+      lambda { |e| e } :
+      lambda { |e| e.is_a?(String) ? e : JSON.dump(e) }
+
+    col.sort_by(&f)
   end
 end
 

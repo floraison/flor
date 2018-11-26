@@ -130,8 +130,12 @@ describe 'Flor procedures' do
 
       expect(r['point']).to eq('terminated')
 
-      expect(r['payload']['ret']).to eq(
-       [ nil, -1.5, 'alpha', true, 'zzz' ].map { |e| { 'd' => e } })
+      expect(
+        r['payload']['ret']
+      ).to eq(
+        [ -1.5, 'alpha', nil, true, 'zzz' ]
+          .map { |e| { 'd' => e } }
+      )
     end
   end
 end
