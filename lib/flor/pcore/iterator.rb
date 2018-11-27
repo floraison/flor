@@ -70,8 +70,7 @@ class Flor::Pro::Iterator < Flor::Procedure
           @node['ocol'] ||= a
         end }
 
-    @node['ocol'] ||= node_payload_ret
-    ocol = @node['ocol']
+    ocol = (@node['ocol'] ||= node_payload_ret)
 
     fail Flor::FlorError.new(
       "function not given to #{heap.inspect}", self
@@ -80,7 +79,7 @@ class Flor::Pro::Iterator < Flor::Procedure
       "collection not given to #{heap.inspect}", self
     ) unless Flor.is_collection?(ocol)
 
-    @node['col'] = Flor.to_coll(@node['ocol']) if @node['fun']
+    @node['col'] = Flor.to_coll(ocol) if @node['fun']
     @node['args'] = nil
   end
 
