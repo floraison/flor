@@ -26,6 +26,8 @@ class Flor::Pro::Sort < Flor::Procedure
 
   def receive_last
 
+    @node['ocol'] ||= node_payload_ret
+
     wrap('ret' => simple_sort)
   end
 

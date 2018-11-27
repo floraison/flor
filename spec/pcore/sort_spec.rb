@@ -77,6 +77,18 @@ describe 'Flor procedures' do
           [ 'bbb' ], [ 'zzz' ]
         ])
       end
+
+      it 'sorts the incoming f.ret if necessary' do
+
+        r = @executor.launch(
+          %q{
+            [ 0 7 1 5 3 4 2 6 ]
+            sort tag: 'x'
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq([ 0, 1, 2, 3, 4, 5, 6, 7 ])
+      end
     end
 
     context 'with a function' do
@@ -90,7 +102,7 @@ describe 'Flor procedures' do
 #              { name: 'Bob', age: 44, function: 'cfo' }
 #              { name: 'Charly', age: 27, function: 'cto' }
 #            ]
-#            sort _
+#            sort (def a b \ > a.age b.age)
 #          })
 #
 #        expect(r['point']).to eq('terminated')
@@ -98,7 +110,9 @@ describe 'Flor procedures' do
 #        expect(
 #          r['payload']['ret']
 #        ).to eq([
-#          0, 1, 2
+#          { 'name' => 'Bob', 'age' => 44, 'function' => 'cfo' },
+#          { 'name' => 'Alice', 'age' => 33, 'function' => 'ceo' },
+#          { 'name' => 'Charly', 'age' => 27, 'function' => 'cto' },
 #        ])
 #      end
     end
