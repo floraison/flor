@@ -91,7 +91,7 @@ describe 'Flor procedures' do
       expect(r['error']['msg']).to eq('function not given to "sort_by"')
     end
 
-    it 'sorts numbers' do
+    it 'sorts arrays of numbers' do
 
       r = @executor.launch(
         %q{
@@ -105,7 +105,7 @@ describe 'Flor procedures' do
        { 'n' => 0 }, { 'n' => 1.0 }, { 'n' => 1.1 }, { 'n' => 1.4 } ])
     end
 
-    it 'sorts strings' do
+    it 'sorts arrays of strings' do
 
       r = @executor.launch(
         %q{
@@ -119,7 +119,33 @@ describe 'Flor procedures' do
        { 's' => 'aaa' }, { 's' => 'xxx' }, { 's' => 'yyy' }, { 's' => 'zzz' } ])
     end
 
-    it 'sorts heterogeneous items (as strings)' do
+    it 'sorts arrays of arrays' do
+
+      r = @executor.launch(
+        %q{
+          [ [ 'zzz' ] [ 'aaa' ] ]
+          sort_by (def e \ e)
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq([ [ 'aaa' ], [ 'zzz' ] ])
+    end
+
+    it 'sorts arrays of objects' do
+
+      r = @executor.launch(
+        %q{
+          [ { s: 'zzz' } { s: 'xxx' } { s: 'yyy' } { s: 'aaa' } ]
+          sort_by (def e \ e)
+        })
+
+      expect(r['point']).to eq('terminated')
+
+      expect(r['payload']['ret']).to eq([
+       { 's' => 'aaa' }, { 's' => 'xxx' }, { 's' => 'yyy' }, { 's' => 'zzz' } ])
+    end
+
+    it 'sorts heterogeneous arrays (as JSON)' do
 
       r = @executor.launch(
         %q{

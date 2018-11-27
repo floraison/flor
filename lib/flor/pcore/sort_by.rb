@@ -14,8 +14,10 @@ class Flor::Pro::SortBy < Flor::Pro::Iterator
 
     res = @node['res']
 
+    classes = res.collect(&:class).uniq
+
     res = res.collect { |e| e.is_a?(String) ? e : JSON.dump(e) } \
-      if res.collect(&:class).uniq.count > 1
+      if classes.count > 1 || [ Hash ].include?(classes[0])
 
     res.zip(@node['ocol'])
       .sort_by(&:first)

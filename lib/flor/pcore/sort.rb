@@ -46,10 +46,12 @@ class Flor::Pro::Sort < Flor::Procedure
 
     col =
       @node['ocol']
+    classes =
+      col.collect(&:class).uniq
     f =
-      col.collect(&:class).uniq.count < 2 ?
-      lambda { |e| e } :
-      lambda { |e| e.is_a?(String) ? e : JSON.dump(e) }
+      (classes.count > 1 || [ Hash ].include?(classes[0])) ?
+      lambda { |e| e.is_a?(String) ? e : JSON.dump(e) } :
+      lambda { |e| e }
 
     col.sort_by(&f)
   end

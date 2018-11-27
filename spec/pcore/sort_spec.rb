@@ -30,7 +30,7 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq([ 0, 1, 2, 3, 4, 5, 6, 7 ])
       end
 
-      it 'sorts heterogeneous values' do
+      it 'sorts heterogeneous arrays' do
 
         r = @executor.launch(
           %q{
@@ -45,11 +45,62 @@ describe 'Flor procedures' do
           0, 1.1, [ 0, 1 ], "false", nil, true, { 'c' => 2 }
         ])
       end
+
+      it 'sorts arrays of objects' do
+
+        r = @executor.launch(
+          %q{
+            sort [ { age: 99 } { age: 33 } ]
+          })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['ret']
+        ).to eq([
+          { 'age' => 33 }, { 'age' => 99 }
+        ])
+      end
+
+      it 'sorts arrays of arrays' do
+
+        r = @executor.launch(
+          %q{
+            sort [ [ 'zzz' ] [ 'bbb' ] ]
+          })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['ret']
+        ).to eq([
+          [ 'bbb' ], [ 'zzz' ]
+        ])
+      end
     end
 
     context 'with a function' do
 
-      it 'sorts'
+      it 'sorts'# do
+#
+#        r = @executor.launch(
+#          %q{
+#            [
+#              { name: 'Alice', age: 33, function: 'ceo' }
+#              { name: 'Bob', age: 44, function: 'cfo' }
+#              { name: 'Charly', age: 27, function: 'cto' }
+#            ]
+#            sort _
+#          })
+#
+#        expect(r['point']).to eq('terminated')
+#
+#        expect(
+#          r['payload']['ret']
+#        ).to eq([
+#          0, 1, 2
+#        ])
+#      end
     end
   end
 end
