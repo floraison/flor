@@ -93,7 +93,7 @@ describe 'Flor procedures' do
 
     context 'with a function' do
 
-      it 'sorts'# do
+      it 'sorts (boolean function)'# do
 #
 #        r = @executor.launch(
 #          %q{
@@ -103,6 +103,29 @@ describe 'Flor procedures' do
 #              { name: 'Charly', age: 27, function: 'cto' }
 #            ]
 #            sort (def a b \ > a.age b.age)
+#          })
+#
+#        expect(r['point']).to eq('terminated')
+#
+#        expect(
+#          r['payload']['ret']
+#        ).to eq([
+#          { 'name' => 'Bob', 'age' => 44, 'function' => 'cfo' },
+#          { 'name' => 'Alice', 'age' => 33, 'function' => 'ceo' },
+#          { 'name' => 'Charly', 'age' => 27, 'function' => 'cto' },
+#        ])
+#      end
+
+      it 'sorts (integer function)'# do
+#
+#        r = @executor.launch(
+#          %q{
+#            [
+#              { name: 'Alice', age: 33, function: 'ceo' }
+#              { name: 'Bob', age: 44, function: 'cfo' }
+#              { name: 'Charly', age: 27, function: 'cto' }
+#            ]
+#            sort (def a b \ - a.age b.age)
 #          })
 #
 #        expect(r['point']).to eq('terminated')
