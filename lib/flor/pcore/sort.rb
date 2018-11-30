@@ -48,6 +48,12 @@ class Flor::Pro::Sort < Flor::Procedure
     end
   end
 
+  #
+  # default_sort
+  #
+  # When no function is given, turns to a collection of string
+  # (or JSON representations) and sorts
+
   def default_sort
 
     col =
@@ -62,39 +68,66 @@ class Flor::Pro::Sort < Flor::Procedure
     wrap('ret' => col.sort_by(&f))
   end
 
+  #
+  # quick_sort
+  #
+  # A quicksort drives the game
+
   def quick_sort
 
-    quicksort(0, @node['col'].length)
+    quick_execute(0, @node['col'].length)
   end
 
-  def quicksort(p, r) # TODO split that in two (apply / receive)
+  def quick_execute(p, r)
 
-    return unless p < r
+    #return unless p < r # FIXME what should I return? empty list of messages?
+    fail "p < r" if p >= r
 
-    q = partition(p, r)
-
-    quicksort(p, q - 1)
-    quicksort(q + 1, r)
+    quick_execute_partition(p, r, nil)
   end
 
-  def partition(p, r)
+  def quick_execute_partition(p, r, j)
 
-    pivot = @node['col'][r]
-    i = p - 1
+    @node['partitions'] ||= {}
+    partition = (@node['partitions'][p] ||= { 'i' => p - 1 })
 
-    for j in p..(r - 1) do
+    j ||= p
 
-      next unless @node['col'][j] <= pivot # TODO emit messages !
-
-      i = i + 1
-      @node['col'][i], @node['col'][j] =
-        @node['col'][j], @node['col'][i]
-    end
-
-    i = i + 1
-    @node['col'][i], @node['col'][r] =
-      @node['col'][r], @node['col'][i]
-    i
+    apply(@node['fun'], [ @node['col'][j], @node['col'][r] ], tree[2])
+.tap { |x| p x }
+      # compare element at j with pivot (element at r)
   end
+
+  # the quicksort as it would look in a non-{execute/receive} world...
+  #
+#  def quicksort(p, r) # TODO split that in two (apply / receive)
+#
+#    return unless p < r
+#
+#    q = partition(p, r)
+#
+#    quicksort(p, q - 1)
+#    quicksort(q + 1, r)
+#  end
+#
+#  def partition(p, r)
+#
+#    pivot = @node['col'][r]
+#    i = p - 1
+#
+#    for j in p..(r - 1) do
+#
+#      next unless @node['col'][j] <= pivot # TODO emit messages !
+#
+#      i = i + 1
+#      @node['col'][i], @node['col'][j] =
+#        @node['col'][j], @node['col'][i]
+#    end
+#
+#    i = i + 1
+#    @node['col'][i], @node['col'][r] =
+#      @node['col'][r], @node['col'][i]
+#    i
+#  end
 end
 
