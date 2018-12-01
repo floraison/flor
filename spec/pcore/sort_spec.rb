@@ -89,6 +89,17 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq([ 0, 1, 2, 3, 4, 5, 6, 7 ])
       end
+
+      it 'returns empty arrays as is' do
+
+        r = @executor.launch(
+          %q{
+            sort []
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq([])
+      end
     end
 
     context 'with a function' do
@@ -138,6 +149,17 @@ describe 'Flor procedures' do
 #          { 'name' => 'Charly', 'age' => 27, 'function' => 'cto' },
 #        ])
 #      end
+
+      it 'returns empty arrays as is' do
+
+        r = @executor.launch(
+          %q{
+            sort [] (def a b \ > a.age b.age)
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq([])
+      end
     end
   end
 end

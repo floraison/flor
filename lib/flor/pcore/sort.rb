@@ -35,7 +35,9 @@ class Flor::Pro::Sort < Flor::Procedure
 
     @node['col'] ||= node_payload_ret
 
-    if @node['fun']
+    if @node['col'].empty?
+      wrap('ret' => @node['col'])
+    elsif @node['fun']
       quick_sort
     else
       default_sort
@@ -111,7 +113,7 @@ class Flor::Pro::Sort < Flor::Procedure
       fields: { pap_field_name => p })
 .tap { |m|
   #p m.first.keys
-  p m.first.select { |k, _| %w[ from nid sm vars ].include?(k) } }
+  pp m.first.select { |k, _| %w[ from nid sm vars ].include?(k) } }
       # compare element at j with pivot (element at r)
   end
 
