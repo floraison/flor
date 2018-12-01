@@ -120,6 +120,10 @@ class Flor::Node
     Flor.dup(node_payload['ret'])
   end
 
+  def payload_ret
+    message['payload']['ret']
+  end
+
   def message_or_node_payload
     payload.current ? payload : node_payload
   end
