@@ -751,9 +751,11 @@ class Flor::Procedure < Flor::Node
       ms.first['on_error'] = oe
     end
 
-    if fs = opts[:fields]
-      ms.first['payload'].merge!(fs)
-    end
+    #if fs = opts[:fields]
+    #  ms.first['payload'].merge!(fs)
+    #end
+      #
+      # an idea from "sort" apply, may be useful later on...
 
     ms
   end

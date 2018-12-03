@@ -82,8 +82,6 @@ class Flor::Pro::Sort < Flor::Procedure
   #
   # A quicksort drives the game
 
-  def pap_field_name; "__#{@node['heat0']}__#{nid}__partition_p"; end
-
   def quick_sort
 
     quick_execute(0, @node['col'].length - 1)
@@ -94,54 +92,65 @@ class Flor::Pro::Sort < Flor::Procedure
     #return unless p < r # FIXME what should I return? empty list of messages?
     fail "p < r" if p >= r
 
-    quick_execute_partition(p, r, nil)
-  end
-
-  def quick_execute_partition(p, r, j)
-
-#Kernel.p [ p, r, j ]
     @node['partitions'] ||= {}
 
-    pa = (@node['partitions'][p.to_s] ||= { 'r' => r })
-    pa['i'] ||= p - 1
-    pa['j'] = (j ||= p)
+    quick_execute_partition(p, r)
+  end
 
-    apply(
+  def quick_receive(p, r, q)
+
+    quick_execute_partition(p, q - 1) +
+    quick_execute_partition(q + 1, r)
+  end
+
+  def quick_execute_partition(p, r, j=p)
+
+#Kernel.p [ p, r, j ]
+    pa = (@node['partitions'][p.to_s] ||= {})
+    pa['r'] = r
+    pa['j'] = j
+    pa['i'] ||= p - 1
+
+    ms = apply(
       @node['fun'],
       [ @node['col'][j], @node['col'][r], p ],
-      tree[2],
-      fields: { pap_field_name => p })
+      tree[2])
 .tap { |m|
   #p m.first.keys
   pp m.first.select { |k, _| %w[ from nid sm vars ].include?(k) } }
       # compare element at j with pivot (element at r)
+# TODO
+    pa['sub'] = Flor.sub_nid(ms.first['nid'])
+
+    ms
   end
 
   def quick_receive_partition
 
 #pp message
-Kernel.p @node['partitions']
-    p = message['payload'][pap_field_name]
-    pa = @node['partitions'][p.to_s]
+#Kernel.p @node['partitions']
+    #p = message['payload'][pap_field_name]
+
+    sn = from_sub_nid
+    p, pa = @node['partitions'].find { |_, v| v['sub'] = sn }
     ret = payload_ret
 Kernel.p [ :incoming, p, pa ]
-Kernel.p payload_ret
+#Kernel.p payload_ret
     i, j, r = pa['i'], pa['j'], pa['r']
 
-    #next if @node['col'][j] > pivot
-    if ret == true || (ret.is_a?(Numeric) && ret < 0)
-      quick_execute_partition(p, r, j + 1)
-    else
-      i = pa['i'] = i + 1
-      @node['col'][i], @node['col'][j] = @node['col'][j], @node['col'][i]
+    return quick_execute_partition(p, r, j + 1) \
+      if ret == true || (ret.is_a?(Numeric) && ret < 0)
+
+    i = pa['i'] = i + 1
+    @node['col'][i], @node['col'][j] = @node['col'][j], @node['col'][i]
+
+    return quick_execute_partition(p, r, j + 1) \
       if j < r
-        quick_execute_partition(p, r, j + 1)
-      else
-        i = pa['i'] = i + 1
-        @node['col'][i], @node['col'][r] = @node['col'][r], @node['col'][i]
-fail
-      end
-    end
+
+    i = pa['i'] = i + 1
+    @node['col'][i], @node['col'][r] = @node['col'][r], @node['col'][i]
+
+    quick_receive(p, r, i)
   end
 
   # the quicksort as it would look in a non-{execute/receive} world...

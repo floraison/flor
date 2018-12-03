@@ -104,7 +104,20 @@ describe 'Flor procedures' do
 
     context 'with a function' do
 
-      it 'sorts (boolean function)'# do
+      it 'sorts integers (boolean function)'# do
+#
+#        r = @executor.launch(
+#          %q{
+#            set a 1
+#            echo a.age
+#            #sort [ 10 1 2 3 7 4 5 ] (def a b \ > a b)
+#          })
+#
+#        expect(r['point']).to eq('terminated')
+#        expect(r['payload']['ret']).to eq([ 1, 2, 3, 4, 5, 7, 10 ])
+#      end
+
+      it 'sorts objects (boolean function)'# do
 #
 #        r = @executor.launch(
 #          %q{
