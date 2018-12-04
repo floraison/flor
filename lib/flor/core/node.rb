@@ -393,6 +393,20 @@ class Flor::Node
 
     raise ke.relabel(m)
 
+  rescue IndexError => ie
+
+    m =
+      if ie.miss[1] == [ ie.miss[2] ]
+         "variable #{ie.miss[2].inspect} not found"
+      else
+        pa = Dense::Path.make(ie.miss[1]).to_s.inspect
+        ty = Flor.type(ie.miss[2])
+        ke = ie.miss[3].inspect
+        "variable at #{pa} is a #{ty}, it has no key #{ke}"
+      end
+
+    raise ie.relabel(m)
+
   #rescue TypeError => te # leave as is
   end
 

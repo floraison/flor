@@ -49,6 +49,23 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('B')
     end
+
+    it 'gives a helpful error message when not finding "deep"' do
+
+      r = @executor.launch(
+        %q{
+          #set a 1
+          a.age
+        },
+        variables: { 'a' => 1 })
+
+      expect(r['point']).to eq('failed')
+
+      expect(r['error']['kla']
+        ).to eq('IndexError')
+      expect(r['error']['msg']
+        ).to eq('variable at "a" is a number, it has no key "age"')
+    end
   end
 
   describe '_rep' do
