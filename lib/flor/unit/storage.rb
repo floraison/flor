@@ -786,7 +786,7 @@ module Flor
 
         @db.extension(:connection_validator)
         @db.pool.connection_validation_timeout = to
-          # NB: -1 means "check all the time"
+          # NB: -1 means "check at every use"
       end
 
       @db_logger = DbLogger.new(@unit)
