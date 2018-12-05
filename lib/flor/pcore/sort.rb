@@ -87,40 +87,39 @@ class Flor::Pro::Sort < Flor::Procedure
     quick_execute(0, @node['col'].length - 1)
   end
 
-  def quick_execute(p, r)
+  def quick_execute(lo, hi)
 
-    #return unless p < r # FIXME what should I return? empty list of messages?
-    fail "p < r" if p >= r
+    #return unless lo < hi # FIXME what should I return? empty list of messages?
+    fail "lo < hi" if lo >= hi
 
     @node['partitions'] ||= {}
 
-    quick_execute_partition(p, r)
+    quick_execute_partition(lo, hi)
   end
 
-  def quick_receive(p, r, q)
+  def quick_receive(lo, hi, pa)
 
-    quick_execute_partition(p, q - 1) +
-    quick_execute_partition(q + 1, r)
+    quick_execute_partition(lo, pa - 1) +
+    quick_execute_partition(pa + 1, hi)
   end
 
-  def quick_execute_partition(p, r, j=p)
+  def quick_execute_partition(lo, hi, j=lo)
 
-#Kernel.p [ p, r, j ]
-    pa = (@node['partitions'][p.to_s] ||= {})
-    pa['r'] = r
-    pa['j'] = j
-    pa['i'] ||= p - 1
+#p [ lo, hi, j ]
+    np = (@node['partitions'][lo.to_s] ||= {})
+    np['lo'] = lo
+    np['hi'] = hi
+    np['j'] = j
+    np['i'] ||= lo - 1
 
-    ms = apply(
-      @node['fun'],
-      [ @node['col'][j], @node['col'][r], p ],
-      tree[2])
-.tap { |m|
-  #p m.first.keys
-  pp m.first.select { |k, _| %w[ from nid sm vars ].include?(k) } }
-      # compare element at j with pivot (element at r)
-# TODO
-    pa['sub'] = Flor.sub_nid(ms.first['nid'])
+    pivot = @node['col'][hi]
+
+    ms = apply(@node['fun'], [ @node['col'][j], pivot, lo ], tree[2])
+      # compare element at j with pivot (element at hi)
+
+    np['sub'] = Flor.sub_nid(ms.first['nid'])
+puts "outgoing: #{np.inspect}"
+pp ms.first.select { |k, _| %w[ from nid sm vars ].include?(k) }
 
     ms
   end
@@ -132,25 +131,25 @@ class Flor::Pro::Sort < Flor::Procedure
     #p = message['payload'][pap_field_name]
 
     sn = from_sub_nid
-    p, pa = @node['partitions'].find { |_, v| v['sub'] = sn }
+    np = @node['partitions'].values.find { |v| v['sub'] = sn }
+    lo, hi, i, j = np['lo'], np['hi'], np['i'], np['j']
     ret = payload_ret
-Kernel.p [ :incoming, p, pa ]
-#Kernel.p payload_ret
-    i, j, r = pa['i'], pa['j'], pa['r']
+puts; p [ :incoming, lo, np ]
+#p payload_ret
 
-    return quick_execute_partition(p, r, j + 1) \
+    return quick_execute_partition(lo, hi, j + 1) \
       if ret == true || (ret.is_a?(Numeric) && ret < 0)
 
-    i = pa['i'] = i + 1
+    i = np['i'] = i + 1
     @node['col'][i], @node['col'][j] = @node['col'][j], @node['col'][i]
 
-    return quick_execute_partition(p, r, j + 1) \
-      if j < r
+    return quick_execute_partition(lo, hi, j + 1) \
+      if j < hi
 
-    i = pa['i'] = i + 1
-    @node['col'][i], @node['col'][r] = @node['col'][r], @node['col'][i]
+    i = np['i'] = i + 1
+    @node['col'][i], @node['col'][hi] = @node['col'][hi], @node['col'][i]
 
-    quick_receive(p, r, i)
+    quick_receive(lo, hi, i)
   end
 
   # the quicksort as it would look in a non-{execute/receive} world...
