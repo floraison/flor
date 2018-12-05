@@ -104,64 +104,69 @@ describe 'Flor procedures' do
 
     context 'with a function' do
 
-      it 'sorts integers (boolean function)'# do
-#
-#        r = @executor.launch(
-#          %q{
-#            set a 1
-#            echo a.age
-#            #sort [ 10 1 2 3 7 4 5 ] (def a b \ > a b)
-#          })
-#
-#        expect(r['point']).to eq('terminated')
-#        expect(r['payload']['ret']).to eq([ 1, 2, 3, 4, 5, 7, 10 ])
-#      end
+      it 'sorts integers (boolean function)' do
 
-      it 'sorts objects (boolean function)'# do
-#
-#        r = @executor.launch(
-#          %q{
-#            [
-#              { name: 'Alice', age: 33, function: 'ceo' }
-#              { name: 'Bob', age: 44, function: 'cfo' }
-#              { name: 'Charly', age: 27, function: 'cto' }
-#            ]
-#            sort (def a b \ > a.age b.age)
-#          })
-#
-#        expect(r['point']).to eq('terminated')
-#
-#        expect(
-#          r['payload']['ret']
-#        ).to eq([
-#          { 'name' => 'Bob', 'age' => 44, 'function' => 'cfo' },
-#          { 'name' => 'Alice', 'age' => 33, 'function' => 'ceo' },
-#          { 'name' => 'Charly', 'age' => 27, 'function' => 'cto' },
-#        ])
-#      end
+        r = @executor.launch(
+          %q{
+            sort [ 9 3 7 5 ] (def a b \ < a b)
+          })
 
-      it 'sorts (integer function)'# do
-#
-#        r = @executor.launch(
-#          %q{
-#            [
-#              { name: 'Alice', age: 33, function: 'ceo' }
-#              { name: 'Bob', age: 44, function: 'cfo' }
-#              { name: 'Charly', age: 27, function: 'cto' }
-#            ]
-#            sort (def a b \ - a.age b.age)
-#          })
-#
-#        expect(r['point']).to eq('terminated')
-#
-#        expect(
-#          r['payload']['ret']
-#        ).to eq([
-#          { 'name' => 'Bob', 'age' => 44, 'function' => 'cfo' },
-#          { 'name' => 'Alice', 'age' => 33, 'function' => 'ceo' },
-#          { 'name' => 'Charly', 'age' => 27, 'function' => 'cto' },
-#        ])
-#      end
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq([ 3, 5, 7, 9 ])
+      end
+
+      it 'sorts integers (boolean function) 2' do
+
+        r = @executor.launch(
+          %q{
+            sort [ 9 3 2 7 5 ] (def a b \ < a b)
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['payload']['ret']).to eq([ 2, 3, 5, 7, 9 ])
+      end
+
+      it 'sorts objects (boolean function)' do
+
+        r = @executor.launch(
+          %q{
+            [ { name: 'Alice', age: 33, function: 'ceo' }
+              { name: 'Bob', age: 44, function: 'cfo' }
+              { name: 'Charly', age: 27, function: 'cto' } ]
+            sort (def a b \ > a.age b.age)
+          })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['ret']
+        ).to eq([
+          { 'name' => 'Bob', 'age' => 44, 'function' => 'cfo' },
+          { 'name' => 'Alice', 'age' => 33, 'function' => 'ceo' },
+          { 'name' => 'Charly', 'age' => 27, 'function' => 'cto' },
+        ])
+      end
+
+      it 'sorts (integer function)' do
+
+        r = @executor.launch(
+          %q{
+            [ { name: 'Alice', age: 33, function: 'ceo' }
+              { name: 'Bob', age: 44, function: 'cfo' }
+              { name: 'Charly', age: 27, function: 'cto' } ]
+            sort (def a b \ - a.age b.age)
+          })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['ret']
+        ).to eq([
+          { 'name' => 'Charly', 'age' => 27, 'function' => 'cto' },
+          { 'name' => 'Alice', 'age' => 33, 'function' => 'ceo' },
+          { 'name' => 'Bob', 'age' => 44, 'function' => 'cfo' },
+        ])
+      end
 
       it 'returns empty arrays as is' do
 
