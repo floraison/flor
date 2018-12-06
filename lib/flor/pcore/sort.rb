@@ -1,6 +1,8 @@
 
 class Flor::Pro::Sort < Flor::Procedure
 
+  # TODO delete @node['ranges'] unused items
+
   name 'sort'
 
   def pre_execute
@@ -74,7 +76,10 @@ class Flor::Pro::Sort < Flor::Procedure
       lambda { |e| e.is_a?(String) ? e : JSON.dump(e) } :
       lambda { |e| e }
 
-    wrap('ret' => col.sort_by(&f))
+    ret = col.sort_by(&f)
+    ret = col.inject({}) { |h, (k, v)| h[k] = v; h } if col.is_a?(Hash)
+
+    wrap('ret' => ret)
   end
 
   #
@@ -84,10 +89,13 @@ class Flor::Pro::Sort < Flor::Procedure
 
   def quick_sort
 
+    col = @node['col']
+    @node['colk'] = col.is_a?(Hash) ? 'object' : 'array'
+    @node['col'] = col.to_a
+
     @node['ranges'] ||= {}
 
-    #quicksort(0, @node['col'].length - 1)
-    quick_partition_execute(0, @node['col'].length - 1)
+    quick_partition_execute(0, col.length - 1)
   end
 
   def quick_partition_execute(lo, hi)
@@ -133,7 +141,11 @@ class Flor::Pro::Sort < Flor::Procedure
       quick_partition_execute(lo, i - 1) +
       quick_partition_execute(i + 1, hi)
 
-    ms.any? ? ms : wrap('ret' => col)
+    if ms.any?
+      ms
+    else # quicksort is over
+      wrap('ret' => (@node['colk'] === 'object' ? Hash[col] : col))
+    end
   end
 end
 

@@ -100,6 +100,23 @@ describe 'Flor procedures' do
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq([])
       end
+
+      it 'sorts objects' do
+
+        r = @executor.launch(
+          %q{
+            sort o
+          },
+          vars: { 'o' => { 'b' => 'B', 'a' => 'A', 'z' => 'Z' } })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['ret']
+        ).to eq({
+          'a' => 'A', 'b' => 'B', 'z' => 'Z'
+        })
+      end
     end
 
     context 'with a function' do
@@ -177,6 +194,25 @@ describe 'Flor procedures' do
 
         expect(r['point']).to eq('terminated')
         expect(r['payload']['ret']).to eq([])
+      end
+
+      it 'sorts objects' do
+
+        r = @executor.launch(
+          %q{
+            sort o (def a b \ > (length a.0) (length b.0))
+              # .0 for the key, .1 for the value
+          },
+          vars: {
+            'o' => { 'name' => 'Charly', 'age' => 27, 'function' => 'cto' } })
+
+        expect(r['point']).to eq('terminated')
+
+        expect(
+          r['payload']['ret']
+        ).to eq({
+          'age' => 27, 'name' => 'Charly', 'function' => 'cto'
+        })
       end
     end
   end
