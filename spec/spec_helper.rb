@@ -49,6 +49,20 @@ module Helpers
     []
       .tap { |a| a.extend(JRuby::Synchronized) if jruby? }
   end
+
+  def display_error_if_failed(message)
+
+    return unless message['point'] == 'failed'
+
+    puts ">" + '-' * 79
+    p message.select { |k, _| %w[ point from nid sm m ].include?(k) }
+    p message['error']['kla']
+    p message['error']['msg']
+    message['error']['trc'].each do |l|
+      puts "  " + l
+    end
+    puts ">" + '-' * 79
+  end
 end
 
 RSpec.configure do |c|
