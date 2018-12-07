@@ -61,7 +61,7 @@ module Helpers
     message['error']['trc'].each do |l|
       puts "  " + l
     end
-    puts ">" + '-' * 79
+    puts ">" + ('-' * 78) + '.'
   end
 end
 

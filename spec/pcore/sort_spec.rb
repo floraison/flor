@@ -128,7 +128,10 @@ describe 'Flor procedures' do
             sort [ 9 3 7 5 ] (def a b \ < a b)
           })
 
-        expect(r['point']).to eq('terminated')
+        #display_error_if_failed(r)
+        #expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
+
         expect(r['payload']['ret']).to eq([ 3, 5, 7, 9 ])
       end
 
@@ -213,6 +216,23 @@ describe 'Flor procedures' do
         ).to eq({
           'age' => 27, 'name' => 'Charly', 'function' => 'cto'
         })
+      end
+
+      it "keeps @node['ranges'] small" do
+        #
+        # yes, it does, because when the ranges becomes empty, "sort"
+        # replies to its parent
+
+        a = [ 1, 0, 7, 8, 2, 3 ]
+
+        r = @executor.launch(
+          %q{
+            sort a (def a b \ < a b)
+          },
+          vars: { 'a' => a })
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq(a.sort)
       end
     end
   end

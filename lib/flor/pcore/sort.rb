@@ -98,44 +98,67 @@ class Flor::Pro::Sort < Flor::Procedure
     quick_partition_execute(0, col.length - 1)
   end
 
-  def quick_partition_execute(lo, hi)
+  def quick_swap(a, b)
 
-    return [] if lo >= hi
+    return if a == b
 
     col = @node['col']
-    rk = "#{lo}_#{hi}"
-    ra = @node['ranges'][rk] ||= { 'i' => lo, 'j' => lo }
-    i, j = ra['i'], ra['j']
+#puts "    swap 0 #{a}<->#{b} " + col.inspect
+    col[a], col[b] = col[b], col[a]
+#puts "         1 #{a}<->#{b} " + col.inspect
+  end
 
-    pivot = col[hi]
+  def quick_partition_execute(lo, hi)
 
-    ms = apply(@node['fun'], [ col[j], pivot, lo ], tree[2])
+#puts "%80s" % @node['col'].inspect
+#p [ :qp_execute, lo, hi ]
+#puts "  lo: #{lo}, hi: #{hi}, #{@node['col'][lo..hi].inspect}"
+    return [] if lo >= hi
+#puts @node['ranges'].any? ? "  ranges:" : "  no ranges"
+#@node['ranges'].each do |k, v| puts "    #{k}: #{v.inspect}"; end
+
+    col = @node['col']
+    ra = @node['ranges']["#{lo}_#{hi}"] ||= { 'i' => lo, 'j' => lo }
+#puts "  ra:   " + ra.inspect
+
+    ms = apply(@node['fun'], [ col[ra['j']], col[hi] ], tree[2])
       # compare element at j with pivot (element at hi)
 
     ra['sub'] = Flor.sub_nid(ms.first['nid'])
+#puts "  ra sub " + ra.inspect
+#puts "  apply #{col[ra['j']]} < #{col[hi]}"
 
     ms
   end
 
   def quick_partition_receive
 
+#puts "%80s" % @node['col'].inspect
     sn = from_sub_nid
     rk, ra = @node['ranges'].find { |_, v| v['sub'] == sn }
     lo, hi = rk.split('_').collect(&:to_i)
     i, j = ra['i'], ra['j']
     ret = payload_ret
     col = @node['col']
+#p [ :qp_receive, lo, hi ]
+#puts "  ret:  " + ret.inspect
+#puts "  ra:   " + ra.inspect
 
     if ret == true || (ret.is_a?(Numeric) && ret < 0)
-      col[i], col[j] = col[j], col[i]
+      quick_swap(i, j)
       ra['i'] = i = (i + 1)
+#puts "  ra i++ " + ra.inspect
     end
 
     ra['j'] = j = (j + 1)
+#puts "  ra j++ " + ra.inspect
 
     return quick_partition_execute(lo, hi) if j < hi # loop on
 
-    col[i], col[hi] = col[hi], col[i]
+    quick_swap(i, hi)
+
+#puts "  partition at #{i}"
+    @node['ranges'].delete(rk)
 
     ms =
       quick_partition_execute(lo, i - 1) +
@@ -143,6 +166,8 @@ class Flor::Pro::Sort < Flor::Procedure
 
     if ms.any?
       ms
+    elsif @node['ranges'].any?
+      []
     else # quicksort is over
       wrap('ret' => (@node['colk'] === 'object' ? Hash[col] : col))
     end
