@@ -194,6 +194,21 @@ RSpec::Matchers.define :point_to do |path|
   end
 end
 
+RSpec::Matchers.define :have_terminated_as_point do
+
+  match do |actual|
+
+    display_error_if_failed(actual)
+
+    actual['point'] == 'terminated'
+  end
+
+  failure_message do |actual|
+
+    "expected message point to be \"terminated\", not \"#{actual['point']}\""
+  end
+end
+
 class RSpec::Core::ExampleGroup
   #
   # for spec/parser_spec.rb
