@@ -233,6 +233,8 @@ describe 'Flor procedures' do
 
         expect(r).to have_terminated_as_point
         expect(r['payload']['ret']).to eq(a.sort)
+
+        expect(@executor.execution['nodes']['0']['ranges'].size).to eq(0)
       end
 
       it 'memoizes the comparison results' do
@@ -250,6 +252,7 @@ describe 'Flor procedures' do
 
         expect(r['m']).not_to eq(455) # no memoization
         expect(r['m']).to eq(279) # memoization
+        expect(@executor.execution['nodes']['0']['memo'].size).to eq(17)
       end
     end
   end

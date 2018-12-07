@@ -1,7 +1,7 @@
 
 class Flor::Pro::Sort < Flor::Procedure
 
-  # TODO delete @node['ranges'] unused items
+  # TODO memo/cache: false
 
   name 'sort'
 
@@ -112,7 +112,7 @@ class Flor::Pro::Sort < Flor::Procedure
     [ va, vb ]
       .collect { |e|
         case e
-        when Array, Hash then Digest::SHA256.hexdigest(JSON.dump(e))
+        when Array, Hash, String then Digest::SHA256.hexdigest(JSON.dump(e))
         else JSON.dump(e)
         end }
       .join('__')
