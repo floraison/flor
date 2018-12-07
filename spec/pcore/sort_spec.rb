@@ -251,8 +251,14 @@ describe 'Flor procedures' do
         expect(r['payload']['ret']).to eq(a.sort)
 
         expect(r['m']).not_to eq(455) # no memoization
-        expect(r['m']).to eq(279) # memoization
-        expect(@executor.execution['nodes']['0']['memo'].size).to eq(17)
+
+        expect(r['m']).not_to eq(279)
+        expect(@executor.execution['nodes']['0']['memo'].size).not_to eq(17)
+          # uni-directional memoization
+
+        expect(r['m']).to eq(247)
+        expect(@executor.execution['nodes']['0']['memo'].size).to eq(24)
+          # bi-directional memoization
       end
     end
   end

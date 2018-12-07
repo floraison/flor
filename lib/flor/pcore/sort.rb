@@ -109,13 +109,14 @@ class Flor::Pro::Sort < Flor::Procedure
 
   def quick_kab(va, vb)
 
-    [ va, vb ]
+    kab = [ va, vb ]
       .collect { |e|
         case e
         when Array, Hash, String then Digest::SHA256.hexdigest(JSON.dump(e))
         else JSON.dump(e)
         end }
-      .join('__')
+
+    [ kab.join('__'), kab.reverse.join('__') ]
   end
 
   def quick_compare(ra, a, b)
@@ -123,7 +124,8 @@ class Flor::Pro::Sort < Flor::Procedure
     col = @node['col']
     va, vb = col[a], col[b]
 
-    ra['kab'] = kab = quick_kab(va, vb)
+    ra['kab'], ra['kba'] = quick_kab(va, vb)
+    kab = ra['kab']
 
     if @node['memo'].has_key?(kab)
       quick_partition_receive(ra['sub'], @node['memo'][kab])
@@ -143,16 +145,21 @@ class Flor::Pro::Sort < Flor::Procedure
       # compare element at j with pivot (element at hi)
   end
 
-  def quick_partition_receive(sn=from_sub_nid, ret=payload_ret)
+  def quick_partition_receive(sn=from_sub_nid, r=:none)
 
     rk, ra = @node['ranges'].find { |_, v| v['sub'] == sn }
     lo, hi = rk.split('_').collect(&:to_i)
     i, j = ra['i'], ra['j']
 
-    @node['memo'][ra['kab']] = ret =
-      (ret == true || (ret.is_a?(Numeric) && ret < 0))
+    if r == :none
+      ret = payload_ret
+      @node['memo'][ra['kab']] = r =
+        (ret == true || (ret.is_a?(Numeric) && ret < 0))
+      @node['memo'][ra['kba']] =
+        ! r
+    end
 
-    if ret
+    if r
       quick_swap(i, j)
       ra['i'] = i = (i + 1)
     end
