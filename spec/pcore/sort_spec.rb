@@ -234,6 +234,23 @@ describe 'Flor procedures' do
         expect(r).to have_terminated_as_point
         expect(r['payload']['ret']).to eq(a.sort)
       end
+
+      it 'memoizes the comparison results' do
+
+        a = [ 1, 0, 7, 8, 2, 3 ] * 2
+
+        r = @executor.launch(
+          %q{
+            sort a (def a b \ < a b)
+          },
+          vars: { 'a' => a })
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq(a.sort)
+
+        expect(r['m']).not_to eq(455) # no memoization
+        expect(r['m']).to eq(279) # memoization
+      end
     end
   end
 end

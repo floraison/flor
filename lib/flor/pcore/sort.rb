@@ -93,7 +93,8 @@ class Flor::Pro::Sort < Flor::Procedure
     @node['colk'] = col.is_a?(Hash) ? 'object' : 'array'
     @node['col'] = col.to_a
 
-    @node['ranges'] ||= {}
+    @node['ranges'] = {}
+    @node['memo'] = {}
 
     quick_partition_execute(0, col.length - 1)
   end
@@ -108,6 +109,36 @@ class Flor::Pro::Sort < Flor::Procedure
 #puts "         1 #{a}<->#{b} " + col.inspect
   end
 
+  def quick_kab(va, vb)
+
+    [ va, vb ]
+      .collect { |e|
+        case e
+        when Array, Hash then Digest::SHA256.hexdigest(JSON.dump(e))
+        else JSON.dump(e)
+        end }
+      .join('__')
+  end
+
+  def quick_apply(ra, a, b)
+
+    col = @node['col']
+    va, vb = col[a], col[b]
+
+    ra['kab'] = kab = quick_kab(va, vb)
+#p ra
+#p @node['memo'].keys
+    if @node['memo'].has_key?(kab)
+      quick_partition_receive(ra['sub'], @node['memo'][kab])
+    else
+#puts "  apply #{va.inspect} vs #{vb.inspect}"
+      ms = apply(@node['fun'], [ va, vb ], tree[2])
+      ra['sub'] = Flor.sub_nid(ms.first['nid'])
+#puts "  ra sub " + ra.inspect
+      ms
+    end
+  end
+
   def quick_partition_execute(lo, hi)
 
 #puts "%80s" % @node['col'].inspect
@@ -117,28 +148,22 @@ class Flor::Pro::Sort < Flor::Procedure
 #puts @node['ranges'].any? ? "  ranges:" : "  no ranges"
 #@node['ranges'].each do |k, v| puts "    #{k}: #{v.inspect}"; end
 
-    col = @node['col']
     ra = @node['ranges']["#{lo}_#{hi}"] ||= { 'i' => lo, 'j' => lo }
 #puts "  ra:   " + ra.inspect
 
-    ms = apply(@node['fun'], [ col[ra['j']], col[hi] ], tree[2])
+    quick_apply(ra, ra['j'], hi)
       # compare element at j with pivot (element at hi)
-
-    ra['sub'] = Flor.sub_nid(ms.first['nid'])
-#puts "  ra sub " + ra.inspect
-#puts "  apply #{col[ra['j']]} < #{col[hi]}"
-
-    ms
   end
 
-  def quick_partition_receive
+  def quick_partition_receive(sn=from_sub_nid, ret=payload_ret)
 
 #puts "%80s" % @node['col'].inspect
-    sn = from_sub_nid
+    #sn = from_sub_nid
     rk, ra = @node['ranges'].find { |_, v| v['sub'] == sn }
     lo, hi = rk.split('_').collect(&:to_i)
     i, j = ra['i'], ra['j']
-    ret = payload_ret
+    #ret = payload_ret
+    @node['memo'][ra['kab']] = ret
     col = @node['col']
 #p [ :qp_receive, lo, hi ]
 #puts "  ret:  " + ret.inspect
