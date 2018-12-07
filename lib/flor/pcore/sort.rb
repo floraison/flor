@@ -163,13 +163,14 @@ class Flor::Pro::Sort < Flor::Procedure
     lo, hi = rk.split('_').collect(&:to_i)
     i, j = ra['i'], ra['j']
     #ret = payload_ret
-    @node['memo'][ra['kab']] = ret
+    @node['memo'][ra['kab']] = ret =
+      (ret == true || (ret.is_a?(Numeric) && ret < 0))
     col = @node['col']
 #p [ :qp_receive, lo, hi ]
 #puts "  ret:  " + ret.inspect
 #puts "  ra:   " + ra.inspect
 
-    if ret == true || (ret.is_a?(Numeric) && ret < 0)
+    if ret
       quick_swap(i, j)
       ra['i'] = i = (i + 1)
 #puts "  ra i++ " + ra.inspect
