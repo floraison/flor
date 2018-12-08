@@ -53,6 +53,7 @@
 * [set, setr](set.md) - Sets a field or a variable.
 * [shuffle, sample](shuffle.md) - Returns a shuffled version of an array.
 * [slice, index](slice.md) - Takes an array or a string and returns a slice of it (a new array or a new string).
+* [sort](sort.md) - Sorts an array or an object.
 * [stall](stall.md) - Mostly used in flor tests. Stalls the current branch of execution.
 * [downcase, lowercase, lowcase, upcase, uppercase, capitalize, trim, strip, snakecase, snake_case, camelcase, camelCase](strings.md) - "downcase", "upcase", "capitalize", etc.
 * [timestamp, ltimestamp](timestamp.md) - Places a string timestamp in f.ret.
@@ -126,6 +127,7 @@
     * [Flor::Pro::ForEach](https://github.com/floraison/flor/blob/master/lib/flor/pcore/for_each.rb) : [for-each](for_each.md)
     * [Flor::Pro::Map](https://github.com/floraison/flor/blob/master/lib/flor/pcore/map.rb) : [map](map.md)
     * [Flor::Pro::Reduce](https://github.com/floraison/flor/blob/master/lib/flor/pcore/reduce.rb) : [reduce](reduce.md)
+    * [Flor::Pro::SortBy](https://github.com/floraison/flor/blob/master/lib/flor/pcore/sort_by.rb) : sort_by
   * [Flor::Pro::Keys](https://github.com/floraison/flor/blob/master/lib/flor/pcore/keys.rb) : [keys, values](keys.md)
   * [Flor::Pro::Length](https://github.com/floraison/flor/blob/master/lib/flor/pcore/length.rb) : [length, size](length.md)
   * [Flor::Pro::Matchr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/matchr.rb) : [matchr, match?, pmatch](matchr.md)
@@ -149,6 +151,7 @@
   * [Flor::Pro::Range](https://github.com/floraison/flor/blob/master/lib/flor/pcore/range.rb) : [range](range.md)
   * [Flor::Pro::Ref](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_ref.rb) : _ref, _rep
   * [Flor::Pro::RegularExpressionString](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_rxs.rb) : _rxs
+  * [Flor::Pro::Return](https://github.com/floraison/flor/blob/master/lib/flor/pcore/return.rb) : return
   * [Flor::Pro::Reverse](https://github.com/floraison/flor/blob/master/lib/flor/pcore/reverse.rb) : [reverse](reverse.md)
   * [Flor::Pro::Schedule](https://github.com/floraison/flor/blob/master/lib/flor/punit/schedule.rb) : [schedule](schedule.md)
   * [Flor::Pro::Sequence](https://github.com/floraison/flor/blob/master/lib/flor/pcore/sequence.rb) : [sequence, _apply, begin](sequence.md)
@@ -158,6 +161,7 @@
   * [Flor::Pro::Skip](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_skip.rb) : [_skip](_skip.md)
   * [Flor::Pro::Sleep](https://github.com/floraison/flor/blob/master/lib/flor/punit/sleep.rb) : [sleep](sleep.md)
   * [Flor::Pro::Slice](https://github.com/floraison/flor/blob/master/lib/flor/pcore/slice.rb) : [slice, index](slice.md)
+  * [Flor::Pro::Sort](https://github.com/floraison/flor/blob/master/lib/flor/pcore/sort.rb) : [sort](sort.md)
   * [Flor::Pro::Split](https://github.com/floraison/flor/blob/master/lib/flor/pcore/split.rb) : split
   * [Flor::Pro::Stall](https://github.com/floraison/flor/blob/master/lib/flor/pcore/stall.rb) : [stall](stall.md)
   * [Flor::Pro::Strings](https://github.com/floraison/flor/blob/master/lib/flor/pcore/strings.rb) : [downcase, lowercase, lowcase, upcase, uppercase, capitalize, trim, strip, snakecase, snake_case, camelcase, camelCase](strings.md)
