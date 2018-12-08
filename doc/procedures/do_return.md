@@ -17,6 +17,10 @@ sequence on_error: (do-return 1)
   do-this-failure-prone-thing _
 ```
 
+## see also
+
+return
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/do_return.rb)
 

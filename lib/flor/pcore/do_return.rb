@@ -17,6 +17,9 @@ class Flor::Pro::DoReturn < Flor::Macro
   #   do-this-failure-prone-thing _
   # ```
   #
+  # ## see also
+  #
+  # return
 
   name 'do-return'
 
