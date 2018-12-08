@@ -26,7 +26,7 @@ describe 'Flor procedures' do
               e.n
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['ret']).to eq([
        { 'n' => 0 }, { 'n' => 1 }, { 'n' => 3 }, { 'n' => 4 } ])
@@ -39,7 +39,7 @@ describe 'Flor procedures' do
           sort_by [ { n: 1 } { n: 0 } { n: 4 } { n: 7 } ] (def e \ e.n)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['ret']).to eq([
        { 'n' => 0 }, { 'n' => 1 }, { 'n' => 4 }, { 'n' => 7 } ])
@@ -52,7 +52,7 @@ describe 'Flor procedures' do
           sort_by (def e \ e.n) [ { n: 1 } { n: 0 } { n: 4 } { n: 7 } ]
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['ret']).to eq([
        { 'n' => 0 }, { 'n' => 1 }, { 'n' => 4 }, { 'n' => 7 } ])
@@ -66,7 +66,7 @@ describe 'Flor procedures' do
           sort_by (def e \ e.n)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['ret']).to eq([
        { 'n' => 0 }, { 'n' => 1 }, { 'n' => 4 }, { 'n' => 7 } ])
@@ -99,7 +99,7 @@ describe 'Flor procedures' do
           sort_by (def e \ e.n)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['ret']).to eq([
        { 'n' => 0 }, { 'n' => 1.0 }, { 'n' => 1.1 }, { 'n' => 1.4 } ])
@@ -113,7 +113,7 @@ describe 'Flor procedures' do
           sort_by (def e \ e.s)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['ret']).to eq([
        { 's' => 'aaa' }, { 's' => 'xxx' }, { 's' => 'yyy' }, { 's' => 'zzz' } ])
@@ -127,7 +127,7 @@ describe 'Flor procedures' do
           sort_by (def e \ e)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ [ 'aaa' ], [ 'zzz' ] ])
     end
 
@@ -139,7 +139,7 @@ describe 'Flor procedures' do
           sort_by (def e \ e)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['ret']).to eq([
        { 's' => 'aaa' }, { 's' => 'xxx' }, { 's' => 'yyy' }, { 's' => 'zzz' } ])
@@ -154,7 +154,7 @@ describe 'Flor procedures' do
             (def e \ e.d)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']['ret']
@@ -162,6 +162,32 @@ describe 'Flor procedures' do
         [ -1.5, 'alpha', nil, true, 'zzz' ]
           .map { |e| { 'd' => e } }
       )
+    end
+
+    it 'sorts objects' do
+
+      r = @executor.launch(
+        %q{
+          sort_by
+            o
+            (def key val \ val.age)
+        },
+        vars: { 'o' => {
+          'ceo' => { 'name' => 'Elie', 'age' => 50 },
+          'cto' => { 'name' => 'Theo', 'age' => 30 },
+          'cfo' => { 'name' => 'Fred', 'age' => 45 },
+          'cio' => { 'name' => 'Ines', 'age' => 28 } } })
+
+      expect(r).to have_terminated_as_point
+
+      expect(
+        r['payload']['ret']
+      ).to eq({
+        'cio' => { 'name' => 'Ines', 'age' => 28 },
+        'cto' => { 'name' => 'Theo', 'age' => 30 },
+        'cfo' => { 'name' => 'Fred', 'age' => 45 },
+        'ceo' => { 'name' => 'Elie', 'age' => 50 },
+      })
     end
   end
 end

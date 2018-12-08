@@ -57,9 +57,11 @@ class Flor::Pro::SortBy < Flor::Pro::Iterator
     res = res.collect { |e| e.is_a?(String) ? e : JSON.dump(e) } \
       if classes.count > 1 || [ Hash ].include?(classes[0])
 
-    res.zip(@node['ocol'])
+    r = res.zip(@node['ocol'])
       .sort_by(&:first)
       .collect(&:last)
+
+    @node['ocol'].is_a?(Hash) ? Hash[r] : r
   end
 end
 
