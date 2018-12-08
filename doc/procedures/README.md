@@ -54,6 +54,7 @@
 * [shuffle, sample](shuffle.md) - Returns a shuffled version of an array.
 * [slice, index](slice.md) - Takes an array or a string and returns a slice of it (a new array or a new string).
 * [sort](sort.md) - Sorts an array or an object.
+* [sort_by](sort_by.md) - Takes a collection and a function and returns the collection sorted by the value returned by the function.
 * [stall](stall.md) - Mostly used in flor tests. Stalls the current branch of execution.
 * [downcase, lowercase, lowcase, upcase, uppercase, capitalize, trim, strip, snakecase, snake_case, camelcase, camelCase](strings.md) - "downcase", "upcase", "capitalize", etc.
 * [timestamp, ltimestamp](timestamp.md) - Places a string timestamp in f.ret.
@@ -127,7 +128,7 @@
     * [Flor::Pro::ForEach](https://github.com/floraison/flor/blob/master/lib/flor/pcore/for_each.rb) : [for-each](for_each.md)
     * [Flor::Pro::Map](https://github.com/floraison/flor/blob/master/lib/flor/pcore/map.rb) : [map](map.md)
     * [Flor::Pro::Reduce](https://github.com/floraison/flor/blob/master/lib/flor/pcore/reduce.rb) : [reduce](reduce.md)
-    * [Flor::Pro::SortBy](https://github.com/floraison/flor/blob/master/lib/flor/pcore/sort_by.rb) : sort_by
+    * [Flor::Pro::SortBy](https://github.com/floraison/flor/blob/master/lib/flor/pcore/sort_by.rb) : [sort_by](sort_by.md)
   * [Flor::Pro::Keys](https://github.com/floraison/flor/blob/master/lib/flor/pcore/keys.rb) : [keys, values](keys.md)
   * [Flor::Pro::Length](https://github.com/floraison/flor/blob/master/lib/flor/pcore/length.rb) : [length, size](length.md)
   * [Flor::Pro::Matchr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/matchr.rb) : [matchr, match?, pmatch](matchr.md)
