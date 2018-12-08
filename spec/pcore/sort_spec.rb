@@ -260,6 +260,27 @@ describe 'Flor procedures' do
         expect(@executor.execution['nodes']['0']['memo'].size).to eq(24)
           # bi-directional memoization
       end
+
+      context 'memo: false' do
+
+        it 'does not memoize' do
+
+          a = [ 1, 0, 7, 8, 2, 3 ] * 2
+
+          r = @executor.launch(
+            %q{
+              sort memo: false a (def a b \ < a b)
+              #sort cache: false a (def a b \ < a b)
+            },
+            vars: { 'a' => a })
+
+          expect(r).to have_terminated_as_point
+          expect(r['payload']['ret']).to eq(a.sort)
+
+          expect(r['m']).to eq(461) # no memoization
+          expect(@executor.execution['nodes']['0']['memo']).to eq(nil)
+        end
+      end
     end
   end
 end

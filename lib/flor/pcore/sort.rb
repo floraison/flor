@@ -1,11 +1,11 @@
 
 class Flor::Pro::Sort < Flor::Procedure
 
-  # TODO memo/cache: false
-
   name 'sort'
 
   def pre_execute
+
+    @node['atts'] = []
 
     @node['col'] = nil # collection
     @node['fun'] = nil # function
@@ -94,7 +94,11 @@ class Flor::Pro::Sort < Flor::Procedure
     @node['col'] = col.to_a
 
     @node['ranges'] = {}
-    @node['memo'] = {}
+
+    @node['memo'] =
+      att('memo', 'cache') == false ?
+      nil :
+      {}
 
     quick_partition_execute(0, col.length - 1)
   end
@@ -108,6 +112,8 @@ class Flor::Pro::Sort < Flor::Procedure
   end
 
   def quick_kab(va, vb)
+
+    return [] unless @node['memo']
 
     kab = [ va, vb ]
       .collect { |e|
@@ -127,7 +133,7 @@ class Flor::Pro::Sort < Flor::Procedure
     ra['kab'], ra['kba'] = quick_kab(va, vb)
     kab = ra['kab']
 
-    if @node['memo'].has_key?(kab)
+    if kab && @node['memo'].has_key?(kab)
       quick_partition_receive(ra['sub'], @node['memo'][kab])
     else
       apply(@node['fun'], [ va, vb ], tree[2])
@@ -153,10 +159,10 @@ class Flor::Pro::Sort < Flor::Procedure
 
     if r == :none
       ret = payload_ret
-      @node['memo'][ra['kab']] = r =
-        (ret == true || (ret.is_a?(Numeric) && ret < 0))
-      @node['memo'][ra['kba']] =
-        ! r
+      r = ret == true || (ret.is_a?(Numeric) && ret < 0)
+      if m = @node['memo']
+        m[ra['kab']], m[ra['kba']] = r, ! r
+      end
     end
 
     if r
