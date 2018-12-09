@@ -72,6 +72,63 @@ describe 'Flor procedures' do
         3, 2, 9
       ])
     end
+
+    it 'does not mind parentheses around the parameters' do
+
+      r = @executor.launch(
+        %q{
+          define sum0 a, b \ (+ a b)
+          define "sum1" (a, b, c) \ (+ a b)
+          define sum2(a, b) \ (+ a b)
+          set sum3
+            def (a, b: 1) \ (+ a b)
+        })
+
+      expect(r).to have_terminated_as_point
+
+      expect(
+        r['vars']['sum0'][1]['tree']
+      ).to eq(
+        [ 'define', [
+          [ '_att', [ [ 'sum0', [], 2 ] ], 2 ],
+          [ '_att', [ [ 'a', [], 2 ] ], 2 ],
+          [ '_att', [ [ 'b', [], 2 ] ], 2 ],
+          [ '+', [ [ 'a', [], 2 ], [ 'b', [], 2 ] ], 2 ]
+        ], 2 ]
+      )
+      expect(
+        r['vars']['sum1'][1]['tree']
+      ).to eq(
+        [ 'define', [
+          [ '_att', [ [ '_sqs', 'sum1', 3 ] ], 3 ],
+          [ '_att', [ [ 'a', [], 3 ] ], 3 ],
+          [ '_att', [ [ 'b', [], 3 ] ], 3 ],
+          [ '_att', [ [ 'c', [], 3 ] ], 3 ],
+          [ '+', [ [ 'a', [], 3 ], [ 'b', [], 3 ] ], 3 ]
+        ], 3 ]
+      )
+      expect(
+        r['vars']['sum2'][1]['tree']
+      ).to eq(
+        [ 'define', [
+          [ '_att', [ [ 'sum2', [], 4 ] ], 4 ],
+          [ '_att', [ [ 'a', [], 4 ] ], 4 ],
+          [ '_att', [ [ 'b', [], 4 ] ], 4 ],
+          [ '+', [ [ 'a', [], 4 ], [ 'b', [], 4 ] ], 4 ]
+        ], 4 ]
+      )
+      expect(
+        r['vars']['sum3'][1]['tree']
+      ).to eq(
+        [ 'def', [
+          [ '_att', [ [ 'a', [], 6 ] ], 6 ],
+          [ '_att', [ [ 'b', [], 6 ], [ '_num', 1, 6 ] ], 6 ],
+          [ '+', [ [ 'a', [], 6 ], [ 'b', [], 6 ] ], 6 ]
+        ], 6 ]
+      )
+    end
+
+    it 'accepts default parameter values'
   end
 
   describe 'def' do

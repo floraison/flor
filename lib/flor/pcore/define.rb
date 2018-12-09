@@ -46,7 +46,7 @@ class Flor::Pro::Define < Flor::Procedure
 
   def receive_att
 
-    t = tree
+    t = flatten_tree
     cnode = lookup_var_node(@node, 'l')
     cnid = cnode['nid']
     fun = counter_next('funs') - 1
@@ -58,7 +58,7 @@ class Flor::Pro::Define < Flor::Procedure
       { 'nid' => nid, 'tree' => t, 'cnid' => cnid, 'fun' => fun },
       t[2] ]
 
-    if t[0] == 'define'
+    if @node['heap'] == 'define'
       name =
         if @message['point'] == 'execute'
           t[1].first[1].first[0]
@@ -69,6 +69,31 @@ class Flor::Pro::Define < Flor::Procedure
     end
 
     wrap('ret' => val)
+  end
+
+  protected
+
+  def flatten_tree
+
+    nam = @node['heap']
+    off = nam == 'define' ? 1 : 0
+    sig = tree[1][off..-2]
+
+    return tree if sig.all? { |a| a[1][0][1] == [] }
+
+    # There is a parenthese around the parameters, let's unwrap that...
+
+    hed = Flor.dup(tree[1][0, off])
+    sig = Flor.dup(sig)
+    bdy = Flor.dup(tree[1][-1, 1])
+
+    att0 = sig[0][1][0]
+    att0atts = att0[1]
+    att0[1] = []
+
+    sig = sig + att0atts
+
+    [ nam, hed + sig + bdy, *tree[2..-1] ]
   end
 end
 
