@@ -58,7 +58,7 @@ class Flor::Pro::Define < Flor::Procedure
       { 'nid' => nid, 'tree' => t, 'cnid' => cnid, 'fun' => fun },
       t[2] ]
 
-    if @node['heap'] == 'define'
+    if heap == 'define'
       name =
         if @message['point'] == 'execute'
           t[1].first[1].first[0]
@@ -75,9 +75,8 @@ class Flor::Pro::Define < Flor::Procedure
 
   def flatten_tree
 
-    nam = @node['heap']
-    off = nam == 'define' ? 1 : 0
-    sig = tree[1][off..-2]
+    off = heap == 'define' ? 1 : 0
+    sig = tree[1][off..-1].select { |t| t[0] == '_att' }
 
     return tree if sig.all? { |a| a[1][0][1] == [] }
 
@@ -85,7 +84,7 @@ class Flor::Pro::Define < Flor::Procedure
 
     hed = Flor.dup(tree[1][0, off])
     sig = Flor.dup(sig)
-    bdy = Flor.dup(tree[1][-1, 1])
+    bdy = Flor.dup(tree[1][(off + sig.length)..-1])
 
     att0 = sig[0][1][0]
     att0atts = att0[1]
@@ -93,7 +92,7 @@ class Flor::Pro::Define < Flor::Procedure
 
     sig = sig + att0atts
 
-    [ nam, hed + sig + bdy, *tree[2..-1] ]
+    [ heap, hed + sig + bdy, *tree[2..-1] ]
   end
 end
 

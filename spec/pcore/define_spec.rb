@@ -82,6 +82,9 @@ describe 'Flor procedures' do
           define sum2(a, b) \ (+ a b)
           set sum3
             def (a, b: 1) \ (+ a b)
+          define sum4 a, b
+            + a b
+            42 # whatever, the answer is always 42...
         })
 
       expect(r).to have_terminated_as_point
@@ -125,6 +128,17 @@ describe 'Flor procedures' do
           [ '_att', [ [ 'b', [], 6 ], [ '_num', 1, 6 ] ], 6 ],
           [ '+', [ [ 'a', [], 6 ], [ 'b', [], 6 ] ], 6 ]
         ], 6 ]
+      )
+      expect(
+        r['vars']['sum4'][1]['tree']
+      ).to eq(
+        [ 'define', [
+          [ '_att', [ [ 'sum4', [], 7 ] ], 7 ],
+          [ '_att', [ [ 'a', [], 7 ] ], 7 ],
+          [ '_att', [ [ 'b', [], 7 ],], 7 ],
+          [ '+', [ [ 'a', [], 8 ], [ 'b', [], 8 ] ], 8 ],
+          [ '_num', 42, 9 ],
+        ], 7 ]
       )
     end
 
