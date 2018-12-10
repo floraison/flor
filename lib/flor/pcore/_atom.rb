@@ -6,7 +6,7 @@ class Flor::Pro::Atom < Flor::Procedure
   def execute
 
     payload['ret'] =
-      case @node['heat0']
+      case heap
       when '_nul' then nil
       when '_func' then tree
       else tree[1]

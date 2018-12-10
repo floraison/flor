@@ -74,7 +74,7 @@ class Flor::Pro::ArrayQmark < Flor::Procedure
     t = Flor.type(@node['ret'])
 
     r =
-      case h0 = @node['heat0']
+      case h = heap
 
       when 'array?', 'list?' then t == :array
       when 'object?', 'hash?' 'dict?' then t == :object
@@ -89,7 +89,7 @@ class Flor::Pro::ArrayQmark < Flor::Procedure
       when 'pair?' then t == :array && @node['ret'].length == 2
       when 'float?' then t == :number && @node['ret'].to_s.index('.') != nil
 
-      else fail(Flor::FlorError.new("#{h0.inspect} not yet implemented", self))
+      else fail(Flor::FlorError.new("#{h.inspect} not yet implemented", self))
       end
 
     wrap_reply('ret' => r)

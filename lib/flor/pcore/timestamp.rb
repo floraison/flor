@@ -24,7 +24,7 @@ class Flor::Pro::TimeStamp < Flor::Procedure
   def receive_last
 
     payload['ret'] =
-      @node['heat0'][0, 1] == 'l' ?
+      heap[0, 1] == 'l' ?
       Time.now.strftime('%Y-%m-%dT%H:%M:%S') :
       Flor.ststamp
 

@@ -58,14 +58,14 @@ class Flor::Pro::Strings < Flor::Procedure
   def receive_last
 
     met =
-      case h0 = @node['heat0']
+      case heap
       when 'downcase', 'lowercase', 'lowcase' then :downcase
       when 'upcase', 'uppercase' then :upcase
       when 'capitalize' then :capitalize
       when 'strip', 'trim' then :strip
       when 'snakecase', 'snake_case' then :snakecase
       when 'camelcase', 'camelCase' then :camelcase
-      else fail NotImplementedError.new("#{h0.inspect} not implemented")
+      else fail NotImplementedError.new("#{heap.inspect} not implemented")
       end
     ret =
       process(

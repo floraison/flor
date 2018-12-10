@@ -67,7 +67,7 @@ class Flor::Pro::Break < Flor::Procedure
 
     if nid
 
-      ms += wrap_cancel('nid' => nid, 'flavour' => @node['heap'])
+      ms += wrap_cancel('nid' => nid, 'flavour' => heap)
     end
 
     unless is_ancestor_node?(nid)

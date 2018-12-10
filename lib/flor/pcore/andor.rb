@@ -23,7 +23,7 @@ class Flor::Pro::Andor < Flor::Procedure
 
   def execute
 
-    payload['ret'] = @node['heat0'] == 'and'
+    payload['ret'] = (heap == 'and')
 
     super
   end
@@ -32,11 +32,9 @@ class Flor::Pro::Andor < Flor::Procedure
 
     c = children[@fcid]; return super if c[0] == '_att' && [1].size == 2
 
-    h0 = @node['heat0']
-
     ret = Flor.true?(payload['ret'])
 
-    return wrap_reply if ((h0 == 'or' && ret) || (h0 == 'and' && ! ret))
+    return wrap_reply if ((heap == 'or' && ret) || (heap == 'and' && ! ret))
 
     super
   end
@@ -51,7 +49,7 @@ class Flor::Pro::Andor < Flor::Procedure
 #  def receive_last
 #
 #    payload['ret'] =
-#      if @node['heat0'] == 'or'
+#      if heap == 'or'
 #        !! @node['rets'].index { |r| Flor.true?(r) }
 #      else
 #        ! @node['rets'].index { |r| Flor.false?(r) }

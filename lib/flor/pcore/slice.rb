@@ -63,7 +63,7 @@ class Flor::Pro::Slice < Flor::Procedure
 
   def receive_last
 
-    send(@node['heat0'])
+    send(heap)
   end
 
   protected

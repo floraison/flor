@@ -70,7 +70,7 @@ class Flor::Pro::Matchr < Flor::Procedure
     m = rex.match(str)
 
     payload['ret'] =
-      case @node['heap']
+      case heap
       when 'match?' then !! m
       when 'pmatch' then (m && (m[1] || m[0])) || ''
       else m ? m.to_a : []

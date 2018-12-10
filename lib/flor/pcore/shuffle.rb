@@ -56,14 +56,14 @@ class Flor::Pro::Shuffle < Flor::Procedure
       (@node['rets'] + [ node_payload_ret ])
         .find { |r| r.is_a?(Array) }
 
-    fail Flor::FlorError.new("no array to #{@node['heat0']}") unless arr
+    fail Flor::FlorError.new("no array to #{heap}") unless arr
 
     cnt =
       att('count', nil) ||
       @node['rets'].find { |r| r.is_a?(Integer) }
 
     ret = arr.sample(cnt || arr.size)
-    ret = ret.first if cnt == nil && @node['heat0'] == 'sample'
+    ret = ret.first if cnt == nil && heap == 'sample'
 
     wrap('ret' => ret)
   end

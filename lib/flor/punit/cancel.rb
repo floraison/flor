@@ -55,7 +55,7 @@ class Flor::Pro::Cancel < Flor::Procedure
     nids += tags_to_nids(tags)
     nids = nids.uniq
 
-    fla = @node['heap']
+    fla = heap
 
     messages = nids
       .collect { |nid| wrap_cancel('nid' => nid, 'flavour' => fla)[0] }

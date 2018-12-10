@@ -31,7 +31,7 @@ class Flor::Pro::Move < Flor::Procedure
 
     wrap_cancel(
       'nid' => nid,
-      'flavour' => @node['heap'], # "move"
+      'flavour' => heap, # "move"
       'payload' => rep.any? ? payload.copy_current : payload.current,
       'to' => to) +
     rep
