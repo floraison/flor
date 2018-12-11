@@ -12,6 +12,7 @@
 .viminfo
 .vimgrep
 #.vimshorts
+.vimmarks
 
 tmp/*.db
 tmp/*.log
