@@ -24,8 +24,7 @@ describe 'Flor core' do
           3
         })
 
-
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(3)
     end
 
@@ -36,7 +35,7 @@ describe 'Flor core' do
           3 tags: 'xyz'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(3)
 
       expect(
@@ -74,7 +73,7 @@ describe 'Flor core' do
           sequence
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']['ret']
@@ -96,7 +95,7 @@ describe 'Flor core' do
             sum
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['ret'][0]).to eq('_func')
       expect(r['payload']['ret'][1]['nid']).to eq('0_0')
@@ -120,7 +119,7 @@ describe 'Flor core' do
             sum 1 2
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(3)
     end
 
@@ -140,7 +139,7 @@ describe 'Flor core' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']['ret']
@@ -167,7 +166,7 @@ describe 'Flor core' do
             sum 7 3
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(10)
     end
 
@@ -179,7 +178,7 @@ describe 'Flor core' do
           f.ret 6 2
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(8)
     end
 
@@ -190,9 +189,23 @@ describe 'Flor core' do
           (def x y \ (+ x y)) 7 2
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(9)
     end
+
+    it 'works with default values for parameters' do
+
+      r = @executor.launch(
+        %q{
+          (def x y:(+ 1 1) \ (+ x y)) 7
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq(9)
+    end
+
+    it 'works with named parameters out of orders'
+    it 'works with a mix of default values and named parameters'
   end
 
   describe 'a closure' do
@@ -212,7 +225,7 @@ describe 'Flor core' do
             add3 7
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['vars'].keys.sort).to eq(%w[ add3 make_adder ])
 
@@ -254,7 +267,7 @@ describe 'Flor core' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ 23, 10 ])
     end
 
@@ -276,7 +289,7 @@ describe 'Flor core' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ 23, 10, 83, 80, -2 ])
 #puts "-" * 80
 #pp r

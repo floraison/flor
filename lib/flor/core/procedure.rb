@@ -722,23 +722,29 @@ class Flor::Procedure < Flor::Node
     cni = fun[1]['cnid'] # closure nid
 
     t = fun[1]['tree']
-    t = t || lookup_tree(fni) # TODO when fun[1]['tree'] is settled, drop me
+    #t = t || lookup_tree(fni) # TODO when fun[1]['tree'] is settled, drop me
     fail ArgumentError.new("couldn't find function at #{fni}") unless t
 
     t = t[0] if t[0].is_a?(Array)
     t = t[1][0] if t[0] == '_att'
 
-    sig = t[1].select { |c| c[0] == '_att' }
-    sig = sig.drop(1) if t[0] == 'define'
+    #sig = t[1].select { |c| c[0] == '_att' }
+    #sig = sig.drop(1) if t[0] == 'define'
+    #
+    #vars = opts[:vars] || {}
+    #  #
+    #vars['arguments'] = args # Should I dup? Dup upstream?
+    #  #
+    #sig.each_with_index do |att, i|
+    #  key = att[1].first[0]
+    #  vars[key] = args[i]
+    #end
+
+    #t1 = t[0] == 'define' ? t[1].drop(1) : t[1]
+    t[1][0][0] = '_name' if t[0] == 'define'
 
     vars = opts[:vars] || {}
-      #
     vars['arguments'] = args # Should I dup? Dup upstream?
-      #
-    sig.each_with_index do |att, i|
-      key = att[1].first[0]
-      vars[key] = args[i]
-    end
 
     ms = wrap(
       'point' => 'execute',

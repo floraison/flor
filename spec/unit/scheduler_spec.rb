@@ -111,7 +111,7 @@ describe 'Flor unit' do
           expect(
             d['counters']
           ).to eq({
-            'funs' => 1, 'msgs' => 29, 'omsgs' => 0, 'subs' => 1, 'runs' => 1
+            'funs' => 1, 'msgs' => 23, 'omsgs' => 0, 'subs' => 1, 'runs' => 1
           })
         end
       end
@@ -150,7 +150,7 @@ describe 'Flor unit' do
           expect(
             d['counters']
           ).to eq({
-            'funs' => 1, 'msgs' => 29, 'omsgs' => 0, 'subs' => 1, 'runs' => 1
+            'funs' => 1, 'msgs' => 23, 'omsgs' => 0, 'subs' => 1, 'runs' => 1
           })
         end
 

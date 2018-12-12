@@ -90,7 +90,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       wait_until { @unit.traces.count > 1 }
 
@@ -152,8 +152,6 @@ describe 'Flor punit' do
         terminated:
         trigger:0_0 <-trigger:36:0_0
         execute:0_0_1-1 <-trigger:36:0_0
-        execute:0_0_1_0-1 <-trigger:36:0_0
-        receive:0_0_1-1 <-trigger:36:0_0
         execute:0_0_1_1-1 <-trigger:36:0_0
         execute:0_0_1_1_0-1 <-trigger:36:0_0
         execute:0_0_1_1_0_0-1 <-trigger:36:0_0
@@ -189,7 +187,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       wait_until { @unit.traces.count > 1 }
 
@@ -270,7 +268,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       wait_until { @unit.traces.count > 6 }
 
@@ -305,7 +303,7 @@ describe 'Flor punit' do
       }, wait: true)
       #exid1 = r['exid']
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       wait_until { @unit.traces.count > 1 }
 
@@ -350,7 +348,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['vars']['l']).to eq(%w[ over hello ])
     end
 
@@ -363,7 +361,7 @@ describe 'Flor punit' do
           trap tag: 't0' \ def msg \ trace "t0_$(msg.exid)"
       }, wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       wait_until {
         exe = @unit.executions[exid: r['exid']]
@@ -418,7 +416,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 4 }
 
@@ -450,7 +448,7 @@ describe 'Flor punit' do
           },
           wait: 'terminated')
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count >= 2 }
 
@@ -477,7 +475,7 @@ describe 'Flor punit' do
           },
           wait: 'terminated')
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count >= 2 }
 
@@ -507,7 +505,7 @@ describe 'Flor punit' do
           },
           wait: 'terminated')
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 2 }
 
@@ -542,7 +540,7 @@ describe 'Flor punit' do
           },
           wait: 'terminated')
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 2 }
 
@@ -578,7 +576,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 1 }
 
@@ -604,9 +602,9 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
-        wait_until { @unit.traces.count > 7 }
+        wait_until { @unit.traces.count >= 6 }
 
         expect(
           @unit.traces
@@ -616,11 +614,9 @@ describe 'Flor punit' do
           0:c-fun0-0_1_1_0_0_1_0_0-1
           1:t-heat-0_1-1
           2:t-heat-0_1-1
-          3:t-heat-0_1-1
-          4:c-fun0-0_1_1_0_0_1_0_0-5
-          5:t-heat-0_1-5
-          6:t-heat-0_1-5
-          7:t-heat-0_1-5
+          3:c-fun0-0_1_1_0_0_1_0_0-4
+          4:t-heat-0_1-4
+          5:t-heat-0_1-4
         }.ftrim)
       end
 
@@ -639,7 +635,7 @@ describe 'Flor punit' do
           },
           wait: 'terminated')
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 1 }
 
@@ -677,7 +673,7 @@ describe 'Flor punit' do
           },
           wait: 'terminated')
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count >= 1 }
 
@@ -687,8 +683,8 @@ describe 'Flor punit' do
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%{
           0:c-fun0-0_1_1_0_0_1_0_0-2
-          1:t-execute-fun0-0_4_0
-          2:c-fun1-0_2_1_0_0_1_0_0-6
+          1:c-fun1-0_2_1_0_0_1_0_0-6
+          2:t-execute-fun0-0_4_0
           3:t-receive--0_4_0
           4:t-execute-fun1-0_4_1
           5:t-receive--0_4_0
@@ -719,7 +715,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 1 }
 
@@ -729,8 +725,8 @@ describe 'Flor punit' do
             .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
         ).to eq(%{
           0:c-fun0-0_1_1_0_0_1_0_0-2
-          1:t-execute-fun0-0_4_0
-          2:c-fun1-0_2_1_0_0_1_0_0-4
+          1:c-fun1-0_2_1_0_0_1_0_0-4
+          2:t-execute-fun0-0_4_0
           3:t-execute-fun1-0_4_1
           4:c-funx-0_3_1_0_0_1_0_0-7
           5:t-execute-fun0-0_4_2
@@ -822,19 +818,19 @@ describe 'Flor punit' do
         # 1
         r = @unit.launch("noret tag: 't0'", domain: 'org.acme', wait: true)
         #exid1 = r['exid']
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
           # completely different domain, not trapped
 
         # 2
         r = @unit.launch("noret tag: 't0'", domain: 'net.acme', wait: true)
         exid2 = r['exid']
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
           # same domain, trapped
 
         # 3
         r = @unit.launch("noret tag: 't0'", domain: 'net.acme.s0', wait: true)
         #exid3 = r['exid']
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
           # subdomain, not trapped
 
         wait_until { @unit.traces.count == 2 }
@@ -868,19 +864,19 @@ describe 'Flor punit' do
         # 1
         r = @unit.launch("noret tag: 't0'", domain: 'org.acme', wait: true)
         #exid1 = r['exid']
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
           # completely different domain, not trapped
 
         # 2
         r = @unit.launch("noret tag: 't0'", domain: 'net.acme', wait: true)
         exid2 = r['exid']
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
           # same domain, trapped
 
         # 3
         r = @unit.launch("noret tag: 't0'", domain: 'net.acme.s0', wait: true)
         exid3 = r['exid']
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
           # subdomain of net.acme, trapped
 
         wait_until { @unit.traces.count == 3 }
@@ -914,7 +910,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 2 }
 
@@ -941,7 +937,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 2 }
 
@@ -970,7 +966,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 2 }
 
@@ -996,7 +992,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 2 }
 
@@ -1029,7 +1025,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 4 }
 
@@ -1057,7 +1053,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 3 }
 
@@ -1085,7 +1081,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 3 }
 
@@ -1107,7 +1103,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 0 }
 
@@ -1131,7 +1127,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 0 }
 
@@ -1155,7 +1151,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 0 }
 
@@ -1185,7 +1181,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 3 }
 
@@ -1213,7 +1209,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 3 }
 
@@ -1243,7 +1239,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 3 }
 
@@ -1268,7 +1264,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 0 }
 
@@ -1296,7 +1292,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 0 }
 
@@ -1333,7 +1329,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 2 }
 
@@ -1361,7 +1357,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until { @unit.traces.count > 0 }
 

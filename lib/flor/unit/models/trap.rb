@@ -104,12 +104,16 @@ module Flor
 
       if vs = msg['vars']
 
-        k = vs.keys.find { |kk| kk != 'arguments' } || 'msg'
-        vs[k] = message
+        #k = vs.keys.find { |kk| kk != 'arguments' } || 'msg'
+        #vs[k] = message
+          #
+        vs['arguments'] = [ message ]
 
-        if sig = message['point'] == 'signal' && message['name']
+        if sig = (message['point'] == 'signal' && message['name'])
           vs['sig'] = sig
         end
+          #
+          # FIXME use new 'arguments' system for "_apply"/'execute'
       end
 
       if dat['pl'] == 'event'
@@ -125,9 +129,9 @@ module Flor
         'trap_id' => self.id,
         'message' => msg,
         'sm' => message['m'] }
-            #'dbg' => xx
-          #.tap { |m| pp m['message'] }
-          #.tap { |m| pp m }
+#.tap { |m| pp m }
+#.tap { |m| pp m['message'] }
+            #'dbg' => xx }
     end
 
     def to_hash

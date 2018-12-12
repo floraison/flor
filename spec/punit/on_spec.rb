@@ -41,7 +41,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['l']).to eq(%w[ requested done. approved(approve) ])
       end
 
@@ -62,7 +62,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['l']).to eq(%w[ a c approve b blue ])
       end
 
@@ -82,7 +82,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['l']).to eq(%w[ in red-zero out red-one ])
       end
 
@@ -103,7 +103,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['l']).to eq(%w[ in black red blue out white ])
       end
     end
@@ -161,7 +161,7 @@ describe 'Flor punit' do
           },
           wait: 'terminated')
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['l']).to eq([ 0, 'cancel:0_1', 3 ])
       end
     end
@@ -181,7 +181,7 @@ describe 'Flor punit' do
           },
           wait: 'terminated')
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['payload']['l']).to eq([ 'a', 'b', 'b' ])
       end
     end

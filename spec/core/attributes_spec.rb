@@ -25,7 +25,7 @@ describe 'Flor core' do
           _dump []: 12
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(nil)
 
       dump = r['vars']['dumps'][0]
@@ -48,7 +48,7 @@ describe 'Flor core' do
           _dump k: 'V'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       dump = r['vars']['dumps'][0]
 
@@ -66,7 +66,7 @@ describe 'Flor core' do
           _dump k: 'V'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       dump = r['vars']['dumps'][0]
 
@@ -82,7 +82,7 @@ describe 'Flor core' do
           _dump kk: 'V'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       dump = r['vars']['dumps'][0]
 
@@ -100,7 +100,7 @@ describe 'Flor core' do
           _dump (k _): 'V'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       dump = r['vars']['dumps'][0]
 

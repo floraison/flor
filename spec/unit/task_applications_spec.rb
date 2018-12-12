@@ -499,7 +499,7 @@ describe 'Flor unit' do
         @unit.journal
           .each_with_index
           .collect { |m, i| "#{i}:#{m['point']}:#{m['from']}->#{m['nid']}" }
-          .slice(0, 37) # trim out the last 'end'
+          .slice(0, 33) # trim out the last 'end'
           .join("\n")
       ).to eq(%{
         0:execute:->0
@@ -523,22 +523,18 @@ describe 'Flor unit' do
         18:receive:->0_1
         19:receive:0_1->0
         20:execute:0->0_0_0-1
-        21:execute:0_0_0-1->0_0_0_0-1
-        22:receive:0_0_0_0-1->0_0_0-1
-        23:execute:0_0_0-1->0_0_0_1-1
-        24:receive:0_0_0_1-1->0_0_0-1
-        25:execute:0_0_0-1->0_0_0_2-1
-        26:execute:0_0_0_2-1->0_0_0_2_0-1
-        27:execute:0_0_0_2_0-1->0_0_0_2_0_0-1
-        28:receive:0_0_0_2_0_0-1->0_0_0_2_0-1
-        29:receive:0_0_0_2_0-1->0_0_0_2-1
-        30:cancel:0_0_0_2-1->0
-        31:cancel:0->0_0_0-1
-        32:cancel:0_0_0-1->0_0_0_2-1
-        33:receive:0_0_0_2-1->0_0_0-1
-        34:receive:0_0_0-1->0
-        35:receive:0->
-        36:terminated:0->
+        21:execute:0_0_0-1->0_0_0_2-1
+        22:execute:0_0_0_2-1->0_0_0_2_0-1
+        23:execute:0_0_0_2_0-1->0_0_0_2_0_0-1
+        24:receive:0_0_0_2_0_0-1->0_0_0_2_0-1
+        25:receive:0_0_0_2_0-1->0_0_0_2-1
+        26:cancel:0_0_0_2-1->0
+        27:cancel:0->0_0_0-1
+        28:cancel:0_0_0-1->0_0_0_2-1
+        29:receive:0_0_0_2-1->0_0_0-1
+        30:receive:0_0_0-1->0
+        31:receive:0->
+        32:terminated:0->
       }.ftrim)
     end
   end

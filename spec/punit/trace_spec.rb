@@ -36,7 +36,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']).to eq({ 'ret' => nil })
 
       traces = @unit.traces.all
@@ -65,7 +65,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']).to eq({ 'ret' => nil })
 
       expect(
@@ -85,7 +85,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['ret'][0]).to eq('_func')
       expect(r['payload']['ret'][1].keys).to eq(%w[ nid tree cnid fun ])
@@ -132,7 +132,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(nil)
 
       expect(
@@ -187,7 +187,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(123)
     end
   end

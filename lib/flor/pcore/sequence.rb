@@ -10,7 +10,7 @@ class Flor::Pro::Sequence < Flor::Procedure
   #   task 'charly'
   # ```
 
-  names %w[ sequence _apply begin ]
+  names %w[ sequence begin ]
 
   def cancel_when_closed
 
