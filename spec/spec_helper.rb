@@ -194,6 +194,21 @@ RSpec::Matchers.define :point_to do |path|
   end
 end
 
+RSpec::Matchers.define :have_as_point do |point|
+
+  match do |actual|
+
+    display_error_if_failed(actual) unless point == 'failed'
+
+    actual['point'] == point
+  end
+
+  failure_message do |actual|
+
+    "expected message point to be \"#{point}\", not \"#{actual['point']}\""
+  end
+end
+
 RSpec::Matchers.define :have_terminated_as_point do
 
   match do |actual|
