@@ -7,7 +7,12 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
 
     vars = @node['vars'] = {}
     args = message['arguments']
+
     vars['arguments'] = args
+
+    #vars['args'] = args.collect(&:last)
+      #
+      # FIXME values get stored twice... use some kind of pseudo-variable
 
     tr = tree
     rewrites = {}

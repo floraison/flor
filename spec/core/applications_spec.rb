@@ -206,6 +206,39 @@ describe 'Flor core' do
 
     it 'works with named parameters out of orders'
     it 'works with a mix of default values and named parameters'
+
+    it "has access to the 'arguments' var" do
+
+      r = @executor.launch(
+        %q{
+          define f
+            arguments
+          f 1 [ 2 3 ] d: 'four'
+        })
+
+      expect(r).to have_terminated_as_point
+
+      expect(
+        r['payload']['ret']
+      ).to eq([
+        [ nil, 1 ], [ nil, [ 2, 3 ] ], [ 'd', 'four' ]
+      ])
+    end
+
+    it "has access to the 'args' var"# do
+#
+#      r = @executor.launch(
+#        %q{
+#          define f
+#            args
+#          f 1 [ 2 3 ] d: 'four'
+#        })
+#
+#      expect(r).to have_terminated_as_point
+#      expect(r['payload']['ret']).to eq([ 1, [ 2, 3 ], 'four' ])
+#    end
+
+    it "has access to the 'hargs' var"
   end
 
   describe 'a closure' do
