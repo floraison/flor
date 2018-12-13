@@ -181,7 +181,7 @@ class Flor::Pro::Sort < Flor::Procedure
     if kab && @node['memo'].has_key?(kab)
       quick_partition_receive(ra['sub'], @node['memo'][kab])
     else
-      apply(@node['fun'], [ va, vb ], tree[2])
+      apply(@node['fun'], [ [ 'a', va ], [ 'b', vb ] ], tree[2])
         .tap { |ms| ra['sub'] = Flor.sub_nid(ms.first['nid']) }
     end
   end

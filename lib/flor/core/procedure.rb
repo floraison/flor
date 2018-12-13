@@ -65,8 +65,7 @@ class Flor::Procedure < Flor::Node
           if Flor.is_message?(mop)
             [ Flor.dup(mop).merge!('msg' => msg) ]
           else # procedure
-            err = msg['error']
-            args = [ msg, err ].compact
+            args = [ [ 'msg', msg ], [ 'err', msg['error'] ] ]
             apply(mop, args, mop[2])
           end) }
   end
@@ -728,29 +727,16 @@ class Flor::Procedure < Flor::Node
     t = t[0] if t[0].is_a?(Array)
     t = t[1][0] if t[0] == '_att'
 
-    #sig = t[1].select { |c| c[0] == '_att' }
-    #sig = sig.drop(1) if t[0] == 'define'
-    #
-    #vars = opts[:vars] || {}
-    #  #
-    #vars['arguments'] = args # Should I dup? Dup upstream?
-    #  #
-    #sig.each_with_index do |att, i|
-    #  key = att[1].first[0]
-    #  vars[key] = args[i]
-    #end
-
-    #t1 = t[0] == 'define' ? t[1].drop(1) : t[1]
     t[1][0][0] = '_name' if t[0] == 'define'
 
-    vars = opts[:vars] || {}
-    vars['arguments'] = args # Should I dup? Dup upstream?
+    #vars = opts[:vars] || {}
+    #vars['arguments'] = args # Should I dup? Dup upstream?
 
     ms = wrap(
       'point' => 'execute',
       'nid' => ani,
       'tree' => [ '_apply', t[1], line ],
-      'vars' => vars,
+      'arguments' => args,
       'cnid' => cni)
 
     if oe = fun[1]['on_error']

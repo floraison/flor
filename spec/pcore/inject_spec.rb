@@ -25,7 +25,7 @@ describe 'Flor procedures' do
             res + elt
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq('01b3')
     end
 
@@ -37,7 +37,7 @@ describe 'Flor procedures' do
             res + elt
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(13)
     end
 
@@ -49,7 +49,7 @@ describe 'Flor procedures' do
             res + elt
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(17)
     end
 
@@ -63,7 +63,7 @@ describe 'Flor procedures' do
                res + val + idx
            })
 
-         expect(r['point']).to eq('terminated')
+         expect(r).to have_terminated_as_point
          expect(r['payload']['ret']).to eq(16)
       end
     end

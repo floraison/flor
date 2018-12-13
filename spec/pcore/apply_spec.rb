@@ -29,7 +29,7 @@ describe 'Flor procedures' do
             apply sum 1 2
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(3)
     end
   end

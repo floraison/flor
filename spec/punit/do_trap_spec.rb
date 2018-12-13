@@ -38,7 +38,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       wait_until { @unit.traces.count > 1 }
 

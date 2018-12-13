@@ -26,7 +26,7 @@ describe 'Flor procedures' do
               + r x '.' (+ i 1) '/' l ','
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq('01.1/3,b.2/3,3.3/3,')
     end
 
@@ -38,7 +38,7 @@ describe 'Flor procedures' do
             def r x \ r + x
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(13)
     end
 
@@ -50,7 +50,7 @@ describe 'Flor procedures' do
             def r x \ r + x
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(17)
     end
 
@@ -61,7 +61,7 @@ describe 'Flor procedures' do
           reduce [ '0', 1, 'b', 3, '3f' ] v.+
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq('01b33f')
     end
 
@@ -72,20 +72,20 @@ describe 'Flor procedures' do
           reduce 4 [ 1, 2, 3 ] v.+
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(10)
     end
 
     it 'reduces objects' do
 
-       r = @executor.launch(
-         %q{
-           reduce 4 { a: 1, b: 2, c: 3 }
-             def r k v i \ r + v + i
-         })
+      r = @executor.launch(
+        %q{
+          reduce 4 { a: 1, b: 2, c: 3 }
+            def r k v i \ r + v + i
+        })
 
-       expect(r['point']).to eq('terminated')
-       expect(r['payload']['ret']).to eq(13)
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq(13)
     end
   end
 end

@@ -26,7 +26,7 @@ describe 'Flor core' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ 0 ])
     end
 
@@ -54,7 +54,7 @@ describe 'Flor core' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ 0, "cannot find \"x\"" ])
     end
 
@@ -66,7 +66,7 @@ describe 'Flor core' do
         },
         payload: { 'l' => [ -1 ] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ -1, "cannot find \"x\"" ])
     end
 
@@ -79,7 +79,7 @@ describe 'Flor core' do
             push f.l 0
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']).to eq({ 'ret' => 'muted.' })
     end
 
@@ -94,7 +94,7 @@ describe 'Flor core' do
             push f.l 0
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(2)
     end
   end

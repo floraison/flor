@@ -90,25 +90,31 @@ class Flor::Pro::Iterator < Flor::Procedure
 
   def apply_iteration
 
-    vars = determine_iteration_vars
+    #vars = determine_iteration_vars
+    #args = vars.values
+    #vars.each { |k, v| @node['vars'][k] = v }
+    #
+    #apply(@node['fun'], args, tree[2])
 
-    args = vars.values
-    vars.each { |k, v| @node['vars'][k] = v }
-
-    apply(@node['fun'], args, tree[2])
+    apply(@node['fun'], determine_iteration_args, tree[2])
   end
 
-  def determine_iteration_vars
+  def determine_iteration_args
 
     idx = @node['idx']
     elt = @node['col'][idx]
     len = @node['col'].length
 
-    if @node['ocol'].is_a?(Array)
-      { 'elt' => elt, 'idx' => idx, 'len' => len }
-    else
-      { 'key' => elt[0], 'val' => elt[1], 'idx' => idx, 'len' => len }
-    end
+    args =
+      if @node['ocol'].is_a?(Array)
+        [ [ 'elt', elt ] ]
+      else
+        [ [ 'key', elt[0] ], [ 'val', elt[1] ] ]
+      end
+    args << [ 'idx', idx ]
+    args << [ 'len', len ]
+
+    args
   end
 
   def iterator_over?

@@ -56,16 +56,6 @@ class Flor::Pro::Cmap < Flor::Procedure
 
   protected
 
-  def determine_iteration_vars(col, idx)
-
-    if col.is_a?(Array)
-      { 'elt' => col[idx], 'idx' => idx, 'len' => col.length }
-    else
-      key, val = col.to_a[idx]
-      { 'key' => key, 'val' => val, 'idx' => idx, 'len' => col.length }
-    end
-  end
-
   def receive_last_argument
 
     col = nil
@@ -90,9 +80,23 @@ class Flor::Pro::Cmap < Flor::Procedure
     col
       .collect
       .with_index { |e, i|
-        vars = determine_iteration_vars(col, i)
-        apply(fun, vars.values, tree[2], vars: vars) }
+        apply(fun, determine_iteration_args(col, i), tree[2]) }
       .flatten(1)
+  end
+
+  def determine_iteration_args(col, idx)
+
+    args =
+      if col.is_a?(Array)
+        [ [ 'elt', col[idx] ] ]
+      else
+        e = col.to_a[idx]
+        [ [ 'key', e[0] ], [ 'val', e[1] ] ]
+      end
+    args << [ 'idx', idx ]
+    args << [ 'len', col.length ]
+
+    args
   end
 
   def receive_ret

@@ -36,7 +36,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ 2, 4, 6 ])
 
       #expect(
@@ -58,7 +58,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ [ 0, 10 ], [ 1, 11 ], [ 2, 12 ] ])
     end
 
@@ -71,7 +71,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ [ 0, 10 ], [ 1, 11 ], [ 2, 12 ] ])
     end
 
@@ -84,7 +84,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']['ret']
@@ -104,7 +104,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ 1, 2, 3 ])
     end
 
@@ -118,7 +118,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']['ret']
@@ -137,7 +137,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']['ret']
@@ -158,7 +158,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']['ret']
@@ -177,7 +177,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']['ret']
@@ -196,7 +196,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']['ret']
@@ -228,7 +228,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ 0, 1, 2, 3 ])
     end
 
@@ -244,7 +244,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ 3, 4, 5 ])
     end
   end

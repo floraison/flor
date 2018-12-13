@@ -39,7 +39,7 @@ describe 'Flor unit' do
                   "$(i):$(c)"
         }, wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ %w[ 1:x 1:y ], %w[ 2:x 2:y ] ])
 
       sleep 0.210
@@ -87,7 +87,7 @@ describe 'Flor unit' do
                 continue _ if (> j 0)
         }, wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       sleep 0.210
 

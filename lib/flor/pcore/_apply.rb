@@ -5,22 +5,35 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
 
   def execute
 
-    args = @node['vars']['arguments']
+    vars = @node['vars'] = {}
+    args = message['arguments']
+    vars['arguments'] = args
 
     tr = tree
     rewrites = {}
 
-    tr[1]
-      .select { |t| t[0] == '_att' }
-      .collect { |t| t[1] }
-      .each_with_index { |a, i|
-        if i < args.length
-          @node['vars'][a[0][0]] = args[i]
-        elsif a.length > 1
-          rewrites[i] = [ 'set', a, tree[2] ]
-        else
-          @node['vars'][a[0][0]] = nil
-        end }
+    atts = tr[1].inject([]) { |a, t| a << t[1] if t[0] == '_att'; a }
+#puts "---"
+#puts "args:"
+#pp args
+#puts "atts:"
+#pp atts
+
+    index = 0
+    atts.each_with_index { |(att_key, att_val), att_i|
+#puts "--- #{index} ---"; p att
+      key = att_key[0]
+      if arg = args[index]
+        vars[key] = arg.last
+      elsif att_val
+        rewrites[att_i] = [ 'set', [ att_key, att_val ], tree[2] ]
+      else
+        vars[key] = nil
+      end
+      index += 1 }
+
+    args.each { |ak, av| vars[ak] = av unless vars.has_key?(ak) }
+#print "vars: "; pp vars
 
     if rewrites.any?
       rewrites.each { |i, t| tr[1][i] = t }

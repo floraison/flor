@@ -83,7 +83,7 @@ describe 'Flor procedures' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ 0, "cannot find \"x\"" ])
     end
 
@@ -103,9 +103,8 @@ describe 'Flor procedures' do
             push f.l 1
         })
 
-      expect(
-        r['point']
-      ).to eq('terminated')
+      expect(r).to have_terminated_as_point
+
       expect(
         r['payload']['l']
       ).to eq([ 0, [ 'F', "cannot find \"x\"" ] ])
@@ -127,9 +126,8 @@ describe 'Flor procedures' do
             push f.l 1
         })
 
-      expect(
-        r['point']
-      ).to eq('terminated')
+      expect(r).to have_terminated_as_point
+
       expect(
         r['payload']['l']
       ).to eq([ 0, [ 'F', "cannot find \"x\"" ] ])
@@ -151,9 +149,8 @@ describe 'Flor procedures' do
             push f.l 1
         })
 
-      expect(
-        r['point']
-      ).to eq('terminated')
+      expect(r).to have_terminated_as_point
+
       expect(
         r['payload']['l']
       ).to eq([ 0, [ 'A', "cannot find \"x\"" ] ])

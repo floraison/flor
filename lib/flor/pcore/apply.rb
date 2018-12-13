@@ -40,13 +40,12 @@ class Flor::Pro::Apply < Flor::Procedure
 
   def receive_last
 
-    args = @node['atts'].collect(&:last)
-
+    args = @node['atts']
     nht = @node['heat']
 
     src =
       Flor.is_proc_tree?(nht) && nht[1]['proc'] == 'apply' ?
-      args.shift :
+      args.shift[1] :
       nht
 
     ms = apply(src, args, tree[2])

@@ -102,23 +102,14 @@ module Flor
 
       msg['trap_id'] = self.id
 
-      if vs = msg['vars']
+      args = msg['arguments'] = [ [ 'msg', message ] ]
 
-        #k = vs.keys.find { |kk| kk != 'arguments' } || 'msg'
-        #vs[k] = message
-          #
-        vs['arguments'] = [ message ]
-
-        if sig = (message['point'] == 'signal' && message['name'])
-          vs['sig'] = sig
-        end
-          #
-          # FIXME use new 'arguments' system for "_apply"/'execute'
+      if sig = (message['point'] == 'signal' && message['name'])
+        args << [ 'sig', sig ]
       end
-
       if dat['pl'] == 'event'
-        (msg['vars'] ||= {})['payload'] = msg['payload']
-        msg['payload'] = Flor.dup(message['payload'])
+        args << [ 'payload', msg['payload'] ]
+        msg['payload'] = Flor.dup(message['payload']) # FIXME try without this line...
       end
 
       { 'point' => 'trigger',

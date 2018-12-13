@@ -71,26 +71,13 @@ class Flor::Pro::Reduce < Flor::Pro::Iterator
     ) unless Flor.is_collection?(ocol)
 
     @node['col'] = Flor.to_coll(@node['ocol'])
-
     @node['res'] ||= @node['col'].shift
-
     @node['args'] = nil
   end
 
-  def determine_iteration_vars
+  def determine_iteration_args
 
-    res = @node['res']
-    idx = @node['idx']
-    elt = @node['col'][idx]
-    len = @node['col'].length
-
-    if @node['ocol'].is_a?(Array)
-      { 'res' => res, 'elt' => elt,
-        'idx' => idx, 'len' => len }
-    else
-      { 'res' => res, 'key' => elt[0], 'val' => elt[1],
-        'idx' => idx, 'len' => len }
-    end
+    super.unshift([ 'res', @node['res'] ])
   end
 
   def receive_iteration

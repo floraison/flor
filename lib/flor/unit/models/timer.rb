@@ -35,8 +35,7 @@ module Flor
 
       sm = d['m']
 
-      {
-        'point' => 'trigger',
+      { 'point' => 'trigger',
         'exid' => self.exid,
         'nid' => self.onid,
         'bnid' => self.nid,
@@ -44,8 +43,7 @@ module Flor
         'schedule' => self.schedule,
         'timer_id' => self.id,
         'message' => m,
-        'sm' => sm
-      }
+        'sm' => sm }
     end
 
     def ntime_t
