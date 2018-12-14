@@ -133,7 +133,7 @@ describe 'Flor punit' do
         %q{
           cmap { name: 'joe' age: 45 drink: 'coffee' }
             def k, v, i, l
-              "$(k):$(v):$(i):$(l)/$(key):$(val):$(idx):$(len)"
+              "$(k):$(v):$(i):$(l)"
         },
         wait: true)
 
@@ -142,9 +142,9 @@ describe 'Flor punit' do
       expect(
         r['payload']['ret']
       ).to eq([
-        'name:joe:0:3/name:joe:0:3',
-        'age:45:1:3/age:45:1:3',
-        'drink:coffee:2:3/drink:coffee:2:3'
+        'name:joe:0:3',
+        'age:45:1:3',
+        'drink:coffee:2:3',
       ])
     end
 

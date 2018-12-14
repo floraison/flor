@@ -73,9 +73,9 @@ describe 'Flor procedures' do
       r = @executor.launch(
         %q{
           #define eh err
-          #  push f.l err.error.msg
+          #  push f.l err.msg
           sequence
-            on_error (def err \ push f.l err.error.msg)
+            on_error (def err \ push f.l err.msg)
             #on_error eh
             push f.l 0
             push f.l x  # FAILS!
@@ -92,7 +92,7 @@ describe 'Flor procedures' do
       r = @executor.launch(
         %q{
           define on_err x
-            def err \ push f.l [ x, err.error.msg ]
+            def err \ push f.l [ x, err.msg ]
           sequence
             set f.l []
             on_error class: 'NadaError' (on_err 'n')  # no
@@ -115,7 +115,7 @@ describe 'Flor procedures' do
       r = @executor.launch(
         %q{
           define on_err x
-            def err \ push f.l [ x, err.error.msg ]
+            def err \ push f.l [ x, err.msg ]
           sequence
             set f.l []
             on_error 'NadaError' (on_err 'n')  # no
@@ -138,7 +138,7 @@ describe 'Flor procedures' do
       r = @executor.launch(
         %q{
           define on_err x
-            def err \ push f.l [ x, err.error.msg ]
+            def err \ push f.l [ x, err.msg ]
           sequence
             set f.l []
             on_error r/failed to write/ (on_err 'w')  # no
@@ -163,7 +163,7 @@ describe 'Flor procedures' do
           sequence
             set f.l []
             on_error class: 'SomeError'
-              def err \ push f.l [ 'F', err.error.msg ]
+              def err \ push f.l [ 'F', err.msg ]
             push f.l 0
             push f.l x  # FAILS!
             push f.l 1

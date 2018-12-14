@@ -25,7 +25,7 @@ describe 'Flor procedures' do
             + elt 3
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ 4, 5, 6 ])
     end
 
@@ -38,7 +38,7 @@ describe 'Flor procedures' do
             + elt 2
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ 3, 4, 5 ])
     end
 
@@ -51,7 +51,7 @@ describe 'Flor procedures' do
           collect [ 0, 1 ] add3
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ 3, 4 ])
     end
 
@@ -63,7 +63,7 @@ describe 'Flor procedures' do
             + elt 3
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ 3, 4, 5 ])
     end
 
@@ -75,7 +75,7 @@ describe 'Flor procedures' do
             [ idx, elt ]
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ [ 0, 'a' ], [ 1, 'b' ] ])
     end
 
@@ -89,8 +89,8 @@ describe 'Flor procedures' do
               [ key val ]
           })
 
-        expect(r['point']
-          ).to eq('terminated')
+        expect(r).to have_terminated_as_point
+
         expect(r['payload']['ret']
           ).to eq([ [ 'a', 'A' ], [ 'b', 'B' ], [ 'c', 'C' ] ])
       end
@@ -103,8 +103,8 @@ describe 'Flor procedures' do
               [ idx key val ]
           })
 
-        expect(r['point']
-          ).to eq('terminated')
+        expect(r).to have_terminated_as_point
+
         expect(r['payload']['ret']
           ).to eq([ [ 0, 'a', 'A' ], [ 1, 'b', 'B' ], [ 2, 'c', 'C' ] ])
       end
@@ -121,8 +121,8 @@ describe 'Flor procedures' do
             collect users \ elt.mail
           })
 
-        expect(r['point']
-          ).to eq('terminated')
+        expect(r).to have_terminated_as_point
+
         expect(r['payload']['ret']
           ).to eq(%w[ al@yahoo.com bo@hotmail.com cara@gmail.com ])
       end

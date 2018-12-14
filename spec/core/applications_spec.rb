@@ -204,7 +204,19 @@ describe 'Flor core' do
       expect(r['payload']['ret']).to eq(9)
     end
 
-    it 'works with named parameters out of orders'
+    it 'works with named parameters out of orders' do
+
+      r = @executor.launch(
+        %q{
+          define f a b
+            + a (/ b 2)
+          [ (f 1 2) (f b: 4 a: 1) ]
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq([ 2, 3 ])
+    end
+
     it 'works with a mix of default values and named parameters'
 
     it "has access to the 'arguments' var" do
