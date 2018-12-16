@@ -423,7 +423,11 @@ class Flor::Node
 
   def lookup_var_container(node, mod, key)
 
-    return lookup_dvar_container(mod, key) if node == nil || mod == 'd'
+    return lookup_dvar_container(mod, key) \
+      if node == nil || mod == 'd'
+
+    return lookup_arg_container(key) \
+      if mod == '' && %w[ args argv argh ].include?(key)
 
     if vwl = node['vwlist']
       return lookup_dvar_container(mod, key) unless var_match?(vwl, key)
@@ -472,6 +476,22 @@ class Flor::Node
     end
 
     {}
+  end
+
+  def lookup_arg_container(key)
+
+    vars = lookup_var_container(@node, '', 'arguments')
+    return {} unless vars
+
+    args = vars['arguments']
+
+    val =
+      case key
+      when 'args', 'argv' then args.collect(&:last)
+      else args.inject({}) { |h, (k, v)| h[k] = v if k; h }
+      end
+
+    { key => val }
   end
 
   def lookup_tag(mod, key)
