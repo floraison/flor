@@ -217,7 +217,20 @@ describe 'Flor core' do
       expect(r['payload']['ret']).to eq([ 2, 3 ])
     end
 
-    it 'works with a mix of default values and named parameters'
+    it 'works with a mix of default values and named parameters' do
+
+      r = @executor.launch(
+        %q{
+          define f a b:2 c:(3 + b)
+            + a (2 * b) (3 * c)
+          [ (f 2 1)
+            (f b: 4 a: 1)
+            (f a: 2 c: 1 b: -2) ]
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq([ 16, 30, 1 ])
+    end
 
     it "has access to the 'arguments' var" do
 
