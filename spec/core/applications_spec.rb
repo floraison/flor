@@ -381,16 +381,32 @@ describe 'Flor core' do
 
   describe 'args/argv/argh' do
 
-    it 'cannot be found outside of a fun call (args)'# do
-#
-#      r = @executor.launch('args')
-#
-#      expect(r['point']).to eq('failed')
-#      expect(r['error']['msg']).to eq('xxx')
-#    end
+    it 'cannot be found outside of a fun call (args)' do
 
-    it 'cannot be found outside of a fun call (argv)'
-    it 'cannot be found outside of a fun call (argh)'
+      r = @executor.launch('args')
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['lin']).to eq(1)
+      expect(r['error']['msg']).to eq('cannot find "args"')
+    end
+
+    it 'cannot be found outside of a fun call (argv)' do
+
+      r = @executor.launch('argv')
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['lin']).to eq(1)
+      expect(r['error']['msg']).to eq('cannot find "argv"')
+    end
+
+    it 'cannot be found outside of a fun call (argh)' do
+
+      r = @executor.launch('argh')
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['lin']).to eq(1)
+      expect(r['error']['msg']).to eq('cannot find "argh"')
+    end
   end
 end
 

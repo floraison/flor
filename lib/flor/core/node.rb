@@ -484,6 +484,7 @@ class Flor::Node
     return {} unless vars
 
     args = vars['arguments']
+    return {} unless args
 
     val =
       case key
