@@ -476,6 +476,7 @@ module Flor
         # with its 'on_error' turned on.
         #
         oep.trigger_on_error
+        #
       else
         #
         # Simply log and don't add further messages ([]) to execute

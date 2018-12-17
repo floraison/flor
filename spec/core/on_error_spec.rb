@@ -97,6 +97,20 @@ describe 'Flor core' do
       expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(2)
     end
+
+    it 'does not loop' do
+
+      r = @executor.launch(
+        %q{
+          define r
+            y _
+          sequence on_error: r
+            x _
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('don\'t know how to apply "y"')
+    end
   end
 end
 

@@ -285,6 +285,10 @@ class Flor::Node
 
   def on_error_parent
 
+    if (@node['in_on_error']) # prevent loop when error in on_error:
+      return nil
+    end
+
     if (@node['on_error'] || []).find { |criteria, _| match_on?(criteria) }
       return self
     end
