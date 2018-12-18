@@ -111,6 +111,32 @@ describe 'Flor core' do
       expect(r['point']).to eq('failed')
       expect(r['error']['msg']).to eq('don\'t know how to apply "y"')
     end
+
+    it 'does not mind nested error handlers' do
+
+      r = @executor.launch(
+        %q{
+          define rr
+            push f.l 'rr'
+          define r
+            sequence on_error: rr
+              y _
+          sequence on_error: r
+            x _
+        },
+        payload: { 'l' => [] })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['l']).to eq([ 'rr' ])
+
+      expect(
+        @executor.journal
+          .select { |m| m['point'] == 'failed' }
+          .count
+      ).to eq(
+        2
+      )
+    end
   end
 end
 
