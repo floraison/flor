@@ -283,18 +283,20 @@ class Flor::Node
     false
   end
 
-  def on_error_parent
+  def on_error_parent(skip=0)
 
     if (@node['in_on_error']) # prevent loop when error in on_error:
-      return nil
+      skip = skip + 1
+      #return nil
     end
 
     if (@node['on_error'] || []).find { |criteria, _| match_on?(criteria) }
-      return self
+      return self if skip < 1
+      skip = skip - 1
     end
 
     if pn = parent_node
-      return Flor::Node.new(@executor, pn, @message).on_error_parent
+      return Flor::Node.new(@executor, pn, @message).on_error_parent(skip)
     end
 
     nil
