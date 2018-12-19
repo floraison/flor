@@ -337,7 +337,16 @@ class Flor::Node
     Flor::Procedure.make(@executor, parent_node(node), @message)
   end
 
-  def is_ancestor_node?(nid, node=@node)
+  # Returns true if the current node has the node identified with nid as
+  # an ancestor. Returns false else.
+  #
+  def is_ancestor_node?(node_or_nid, node=@node)
+
+    nid = node_or_nid
+
+    return false unless nid
+
+    nid = node_or_nid['nid'] unless nid.is_a?(String)
 
     return false unless node
     return true if node['nid'] == nid

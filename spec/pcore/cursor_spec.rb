@@ -32,7 +32,7 @@ describe 'Flor pcore' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ 0, 1, 2 ])
     end
 
@@ -50,7 +50,7 @@ describe 'Flor pcore' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ 0_0_0_1 0_1_1 ])
     end
 
@@ -66,7 +66,7 @@ describe 'Flor pcore' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ 0_0_1 0_0_1-1 0_2_1-1 ])
     end
 
@@ -85,7 +85,7 @@ describe 'Flor pcore' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ 0_1_1 0_2_0_1 0_1_1-1 0_2_0_1-1 ])
     end
 
@@ -98,7 +98,7 @@ describe 'Flor pcore' do
             continue _ if node.nid == '0_1_0_0-1'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         @executor.journal
@@ -194,7 +194,7 @@ describe 'Flor pcore' do
             set f.done true
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         @executor.journal
@@ -236,7 +236,7 @@ describe 'Flor pcore' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ a c ])
     end
 
@@ -251,7 +251,7 @@ describe 'Flor pcore' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ a a ])
     end
 
@@ -275,7 +275,7 @@ describe 'Flor pcore' do
           },
           archive: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['l']).to eq(%w[ a b c ])
         #expect(r['payload']['ret']).to eq(1)
 
@@ -314,7 +314,7 @@ describe 'Flor pcore' do
           },
           archive: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['l']).to eq(%w[ a b c a ])
         expect(r['payload']['ret']).to eq(1)
 
@@ -359,7 +359,7 @@ describe 'Flor pcore' do
           },
           archive: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['l']).to eq(%w[ a b c a ])
         expect(r['payload']['ret']).to eq(1)
 
@@ -398,7 +398,7 @@ describe 'Flor pcore' do
           },
           archive: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['l']).to eq(%w[ a b c ])
         #expect(r['payload']['ret']).to eq(0)
 
@@ -436,7 +436,7 @@ describe 'Flor pcore' do
           },
           archive: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['l']).to eq(%w[ a b c ])
         expect(r['payload']['ret']).to eq(0)
 
@@ -468,7 +468,7 @@ describe 'Flor pcore' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(0)
       expect(r['vars'].keys).to eq(%w[ break continue move a b ])
     end

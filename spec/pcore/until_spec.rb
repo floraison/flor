@@ -29,7 +29,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(7)
     end
 
@@ -47,7 +47,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['a']).to eq(3)
       expect(r['payload']['ret']).to eq(123)
     end
@@ -63,7 +63,7 @@ describe 'Flor procedures' do
             set f.a (+ f.a 1)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['a']).to eq(2)
       expect(r['payload']['ret']).to eq(456)
 
@@ -94,7 +94,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(13)
     end
 
@@ -110,7 +110,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(123)
     end
 
@@ -127,7 +127,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['a']).to eq(1)
       expect(r['payload']['ret']).to eq(123)
     end
@@ -144,7 +144,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['a']).to eq(1)
       expect(r['payload']['ret']).to eq('over')
     end
@@ -165,7 +165,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ 0, 1, 2 ])
     end
 
@@ -185,7 +185,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq('x')
       expect(r['payload']['l']).to eq([ 0, 'a' ])
     end
@@ -206,7 +206,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq('x')
       expect(r['payload']['l']).to eq([ 0, 'a' ])
     end
@@ -233,7 +233,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ i0 j0 i1 j1 jj2 ii2 ])
       expect(r['payload']['ret']).to eq(123)
     end
@@ -258,7 +258,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['l']).to eq(%w[ i0 j0 i1 j1 jj2 ii2 ])
     end
@@ -279,7 +279,7 @@ describe 'Flor procedures' do
           },
           archive: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['payload']['ret']).to eq(0)
 
         expect(
@@ -318,7 +318,7 @@ describe 'Flor procedures' do
           },
           archive: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['payload']['ret']).to eq(nil)
         expect(r['vars']['l']).to eq(%w[ b a c a ])
 
@@ -356,7 +356,7 @@ describe 'Flor procedures' do
           },
           archive: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['payload']['ret']).to eq(0)
         expect(r['vars']['l']).to eq(%w[ a b c ])
 
@@ -388,7 +388,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(8)
     end
 
@@ -406,7 +406,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(2)
       expect(r['payload']['a']).to eq(3)
     end
@@ -424,7 +424,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(23)
     end
 
@@ -439,7 +439,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(nil)
     end
 
@@ -458,7 +458,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ 0 ])
       expect(r['payload']['ret']).to eq(456)
     end
@@ -477,7 +477,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq('done.')
       expect(r['payload']['l']).to eq([ 0 ])
     end
@@ -498,7 +498,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ a0 a1 b2 a2 b3 ])
       expect(r['payload']['ret']).to eq(123)
     end
@@ -522,7 +522,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq('done.')
       expect(r['payload']['l']).to eq(%w[ i1 i1j1 i1j2 ])
     end
@@ -546,7 +546,7 @@ describe 'Flor procedures' do
 
       expect(@executor.execution['nodes'].keys).to eq(%w[ 0 ])
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ i1 i1j1 i2 i2j1 i3 i3j1 ])
       expect(r['payload']['ret']).to eq(nil)
     end
