@@ -5,8 +5,14 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
 
   def execute
 
-    if oe = message['on_error']
-      @node['in_on_error'] = oe
+    #if oe = message['on_error']
+    #  @node['in_on_error'] = oe
+    #end
+      #
+      # which is equivalent, for now, to
+      #
+    if message['on_error']
+      @node['in_on_error'] = true
     end
 
     vars = @node['vars'] = {}
@@ -24,9 +30,11 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
 #puts "== args (given):"; pp args  # passed arguments
 #puts
 
-    # make 2 passes
+    # first, make 2 passes on atts
     # 1). grab named args
-    # 2). grab unamed args (arg_key == nil)
+    # 2). grab remaining args
+    # then make 1 pass on still remaining args
+    # 1). set vars if not yet set
 
     seen = []
 

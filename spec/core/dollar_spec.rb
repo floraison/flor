@@ -29,7 +29,7 @@ describe 'Flor core' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ 1, 2 ])
       expect(r['payload']['ret']).to eq('sequence')
     end
@@ -45,7 +45,7 @@ describe 'Flor core' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ %w[ car ], %w[ car ] ])
     end
 
@@ -58,7 +58,7 @@ describe 'Flor core' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ nid:0_0_1_1_0_0 heat0:_ref ])
     end
 
@@ -72,7 +72,7 @@ describe 'Flor core' do
         },
         payload: { 'a' => %w[ a b c d e f ], 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq([ 'b', '["b","c"]', '["a","c","e"]' ])
     end
 
@@ -159,7 +159,7 @@ describe 'Flor core' do
 
         r = @executor.launch(flow, vars: vars)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['payload']['ret']).to eq(ret)
       end
     end
@@ -172,7 +172,7 @@ describe 'Flor core' do
           push f.l "abc-$(nada.0.xxx)-ghi"
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ abc--ghi ])
     end
 
@@ -188,7 +188,7 @@ describe 'Flor core' do
           fun 2
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ 0-abc--ghi 1-abc--ghi 2-abc--ghi ])
     end
   end
