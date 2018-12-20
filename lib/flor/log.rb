@@ -228,9 +228,23 @@ module Flor
 
     def ret_to_s(executor, m, c)
 
-      ret = (m['payload'] || {})['ret']
-      s = Flor.to_d(ret, compact: true)
-      Flor.truncate_string(s, 35, Proc.new { |x| "#{c.dg}... (ln#{x})#{c.rs}" })
+      case pl = m['payload']
+      when NilClass, Hash
+        ret = (pl || {})['ret']
+        Flor.truncate_string(
+          Flor.to_d(ret, compact: true),
+          35,
+          Proc.new { |x| "#{c.dg}... (ln#{x})#{c.rs}" })
+      else
+        s =
+          "#{c.rd}(/!\\ payload is an instance of #{pl.class}: " +
+          Flor.truncate_string(
+            Flor.to_d(pl, compact: true, color: false),
+            35,
+            Proc.new { |x| "... (ln#{x})" }) +
+          ")#{c.rs}"
+        s
+      end
     end
 
     def nod_to_s(executor, n, opts, here=false)
