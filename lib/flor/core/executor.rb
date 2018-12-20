@@ -404,6 +404,11 @@ module Flor
 
     def process(message)
 
+      fail ArgumentError.new("incoming message has non nil or Hash payload") \
+        unless message['payload'] == nil || message['payload'].is_a?(Hash)
+          #
+          # weed out messages with non-conforming payloads
+
       begin
 
         message['m'] = counter_next('msgs') # number messages
