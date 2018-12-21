@@ -21,7 +21,7 @@ describe 'Flor procedures' do
 
       r = @executor.launch(' set _ ')
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['from']).to eq('0')
       expect(r['payload']).to eq({ 'ret' => nil })
       expect(r['vars'].has_key?('_')).to be(false)
@@ -36,7 +36,7 @@ describe 'Flor procedures' do
             1
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['from']).to eq('0')
       expect(r['payload']).to eq({ 'a' => 1, 'ret' => nil })
     end
@@ -49,7 +49,7 @@ describe 'Flor procedures' do
             0
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['from']).to eq('0')
       expect(r['vars']).to eq({})
       expect(r['payload']).to eq({ 'a' => 0, 'ret' => nil })
@@ -66,7 +66,7 @@ describe 'Flor procedures' do
         },
         payload: { 'h' => {}, 'i' => [ 0, 1 ] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['from']).to eq('0')
       expect(r['vars']).to eq({})
 
@@ -101,7 +101,7 @@ describe 'Flor procedures' do
             0
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['from']).to eq('0')
       expect(r['vars']).to eq({ 'a' => 0 })
       expect(r['payload']).to eq({ 'ret' => nil })
@@ -115,7 +115,7 @@ describe 'Flor procedures' do
           set a f.ret tag: 'nada'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['from']).to eq('0')
       expect(r['vars']).to eq({ 'a' => 1 })
       expect(r['payload']).to eq({ 'ret' => 1 })
@@ -130,7 +130,7 @@ describe 'Flor procedures' do
         },
         vars: { 'h' => {} })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['from']).to eq('0')
       expect(r['vars']).to eq({ 'h' => { 'count' => 8 } })
       expect(r['payload']).to eq({ 'ret' => nil })
@@ -159,7 +159,7 @@ describe 'Flor procedures' do
           set f.a 12
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['a']).to eq(12)
       expect(r['payload']['ret']).to eq(11)
     end
@@ -172,7 +172,7 @@ describe 'Flor procedures' do
           set f.ret 12
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(12)
     end
 
@@ -184,7 +184,7 @@ describe 'Flor procedures' do
           set a
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['vars']).to eq({ 'a' => 14 })
       expect(r['payload']['ret']).to eq(14)
     end
@@ -197,7 +197,7 @@ describe 'Flor procedures' do
         },
         payload: { 'h' => {} })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']
@@ -215,7 +215,7 @@ describe 'Flor procedures' do
         },
         payload: { 'h' => {} })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']
@@ -240,7 +240,7 @@ describe 'Flor procedures' do
         },
         payload: { 'h' => {}, 'a' => [ 0, 1, 2 ] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['payload']
@@ -269,7 +269,7 @@ describe 'Flor procedures' do
             f1 1
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['a']).to eq(0)
       expect(r['payload']['b']).to eq(2)
@@ -293,7 +293,7 @@ describe 'Flor procedures' do
           set f.a1 (f1 _)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['a0']).to eq(0)
       expect(r['payload']['b0']).to eq(0)
@@ -309,7 +309,7 @@ describe 'Flor procedures' do
           set f.a2 (f2 _)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['a2']).to eq(2)
     end
@@ -321,7 +321,7 @@ describe 'Flor procedures' do
           set a 2 tag: 'here'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['vars']['a']).to eq(2)
       expect(r['payload']['a2']).to eq(nil)
@@ -331,6 +331,20 @@ describe 'Flor procedures' do
 
       expect(ent['tags']).to eq(%w[ here ])
       expect(lef['tags']).to eq(%w[ here ])
+    end
+
+    it 'is ok with deep references' do
+
+      r = @executor.launch(
+        %q{
+          set h0 { a: "a" }
+          set h1 { a: "a", b: "b" }
+          set h0[h1.a] h1.b
+          h0
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq({ 'a' => 'b' })
     end
 
     describe 'set a' do
@@ -366,7 +380,7 @@ describe 'Flor procedures' do
                 1
           })
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['a']).to eq(1)
       end
 
@@ -382,7 +396,7 @@ describe 'Flor procedures' do
                   1
           })
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['a']).to eq(1)
       end
     end
@@ -420,7 +434,7 @@ describe 'Flor procedures' do
                 1
           })
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['a']).to eq(1)
       end
 
@@ -436,7 +450,7 @@ describe 'Flor procedures' do
                   1
           })
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']['a']).to eq(1)
       end
     end
@@ -458,7 +472,7 @@ describe 'Flor procedures' do
                 11
           })
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['vars']).to eq({ 'a' => 1, 'b' => 11 })
       end
     end
@@ -480,7 +494,7 @@ describe 'Flor procedures' do
               set f 'f'; set "f.$(f)" true
           })
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         expect(
           r['payload']
@@ -506,7 +520,7 @@ describe 'Flor procedures' do
               [ 4 5 6 ]
           })
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         expect(r['payload']['ret']).to eq(nil)
 
@@ -536,7 +550,7 @@ describe 'Flor procedures' do
             },
             vars: { 'x' => 3 })
 
-          expect(r['point']).to eq('terminated')
+          expect(r).to have_terminated_as_point
 
           expect(r['payload']['ret']).to eq(nil)
 
@@ -566,7 +580,7 @@ describe 'Flor procedures' do
             0
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']).to eq({ 'a' => 0, 'ret' => 0 })
     end
   end
