@@ -94,7 +94,7 @@ describe 'Flor procedures' do
 
   describe 'values' do
 
-    it 'returns the indexes for an array' do
+    it 'returns the values for an array' do
 
       r = @executor.launch(
         %q{
