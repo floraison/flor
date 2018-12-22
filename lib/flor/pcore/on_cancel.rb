@@ -48,7 +48,11 @@ class Flor::Pro::OnCancel < Flor::Procedure
 
     store_on(:cancel)
 
-    super
+    ms = super
+
+    ms.first['from_on'] = 'cancel'
+
+    ms
   end
 end
 

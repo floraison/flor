@@ -40,6 +40,11 @@ describe 'Flor procedures' do
               'on_cancel' => true },
             3 ] ]
       ])
+
+      m = @executor.journal
+        .find { |m| m['point'] == 'receive' && m['nid'] == '0' }
+
+      expect(m['from_on']).to eq('cancel')
     end
 
     it 'triggers on (internal) cancel' do

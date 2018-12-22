@@ -40,6 +40,11 @@ describe 'Flor procedures' do
               'on_error' => true },
             3 ] ]
       ])
+
+      m = @executor.journal
+        .find { |m| m['point'] == 'receive' && m['nid'] == '0' }
+
+      expect(m['from_on']).to eq('error')
     end
 
     it 'binds with criteria' do

@@ -123,7 +123,11 @@ class Flor::Pro::OnError < Flor::Procedure
 
     store_on(:error, prc, cri)
 
-    super
+    ms = super
+
+    ms.first['from_on'] = 'error'
+
+    ms
   end
 end
 
