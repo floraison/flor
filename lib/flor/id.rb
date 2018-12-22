@@ -47,6 +47,11 @@ module Flor
       end
     end
 
+    def same_sub?(nid0, nid1)
+
+      sub_nid(nid0) == sub_nid(nid1)
+    end
+
     # Remove the sub_nid if any.
     #
     def master_nid(nid)

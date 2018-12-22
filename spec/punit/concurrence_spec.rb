@@ -35,7 +35,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(msg['point']).to eq('terminated')
+      expect(msg).to have_terminated_as_point
     end
 
     it 'has no effect when empty (2)' do
@@ -46,7 +46,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(msg['point']).to eq('terminated')
+      expect(msg).to have_terminated_as_point
 
       wait_until { @unit.journal.find { |m| m['point'] == 'terminated' } }
       wait_until { @unit.journal.find { |m| m['point'] == 'end' } }
@@ -82,7 +82,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(msg['point']).to eq('terminated')
+      expect(msg).to have_terminated_as_point
 
       expect(
         @unit.traces.collect(&:text).join(' ')
@@ -113,7 +113,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(msg['point']).to eq('terminated')
+        expect(msg).to have_terminated_as_point
         expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0, 'b' => 2 })
       end
     end
@@ -130,7 +130,7 @@ describe 'Flor punit' do
           },
           wait: true)
 
-        expect(msg['point']).to eq('terminated')
+        expect(msg).to have_terminated_as_point
         expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
 
         wait_until { @unit.journal.find { |m| m['point'] == 'terminated' } }
@@ -158,7 +158,7 @@ describe 'Flor punit' do
             },
             wait: true)
 
-          expect(msg['point']).to eq('terminated')
+          expect(msg).to have_terminated_as_point
           expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
 
           wait_until { @unit.journal.find { |m| m['point'] == 'terminated' } }
@@ -189,7 +189,7 @@ describe 'Flor punit' do
             },
             wait: true)
 
-          expect(msg['point']).to eq('terminated')
+          expect(msg).to have_terminated_as_point
           expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
 
           wait_until { @unit.journal.find { |m| m['point'] == 'terminated' } }
@@ -232,7 +232,7 @@ describe 'Flor punit' do
 #          },
 #          wait: true)
 #
-#        expect(r['point']).to eq('terminated')
+#        expect(r).to have_terminated_as_point
 #
 #        expect(
 #          @unit.traces.collect(&:text)
@@ -259,7 +259,7 @@ describe 'Flor punit' do
           { 'point' => 'cancel', 'exid' => msg['exid'], 'nid' => '0' },
           wait: true)
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         wait_until do
           m = @unit.journal.last
@@ -298,38 +298,38 @@ ms-e3p3-end-
       end
     end
 
-    describe 'on_merge:' do
+    describe 'on_receive:' do
 
-      it 'hands each child reply to a function'# do
+      it 'hands each child reply to its function'# do
 #
 #        msg = @unit.launch(
 #          %q{
-#            #define m payload, rank, reply_order, reply_count
-#            define m from, replies
-#            concurrence on_merge: m
-#              a _
-#              b _
+#            define r from, replies, branch_count
+#              set replies...
+#            concurrence on_receive: r
+#              + 1 2
+#              + 3 4
 #          },
 #          wait: true)
 #
-#        expect(msg['point']).to eq('terminated')
+#        expect(msg).to have_terminated_as_point
 #        #expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
 #      end
     end
 
+    describe 'on receive' do
+
+      it 'hands each child reply to its block'
+    end
+
+    describe 'on_merge:' do
+
+      it 'calls its function before the concurrence replies'
+    end
+
     describe 'on merge' do
 
-      it 'hands each child reply to a block'
-    end
-
-    describe 'on_post_merge:' do
-
-      it 'runs a function after each merge'
-    end
-
-    describe 'on post_merge' do
-
-      it 'runs a block after each merge'
+      it 'calls its block before the concurrence replies'
     end
   end
 end
