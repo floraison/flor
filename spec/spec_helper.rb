@@ -56,8 +56,8 @@ module Helpers
 
     puts ">" + '-' * 79
     p message.select { |k, _| %w[ point from nid sm m ].include?(k) }
-    p message['error']['kla']
-    p message['error']['msg']
+    puts message['error']['kla']
+    puts message['error']['msg']
     message['error']['trc'].each do |l|
       puts "  " + l
     end
