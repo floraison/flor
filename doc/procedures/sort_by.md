@@ -37,7 +37,7 @@ their JSON representation before the sorting happens.
 
 ## see also
 
-[sort](sort.md), [reverse](reverse.md), [shuffle](shuffle.md)
+[sort](sort.md), [reverse](reverse.md), and [shuffle](shuffle.md)
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/sort_by.rb)

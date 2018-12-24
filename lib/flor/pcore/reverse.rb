@@ -17,6 +17,10 @@ class Flor::Pro::Reverse < Flor::Procedure
   # ```
   #
   # Will fail if it finds nothing reversable.
+  #
+  # # see also
+  #
+  # shuffle, sort, and sort_by
 
   name 'reverse'
 

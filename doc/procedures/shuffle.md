@@ -38,7 +38,7 @@ sample [ 'a' 'b' 'c' ] 2
 
 ## see also
 
-[Slice](slice.md), [index](slice.md), and [length](length.md)
+[slice](slice.md), [index](slice.md), [reverse](reverse.md), and [length](length.md)
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/shuffle.rb)

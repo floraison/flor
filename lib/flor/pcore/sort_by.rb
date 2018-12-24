@@ -37,7 +37,7 @@ class Flor::Pro::SortBy < Flor::Pro::Iterator
   #
   # ## see also
   #
-  # sort, reverse, shuffle
+  # sort, reverse, and shuffle
 
   name 'sort_by'
 

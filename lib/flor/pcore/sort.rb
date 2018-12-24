@@ -44,7 +44,7 @@ class Flor::Pro::Sort < Flor::Procedure
   #
   # ## see also
   #
-  # sort_by, reverse, shuffle
+  # sort_by, reverse, and shuffle
 
   name 'sort'
 

@@ -38,7 +38,7 @@ class Flor::Pro::Shuffle < Flor::Procedure
   #
   # ## see also
   #
-  # Slice, index, and length
+  # slice, index, reverse, and length
 
   names %w[ shuffle sample ]
 

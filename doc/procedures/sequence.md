@@ -1,5 +1,5 @@
 
-# sequence, _apply, begin
+# sequence, begin
 
 Executes child expressions in sequence.
 

@@ -44,7 +44,7 @@ sort memo: false a (def a b \ < a b)
 
 ## see also
 
-[sort_by](sort_by.md), [reverse](reverse.md), [shuffle](shuffle.md)
+[sort_by](sort_by.md), [reverse](reverse.md), and [shuffle](shuffle.md)
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/sort.rb)
