@@ -52,6 +52,16 @@ module Flor
       sub_nid(nid0) == sub_nid(nid1)
     end
 
+    def same_branch?(nid0, nid1)
+
+      return false unless same_sub?(nid0, nid1)
+
+      n0, n1 = [ nid0, nid1 ].collect { |i| Flor.master_nid(i) }.sort
+      n = n1[0, n0.length]
+
+      n == n0
+    end
+
     # Remove the sub_nid if any.
     #
     def master_nid(nid)

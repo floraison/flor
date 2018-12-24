@@ -83,7 +83,10 @@ class Flor::Pro::Concurrence < Flor::Procedure
     @node['receiver'] = determine_receiver
     @node['merger'] = determine_merger
 
-    (@ncid..children.size - 1)
+    branches = (@ncid..children.size - 1).to_a
+    @node['branch_count'] = branches.count
+
+    branches
       .map { |i| execute_child(i, 0, 'payload' => payload.copy_current) }
       .flatten(1)
         #
@@ -113,7 +116,8 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def receive_from_sub
 
-fail NotImplementedError # TODO
+#fail NotImplementedError # TODO
+    receive_from_receiver
   end
 
   def apply_receiver
@@ -135,13 +139,39 @@ fail NotImplementedError # TODO
 
   def apply_receiver_function
 
-    apply(@node['receiver'], receiver_args, tree[2])
+    ms = apply(@node['receiver'], receiver_args, tree[2])
+
+    (@node['receiver_subs'] ||= {})[ms.first['nid']] = from
+
+    ms
+  end
+
+  def receiver_args
+
+    f = from
+    rs = Flor.dup(@node['payloads'])
+
+    [ [ 'reply', rs[f] ],
+      [ 'from', f ],
+      [ 'replies', rs ],
+      [ 'branch_count', @node['branch_count'] ] ]
   end
 
   def receive_from_receiver(msg=message)
 
-    over = @node['over'] || msg['payload']['ret']
+    ret = msg['payload']['ret']
+    over = @node['over']
+
+    if ret.is_a?(Hash) && ret.keys == %w[ over payload ]
+      over = over || ret['over']
+      from = @node['receiver_subs'][msg['from']]
+      @node['payloads'][from] = ret['payload']
+    else
+      over = over || ret
+    end
+
     just_over = over && ! @node['over']
+
     @node['over'] ||= just_over
 
     if just_over
@@ -277,69 +307,5 @@ receive_from_merger(nil) # FIXME
     #     '1' => yyy,
     #     'children_count' => 7 }
     ############################################################################
-
-#  def receive_last_att
-#
-#    return wrap_reply unless children[@ncid]
-#
-#    @node['receiver'] = determine_receiver
-#    @node['merger'] = determine_merger
-#
-#    (@ncid..children.size - 1)
-#      .map { |i| execute_child(i, 0, 'payload' => payload.copy_current) }
-#      .flatten(1)
-#        #
-#        # call execute for each of the (non _att) children
-#  end
-#
-#  def receive_non_att
-#
-#    @node['payloads'][@message['from']] = @message['payload']
-#
-#    over = @node['over'] || invoke_receiver
-#    just_over = over && ! @node['over']
-#    @node['over'] ||= just_over
-#
-#    @node['merged_payload'] ||= just_over ? invoke_merger : nil
-#    rem = just_over ? determine_remainder : nil
-#
-#    cancel_children(rem) + reply_to_parent(rem)
-#  end
-
-#  protected
-#
-#  def determine_receiver
-#
-#    ex = att(:expect)
-#
-#    return 'expect_integer_receive' if ex && ex.is_a?(Integer) && ex > 0
-#
-#    'default_receive'
-#  end
-#
-#  def determine_merger
-#
-#    om = att(:on_merge, :merger)
-#
-#    if Flor.is_func_tree?(om)
-#      'func_merge'
-#    #else if om.is_a?(String)
-#    #  "#{om}_merge"
-#    else
-#      'default_merge'
-#    end
-#  end
-#
-#  def invoke_receiver; self.send(@node['receiver']); end
-#  def invoke_merger; self.send(@node['merger']); end
-#
-#  def func_merge
-#
-#    #om = att(:on_merge, :merger)
-#
-#pp @node['payloads']
-#
-#    default_merge
-#  end
 end
 

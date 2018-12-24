@@ -300,21 +300,40 @@ ms-e3p3-end-
 
     describe 'on_receive:' do
 
-      it 'hands each child reply to its function'# do
-#
-#        msg = @unit.launch(
-#          %q{
-#            define r from, replies, branch_count
-#              set replies...
-#            concurrence on_receive: r
-#              + 1 2
-#              + 3 4
-#          },
-#          wait: true)
-#
-#        expect(msg).to have_terminated_as_point
-#        #expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0 })
-#      end
+      it 'hands each child reply to its function' do
+
+        msg = @unit.launch(
+          %q{
+            define r reply, from, replies, branch_count
+              #set replies[from].ret (+ replies[from].ret 10)
+              #{ over: false, payload: pl }
+              >= (length replies) branch_count
+            concurrence on_receive: r
+              + 1 2
+              + 3 4
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['payload']['ret']).to eq(3)
+      end
+
+      it 'can be used with an object ret over/payload' do
+
+        msg = @unit.launch(
+          %q{
+            define r reply, from, replies, branch_count
+              set reply.ret (+ reply.ret 10)
+              { over: (>= (length replies) branch_count), payload: reply }
+            concurrence on_receive: r
+              + 1 2
+              + 3 4
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['payload']['ret']).to eq(13)
+      end
     end
 
     describe 'on receive' do

@@ -421,7 +421,10 @@ class Flor::Procedure < Flor::Node
 
   def from_att?
 
-    @fcid && (c = children[@fcid]) && c[0] == '_att'
+    @fcid &&
+    Flor.same_branch?(nid, from) &&
+    (c = children[@fcid]) &&
+    c[0] == '_att'
   end
 
   def from_sub_nid
