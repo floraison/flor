@@ -341,21 +341,22 @@ ms-e3p3-end-
 
     describe 'on_merge:' do
 
-      it 'calls its function before the concurrence replies' do
-
-        msg = @unit.launch(
-          %q{
-            define m replies, branch_count
-              replies | values | max
-            concurrence on_merge: m
-              + 1 2 3
-              + 3 4 5
-          },
-          wait: true)
-
-        expect(msg).to have_terminated_as_point
-        expect(msg['payload']['ret']).to eq(12)
-      end
+      it 'calls its function before the concurrence replies'# do
+#
+#        msg = @unit.launch(
+#          %q{
+#            define m rets#, replies, branch_count
+#              rets | values _ | max _
+#            concurrence on_merge: m
+#              + 1 2 3
+#              + 3 4 5
+#          },
+#          wait: true)
+#
+#        expect(msg).to have_terminated_as_point
+#pp msg['payload']
+#        expect(msg['payload']['ret']).to eq(12)
+#      end
     end
 
     describe 'on merge' do
