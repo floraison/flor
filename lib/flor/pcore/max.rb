@@ -5,6 +5,7 @@ class Flor::Pro::Max < Flor::Procedure
 
   def pre_execute
 
+    @node['atts'] = []
     @node['ret'] ||= receive_payload_ret
 
     unatt_unkeyed_children
@@ -27,9 +28,24 @@ class Flor::Pro::Max < Flor::Procedure
       "found no argument that can #{@node['heap']}", self
     ) unless ret
 
-    r = ret.send(@node['heap'])
+    lax = att('lax', 'loose') == true
+    types = ret.collect { |e| Flor.type(e) }
 
-    wrap_reply('ret' => r)
+    ret = ret.collect { |x| JSON.dump(x) } if lax && types != [ 'number' ]
+
+    r =
+      begin
+        ret.send(@node['heap'])
+      rescue
+        fail unless lax
+        nil
+      end
+    res =
+      r ?
+      @node['ret'][ret.index { |e| e == r }] :
+      nil
+
+    wrap_reply('ret' => res)
   end
 end
 

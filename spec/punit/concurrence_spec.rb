@@ -305,8 +305,6 @@ ms-e3p3-end-
         msg = @unit.launch(
           %q{
             define r reply, from, replies, branch_count
-              #set replies[from].ret (+ replies[from].ret 10)
-              #{ over: false, payload: pl }
               >= (length replies) branch_count
             concurrence on_receive: r
               + 1 2
@@ -343,7 +341,21 @@ ms-e3p3-end-
 
     describe 'on_merge:' do
 
-      it 'calls its function before the concurrence replies'
+      it 'calls its function before the concurrence replies' do
+
+        msg = @unit.launch(
+          %q{
+            define m replies, branch_count
+              replies | values | max
+            concurrence on_merge: m
+              + 1 2 3
+              + 3 4 5
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['payload']['ret']).to eq(12)
+      end
     end
 
     describe 'on merge' do

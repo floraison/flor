@@ -206,6 +206,12 @@ receive_from_merger(nil) # FIXME
     apply(@node['merger'], merger_args, tree[2])
   end
 
+  def merger_args
+
+    [ [ 'replies', Flor.dup(@node['payloads']) ],
+      [ 'branch_count', @node['branch_count'] ] ]
+  end
+
   def receive_from_merger(msg=message)
 
     #return [] if @node['merged_payload'] # already over
