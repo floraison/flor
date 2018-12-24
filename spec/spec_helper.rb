@@ -360,7 +360,7 @@ class Hash
 
           r = @executor.launch(k)
 
-          expect(r['point']).to eq('terminated')
+          expect(r).to have_terminated_as_point
           expect(r['payload']['ret']).to eq(v)
         end
     end
