@@ -100,8 +100,10 @@ class Flor::Pro::Concurrence < Flor::Procedure
       #receive_from_on
     elsif Flor.same_sub?(nid, from)
       receive_from_branch
+    elsif (@node['receiver_nids'] || []).include?(from)
+      receive_from_receiver
     else
-      receive_from_sub
+      receive_from_merger
     end
   end
 
@@ -112,12 +114,6 @@ class Flor::Pro::Concurrence < Flor::Procedure
     @node['payloads'][from] = @message['payload']
 
     apply_receiver
-  end
-
-  def receive_from_sub
-
-#fail NotImplementedError # TODO
-    receive_from_receiver
   end
 
   def apply_receiver
@@ -141,7 +137,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     ms = apply(@node['receiver'], receiver_args, tree[2])
 
-    (@node['receiver_subs'] ||= {})[ms.first['nid']] = from
+    (@node['receiver_nids'] ||= {})[ms.first['nid']] = from
 
     ms
   end
@@ -164,7 +160,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     if ret.is_a?(Hash) && ret.keys == %w[ over payload ]
       over = over || ret['over']
-      from = @node['receiver_subs'][msg['from']]
+      from = @node['receiver_nids'][msg['from']]
       @node['payloads'][from] = ret['payload']
     else
       over = over || ret
@@ -179,8 +175,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
     elsif ! over
       [] # wait for more branches
     else
-#[]
-receive_from_merger(nil) # FIXME
+      receive_from_merger(nil)
     end
   end
 
@@ -195,8 +190,8 @@ receive_from_merger(nil) # FIXME
 
   def apply_merger_method
 
-    ret = send(@node['merger'])
-    msg = { 'payload' => { 'ret' => ret } }
+    pld = send(@node['merger'])
+    msg = { 'payload' => pld }
 
     receive_from_merger(msg)
   end
@@ -208,17 +203,17 @@ receive_from_merger(nil) # FIXME
 
   def merger_args
 
-    [ [ 'replies', Flor.dup(@node['payloads']) ],
+    rs = Flor.dup(@node['payloads'])
+
+    [ [ 'rets', rs.inject({}) { |h, (k, v)| h[k] = v['ret']; h } ],
+      [ 'replies', rs ],
       [ 'branch_count', @node['branch_count'] ] ]
   end
 
   def receive_from_merger(msg=message)
 
-    #return [] if @node['merged_payload'] # already over
-
-    if msg
-      @node['merged_payload'] ||= msg['payload']['ret']
-    end
+    @node['merged_payload'] = msg['payload'] \
+      if msg && ! @node.has_key?('merged_payload')
 
     rem = determine_remainder
 
