@@ -14,6 +14,7 @@ describe 'Flor punit' do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf['unit'] = 'u'
+    @unit.hooker.add('journal', Flor::Journal)
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
@@ -59,6 +60,11 @@ describe 'Flor punit' do
               'on_timeout' => true },
             3 ] ]
       ])
+
+      m = @unit.journal
+        .find { |m| m['point'] == 'receive' && m['nid'] == '0' }
+
+      expect(m['from_on']).to eq('timeout')
     end
 
     it 'catches triggers on timeout' do

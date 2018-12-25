@@ -32,7 +32,11 @@ class Flor::Pro::OnTimeout < Flor::Procedure
 
     store_on(:timeout)
 
-    super
+    ms = super
+
+    ms.first['from_on'] = 'timeout'
+
+    ms
   end
 end
 
