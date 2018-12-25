@@ -187,6 +187,9 @@ module Flor
 
     def to_compact_tree_s(tree, nid='0', opts={})
 
+      close = opts[:close]
+      opts.merge!(close: false)
+
       o = StringIO.new
       _c = colours(opts)
 
@@ -216,8 +219,7 @@ module Flor
         o << "\n" << to_compact_tree_s(ct, "#{nid}_#{i}", opts)
       end
 
-      #o << "\n" << ind << _c.dg << '\---' if is_root && opts[:close]
-      o << "\n" << ind << _c.dg << '\---' if opts[:close]
+      o << "\n" << ind << _c.dg << '\---' if close
 
       o << _c.rs
 
