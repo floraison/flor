@@ -57,16 +57,16 @@ class Flor::Pro::Cursor < Flor::Procedure
 
   def receive_first
 
-    @node['vars'] =
-      {}
+    # break/continue/move are set as variables so that they can
+    # be aliases, it's useful in nested loops
 
-    @node['vars']['break'] =
-      [ '_proc', { 'proc' => 'break', 'nid' => nid }, tree[-1] ]
-    @node['vars']['continue'] =
-      [ '_proc', { 'proc' => 'continue', 'nid' => nid }, tree[-1] ]
-
-    @node['vars']['move'] =
-      [ '_proc', { 'proc' => 'move', 'nid' => nid }, tree[-1] ]
+    @node['vars'] = {
+      'break' =>
+        [ '_proc', { 'proc' => 'break', 'nid' => nid }, tree[-1] ],
+      'continue' =>
+        [ '_proc', { 'proc' => 'continue', 'nid' => nid }, tree[-1] ],
+      'move' =>
+        [ '_proc', { 'proc' => 'move', 'nid' => nid }, tree[-1] ] }
 
     super
   end
