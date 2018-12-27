@@ -229,11 +229,14 @@ module Flor
     def keycol(i); seq(nil, i, :key, :wstar, :colon, :eol_wstar); end
 
     def att(i); seq(:att, i, :sep, :keycol, '?', :exp); end
+    def riou(i); rex(:iou, i, /(if|unless)/); end
+    def iou(i); seq(nil, i, :sep, :riou); end
+    def natt(i); alt(nil, i, :iou, :att); end
+
     def head(i); seq(:head, i, :exp); end
     def indent(i); rex(:indent, i, /[ \t]*/); end
-    def node(i); seq(:node, i, :indent, :head, :att, '*'); end
+    def node(i); seq(:node, i, :indent, :head, :natt, '*'); end
 
-    #def linjoin(i); rex(nil, i, /[ \t]*[\\|;][ \t]*/); end
     def linjoin(i); rex(nil, i, /[ \t]*(\\|\|(?!\|)|;)[ \t]*/); end
     def outjnl(i); seq(nil, i, :linjoin, :comment, '?', :retnew); end
     def outnlj(i); seq(nil, i, :wstar, :comment, '?', :retnew, :linjoin); end
@@ -451,6 +454,9 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 #puts caller[0, 7]
 #Raabro.pp(t, colours: true)
       return rewrite(t.c0) if t.children.size == 1
+#puts "-" * 80
+#puts caller[0, 7]
+#Raabro.pp(t, colours: true)
 
       cn = t.children.collect { |ct| ct.lookup(nil) }
 
@@ -522,8 +528,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
         as.each do |c|
 
-          c1 = c[1]; c10 = c1.size == 1 && c1[0]
-          suff = [] if c10 && c10[1] == [] && %w[ if unless ].include?(c10[0])
+          suff = [] if %w[ if unless ].include?(c[1])
 
           (suff || atts) << c
         end
@@ -536,10 +541,18 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
         return core unless suff
 
-        [ '_' + suff.shift[1][0][0], [ suff.first[1].first, core ], @line ]
+        ta_rework_suff(core, suff)
       end
 
       protected
+
+      def ta_rework_suff(core, suff)
+
+        cond = suff[1][1][0]
+        suff[2..-1].each { |ct| cond[1] << ct }
+
+        [ '_' + suff.shift[1], [ cond, core ], @line ]
+      end
 
       def ta_rework_arr_or_obj(atts, non_atts)
 
@@ -569,6 +582,8 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
       def read(tree)
 
         @tree = tree
+#puts "-" * 80
+#Raabro.pp(tree, colours: true)
 
         @indent = tree.lookup(:indent).string.length
 
@@ -581,14 +596,23 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
         atts = tree.children[2..-1]
           .inject([]) { |as, ct|
 
-            kt = ct.children.size == 3 ? ct.children[1].lookup(:key) : nil
-            v = Flor::Parser.rewrite(ct.clast)
+            ct = ct.lookup(nil)
 
-            if kt
-              k = Flor::Parser.rewrite(kt.c0)
-              as.push([ '_att', [ k, v ], k[2] ])
+            if ct.name == :iou
+
+              as.push([ '_att', ct.string, @line ])
+
             else
-              as.push([ '_att', [ v ], v[2] ])
+
+              kt = ct.children.size == 3 ? ct.children[1].lookup(:key) : nil
+              v = Flor::Parser.rewrite(ct.clast)
+
+              if kt
+                k = Flor::Parser.rewrite(kt.c0)
+                as.push([ '_att', [ k, v ], k[2] ])
+              else
+                as.push([ '_att', [ v ], v[2] ])
+              end
             end }
 
         @children.concat(atts)

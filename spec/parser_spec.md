@@ -2095,6 +2095,21 @@ parses to
 ---
 
 ```flor
+  push 7 if > a b
+```
+parses to
+```ruby
+  [ '_if', [
+    [ '>', [
+      [ '_att', [ [ 'a', [], 1 ] ], 1 ],
+      [ '_att', [ [ 'b', [], 1 ] ], 1 ]
+    ], 1 ],
+    [ 'push', [ [ '_att', [ [ '_num', 7, 1 ] ], 1 ] ], 1 ]
+  ], 1 ]
+```
+---
+
+```flor
   push 7 if (> a b)
 ```
 parses to

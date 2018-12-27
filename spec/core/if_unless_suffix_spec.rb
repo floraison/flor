@@ -31,6 +31,20 @@ describe 'Flor core' do
       expect(r['payload']['l']).to eq(%w[ b c ])
     end
 
+    it 'works (2)' do
+
+      r = @executor.launch(
+        %q{
+          set f.l []
+          push f.l 'a' if > (length f.l) 0
+          push f.l 'b'
+          push f.l 'c' if > (length f.l) 0
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['l']).to eq(%w[ b c ])
+    end
+
     it 'gets skipped by on_ setters' do
 
       @executor.launch(
