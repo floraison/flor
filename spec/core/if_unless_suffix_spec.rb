@@ -30,6 +30,24 @@ describe 'Flor core' do
       expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ b c ])
     end
+
+    it 'gets skipped by on_ setters' do
+
+      @executor.launch(
+        %q{
+          sequence
+            on error if true
+              push f.l err.msg
+            stall _
+        })
+
+      expect(@executor.execution['nodes'].keys).to eq(%w[ 0 0_1 ])
+
+      oe = @executor.execution['nodes']['0']['on_error']
+      expect(oe[0][0]).to eq([ '*' ])
+      expect(oe[0][1][0]).to eq('_func')
+
+    end
   end
 
   describe '"unless" as a suffix' do

@@ -502,9 +502,12 @@ class Flor::Procedure < Flor::Node
 
     return unless Flor.is_func_tree?(prc)
 
-    pnode = parent_node
-
-    return unless pnode
+    pnode =
+      @node; loop do
+        pnode = parent_node(pnode)
+        return unless pnode
+        break unless %w[ _if _unless ].include?(pnode['heap'])
+      end
 
     flavour = "on_#{key}"
 
