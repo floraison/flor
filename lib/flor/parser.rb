@@ -448,7 +448,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
     def rewrite_exp(t)
 
 #puts "-" * 80
-##puts caller[0, 7]
+#puts caller[0, 7]
 #Raabro.pp(t, colours: true)
       return rewrite(t.c0) if t.children.size == 1
 
@@ -536,7 +536,7 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
         return core unless suff
 
-        [ suff.shift[1][0][0], [ suff.first[1].first, core ], @line ]
+        [ '_' + suff.shift[1][0][0], [ suff.first[1].first, core ], @line ]
       end
 
       protected

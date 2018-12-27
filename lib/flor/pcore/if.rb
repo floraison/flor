@@ -47,7 +47,7 @@ class Flor::Pro::If < Flor::Procedure
   #
   # Cond, case, match.
 
-  names %w[ if unless ife unlesse ]
+  names %w[ if unless ife unlesse _if _unless ]
     #
     # removing "ife" and "unlesse" leads to
     # LoadError: cannot load such file -- sequel/adapters/
@@ -65,7 +65,8 @@ class Flor::Pro::If < Flor::Procedure
       # "else" or "then" answered, replying to parent...
 
     off =
-      if tree[0] == 'unless' || tree[0] == 'unlesse'
+      case heap
+      when 'unless', 'unlesse', '_unless'
         Flor.false?(payload['ret']) ? 1 : 2
       else # 'if' or 'ife'
         Flor.true?(payload['ret']) ? 1 : 2
