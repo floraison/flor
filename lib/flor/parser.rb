@@ -528,7 +528,14 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
 
         as.each do |c|
 
-          suff = [] if %w[ if unless ].include?(c[1])
+          if %w[ if unless ].include?(c[1])
+            suff = []
+          elsif suff && c[1].length > 1
+            iou = suff.shift; iou[1] = [ [ iou[1], [], iou[2] ] ]
+            atts << iou
+            atts.concat(suff)
+            suff = nil
+          end
 
           (suff || atts) << c
         end
