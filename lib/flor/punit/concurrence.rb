@@ -281,32 +281,5 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     pop_on_receive_last || ms
   end
-
-    ############################################################################
-    #
-    # rem: cancel/forget/wait
-    # expect: {int}
-    # on_merge/merger: {fun}
-    #
-    ############################################################################
-    #
-    # define m  from,   replies,  over
-    #           '0_1',  {},       false
-    #           1,      {},       false
-    #           1,      {},       false / {} payload
-    #
-    # define m  from, replies, over, child_count, wip <-- why not?
-    #
-    #   returns nil/false -> not over, true -> over
-    #   returns nil/false -> not over, {} payload -> over
-    #
-    # saturation?
-    #
-    ############################################################################
-    # replies
-    #   { '0' => xxx,
-    #     '1' => yyy,
-    #     'children_count' => 7 }
-    ############################################################################
 end
 
