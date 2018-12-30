@@ -74,6 +74,9 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     @node['atts'] = []
     @node['payloads'] = {}
+
+    @node['on_receive_nids'] = nil
+    @node['on_receive_queue'] = []
   end
 
   def receive_last_att
@@ -100,7 +103,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
       #receive_from_on
     elsif Flor.same_sub?(nid, from)
       receive_from_branch
-    elsif (@node['receiver_nids'] || []).include?(from)
+    elsif @node['on_receive_nids'] && @node['on_receive_nids'][0] == from
       receive_from_receiver
     else
       receive_from_merger
@@ -135,22 +138,33 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def apply_receiver_function
 
-    ms = apply(@node['receiver'], receiver_args, tree[2])
+    @node['on_receive_queue'] << from
 
-    (@node['receiver_nids'] ||= {})[ms.first['nid']] = from
-
-    ms
+    dequeue_receiver_function
   end
 
-  def receiver_args
+  def dequeue_receiver_function
 
-    f = from
+    if @node['on_receive_nids']
+      []
+    elsif f = @node['on_receive_queue'].shift
+      ms = apply(@node['receiver'], receiver_args(f), tree[2])
+      @node['on_receive_nids'] = [ ms.first['nid'], f ]
+      ms
+    else
+      []
+    end
+  end
+
+  def receiver_args(from)
+
     rs = Flor.dup(@node['payloads'])
 
-    [ [ 'reply', rs[f] ],
-      [ 'from', f ],
+    [ [ 'reply', rs[from] ],
+      [ 'from', from ],
       [ 'replies', rs ],
-      [ 'branch_count', @node['branch_count'] ] ]
+      [ 'branch_count', @node['branch_count'] ],
+      [ 'over', !! @node['over'] ] ]
   end
 
   def receive_from_receiver(msg=message)
@@ -158,13 +172,15 @@ class Flor::Pro::Concurrence < Flor::Procedure
     ret = msg['payload']['ret']
     over = @node['over']
 
-    if ret.is_a?(Hash) && ret.keys == %w[ over payload ]
-      over = over || ret['over']
-      from = @node['receiver_nids'][msg['from']]
+    if ret.is_a?(Hash) && ret.keys == %w[ done payload ]
+      over = over || ret['done']
+      from = @node['on_receive_nids'][1]
       @node['payloads'][from] = ret['payload']
     else
       over = over || ret
     end
+
+    @node['on_receive_nids'] = nil
 
     just_over = over && ! @node['over']
 
@@ -176,7 +192,8 @@ class Flor::Pro::Concurrence < Flor::Procedure
       [] # wait for more branches
     else
       receive_from_merger(nil)
-    end
+    end +
+    dequeue_receiver_function
   end
 
   def apply_merger

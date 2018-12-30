@@ -320,9 +320,9 @@ ms-e3p3-end-
 
         msg = @unit.launch(
           %q{
-            define r reply, from, replies, branch_count
+            define r reply, from, replies, branch_count, over
               set reply.ret (+ reply.ret 10)
-              { over: (>= (length replies) branch_count), payload: reply }
+              { done: (>= (length replies) branch_count), payload: reply }
             concurrence on_receive: r
               + 1 2
               + 3 4
@@ -331,6 +331,25 @@ ms-e3p3-end-
 
         expect(msg).to have_terminated_as_point
         expect(msg['payload']['ret']).to eq(13)
+      end
+
+      it "receives an 'over' argument" do
+
+        msg = @unit.launch(
+          %q{
+            define r reply, from, replies, branch_count, over
+              push l over
+              true
+            set l []
+            concurrence on_receive: r
+              + 1 2
+              + 3 4
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['payload']['ret']).to eq(3)
+        expect(msg['vars']['l']).to eq([ false, true ])
       end
     end
 
