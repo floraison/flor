@@ -229,7 +229,15 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def receive_from_merger(msg=message)
 
-    @node['merged_payload'] = msg['payload'] \
+    pl = msg ? msg['payload'] : {}
+    ret = pl['ret']
+
+    pl = ret['payload'] \
+      if ret.is_a?(Hash) && ret.keys == %w[ done payload ]
+
+    # TODO somehow, what if done is false, should we un-over the concurrence?
+
+    @node['merged_payload'] = pl \
       if msg && ! @node.has_key?('merged_payload')
 
     rem = determine_remainder

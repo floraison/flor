@@ -367,13 +367,39 @@ ms-e3p3-end-
             define m rets#, replies, branch_count
               rets | values _ | max _
             concurrence on_merge: m
-              + 1 2 3
               + 3 4 5
+              + 6 7 8
+              + 1 2 3
           },
           wait: true)
 
         expect(msg).to have_terminated_as_point
-        expect(msg['payload']['ret']).to eq(12)
+        expect(msg['payload']['ret']).to eq(21)
+      end
+
+      it 'can change the resulting payload' do
+
+        msg = @unit.launch(
+          %q{
+            define m rets, replies#, branch_count
+              set r (rets | values _ | min _)
+              { done: true, payload: { ret: r, pls: replies } }
+            concurrence on_merge: m
+              + 1 2
+              + 3 4
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+
+        expect(msg['payload']['ret']).to eq(3)
+
+        expect(
+          msg['payload']['pls']
+        ).to eq(
+          '0_1_1' => { 'ret' => 3 },
+          '0_1_2' => { 'ret' => 7 }
+        )
       end
     end
 
