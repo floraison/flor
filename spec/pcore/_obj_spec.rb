@@ -93,12 +93,24 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq({ '7' => 'sept' })
     end
 
-    it 'evaluates keys' do
+    it 'does not evaluate variable keys' do
 
       r = @executor.launch(
         %q{
           set a "colour"
-          { a: 'yellow' }
+          { a: 'yellow', if: false }
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq({ 'a' => 'yellow', 'if' => false })
+    end
+
+    it 'evaluate keys (v.a)' do
+
+      r = @executor.launch(
+        %q{
+          set a "colour"
+          { v.a: 'yellow' }
         })
 
       expect(r['point']).to eq('terminated')
@@ -117,22 +129,24 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq({ 'colors' => %w[ yellow blue ] })
     end
 
-    context "quote: 'keys'" do
-
-      it 'does not evaluate keys' do
-
-        r = @executor.launch(
-          %q{
-            set a "colour"
-            { a: 'red', (a _): 'green' } quote: 'keys'
-          })
-
-        expect(r['point']).to eq(
-          'terminated')
-        expect(r['payload']['ret']).to eq(
-          { 'a' => 'red', 'colour' => 'green' })
-      end
-    end
+  # keys are now (2019-01-01) quoted by default, see above.
+  #
+#    context "quote: 'keys'" do
+#
+#      it 'does not evaluate keys' do
+#
+#        r = @executor.launch(
+#          %q{
+#            set a "colour"
+#            { a: 'red', (a _): 'green' } quote: 'keys'
+#          })
+#
+#        expect(r['point']).to eq(
+#          'terminated')
+#        expect(r['payload']['ret']).to eq(
+#          { 'a' => 'red', 'colour' => 'green' })
+#      end
+#    end
   end
 end
 

@@ -25,7 +25,6 @@ class Flor::Pro::Obj < Flor::Pro::Coll
   def pre_execute
 
     @node['rets'] = []
-    @node['atts'] = []
   end
 
   def execute_child(index=0, sub=nil, h=nil)
@@ -33,9 +32,8 @@ class Flor::Pro::Obj < Flor::Pro::Coll
     return super if @node['rets'].size.odd?
 
     ct = children[index]
-    q = (att('quote') == 'keys')
 
-    return super unless ct[1] == [] && (deref(ct[0]) == nil || q)
+    return super unless ct[1] == []
 
     t = tree
     t[1][index] = [ '_sqs', ct[0], *ct[2..-1] ]
