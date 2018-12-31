@@ -275,7 +275,7 @@ describe 'Flor core' do
 
       expect(r['point']).to eq('terminated')
 
-      n = Time.now
+      n = Time.now.utc
 
       expect(r['payload']['ret']).to eq(nil)
       expect(r['payload']['nid']).to eq('0_0_1')

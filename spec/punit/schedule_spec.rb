@@ -56,7 +56,7 @@ describe 'Flor punit' do
       expect(t.exid).to eq(exid)
       expect(t.type).to eq('cron')
       expect(t.schedule).to eq('0 0 1 jan *')
-      expect(t.ntime_t.localtime.year).to eq(Time.now.utc.year + 1)
+      expect(t.ntime_t.localtime.year).to eq(Time.now.year + 1)
 
       td = t.data
 
@@ -141,7 +141,7 @@ describe 'Flor punit' do
       expect(t.exid).to eq(exid)
       expect(t.type).to eq('cron')
       expect(t.schedule).to eq('0 0 1 jan *')
-      expect(t.ntime_t.localtime.year).to eq(Time.now.utc.year + 1)
+      expect(t.ntime_t.localtime.year).to eq(Time.now.year + 1)
 
       td = t.data
 
