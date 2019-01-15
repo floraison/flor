@@ -5,6 +5,7 @@ require 'logger'
 require 'thread'
 require 'digest'
 require 'socket'
+require 'forwardable'
 
 require 'munemo'
 require 'raabro'
