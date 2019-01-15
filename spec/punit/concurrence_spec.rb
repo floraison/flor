@@ -175,9 +175,9 @@ describe 'Flor punit' do
       context "'wait'" do
 
         # ruote said:
-        # There is a third setting, ‘wait’. It behaves like ‘cancel’, but the
-        # concurrence waits for the cancelled children to reply. The workitems
-        # from cancelled branches are merged in as well.
+        # There is a third setting, ‘wait’. It behaves like ‘cancel’,
+        # but the concurrence waits for the cancelled children to reply.
+        # The workitems from cancelled branches are merged in as well.
 
         it 'waits for the cancelled children' do
 
@@ -203,45 +203,6 @@ describe 'Flor punit' do
         end
       end
     end
-
-#    context 'merger:' do
-#
-#      it 'hands each incoming workitem to the merger' do
-#
-#        r = @unit.launch(
-#          %q{
-#              # pld: payload
-#              # cct: children count
-#              # act: answer count
-#              # crk: children rank
-#              # ark: answer rank
-#              # ans: answers
-#              # ats: attributes
-#              #   return: false (continue), true (stop)
-#              3     # OR
-#              3   return: nil (continue), true/"cancel", or "forget"
-#              #
-#            define m pl, cc, cr, ac, ar, as
-#              trace "cc:$(cc),cr:$(cr),rc:$(rc),rr:$(rr)"
-#              #== reply_count children_count
-#              == reply_count 2
-#            concurrence merger: m
-#              sequence \ _skip 2; set f.a 0
-#              sequence \ _skip 1; set f.a 1
-#              set f.a 2
-#          },
-#          wait: true)
-#
-#        expect(r).to have_terminated_as_point
-#
-#        expect(
-#          @unit.traces.collect(&:text)
-#        ).to eq(%w[
-#          xxx
-#          yyy
-#        ])
-#      end
-#    end
 
     context 'upon cancelling' do
 
