@@ -287,6 +287,23 @@ describe 'Flor core' do
         'four'
       ])
     end
+
+    it "passes a block" do
+
+      r = @executor.launch(
+        %q{
+          define f count
+            each (range 0 count)
+              _block _
+          set l []
+          f 3
+            push l 'a'
+            push l 'b'
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['vars']['l']).to eq(%w[ a b ] * 3)
+    end
   end
 
   describe 'a closure' do
