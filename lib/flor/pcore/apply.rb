@@ -64,7 +64,7 @@ class Flor::Pro::Apply < Flor::Procedure
       args.shift[1] :
       nht
 
-    args << [ '_block', payload_ret ] \
+    args << [ 'yield', payload_ret ] \
       if ! from_att? && Flor.is_func_tree?(payload_ret)
 
     ms = apply(src, args, tree[2])

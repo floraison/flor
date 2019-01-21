@@ -294,7 +294,7 @@ describe 'Flor core' do
         %q{
           define f count
             each (range 0 count)
-              _block _
+              yield _
           set l []
           f 3
             push l 'a'
@@ -311,7 +311,7 @@ describe 'Flor core' do
         %q{
           define f count
             each (range 0 count)
-              _block idx
+              yield idx
           set l []
           f 3
             def i
@@ -321,6 +321,7 @@ describe 'Flor core' do
       expect(r).to have_terminated_as_point
       expect(r['vars']['l']).to eq([ 0, 2, 4 ])
     end
+# TODO closure?
   end
 
   describe 'a closure' do
