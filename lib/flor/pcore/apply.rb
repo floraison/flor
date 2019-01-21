@@ -40,6 +40,22 @@ class Flor::Pro::Apply < Flor::Procedure
 
   def receive_last_att
 
+    return do_apply unless tree[1][@ncid]
+
+    rewrite_block_into_function
+
+    super
+  end
+
+  def receive_last
+
+    do_apply
+  end
+
+  protected
+
+  def do_apply
+
     args = @node['atts']
     nht = @node['heat']
 
@@ -48,8 +64,8 @@ class Flor::Pro::Apply < Flor::Procedure
       args.shift[1] :
       nht
 
-    bfun = make_block_func
-    args << [ '_block', bfun ] if bfun
+    args << [ '_block', payload_ret ] \
+      if ! from_att? && Flor.is_func_tree?(payload_ret)
 
     ms = apply(src, args, tree[2])
 
@@ -58,25 +74,18 @@ class Flor::Pro::Apply < Flor::Procedure
     ms
   end
 
-  protected
-
-  def make_block_func
+  def rewrite_block_into_function
 
     t = tree
-    ncid = @fcid + 1
+    cn = t[1][@ncid..-1]
+    c0 = cn[0]
 
-    return nil unless t[1][ncid]
+    return if cn.size == 1 && %w[ def fun ].include?(c0[0])
+
+    bt = [ 'def', cn, t[2] ]
+    t[1] = t[1][0..@fcid] + [ bt ]
 
     @node['tree'] = t
-
-    cn = t[1][ncid..-1]
-    tr = [ 'def', cn, cn[0][2] ]
-    t[1] = t[1][0..@fcid]
-
-    [ '_func',
-      { 'nid' => Flor.child_nid(nid, @fcid + 1),
-        'tree' => tr },
-      tree[2] ]
   end
 end
 

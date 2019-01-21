@@ -288,7 +288,7 @@ describe 'Flor core' do
       ])
     end
 
-    it "passes a block" do
+    it 'passes a block' do
 
       r = @executor.launch(
         %q{
@@ -303,6 +303,23 @@ describe 'Flor core' do
 
       expect(r).to have_terminated_as_point
       expect(r['vars']['l']).to eq(%w[ a b ] * 3)
+    end
+
+    it 'accepts a function instead of a block' do
+
+      r = @executor.launch(
+        %q{
+          define f count
+            each (range 0 count)
+              _block idx
+          set l []
+          f 3
+            def i
+              push l (2 * i)
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['vars']['l']).to eq([ 0, 2, 4 ])
     end
   end
 
