@@ -288,40 +288,64 @@ describe 'Flor core' do
       ])
     end
 
-    it 'passes a block' do
+    context 'with a block' do
 
-      r = @executor.launch(
-        %q{
-          define f count
-            each (range 0 count)
-              yield _
-          set l []
-          f 3
-            push l 'a'
-            push l 'b'
-        })
-
-      expect(r).to have_terminated_as_point
-      expect(r['vars']['l']).to eq(%w[ a b ] * 3)
-    end
-
-    it 'accepts a function instead of a block' do
-
-      r = @executor.launch(
-        %q{
-          define f count
-            each (range 0 count)
-              yield idx
-          set l []
-          f 3
-            def i
-              push l (2 * i)
-        })
-
-      expect(r).to have_terminated_as_point
-      expect(r['vars']['l']).to eq([ 0, 2, 4 ])
-    end
 # TODO closure?
+
+      it 'wraps the block in a function' do
+
+        r = @executor.launch(
+          %q{
+            define f count
+              each (range 0 count)
+                yield _
+            set l []
+            f 3
+              push l 'a'
+              push l 'b'
+          })
+
+        expect(r).to have_terminated_as_point
+        expect(r['vars']['l']).to eq(%w[ a b ] * 3)
+      end
+
+      it "takes the function if it's the only child in the block" do
+
+        r = @executor.launch(
+          %q{
+            define f count
+              each (range 0 count)
+                yield idx
+            set l []
+            f 3
+              def i
+                push l (2 * i)
+          })
+
+        expect(r).to have_terminated_as_point
+        expect(r['vars']['l']).to eq([ 0, 2, 4 ])
+      end
+
+      it 'yields' do
+
+        r = @executor.launch(
+          %q{
+            #define f i
+            #  * i (yield _)
+            #f 5
+            #  10
+
+            define f i
+              + i (yield i)
+            f 5
+              def j
+                * 3 j
+          })
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq(20)
+      end
+    end
   end
 
   describe 'a closure' do

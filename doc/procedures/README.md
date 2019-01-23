@@ -27,7 +27,7 @@
 * [find](find.md) - Finds the first matching element.
 * [flatten](flatten.md) - Flattens the given array
 * [for-each](for_each.md) - Calls a function for each element in the argument collection.
-* [if, unless, ife, unlesse](if.md) - The classical "if" (and its "unless" sidekick)
+* [if, unless, ife, unlesse, _if, _unless](if.md) - The classical "if" (and its "unless" sidekick)
 * [inject](inject.md) - A simplified version of [reduce](reduce.md).
 * [keys, values](keys.md) - Returns the "keys" or the "values" of an object.
 * [length, size](length.md) - Returns the length of its last collection argument or the length of the incoming f.ret
@@ -118,7 +118,7 @@
   * [Flor::Pro::Flatten](https://github.com/floraison/flor/blob/master/lib/flor/pcore/flatten.rb) : [flatten](flatten.md)
   * [Flor::Pro::Graft](https://github.com/floraison/flor/blob/master/lib/flor/punit/graft.rb) : [graft, import](graft.md)
   * [Flor::Pro::Head](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_head.rb) : _head
-  * [Flor::Pro::If](https://github.com/floraison/flor/blob/master/lib/flor/pcore/if.rb) : [if, unless, ife, unlesse](if.md)
+  * [Flor::Pro::If](https://github.com/floraison/flor/blob/master/lib/flor/pcore/if.rb) : [if, unless, ife, unlesse, _if, _unless](if.md)
   * [Flor::Pro::Includes](https://github.com/floraison/flor/blob/master/lib/flor/pcore/includes.rb) : includes?
   * [Flor::Pro::Iterator](https://github.com/floraison/flor/blob/master/lib/flor/pcore/iterator.rb) : 
     * [Flor::Pro::All](https://github.com/floraison/flor/blob/master/lib/flor/pcore/all.rb) : [all?](all.md)
@@ -132,6 +132,7 @@
   * [Flor::Pro::Keys](https://github.com/floraison/flor/blob/master/lib/flor/pcore/keys.rb) : [keys, values](keys.md)
   * [Flor::Pro::Length](https://github.com/floraison/flor/blob/master/lib/flor/pcore/length.rb) : [length, size](length.md)
   * [Flor::Pro::Matchr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/matchr.rb) : [matchr, match?, pmatch](matchr.md)
+  * [Flor::Pro::Max](https://github.com/floraison/flor/blob/master/lib/flor/pcore/max.rb) : max, min
   * [Flor::Pro::Merge](https://github.com/floraison/flor/blob/master/lib/flor/pcore/merge.rb) : [merge](merge.md)
   * [Flor::Pro::Move](https://github.com/floraison/flor/blob/master/lib/flor/pcore/move.rb) : [move](move.md)
   * [Flor::Pro::NoEval](https://github.com/floraison/flor/blob/master/lib/flor/pcore/noeval.rb) : [noeval](noeval.md)

@@ -23,6 +23,41 @@ class Flor::Pro::Apply < Flor::Procedure
   # ```
   # where flor figures out by itself it has to use this "apply" procedure
   # to call the function.
+  #
+  # ## rubyesque blocks
+  #
+  # In Ruby, one case pass a block on a function call:
+  # ```ruby
+  # def f(i)
+  #   i * yield
+  # end
+  # p f(5) { |j| 10 }
+  # ```
+  # which just prints `50`.
+  #
+  # This can be achieved in flor like this:
+  # ```
+  # define f i
+  #   * i (yield _)
+  # f 5
+  #   10
+  # echo f.ret
+  # ```
+  #
+  # If one needs to have a "block" with parameters, it can be done by having
+  # an anonymous function definition has the only thing in the block:
+  # ```
+  # define f i
+  #   + i (yield i)
+  # f 5
+  #   def j
+  #     * 3 j
+  # f.ret #=> 20
+  # ```
+  #
+  # ## see also
+  #
+  # define
 
   name 'apply'
 
