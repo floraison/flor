@@ -33,6 +33,10 @@ sequence
     + a b
 ```
 
+## see also
+
+[apply](apply.md).
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/define.rb)
 * [define spec](https://github.com/floraison/flor/tree/master/spec/pcore/define_spec.rb)

@@ -32,6 +32,10 @@ class Flor::Pro::Define < Flor::Procedure
   #   define "$(prefix)-sum" a b
   #     + a b
   # ```
+  #
+  # ## see also
+  #
+  # apply.
 
   names %w[ def fun define ]
 
