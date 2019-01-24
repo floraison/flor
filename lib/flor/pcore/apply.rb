@@ -57,7 +57,7 @@ class Flor::Pro::Apply < Flor::Procedure
   #
   # ## see also
   #
-  # define
+  # define.
 
   name 'apply'
 
@@ -116,6 +116,9 @@ class Flor::Pro::Apply < Flor::Procedure
     c0 = cn[0]
 
     return if cn.size == 1 && %w[ def fun ].include?(c0[0])
+      #
+      # if the single child is a "def" or "fun", no need to rewrite,
+      # that single child function becomes the block
 
     bt = [ 'def', cn, t[2] ]
     t[1] = t[1][0..@fcid] + [ bt ]

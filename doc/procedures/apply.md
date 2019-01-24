@@ -57,7 +57,7 @@ f.ret #=> 20
 
 ## see also
 
-[define](define.md)
+[define](define.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/apply.rb)
