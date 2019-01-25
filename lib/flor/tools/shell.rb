@@ -642,7 +642,8 @@ module Flor::Tools
       %{ prints the file hierarchy for #{@root} }
     end
     def cmd_t(line)
-      page(`tree -C #{@root}`)
+      #page(`tree -C #{@root}`)
+      page(`tree #{@root}`)
     end
 
     def hlp_tasks
