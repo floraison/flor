@@ -217,9 +217,30 @@ module Flor::Tools
     def arg(line, index=1); args(line)[index]; end
     alias fname arg
 
+    def choose_execution_path(frag, option)
+
+      fail ArgumentError.new("'frag' argument missing") \
+        unless frag
+
+      exe = lookup_execution(frag)
+
+      fail ArgumentError.new("execution matching \"%#{frag}%\" not found") \
+        unless exe
+
+      d = File.join(@root, 'tmp')
+      FileUtils.mkdir_p(d)
+      fn = File.join(d, "exe__#{exe.exid}.rb")
+
+      File.open(fn, 'wb') { |f| PP.pp(exe.data, f, 79) } \
+        if ! File.exist?(fn) || option == 'force'
+
+      fn
+    end
+
     def choose_path(line)
 
       b = arg(line, 2)
+      c = arg(line, 3)
 
       case fname(line)
       when /\Av/,
@@ -232,14 +253,7 @@ module Flor::Tools
       when /\Ar/
         @ra_flow_path
       when /\Ae/
-        exe = lookup_execution(b)
-#p exe
-#pp exe.data
-#puts JSON.pretty_generate(exe.data)
-#puts JSON.dump(exe.data)
-#puts JSON.generate(exe.data, indent: '  ', space: ' ', object_nl: "\n", array_nl: "\n")
-puts Flor.to_d(exe.data, width: true, colours: true)
-fail NotImplementedError
+        choose_execution_path(b, c)
       else
         @flow_path
       end
@@ -555,6 +569,10 @@ fail NotImplementedError
           edits the payload for the next execution
         * edit [f|flow]
           edits the flow for the next execution
+        * edit [e|exe] frag
+          edits the execution data
+        * edit [e|exe] frag force
+          edits the execution data (redump the data)
         * edit t|task frag
           edits a task currently under var/tasks/
         * edit r
