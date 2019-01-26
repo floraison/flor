@@ -345,6 +345,34 @@ describe 'Flor core' do
         expect(r).to have_terminated_as_point
         expect(r['payload']['ret']).to eq(20)
       end
+
+      it 'is ok with an underscore and a block as args' do
+
+        r = @executor.launch(
+          %q{
+            define f
+              * 2 (yield _)
+            f _
+              7
+          })
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq(14)
+      end
+
+      it 'is ok with the block as single argument' do
+
+        r = @executor.launch(
+          %q{
+            define f
+              * 2 (yield _)
+            f
+              14
+          })
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq(28)
+      end
     end
   end
 

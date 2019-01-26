@@ -121,7 +121,7 @@ class Flor::Pro::Apply < Flor::Procedure
       # that single child function becomes the block
 
     bt = [ 'def', cn, t[2] ]
-    t[1] = t[1][0..@fcid] + [ bt ]
+    t[1] = (@fcid ? t[1][0..@fcid] : []) + [ bt ]
 
     @node['tree'] = t
   end
