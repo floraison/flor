@@ -261,6 +261,21 @@ ms-e3p3-end-
 
     describe 'on_receive:/receiver:' do
 
+      it 'is ignored when null' do
+
+        msg = @unit.launch(
+          %q{
+            set r null
+            concurrence on_receive: r
+              + 1 2
+              + 3 4
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['payload']['ret']).to eq(3)
+      end
+
       it 'hands each child reply to its function' do
 
         msg = @unit.launch(

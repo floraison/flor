@@ -132,7 +132,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def apply_receiver_method
 
-    ret = send(@node['receiver'])
+    ret = send('rm__' + @node['receiver'])
     msg = { 'payload' => { 'ret' => ret } }
 
     receive_from_receiver(msg)
@@ -209,7 +209,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def apply_merger_method
 
-    pld = send(@node['merger'])
+    pld = send('mm__' + @node['merger'])
     msg = { 'payload' => pld }
 
     receive_from_merger(msg)
@@ -247,17 +247,17 @@ class Flor::Pro::Concurrence < Flor::Procedure
     cancel_children(rem) + reply_to_parent(rem)
   end
 
-  def default_receive
+  def rm__default_receive
 
     @node['payloads'].size >= non_att_count
   end
 
-  def expect_integer_receive
+  def rm__expect_integer_receive
 
     @node['payloads'].size >= att(:expect)
   end
 
-  def default_merge
+  def mm__default_merge
 
     @node['payloads'].values
       .reverse
