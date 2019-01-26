@@ -330,17 +330,14 @@ ms-e3p3-end-
       end
     end
 
-    describe 'on receive' do
+    describe 'on_receive' do
 
-      it 'hands each child reply to its block' do
+      it 'hands each child reply to its function' do
 
         msg = @unit.launch(
           %q{
-            #define r reply, from, replies, branch_count
-            #  >= (length replies) branch_count
             concurrence tag: 'x'
-              on_receive
-                >= (length replies) branch_count
+              on_receive (def \ >= (length replies) branch_count)
               + 12 34
               + 56 78
           },
@@ -348,6 +345,38 @@ ms-e3p3-end-
 
         expect(msg).to have_terminated_as_point
         expect(msg['payload']['ret']).to eq(46)
+      end
+
+      it 'hands each child reply to its function (2)' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence tag: 'x'
+              on_receive (def r f rs bc o \ >= (length rs) bc)
+                #(reply, from, replies, branch_count, over)
+              + 11 22
+              + 33 44
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['payload']['ret']).to eq(33)
+      end
+
+      it 'hands each child reply to its block' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence tag: 'x'
+              on_receive
+                >= (length replies) branch_count
+              + 98 76
+              + 54 32
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['payload']['ret']).to eq(174)
       end
     end
 

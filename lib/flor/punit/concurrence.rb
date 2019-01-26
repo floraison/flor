@@ -313,10 +313,15 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     ct0, ct1, ct2 = child_tree
 
-    [ '_att', [
-      [ ct0, [], ct2 ],
-      [ 'def', ct1, ct2 ] # FIXME
-    ], ct2 ]
+    ct10 = ct1.length == 1 ? ct1[0] : nil
+
+    ct1010 = Flor.is_att_tree?(ct10) && ct10[1].length == 1 && ct10[1][0]
+    ct1010 = Flor.is_definition_tree?(ct1010) ? ct1010 : nil
+
+    k = [ ct0, [], ct2 ]
+    v = ct1010 || [ 'def', ct1, ct2 ]
+
+    [ '_att', [ k, v ], ct2 ]
   end
 
   def rewrite
@@ -337,7 +342,10 @@ class Flor::Pro::Concurrence < Flor::Procedure
         end
         r }
 
-    @node['tree'] = [ t[0], atts + cldn, *t[2..-1] ]
+    nt1 = atts + cldn
+
+    @node['tree'] = [ t[0], nt1, *t[2..-1] ] \
+      if nt1 != t1
   end
 end
 

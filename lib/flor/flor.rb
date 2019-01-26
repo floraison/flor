@@ -372,6 +372,20 @@ module Flor
       t[1].is_a?(Array)
     end
 
+    def is_definition_tree?(t)
+
+      t.is_a?(Array) &&
+      Flor::Pro::Define.names.include?(t[0]) &&
+      t[2].is_a?(Integer) &&
+      t[1].is_a?(Array)
+    end
+
+    def is_def_tree?(t)
+
+      is_definition_tree?(t) &&
+      t[0] != 'define'
+    end
+
     def is_array_of_trees?(o)
 
       o.is_a?(Array) &&
