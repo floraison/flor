@@ -259,7 +259,7 @@ ms-e3p3-end-
       end
     end
 
-    describe 'on_receive:' do
+    describe 'on_receive:/receiver:' do
 
       it 'hands each child reply to its function' do
 
@@ -267,7 +267,8 @@ ms-e3p3-end-
           %q{
             define r reply, from, replies, branch_count
               >= (length replies) branch_count
-            concurrence on_receive: r
+            #concurrence on_receive: r
+            concurrence receiver: r
               + 1 2
               + 3 4
           },
@@ -319,7 +320,7 @@ ms-e3p3-end-
       it 'hands each child reply to its block'
     end
 
-    describe 'on_merge:' do
+    describe 'on_merge:/merger:' do
 
       it 'calls its function before the concurrence replies' do
 
@@ -327,7 +328,8 @@ ms-e3p3-end-
           %q{
             define m rets#, replies, branch_count
               rets | values _ | max _
-            concurrence on_merge: m
+            #concurrence on_merge: m
+            concurrence merger: m
               + 3 4 5
               + 6 7 8
               + 1 2 3
