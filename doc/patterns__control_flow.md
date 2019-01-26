@@ -202,7 +202,41 @@ sequence
   quality_review _
   # ...
 ```
-FIXME: "this is naive, it's a "after all of them", not "after each of them"... Oh well, it's forking tokens...
+But the "the quality_review task is run before that branch (...) finishes" is not respected. This is better, but verbose:
+```python
+sequence
+  # ...
+  concurrence
+    sequence
+      lay_foundations _
+      quality_review _
+    sequence
+      order_materials _
+      quality_review _
+    sequence
+      book_labourer _
+      quality_review _
+  # ...
+```
+This uses a wrapper function, it calls it with a block (like a Ruby block):
+```python
+sequence
+
+  # ...
+
+  define with_quality_review
+    yield _           # the wrapped block is called
+    quality_review _  # then the review is performed
+
+  concurrence
+    with_quality_review
+      lay_foundations _
+    with_quality_review
+      order_materials _
+    with_quality_review
+      book_labourer _
+```
+
 
 TODO: alternatives...
 
