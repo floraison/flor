@@ -77,6 +77,8 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     @node['on_receive_nids'] = nil
     @node['on_receive_queue'] = []
+
+    rewrite
   end
 
   def receive_last_att
@@ -305,6 +307,37 @@ class Flor::Pro::Concurrence < Flor::Procedure
     return [] if ms.empty?
 
     pop_on_receive_last || ms
+  end
+
+  def rewrite_as_attribute(child_tree)
+
+    ct0, ct1, ct2 = child_tree
+
+    [ '_att', [
+      [ ct0, [], ct2 ],
+      [ 'def', ct1, ct2 ] # FIXME
+    ], ct2 ]
+  end
+
+  def rewrite
+
+    t = tree
+    t1 = t[1]
+
+    return if t1.empty?
+
+    atts, cldn =
+      t1.inject([ [], [] ]) { |r, ct|
+        if ct[0] == '_att'
+          r[0] << ct
+        elsif ct[0] == 'on_receive'
+          r[0] << rewrite_as_attribute(ct)
+        else
+          r[1] << ct
+        end
+        r }
+
+    @node['tree'] = [ t[0], atts + cldn, *t[2..-1] ]
   end
 end
 

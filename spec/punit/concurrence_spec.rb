@@ -317,7 +317,23 @@ ms-e3p3-end-
 
     describe 'on receive' do
 
-      it 'hands each child reply to its block'
+      it 'hands each child reply to its block' do
+
+        msg = @unit.launch(
+          %q{
+            #define r reply, from, replies, branch_count
+            #  >= (length replies) branch_count
+            concurrence tag: 'x'
+              on_receive
+                >= (length replies) branch_count
+              + 12 34
+              + 56 78
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['payload']['ret']).to eq(46)
+      end
     end
 
     describe 'on_merge:/merger:' do
@@ -369,6 +385,16 @@ ms-e3p3-end-
     describe 'on merge' do
 
       it 'calls its block before the concurrence replies'
+    end
+
+    describe 'on_error:' do
+
+      it 'works'
+    end
+
+    describe 'on error' do
+
+      it 'works'
     end
   end
 end
