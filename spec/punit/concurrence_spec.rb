@@ -426,9 +426,58 @@ ms-e3p3-end-
       end
     end
 
-    describe 'on merge' do
+    describe 'on_merge' do
 
-      it 'calls its block before the concurrence replies'
+      it 'calls its block' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence
+              on_merge
+                rets | values _ | min _
+              + 3 4 5
+              + 6 7 8
+              + 1 2 3
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['payload']['ret']).to eq(6)
+      end
+
+      it 'calls its function' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence
+              on_merge (def rs \ rs | values _ | max _)
+              + 1 4 5
+              + 3 7 8
+              + 6 2 3
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['payload']['ret']).to eq(18)
+      end
+
+      it 'calls its function (2)' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence
+              on_merge
+                def rs
+                  rs | values _ | max _
+              + 1 4 5
+              + 3 7 8
+              + 6 2 3
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['payload']['ret']).to eq(18)
+      end
     end
 
     describe 'on_error:' do

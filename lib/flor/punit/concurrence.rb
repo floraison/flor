@@ -309,17 +309,22 @@ class Flor::Pro::Concurrence < Flor::Procedure
     pop_on_receive_last || ms
   end
 
+  def make_on_def(cn, l)
+
+    c0 = cn.length == 1 ? cn[0] : nil
+
+    return c0 if Flor.is_definition_tree?(c0)
+    return make_on_def(c0[1], l) if Flor.is_att_tree?(c0)
+
+    [ 'def', cn, l ]
+  end
+
   def rewrite_as_attribute(child_tree)
 
     ct0, ct1, ct2 = child_tree
 
-    ct10 = ct1.length == 1 ? ct1[0] : nil
-
-    ct1010 = Flor.is_att_tree?(ct10) && ct10[1].length == 1 && ct10[1][0]
-    ct1010 = Flor.is_definition_tree?(ct1010) ? ct1010 : nil
-
     k = [ ct0, [], ct2 ]
-    v = ct1010 || [ 'def', ct1, ct2 ]
+    v = make_on_def(ct1, ct2)
 
     [ '_att', [ k, v ], ct2 ]
   end
@@ -335,7 +340,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
       t1.inject([ [], [] ]) { |r, ct|
         if ct[0] == '_att'
           r[0] << ct
-        elsif ct[0] == 'on_receive'
+        elsif %w[ on_receive on_merge ].include?(ct[0])
           r[0] << rewrite_as_attribute(ct)
         else
           r[1] << ct
