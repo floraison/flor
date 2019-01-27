@@ -56,7 +56,7 @@ module Flor
           ''
         end
 
-      a << m['on_error'] ? " #{_c.rd}on_error" : ''
+      a << (m['on_error'] ? " #{_c.rd}on_error" : '')
 
       tmi = m['timer_id']
       tmi = tmi ? " #{_c.dg}tmi:#{tmi}" : ''
@@ -71,7 +71,7 @@ module Flor
       a << cn
 
       hp = nd && nd['heap']
-      hp = hp && (hp != (t || [])[0]) ? " #{_c.dg}hp:#{nd['heap']}" : ''
+      hp = (hp && (hp != (t || [])[0])) ? " #{_c.dg}hp:#{nd['heap']}" : ''
       a << hp
 
       msr = " #{_c.dg}m#{m['m']}s#{m['sm'] || '_'}"
