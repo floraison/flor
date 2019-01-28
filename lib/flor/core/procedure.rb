@@ -347,10 +347,11 @@ class Flor::Procedure < Flor::Node
 
     if node_closed?
 
-      return receive_from_child_when_closed \
-        if from_child || node_status_flavour
-
-      receive_when_closed
+      if from_child || node_status_flavour
+        receive_from_child_when_closed
+      else
+        receive_when_closed
+      end
 
     elsif node_ended?
 

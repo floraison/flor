@@ -114,6 +114,15 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   protected
 
+  def receive_from_child_when_closed
+
+    ms = receive
+
+    return [] if ms.empty?
+
+    pop_on_receive_last || ms
+  end
+
   def receive_from_branch
 
     @node['payloads'][from] = @message['payload']
@@ -298,15 +307,6 @@ class Flor::Pro::Concurrence < Flor::Procedure
     @node['replied'] = true
 
     wrap_reply('payload' => @node['merged_payload'])
-  end
-
-  def receive_from_child_when_closed
-
-    ms = receive
-
-    return [] if ms.empty?
-
-    pop_on_receive_last || ms
   end
 
   def make_on_def(cn, l)
