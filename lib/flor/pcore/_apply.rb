@@ -12,7 +12,8 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
       # which is equivalent, for now, to
       #
     if message['on_error']
-      @node['in_on_error'] = true
+      #@node['in_on_error'] = true
+      @node['in_on_error'] = from
     end
 
     vars = @node['vars'] = {}
@@ -93,5 +94,15 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
   #end
     #
     # as it was when "_apply" was an alias to "sequence"
+
+  def wrap_reply(h={})
+
+    ms = super
+
+    ioe = @node['in_on_error']
+    ms[0]['from_on_error'] = ioe if ioe
+
+    ms
+  end
 end
 

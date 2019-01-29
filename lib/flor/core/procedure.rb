@@ -434,6 +434,11 @@ class Flor::Procedure < Flor::Node
     i ? i.to_i : false
   end
 
+  def from_error_handler?
+
+    message['from_on_error'] == nid
+  end
+
   def last_receive?
 
     children[@ncid] == nil

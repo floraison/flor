@@ -105,6 +105,8 @@ class Flor::Pro::Concurrence < Flor::Procedure
       #receive_from_on
     elsif Flor.same_sub?(nid, from)
       receive_from_branch
+    elsif from_error_handler?
+      wrap_reply
     elsif @node['on_receive_nids'] && @node['on_receive_nids'][0] == from
       receive_from_receiver
     else
@@ -113,6 +115,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
   end
 
   protected
+
 
   def receive_from_child_when_closed
 
