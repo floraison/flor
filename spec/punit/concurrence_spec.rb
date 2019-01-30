@@ -518,7 +518,20 @@ ms-e3p3-end-
         expect(msg['vars']['l']).to eq([ 'err@0_1_1_1' ])
       end
 
-      it 'works (error in 2 or more branches)'
+      it 'works (error in 2 or more branches)' do
+
+        msg = @unit.launch(
+          %q{
+            set l []
+            concurrence on_error: (def msg \ push l "err@$(msg.nid)")
+              push l x
+              push l y
+          },
+          wait: 'terminated')
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['vars']['l']).to eq([ 'err@0_1_2_1' ])
+      end
     end
 
     describe 'on_error' do
