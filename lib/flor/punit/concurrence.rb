@@ -78,7 +78,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
     @node['on_receive_nids'] = nil
     @node['on_receive_queue'] = []
 
-    rewrite
+    pre_execute_rewrite
   end
 
   def receive_last_att
@@ -88,14 +88,20 @@ class Flor::Pro::Concurrence < Flor::Procedure
     @node['receiver'] = determine_receiver
     @node['merger'] = determine_merger
 
+
     branches = (@ncid..children.size - 1).to_a
     @node['branch_count'] = branches.count
 
-    branches
+    ms = branches
       .map { |i| execute_child(i, 0, 'payload' => payload.copy_current) }
       .flatten(1)
         #
         # call execute for each of the (non _att) children
+
+    oce = att('on_child_error')
+    ms.each { |m| m['on_error_handler'] = oce } if oce
+
+    ms
   end
 
   def receive_non_att
@@ -332,7 +338,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
     [ '_att', [ k, v ], ct2 ]
   end
 
-  def rewrite
+  def pre_execute_rewrite
 
     t = tree
     t1 = t[1]

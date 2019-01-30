@@ -480,10 +480,6 @@ ms-e3p3-end-
       end
     end
 
-# [ ] on_error_in_child: idea, maybe...
-# Could it rewrite each child branch? why not, it would happen before
-# the non-att child branches are triggered...
-
     describe 'on_error:' do
 
       it 'works (single error)' do
@@ -532,6 +528,16 @@ ms-e3p3-end-
         expect(msg).to have_terminated_as_point
         expect(msg['vars']['l']).to eq([ 'err@0_1_2_1' ])
       end
+
+      context 'when receive error' do
+
+        it 'works'
+      end
+
+      context 'when merge error' do
+
+        it 'works'
+      end
     end
 
     describe 'on_error' do
@@ -542,6 +548,26 @@ ms-e3p3-end-
     describe 'on error' do
 
       it 'works'
+    end
+
+    describe 'on_child_error:' do
+
+      it 'works' do
+
+        msg = @unit.launch(
+          %q{
+            set l []
+            concurrence on_child_error: (def msg \ push l "err@$(msg.nid)")
+              push l x
+              push l y
+          },
+          wait: 'terminated')
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['vars']['l']).to eq([ 'err@0_1_1_1', 'err@0_1_2_1' ])
+      end
+
+      it 'is overriden by the child own on_error'
     end
   end
 end
