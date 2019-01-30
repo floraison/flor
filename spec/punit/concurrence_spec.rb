@@ -480,15 +480,6 @@ ms-e3p3-end-
       end
     end
 
-# on_error / on error
-# This sets the error handler in the parent node...
-# This should not be used to sets an error handler for all the concurrence
-# branches.
-#
-# But I should make sure that an error handler terminates the whole
-# concurrence and lets the flow go on (right after the concurrence),
-# even if there are errors in more than 1 branch.
-#
 # [ ] on_error_in_child: idea, maybe...
 # Could it rewrite each child branch? why not, it would happen before
 # the non-att child branches are triggered...
@@ -510,7 +501,23 @@ ms-e3p3-end-
         expect(msg['vars']['l']).to eq([ 1, 'err@0_1_1_1' ])
       end
 
-      it 'works (green branch replies after error handler replies)'
+      it 'works (green branch replies after error handler replies)' do
+
+        msg = @unit.launch(
+          %q{
+            set l []
+            concurrence on_error: (def msg \ push l "err@$(msg.nid)")
+              push l x
+              sequence
+                sleep 0.4
+                push l 1
+          },
+          wait: 'terminated')
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['vars']['l']).to eq([ 'err@0_1_1_1' ])
+      end
+
       it 'works (error in 2 or more branches)'
     end
 
