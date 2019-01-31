@@ -41,9 +41,9 @@ class Flor::Pro::Range < Flor::Procedure
     edn = rets[1] || rets[0] || 0
     ste = rets[2] || ((sta > edn) ? -1 : 1)
 
-    asta = att('start') || att('from')
-    aedn = att('end') || att('to')
-    aste = att('step') || att('by') || att('inc')
+    asta = att('start', 'from')
+    aedn = att('end', 'to')
+    aste = att('step', 'by', 'inc')
 
     sta = asta if asta
     edn = aedn if aedn

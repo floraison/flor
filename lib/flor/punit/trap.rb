@@ -235,7 +235,7 @@ class Flor::Pro::Trap < Flor::Procedure
     count = 1 if fun == nil # blocking mode implies count: 1
     tra['count'] = count if count
 
-    tra['range'] = att('range') || att('scope') || 'subnid'
+    tra['range'] = att('range', 'scope') || 'subnid'
 
     @node['trapped'] = true
 
