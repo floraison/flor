@@ -550,14 +550,15 @@ ms-e3p3-end-
       it 'works'
     end
 
-    describe 'on_child_error:' do
+    describe 'child_on_error:/children_on_error:' do
 
       it 'works' do
 
         msg = @unit.launch(
           %q{
             set l []
-            concurrence on_child_error: (def msg \ push l "err@$(msg.nid)")
+            concurrence children_on_error: (def msg \ push l "err@$(msg.nid)")
+            #concurrence child_on_error: (def msg \ push l "err@$(msg.nid)")
               push l x
               push l y
           },
