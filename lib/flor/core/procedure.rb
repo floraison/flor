@@ -519,7 +519,7 @@ class Flor::Procedure < Flor::Node
 
     prc[1][flavour] = true
 
-    (pnode[flavour] ||= []) << [ criteria, prc ]
+    (pnode[flavour] ||= []).unshift([ criteria, prc ])
   end
 
   # Used by 'cursor' (and 'loop') when
