@@ -519,7 +519,10 @@ class Flor::Procedure < Flor::Node
 
     prc[1][flavour] = true
 
-    (pnode[flavour] ||= []).unshift([ criteria, prc ])
+    a = (pnode[flavour] ||= [])
+    i = a.index { |e| e[0] == criteria } || -1
+      #
+    a.insert(i, [ criteria, prc ])
   end
 
   # Used by 'cursor' (and 'loop') when
