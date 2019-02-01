@@ -531,12 +531,47 @@ ms-e3p3-end-
 
       context 'when receive error' do
 
-        it 'works'
+        it 'handles it' do
+
+          msg = @unit.launch(
+            %q{
+              set l []
+              define r reply, from, replies, branch_count
+                error "from:$(from)"
+                >= (length replies) branch_count
+              define e msg err
+                push l "err@$(msg.nid)/$(err.msg)"
+              concurrence on_receive: r on_error: e
+                + 1 2
+                + 3 4
+            },
+            wait: 'terminated')
+
+          expect(msg).to have_terminated_as_point
+          expect(msg['vars']['l']).to eq(%w[ err@0_1-1/from:0_3_2 ])
+        end
       end
 
       context 'when merge error' do
 
-        it 'works'
+        it 'handles it' do
+
+          msg = @unit.launch(
+            %q{
+              set l []
+              define e msg err
+                push l "err@$(msg.nid)/$(err.msg)"
+              concurrence on_error: e
+                on_merge (def rs \ fail "miserably")
+                + 1 4 5
+                + 3 7 8
+                + 6 2 3
+            },
+            wait: 'terminated')
+
+          expect(msg).to have_terminated_as_point
+          expect(msg['vars']['l']).to eq(%w[ err@0_2_1_1-1/miserably ])
+        end
       end
     end
 
