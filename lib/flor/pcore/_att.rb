@@ -230,9 +230,11 @@ class Flor::Pro::Att < Flor::Procedure
   # (the node bearing the att under evaluation right now) to terminate
   # immediately (by replying to its own parent node).
   #
-  def receive_off
+  def receive_disabled
 
     wrap_reply('disable' => Flor.true?(payload['ret']))
   end
+
+  alias receive_off receive_disabled
 end
 

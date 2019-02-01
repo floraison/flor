@@ -264,7 +264,19 @@ describe 'Flor core' do
 
     describe 'off:/disable:/disabled:' do
 
-      it 'turns off a node'
+      it 'turns off a node' do
+
+        r = @executor.launch(
+          %q{
+            set a 0
+            set a 1 off: false
+            set a 2 off: true
+            set a 3 disabled: true
+          })
+
+        expect(r).to have_terminated_as_point
+        expect(r['vars']['a']).to eq(1)
+      end
     end
 
     describe 'off/disabled' do
@@ -275,7 +287,7 @@ describe 'Flor core' do
           %q{
             set a 0
             set a 1 off
-            #set a 2 disabled  TODO
+            set a 2 disabled
           })
 
         expect(r).to have_terminated_as_point
