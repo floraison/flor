@@ -248,6 +248,15 @@ class Flor::Procedure < Flor::Node
     wrap(hh)
   end
 
+  def stays_an_att?(t)
+
+    t[1].length == 1 &&
+    t[1][0].is_a?(Array) &&
+    t[1][0][1] == [] &&
+    %w[ flank off ].include?(t[1][0][0])
+      # TODO could that be coordinated with Att#pre_execute_off et al?
+  end
+
   def unatt_unkeyed_children(first_only=false)
 
     found = false
@@ -256,12 +265,13 @@ class Flor::Procedure < Flor::Node
       att_children.partition { |c|
         if found
           false
+        elsif stays_an_att?(c)
+          false
         else
           is_unkeyed = c[1].size == 1
           found = true if is_unkeyed && first_only
           is_unkeyed
-        end
-      }
+        end }
 
     unkeyed = unkeyed
       .collect { |c| c[1].first }
@@ -345,7 +355,13 @@ class Flor::Procedure < Flor::Node
     from_child = nil
     from_child = cnodes.delete(from) if cnodes_any? && remove
 
-    if node_closed?
+    if di = @message['disable']
+      #
+      # the off: and the disable:/disabled: can achieve that
+
+      wrap_reply('disabled' => di)
+
+    elsif node_closed?
 
       if from_child || node_status_flavour
         receive_from_child_when_closed

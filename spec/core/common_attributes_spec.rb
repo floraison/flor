@@ -26,7 +26,7 @@ describe 'Flor core' do
             sequence vars: { a: 1 }
           })
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['payload']['ret']).to eq(nil)
       end
 
@@ -42,7 +42,7 @@ describe 'Flor core' do
           },
           vars: { 'l' => [] })
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         expect(
           r['vars']['l']
@@ -66,7 +66,7 @@ describe 'Flor core' do
           },
           payload: { 'l' => [] })
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
 
         expect(
           r['payload']['l']
@@ -111,7 +111,7 @@ describe 'Flor core' do
             },
             payload: { 'l' => [] })
 
-          expect(r['point']).to eq('terminated')
+          expect(r).to have_terminated_as_point
 
           expect(
             r['payload']['l']
@@ -133,7 +133,7 @@ describe 'Flor core' do
             },
             payload: { 'l' => [] })
 
-          expect(r['point']).to eq('terminated')
+          expect(r).to have_terminated_as_point
 
           expect(
             r['payload']['l']
@@ -154,7 +154,7 @@ describe 'Flor core' do
             },
             payload: { 'l' => [] })
 
-          expect(r['point']).to eq('terminated')
+          expect(r).to have_terminated_as_point
 
           expect(
             r['payload']['l']
@@ -201,7 +201,7 @@ describe 'Flor core' do
             },
             payload: { 'l' => [] })
 
-          expect(r['point']).to eq('terminated')
+          expect(r).to have_terminated_as_point
 
           expect(
             r['payload']['l']
@@ -227,7 +227,7 @@ describe 'Flor core' do
             },
             payload: { 'l' => [] })
 
-          expect(r['point']).to eq('terminated')
+          expect(r).to have_terminated_as_point
 
           expect(
             r['payload']['l']
@@ -257,8 +257,29 @@ describe 'Flor core' do
             3 ret: 4
           })
 
-        expect(r['point']).to eq('terminated')
+        expect(r).to have_terminated_as_point
         expect(r['payload']['ret']).to eq(4)
+      end
+    end
+
+    describe 'off:/disable:/disabled:' do
+
+      it 'turns off a node'
+    end
+
+    describe 'off/disabled' do
+
+      it 'turns off a node' do
+
+        r = @executor.launch(
+          %q{
+            set a 0
+            set a 1 off
+            #set a 2 disabled  TODO
+          })
+
+        expect(r).to have_terminated_as_point
+        expect(r['vars']['a']).to eq(0)
       end
     end
   end

@@ -42,6 +42,7 @@ class Flor::Pro::Att < Flor::Procedure
   end
 
   alias pre_execute_flank pre_execute_boolean_attribute
+  alias pre_execute_off pre_execute_boolean_attribute
 
   def pre_execute_vars
 
@@ -221,6 +222,15 @@ class Flor::Pro::Att < Flor::Procedure
 
     parent_node_procedure.flank +
     wrap_reply
+  end
+
+  # Might turn the "disable" flag to true, which forces the parent node
+  # (the node bearing the att under evaluation right now) to terminate
+  # immediately (by replying to its own parent node).
+  #
+  def receive_off
+
+    wrap_reply('disable' => Flor.true?(payload['ret']))
   end
 end
 
