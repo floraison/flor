@@ -170,3 +170,33 @@ sequence
   d _
 ```
 
+## disable: / off: / disabled: and disabled / off
+
+When this attribute evaluates to something not false, it forces its node to stop and reply to its parent.
+
+This sequence ends up having a set to 2:
+```
+sequence
+  set a 0
+  set a 1 off: false
+  set a 2 off: true
+  set a 3 disable: true
+  set a 4 disabled: true
+```
+
+While this sequence has a set to 0:
+```
+sequence
+  set a 0
+  set a 1 off
+  set a 2 disabled
+```
+
+Please note that the stopping of the node occurs right after the evaluation of the off/disable/disabled, not upon initial evalution of the node. So
+```
+sequence
+  set d true
+  set a (+ 1 2 3) disable: d
+```
+will disable its `set a` but after the `(+ 1 2 3)` sum computation.
+
