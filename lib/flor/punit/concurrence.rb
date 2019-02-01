@@ -67,6 +67,13 @@ class Flor::Pro::Concurrence < Flor::Procedure
   #   task 'alpha'
   #   task 'bravo'
   # ```
+  #
+  # ## on_receive: / receiver:
+  # ## on_receive (non-attribute)
+  # ## on_merge: / merger:
+  # ## on_merge (non-attribute)
+  # ## child_on_error: / children_on_error:
+  # ## child_on_error / children_on_error (non-attribute)
 
   name 'concurrence'
 
@@ -338,6 +345,13 @@ class Flor::Pro::Concurrence < Flor::Procedure
     [ '_att', [ k, v ], ct2 ]
   end
 
+  REWRITE_AS_ATTS = %w[
+    on_receive on_merge
+    child_on_error children_on_error ]
+      #
+      # heads of the child nodes that should get rewritten as attributes
+      # of the concurrence ...
+
   def pre_execute_rewrite
 
     t = tree
@@ -349,7 +363,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
       t1.inject([ [], [] ]) { |r, ct|
         if ct[0] == '_att'
           r[0] << ct
-        elsif %w[ on_receive on_merge ].include?(ct[0])
+        elsif REWRITE_AS_ATTS.include?(ct[0])
           r[0] << rewrite_as_attribute(ct)
         else
           r[1] << ct

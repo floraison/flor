@@ -587,7 +587,7 @@ ms-e3p3-end-
 
     describe 'child_on_error:/children_on_error:' do
 
-      it 'works' do
+      it 'sets the on_error: for each child' do
 
         msg = @unit.launch(
           %q{
@@ -616,6 +616,27 @@ ms-e3p3-end-
 
         expect(msg).to have_terminated_as_point
         expect(msg['vars']['l']).to eq([ 'err@0_1_1_1', 'y__err@0_1_2_2' ])
+      end
+    end
+
+    describe 'child_on_error / children_on_error' do
+
+      it 'sets the on_error: for each child' do
+
+        msg = @unit.launch(
+          %q{
+            set l []
+            concurrence
+              #child_on_error
+              children_on_error
+                push l "err@$(msg.nid)"
+              push l x
+              push l y
+          },
+          wait: 'terminated')
+
+        expect(msg).to have_terminated_as_point
+        expect(msg['vars']['l']).to eq([ 'err@0_1_1_1', 'err@0_1_2_1' ])
       end
     end
   end
