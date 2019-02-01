@@ -116,6 +116,11 @@ module Flor
       @out.puts "#{_c.blg}sto#{_c.rs} t#{Thread.current.object_id} #{level.upcase} #{msg}"
     end
 
+    def size_to_s(s)
+
+      "%.2fk" % (s.to_f / 1024)
+    end
+
     def log_run_start(executor)
 
       return unless @unit.conf['log_run']
@@ -131,7 +136,7 @@ module Flor
       s << "\n    |   "; s << Flor.to_dnc(
         counters: execution['counters'],
         nodes: execution['nodes'].size,
-        execution_size: execution['size'])
+        execution_size: size_to_s(execution['size']))
       s << _c.rs
 
       @out.puts(s.string)
@@ -159,7 +164,7 @@ module Flor
         #own_traps: @traps.reject { |t| t.texid == nil }.size, # FIXME
         counters: execution['counters'],
         nodes: execution['nodes'].size,
-        execution_size: execution['size'])
+        execution_size: size_to_s(execution['size']))
       if @unit.archive
         s << "\n    |   "
         s << Flor.to_dnc(archive_size: (@unit.archive[exid].size rescue '???'))
