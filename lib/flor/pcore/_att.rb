@@ -41,8 +41,10 @@ class Flor::Pro::Att < Flor::Procedure
     t[1] << [ '_boo', true, @node['tree'][2] ]
   end
 
-  alias pre_execute_flank pre_execute_boolean_attribute
-  alias pre_execute_off pre_execute_boolean_attribute
+  TRUE_ATTS
+    .each do |k|
+      alias_method "pre_execute_#{k}", :pre_execute_boolean_attribute
+    end
 
   def pre_execute_vars
 

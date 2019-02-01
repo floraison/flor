@@ -6,6 +6,14 @@ class Flor::Procedure < Flor::Node
   #
   RVARS = %w[ idx ]
 
+  # Attributes that when given alone are turned to "true" attributes.
+  #
+  # For example `sequence flank` gets turned to `sequence flank: true`
+  #
+  # The transformation occurs in Flor::Pro::Att ("_att").
+  #
+  TRUE_ATTS = %w[ flank off disabled ]
+
   class << self
 
     def inherited(subclass)
@@ -253,8 +261,7 @@ class Flor::Procedure < Flor::Node
     t[1].length == 1 &&
     t[1][0].is_a?(Array) &&
     t[1][0][1] == [] &&
-    %w[ flank off ].include?(t[1][0][0])
-      # TODO could that be coordinated with Att#pre_execute_off et al?
+    TRUE_ATTS.include?(t[1][0][0])
   end
 
   def unatt_unkeyed_children(first_only=false)
