@@ -236,5 +236,6 @@ class Flor::Pro::Att < Flor::Procedure
   end
 
   alias receive_off receive_disabled
+  alias receive_disable receive_disabled
 end
 

@@ -271,7 +271,8 @@ describe 'Flor core' do
             set a 0
             set a 1 off: false
             set a 2 off: true
-            set a 3 disabled: true
+            set a 3 disable: true
+            set a 4 disabled: true
           })
 
         expect(r).to have_terminated_as_point
