@@ -68,6 +68,71 @@ concurrence expect: 1 rem: 'wait'
   task 'bravo'
 ```
 
+## on_receive: / receiver:
+
+Sets a function that is to be run each time a concurrence branch replies.
+Should return a boolean, `true` for the concurrence to end (and trigger
+the merging) or `false` for the concurrence to go on (and replies from
+other branches to be received).
+
+In this example, the receiver is actually an implementation of the default
+receive behaviour, "concurrence" merges as soon as all the children have
+replied (`>= (length replies) branch_count`).
+```
+define r reply, from, replies, branch_count
+  >= (length replies) branch_count
+concurrence on_receive: r
+  + 1 2
+  + 3 4
+```
+
+The receiver can be used to change the reply payload. Instead of
+returning a boolean, it can return an object with the `done:` and
+the `payload:` keys:
+```
+define r reply, from, replies, branch_count, over
+  set reply.ret (+ reply.ret 10)
+  { done: (>= (length replies) branch_count), payload: reply }
+concurrence on_receive: r
+  + 1 2
+  + 3 4
+```
+The first branch thus returns `1 + 2 + 10`, while the second one returns
+`3 + 4 + 10`.
+
+## on_receive (non-attribute)
+
+Sometimes, it's better to declutter the concurrence and write the
+on_receive as a 'special' child rather than a attribute:
+
+```
+define r reply, from, replies, branch_count
+  >= (length replies) branch_count
+concurrence on_receive: r
+  + 1 2
+  + 3 4
+```
+becomes
+```
+concurrence tag: 'x'
+  on_receive (def \ >= (length replies) branch_count)
+  + 12 34
+  + 56 78
+```
+One can even express the function has a 'block':
+```
+concurrence tag: 'x'
+  on_receive
+    >= (length replies) branch_count
+  + 12 34
+  + 56 78
+```
+
+## on_merge: / merger:
+## on_merge (non-attribute)
+## child_on_error: / children_on_error:
+## child_on_error / children_on_error (non-attribute)
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/concurrence.rb)
 * [concurrence spec](https://github.com/floraison/flor/tree/master/spec/punit/concurrence_spec.rb)
