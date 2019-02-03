@@ -129,7 +129,62 @@ concurrence tag: 'x'
 ```
 
 ## on_merge: / merger:
+
+the function given to `on_merge:` or `merger:` is called once the
+concurrence has gathered enough replies (or the right replies,
+depending on `on_receive:` / `receiver:` or `expect:`).
+
+In the example below, the merging function take all the `f.ret` and
+selects the maximum one:
+```
+define m rets, replies, branch_count
+  rets | values _ | max _
+concurrence on_merge: m
+  + 3 4 5
+  + 6 7 8
+  + 1 2 3
+```
+It can be shortened to:
+```
+concurrence on_merge: (def rets \ rets | values _ | max _)
+  + 3 4 5
+  + 6 7 8
+  + 1 2 3
+```
+`rets` looks like `{ "0_1_1" => 12, "0_1_2" => 21, "0_1_3" => 6 }`,
+hence the `rets | values _ | max _`.
+
+The signature for the merge function looks like:
+`define m rets, replies, branch_count`
+
+* _rets_ is the object collecting the `f.ret` of the replies to merge,
+  like `{ "0_1_1" => 12, "0_1_2" => 21, "0_1_3" => 6 }` as seen above.
+* _replies_ is the equivalent but for the whole reply payload (fields),
+  like `{"0_1"=>{"ret"=>12}, "0_2"=>{"ret"=>21}, "0_3"=>{"ret"=>6}}`.
+* _branch_count_ simply contains the count of branches. It should be
+  inferior or equal to the size of _rets_ and _replies_.
+
 ## on_merge (non-attribute)
+
+Like `receiver:` / `:on_receive` has the `on_receive` construct, there
+is the `on_merge` construct which accepts a function or a block:
+```
+concurrence
+  on_merge (def rs \ rs | values _ | max _)
+  + 1 4 5
+  + 3 7 8
+  + 6 2 3
+```
+or
+```
+concurrence
+  on_merge
+    rets | values _ | min _
+  + 3 4 5
+  + 6 7 8
+  + 1 2 3
+```
+
 ## child_on_error: / children_on_error:
 ## child_on_error / children_on_error (non-attribute)
 
