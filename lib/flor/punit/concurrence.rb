@@ -100,6 +100,22 @@ class Flor::Pro::Concurrence < Flor::Procedure
   # The first branch thus returns `1 + 2 + 10`, while the second one returns
   # `3 + 4 + 10`.
   #
+  # The signature for receiver functions is:
+  # `define r reply, from, replies, branch_count`
+  #
+  # * _reply_ the current reply, here something like `{ ret: 3 }`.
+  # * _from_ a string like "0_1_1", the nid of the node that emitted
+  #   the current reply.
+  # * _replies_ an object indexing the replies received so far, like
+  #   `{ "0_1_1" => { "ret" => 13 } }`.
+  # * _branch_count_ simply contains the count of branches. It should be
+  #   superior or equal to the size of _rets_ and _replies_.
+  # * _over_ is set to `true` if a previous receiver call said the
+  #   concurrence should end. It is set to `false` else. So it's `true`
+  #   for replies post-merge. It might happen for children answering
+  #   right after the merge limit and children of concurrences that
+  #   wait for all the replies, see the `remaining:` attribute above.
+  #
   # ## on_receive (non-attribute)
   #
   # Sometimes, it's better to declutter the concurrence and write the
@@ -162,7 +178,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
   # * _replies_ is the equivalent but for the whole reply payload (fields),
   #   like `{"0_1"=>{"ret"=>12}, "0_2"=>{"ret"=>21}, "0_3"=>{"ret"=>6}}`.
   # * _branch_count_ simply contains the count of branches. It should be
-  #   inferior or equal to the size of _rets_ and _replies_.
+  #   superior or equal to the size of _rets_ and _replies_.
   #
   # ## on_merge (non-attribute)
   #
