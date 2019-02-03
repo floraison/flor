@@ -202,7 +202,74 @@ class Flor::Pro::Concurrence < Flor::Procedure
   # ```
   #
   # ## child_on_error: / children_on_error:
+  #
+  # Setting the common attribute `on_error:` on a concurrence is OK, but it
+  # only catches a single error and then the flow resumes after the concurrence:
+  # ```
+  # sequence
+  #   set l []
+  #   concurrence on_error:
+  #       (def msg err \ push l "error at $(msg.nid): $(err.msg)")
+  #     push l 0
+  #     push l x  # fails because 'x' is unknown)
+  #   push l 2
+  # ```
+  # The `push l x` here fails, the on_error is triggered and the flow resumes
+  # at `push l 2`. `l` ends up containing
+  # `[ 0, "error at 0_1_2_1: cannot find \"x\"", 2 ]`.
+  #
+  # It is easy to set an `on_error:` on each child:
+  # ```
+  # sequence
+  #   set l []
+  #   define oe msg err
+  #     push l "error at $(msg.nid): $(err.msg)"
+  #   concurrence
+  #     push l 0 on_error: oe
+  #     push l x on_error: oe
+  #   push l 2
+  # ```
+  # But that can also be written as:
+  # ```
+  # sequence
+  #   set l []
+  #   concurrence child_on_error:
+  #       (def msg err \ push l "error at $(msg.nid): $(err.msg)")
+  #     push l 0
+  #     push l x
+  #   push l 2
+  # ```
+  # `child_on_error` can also be written as `children_on_error`.
+  #
+  # The signature for the error handler is:
+  # * _msg_ the message (usually `point: 'failed'`) communicating the error
+  # * _err_ contains the error itself, it's a shortcut to `msg.error`
+  #
+  #
   # ## child_on_error / children_on_error (non-attribute)
+  #
+  # Those who prefer to tie handlers via a node rather than an attribute
+  # can do so:
+  # ```
+  # sequence
+  #   set l []
+  #   concurrence
+  #     child_on_error (def msg err \ push l "error at $(msg.nid): $(err.msg)")
+  #     push l 0
+  #     push l x
+  #   push l 2
+  # ```
+  # One step further, with a block:
+  # ```
+  # sequence
+  #   set l []
+  #   concurrence
+  #     child_on_error
+  #       push l "error at $(msg.nid): $(err.msg)")
+  #     push l 0
+  #     push l x
+  #   push l 2
+  # ```
 
   name 'concurrence'
 
