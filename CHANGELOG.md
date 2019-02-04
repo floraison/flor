@@ -4,13 +4,13 @@
 
 ## flor 1.0.0  not yet released
 
+
+## flor 0.16.0  released 2019-02-04
+
+- Many many improvements
 - Include "undense" work ("_ref" and friends)
 - Include "undense" work (killing the dollar subsystem)
 - Fix dereserving delayed messages
-
-
-## flor 0.15.1  not yet released
-
 - allow for cancel behaviour when "cursor", "sequence", and "until"
   node_status flavour is "on-error"
 
