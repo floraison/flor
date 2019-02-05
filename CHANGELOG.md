@@ -2,8 +2,7 @@
 # CHANGELOG.md
 
 
-## flor 1.0.0  not yet released
-
+## flor 0.16.1  not yet released
 
 ## flor 0.16.0  released 2019-02-04
 
