@@ -44,7 +44,7 @@ A Ruby workflow engine (ruote next generation)
   s.add_runtime_dependency 'fugit', '~> 1.1', '>= 1.1.8'
   s.add_runtime_dependency 'dense', '~> 1.1', '>= 1.1.6'
 
-  s.add_runtime_dependency 'sequel', '~> 4'
+  s.add_runtime_dependency 'sequel', '~> 5'
 
   s.add_development_dependency 'rspec', '~> 3.7'
   s.add_development_dependency 'terminal-table'

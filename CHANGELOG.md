@@ -4,6 +4,9 @@
 
 ## flor 0.16.1  not yet released
 
+- Depend on Sequel 5 (Sequel 4 and 5 seem OK)
+
+
 ## flor 0.16.0  released 2019-02-04
 
 - Many many improvements
