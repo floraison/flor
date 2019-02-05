@@ -1,5 +1,6 @@
 
 .ruby-version
+.tool-versions
 #.rspec
 .rspec.out
 .errors
