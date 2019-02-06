@@ -44,7 +44,7 @@ class Flor::Pro::OnCancel < Flor::Procedure
     unatt_unkeyed_children
   end
 
-  def receive_non_att
+  def receive_last
 
     store_on(:cancel)
 

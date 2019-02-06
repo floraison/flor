@@ -4,6 +4,8 @@
 
 ## flor 0.16.2  not yet released
 
+- Ensure "on_cancel" sets only one handler
+
 
 ## flor 0.16.1  released 2019-02-05
 

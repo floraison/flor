@@ -93,6 +93,34 @@ describe 'Flor procedures' do
       expect(m['cause'][0]['nid']).to eq('0_0')
       expect(m['cause'][0]['type']).to eq(nil)
     end
+
+    it 'sets a single handler' do
+
+      @executor.launch(
+        %q{
+          sequence
+            #on_cancel (def msg \ 0) (def msg \ 1)
+            on_cancel
+              def msg \ 0
+              def msg \ 1
+            stall _
+        })
+
+      expect(
+        @executor.execution['nodes']['0']['on_cancel']
+      ).to eq([
+        [ [ '*' ],
+          [ '_func',
+            { 'nid' => '0_0_1',
+              'tree' => [
+                'def', [
+                  [ '_att', [ [ 'msg', [], 6 ] ], 6 ], [ '_num', 1, 6 ] ], 6 ],
+              'cnid' => '0',
+              'fun' => 1,
+              'on_cancel' => true },
+            6 ] ]
+      ])
+    end
   end
 end
 
