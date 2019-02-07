@@ -52,6 +52,7 @@ module Helpers
 
   def display_error_if_failed(message)
 
+    return unless message
     return unless message['point'] == 'failed'
 
     puts ">" + '-' * 79
@@ -200,12 +201,16 @@ RSpec::Matchers.define :have_as_point do |point|
 
     display_error_if_failed(actual) unless point == 'failed'
 
-    actual['point'] == point
+    actual && actual['point'] == point
   end
 
   failure_message do |actual|
 
-    "expected message point to be \"#{point}\", not \"#{actual['point']}\""
+    if actual
+      "expected message point to be \"#{point}\", not \"#{actual['point']}\""
+    else
+      "returned message is nil"
+    end
   end
 end
 
@@ -215,12 +220,16 @@ RSpec::Matchers.define :have_terminated_as_point do
 
     display_error_if_failed(actual)
 
-    actual['point'] == 'terminated'
+    actual && actual['point'] == 'terminated'
   end
 
   failure_message do |actual|
 
-    "expected message point to be \"terminated\", not \"#{actual['point']}\""
+    if actual
+      "expected message point to be \"terminated\", not \"#{actual['point']}\""
+    else
+      "returned message is nil"
+    end
   end
 end
 
