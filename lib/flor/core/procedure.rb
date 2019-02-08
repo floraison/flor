@@ -618,7 +618,9 @@ class Flor::Procedure < Flor::Node
     %w[ error cancel timeout ]
       .each { |k|
         co = @node["child_on_#{k}"]
-        m["on_#{k}_handler"] = co if co }
+        next unless co
+        kri = [ '*' ]
+        m["on_#{k}_handler"] = [ kri, co ] }
 
     [ m ]
   end

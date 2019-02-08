@@ -149,7 +149,7 @@ module Flor
       %w[ error cancel timeout ]
         .each { |k|
           h = message["on_#{k}_handler"]
-          node["on_#{k}"] = [ [ [ '*' ], h ] ] if h }
+          node["on_#{k}"] = [ h ] if h }
 
       @execution['nodes'][nid] = node
     end
