@@ -9,7 +9,7 @@ lib/flor/core/executor.rb
 spec/pcore/
 spec/punit/
 doc/
-doc/procedures/
+#doc/procedures/
 
 # vimgreps are OK too, for example:
 #  / "concurrence" lib/
