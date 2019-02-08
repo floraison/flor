@@ -200,3 +200,37 @@ sequence
 ```
 will disable its `set a` but after the `(+ 1 2 3)` sum computation.
 
+## child_on_error: / children_on_error:
+
+It's nice to set `on_error:` on each child of a node, but it might get repetitive
+```
+sequence
+  alpha on_error: (def \ _)
+  bravo on_error: (def \ _)
+  charly on_error: (def \ _)
+```
+or
+```
+define mute \ _
+sequence
+  alpha on_error: mute
+  bravo on_error: mute
+  charly on_error: mute
+```
+hence
+```
+sequence children_on_error: (def \ _)
+#sequence child_on_error: (def \ _) # as you wish
+  alpha
+  bravo
+  charly
+```
+
+## child_on_cancel: / children_on_cancel:
+
+TODO
+
+## child_on_timeout: / children_on_timeout:
+
+TODO
+

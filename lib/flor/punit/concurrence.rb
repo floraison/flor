@@ -295,13 +295,8 @@ class Flor::Pro::Concurrence < Flor::Procedure
     branches = (@ncid..children.size - 1).to_a
     @node['branch_count'] = branches.count
 
-    coe = att('children_on_error', 'child_on_error')
-      # might be nil
-
     branches
-      .map { |i|
-        execute_child(
-         i, 0, 'payload' => payload.copy_current, 'on_error_handler' => coe) }
+      .map { |i| execute_child(i, 0, 'payload' => payload.copy_current) }
       .flatten(1)
         #
         # call execute for each of the (non _att) children

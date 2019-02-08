@@ -237,5 +237,15 @@ class Flor::Pro::Att < Flor::Procedure
 
   alias receive_off receive_disabled
   alias receive_disable receive_disabled
+
+  def receive_child_on_error
+
+    pn = parent_node
+    pn['child_on_error'] = payload_ret if pn
+
+    wrap_reply
+  end
+
+  alias receive_children_on_error receive_child_on_error
 end
 

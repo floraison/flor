@@ -295,6 +295,24 @@ describe 'Flor core' do
         expect(r['vars']['a']).to eq(0)
       end
     end
+
+    describe 'child_on_error:/children_on_error:' do
+
+      it 'sets an error handler on each child'  do
+
+        r = @executor.launch(
+          %q{
+            set l []
+            sequence child_on_error: (def msg, err \ push l msg.nid)
+              push l x
+              push l y
+          },
+          wait: 'terminated')
+
+        expect(r).to have_terminated_as_point
+        expect(r['vars']['l']).to eq(%w[ 0_1_1_1 0_1_2_1 ])
+      end
+    end
   end
 end
 

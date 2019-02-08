@@ -228,6 +228,19 @@ module Flor
       heap = node['heap']
 
       heac = Flor::Procedure[heap]
+unless heac
+  puts "v" * 80
+  puts "===node:"
+  p node['nid']
+  p heap
+  puts "."
+  pp node
+  puts "===message:"
+  p message['point']
+  puts "."
+  pp message
+  puts "." * 80
+end
       fail NameError.new("unknown procedure #{heap.inspect}") unless heac
 
       head = heac.new(self, node, message)
