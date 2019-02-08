@@ -615,8 +615,10 @@ class Flor::Procedure < Flor::Node
       # was considering passing the whole vars back (as 'varz'), but
       # it got in the way... and it might be heavy
 
-    coe = @node['child_on_error']
-    m['on_error_handler'] = coe if coe
+    %w[ error cancel timeout ]
+      .each { |k|
+        co = @node["child_on_#{k}"]
+        m["on_#{k}_handler"] = co if co }
 
     [ m ]
   end

@@ -146,9 +146,10 @@ module Flor
         # cnid: closure nid
         # dbg: used to debug messages (useful @node['dbg'] when 'receive')
 
-      if oeh = message['on_error_handler']
-        node['on_error'] = [ [ [ '*' ], oeh ] ]
-      end
+      %w[ error cancel timeout ]
+        .each { |k|
+          h = message["on_#{k}_handler"]
+          node["on_#{k}"] = [ [ [ '*' ], h ] ] if h }
 
       @execution['nodes'][nid] = node
     end
