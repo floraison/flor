@@ -306,11 +306,55 @@ describe 'Flor core' do
             sequence child_on_error: (def msg, err \ push l msg.nid)
               push l x
               push l y
-          },
-          wait: 'terminated')
+          })
 
         expect(r).to have_terminated_as_point
         expect(r['vars']['l']).to eq(%w[ 0_1_1_1 0_1_2_1 ])
+      end
+    end
+
+    describe 'child_on_cancel:/children_on_cancel:' do
+
+      it 'sets a cancel handler on each child' do
+
+        r = @executor.launch(
+          %q{
+            set l []
+            sequence child_on_cancel: (def m \ push l "$(m.point):$(m.nid)")
+              sequence
+                cancel '0_1_1'
+              sequence
+                cancel '0_1_2'
+          })
+
+        expect(r).to have_terminated_as_point
+        expect(r['vars']['l']).to eq(%w[ cancel:0_1_1 cancel:0_1_2 ])
+      end
+    end
+
+    describe 'child_on_timeout:/children_on_timeout:' do
+
+      it 'sets a timeout handler on each child' do
+
+        r = @executor.launch(
+          %q{
+            sequence child_on_timeout: (def msg \ _)
+              stall _
+          })
+
+        expect(r).to eq(nil)
+
+        expect(
+          @executor.execution['nodes']['0_1']['on_timeout']
+        ).to eq([
+          [ [ '*' ],
+            [ '_func',
+              { 'cnid' => '0', 'fun' => 0, 'nid' => '0_0_1',
+                'tree' => [ 'def', [
+                  [ '_att', [ [ 'msg', [], 2 ] ], 2 ], [ '_', [], 2 ] ], 2 ]
+              },
+              2 ] ]
+        ])
       end
     end
   end

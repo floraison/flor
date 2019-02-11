@@ -234,18 +234,22 @@ class Flor::Pro::Att < Flor::Procedure
 
     wrap_reply('disable' => Flor.true?(payload['ret']))
   end
-
+    #
   alias receive_off receive_disabled
   alias receive_disable receive_disabled
 
   def receive_child_on_error
-
-    pn = parent_node
-    pn['child_on_error'] = payload_ret if pn
-
-    wrap_reply
+    if pn = parent_node; pn['child_on_error'] = payload_ret; end; wrap_reply
   end
-
+  def receive_child_on_cancel
+    if pn = parent_node; pn['child_on_cancel'] = payload_ret; end; wrap_reply
+  end
+  def receive_child_on_timeout
+    if pn = parent_node; pn['child_on_timeout'] = payload_ret; end; wrap_reply
+  end
+    #
   alias receive_children_on_error receive_child_on_error
+  alias receive_children_on_cancel receive_child_on_cancel
+  alias receive_children_on_timeout receive_child_on_timeout
 end
 
