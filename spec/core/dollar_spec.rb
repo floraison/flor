@@ -170,10 +170,11 @@ describe 'Flor core' do
         %q{
           set f.l []
           push f.l "abc-$(nada.0.xxx)-ghi"
+          push f.l "jkl-$(length f.l)"
         })
 
       expect(r).to have_terminated_as_point
-      expect(r['payload']['l']).to eq(%w[ abc--ghi ])
+      expect(r['payload']['l']).to eq(%w[ abc--ghi jkl-1 ])
     end
 
     it 'silences errors inside of functions' do
