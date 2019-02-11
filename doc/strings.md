@@ -32,7 +32,7 @@ set text0 "Responsible person: $(users.0.name) ($(users.0.age))"
 set text1 "Team size: $(length users)"
 ```
 
-See [../spec/core/dollar_spec.rb](dollar_spec.rb).
+See [dollar_spec.rb](../spec/core/dollar_spec.rb).
 
 ## string concatenation
 
