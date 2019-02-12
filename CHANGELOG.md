@@ -4,6 +4,7 @@
 
 ## flor 0.16.2  not yet released
 
+- Allow for `[ 1 2 3 ] | + _` (yields `6`)
 - Make "child_on_error:"/"children_on_error:" a common attribute
 - Ensure "on_cancel" sets only one handler
 

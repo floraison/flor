@@ -88,6 +88,18 @@ describe 'Flor procedures' do
       expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq('1true[1, 2]')
     end
+
+    it 'sums the incoming array by default' do
+
+      r = @executor.launch(
+        %q{
+          [ 2 4 6 8 ]
+          + _
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']).to eq({ 'ret' => 20 })
+    end
   end
 
   describe '-' do
@@ -158,6 +170,18 @@ describe 'Flor procedures' do
 
       expect(r).to have_terminated_as_point
       expect(r['payload']).to eq({ 'ret' => -6 })
+    end
+
+    it 'multiplies the incoming array by default' do
+
+      r = @executor.launch(
+        %q{
+          [ 2 4 6 8 ]
+          * _
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']).to eq({ 'ret' => 384 })
     end
   end
 

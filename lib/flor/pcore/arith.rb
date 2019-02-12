@@ -23,7 +23,19 @@ class Flor::Pro::Arith < Flor::Procedure
   #   3 # ==> -4
   # ```
   #
-  # ...
+  # ```
+  # [ 1 2 3 ]
+  # + _ # ==> 6
+  #
+  # [ 2 3 4 ]
+  # * _ # ==> 24
+  # ```
+  #
+  # ```
+  # + "hell" "o"
+  # "hel" + "lo"
+  #   # both yield "hello"
+  # ```
 
   names %w[ + - * / % ]
 
@@ -32,26 +44,31 @@ class Flor::Pro::Arith < Flor::Procedure
   def pre_execute
 
     @node['rets'] = []
+
+    unatt_unkeyed_children
   end
 
   def receive_last
 
     sign = tree.first.to_sym
-    count = @node['rets'].size
+    rets = @node['rets']
+    count = rets.size
 
     fail Flor::FlorError.new('modulo % requires at least 2 arguments', self) \
       if sign == :% && count < 2
 
+    rets = rets[0] \
+      if count == 1 && rets[0].is_a?(Array)
+
     ret =
-      if @node['rets'].compact.empty?
+      if rets.compact.empty?
         DEFAULTS[sign]
       elsif sign == :+
-        @node['rets'].reduce { |r, e|
+        rets.reduce { |r, e|
           # TODO use djan instead of #to_s?
           # TODO use JSON instead of #to_s or djan?
           r + (r.is_a?(String) ? e.to_s : e) }
       else
-        rets = @node['rets']
         rets = rets.collect(&:to_f) \
           if sign == :/ || rets.find { |r| r.is_a?(Float) }
         rets.reduce(&sign)
