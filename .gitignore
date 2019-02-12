@@ -14,6 +14,7 @@
 .vimgrep
 #.vimshorts
 .vimmarks
+.vimspec
 
 tmp/*.db
 tmp/*.log
