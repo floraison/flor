@@ -36,6 +36,10 @@ describe 'Flor procedures' do
           [ 1, 2, 3, 4, 5 ]
           select
             = (elt % 2) 1
+              #
+              # or
+              #
+          #select \ = (elt % 2) 1
         })
 
       expect(r['point']).to eq('terminated')
