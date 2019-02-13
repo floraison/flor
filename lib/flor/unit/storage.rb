@@ -80,14 +80,12 @@ module Flor
       opts[:current] ||= from if from.is_a?(Integer)
         #
         # defaults for the migration version table:
-        #:table => :schema_info
-        #:column => :version
+        # { table: :schema_info,
+        #   column: :version }
 
       dir =
         @unit.conf['db_migrations'] ||
-        File.absolute_path(
-          File.join(
-            File.dirname(__FILE__), '..', 'migrations'))
+        Flor.migration_dir
 
       synchronize do
 

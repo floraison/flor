@@ -543,6 +543,15 @@ module Flor
 
       indent == '' ? out.string : nil
     end
+
+    # Available as `Flor.migration_dir`
+    #
+    def migration_dir
+
+      File.absolute_path(
+        File.join(
+          File.dirname(__FILE__), 'migrations'))
+    end
   end
 end
 
