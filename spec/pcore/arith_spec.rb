@@ -100,6 +100,45 @@ describe 'Flor procedures' do
       expect(r).to have_terminated_as_point
       expect(r['payload']).to eq({ 'ret' => 20 })
     end
+
+    context 'join:' do
+
+      it 'sums integers' do
+
+        r = @executor.launch(
+          %q{
+            [ 2 4 6 8 ]
+            + join: 1
+          })
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq(2 + 1 + 4 + 1 + 6 + 1 + 8)
+      end
+
+      it 'sums strings when the first elt is a string' do
+
+        r = @executor.launch(
+          %q{
+            [ 'he' 'll' 'O' ]
+            + join: '.'
+          })
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq('he.ll.O')
+      end
+
+      it 'sums strings when the join is a string' do
+
+        r = @executor.launch(
+          %q{
+            [ 2 3 4 ]
+            + join: '.'
+          })
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq('2.3.4')
+      end
+    end
   end
 
   describe '-' do

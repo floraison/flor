@@ -44,6 +44,7 @@ class Flor::Pro::Arith < Flor::Procedure
   def pre_execute
 
     @node['rets'] = []
+    @node['atts'] = []
 
     unatt_unkeyed_children
   end
@@ -51,23 +52,32 @@ class Flor::Pro::Arith < Flor::Procedure
   def receive_last
 
     sign = tree.first.to_sym
+
     rets = @node['rets']
-    count = rets.size
+    rets << node_payload_ret \
+      if rets.empty? && node_payload_ret.is_a?(Array)
+    rets = rets[0] \
+      if rets.size == 1 && rets[0].is_a?(Array)
 
     fail Flor::FlorError.new('modulo % requires at least 2 arguments', self) \
-      if sign == :% && count < 2
+      if sign == :% && rets.size < 2
 
-    rets = rets[0] \
-      if count == 1 && rets[0].is_a?(Array)
+    if j = att('join')
+      max = rets.size - 1
+      rets = rets.each_with_index.inject([]) { |a, (e, i)|
+        a << e
+        a << j if i < max
+        a }
+      rets[0] = stringify(rets[0]) \
+        if rets.any? && j.is_a?(String)
+    end
 
     ret =
       if rets.compact.empty?
         DEFAULTS[sign]
       elsif sign == :+
         rets.reduce { |r, e|
-          # TODO use djan instead of #to_s?
-          # TODO use JSON instead of #to_s or djan?
-          r + (r.is_a?(String) ? e.to_s : e) }
+          r + (r.is_a?(String) ? stringify(e) : e) }
       else
         rets = rets.collect(&:to_f) \
           if sign == :/ || rets.find { |r| r.is_a?(Float) }
@@ -81,6 +91,16 @@ class Flor::Pro::Arith < Flor::Procedure
       # follow JSON somehow, in show "1.0" as "1"...
 
     wrap_reply('ret' => ret)
+  end
+
+  protected
+
+  def stringify(o)
+
+    # TODO use djan instead of #to_s?
+    # TODO use JSON instead of #to_s or djan?
+
+    o.to_s
   end
 end
 
