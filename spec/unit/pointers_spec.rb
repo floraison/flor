@@ -47,7 +47,7 @@ describe 'Flor unit' do
       i1 = r['exid']
       expect(r['point']).to eq('entered')
 
-      sleep 0.350
+      wait_until { @unit.executions.by_tag('a').count == 2 }
 
       exes = @unit.executions.by_tag('a')
 
@@ -67,7 +67,7 @@ describe 'Flor unit' do
 
       expect(r['point']).to eq('task')
 
-      sleep 0.350
+      wait_until { @unit.executions.by_tasker('hole').count == 1 }
 
       exes = @unit.executions.by_tasker('hole')
 
@@ -124,7 +124,7 @@ describe 'Flor unit' do
         }, wait: '0_2 execute')
       i1 = r['exid']
 
-      sleep 0.350
+      wait_until { @unit.executions.by_var('item_id').count == 2 }
 
       exes = @unit.executions.by_var('item_id')
 
@@ -152,7 +152,7 @@ describe 'Flor unit' do
       expect(r['point']).to eq('execute')
       expect(r['nid']).to eq('0_1')
 
-      sleep 0.350
+      wait_until { @unit.executions.by_var('item_id').count == 1 }
 
       exes = @unit.executions.by_var('item_id')
 
