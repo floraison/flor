@@ -192,6 +192,14 @@ A payload is a dictionary / hash. It corresponds to a Javascript object (keys ar
 
 Payloads entries are named [fields](#field).
 
+## pointer
+
+Flor maintains a :flor_pointers table. This table is used behind the `Flor::Execution#by_tag(tag_name)`, `#by_var(var_name, value=:no)`, and `#by_tasker(tasker_name, taskname=:no)`.
+
+The table is populated automatically each time an execution enters or leaves a tag, sets or unsets a top-level variable (top level, is the root node level), and each time a task reaches a tasker or is returned by a tasker.
+
+Querying the :flor_pointers table helps looking up executions in a given state, or, in a reverse way, determine the state of a given execution.
+
 ## procedure
 
 Procedures are the basic building block of the flor language. Those were called "expressions" in ruote.
