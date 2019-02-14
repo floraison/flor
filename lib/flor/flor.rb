@@ -544,6 +544,18 @@ module Flor
       indent == '' ? out.string : nil
     end
 
+    def to_string_keyed_hash(o)
+
+      case o
+      when Array
+        o.collect { |e| to_string_keyed_hash(e) }
+      when Hash
+        o.inject({}) { |h, (k, v)| h[k.to_s] = to_string_keyed_hash(v); h }
+      else
+        o
+      end
+    end
+
     # Available as `Flor.migration_dir`
     #
     def migration_dir
