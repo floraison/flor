@@ -12,23 +12,30 @@ describe Flor::HashLoader do
 
   before :each do
 
-    environment = {
-      variables: {
-        'net' => { 'car' => 'fiat' },
-        'net.example' => {
-          'alpha' => {
-            'car' => 'lancia', 'flower' => 'forget-me-not' },
-          'car' => 'alfa romeo', 'flower' => 'rose' },
-        'org.example' => { 'car' => nil, 'flower' => 'lilly' },
-      }
-    }
-
-    unit = OpenStruct.new(conf: { 'lod_environment' => environment })
+    unit = OpenStruct.new(conf: {})
 
     @loader = Flor::HashLoader.new(unit)
   end
 
   describe '#variables' do
+
+    before :each do
+
+      environment = {
+        variables: {
+          'net' => { 'car' => 'fiat' },
+          'net.example' => {
+            'alpha' => {
+              'car' => 'lancia', 'flower' => 'forget-me-not' },
+            'car' => 'alfa romeo', 'flower' => 'rose' },
+          'org.example' => { 'car' => nil, 'flower' => 'lilly' },
+        }
+      }
+
+      unit = OpenStruct.new(conf: { 'lod_environment' => environment })
+
+      @loader = Flor::HashLoader.new(unit)
+    end
 
     {
       'net' =>
@@ -284,6 +291,53 @@ describe Flor::HashLoader do
       expect(hooks[2]['require']).to eq('xyz/oe_hooks.rb')
       expect(hooks[2]['class']).to eq('Xyz::OeExecuteHook')
       expect(hooks[2]['_path']).to eq('org.example')
+    end
+  end
+
+  context 'when empty environment' do
+
+    describe '#variables' do
+
+      it 'returns {}' do
+
+        r = @loader.variables('nada')
+
+        expect(r).to eq({})
+      end
+    end
+
+    describe '#library' do
+
+      it 'returns nil' do
+
+        r = @loader.library('net.example')
+
+        expect(r).to eq(nil)
+
+        r = @loader.library('net.example', 'nada')
+
+        expect(r).to eq(nil)
+      end
+    end
+
+    describe '#tasker' do
+
+      it 'returns nil' do
+
+        r = @loader.tasker('net.example', 'alice')
+
+        expect(r).to eq(nil)
+      end
+    end
+
+    describe '#hooks' do
+
+      it 'returns []' do
+
+        r = @loader.hooks('org.example')
+
+        expect(r).to eq([])
+      end
     end
   end
 end

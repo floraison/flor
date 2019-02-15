@@ -157,7 +157,7 @@ module Flor
 
     def entries(cat, domain)
 
-      (@environment[cat.to_s] || {})
+      (@environment[cat.to_s] || [])
         .select { |path, _, _| Flor.sub_domain?(path, domain) }
     end
 
