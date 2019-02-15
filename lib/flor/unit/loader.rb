@@ -87,7 +87,7 @@ module Flor
       conf
     end
 
-    def hooks(domain, name=nil)
+    def hooks(domain)
 
       # NB: do not relativize path, because Ruby load path != cwd,
       # stay absolute for `require` and `load`

@@ -130,6 +130,13 @@ describe Flor::HashLoader do
         :tasker, 'mil.example.air.tactical.intel',
         [ { point: 'task', description: 'task d' },
           { point: 'detask', description: 'detask d' } ])
+
+      @loader.add(
+        :tasker, 'edu.example.echo',
+        %{
+          description: 'edu.example echo'
+          class: "Edu::Example::Taskers::$(f.flavour|capitalize _)"
+        })
     end
 
     {
@@ -188,16 +195,7 @@ describe Flor::HashLoader do
       end
     end
 
-    it 'loads a tasker conf {name}.json' do
-
-      tc = @loader.tasker('org.example', 'charly')
-
-      expect(tc['description']).to eq('org.example charly')
-      expect(tc['_path']).to eq('org.example')
-    end
-
     {
-
       [ 'mil.example', 'staff' ] => [
         'mil.example.staff',
         nil ],
@@ -234,16 +232,6 @@ describe Flor::HashLoader do
       expect(tc[1]['_path']).to eq('mil.example.air.tactical')
     end
 
-    before :each do
-
-      @loader.add(
-        :tasker, 'edu.example.echo',
-        %{
-description: 'edu.example echo'
-class: "Edu::Example::Taskers::$(f.flavour|capitalize _)"
-        })
-    end
-
     it 'uses the message when loading the tasker configuration' do
 
       tc = @loader.tasker(
@@ -259,73 +247,44 @@ class: "Edu::Example::Taskers::$(f.flavour|capitalize _)"
 
   describe '#hooks' do
 
-#    it 'returns the sum of the hooks for a domain' do
-#
-#      hooks = @loader.hooks('org.example')
-#
-#      expect(hooks.size).to eq(3)
-#
-#      expect(hooks[0]['point'])
-#        .to eq('execute')
-#      expect(hooks[0]['require'])
-#        .to eq('xyz/my_hooks.rb')
-#      expect(hooks[0]['class'])
-#        .to eq('Xyz::MyExecuteHook')
-#      expect(hooks[0]['_path'])
-#        .to point_to('envs/uspec_loader/lib/hooks/dot.json:0')
-#
-#      expect(hooks[1]['point'])
-#        .to eq('terminated')
-#      expect(hooks[1]['require'])
-#        .to eq('xyz/my_hooks.rb')
-#      expect(hooks[1]['class'])
-#        .to eq('Xyz::MyGenericHook')
-#      expect(hooks[1]['_path'])
-#        .to point_to('envs/uspec_loader/lib/hooks/dot.json:1')
-#
-#      expect(hooks[2]['point'])
-#        .to eq('execute')
-#      expect(hooks[2]['require'])
-#        .to eq('xyz/oe_hooks.rb')
-#      expect(hooks[2]['class'])
-#        .to eq('Xyz::OeExecuteHook')
-#      expect(hooks[2]['_path'])
-#        .to point_to('envs/uspec_loader/lib/hooks/org.example.json:0')
-#    end
+    before :each do
 
-#    it 'loads from hooks.json' do
-#
-#      hooks = @loader.hooks('mil.example')
-#
-#      expect(hooks.size).to eq(3)
-#
-#      expect(hooks[0]['point'])
-#        .to eq('execute')
-#      expect(hooks[0]['require'])
-#        .to eq('xyz/my_hooks.rb')
-#      expect(hooks[0]['class'])
-#        .to eq('Xyz::MyExecuteHook')
-#      expect(hooks[0]['_path'])
-#        .to point_to('envs/uspec_loader/lib/hooks/dot.json:0')
-#
-#      expect(hooks[1]['point'])
-#        .to eq('terminated')
-#      expect(hooks[1]['require'])
-#        .to eq('xyz/my_hooks.rb')
-#      expect(hooks[1]['class'])
-#        .to eq('Xyz::MyGenericHook')
-#      expect(hooks[1]['_path'])
-#        .to point_to('envs/uspec_loader/lib/hooks/dot.json:1')
-#
-#      expect(hooks[2]['point'])
-#        .to eq('receive')
-#      expect(hooks[2]['require'])
-#        .to eq('xyz/me_hooks.rb')
-#      expect(hooks[2]['class'])
-#        .to eq('Xyz::MeReceiveHook')
-#      expect(hooks[2]['_path'])
-#        .to point_to('envs/uspec_loader/usr/mil.example/lib/hooks/hooks.json:0')
-#    end
+      @loader.add(
+        :hook, '',
+        [ { point: 'execute',
+            require: 'xyz/my_hooks.rb', class: 'Xyz::MyExecuteHook' },
+          %{
+            point: terminated,
+            require: 'xyz/my_hooks.rb'
+            class: 'Xyz::MyGenericHook'
+          } ])
+      @loader.add(
+        :hook, 'org.example',
+        [ { point: 'execute',
+            require: 'xyz/oe_hooks.rb', class: 'Xyz::OeExecuteHook' } ])
+    end
+
+    it 'returns the sum of the hooks for a domain' do
+
+      hooks = @loader.hooks('org.example')
+
+      expect(hooks.size).to eq(3)
+
+      expect(hooks[0]['point']).to eq('execute')
+      expect(hooks[0]['require']).to eq('xyz/my_hooks.rb')
+      expect(hooks[0]['class']).to eq('Xyz::MyExecuteHook')
+      expect(hooks[0]['_path']).to eq('org.example')
+
+      expect(hooks[1]['point']).to eq('terminated')
+      expect(hooks[1]['require']).to eq('xyz/my_hooks.rb')
+      expect(hooks[1]['class']).to eq('Xyz::MyGenericHook')
+      expect(hooks[1]['_path']).to eq('org.example')
+
+      expect(hooks[2]['point']).to eq('execute')
+      expect(hooks[2]['require']).to eq('xyz/oe_hooks.rb')
+      expect(hooks[2]['class']).to eq('Xyz::OeExecuteHook')
+      expect(hooks[2]['_path']).to eq('org.example')
+    end
   end
 end
 

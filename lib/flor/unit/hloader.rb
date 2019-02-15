@@ -40,7 +40,10 @@ module Flor
 
       c = recat(cat)
 
-      value = Flor.to_string_keyed_hash(value) if c == 'taskers'
+      path = path + '.' \
+        if c == 'hooks' && path.length > 0 && path[-1, 1] != '.'
+
+      value = Flor.to_string_keyed_hash(value)
 
       e = (@environment[c] ||= [])
       e << [ *split(path), value ]
@@ -92,31 +95,22 @@ module Flor
       entries('taskers', path)
         .reverse # FIXME
         .each { |pa, ke, va|
-          return tasker_conf(pa, va, message) if ke == key }
+          return to_conf_h(pa, va, message) if ke == key }
 
       nil
     end
 
-    def hooks(domain, name=nil)
+    def hooks(domain)
 
-#      # NB: do not relativize path, because Ruby load path != cwd,
-#      # stay absolute for `require` and `load`
-#
-#      Dir[File.join(@root, '**/*.json')]
-#        .select { |f| f.index('/lib/hooks/') }
-#        .collect { |pa| [ pa, expose_d(pa, {}) ] }
-#        .select { |pa, d| is_subdomain?(domain, d) }
-#        .sort_by { |pa, d| d.count('.') }
-#        .collect { |pa, d|
-#          eval(pa, {}).each_with_index { |h, i|
-#            h['_path'] = pa + ":#{i}" } }
-#        .flatten(1)
+      entries('hooks', domain)
+        .collect { |_, _, va| to_conf_h(domain, va, {}) }
+        .flatten(1)
     end
 
     def load_hooks(exid)
 
-#      hooks(Flor.domain(exid))
-#        .collect { |h| Flor::Hook.new(@unit, exid, h) }
+      hooks(Flor.domain(exid))
+        .collect { |h| Flor::Hook.new(@unit, exid, h) }
     end
 
     protected
@@ -167,13 +161,13 @@ module Flor
         .select { |path, _, _| Flor.sub_domain?(path, domain) }
     end
 
-    def tasker_conf(path, value, message)
+    def to_conf_h(path, value, context)
 
       is_array = value.is_a?(Array)
 
       a = (is_array ? value : [ value ])
         .collect { |v|
-          h = v.is_a?(String) ? eval(path, v, message) : v
+          h = v.is_a?(String) ? eval(path, v, context) : v
           h['_path'] = path
           h['root'] = nil
           h }
