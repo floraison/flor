@@ -95,6 +95,41 @@ describe Flor::HashLoader do
       @loader.add(
         :tasker, 'org.example.bob',
         { description: 'org.example bob', bo: 'BO' })
+
+      @loader.add(
+        :tasker, 'com.example.tasker',
+        { description: '/cet/dot.json' })
+      @loader.add(
+        :tasker, 'com.example.alpha.tasker',
+        { description: '/usr/ceat/dot.json' })
+      @loader.add(
+        :tasker, 'com.example.bravo.tasker',
+        { description: '/usr/cebt/flor.json' })
+      @loader.add(
+        :tasker, 'com.example.charly.tasker',
+        { description: '/cect.json' })
+
+      @loader.add(
+        :tasker, 'org.example.charly',
+        { description: 'org.example charly' })
+
+      @loader.add(
+        :tasker, 'mil.example.staff',
+        { description: 'mil.example.staff' })
+      @loader.add(
+        :tasker, 'mil.example.ground.staff',
+        { description: 'mil.example.ground.staff' })
+      @loader.add(
+        :tasker, 'mil.example.air.command',
+        { description: 'mil.example.air.command' })
+      @loader.add(
+        :tasker, 'mil.example.air.tactical.command',
+        { description: 'mil.example.air.command' })
+
+      @loader.add(
+        :tasker, 'mil.example.air.tactical.intel',
+        [ { point: 'task', description: 'task d' },
+          { point: 'detask', description: 'detask d' } ])
     end
 
     {
@@ -134,91 +169,92 @@ describe Flor::HashLoader do
       end
     end
 
-#    {
-#
-#      [ 'com.example.tasker', nil ] => '/cet/dot.json',
-#      [ 'com.example', 'tasker' ] => '/cet/dot.json',
-#      [ 'com.example.alpha.tasker', nil ] => '/usr/ceat/dot.json',
-#      [ 'com.example.alpha', 'tasker' ] => '/usr/ceat/dot.json',
-#      [ 'com.example.bravo.tasker', nil ] => '/usr/cebt/flor.json',
-#      [ 'com.example.bravo', 'tasker' ] => '/usr/cebt/flor.json',
-#      [ 'com.example.charly', 'tasker' ] => '/cect.json',
-#
-#    }.each do |ks, desc|
-#
-#      it "loads the domain tasker conf at #{ks.inspect}" do
-#
-#        tc = @loader.tasker(*ks)
-#
-#        expect(tc['description']).to eq(desc)
-#      end
-#    end
+    {
+      [ 'com.example.tasker', nil ] => '/cet/dot.json',
+      [ 'com.example', 'tasker' ] => '/cet/dot.json',
+      [ 'com.example.alpha.tasker', nil ] => '/usr/ceat/dot.json',
+      [ 'com.example.alpha', 'tasker' ] => '/usr/ceat/dot.json',
+      [ 'com.example.bravo.tasker', nil ] => '/usr/cebt/flor.json',
+      [ 'com.example.bravo', 'tasker' ] => '/usr/cebt/flor.json',
+      [ 'com.example.charly', 'tasker' ] => '/cect.json',
 
-#    it 'loads a tasker conf {name}.json' do
-#
-#      tc = @loader.tasker('org.example', 'charly')
-#      expect(tc['description']).to eq('org.example charly')
-#
-#      expect(tc['_path']).to point_to(
-#        'envs/uspec_loader/lib/taskers/org.example/charly.json')
-#    end
+    }.each do |ks, desc|
 
-#    {
-#
-#      [ 'mil.example', 'staff' ] => [
-#        'mil.example.staff',
-#        nil ],
-#      [ 'mil.example.ground', 'staff' ] => [
-#        'mil.example.ground.staff',
-#        nil ],
-#      [ 'mil.example.air', 'command' ] => [
-#        'mil.example.air.command',
-#        nil ],
-#      [ 'mil.example.air.tactical', 'command' ] => [
-#        'mil.example.air.command',
-#        'envs/uspec_loader/usr/mil.example/lib/taskers/air.json' ],
-#
-#    }.each do |ks, (desc, path)|
-#
-#      it "loads the do.main.json tasker conf at #{ks.inspect}" do
-#
-#        tc = @loader.tasker(*ks)
-#
-#        expect(tc['description']).to eq(desc)
-#        expect(tc['_path']).to point_to(path) if path
-#      end
-#    end
+      it "loads the domain tasker conf at #{ks.inspect}" do
 
-#    it 'loads a tasker array configuration do.ma.in.json' do
-#
-#      tc = @loader.tasker('mil.example.air.tactical', 'intel')
-#
-#      expect(tc.size).to eq(2)
-#
-#      expect(tc[0]['point']).to eq('task')
-#      expect(tc[1]['point']).to eq('detask')
-#
-#      expect(tc[0]['_path']).to point_to(
-#        'envs/uspec_loader/usr/mil.example/lib/taskers/air.json')
-#      expect(tc[1]['_path']).to point_to(
-#        'envs/uspec_loader/usr/mil.example/lib/taskers/air.json')
-#    end
+        tc = @loader.tasker(*ks)
 
-#    it 'uses the message when loading the tasker configuration' do
-#
-#      tc = @loader.tasker(
-#        'edu.example', 'echo',
-#        { 'payload' => { 'flavour' => 'vanilla' } })
-#
-#      expect(tc['description']).to eq(
-#        'edu.example echo')
-#      expect(tc['class']).to eq(
-#        'Edu::Example::Taskers::Vanilla')
-#      expect(tc['_path']).to match(
-#        /\/envs\/uspec_loader\/lib\/taskers\/edu\.example\/echo\/dot\.json\z/)
-#      expect(tc['root']).to eq(
-#        'envs/uspec_loader/lib/taskers/edu.example/echo')
-#    end
+        expect(tc['description']).to eq(desc)
+      end
+    end
+
+    it 'loads a tasker conf {name}.json' do
+
+      tc = @loader.tasker('org.example', 'charly')
+
+      expect(tc['description']).to eq('org.example charly')
+      expect(tc['_path']).to eq('org.example')
+    end
+
+    {
+
+      [ 'mil.example', 'staff' ] => [
+        'mil.example.staff',
+        nil ],
+      [ 'mil.example.ground', 'staff' ] => [
+        'mil.example.ground.staff',
+        nil ],
+      [ 'mil.example.air', 'command' ] => [
+        'mil.example.air.command',
+        nil ],
+      [ 'mil.example.air.tactical', 'command' ] => [
+        'mil.example.air.command',
+        'mil.example.air.tactical' ],
+
+    }.each do |ks, (desc, path)|
+
+      it "loads the do.main.json tasker conf at #{ks.inspect}" do
+
+        tc = @loader.tasker(*ks)
+
+        expect(tc['description']).to eq(desc)
+        expect(tc['_path']).to eq(path) if path
+      end
+    end
+
+    it 'loads a tasker array configuration do.ma.in.json' do
+
+      tc = @loader.tasker('mil.example.air.tactical', 'intel')
+
+      expect(tc.size).to eq(2)
+
+      expect(tc[0]['point']).to eq('task')
+      expect(tc[1]['point']).to eq('detask')
+      expect(tc[0]['_path']).to eq('mil.example.air.tactical')
+      expect(tc[1]['_path']).to eq('mil.example.air.tactical')
+    end
+
+    before :each do
+
+      @loader.add(
+        :tasker, 'edu.example.echo',
+        %{
+description: 'edu.example echo'
+class: "Edu::Example::Taskers::$(f.flavour|capitalize _)"
+        })
+    end
+
+    it 'uses the message when loading the tasker configuration' do
+
+      tc = @loader.tasker(
+        'edu.example', 'echo',
+        { 'payload' => { 'flavour' => 'vanilla' } })
+
+      expect(tc['description']).to eq('edu.example echo')
+      expect(tc['class']).to eq('Edu::Example::Taskers::Vanilla')
+      expect(tc['_path']).to eq('edu.example')
+      expect(tc['root']).to eq(nil)
+    end
   end
 
   describe '#hooks' do

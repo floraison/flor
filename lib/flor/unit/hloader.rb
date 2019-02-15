@@ -83,22 +83,6 @@ module Flor
           return [ [ pa, ke ].join('.'), va ] }
 
       nil
-
-#      domain, name, opts = [ domain, nil, name ] if name.is_a?(Hash)
-#      domain, name = split_dn(domain, name)
-#
-#      if m = name.match(/(\.flor?)\z/)
-#        name = name[0..m[1].length - 1]
-#      end
-#
-#      path, _, _ = (Dir[File.join(@root, '**/*.{flo,flor}')])
-#        .select { |f| f.index('/lib/') }
-#        .collect { |pa| [ pa, *expose_dn(pa, opts) ] }
-#        .select { |pa, d, n| n == name && is_subdomain?(domain, d) }
-#        .sort_by { |pa, d, n| d.count('.') }
-#        .last
-#
-#      path ? [ Flor.relativize_path(path), File.read(path) ] : nil
     end
 
     def tasker(domain, name, message={})
@@ -106,12 +90,9 @@ module Flor
       path, key = split(domain, name)
 
       entries('taskers', path)
-        .reverse # FIXME...
+        .reverse # FIXME
         .each { |pa, ke, va|
-          next unless ke == key
-          va['_path'] = pa
-          va['root'] = nil
-          return va }
+          return tasker_conf(pa, va, message) if ke == key }
 
       nil
     end
@@ -184,6 +165,27 @@ module Flor
 
       (@environment[cat.to_s] || {})
         .select { |path, _, _| Flor.sub_domain?(path, domain) }
+    end
+
+    def tasker_conf(path, value, message)
+
+      is_array = value.is_a?(Array)
+
+      a = (is_array ? value : [ value ])
+        .collect { |v|
+          h = v.is_a?(String) ? eval(path, v, message) : v
+          h['_path'] = path
+          h['root'] = nil
+          h }
+
+      is_array ? a : a.first
+    end
+
+    def eval(path, code, context)
+
+      code = Flor::ConfExecutor.load(code)
+
+      Flor::ConfExecutor.interpret(path, code, context)
     end
   end
 end
