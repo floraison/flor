@@ -71,8 +71,12 @@ module Flor
 
       def prepare(conf, over_conf)
 
-        c = conf
-        c = Flor::ConfExecutor.interpret_path_or_source(c) if c.is_a?(String)
+        c =
+          case conf
+          when String then Flor::ConfExecutor.interpret_path_or_source(conf)
+          when Hash then Flor.to_string_keyed_hash(conf)
+          else conf
+          end
 
         fail ArgumentError.new(
           "cannot extract conf out of #{c.inspect} (#{conf.class})"
@@ -92,10 +96,10 @@ module Flor
 
       def get_class(conf, key)
 
-        if v = conf[key]
-          Flor.const_lookup(v)
-        else
-          nil
+        case v = conf[key]
+        when Class then v
+        when String then Flor.const_lookup(v)
+        else nil
         end
       end
 
