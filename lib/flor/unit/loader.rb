@@ -23,7 +23,7 @@ module Flor
       Dir[File.join(@root, '**/*.json')]
         .select { |f| f.index('/etc/variables/') }
         .collect { |pa| [ pa, expose_d(pa, {}) ] }
-        .select { |pa, d| is_subdomain?(domain, d) }
+        .select { |pa, d| Flor.sub_domain?(d, domain) }
         .sort_by { |pa, d| d.count('.') }
         .inject({}) { |vars, (pa, _)| vars.merge!(eval(pa, {})) }
     end
@@ -48,7 +48,7 @@ module Flor
       path, _, _ = (Dir[File.join(@root, '**/*.{flo,flor}')])
         .select { |f| f.index('/lib/') }
         .collect { |pa| [ pa, *expose_dn(pa, opts) ] }
-        .select { |pa, d, n| n == name && is_subdomain?(domain, d) }
+        .select { |pa, d, n| n == name && Flor.sub_domain?(d, domain) }
         .sort_by { |pa, d, n| d.count('.') }
         .last
 
@@ -66,8 +66,8 @@ module Flor
         .select { |pa| pa.index('/lib/taskers/') }
         .collect { |pa| [ pa, *expose_dn(pa, {}) ] }
         .select { |pa, d, n|
-          is_subdomain?(domain, [ d, n ].join('.')) ||
-          (n == name && is_subdomain?(domain, d)) }
+          Flor.sub_domain?([ d, n ].join('.'), domain) ||
+          (n == name && Flor.sub_domain?(d, domain)) }
         .sort_by { |pa, d, n| d.count('.') }
         .last
 
@@ -95,7 +95,7 @@ module Flor
       Dir[File.join(@root, '**/*.json')]
         .select { |f| f.index('/lib/hooks/') }
         .collect { |pa| [ pa, expose_d(pa, {}) ] }
-        .select { |pa, d| is_subdomain?(domain, d) }
+        .select { |pa, d| Flor.sub_domain?(d, domain) }
         .sort_by { |pa, d| d.count('.') }
         .collect { |pa, d|
           eval(pa, {}).each_with_index { |h, i|
@@ -110,15 +110,6 @@ module Flor
     end
 
     protected
-
-    # is da a subdomain of db?
-    #
-    def is_subdomain?(da, db)
-
-      da == db ||
-      db == '' ||
-      da[0, db.length + 1] == db + '.'
-    end
 
     def split_dn(domain, name)
 

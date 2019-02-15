@@ -314,7 +314,14 @@ module Flor
         "not a sub domain #{sub.inspect}"
       ) unless potential_domain_name?(sub)
 
-      sub == dom || sub[0, dom.length + 1] == dom + '.'
+      sub_domain?(dom, sub)
+    end
+
+    def sub_domain?(dom, sub)
+
+      dom == '' ||
+      sub == dom ||
+      sub[0, dom.length + 1] == dom + '.'
     end
 
     def split_domain_unit(s)

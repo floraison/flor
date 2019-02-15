@@ -28,7 +28,7 @@ module Flor
     def variables(domain)
 
       deflate(@environment['variables'] || {})
-        .select { |pa, _, _| is_subdomain?(domain, pa) }
+        .select { |pa, _, _| Flor.sub_domain?(pa, domain) }
         .inject({}) { |h, (_, k, v)| h[k] = v; h }
     end
 
@@ -136,17 +136,6 @@ module Flor
             r[pathk] = v
           end
           r }
-    end
-
-# TODO move to upstream class...
-#
-    # is da a subdomain of db?
-    #
-    def is_subdomain?(da, db)
-
-      da == db ||
-      db == '' ||
-      da[0, db.length + 1] == db + '.'
     end
 
 #    def split_dn(domain, name)
