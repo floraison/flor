@@ -21,10 +21,15 @@ describe Flor::Loader do
   describe '#variables' do
 
     {
-      'net' => { 'car' => 'fiat' },
-      'net.example' => { 'car' => 'alfa romeo', 'flower' => 'rose' },
-      'org.example' => { 'car' => nil, 'flower' => 'lilly' },
-      'net.example.alpha' => { 'car' => 'lancia', 'flower' => 'forget-me-not' }
+      'net' =>
+        { 'car' => 'fiat' },
+      'net.example' =>
+        { 'car' => 'alfa romeo', 'flower' => 'rose' },
+      'org.example' =>
+        { 'car' => nil, 'flower' => 'lilly' },
+      'net.example.alpha' =>
+        { 'car' => 'lancia', 'flower' => 'forget-me-not' }
+
     }.each do |d, h|
 
       it "loads variable \"#{d}\"" do
@@ -38,20 +43,24 @@ describe Flor::Loader do
   describe '#library' do
 
     {
-      [ 'net.example', 'flow1' ] => [
-        'envs/uspec_loader/usr/net.example/lib/flows/flow1.flo',
-        "task 'alice'" ],
-      [ 'org.example.flow1' ] => [
-        'envs/uspec_loader/usr/org.example/lib/flows/flow1.flor',
-        "task 'oskar'" ],
-    }.each do |ks, (pa, fn)|
+      [ 'net.example', 'flow1' ] =>
+        [ 'envs/uspec_loader/usr/net.example/lib/flows/flow1.flo',
+          "task 'alice'" ],
+      [ 'org.example.flow1' ] =>
+        [ 'envs/uspec_loader/usr/org.example/lib/flows/flow1.flor',
+          "task 'oskar'" ],
+      [ 'org.example.flow99' ] =>
+        nil,
+
+    }.each do |ks, (path, code)|
 
       it "loads lib at #{ks.inspect}" do
 
-        p, f = @loader.library(*ks)
+        pa, co = @loader.library(*ks)
+        co = co.strip if co
 
-        expect(p).to eq(pa)
-        expect(f.strip).to eq(fn)
+        expect(pa).to eq(path)
+        expect(co).to eq(code)
       end
     end
   end
@@ -59,26 +68,26 @@ describe Flor::Loader do
   describe '#tasker' do
 
     {
-      [ '', 'alice' ] => [
-        'basic alice', %w[ description a _path root ] ],
+      [ '', 'alice' ] =>
+        [ 'basic alice', %w[ description a _path root ] ],
 
-      [ 'net.example', 'alice' ] => [
-        'basic alice', %w[ description a _path root ] ],
+      [ 'net.example', 'alice' ] =>
+        [ 'basic alice', %w[ description a _path root ] ],
 
-      [ 'org.example', 'alice' ] => [
-        'org.example alice', %w[ description ao _path root ] ],
+      [ 'org.example', 'alice' ] =>
+        [ 'org.example alice', %w[ description ao _path root ] ],
 
       [ '', 'bob' ] => [
         nil ],
 
-      [ 'net.example', 'bob' ] => [
-        'usr net.example bob', %w[ description ubn _path root ] ],
+      [ 'net.example', 'bob' ] =>
+        [ 'usr net.example bob', %w[ description ubn _path root ] ],
 
-      [ 'org.example', 'bob' ] => [
-        'org.example bob', %w[ description bo _path root ] ],
+      [ 'org.example', 'bob' ] =>
+        [ 'org.example bob', %w[ description bo _path root ] ],
 
-      [ 'org.example.bob', nil ] => [
-        'org.example bob', %w[ description bo _path root ] ],
+      [ 'org.example.bob', nil ] =>
+        [ 'org.example bob', %w[ description bo _path root ] ],
 
     }.each do |ks, (desc, keys)|
 
@@ -126,18 +135,18 @@ describe Flor::Loader do
 
     {
 
-      [ 'mil.example', 'staff' ] => [
-        'mil.example.staff',
-        nil ],
-      [ 'mil.example.ground', 'staff' ] => [
-        'mil.example.ground.staff',
-        nil ],
-      [ 'mil.example.air', 'command' ] => [
-        'mil.example.air.command',
-        nil ],
-      [ 'mil.example.air.tactical', 'command' ] => [
-        'mil.example.air.command',
-        'envs/uspec_loader/usr/mil.example/lib/taskers/air.json' ],
+      [ 'mil.example', 'staff' ] =>
+        [ 'mil.example.staff',
+          nil ],
+      [ 'mil.example.ground', 'staff' ] =>
+        [ 'mil.example.ground.staff',
+          nil ],
+      [ 'mil.example.air', 'command' ] =>
+        [ 'mil.example.air.command',
+          nil ],
+      [ 'mil.example.air.tactical', 'command' ] =>
+        [ 'mil.example.air.command',
+          'envs/uspec_loader/usr/mil.example/lib/taskers/air.json' ],
 
     }.each do |ks, (desc, path)|
 

@@ -31,10 +31,15 @@ describe Flor::HashLoader do
   describe '#variables' do
 
     {
-      'net' => { 'car' => 'fiat' },
-      'net.example' => { 'car' => 'alfa romeo', 'flower' => 'rose' },
-      'org.example' => { 'car' => nil, 'flower' => 'lilly' },
-      'net.example.alpha' => { 'car' => 'lancia', 'flower' => 'forget-me-not' }
+      'net' =>
+        { 'car' => 'fiat' },
+      'net.example' =>
+        { 'car' => 'alfa romeo', 'flower' => 'rose' },
+      'org.example' =>
+        { 'car' => nil, 'flower' => 'lilly' },
+      'net.example.alpha' =>
+        { 'car' => 'lancia', 'flower' => 'forget-me-not' }
+
     }.each do |d, h|
 
       it "loads variable \"#{d}\"" do
@@ -47,23 +52,31 @@ describe Flor::HashLoader do
 
   describe '#library' do
 
-#    {
-#      [ 'net.example', 'flow1' ] => [
-#        'envs/uspec_loader/usr/net.example/lib/flows/flow1.flo',
-#        "task 'alice'" ],
-#      [ 'org.example.flow1' ] => [
-#        'envs/uspec_loader/usr/org.example/lib/flows/flow1.flor',
-#        "task 'oskar'" ],
-#    }.each do |ks, (pa, fn)|
-#
-#      it "loads lib at #{ks.inspect}" do
-#
-#        p, f = @loader.library(*ks)
-#
-#        expect(p).to eq(pa)
-#        expect(f.strip).to eq(fn)
-#      end
-#    end
+    before :each do
+
+      @loader.add(:libraries, 'net.example.flow1', "task 'nathalie'")
+      @loader.add(:libraries, 'org.example.flow1', "task 'oskar'")
+    end
+
+    {
+      [ 'net.example', 'flow1' ] =>
+        [ 'net.example.flow1', "task 'nathalie'" ],
+      [ 'org.example.flow1' ] =>
+        [ 'org.example.flow1', "task 'oskar'" ],
+      [ 'org.example.flow99' ] =>
+        nil
+
+    }.each do |ks, (path, code)|
+
+      it "loads lib at #{ks.inspect}" do
+
+        pa, co = @loader.library(*ks)
+        co = co.strip if co
+
+        expect(pa).to eq(path)
+        expect(co).to eq(code)
+      end
+    end
   end
 
   describe '#tasker' do

@@ -28,9 +28,38 @@ module Flor
     def shutdown
     end
 
+    ENV_CATS = %w[ variables libraries taskers hooks ]
+
+    def add(cat, path, value)
+
+      c = cat.to_s
+
+      fail ArgumentError.new("unknown category #{c.inspect}") \
+        unless ENV_CATS.include?(c)
+
+      e = (@environment[c] ||= [])
+      e << [ *split(path), value ]
+      e.sort_by! { |pa, _, _| pa.count('.') }
+    end
+
+    def remove(cat, path)
+
+      c = cat.to_s
+
+      fail ArgumentError.new("unknown category #{c.inspect}") \
+        unless ENV_CATS.include?(c)
+
+      e = @environment[c]
+      return [] unless e
+
+      pa, ke = split(path)
+
+      e.reject! { |epa, eke, _| epa == pa && eke == ke }
+    end
+
     def variables(domain)
 
-      env('variables', domain)
+      entries('variables', domain)
         .inject({}) { |h, (_, k, v)| h[k] = v; h }
     end
 
@@ -43,6 +72,15 @@ module Flor
     # If found, returns [ source_path, path ]
     #
     def library(domain, name=nil, opts={})
+
+      path, key = split(domain, name)
+
+      entries('libraries', domain)
+        .each { |pa, ke, va|
+          next unless pa == path && ke == key
+          return [ [ pa, ke ].join('.'), va ] }
+
+      nil
 
 #      domain, name, opts = [ domain, nil, name ] if name.is_a?(Hash)
 #      domain, name = split_dn(domain, name)
@@ -120,11 +158,8 @@ module Flor
     def recompose(h)
 
       deflate(h, {}, nil)
-        .sort_by { |k, _|
-          k.count('.') }
-        .collect { |k, v|
-          i = k.rindex('.') || 0
-          [ k[0, i], k[(i == 0 ? i : i + 1)..-1], v ] }
+        .sort_by { |k, _| k.count('.') }
+        .collect { |k, v| [ *split(k), v ] }
     end
 
     def deflate(h, out, path)
@@ -140,7 +175,16 @@ module Flor
           r }
     end
 
-    def env(cat, domain)
+    def split(path, key=nil)
+
+      return [ path, key ] if key
+
+      i = path.rindex('.') || 0
+
+      [ path[0, i], path[(i == 0 ? i : i + 1)..-1] ]
+    end
+
+    def entries(cat, domain)
 
       (@environment[cat.to_s] || {})
         .select { |path, _, _| Flor.sub_domain?(path, domain) }
