@@ -43,9 +43,11 @@ module Flor
 
     def determine_spool_dir
 
-      d = @unit.conf['spo_dir'] || 'var/spool'
-      d = File.join(@unit.conf['root'], d) if d
-      d = nil unless File.directory?(d)
+      r = @unit.conf['root']
+      return nil unless r
+
+      d = File.join(r, @unit.conf['spo_dir'] || 'var/spool')
+      return nil unless File.directory?(d)
 
       d
     end
