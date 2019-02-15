@@ -13,6 +13,9 @@ module Flor
     def environment=(h)
 
       @environment = Flor.to_string_keyed_hash(h)
+        .inject({}) { |r, (cat, v)|
+          r[cat] = recompose(v)
+          r }
     end
 
     def initialize(unit)
@@ -27,8 +30,7 @@ module Flor
 
     def variables(domain)
 
-      deflate(@environment['variables'] || {})
-        .select { |pa, _, _| Flor.sub_domain?(pa, domain) }
+      env('variables', domain)
         .inject({}) { |h, (_, k, v)| h[k] = v; h }
     end
 
@@ -115,9 +117,9 @@ module Flor
 
     protected
 
-    def deflate(h)
+    def recompose(h)
 
-      do_deflate(h, {}, nil)
+      deflate(h, {}, nil)
         .sort_by { |k, _|
           k.count('.') }
         .collect { |k, v|
@@ -125,77 +127,24 @@ module Flor
           [ k[0, i], k[(i == 0 ? i : i + 1)..-1], v ] }
     end
 
-    def do_deflate(h, out, path)
+    def deflate(h, out, path)
 
       h
         .inject(out) { |r, (k, v)|
           pathk = path ? [ path, k ].join('.') : k
           if v.is_a?(Hash)
-            do_deflate(v, r, pathk)
+            deflate(v, r, pathk)
           else
             r[pathk] = v
           end
           r }
     end
 
-#    def split_dn(domain, name)
-#
-#      if name
-#        [ domain, name ]
-#      else
-#        elts = domain.split('.')
-#        [ elts[0..-2].join('.'), elts[-1] ]
-#      end
-#    end
-#
-#    def expose_d(path, opts)
-#
-#      pa = path[@root.length..-1]
-#      pa = pa[5..-1] if pa[0, 5] == '/usr/'
-#
-#      libregex =
-#        opts[:subflows] ?
-#        /\/lib\/(subflows|flows|hooks|taskers)\// :
-#        /\/lib\/(flows|hooks|taskers)\//
-#
-#      pa
-#        .sub(/\/etc\/variables\//, '/')
-#        .sub(libregex, '/')
-#        .sub(/\/\z/, '')
-#        .sub(/\/(flo|flor|dot|hooks)\.json\z/, '')
-#        .sub(/\.(flo|flor|json)\z/, '')
-#        .sub(/\A\//, '')
-#        .gsub(/\//, '.')
-#    end
-#
-#    def expose_dn(path, opts)
-#
-#      pa = expose_d(path, opts)
-#
-#      if ri = pa.rindex('.')
-#        [ pa[0..ri - 1], pa[ri + 1..-1] ]
-#      else
-#        [ '', pa ]
-#      end
-#    end
-#
-#    def eval(path, context)
-#
-#      src =
-#        @mutex.synchronize do
-#
-#          mt1 = File.mtime(path)
-#          val, mt0 = @cache[path]
-#
-#          if val && mt1 == mt0
-#            val
-#          else
-#            (@cache[path] = [ Flor::ConfExecutor.load(path), mt1 ]).first
-#          end
-#        end
-#
-#      Flor::ConfExecutor.interpret(path, src, context)
-#    end
+    def env(cat, domain)
+
+      (@environment[cat.to_s] || {})
+        .select { |path, _, _| Flor.sub_domain?(path, domain) }
+    end
   end
 end
 
