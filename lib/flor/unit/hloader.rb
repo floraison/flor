@@ -28,14 +28,19 @@ module Flor
     def shutdown
     end
 
-    ENV_CATS = %w[ variables libraries taskers hooks ]
+    HCATS = {
+      'variable' => 'variables',
+      'library' => 'libraries',
+      'tasker' => 'taskers',
+      'hook' => 'hooks' }
+    CATS =
+      HCATS.values
 
     def add(cat, path, value)
 
-      c = cat.to_s
+      c = recat(cat)
 
-      fail ArgumentError.new("unknown category #{c.inspect}") \
-        unless ENV_CATS.include?(c)
+      value = Flor.to_string_keyed_hash(value) if c == 'taskers'
 
       e = (@environment[c] ||= [])
       e << [ *split(path), value ]
@@ -44,10 +49,7 @@ module Flor
 
     def remove(cat, path)
 
-      c = cat.to_s
-
-      fail ArgumentError.new("unknown category #{c.inspect}") \
-        unless ENV_CATS.include?(c)
+      c = recat(cat)
 
       e = @environment[c]
       return [] unless e
@@ -75,7 +77,7 @@ module Flor
 
       path, key = split(domain, name)
 
-      entries('libraries', domain)
+      entries('libraries', path)
         .each { |pa, ke, va|
           next unless pa == path && ke == key
           return [ [ pa, ke ].join('.'), va ] }
@@ -101,34 +103,17 @@ module Flor
 
     def tasker(domain, name, message={})
 
-#      # NB: do not relativize path, because Ruby load path != cwd,
-#      # stay absolute for `require` and `load`
-#
-#      domain, name = split_dn(domain, name)
-#
-#      pat, _, nam = Dir[File.join(@root, '**/*.json')]
-#        .select { |pa| pa.index('/lib/taskers/') }
-#        .collect { |pa| [ pa, *expose_dn(pa, {}) ] }
-#        .select { |pa, d, n|
-#          is_subdomain?(domain, [ d, n ].join('.')) ||
-#          (n == name && is_subdomain?(domain, d)) }
-#        .sort_by { |pa, d, n| d.count('.') }
-#        .last
-#
-#      return nil unless pat
-#
-#      conf = eval(pat, message)
-#
-#      return conf if nam == name
-#
-#      conf = conf[name]
-#
-#      return nil unless conf
-#
-#      (conf.is_a?(Array) ? conf : [ conf ])
-#        .each { |h| h['_path'] = pat }
-#
-#      conf
+      path, key = split(domain, name)
+
+      entries('taskers', path)
+        .reverse # FIXME...
+        .each { |pa, ke, va|
+          next unless ke == key
+          va['_path'] = pa
+          va['root'] = nil
+          return va }
+
+      nil
     end
 
     def hooks(domain, name=nil)
@@ -173,6 +158,17 @@ module Flor
             r[pathk] = v
           end
           r }
+    end
+
+    def recat(cat)
+
+      c = cat.to_s
+      c = HCATS[c] || c
+
+      fail ArgumentError.new("unknown category #{cat.to_s.inspect}") \
+        unless CATS.include?(c)
+
+      c
     end
 
     def split(path, key=nil)

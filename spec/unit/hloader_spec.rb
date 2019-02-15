@@ -54,8 +54,8 @@ describe Flor::HashLoader do
 
     before :each do
 
-      @loader.add(:libraries, 'net.example.flow1', "task 'nathalie'")
-      @loader.add(:libraries, 'org.example.flow1', "task 'oskar'")
+      @loader.add(:library, 'net.example.flow1', "task 'nathalie'")
+      @loader.add(:library, 'org.example.flow1', "task 'oskar'")
     end
 
     {
@@ -81,42 +81,58 @@ describe Flor::HashLoader do
 
   describe '#tasker' do
 
-#    {
-#      [ '', 'alice' ] => [
-#        'basic alice', %w[ description a _path root ] ],
-#
-#      [ 'net.example', 'alice' ] => [
-#        'basic alice', %w[ description a _path root ] ],
-#
-#      [ 'org.example', 'alice' ] => [
-#        'org.example alice', %w[ description ao _path root ] ],
-#
-#      [ '', 'bob' ] => [
-#        nil ],
-#
-#      [ 'net.example', 'bob' ] => [
-#        'usr net.example bob', %w[ description ubn _path root ] ],
-#
-#      [ 'org.example', 'bob' ] => [
-#        'org.example bob', %w[ description bo _path root ] ],
-#
-#      [ 'org.example.bob', nil ] => [
-#        'org.example bob', %w[ description bo _path root ] ],
-#
-#    }.each do |ks, (desc, keys)|
-#
-#      it "loads tasker conf at #{ks.inspect}" do
-#
-#        t = @loader.tasker(*ks)
-#
-#        if desc
-#          expect(t['description']).to eq(desc)
-#          expect(t.keys).to eq(keys)
-#        else
-#          expect(t).to eq(nil)
-#        end
-#      end
-#    end
+    before :each do
+
+      @loader.add(
+        :tasker, 'alice',
+        { description: 'basic alice', a: 'a' })
+      @loader.add(
+        :tasker, 'org.example.alice',
+        { description: 'org.example alice', ao: 'AO' })
+      @loader.add(
+        :tasker, 'net.example.bob',
+        { description: 'net.example bob', bn: 'BN' })
+      @loader.add(
+        :tasker, 'org.example.bob',
+        { description: 'org.example bob', bo: 'BO' })
+    end
+
+    {
+      [ '', 'alice' ] =>
+        [ 'basic alice', %w[ description a _path root ] ],
+
+      [ 'net.example', 'alice' ] =>
+        [ 'basic alice', %w[ description a _path root ] ],
+
+      [ 'org.example', 'alice' ] =>
+        [ 'org.example alice', %w[ description ao _path root ] ],
+
+      [ '', 'bob' ] => [
+        nil ],
+
+      [ 'net.example', 'bob' ] =>
+        [ 'net.example bob', %w[ description bn _path root ] ],
+
+      [ 'org.example', 'bob' ] =>
+        [ 'org.example bob', %w[ description bo _path root ] ],
+
+      [ 'org.example.bob', nil ] =>
+        [ 'org.example bob', %w[ description bo _path root ] ],
+
+    }.each do |ks, (desc, keys)|
+
+      it "loads tasker conf at #{ks.inspect}" do
+
+        t = @loader.tasker(*ks)
+
+        if desc
+          expect(t['description']).to eq(desc)
+          expect(t.keys).to eq(keys)
+        else
+          expect(t).to eq(nil)
+        end
+      end
+    end
 
 #    {
 #
