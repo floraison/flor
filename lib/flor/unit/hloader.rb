@@ -205,6 +205,8 @@ module Flor
         self.loader.add(:hook, path, value)
       end
 
+      alias add_var add_variable
+
       # to remove: unit.loader.remove(:tasker, path)
     end
   end

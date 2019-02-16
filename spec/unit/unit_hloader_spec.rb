@@ -40,6 +40,37 @@ describe 'Flor unit' do
 
   describe 'with hloader' do
 
+    {
+      [ 'age', 20 ] => 20,
+      [ 'age', 20, 'org.example' ] => 20,
+      [ 'org.example.age', 21 ] => :fail,
+      [ 'org.example.age', 21, 'org.example.accounting' ] => 21,
+
+    }.each do |(key, val, dom), ret|
+
+      it "works with variable conf #{key.inspect}, #{val.inspect}" do
+
+        #@unit.loader.add(:variable, 'alice', tasker_conf)
+        @unit.add_var(key, val)
+
+        k = key.split('.').last
+
+        r = @unit.launch(
+          %{
+            #{k}
+          },
+          domain: dom,
+          wait: true)
+
+        if ret == :fail
+          expect(r['point']).to eq('failed')
+        else
+          expect(r).to have_terminated_as_point
+          expect(r['payload']['ret']).to eq(ret)
+        end
+      end
+    end
+
     [
       { class: '::HlAliceTasker' },
       { class: ::HlAliceTasker },
@@ -61,6 +92,22 @@ describe 'Flor unit' do
         expect(r).to have_terminated_as_point
         expect(r['payload']['ret']).to eq('Alice was here')
       end
+    end
+
+    [
+      :replaceme
+
+    ].each do |library_conf|
+
+      it "works with library conf #{library_conf.inspect}"
+    end
+
+    [
+      :replaceme
+
+    ].each do |hook_conf|
+
+      it "works with hook conf #{hook_conf.inspect}"
     end
   end
 end
