@@ -34,8 +34,13 @@ module Flor
       'v' => 'variables',
       'var' => 'variables',
       'variable' => 'variables',
+      'flo' => 'libraries',
+      'flow' => 'libraries',
       'lib' => 'libraries',
       'library' => 'libraries',
+      'sub' => 'sublibraries',
+      'sublib' => 'sublibraries',
+      'sublibrary' => 'sublibraries',
       'tasker' => 'taskers',
       'hook' => 'hooks' }
     CATS =
@@ -84,6 +89,12 @@ module Flor
     def library(domain, name=nil, opts={})
 
       path, key = split(domain, name)
+
+      libs = entries('libraries', path)
+      if opts[:subflows] # used by "graft"/"import"
+        libs += entries('sublibraries', path)
+        libs = libs.sort_by { |pa, _, _| pa.count('.') }
+      end
 
       entries('libraries', path)
         .each { |pa, ke, va|
@@ -201,6 +212,9 @@ module Flor
       def add_library(path, value)
         self.loader.add(:library, path, value)
       end
+      def add_sublibrary(path, value)
+        self.loader.add(:sublibrary, path, value)
+      end
       def add_tasker(path, value)
         self.loader.add(:tasker, path, value)
       end
@@ -210,6 +224,8 @@ module Flor
 
       alias add_var add_variable
       alias add_lib add_library
+      alias add_sub add_sublibrary
+      alias add_sub_lib add_sublibrary
 
       # to remove: unit.loader.remove(:tasker, path)
     end

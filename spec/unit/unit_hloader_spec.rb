@@ -95,28 +95,29 @@ describe 'Flor unit' do
       end
     end
 
-
     {
-      [ 'domain0.flow0',
-        %q{
-          1234
-        }
-      ] => 1234
+      [ { 'domain0.flow0' => %q{ 1234 } } ] => 1234
 
-    }.each do |(path, flow, dom), ret|
+    }.each do |(h, dom), ret|
 
-      it "works with library conf #{path.inspect}" do
+      it "works with library conf #{h.keys.inspect}" do
 
-        #@unit.loader.add(:library, path, flow)
-        @unit.add_lib(path, flow)
+        h.each do |path, flow|
+          if m = path.match(/\Asubflows?:(.+)\z/)
+            @unit.add_sub(m[1], flow)
+          else
+            @unit.add_lib(path, flow)
+          end
+        end
 
-        th = path.split('.').last
+        th = h.keys.last.split('.').last
 
         r = @unit.launch(
           %{
             sequence
               import '#{th}'
           },
+          domain: dom,
           wait: true)
 
         expect(r).to have_terminated_as_point
