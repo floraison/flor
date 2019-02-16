@@ -22,6 +22,8 @@ module Flor
 
       @unit = unit
 
+      class << @unit; include Flor::HashLoader::UnitAdders; end
+
       self.environment = (@unit.conf['lod_environment'] || {})
     end
 
@@ -186,6 +188,24 @@ module Flor
       code = Flor::ConfExecutor.load(code)
 
       Flor::ConfExecutor.interpret(path, code, context)
+    end
+
+    module UnitAdders
+
+      def add_variable(path, value)
+        self.loader.add(:variable, path, value)
+      end
+      def add_library(path, value)
+        self.loader.add(:library, path, value)
+      end
+      def add_tasker(path, value)
+        self.loader.add(:tasker, path, value)
+      end
+      def add_hook(path, value)
+        self.loader.add(:hook, path, value)
+      end
+
+      # to remove: unit.loader.remove(:tasker, path)
     end
   end
 end

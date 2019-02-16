@@ -49,7 +49,8 @@ describe 'Flor unit' do
 
       it "works with tasker conf #{tasker_conf.inspect}" do
 
-        @unit.loader.add(:tasker, 'alice', tasker_conf)
+        #@unit.loader.add(:tasker, 'alice', tasker_conf)
+        @unit.add_tasker('alice', tasker_conf)
 
         r = @unit.launch(
           %q{
