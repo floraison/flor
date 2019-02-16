@@ -31,12 +31,15 @@ module Flor
     end
 
     HCATS = {
+      'v' => 'variables',
+      'var' => 'variables',
       'variable' => 'variables',
+      'lib' => 'libraries',
       'library' => 'libraries',
       'tasker' => 'taskers',
       'hook' => 'hooks' }
     CATS =
-      HCATS.values
+      HCATS.values.uniq
 
     def add(cat, path, value)
 
