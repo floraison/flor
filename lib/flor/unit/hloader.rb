@@ -209,6 +209,7 @@ module Flor
       end
 
       alias add_var add_variable
+      alias add_lib add_library
 
       # to remove: unit.loader.remove(:tasker, path)
     end

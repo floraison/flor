@@ -95,12 +95,33 @@ describe 'Flor unit' do
       end
     end
 
-    [
-      :replaceme
 
-    ].each do |library_conf|
+    {
+      [ 'domain0.flow0',
+        %q{
+          1234
+        }
+      ] => 1234
 
-      it "works with library conf #{library_conf.inspect}"
+    }.each do |(path, flow, dom), ret|
+
+      it "works with library conf #{path.inspect}" do
+
+        #@unit.loader.add(:library, path, flow)
+        @unit.add_lib(path, flow)
+
+        th = path.split('.').last
+
+        r = @unit.launch(
+          %{
+            sequence
+              import '#{th}'
+          },
+          wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq(ret)
+      end
     end
 
     [
