@@ -41,23 +41,24 @@ describe 'Flor unit' do
   describe 'with hloader' do
 
     {
-      [ 'age', 20 ] => 20,
-      [ 'age', 20, 'org.example' ] => 20,
-      [ 'org.example.age', 21 ] => :fail,
-      [ 'org.example.age', 21, 'org.example.accounting' ] => 21,
+      [ { 'age' => 20 } ] => 20,
+      [ { 'age' => 20 }, 'org.example' ] => 20,
+      [ { 'org.example.age' => 21 } ] => :fail,
+      [ { 'age' => 19, 'org.example.age' => 21 } ] => 19,
+      [ { 'org.example.age' => 21 }, 'org.example.accounting' ] => 21,
 
-    }.each do |(key, val, dom), ret|
+    }.each do |(h, dom), ret|
 
-      it "works with variable conf #{key.inspect}, #{val.inspect}" do
+      it "works with variable conf #{h.inspect}" do
 
-        #@unit.loader.add(:variable, 'alice', tasker_conf)
-        @unit.add_var(key, val)
-
-        k = key.split('.').last
+        h.each do |k, v|
+          #@unit.loader.add(:variable, k, v)
+          @unit.add_var(k, v)
+        end
 
         r = @unit.launch(
           %{
-            #{k}
+            #{h.keys.last.split('.').last}
           },
           domain: dom,
           wait: true)
