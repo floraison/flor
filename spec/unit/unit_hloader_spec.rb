@@ -24,7 +24,8 @@ describe 'Flor unit' do
 
     @unit = Flor::Unit.new(
       loader: Flor::HashLoader,
-      sto_uri: 'sqlite::memory:')
+      sto_uri: RUBY_PLATFORM.match(/java/) ?
+        'jdbc:sqlite://tmp/test.db' : 'sqlite::memory:')
     @unit.conf['unit'] = 'unit_hloader'
     #@unit.hook('journal', Flor::Journal)
     @unit.storage.delete_tables
