@@ -55,7 +55,12 @@ module Flor
       #
       # initialize
 
-      k = Flor.const_lookup(conf['class'] || conf['module'])
+      k =
+        case com = conf['class'] || conf['module']
+        when String then Flor.const_lookup(com)
+        when Class then com
+        else fail ArgumentError.new("don't know how to call #{com.inspect}")
+        end
 
       o =
         if k.class == Module

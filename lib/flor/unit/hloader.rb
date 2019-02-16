@@ -167,7 +167,13 @@ module Flor
 
       a = (is_array ? value : [ value ])
         .collect { |v|
-          h = v.is_a?(String) ? eval(path, v, context) : v
+          h =
+            case v
+            when String then eval(path, v, context)
+            when Class then { 'class' => v }
+            when Hash then v
+            else fail ArgumentError.new("no conf in #{v.inspect}")
+            end
           h['_path'] = path
           h['root'] = nil
           h }

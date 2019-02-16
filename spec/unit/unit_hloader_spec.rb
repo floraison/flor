@@ -38,19 +38,18 @@ describe 'Flor unit' do
     @unit.shutdown
   end
 
-  describe 'Flor::Unit with hloader' do
+  describe 'with hloader' do
 
-    before :each do
+    [
+      { class: '::HlAliceTasker' },
+      { class: ::HlAliceTasker },
+      ::HlAliceTasker,
 
-      #@unit.loader.add(:tasker, 'alice', '::HlAliceTasker')
-      #@unit.loader.add(:tasker, 'alice', ::HlAliceTasker)
-      @unit.loader.add(:tasker, 'alice', { class: '::HlAliceTasker' })
-      #@unit.loader.add(:tasker, 'alice', { class: ::HlAliceTasker })
-    end
+    ].each do |tasker_conf|
 
-    context 'with taskers' do
+      it "works with tasker conf #{tasker_conf.inspect}" do
 
-      it 'hands the task' do
+        @unit.loader.add(:tasker, 'alice', tasker_conf)
 
         r = @unit.launch(
           %q{
