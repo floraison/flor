@@ -64,9 +64,9 @@ class Flor::Pro::Graft < Flor::Procedure
 
     # graft subtree into parent node
 
-# FIXME doesn't work at root level (parent_tree nil...)
-    parent_tree = lookup_tree(parent)
-    parent_tree[1][child_id] = tree
+    if parent_tree = lookup_tree(parent)
+      parent_tree[1][child_id] = tree
+    end
 
     # re-apply self with subtree
 

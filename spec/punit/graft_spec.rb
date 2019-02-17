@@ -53,7 +53,7 @@ describe 'Flor punit' do
         domain: 'com.acme.alpha',
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['vars']['a']).to eq([ 1, 1 ])
     end
 
@@ -68,7 +68,7 @@ describe 'Flor punit' do
         },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['vars']['a']).to eq([ 1, 2 ])
     end
 
@@ -84,8 +84,23 @@ describe 'Flor punit' do
         domain: 'com.acme.alpha',
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['vars']['a']).to eq([ 1, 1 ])
+    end
+
+    it 'is ok grafting at the root' do
+
+      r = @unit.launch(
+        %q{
+          #graft 'sub0'
+          import 'sub0'
+        },
+        domain: 'com.acme.alpha',
+        vars: { 'a' => [] },
+        wait: true)
+
+      expect(r).to have_terminated_as_point
+      expect(r['vars']['a']).to eq([ 1 ])
     end
   end
 end
