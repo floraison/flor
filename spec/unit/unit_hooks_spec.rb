@@ -226,7 +226,7 @@ end
             fun1 'b'
         }, wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         @unit.traces.collect { |t| "#{t.nid}:#{t.text}" }
@@ -261,7 +261,7 @@ end
             trace 'yellow'
         }, wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         @unit.traces.collect { |t| "#{t.nid}:#{t.text}" }
@@ -301,7 +301,7 @@ end
             trace 'yellow'
         }, wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         @unit.traces.collect { |t| "#{t.nid}:#{t.text}" }
