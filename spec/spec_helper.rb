@@ -55,14 +55,20 @@ module Helpers
     return unless message
     return unless message['point'] == 'failed'
 
-    puts ">" + '-' * 79
-    p message.select { |k, _| %w[ point from nid sm m ].include?(k) }
-    puts message['error']['kla']
-    puts message['error']['msg']
+    c = Flor.colours
+    x = c.yellow
+
+    puts x + '>' + '-' * 78
+    puts x + Flor.to_d(
+      message.select { |k, _| %w[ point from nid sm m pr er ].include?(k) },
+      compact: true, colours: false)
+    puts x + message['error']['kla']
+    puts x + message['error']['msg']
+    puts x + 'flo line: ' + message['error']['lin'].to_s
     (message['error']['trc']  || [ '(no trc)' ]).each do |l|
-      puts "  " + l
+      puts x + '  ' + l
     end
-    puts ">" + ('-' * 78) + '.'
+    puts x + '>' + ('-' * 78) + '.' + c.reset
   end
 end
 
