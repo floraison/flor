@@ -182,13 +182,9 @@ module Flor
 
       source, domain, flow_name =
         if df = Flor.split_flow_name(source_or_path)
-          [ source_or_path,
-            opts[:domain] || df[0],
-            df[1] ]
+          [ source_or_path, opts[:domain] || df[0], df[1] ]
         else
-          [ source_or_path,
-            opts[:domain] || @conf['domain'] || 'domain0',
-            nil ]
+          [ source_or_path, opts[:domain] || @conf['domain'] || 'domain0', nil ]
         end
 
       fail ArgumentError.new(

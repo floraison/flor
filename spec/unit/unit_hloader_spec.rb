@@ -96,21 +96,23 @@ describe 'Flor unit' do
     end
 
     {
-      [ { 'domain0.flow0' => %q{ 1234 } } ] => 1234
+      [ { 'flow0' => %q{ 1234 } } ] => 1234,
+      [ { 'domain0.flow0' => %q{ 1234 } } ] => 1234,
+      [ { 'sub:flow0' => %q{ 1234 } } ] => 1234,
 
     }.each do |(h, dom), ret|
 
       it "works with library conf #{h.keys.inspect}" do
 
         h.each do |path, flow|
-          if m = path.match(/\Asubflows?:(.+)\z/)
+          if m = path.match(/\Asub(?:flows?)?:(.+)\z/)
             @unit.add_sub(m[1], flow)
           else
             @unit.add_lib(path, flow)
           end
         end
 
-        th = h.keys.last.split('.').last
+        th = h.keys.last.split(/[:.]/).last
 
         r = @unit.launch(
           %{

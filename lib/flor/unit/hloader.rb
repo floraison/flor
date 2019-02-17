@@ -96,9 +96,9 @@ module Flor
         libs = libs.sort_by { |pa, _, _| pa.count('.') }
       end
 
-      entries('libraries', path)
+      libs
         .each { |pa, ke, va|
-          next unless pa == path && ke == key
+          next unless ke == key
           return [ [ pa, ke ].join('.'), va ] }
 
       nil
