@@ -46,14 +46,16 @@ module Flor
     CATS =
       HCATS.values.uniq
 
-    def add(cat, path, value)
+    def add(cat, path, value, &block)
 
       c = recat(cat)
 
       path = path + '.' \
         if c == 'hooks' && path.length > 0 && path[-1, 1] != '.'
 
-      value = Flor.to_string_keyed_hash(value)
+      value = block ?
+        block_to_class(block, c) :
+        Flor.to_string_keyed_hash(value)
 
       e = (@environment[c] ||= [])
       e << [ *split(path), value ]
@@ -204,7 +206,18 @@ module Flor
       Flor::ConfExecutor.interpret(path, code, context)
     end
 
-    def block_to_class(block, flavour)
+    def block_to_class(block, cat)
+
+      c = Class.new(Flor::BasicTasker)
+      class << c; attr_accessor :source_location; end
+      c.source_location = block.source_location
+
+      if cat == 'taskers'
+        c.send(:define_method, :on_message, &block)
+      #elsif cat == 'hooks'
+      end
+
+      c
     end
 
     module UnitAdders
@@ -218,20 +231,11 @@ module Flor
       def add_sublibrary(path, value)
         self.loader.add(:sublibrary, path, value)
       end
-      def add_hook(path, value)
-        self.loader.add(:hook, path, value)
-      end
-
       def add_tasker(path, value=nil, &block)
-
-        if block
-          value = Class.new(Flor::BasicTasker)
-          class << value; attr_accessor :source_location; end
-          value.source_location = block.source_location
-          value.send(:define_method, :on_message, &block)
-        end
-
-        self.loader.add(:tasker, path, value)
+        self.loader.add(:tasker, path, value, &block)
+      end
+      def add_hook(path, value, &block)
+        self.loader.add(:hook, path, value, &block)
       end
 
       alias add_var add_variable
