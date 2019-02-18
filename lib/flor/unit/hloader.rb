@@ -210,13 +210,10 @@ module Flor
     def block_to_class(block, cat)
 
       c = Class.new(Flor::BasicTasker)
+
       class << c; attr_accessor :source_location; end
       c.source_location = block.source_location
-
-      if cat == 'taskers'
-        c.send(:define_method, :on_message, &block)
-      #elsif cat == 'hooks'
-      end
+      c.send(:define_method, :on_message, &block)
 
       c
     end
@@ -235,7 +232,7 @@ module Flor
       def add_tasker(path, value=nil, &block)
         self.loader.add(:tasker, path, value, &block)
       end
-      def add_hook(path, value, &block)
+      def add_hook(path, value=nil, &block)
         self.loader.add(:hook, path, value, &block)
       end
 

@@ -145,21 +145,34 @@ describe 'Flor unit' do
     end
 
     class UnitHloaderHook0
-      #def opts; { consumed: false }; end # FIXME should have an effect
+      #def opts; { consumed: false }; end
       def on_message(m)
-        m['payload']['ret'] = 'uhlh0'
+#p m['consumed']
+        m['payload']['ret'] = 'uhlh0' # invasive hook
         [] # no new messages
       end
     end
 
     {
-      [ '', { point: 'execute', class: UnitHloaderHook0 } ] => 'uhlh0'
+      [ '', UnitHloaderHook0 ] => 'uhlh0',
+      [ '', { point: 'execute', class: UnitHloaderHook0 } ] => 'uhlh0',
+      [ '', lambda { |m| m['payload']['ret'] = 'l0' } ] => 'l0',
 
     }.each do |(dompath, hook_conf, dom), ret|
 
-      it "works with hook conf #{hook_conf.inspect}" do
+      hc = hook_conf
+      if hc.is_a?(Proc)
+        f, l = hc.source_location
+        hc = File.readlines(f)[l - 1].match(/ (lambda.+\}) \] =>/)[1]
+      end
 
-        @unit.add_hook(dompath, hook_conf)
+      it "works with hook conf #{hc.inspect}" do
+
+        if hook_conf.is_a?(Proc)
+          @unit.add_hook(dompath, &hook_conf)
+        else
+          @unit.add_hook(dompath, hook_conf)
+        end
 
         r = @unit.launch(
           %{
