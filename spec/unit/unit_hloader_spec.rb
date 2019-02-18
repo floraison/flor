@@ -144,12 +144,34 @@ describe 'Flor unit' do
       end
     end
 
-    [
-      :replaceme
+    class UnitHloaderHook0
+      #def opts; { consumed: false }; end # FIXME should have an effect
+      def on_message(m)
+        m['payload']['ret'] = 'uhlh0'
+        [] # no new messages
+      end
+    end
 
-    ].each do |hook_conf|
+    {
+      [ '', { point: 'execute', class: UnitHloaderHook0 } ] => 'uhlh0'
 
-      it "works with hook conf #{hook_conf.inspect}"
+    }.each do |(dompath, hook_conf, dom), ret|
+
+      it "works with hook conf #{hook_conf.inspect}" do
+
+        @unit.add_hook(dompath, hook_conf)
+
+        r = @unit.launch(
+          %{
+            sequence
+              sequence _
+          },
+          domain: dom,
+          wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq(ret)
+      end
     end
   end
 end
