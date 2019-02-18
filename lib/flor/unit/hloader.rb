@@ -204,6 +204,9 @@ module Flor
       Flor::ConfExecutor.interpret(path, code, context)
     end
 
+    def block_to_class(block, flavour)
+    end
+
     module UnitAdders
 
       def add_variable(path, value)
@@ -215,11 +218,20 @@ module Flor
       def add_sublibrary(path, value)
         self.loader.add(:sublibrary, path, value)
       end
-      def add_tasker(path, value)
-        self.loader.add(:tasker, path, value)
-      end
       def add_hook(path, value)
         self.loader.add(:hook, path, value)
+      end
+
+      def add_tasker(path, value=nil, &block)
+
+        if block
+          value = Class.new(Flor::BasicTasker)
+          class << value; attr_accessor :source_location; end
+          value.source_location = block.source_location
+          value.send(:define_method, :on_message, &block)
+        end
+
+        self.loader.add(:tasker, path, value)
       end
 
       alias add_var add_variable

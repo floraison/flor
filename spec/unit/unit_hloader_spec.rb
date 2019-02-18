@@ -95,6 +95,23 @@ describe 'Flor unit' do
       end
     end
 
+    it "works with a block tasker conf" do
+
+      @unit.add_tasker('alice') do
+        payload['ret'] = 'signed Alice.'
+        reply
+      end
+
+      r = @unit.launch(
+        %q{
+          alice _
+        },
+        wait: true)
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq('signed Alice.')
+    end
+
     {
       [ { 'flow0' => %q{ 1234 } } ] => 1234,
       [ { 'domain0.flow0' => %q{ 1234 } } ] => 1234,
