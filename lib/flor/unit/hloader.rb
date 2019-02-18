@@ -113,7 +113,8 @@ module Flor
       entries('taskers', path)
         .reverse # FIXME
         .each { |pa, ke, va|
-          return to_conf_h(pa, va, message) if ke == key }
+          next unless ke == key
+          return to_conf_h(pa, va, message) }
 
       nil
     end
