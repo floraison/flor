@@ -114,7 +114,7 @@ module Flor
         .reverse # FIXME
         .each { |pa, ke, va|
           next unless ke == key
-          return to_conf_h(pa, va, message) }
+          return to_conf_h('taskers', pa, va, message) }
 
       nil
     end
@@ -122,7 +122,7 @@ module Flor
     def hooks(domain)
 
       entries('hooks', domain)
-        .collect { |_, _, va| to_conf_h(domain, va, {}) }
+        .collect { |_, _, va| to_conf_h('hooks', domain, va, {}) }
         .flatten(1)
     end
 
@@ -180,7 +180,7 @@ module Flor
         .select { |path, _, _| Flor.sub_domain?(path, domain) }
     end
 
-    def to_conf_h(path, value, context)
+    def to_conf_h(cat, path, value, context)
 
       is_array = value.is_a?(Array)
 
