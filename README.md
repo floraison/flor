@@ -13,7 +13,7 @@ Flor is a "Ruby workflow engine", if that makes any sense.
 ## Design
 
 * Strives to propose a scheming interpreter for long running executions
-* Is written in Ruby a rather straightforward language with at least two
+* Is written in Ruby, a rather straightforward language with at least two
   wonderful implementations (MRI and JRuby, which is enterprise-friendly)
 * Stores everything as JSON (if it breaks it's still readable)
 * Stores in any database supported by [Sequel](http://sequel.jeremyevans.net/)
@@ -29,6 +29,10 @@ See [quickstart/](quickstart/).
 ## Documentation
 
 See [doc/](doc/).
+
+* [doc/procedures/](doc/procedures/) the basic building blocks of the flor language
+* [doc/glossary](doc/glossary.md) words and their meaning in the flor context
+* [doc/patterns](doc/patterns.md) workflow patterns and their flor (tentative) implementations
 
 ## blog posts and presentations
 
