@@ -191,7 +191,7 @@ module Flor
             when String then eval(path, v, context)
             when Class then { 'class' => v }
             when Hash then v
-            else fail ArgumentError.new("no conf in #{v.inspect}")
+            else { 'instance' => v }
             end
           h['_path'] = path
           h['root'] = nil
