@@ -54,7 +54,7 @@ module Flor
         if c == 'hooks' && path.length > 0 && path[-1, 1] != '.'
 
       value = block ?
-        block_to_class(block, c) :
+        block_to_class(c, block) :
         Flor.to_string_keyed_hash(value)
 
       e = (@environment[c] ||= [])
@@ -207,9 +207,12 @@ module Flor
       Flor::ConfExecutor.interpret(path, code, context)
     end
 
-    def block_to_class(block, cat)
+    def block_to_class(cat, block)
 
-      c = Class.new(Flor::BasicTasker)
+      c =
+        cat == 'taskers' ?
+        Class.new(Flor::BasicTasker) :
+        Class.new
 
       class << c; attr_accessor :source_location; end
       c.source_location = block.source_location

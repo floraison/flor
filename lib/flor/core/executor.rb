@@ -69,18 +69,31 @@ module Flor
 
     def trigger_hook(hook, message)
 
-      hook.notify(self, message)
+      m =
+        case
+        when hook.respond_to?(:notify) then :notify
+        when hook.respond_to?(:on_message) then :on_message
+        else :on
+        end
+      as =
+        case hook.method(m).arity
+        when 3 then [ @unit, self, message ]
+        when 2 then [ self, message ]
+        else [ message ]
+        end
+
+      r = hook.send(m, *as)
+
+      Flor.is_array_of_messages?(r) ? r : []
     end
 
     def trigger_block(block, opts, message)
 
       r =
-        if block.arity == 1
-          block.call(message)
-        elsif block.arity == 2
-          block.call(message, opts)
-        else
-          block.call(self, message, opts)
+        case block.arity
+        when 1 then block.call(message)
+        when 2 then block.call(message, opts)
+        else block.call(self, message, opts)
         end
 
       r.is_a?(Array) && r.all? { |e| e.is_a?(Hash) } ? r : []

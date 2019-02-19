@@ -46,7 +46,7 @@ module Flor
         end
       end
 
-      hook = instantiate_hook(hook) if hook.is_a?(Class)
+      hook = Flor::Hook.instantiate(@unit, hook) if hook.is_a?(Class)
 
       @hooks << [ name, opts, hook, block ]
     end
@@ -72,17 +72,6 @@ module Flor
     end
 
     protected
-
-    def instantiate_hook(hook_class)
-
-      a =
-        case i = hook_class.instance_method(:initialize).arity
-        when 0, 1 then [ @unit ][0, i]
-        else []
-        end
-
-      hook_class.new(*a)
-    end
 
     def o(opts, *keys)
 

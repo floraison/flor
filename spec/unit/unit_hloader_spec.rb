@@ -139,10 +139,27 @@ describe 'Flor unit' do
     end
 
     class UnitHloaderHook0
-      #def opts; { consumed: false }; end
+      #def opts; { point: 'execute' }; end
       def on_message(m)
-#p m['consumed']
-        m['payload']['ret'] = 'uhlh0' # invasive hook
+        m['payload']['ret'] = 'uhlh0' \
+          if m['payload'] # invasive hook
+        [] # no new messages
+      end
+    end
+
+    class UnitHloaderHook1
+      def opts; { consumed: false, point: 'execute' }; end
+      def on_message(m)
+        m['payload']['ret'] = (m['payload']['ret'] || 0) + 1
+        [] # no new messages
+      end
+    end
+
+    class UnitHloaderHook2
+      def opts; { consumed: false, point: 'execute' }; end
+      def initialize; @counter = 1; end
+      def on_message(m)
+        m['payload']['ret'] = @counter = (@counter * 2)
         [] # no new messages
       end
     end
@@ -150,7 +167,9 @@ describe 'Flor unit' do
     {
       [ '', UnitHloaderHook0 ] => 'uhlh0',
       [ '', { point: 'execute', class: UnitHloaderHook0 } ] => 'uhlh0',
-      [ '', lambda { |m| m['payload']['ret'] = 'l0' } ] => 'l0',
+      [ '', lambda { |m| (m['payload']['ret'] = 'l0') rescue nil } ] => 'l0',
+      [ '', UnitHloaderHook1 ] => 3,
+      [ '', UnitHloaderHook2.new ] => 8,
 
     }.each do |(dompath, hook_conf, dom), ret|
 
