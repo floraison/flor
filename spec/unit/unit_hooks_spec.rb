@@ -343,7 +343,7 @@ end
             wait: true)
 
         expect(r).to have_terminated_as_point
-        expect(r['payload']['count']).to eq(19)
+        expect(r['payload']['count']).to eq(18).or(19)
       end
 
       class UhSpecOne
