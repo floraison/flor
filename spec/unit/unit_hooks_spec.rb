@@ -317,6 +317,139 @@ end
         ms1.collect { |m| "#{m['point']}:#{m['nid']}" }
       ).to eq(%w[ entered:0_0 left:0_0 entered:0_1 left:0_1 ])
     end
+
+    context 'a class' do
+
+      class UhSpecZero
+
+        def notify(executor, message)
+
+          message['payload']['count'] = (message['payload']['count'] || 0) + 1
+
+          [] # add no further messages
+        end
+      end
+
+      it 'intercepts' do
+
+        @unit.hook(UhSpecZero)
+
+        r =
+          @unit.launch(
+            %{
+              sequence tag: 'blue'
+                _
+            },
+            wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['count']).to eq(19)
+      end
+
+      class UhSpecOne
+
+        def opts; { point: 'execute' }; end
+
+        def notify(executor, message)
+
+          message['payload']['count'] = (message['payload']['count'] || 0) + 1
+
+          [] # add no further messages
+        end
+      end
+
+      it 'intercepts with #opts' do
+
+        @unit.hook(UhSpecOne)
+
+        r =
+          @unit.launch(
+            %{
+              sequence tag: 'blue'
+                _
+            },
+            wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['count']).to eq(7)
+      end
+    end
+
+    context 'an instance' do
+
+      class UhSpecInsZero
+
+        attr_reader :counter
+
+        def initialize
+
+          @counter = 0
+        end
+
+        def notify(executor, message)
+
+          @counter += 1 \
+            if message['point'] == 'receive'
+
+          [] # add no further messages
+        end
+      end
+
+      it 'intercepts' do
+
+        i = UhSpecInsZero.new
+
+        @unit.hook(i)
+
+        r =
+          @unit.launch(
+            %{
+              sequence tag: 'blue'
+                _
+            },
+            wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(i.counter).to eq(10)
+      end
+
+      class UhSpecInsOne
+
+        attr_reader :counter
+
+        def opts; { point: 'execute' }; end
+
+        def initialize
+
+          @counter = 0
+        end
+
+        def notify(executor, message)
+
+          @counter += 1
+
+          [] # add no further messages
+        end
+      end
+
+      it 'intercepts with #opts' do
+
+        i = UhSpecInsOne.new
+
+        @unit.hook(i)
+
+        r =
+          @unit.launch(
+            %{
+              sequence tag: 'blue'
+                _
+            },
+            wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(i.counter).to eq(10)
+      end
+    end
   end
 end
 
