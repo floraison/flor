@@ -30,9 +30,9 @@ See [quickstart/](quickstart/).
 
 See [doc/](doc/).
 
-* [doc/procedures/](doc/procedures/) the basic building blocks of the flor language
-* [doc/glossary](doc/glossary.md) words and their meaning in the flor context
-* [doc/patterns](doc/patterns.md) workflow patterns and their flor (tentative) implementations
+* [doc/procedures/](doc/procedures/#procedures) - the basic building blocks of the flor language
+* [doc/glossary](doc/glossary.md) - words and their meaning in the flor context
+* [doc/patterns](doc/patterns.md) - workflow patterns and their flor (tentative) implementations
 
 ## blog posts and presentations
 
