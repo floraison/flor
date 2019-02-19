@@ -325,7 +325,7 @@ end
         def notify(executor, message)
 
           message['payload']['count'] = (message['payload']['count'] || 0) + 1 \
-            if message['payload']
+            if message['payload'] && ! message['consumed']
 
           [] # add no further messages
         end
@@ -344,7 +344,7 @@ end
             wait: true)
 
         expect(r).to have_terminated_as_point
-        expect(r['payload']['count']).to eq(19)
+        expect(r['payload']['count']).to eq(12)
       end
 
       class UhSpecOne
