@@ -2,7 +2,7 @@
 #
 # specifying flor
 #
-# Tue Jan 31 14:41:20 JST 2017
+# Sat Feb 16 12:00:00 JST 2019
 #
 
 require 'spec_helper'
@@ -76,13 +76,24 @@ describe 'Flor unit' do
       { class: '::HlAliceTasker' },
       { class: ::HlAliceTasker },
       ::HlAliceTasker,
+      lambda { payload['ret'] = 'Alice was here'; reply }
 
     ].each do |tasker_conf|
 
-      it "works with tasker conf #{tasker_conf.inspect}" do
+      tc = tasker_conf
+      if tc.is_a?(Proc)
+        f, l = tc.source_location
+        tc = File.readlines(f)[l - 1].strip
+      end
 
-        #@unit.loader.add(:tasker, 'alice', tasker_conf)
-        @unit.add_tasker('alice', tasker_conf)
+      it "works with tasker conf #{tc.inspect}" do
+
+        if tasker_conf.is_a?(Proc)
+          @unit.add_tasker('alice', &tasker_conf)
+        else
+          #@unit.loader.add(:tasker, 'alice', tasker_conf)
+          @unit.add_tasker('alice', tasker_conf)
+        end
 
         r = @unit.launch(
           %q{
@@ -93,23 +104,6 @@ describe 'Flor unit' do
         expect(r).to have_terminated_as_point
         expect(r['payload']['ret']).to eq('Alice was here')
       end
-    end
-
-    it "works with a block tasker conf" do
-
-      @unit.add_tasker('alice') do
-        payload['ret'] = 'signed Alice.'
-        reply
-      end
-
-      r = @unit.launch(
-        %q{
-          alice _
-        },
-        wait: true)
-
-      expect(r).to have_terminated_as_point
-      expect(r['payload']['ret']).to eq('signed Alice.')
     end
 
     {
