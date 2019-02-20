@@ -231,8 +231,12 @@ describe Flor::Storage do
       r0 = @unit.launch('alpha _')
       r1 = @unit.launch('bravo _')
 
-      m0, m1 = @unit.storage.db[:flor_messages].sort_by { |m| m[:exid] }
+#      m0, m1 = @unit.storage.db[:flor_messages].sort_by { |m| m[:exid] }
+#p [ m0[:id], m1[:id], '/', m0[:exid], m1[:exid] ]
+      m0, m1 = @unit.storage.db[:flor_messages].sort_by { |m| m[:id] }
+#p [ m0[:id], m1[:id], '/', m0[:exid], m1[:exid] ]
 
+      expect(m1[:id]).not_to eq(m0[:id])
       expect(m1[:id]).to eq(m0[:id] + 1)
     end
   end
