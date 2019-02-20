@@ -212,5 +212,29 @@ describe Flor::Storage do
       ])
     end
   end
+
+  context 'primary keys' do
+
+    before :each do
+
+      @unit = Flor::Unit.new('envs/test/etc/conf.json')
+      @unit.conf[:unit] = 'u_storage_pks'
+      #@unit.hooker.add('journal', Flor::Journal)
+      @unit.storage.archive = true
+      @unit.storage.delete_tables
+      @unit.storage.migrate
+      #@unit.start
+    end
+
+    they 'auto increment' do
+
+      r0 = @unit.launch('alpha _')
+      r1 = @unit.launch('bravo _')
+
+      m0, m1 = @unit.storage.db[:flor_messages].sort_by { |m| m[:exid] }
+
+      expect(m1[:id]).to eq(m0[:id] + 1)
+    end
+  end
 end
 
