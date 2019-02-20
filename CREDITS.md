@@ -3,6 +3,7 @@
 
 ## Contributors
 
+* Ryan Scott - https://github.com/Subtletree
 * Jeffrey Hicks - https://github.com/jrhicks
 * David Verrier - https://github.com/dverrier
 * Tsunehisa Doi - https://github.com/dmicky0419
