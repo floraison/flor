@@ -59,7 +59,7 @@ module Flor
   dir = File.dirname(__FILE__)
   MODELS.each { |m| require File.join(dir, 'models', "#{m.to_s[0..-2]}.rb") }
 
-  def self.add_model(key, table_prefix='flor_')
+  def self.add_model(key, parent_module=Flor, table_prefix='flor_')
 
     Flor::Storage.send(:define_method, key) do
 
@@ -67,9 +67,9 @@ module Flor
       c = key.to_s[0..-2].capitalize
 
       @models[key] ||=
-        Flor.const_set(
+        parent_module.const_set(
           "#{c}#{@db.object_id.to_s.gsub('-', 'M')}",
-          Class.new(Flor.const_get(c)) do
+          Class.new(parent_module.const_get(c)) do
             self.dataset = s.db["#{table_prefix}#{key}".to_sym]
           end)
     end
