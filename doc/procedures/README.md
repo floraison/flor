@@ -12,7 +12,7 @@
 * [apply](apply.md) - Applies a function.
 * [+, -, *, /, %](arith.md) - The base implementation for + - + / %
 * [array?, object?, boolean?, number?, string?, null?, list?, dict?, hash?, nil?, false?, true?, pair?, float?](array_qmark.md) - Returns true if the argument or the incoming ret matches in type.
-* [break, continue](break.md) - Breaks or continues a "while", "until", "loop" or an "cursor".
+* [break, continue](break.md) - Breaks or continues a "while", "until", "loop" or a "cursor".
 * [case](case.md) - The classical case form.
 * [collect](collect.md) - A simplified version of [map](map.md).
 * [cond](cond.md) - Evaluates all its condition children until one evaluates to true (or it's an else), then executes the corresponding clause child.

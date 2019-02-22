@@ -1,7 +1,7 @@
 
 class Flor::Pro::Break < Flor::Procedure
   #
-  # Breaks or continues a "while", "until", "loop" or an "cursor".
+  # Breaks or continues a "while", "until", "loop" or a "cursor".
   #
   # ```
   # until false
