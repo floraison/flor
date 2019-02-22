@@ -59,31 +59,30 @@ module Flor
   dir = File.dirname(__FILE__)
   MODELS.each { |m| require File.join(dir, 'models', "#{m.to_s[0..-2]}.rb") }
 
-  class Storage
+  def self.add_model(key, table_prefix='flor_')
 
-    MODELS.each do |k|
+    Flor::Storage.send(:define_method, key) do
 
-      define_method(k) do
+      s = self
+      c = key.to_s[0..-2].capitalize
 
-        s = self
-        c = k.to_s[0..-2].capitalize
+      @models[key] ||=
+        Flor.const_set(
+          "#{c}#{@db.object_id.to_s.gsub('-', 'M')}",
+          Class.new(Flor.const_get(c)) do
+            self.dataset = s.db["#{table_prefix}#{key}".to_sym]
+          end)
+    end
 
-        @models[k] ||=
-          Flor.const_set(
-            "#{c}#{@db.object_id.to_s.gsub('-', 'M')}",
-            Class.new(Flor.const_get(c)) do
-              self.dataset = s.db["flor_#{k}".to_sym]
-            end)
-      end
+    Flor::Scheduler.send(:define_method, key) do
+
+      @storage.send(key)
     end
   end
 
-  class Scheduler
+  MODELS.each do |k|
 
-    MODELS.each do |k|
-
-      define_method(k) { @storage.send(k) }
-    end
+    add_model(k)
   end
 end
 
