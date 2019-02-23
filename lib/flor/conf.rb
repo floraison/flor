@@ -48,6 +48,15 @@ module Flor
     #   "reserved" state, messages are put back in the "created" state
     #   (by a running unit (scheduler) if any).
     #
+    # * :db_migration / :sto_migration / :db_migration_dir / :sto_migration_dir
+    #   (Flor::Storage#migrate option)
+    #   Points the migrator to its Ruby Sequel migration directory.
+    #
+    # * :db_sparse_migrations / :sto_sparse_migrations
+    #   (Flor::Storage#migrate option)
+    #   Setting this to true is equivalent to calling
+    #   `unit.storage.migration(allow_missing_migration_files: true)`
+    #
     # And finally:
     #
     # * :flor_debug or :debug

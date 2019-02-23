@@ -83,8 +83,21 @@ module Flor
         # { table: :schema_info,
         #   column: :version }
 
+      skip =
+        @unit.conf['db_sparse_migrations'] ||
+        @unit.conf['sto_sparse_migrations'] ||
+        opts[:sparse_migrations]
+      if skip && ! opts.has_key?(:allow_missing_migration_files)
+        opts[:allow_missing_migration_files] = true
+      end
+
       dir =
         @unit.conf['db_migrations'] ||
+        @unit.conf['db_migration_dir'] ||
+        @unit.conf['sto_migrations'] ||
+        @unit.conf['sto_migration_dir'] ||
+        opts[:migrations] ||
+        opts[:migration_dir] ||
         Flor.migration_dir
 
       synchronize do
