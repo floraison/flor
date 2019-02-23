@@ -563,6 +563,11 @@ module Flor
       end
     end
 
+    def to_camel_case(s)
+
+      s.sub(/\A[a-z]/) { |m| m.upcase }.gsub(/_[a-z]/) { |m| m[1, 1].upcase }
+    end
+
     # Available as `Flor.migration_dir`
     #
     def migration_dir

@@ -64,7 +64,7 @@ module Flor
     Flor::Storage.send(:define_method, key) do
 
       s = self
-      c = key.to_s[0..-2].capitalize
+      c = Flor.to_camel_case(key.to_s[0..-2])
 
       @models[key] ||=
         parent_module.const_set(
