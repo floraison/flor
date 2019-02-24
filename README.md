@@ -10,7 +10,7 @@ Flor is a "Ruby workflow engine", if that makes any sense.
 * [floraison mailing list](https://groups.google.com/forum/#!forum/floraison)
 * [twitter.com/@flor_workflow](https://twitter.com/flor_workflow)
 
-## Design
+## design
 
 * Strives to propose a scheming interpreter for long running executions
 * Is written in Ruby, a rather straightforward language with at least two
@@ -22,17 +22,27 @@ Flor is a "Ruby workflow engine", if that makes any sense.
 * All in all should be easy to maintain (engine itself and executions running
   on top of it)
 
-## Quickstart
+## quickstart
 
 See [quickstart/](quickstart/).
 
-## Documentation
+## documentation
 
 See [doc/](doc/).
 
 * [doc/procedures/](doc/procedures/#procedures) - the basic building blocks of the flor language
 * [doc/glossary](doc/glossary.md) - words and their meaning in the flor context
 * [doc/patterns](doc/patterns.md) - workflow patterns and their flor (tentative) implementations
+
+## related projects
+
+* [mantor/floristry](https://github.com/mantor/floristry) - visualize and interact with flor through Rails facilities
+* [floraison/pollen](https://github.com/floraison/pollen) - a set of flor hooks that emit over the http
+* [floraison/florist](https://github.com/floraison/florist) - a flor worklist implementation
+* [floraison/flack](https://github.com/floraison/flack) - a flor wrapping [Rack](https://github.com/rack/rack) app
+
+* [floraison/fugit](https://github.com/floraison/fugit) - a time library for flor and [rufus-scheduler](https://github.com/jmettraux/rufus-scheduler)
+* [floraison/raabro](https://github.com/floraison/raabro) - the PEG library flor uses for its parsing needs
 
 ## blog posts and presentations
 
@@ -43,7 +53,7 @@ See [doc/](doc/).
 * [flor 2017](https://speakerdeck.com/jmettraux/flor-2017) - q1 2017 - very dry deck
 
 
-## LICENSE
+## license
 
 MIT, see [LICENSE.txt](LICENSE.txt)
 
