@@ -50,8 +50,8 @@ module Flor
 
       c = recat(cat)
 
-      path = path + '.' \
-        if c == 'hooks' && path.length > 0 && path[-1, 1] != '.'
+      path = path.to_s
+      path = path + '.' if c == 'hooks' && path.length > 0 && path[-1, 1] != '.'
 
       value = block ?
         block_to_class(c, block) :
