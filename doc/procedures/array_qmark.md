@@ -54,7 +54,7 @@ string? {} tag: "xxx"      # => false,
 
 ## see also
 
-[type](type_of.md)-of, [type](type_of.md)
+[type-of](type_of.md), [type](type_of.md)
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/array_qmark.rb)

@@ -63,7 +63,7 @@ def make_proc_doc(path, names_and_lines)
 
     (see_also..see_also + count).each do |i|
       lines[i] = lines[i]
-        .gsub(/\w+\??/) { |w|
+        .gsub(/[-A-Za-z_]+\??/) { |w|
           dw = w.downcase
           fw = NAMES_AND_FILES[dw]
           ALSO_NAMES.include?(dw) ? "[#{w}](#{fw})" : w }

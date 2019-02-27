@@ -37,7 +37,7 @@ current key/val), and `len` (the length of the object).
 
 ## see also
 
-for-[each](each.md).
+[for-each](for_each.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/each.rb)
