@@ -85,6 +85,47 @@ class Flor::Pro::Case < Flor::Procedure
   # # yields "matched:molzin"
   # ```
   #
+  # ### defaulting to f.ret
+  #
+  # When nothing is explicitely provided for consideration by "case", the
+  # incoming `f.ret` is used.
+  #
+  # ```
+  # 2
+  # case
+  #   [ 0 1 2 ]; 'low'
+  #   6; 'high'
+  #   else; 'over'
+  # # yields 'low'
+  # ```
+  #
+  # ### incoming f.ret is preserved
+  #
+  # "case" makes sure `f.ret` gets to its upon-entering-"case" value
+  # when considered inside:
+  #
+  # ```
+  #  7
+  #  case (+ 3 4)
+  #    5; 'cinq'
+  #    [ f.ret ]; 'sept'
+  #    6; 'six'
+  #    else; 'whatever...'
+  #
+  #  # yields 'sept'
+  # ```
+  #
+  # ```
+  # "six"
+  # case 6
+  #   5; 'cinq'
+  #   7; 'sept'
+  #   6; "six $( f.ret | upcase _ )"
+  #   else; 'je ne sais pas'
+  #
+  # # yields "six SIX"
+  # ```
+  #
   # ## see also
   #
   # Match, cond, if.
