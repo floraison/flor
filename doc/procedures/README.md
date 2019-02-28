@@ -64,6 +64,7 @@
 
 ## unit
 
+* [c-for-each](c_for_each.md) - Concurrent "for-each", launches a concurrent branch for each elt or entry of the incoming collection.
 * [cancel, kill](cancel.md) - Cancels an execution branch
 * [ccollect](ccollect.md) - A concurrent version of [collect](collect.md).
 * [cmap](cmap.md) - Concurrent version of "map". Spins a concurrent child for each element of the incoming/argument collection.
@@ -97,6 +98,7 @@
   * [Flor::Pro::Cancel](https://github.com/floraison/flor/blob/master/lib/flor/punit/cancel.rb) : [cancel, kill](cancel.md)
   * [Flor::Pro::Case](https://github.com/floraison/flor/blob/master/lib/flor/pcore/case.rb) : [case](case.md)
     * [Flor::Pro::Match](https://github.com/floraison/flor/blob/master/lib/flor/pcore/match.rb) : [match](matchr.md)
+  * [Flor::Pro::CforEach](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_for_each.rb) : [c-for-each](c_for_each.md)
   * [Flor::Pro::Cmap](https://github.com/floraison/flor/blob/master/lib/flor/punit/cmap.rb) : [cmap](cmap.md)
   * [Flor::Pro::Cmp](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cmp.rb) : =, ==, <, >, <=, >=, !=, <>
   * [Flor::Pro::Coll](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_coll.rb) : 
