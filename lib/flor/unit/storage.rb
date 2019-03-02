@@ -804,19 +804,30 @@ module Flor
       @db.loggers << @db_logger
     end
 
-    def self.to_blob(h)
+    class << self
 
-      Sequel.blob(Zlib::Deflate.deflate(JSON.dump(h)))
+      def to_blob(h)
+
+        h ? Sequel.blob(Zlib::Deflate.deflate(JSON.dump(h))) : nil
 #rescue => e; pp h; raise e
-    end
+      end
 
-    def self.from_blob(content)
+      def from_blob(content)
 
-      JSON.parse(Zlib::Inflate.inflate(content))
+        content ? JSON.parse(Zlib::Inflate.inflate(content)) : nil
+      end
     end
 
     def to_blob(h); self.class.to_blob(h); end
     def from_blob(content); self.class.from_blob(content); end
+  end
+
+  # module Flor
+
+  class << self
+
+    def to_blob(h); ::Flor::Storage.to_blob(h); end
+    def from_blob(content); ::Flor::Storage.from_blob(content); end
   end
 end
 
