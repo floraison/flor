@@ -27,7 +27,8 @@ describe 'Flor procedures' do
               b
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
+
       expect(r['vars']).to eq({ 'sum' => r['payload']['ret'] })
 
       expect(r['payload']['ret'][0]).to eq('_func')
@@ -51,7 +52,7 @@ describe 'Flor procedures' do
           set f.r2 (sum2 4, 5)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(
         r['vars'].keys
@@ -142,7 +143,20 @@ describe 'Flor procedures' do
       )
     end
 
-    it 'accepts default parameter values'
+    it 'accepts default parameter values' do
+
+      r = @executor.launch(
+        %q{
+          define f a b:2 c:(3 + b)
+            + a (2 * b) (3 * c)
+          [ (f 2 1)
+            (f b: 4 a: 1)
+            (f a: 2 c: 1 b: -2) ]
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq([ 16, 30, 1 ])
+    end
   end
 
   describe 'def' do
@@ -157,7 +171,8 @@ describe 'Flor procedures' do
               b
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
+
       expect(r['vars']).to eq({})
 
       expect(r['payload']['ret'][0]).to eq('_func')
@@ -177,7 +192,7 @@ describe 'Flor procedures' do
           f.ret _
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(2)
     end
   end
@@ -194,7 +209,8 @@ describe 'Flor procedures' do
               b
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
+
       expect(r['vars']).to eq({})
 
       expect(r['payload']['ret'][0]).to eq('_func')
