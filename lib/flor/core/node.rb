@@ -441,7 +441,7 @@ class Flor::Node
       if node == nil || mod == 'd'
 
     return lookup_arg_container(key) \
-      if mod == '' && %w[ args argv argh ].include?(key)
+      if mod == '' && %w[ arga args argv argh argd ].include?(key)
 
     if vwl = node['vwlist']
       return lookup_dvar_container(mod, key) unless var_match?(vwl, key)
@@ -502,7 +502,7 @@ class Flor::Node
 
     val =
       case key
-      when 'args', 'argv' then args.collect(&:last)
+      when 'arga', 'args', 'argv' then args.collect(&:last)
       else args.inject({}) { |h, (k, v)| h[k] = v if k; h }
       end
 

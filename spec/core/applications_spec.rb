@@ -250,12 +250,12 @@ describe 'Flor core' do
       ])
     end
 
-    it "has access to the 'args' var" do
+    it "has access to the args/argv/arga var" do
 
       r = @executor.launch(
         %q{
           define f
-            [ args, args.1 ]
+            [ args, args.0, arga.1, argv.2 ]
           f 1 [ 2 3 ] d: 'four'
         })
 
@@ -265,16 +265,16 @@ describe 'Flor core' do
         r['payload']['ret']
       ).to eq([
         [ 1, [ 2, 3 ], 'four' ],
-        [ 2, 3 ]
+        1, [ 2, 3 ], 'four'
       ])
     end
 
-    it "has access to the 'argh' var" do
+    it "has access to the argh/argd var" do
 
       r = @executor.launch(
         %q{
           define f
-            [ argh, argh.d ]
+            [ argh, argh.d, argd.d ]
           f 1 [ 2 3 ] d: 'four'
         })
 
@@ -284,6 +284,7 @@ describe 'Flor core' do
         r['payload']['ret']
       ).to eq([
         { 'd' => 'four' },
+        'four',
         'four'
       ])
     end
@@ -466,7 +467,7 @@ describe 'Flor core' do
     end
   end
 
-  describe 'args/argv/argh' do
+  describe 'args/argv/argh/argd' do
 
     it 'cannot be found outside of a fun call (args)' do
 
@@ -493,6 +494,15 @@ describe 'Flor core' do
       expect(r['point']).to eq('failed')
       expect(r['error']['lin']).to eq(1)
       expect(r['error']['msg']).to eq('cannot find "argh"')
+    end
+
+    it 'cannot be found outside of a fun call (argd)' do
+
+      r = @executor.launch('argd')
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['lin']).to eq(1)
+      expect(r['error']['msg']).to eq('cannot find "argd"')
     end
   end
 end
