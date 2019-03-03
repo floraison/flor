@@ -31,7 +31,7 @@ module Flor
     def _data
 
       d = Flor::Storage.from_blob(content)
-      d['id'] = id if d
+      d['id'] = id if d.is_a?(Hash)
 
       d
     end
