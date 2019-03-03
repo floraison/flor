@@ -79,16 +79,17 @@ class Flor::Pro::Define < Flor::Procedure
 
   def flatten_tree
 
+    tre = tree
     off = heap == 'define' ? 1 : 0
-    sig = tree[1][off..-1].select { |t| t[0] == '_att' }
+    sig = tre[1][off..-1].select { |t| t[0] == '_att' }
 
-    return tree if sig.all? { |a| a[1][0][1] == [] }
+    return tre if sig.all? { |a| a[1][0][1] == [] }
 
     # There is a parenthese around the parameters, let's unwrap that...
 
-    hed = Flor.dup(tree[1][0, off])
+    hed = Flor.dup(tre[1][0, off])
     sig = Flor.dup(sig)
-    bdy = Flor.dup(tree[1][(off + sig.length)..-1])
+    bdy = Flor.dup(tre[1][(off + sig.length)..-1])
 
     att0 = sig[0][1][0]
     att0atts = att0[1]
@@ -96,7 +97,7 @@ class Flor::Pro::Define < Flor::Procedure
 
     sig = sig + att0atts
 
-    [ heap, hed + sig + bdy, *tree[2..-1] ]
+    [ heap, hed + sig + bdy, *tre[2..-1] ]
   end
 end
 

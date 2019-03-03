@@ -157,6 +157,22 @@ describe 'Flor procedures' do
       expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ 16, 30, 1 ])
     end
+
+#    it 'accepts fields in its signature' do ############################# FIXME
+#
+#      r = @executor.launch(
+#        %q{
+#          define f f.a f.b
+#            + f.a f.b
+#          f 1 2
+#        })
+#
+#pp r['vars']
+#      expect(r).to have_terminated_as_point
+#      expect(r['payload']['a']).to eq(1)
+#      expect(r['payload']['b']).to eq(2)
+#      expect(r['payload']['ret']).to eq(3)
+#    end
   end
 
   describe 'def' do
