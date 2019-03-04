@@ -35,6 +35,9 @@ msg =
       # "alice" and "bob" are 'taskers', their implementations can be found
       # under quickstart/flor/lib/taskers/org.example/alice/ and
       # quickstart/flor/lib/taskers/org.example/bob/ respectively
+      #
+      # There is more information about domain: and wait:
+      # in ../doc/launching.md
 
 sleep 0.5
   # Give time to executor to shutdown and stop spitting debug info
