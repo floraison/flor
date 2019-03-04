@@ -79,7 +79,7 @@ describe 'Flor procedures' do
       r = @executor.launch(
         %q{
           define sum0 a, b \ (+ a b)
-          define "sum1" (a, b, c) \ (+ a b)
+          define "sum1" (a, b, f.c) \ (+ a b)
           define sum2(a, b) \ (+ a b)
           set sum3
             def (a, b: 1) \ (+ a b)
@@ -104,10 +104,14 @@ describe 'Flor procedures' do
         r['vars']['sum1'][1]['tree']
       ).to eq(
         [ 'define', [
-          [ '_att', [ [ '_sqs', 'sum1', 3 ] ], 3 ],
-          [ '_att', [ [ 'a', [], 3 ] ], 3 ],
-          [ '_att', [ [ 'b', [], 3 ] ], 3 ],
-          [ '_att', [ [ 'c', [], 3 ] ], 3 ],
+          [ '_att', [
+            [ '_sqs', 'sum1', 3 ] ], 3 ],
+          [ '_att', [
+            [ 'a', [], 3 ] ], 3 ],
+          [ '_att', [
+            [ 'b', [], 3 ] ], 3 ],
+          [ '_att', [
+            [ '_ref', [ [ '_sqs', 'f', 3 ], [ '_sqs', 'c', 3 ] ], 3 ] ], 3 ],
           [ '+', [ [ 'a', [], 3 ], [ 'b', [], 3 ] ], 3 ]
         ], 3 ]
       )
@@ -158,21 +162,37 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq([ 16, 30, 1 ])
     end
 
+    it 'rejects deep variables in its signature' do
+
+      r = @executor.launch(
+        %q{
+          define f a.b
+            -1
+        })
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['kla']).to eq('Flor::FlorError')
+      expect(r['error']['msg']).to eq('cannot accept "a.b" as parameter')
+      expect(r['error']['lin']).to eq(2)
+    end
+
 #    it 'accepts fields in its signature' do ############################# FIXME
 #
 #      r = @executor.launch(
 #        %q{
-#          define f f.a f.b
-#            + f.a f.b
+#          define f a f.b
+#            + a f.b
 #          f 1 2
 #        })
 #
-#pp r['vars']
+##puts "r.vars:"
+##pp r['vars']
 #      expect(r).to have_terminated_as_point
-#      expect(r['payload']['a']).to eq(1)
 #      expect(r['payload']['b']).to eq(2)
 #      expect(r['payload']['ret']).to eq(3)
 #    end
+
+    it 'accepts fields wrapped in parentheses in its signature'
   end
 
   describe 'def' do

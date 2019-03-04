@@ -50,7 +50,19 @@ class Flor::Pro::Define < Flor::Procedure
 
   def receive_att
 
-    t = flatten_tree
+    t, sig = flatten_tree
+
+    bad_param =
+      sig.inject(nil) { |r, a|
+        a10 = a[1][0]
+        pa = a10[0] == '_ref' && a10[1].size > 1 && a10[1].collect { |e| e[1] }
+        break pa.join('.') if pa && ! pa[0].match(/\A(f|fld|field)\z/)
+        nil }
+
+    fail Flor::FlorError.new(
+      "cannot accept #{bad_param.inspect} as parameter", self
+    ) if bad_param
+
     cnode = lookup_var_node(@node, 'l')
     cnid = cnode['nid']
     fun = counter_next('funs') - 1
@@ -79,11 +91,16 @@ class Flor::Pro::Define < Flor::Procedure
 
   def flatten_tree
 
+#puts "== tree"
+#pp tree
     tre = tree
     off = heap == 'define' ? 1 : 0
     sig = tre[1][off..-1].select { |t| t[0] == '_att' }
+#puts "sig: " + sig.inspect
+#p sig[0][0]
+#p sig[0][1][0]
 
-    return tre if sig.all? { |a| a[1][0][1] == [] }
+    return [ tre, sig ] unless wrapped?(sig)
 
     # There is a parenthese around the parameters, let's unwrap that...
 
@@ -97,7 +114,15 @@ class Flor::Pro::Define < Flor::Procedure
 
     sig = sig + att0atts
 
-    [ heap, hed + sig + bdy, *tre[2..-1] ]
+    [ [ heap, hed + sig + bdy, *tre[2..-1] ],
+      sig ]
+  end
+
+  def wrapped?(sig)
+
+    return false if sig.length != 1
+    return false if sig[0][1][0][0] == '_ref'
+    sig[0][1][1] != []
   end
 end
 

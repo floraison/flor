@@ -27,8 +27,8 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
     atts = tr[1].inject([]) { |a, t| a << t[1] if t[0] == '_att'; a }
     args = args.dup
 #puts "\n---"
-#puts "== atts (sig):"; pp atts;   # signature
-#puts "== args (given):"; pp args  # passed arguments
+#puts "== atts (sig):"; atts.each { |a| pp a }    # signature
+#puts "== args (given):"; args.each { |a| pp a }  # passed arguments
 #puts
 
     # first, make 2 passes on atts
@@ -72,7 +72,7 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
 #print "vars: "; vars.each { |k, v| print "#{k.inspect} --> "; pp v }
 
     @node['tree'] = retree if retree
-#puts "== retree:"; pp retree
+#puts "== retree:"; pp retree; puts
 
     super
   end
