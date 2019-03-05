@@ -47,6 +47,7 @@ The `#launch` options are:
 * [on_timeout:](#on_timeout) - in case of `timeout:`, what should happen when it triggers?
 * [vars:](#vars) - the initial variable hash to use in the execution
 * [wait:](#wait) - wait for certain events before allowing the `#launch` method to return
+* [nolaunch:](#nolaunch) - doesn't actually launch, returns the launch message and the expanded launch options
 
 ## domain:
 
@@ -54,7 +55,7 @@ A string like `"org.example.accounting"` indicating which domain / subdomain the
 
 The domain choice has an impact how what taskers / subflows / variables / hooks the execution interacts with. See [domains.md](domains.md) for more information.
 
-Defaults to `""`.
+Defaults to the value set in the flor configuration or `""`.
 
 ## payload: / fields:
 
@@ -63,7 +64,23 @@ The initial payload / fields for the execution. Default to `{}`. Must be set to 
 Do not attempt to pass ActiveRecord model instances or things like that here, the JSON dumper would choke. Pass ids and let taskers fetch the data as they see fit.
 
 ## timeout:
+
+Used in coordination with [wait:](#wait), how many seconds should the `#launch` hold before the requested wait pattern realizes?
+
+[on_timeout:](#on_timeout) below determines what happens in case of timeout.
+
 ## on_timeout:
+
+Currently accepts `"fail"` or `"shutup"`.
+
+When `"fail"`, the timeout will provoke an error.
+
+When `"shutup"`, the timeout doesn't provoke an error. The waited for message hasn't shown up, so instead, an object is returned which look like:
+```ruby
+{ 'exid' => "org.example.test-u0-20190305.2156.hekekefeba",
+  'timed_out' => "shutup" }
+```
+
 ## vars:
 
 The initial variables for the execution.
@@ -73,8 +90,17 @@ Follow the same "must be JSON serializable" command as given above for the initi
 There is another way to set initial variables for an execution. That's via domain variables. See [domains.md](domains.md) for more information.
 
 ## wait:
+## nolaunch:
+
+When `nolaunch:` is given something trueish, the launch call won't actually launch, it'll just return the launch message and the expanded launch options.
+
+It might be useful for debugging, but also to prepare template launch messages for [manual insertion](#launching-manually) in the database's flor_messages table.
 
 ## other wait techniques
 
+TODO
+
 ## launching manually
+
+TODO
 
