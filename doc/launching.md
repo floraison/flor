@@ -81,6 +81,8 @@ When `"shutup"`, the timeout doesn't provoke an error. The waited for message ha
   'timed_out' => "shutup" }
 ```
 
+Defaults to `"fail"`.
+
 ## vars:
 
 The initial variables for the execution.
@@ -90,6 +92,30 @@ Follow the same "must be JSON serializable" command as given above for the initi
 There is another way to set initial variables for an execution. That's via domain variables. See [domains.md](domains.md) for more information.
 
 ## wait:
+
+Wait accepts `true`, a number, a string, or an array of strings.
+
+When `wait: true`, the `#launch` call will return with the first `failed` or `terminated` message it sees. This is mostly used in flor's own specs.
+
+When given a number, the number is turned to a timeout. For example, `wait: 7` is interpreted as `wait: true, timeout: 7`.
+
+When given a string, that string is split by semi colons and turned into an array of strings.
+
+When given an array of strings, the `#launch` will wait for each string to happen before returning (with the last match) or timing out.
+
+* `wait: 'task'` - wait for the first "task" message to happen (task delivered to tasker) and returns it
+* `wait: '0_0 task'` - wait for the first "task" message to happen at node "0_0" and returns it
+* `wait: '0_0 task,cancel'` - wait for the first "task" message to happen at node "0_0" and returns it
+* `wait: '0_0 task|cancel'` - wait for the first "task" message or "cancel" message to happen at node 0_0
+* `wait: 'task,cancel'` - wait for the first "task" message to happen at node "0_0" and returns it
+* `wait: '0_0 execute'` - wait for the execution to reach node 0_0
+* `wait: '0_0 receive'` - wait for the first receive message handed to 0_0
+* `wait: end'` - wait for an execution to pause (usually an execution runs for 77 messages before pausing and yielding for other executions to run, it might alos "end" when sleeping or waiting for external messages)
+* `wait: terminated'` - wait until the execution terminates (useful for testing or when using small flows without human participants)
+* `wait: failed'` - wait until the execution emits a failed message (mostly useful when testing a flow)
+
+Comma and pipe are interchangeable "or" operators within the wait strings.
+
 ## nolaunch:
 
 When `nolaunch:` is given something trueish, the launch call won't actually launch, it'll just return the launch message and the expanded launch options.
