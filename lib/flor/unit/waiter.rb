@@ -85,7 +85,12 @@ module Flor
       mnid = message['nid']
 
       return false if nid && mnid && nid != mnid
-      return false if ! points.include?(mpoint)
+
+      return false unless points.find { |point|
+        ps = point.split(':')
+        next false if ps[0] != mpoint
+        next false if ps[1] && ! message['tags'].include?(ps[1])
+        true }
 
       true
     end
@@ -119,13 +124,23 @@ module Flor
       end
     end
 
+    WAIT_REX =
+      %r{
+        \A
+        ([0-9_\-]+)?[ ]*
+        (
+          [a-z]+(?::[-a-zA-Z_]+)?
+          (?:[|, ][a-z]+(:[-a-zA-Z_]+)?)*
+        )\z
+      }x
+
     def parse_serie(s)
 
       return s if s.is_a?(Array) && s.collect(&:class).uniq == [ Array ]
 
       (s.is_a?(String) ? s.split(';') : s)
         .collect { |ss|
-          ni, pt = ss.strip.match(/\A([0-9_\-]+)? *([a-z|, ]+)\z/)[1, 2]
+          ni, pt = ss.strip.match(WAIT_REX)[1, 2]
           [ ni, pt.split(/[|,]/).collect(&:strip) ]
         }
     end

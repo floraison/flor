@@ -175,6 +175,68 @@ describe Flor::Waiter do
         nodes execution_size er pr ])
     end
 
+    it 'lets wait until a tag is entered' do
+
+      r = @unit.launch(
+        %q{
+          sequence tag: 'stage-a'
+            push f.l 0
+          sequence tag: 'stage-b'
+            push f.l 1
+            stall _
+          sequence tag: 'stage-c'
+            push f.l 2
+        },
+        payload: { l: [] },
+        wait: 'entered')
+
+      expect(r['point']).to eq('entered')
+      expect(r['tags']).to eq(%w[ stage-a ])
+      expect(r['nid']).to eq('0_0')
+    end
+
+    it 'lets wait until a given tag is entered' do
+
+      r = @unit.launch(
+        %q{
+          sequence tag: 'stage-a'
+            push f.l 0
+          sequence tag: 'stage-b'
+            push f.l 1
+            stall _
+          sequence tag: 'stage-c'
+            push f.l 2
+        },
+        payload: { l: [] },
+        wait: 'entered:stage-b')
+
+      expect(r['point']).to eq('entered')
+      expect(r['tags']).to eq(%w[ stage-b ])
+      expect(r['nid']).to eq('0_1')
+      expect(r['payload']['l']).to eq([ 0 ])
+    end
+
+    it 'lets wait until a given tag is left' do
+
+      r = @unit.launch(
+        %q{
+          sequence tag: 'stage-a'
+            push f.l 0
+          sequence tag: 'stage-b'
+            push f.l 1
+          sequence tag: 'stage-c'
+            stall _
+            push f.l 2
+        },
+        payload: { l: [] },
+        wait: 'left:stage-b')
+
+      expect(r['point']).to eq('left')
+      expect(r['tags']).to eq(%w[ stage-b ])
+      expect(r['nid']).to eq('0_1')
+      expect(r['payload']['l']).to eq([ 0, 1 ])
+    end
+
 #    it 'understands timeout:' do
 #
 #      Thread.new do
