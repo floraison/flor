@@ -110,11 +110,17 @@ When given an array of strings, the `#launch` will wait for each string to happe
 * `wait: 'task,cancel'` - wait for the first "task" message to happen at node "0_0" and returns it
 * `wait: '0_0 execute'` - wait for the execution to reach node 0_0
 * `wait: '0_0 receive'` - wait for the first receive message handed to 0_0
-* `wait: end'` - wait for an execution to pause (usually an execution runs for 77 messages before pausing and yielding for other executions to run, it might alos "end" when sleeping or waiting for external messages)
-* `wait: terminated'` - wait until the execution terminates (useful for testing or when using small flows without human participants)
-* `wait: failed'` - wait until the execution emits a failed message (mostly useful when testing a flow)
+* `wait: 'end'` - wait for an execution to pause (usually an execution runs for 77 messages before pausing and yielding for other executions to run, it might alos "end" when sleeping or waiting for external messages)
+* `wait: 'terminated'` - wait until the execution terminates (useful for testing or when using small flows without human participants)
+* `wait: 'failed'` - wait until the execution emits a failed message (mostly useful when testing a flow)
+* `wait: 'entered'` - wait until the execution enters a tagged branch
+* `wait: 'left'` - wait until the execution leaves a tagged branch
+* `wait: 'entered:stage-a'` - wait until the execution enters the branch tagged "stage-a"
+* `wait: 'left:stage-b'` - wait until the execution leaves the branch tagged "stage-b"
 
 Comma and pipe are interchangeable "or" operators within the wait strings.
+
+Examples of the `#launch` and `wait:` combination can be seen in [spec/unit/waiter_launch_spec.rb](../spec/unit/waiter_launch_spec.rb). Examples of `wait:` arguments can be seen in [spec/unit/waiter_spec.rb](../spec/unit/waiter_spec.rb).
 
 ## nolaunch:
 
@@ -127,6 +133,10 @@ It might be useful for debugging, but also to prepare template launch messages f
 TODO
 
 ## launching manually
+
+TODO
+
+## waiting after launch
 
 TODO
 
