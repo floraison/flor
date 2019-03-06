@@ -88,10 +88,13 @@ module Flor
 
       if kt = opts[:keytab]
         out << ' ' * kt
+        :indent
       elsif opts[:indent]
         newline(out, opts)
+        :newline
       elsif ! opts[:compact]
         space(out, opts)
+        :space
       end
     end
 
@@ -152,9 +155,9 @@ module Flor
         c_inf(':', out, opts)
 
         kt = key_max_len ? key_max_len - kl : nil
-        newline_or_space(out, opts.merge(keytab: kt))
+        r = newline_or_space(out, opts.merge(keytab: kt))
 
-        to_d(v, out, indent(opts, inc: 2, keytab: kt))
+        to_d(v, out, indent(opts, inc: 2, keytab: r == :newline ? kt : 1))
 
         if ii < x.size - 1
           c_inf(',', out, opts)
