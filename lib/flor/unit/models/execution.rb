@@ -20,6 +20,7 @@ module Flor
 
     def nodes; data['nodes']; end
     def zero_node; nodes['0']; end
+    def closing_messages; data['closing_messages']; end
 
     def tags
 

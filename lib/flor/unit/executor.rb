@@ -47,6 +47,11 @@ module Flor
 
     protected
 
+    CLOSING_POINTS = %w[ task terminated ceased ]
+      #
+      # point for messages that, after consumption, are conserved
+      # in the execution's "closing_messages" array
+
     def do_run
 
       @unit.logger.log_run_start(self)
@@ -82,6 +87,10 @@ module Flor
       end
 
       @alive = false
+
+      @execution.merge!(
+        closing_messages: @consumed.select { |m|
+          CLOSING_POINTS.include?(m['point']) })
 
       @unit.storage.put_execution(@execution)
       @unit.storage.consume(@consumed)
