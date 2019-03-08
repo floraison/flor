@@ -42,8 +42,9 @@ describe 'Flor unit' do
 
         expect(pointer.unit).to eq(@unit)
         expect(pointer.storage).to eq(@unit.storage)
-#pp pointer
-        #expect(pointer.execution.exid).to eq(exid)
+
+        expect(pointer.execution.exid).to eq(exid)
+        expect(pointer.execution.status).to eq('active')
       end
     end
   end

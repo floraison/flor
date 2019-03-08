@@ -36,6 +36,15 @@ module Flor
     def unit; self.class.unit; end
     def storage; unit.storage; end
 
+    def execution(reload=false)
+
+      exid = @values[:exid]; return nil unless exid
+
+      @execution = nil if reload
+
+      @execution ||= unit.executions[exid: exid]
+    end
+
     def _data
 
       d = Flor::Storage.from_blob(content)

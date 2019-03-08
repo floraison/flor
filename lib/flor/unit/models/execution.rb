@@ -22,6 +22,8 @@ module Flor
     def zero_node; nodes['0']; end
     def closing_messages; data['closing_messages']; end
 
+    def execution(reload=false); self; end
+
     def tags
 
       data['nodes'].values.inject([]) do |a, n|
