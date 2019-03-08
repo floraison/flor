@@ -65,19 +65,22 @@ describe Flor::Waiter do
       )
     end
 
-#    it 'let the launcher wait for an execution termination' do
-#
-#      exid = @unit1.launch(
-#        %q{
-#          + 1 2 3
-#        },
-#        wait: 'status:terminated')
-#
-#      expect(@unit0.journal.count).to eq(10)
-#      expect(@unit1.journal.count).to eq(0)
-#
-#      expect(@unit1.storage.executions.count).to eq(1)
-#    end
+    it 'let the launcher wait for an execution termination' do
+
+      exe = @unit1.launch(
+        %q{
+          + 1 2 3
+        },
+        wait: 'status:terminated')
+
+      expect(@unit0.journal.count).to eq(10)
+      expect(@unit1.journal.count).to eq(0)
+
+      expect(@unit1.storage.executions.count).to eq(1)
+
+      expect(exe.status).to eq('terminated')
+      expect(exe.closing_messages.first['payload']).to eq('ret' => 6)
+    end
   end
 end
 

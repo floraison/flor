@@ -8,6 +8,8 @@ module Flor
       serie, timeout, on_timeout, repeat =
         expand_args(opts)
 
+      # TODO fail if the serie mixes msg_waiting with row_waiting...
+
       @exid = exid
       @original_serie = repeat ? Flor.dup(serie) : nil
       @serie = serie
@@ -17,6 +19,17 @@ module Flor
       @queue = []
       @mutex = Mutex.new
       @var = ConditionVariable.new
+    end
+
+    ROW_PSEUDO_POINTS = %w[ status ]
+
+    def row_waiter?
+
+      @serie.find { |nid, points|
+        next false if nid
+        points.find { |po|
+          pos = po.split(':')
+          pos.length > 1 && ROW_PSEUDO_POINTS.include?(pos[0]) } }
     end
 
     def to_s
@@ -35,7 +48,7 @@ module Flor
         return false unless match?(message)
 
         @serie.shift
-        return false unless @serie.empty?
+        return false if @serie.any?
 
         @queue << [ executor, message ]
         @var.signal
@@ -46,10 +59,44 @@ module Flor
       # returning true: remove me
 
       return true unless @original_serie
+        # @original_serie is set if this is a repeat Waiter
 
       @serie = Flor.dup(@original_serie) # reset serie
 
       false # do not remove me
+    end
+
+    def check(unit)
+
+      @mutex.synchronize do
+
+        row = row_match?(unit)
+        return false unless row
+
+        @serie.shift
+        return false if @serie.any?
+
+        @queue << [ unit, row ]
+        @var.signal
+      end
+
+      # then...
+      # returning false: do not remove me, I want to listen/wait further
+      # returning true: remove me
+
+      return true unless @original_serie
+        # @original_serie is set if this is a repeat Waiter
+
+      @serie = Flor.dup(@original_serie) # reset serie
+
+      false # do not remove me
+
+    rescue => err
+
+      @unit.logger.warn(
+        "#{self.class}#check()", err, '(returning true, aka remove me)')
+
+      true # remove me
     end
 
     def wait
@@ -93,6 +140,26 @@ module Flor
         true }
 
       true
+    end
+
+    def row_match?(unit)
+
+      _, points = @serie.first
+
+      row = nil
+
+      points.find { |point|
+        ps = point.split(':')
+        row = send("row_match_#{ps[0]}?", unit, ps[1..-1]) }
+
+      row
+    end
+
+    def row_match_status?(unit, cdr)
+
+      unit.storage.executions
+        .where(exid: @exid, status: cdr.first)
+        .first
     end
 
     def expand_args(opts)
