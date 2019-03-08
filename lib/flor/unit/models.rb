@@ -36,6 +36,8 @@ module Flor
     def unit; self.class.unit; end
     def storage; unit.storage; end
 
+    # Return a Flor::Execution instance linked to this model
+    #
     def execution(reload=false)
 
       exid = @values[:exid]; return nil unless exid
@@ -43,6 +45,17 @@ module Flor
       @execution = nil if reload
 
       @execution ||= unit.executions[exid: exid]
+    end
+
+    # Returns the node hash linked to this model
+    #
+    def node(reload=false)
+
+      nid = @values[:nid]; return nil unless nid
+      exe = execution(reload); return nil unless exe
+
+      nodes = exe.data['nodes']; return nil unless nodes
+      nodes[nid]
     end
 
     def _data

@@ -45,6 +45,11 @@ describe 'Flor unit' do
 
         expect(pointer.execution.exid).to eq(exid)
         expect(pointer.execution.status).to eq('active')
+
+        expect(pointer.node['nid']
+          ).to eq('0')
+        expect(pointer.node['task']
+          ).to eq('tasker' => 'bravo', 'name' => 'do the job')
       end
     end
   end
