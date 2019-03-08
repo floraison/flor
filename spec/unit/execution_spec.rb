@@ -40,9 +40,7 @@ describe 'Flor unit' do
 
       expect(r['point']).to eq('execute')
 
-      sleep 0.490
-
-      exe = @unit.executions[exid: r['exid']]
+      exe = wait_until { @unit.executions[exid: r['exid']] }
 
       expect(exe.tags).to eq(%w[ aa bb cc ])
     end
@@ -58,9 +56,7 @@ describe 'Flor unit' do
 
       expect(r['point']).to eq('execute')
 
-      sleep 0.490
-
-      exe = @unit.executions[exid: r['exid']]
+      exe = wait_until { @unit.executions[exid: r['exid']] }
 
       expect(exe.tags).to eq([])
     end

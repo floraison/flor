@@ -147,8 +147,10 @@ describe Flor::Waiter do
 
       expect(ptr.type).to eq('tag')
       expect(ptr.name).to eq('alpha')
-      #expect(ptr.data).to eq('xxx') # TODO
+      #expect(ptr.data).to eq('xxx') # TODO maybe
     end
+
+    it 'lets the launcher wait for the presence of a task'
   end
 end
 

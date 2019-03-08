@@ -28,6 +28,14 @@ module Flor
 
     self.require_valid_table = false
 
+    class << self
+
+      attr_accessor :unit
+    end
+
+    def unit; self.class.unit; end
+    def storage; unit.storage; end
+
     def _data
 
       d = Flor::Storage.from_blob(content)
@@ -71,6 +79,7 @@ module Flor
           "#{c}#{@db.object_id.to_s.gsub('-', 'M')}",
           Class.new(parent_module.const_get(c)) do
             self.dataset = s.db["#{table_prefix}#{key}".to_sym]
+            self.unit = s.unit
           end)
     end
 

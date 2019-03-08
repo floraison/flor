@@ -43,6 +43,9 @@ describe 'Flor unit' do
         execution = wait_until {
           @unit.executions.first(exid: exid) }
 
+        expect(execution.unit).to eq(@unit)
+        expect(execution.storage.class).to eq(Flor::Storage)
+
         expect(execution.closing_messages.size).to eq(1)
         expect(execution.closing_messages[0]['point']).to eq('task')
 
