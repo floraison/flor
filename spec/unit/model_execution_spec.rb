@@ -25,7 +25,7 @@ describe 'Flor unit' do
     @unit.shutdown
   end
 
-  describe 'Execution model' do
+  describe 'Flor::Execution model' do
 
     describe '#to_h' do
 
