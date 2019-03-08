@@ -32,6 +32,13 @@ module Flor
           pos.length > 1 && ROW_PSEUDO_POINTS.include?(pos[0]) } }
     end
 
+    def msg_waiter?
+
+      @serie.find { |nid, points|
+        points.find { |po|
+          ! ROW_PSEUDO_POINTS.include?(po.split(':').first) } }
+    end
+
     def to_s
 
       "#{super[0..-2]}#{

@@ -77,7 +77,19 @@ module Flor
 
         waiter = Waiter.new(exid, opts)
 
-        (waiter.row_waiter? ? @row_waiters : @msg_waiters) << waiter
+        fail ArgumentError.new(
+          "unit is stopped, it cannot wait for #{[ exid, opts ].inspect}"
+        ) if waiter.msg_waiter? && @unit.stopped?
+
+        waiters = [ @msg_waiters, @row_waiters ]
+        ts = [ 'msg', 'row' ]
+        if waiter.row_waiter?; waiters.reverse!; ts.reverse!; end
+
+        fail ArgumentError.new(
+          "cannot add a #{ts[0]} waiter, since there are already #{ts[1]} ones"
+        ) if waiters[1].any?
+
+        waiters.first << waiter
 
         start_row_thread if @row_waiters.any?
 

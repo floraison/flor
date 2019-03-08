@@ -39,6 +39,51 @@ describe Flor::Waiter do
       @unit1.shutdown
     end
 
+    it 'rejects msg waiters in non-started units' do
+
+      expect {
+        @unit1.launch(%q{ + 1 2 }, wait: 'terminated')
+      }.to raise_error(
+        ArgumentError, /\Aunit is stopped, it cannot wait for \["domain0/
+      )
+    end
+
+    it 'rejects row waiters if there are already msg waiters' do
+
+      Thread.new do
+        begin
+          @unit0.launch(%q{ stall _ }, wait: 'terminated')
+        rescue => err; puts "!" * 80; p err; end
+      end
+
+      sleep 0.140
+
+      expect {
+        @unit0.wait(nil, 'status:terminated')
+      }.to raise_error(
+        ArgumentError,
+        'cannot add a row waiter, since there are already msg ones'
+      )
+    end
+
+    it 'rejects msg waiters if there are already row waiters' do
+
+      Thread.new do
+        begin
+          @unit0.launch(%q{ stall _ }, wait: 'status:terminated')
+        rescue => err; puts "!" * 80; p err; end
+      end
+
+      sleep 0.140
+
+      expect {
+        @unit0.wait(nil, 'terminated')
+      }.to raise_error(
+        ArgumentError,
+        'cannot add a msg waiter, since there are already row ones'
+      )
+    end
+
     it 'launches in 1 and processes in 0' do
 
       exid = @unit1.launch(
@@ -65,7 +110,7 @@ describe Flor::Waiter do
       )
     end
 
-    it 'let the launcher wait for an execution termination' do
+    it 'lets the launcher wait for an execution termination' do
 
       exe = @unit1.launch(
         %q{
