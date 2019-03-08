@@ -36,6 +36,8 @@ module Flor
     def shutdown
 
       @row_thread_status = :shutdown
+
+      nil
     end
 
     def notify(executor, message)
@@ -89,6 +91,7 @@ module Flor
           "cannot add a #{ts[0]} waiter, since there are already #{ts[1]} ones"
         ) if waiters[1].any?
 
+#p waiter
         waiters.first << waiter
 
         start_row_thread if @row_waiters.any?

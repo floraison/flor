@@ -53,7 +53,8 @@ describe Flor::Waiter do
       Thread.new do
         begin
           @unit0.launch(%q{ stall _ }, wait: 'terminated')
-        rescue => err; puts "!" * 80; p err; end
+        #rescue => err; puts "!" * 80; p err; end
+        rescue; end
       end
 
       sleep 0.140
@@ -71,7 +72,8 @@ describe Flor::Waiter do
       Thread.new do
         begin
           @unit0.launch(%q{ stall _ }, wait: 'status:terminated')
-        rescue => err; puts "!" * 80; p err; end
+        #rescue => err; puts "!" * 80; p err; end
+        rescue; end
       end
 
       sleep 0.140
@@ -125,6 +127,27 @@ describe Flor::Waiter do
 
       expect(exe.status).to eq('terminated')
       expect(exe.closing_messages.first['payload']).to eq('ret' => 6)
+    end
+
+    it 'lets the launcher wait for the presence of a tag' do
+
+      ptr = @unit1.launch(
+        %q{
+          1
+          sequence tag: 'alpha'
+            stall _
+        },
+        wait: 'tag:alpha')
+
+      expect(@unit0.journal.count).to eq(15)
+      expect(@unit1.journal.count).to eq(0)
+
+      expect(@unit1.storage.executions.count).to eq(1)
+      expect(@unit1.storage.executions.first.status).to eq('active')
+
+      expect(ptr.type).to eq('tag')
+      expect(ptr.name).to eq('alpha')
+      #expect(ptr.data).to eq('xxx') # TODO
     end
   end
 end

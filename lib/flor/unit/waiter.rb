@@ -19,14 +19,15 @@ module Flor
       @queue = []
       @mutex = Mutex.new
       @var = ConditionVariable.new
+
+      @executor = nil
     end
 
-    ROW_PSEUDO_POINTS = %w[ status ]
+    ROW_PSEUDO_POINTS = %w[ status tag ]
 
     def row_waiter?
 
-      @serie.find { |nid, points|
-        next false if nid
+      @serie.find { |_, points|
         points.find { |po|
           pos = po.split(':')
           pos.length > 1 && ROW_PSEUDO_POINTS.include?(pos[0]) } }
@@ -34,7 +35,7 @@ module Flor
 
     def msg_waiter?
 
-      @serie.find { |nid, points|
+      @serie.find { |_, points|
         points.find { |po|
           ! ROW_PSEUDO_POINTS.include?(po.split(':').first) } }
     end
@@ -49,6 +50,9 @@ module Flor
     end
 
     def notify(executor, message)
+
+      @executor = executor
+        # could be handy
 
       @mutex.synchronize do
 
@@ -100,8 +104,10 @@ module Flor
 
     rescue => err
 
-      @unit.logger.warn(
-        "#{self.class}#check()", err, '(returning true, aka remove me)')
+#puts "!" * 80; p err
+      @executor.unit.logger.warn(
+        "#{self.class}#check()", err, '(returning true, aka remove me)'
+      ) if @executor
 
       true # remove me
     end
@@ -117,7 +123,8 @@ module Flor
 
           if @queue.empty?
             fail RuntimeError.new(
-              "timeout for #{self.to_s}"
+              "timeout for #{self.to_s}, " +
+              "msg_waiter? #{ !! msg_waiter?}, row_waiter? #{ !! row_waiter?}"
             ) if @on_timeout == 'fail'
             return { 'exid' => @exid, 'timed_out' => @on_timeout }
           end
@@ -151,22 +158,34 @@ module Flor
 
     def row_match?(unit)
 
-      _, points = @serie.first
+      nid, points = @serie.first
 
       row = nil
 
       points.find { |point|
         ps = point.split(':')
-        row = send("row_match_#{ps[0]}?", unit, ps[1..-1]) }
+        row = send("row_match_#{ps[0]}?", unit, nid, ps[1..-1]) }
 
       row
     end
 
-    def row_match_status?(unit, cdr)
+    def row_match_status?(unit, _, cdr)
 
       unit.storage.executions
         .where(exid: @exid, status: cdr.first)
         .first
+    end
+
+    def row_match_tag?(unit, nid, cdr)
+
+      name = cdr.first
+
+      q = unit.storage.pointers
+        .where(exid: @exid, type: 'tag')
+      q = q.where(nid: nid) if nid
+      q = q.where(name: name) if name
+
+      q.first
     end
 
     def expand_args(opts)
