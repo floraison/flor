@@ -675,9 +675,9 @@ module Flor
 
     def update_pointers(exe, status, now)
 
-# TODO Should we archive old pointers?
-#      Well, it might be better to only archive the execution and leave
-#      in there enough information...
+# Q Should we archive old pointers?
+#   Well, it might be better to only archive the execution and leave
+#   in there enough information...
 
       exid = exe['exid']
 

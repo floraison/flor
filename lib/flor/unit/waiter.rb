@@ -23,7 +23,8 @@ module Flor
       @executor = nil
     end
 
-    ROW_PSEUDO_POINTS = %w[ status tag ]
+    ROW_PSEUDO_POINTS = %w[ status tag tasker ]
+      # "tasker", not "task", since "task" is already a message point
 
     def row_waiter?
 
@@ -178,10 +179,18 @@ module Flor
 
     def row_match_tag?(unit, nid, cdr)
 
-      name = cdr.first
+      query_pointer(unit, nid, 'tag', cdr.first)
+    end
+
+    def row_match_tasker?(unit, nid, cdr)
+
+      query_pointer(unit, nid, 'tasker', cdr.first)
+    end
+
+    def query_pointer(unit, nid, type, name)
 
       q = unit.storage.pointers
-        .where(exid: @exid, type: 'tag')
+        .where(exid: @exid, type: type)
       q = q.where(nid: nid) if nid
       q = q.where(name: name) if name
 

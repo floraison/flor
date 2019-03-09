@@ -128,6 +128,10 @@ module Flor
 
         to_remove = []
 
+        # Idea here, query all necessary pointers in one select,
+        # and all executions in on select, then check.
+        # currently we're having a select per waiter.
+
         @row_waiters.each do |w|
           remove = w.check(@unit)
           to_remove << w if remove

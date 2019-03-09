@@ -150,7 +150,29 @@ describe Flor::Waiter do
       #expect(ptr.data).to eq('xxx') # TODO maybe
     end
 
-    it 'lets the launcher wait for the presence of a task'
+    it 'lets the launcher wait for the presence of a task' do
+
+      @unit0.add_tasker('hole') {}
+
+      ptr = @unit1.launch(
+        %q{
+          hole _
+        },
+        payload: { target: 'Talos IV' },
+        wait: 'tasker:hole')
+
+      expect(@unit0.journal.count).to eq(9)
+      expect(@unit1.journal.count).to eq(0)
+
+      expect(@unit1.storage.executions.count).to eq(1)
+      expect(@unit1.storage.executions.first.status).to eq('active')
+
+      expect(ptr.domain).to eq('domain0')
+      expect(ptr.nid).to eq('0')
+      expect(ptr.type).to eq('tasker')
+      expect(ptr.name).to eq('hole')
+      expect(ptr.payload).to eq('target' => 'Talos IV')
+    end
   end
 end
 

@@ -58,6 +58,12 @@ module Flor
       nodes[nid]
     end
 
+    def payload(reload=false)
+
+      nod = node(reload)
+      nod ? nod['payload'] : nil
+    end
+
     def _data
 
       d = Flor::Storage.from_blob(content)
