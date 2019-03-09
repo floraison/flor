@@ -95,7 +95,7 @@ describe Flor::Waiter do
 
       wait_until do
         exe = @unit1.storage.executions[exid: exid]
-        exe && exe.status == 'terminated'
+        exe && exe.status == 'terminated' && @unit0.journal.count >= 10
       end
 
       expect(@unit0.journal.count).to eq(10)
