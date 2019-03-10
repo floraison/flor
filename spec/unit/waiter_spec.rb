@@ -27,8 +27,7 @@ describe Flor::Waiter do
       ).to eq([
         [ [ nil, [ 'terminated' ] ] ],
         nil,
-        'fail',
-        false
+        'fail'
       ])
     end
 
@@ -39,8 +38,7 @@ describe Flor::Waiter do
       ).to eq([
         [ [ '0_0', [ 'task' ] ] ],
         nil,
-        'fail',
-        false
+        'fail'
       ])
     end
 
@@ -54,8 +52,7 @@ describe Flor::Waiter do
           [ nil, [ 'terminated' ] ]
         ],
         nil,
-        'fail',
-        false
+        'fail'
       ])
     end
 
@@ -69,8 +66,7 @@ describe Flor::Waiter do
           [ nil, [ 'terminated' ] ]
         ],
         nil,
-        'fail',
-        false
+        'fail'
       ])
     end
 
@@ -84,8 +80,7 @@ describe Flor::Waiter do
           [ '0_1', [ 'task', 'cancel' ] ]
         ],
         nil,
-        'fail',
-        false
+        'fail'
       ])
     end
 
@@ -96,8 +91,7 @@ describe Flor::Waiter do
       ).to eq([
         [ [ '0_0', [ 'task' ] ] ],
         12,
-        'fail',
-        false
+        'fail'
       ])
     end
 
@@ -108,20 +102,7 @@ describe Flor::Waiter do
       ).to eq([
         [ [ '0_0', [ 'task' ] ] ],
         nil,
-        'shutup',
-        false
-      ])
-    end
-
-    it 'accepts a repeat:' do
-
-      expect(
-        @waiter.expand_args(wait: '0_0 task', repeat: 3)
-      ).to eq([
-        [ [ '0_0', [ 'task' ] ] ],
-        nil,
-        'fail',
-        3
+        'shutup'
       ])
     end
   end

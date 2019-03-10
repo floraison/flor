@@ -5,13 +5,12 @@ module Flor
 
     def initialize(exid, opts)
 
-      serie, timeout, on_timeout, repeat =
+      serie, timeout, on_timeout =
         expand_args(opts)
 
       # TODO fail if the serie mixes msg_waiting with row_waiting...
 
       @exid = exid
-      @original_serie = repeat ? Flor.dup(serie) : nil
       @serie = serie
       @timeout = timeout
       @on_timeout = on_timeout
@@ -43,11 +42,7 @@ module Flor
 
     def to_s
 
-      "#{super[0..-2]}#{
-        { exid: @exid,
-          original_serie: @original_serie,
-          timeout: @timeout }.inspect
-      }>"
+      "#{super[0..-2]}#{{ exid: @exid, timeout: @timeout }.inspect}>"
     end
 
     def notify(executor, message)
@@ -66,16 +61,7 @@ module Flor
         @var.signal
       end
 
-      # then...
-      # returning false: do not remove me, I want to listen/wait further
-      # returning true: remove me
-
-      return true unless @original_serie
-        # @original_serie is set if this is a repeat Waiter
-
-      @serie = Flor.dup(@original_serie) # reset serie
-
-      false # do not remove me
+      true # serie over, remove me
     end
 
     def check(unit)
@@ -92,23 +78,13 @@ module Flor
         @var.signal
       end
 
-      # then...
-      # returning false: do not remove me, I want to listen/wait further
-      # returning true: remove me
-
-      return true unless @original_serie
-        # @original_serie is set if this is a repeat Waiter
-
-      @serie = Flor.dup(@original_serie) # reset serie
-
-      false # do not remove me
+      true # serie over, remove me
 
     rescue => err
 
 #puts "!" * 80; p err
-      @executor.unit.logger.warn(
-        "#{self.class}#check()", err, '(returning true, aka remove me)'
-      ) if @executor
+      unit.logger.warn(
+        "#{self.class}#check()", err, '(returning true, aka remove me)')
 
       true # remove me
     end
@@ -200,7 +176,6 @@ module Flor
     def expand_args(opts)
 
       owait = opts[:wait]
-      orepeat = opts[:repeat] || false
       otimeout = opts[:timeout]
       oontimeout = opts[:on_timeout] || opts[:ontimeout] || 'fail'
 
@@ -208,18 +183,15 @@ module Flor
       when nil, true
         [ [ [ nil, %w[ failed terminated ] ] ], # serie
           otimeout,
-          oontimeout,
-          orepeat ]
+          oontimeout ]
       when Numeric
         [ [ [ nil, %w[ failed terminated ] ] ], # serie
           owait, # timeout
-          oontimeout,
-          orepeat ]
+          oontimeout ]
       when String, Array
         [ parse_serie(owait), # serie
           otimeout,
-          oontimeout,
-          orepeat ]
+          oontimeout ]
       else
         fail ArgumentError.new(
           "don't know how to deal with #{owait.inspect} (#{owait.class})")
