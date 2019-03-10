@@ -103,11 +103,14 @@ When given a string, that string is split by semi colons and turned into an arra
 
 When given an array of strings, the `#launch` will wait for each string to happen before returning (with the last match) or timing out.
 
+* `wait: true` - is interpreted as `wait: 'failed,terminated'`
 * `wait: 'task'` - wait for the first "task" message to happen (task delivered to tasker) and returns it
 * `wait: '0_0 task'` - wait for the first "task" message to happen at node "0_0" and returns it
 * `wait: '0_0 task,cancel'` - wait for the first "task" message to happen at node "0_0" and returns it
 * `wait: '0_0 task|cancel'` - wait for the first "task" message or "cancel" message to happen at node 0_0
-* `wait: 'task,cancel'` - wait for the first "task" message to happen at node "0_0" and returns it
+* `wait: 'task,cancel'` - wait for the first "task" or "cancel" message
+* `wait: '0_0 task; 0_1 task'` - wait for a task reaching 0_0 and then for a task reaching 0_1
+* `wait: [ '0_0 task', '0_1 task' ]` - same as right above
 * `wait: '0_0 execute'` - wait for the execution to reach node 0_0
 * `wait: '0_0 receive'` - wait for the first receive message handed to 0_0
 * `wait: 'end'` - wait for an execution to pause (usually an execution runs for 77 messages before pausing and yielding for other executions to run, it might alos "end" when sleeping or waiting for external messages)
@@ -121,6 +124,17 @@ When given an array of strings, the `#launch` will wait for each string to happe
 Comma and pipe are interchangeable "or" operators within the wait strings.
 
 Examples of the `#launch` and `wait:` combination can be seen in [spec/unit/waiter_launch_spec.rb](../spec/unit/waiter_launch_spec.rb). Examples of `wait:` arguments can be seen in [spec/unit/waiter_spec.rb](../spec/unit/waiter_spec.rb).
+
+BUT, if you are launching from a flor unit/scheduler shared the database with another unit/scheduler instance, `#launch` and `#wait` only see message in their own unit.
+SO you have to use a different, narrower, set of wait directives.
+
+* `wait: 'tasker:alice'` - wait for a task to reach tasker alice, returns a Flor::Pointer instance (or times out)
+* `wait: '0_0 tasker:alice'` - wait for a task to reach tasker alice at node 0_0, returns a Flor::Pointer instance (or times out)
+* `wait: 'tag:stage-a'` - wait for the tag "stage-a" to be reached, returns a Flor::Pointer instance
+* `wait: 'status:active'` - wait for the execution to be active, returns a Flor::Execution instance (or times out)
+* `wait: 'status:terminated'` - wait for execution to be terminated
+
+See [multi_instance.md](multi_instance.md) for information and suggestions about such multi flor instance deployments. The spec [waiter_multi_spec.rb](../spec/unit/waiter_multi_spec.rb) explores a two instance setup, with one passive and one active flor instance.
 
 ## nolaunch:
 
