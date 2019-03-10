@@ -127,17 +127,41 @@ module Flor
 
         to_remove = []
 
-        # Idea here, query all necessary pointers in one select,
-        # and all executions in on select, then check.
-        # currently we're having a select per waiter.
+        rs = row_query_all
 
         @row_waiters.each do |w|
-          remove = w.check(@unit)
+          remove = w.check(@unit, rs)
           to_remove << w if remove
         end
 
         @row_waiters -= to_remove
       end
+
+    rescue => err
+
+      @unit.logger.warn("#{self.class}#check()", err)
+    end
+
+    def row_query_all
+
+      exes, ptrs =
+        @row_waiters.inject([ [], [] ]) { |a, w|
+          es, ps = w.to_query_hashes
+          a[0].concat(es)
+          a[1].concat(ps)
+          a }
+
+      [ row_query(:executions, exes), row_query(:pointers, ptrs) ]
+    end
+
+    def row_query(klass, hs)
+
+      return [] if hs.empty?
+
+      q = @unit.send(klass).where(hs.shift)
+      hs.each { |h| q = q.or(h) }
+
+      q.all
     end
   end
 end

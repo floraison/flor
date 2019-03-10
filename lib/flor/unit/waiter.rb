@@ -64,7 +64,7 @@ module Flor
       true # serie over, remove me
     end
 
-    def check(unit)
+    def check(unit, rs)
 
       @mutex.synchronize do
 
@@ -74,7 +74,7 @@ module Flor
 
           break if @serie.empty?
 
-          row = row_match?(unit)
+          row = row_match?(unit, rs)
           return false unless row
 
           @serie.shift
@@ -117,6 +117,36 @@ module Flor
       end
     end
 
+    def to_query_hashes
+
+      @serie
+        .inject([ [], [] ]) { |a, (nid, points)|
+
+          points.each do |point|
+
+            ss = point.split(':')
+
+            h = {}
+            h[:exid] = @exid if @exid
+            h[:nid] = nid if nid
+
+            case ss[0]
+            when 'status'
+              h[:status] = ss[1]
+              a[0] << h
+            when 'tag', 'tasker'
+              h[:type] = ss[0]
+              h[:name] = ss[1]
+              h[:value] = ss[2] if ss[2]
+              a[1] << h
+            else
+              fail ArgumentError, "cannot turn to query_hash, #{self.inspect}"
+            end
+          end
+
+          a }
+    end
+
     protected
 
     def match?(message)
@@ -139,7 +169,7 @@ module Flor
       true
     end
 
-    def row_match?(unit)
+    def row_match?(unit, rs)
 
       nid, points = @serie.first
 
@@ -147,36 +177,36 @@ module Flor
 
       points.find { |point|
         ps = point.split(':')
-        row = send("row_match_#{ps[0]}?", unit, nid, ps[1..-1]) }
+        row = send("row_match_#{ps[0]}?", unit, rs, nid, ps[1..-1]) }
 
       row
     end
 
-    def row_match_status?(unit, _, cdr)
+    def row_match_status?(unit, rs, _, cdr)
 
-      unit.storage.executions
-        .where(exid: @exid, status: cdr.first)
-        .first
+      rs[0].find { |exe|
+        (@exid == nil || exe.exid == @exid) &&
+        exe.status == cdr.first }
     end
 
-    def row_match_tag?(unit, nid, cdr)
+    def row_match_tag?(unit, rs, nid, (name, value))
 
-      query_pointer(unit, nid, 'tag', cdr.first)
+      rs[1].find { |ptr|
+        ptr.type == 'tag' &&
+        (@exid == nil || ptr.exid == @exid) &&
+        (nid == nil || ptr.nid == nid) &&
+        (name == nil || ptr.name == name) &&
+        (value == nil || ptr.value == value) }
     end
 
-    def row_match_tasker?(unit, nid, cdr)
+    def row_match_tasker?(unit, rs, nid, (name, value))
 
-      query_pointer(unit, nid, 'tasker', cdr.first)
-    end
-
-    def query_pointer(unit, nid, type, name)
-
-      q = unit.storage.pointers
-        .where(exid: @exid, type: type)
-      q = q.where(nid: nid) if nid
-      q = q.where(name: name) if name
-
-      q.first
+      rs[1].find { |ptr|
+        ptr.type == 'tasker' &&
+        (@exid == nil || ptr.exid == @exid) &&
+        (nid == nil || ptr.nid == nid) &&
+        (name == nil || ptr.name == name) &&
+        (value == nil || ptr.value == value) }
     end
 
     def expand_args(opts)
