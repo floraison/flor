@@ -119,6 +119,43 @@ describe Flor do
     end
   end
 
+  describe '.split_exid(s)' do
+
+    {
+
+      'domain0-xu1-20190310.0146.mamliliba' =>
+        [ 'domain0', 'xu1', '20190310.0146.mamliliba' ],
+
+      true => nil,
+      'nada' => nil,
+
+    }.each do |k, v|
+
+      it "returns #{v} for #{k.inspect}" do
+
+        expect(Flor.split_exid(k)).to eq(v)
+      end
+    end
+  end
+
+  describe '.is_exid?(s)' do
+
+    {
+
+      'domain0-xu1-20190310.0146.mamliliba' => true,
+
+      true => false,
+      'nada' => false,
+
+    }.each do |k, v|
+
+      it "returns #{v} for #{k.inspect}" do
+
+        expect(Flor.is_exid?(k)).to eq(v)
+      end
+    end
+  end
+
   describe '.domain(s)' do
 
     it 'returns the domain for exid s' do

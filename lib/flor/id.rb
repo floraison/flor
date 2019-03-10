@@ -100,6 +100,24 @@ module Flor
       !! (s.is_a?(String) && s.match(/\A[0-9]+(?:_[0-9]+)*(?:-[0-9]+)?\z/))
     end
 
+    def split_exid(s)
+
+      return nil unless s.is_a?(String)
+
+      _, d, u, t = s
+        .match(/\A([^-\s]+)-([^-\s]+)-(\d{8,9}\.\d{4}\.[a-z]+)\z/)
+        .to_a
+
+      return nil unless d && u && t
+
+      [ d, u, t ]
+    end
+
+    def is_exid?(s)
+
+      !! split_exid(s)
+    end
+
     # Returns [ exid, nid ]
     #
     def extract_exid_and_nid(s)
