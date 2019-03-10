@@ -199,6 +199,55 @@ describe Flor::Waiter do
       expect(ptr.value).to eq('take 2')
       expect(ptr.payload).to eq({})
     end
+
+    it 'lets the launcher wait for two taskers' do
+
+      @unit0.add_tasker('hole') {}
+
+      ptr = @unit1.launch(
+        %q{
+          concurrence
+            hole 'take 1'
+            hole 'take 2'
+        },
+        wait: '0_0 tasker:hole; 0_1 tasker:hole')
+
+      expect(ptr.nid).to eq('0_1')
+      expect(ptr.type).to eq('tasker')
+      expect(ptr.name).to eq('hole')
+      expect(ptr.value).to eq('take 2')
+    end
+
+#    it 'lets the launcher wait for ...' do
+#
+#$stdout.sync = true
+#      @unit0.add_tasker('hole') {}
+#
+#      exid = @unit1.launch(
+#        %q{
+#          concurrence
+#            hole 'take 1'
+#            hole 'take 2'
+#        })
+#
+#      Thread.new do
+#        begin
+#          @unit1.wait(exid, '0_0 tasker:hole')
+#        rescue => err; p '0_0 ' + err.inspect; end
+#      end
+#      Thread.new do
+#        begin
+#          @unit1.wait('0_1 tasker:hole')
+#        rescue => err; p '0_1 ' + err.inspect; end
+#      end
+#      Thread.new do
+#        begin
+#          @unit1.wait(exid, 'status:terminated')
+#        rescue => err; p 'status ' + err.inspect; end
+#      end
+#
+#sleep 7
+#    end
   end
 end
 

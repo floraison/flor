@@ -68,11 +68,17 @@ module Flor
 
       @mutex.synchronize do
 
-        row = row_match?(unit)
-        return false unless row
+        row = nil
 
-        @serie.shift
-        return false if @serie.any?
+        loop do
+
+          break if @serie.empty?
+
+          row = row_match?(unit)
+          return false unless row
+
+          @serie.shift
+        end
 
         @queue << [ unit, row ]
         @var.signal
