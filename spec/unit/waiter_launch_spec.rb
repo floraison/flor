@@ -145,5 +145,10 @@ describe Flor::Waiter do
 #      expect(waiter.on_timeout).to eq('shutup')
 #    end
   end
+
+  context 'and Unit#wait(exid, sthing)' do
+
+    it 'works'
+  end
 end
 

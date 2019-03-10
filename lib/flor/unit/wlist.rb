@@ -61,7 +61,7 @@ module Flor
     def wait(exid, opts, more)
 
       exid, opts =
-        if opts == true && exid == 'idle'
+        if opts == true && ! Flor.is_exid?(exid)
           [ nil, { wait: exid } ]
         elsif opts == true || opts.is_a?(String)
           [ exid, { wait: opts } ]
@@ -91,7 +91,6 @@ module Flor
           "cannot add a #{ts[0]} waiter, since there are already #{ts[1]} ones"
         ) if waiters[1].any?
 
-#p waiter
         waiters.first << waiter
 
         start_row_thread if @row_waiters.any?
