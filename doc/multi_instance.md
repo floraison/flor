@@ -5,9 +5,11 @@ An ideal application would sit in a single Ruby process and handle with ease all
 
 Often, it's necessary to prepare for growth and split the application on multiple Ruby processes.
 
-The usual flor integrator is building a web application and wants her/his users to take part in workflow executions. Seemingly snappy responses are necessary. One initial technique is to separate HTTP handling from workflow processing, one rocess for each.
+The usual flor integrator is building a web application and wants her/his users to take part in workflow executions. Seemingly snappy responses are necessary. One [initial technique](#separating-user-interfacing-from-workflow-processing) is to separate HTTP handling from workflow processing, one process for each.
 
 Ruby people have developed numerous server libraries for efficient HTTP handling. Some of them ([Passenger](https://www.phusionpassenger.com), [Unicorn](https://bogomips.org/unicorn), ...) manage pools of Ruby processes to distribute the work, when using them, one has to be aware of this.
+
+[Another technique](#extending-the-workflow-processing-capacity) is to have more than one active flor instances to deal with more executions at once.
 
 ## separating user interfacing from workflow processing
 
@@ -34,7 +36,11 @@ FLOR.start # yes!
 
 (Note that I'm using a `FLOR` constant, feel free to use another constant name or another way to point at your flor instance in your Ruby process)
 
+One could use [foreman](https://github.com/ddollar/foreman) or an equivalent to manage such a multi process setup.
+
 Flow/execution launching/cancelling/signalling thus happens in the web handling side, while the processing happens in its own side.
+
+One has to keep in mind that a passive flor, doing no message handling, since it merely places messages in the flor database to get picked by the active flor(s) on the other side, it doesn't see the message circulation that is in fact the flow execution. See [below](#launchingwaiting-in-a-multi-instance-setup) for `#launch` / `#wait:` gotchas in multi instance setups.
 
 ## extending the workflow processing capacity
 
