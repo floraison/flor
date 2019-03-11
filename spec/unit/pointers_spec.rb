@@ -139,7 +139,7 @@ describe 'Flor unit' do
       expect(exes.collect(&:exid)).to eq([])
     end
 
-    it 'points to executions by var name and nil value' do
+    it 'points to executions by var name and blank value' do
 
       r =
         @unit.launch(%{
@@ -158,7 +158,7 @@ describe 'Flor unit' do
 
       expect(exes.collect(&:exid)).to eq([ exid ])
 
-      exes = @unit.executions.by_var('item_id', nil)
+      exes = @unit.executions.by_var('item_id', '')
 
       expect(exes.collect(&:exid)).to eq([ exid ])
 

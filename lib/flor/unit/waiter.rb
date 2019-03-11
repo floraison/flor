@@ -22,7 +22,7 @@ module Flor
       @executor = nil
     end
 
-    ROW_PSEUDO_POINTS = %w[ status tag tasker ]
+    ROW_PSEUDO_POINTS = %w[ status tag tasker var variable ]
       # "tasker", not "task", since "task" is already a message point
 
     def row_waiter?
@@ -134,8 +134,9 @@ module Flor
             when 'status'
               h[:status] = ss[1]
               a[0] << h
-            when 'tag', 'tasker'
-              h[:type] = ss[0]
+            when 'tag', 'tasker', 'var', 'variable'
+              t = ss[0]; t = 'var' if t == 'variable'
+              h[:type] = t
               h[:name] = ss[1]
               h[:value] = ss[2] if ss[2]
               a[1] << h
@@ -199,6 +200,17 @@ module Flor
         (value == nil || ptr.value == value) }
     end
 
+    def row_match_var?(unit, rs, nid, (name, value))
+
+      rs[1].find { |ptr|
+        ptr.type == 'var' &&
+        (@exid == nil || ptr.exid == @exid) &&
+        (nid == nil || ptr.nid == nid) &&
+        (name == nil || ptr.name == name) &&
+        (value == nil || ptr.value == value.to_s) }
+    end
+    alias row_match_variable?  row_match_var?
+
     def row_match_tasker?(unit, rs, nid, (name, value))
 
       rs[1].find { |ptr|
@@ -250,9 +262,11 @@ module Flor
 
       (s.is_a?(String) ? s.split(';') : s)
         .collect { |ss|
-          ni, pt = ss.strip.match(WAIT_REX)[1, 2]
-          [ ni, pt.split(/[|,]/).collect(&:strip) ]
-        }
+          m = ss.strip.match(WAIT_REX)
+          fail ArgumentError.new(
+            "cannot parse #{ss.strip.inspect} wait directive") unless m
+          ni, pt = m[1, 2]
+          [ ni, pt.split(/[|,]/).collect(&:strip) ] }
     end
   end
 end

@@ -218,35 +218,42 @@ describe Flor::Waiter do
       expect(ptr.value).to eq('take 2')
     end
 
-#    it 'lets the launcher wait for ...' do
+    it 'lets the launcher wait for a variable' do
+
+      ptr = @unit1.launch(
+        %q{
+          set a 0
+          set b 1
+          set c 2
+          stall _
+        },
+        wait: 'var:b; variable:c')
+
+      expect(ptr.nid).to eq('0')
+        # pointers only care about variables at node "0" (root)
+
+      expect(ptr.type).to eq('var')
+      expect(ptr.name).to eq('c')
+      expect(ptr.value).to eq('2')
+    end
+
+    it 'lets the launcher wait for a variable and a given value'
 #
-#$stdout.sync = true
-#      @unit0.add_tasker('hole') {}
-#
-#      exid = @unit1.launch(
+#      ptr = @unit1.launch(
 #        %q{
-#          concurrence
-#            hole 'take 1'
-#            hole 'take 2'
-#        })
+#          set a 0
+#          set b 1
+#          set c 'deux'
+#          stall _
+#        },
+#        wait: 'var:b; variable:c:"deux"')
 #
-#      Thread.new do
-#        begin
-#          @unit1.wait(exid, '0_0 tasker:hole')
-#        rescue => err; p '0_0 ' + err.inspect; end
-#      end
-#      Thread.new do
-#        begin
-#          @unit1.wait('0_1 tasker:hole')
-#        rescue => err; p '0_1 ' + err.inspect; end
-#      end
-#      Thread.new do
-#        begin
-#          @unit1.wait(exid, 'status:terminated')
-#        rescue => err; p 'status ' + err.inspect; end
-#      end
+#      expect(ptr.nid).to eq('0')
+#        # pointers only care about variables at node "0" (root)
 #
-#sleep 7
+#      expect(ptr.type).to eq('var')
+#      expect(ptr.name).to eq('c')
+#      expect(ptr.value).to eq('2')
 #    end
   end
 end
