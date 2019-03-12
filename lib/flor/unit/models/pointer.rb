@@ -12,6 +12,7 @@ module Flor
     #  String :type, null: false  # task, tasked, tag, var
     #  String :name, null: false # task name, tasked name, tag name, var name
     #  String :value
+    #  File :content
     #  String :ctime, null: false
     #
     #  # no :status, no :mtime
