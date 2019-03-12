@@ -133,6 +133,8 @@ SO you have to use a different, narrower, set of wait directives.
 * `wait: 'tag:stage-a'` - wait for the tag "stage-a" to be reached, returns a Flor::Pointer instance
 * `wait: 'status:active'` - wait for the execution to be active, returns a Flor::Execution instance (or times out)
 * `wait: 'status:terminated'` - wait for execution to be terminated
+* `wait: 'var:customer_id'` - wait for the variable "customer_id" to be set at the root level, returns a Flor::Pointer instance (or times out)
+* `wait: 'var:customer_id:123'` - wait for the variable "customer_id" to be set at the root level with the value 123 (string or integer), returns a Flor::Pointer instance (or times out)
 
 See [multi_instance.md](multi_instance.md) for information and suggestions about such multi flor instance deployments. The spec [waiter_multi_spec.rb](../spec/unit/waiter_multi_spec.rb) explores a two instance setup, with one passive and one active flor instance.
 
@@ -148,9 +150,20 @@ TODO
 
 ## launching manually
 
+(launching with a passive or active flor unit, simply by insering a launch message in the `:flor_messages` table of the flor database)
+
 TODO
 
 ## waiting after launch
+
+Waiting right after a launch is useful to give the launching user the impression of immediate progress (reaching the expecting stage in the execution) before handing her/him the hand back.
+
+Likewise, it is necessary to wait also after completion of a task or emitting a (cancel or other) signal towards and execution.
+
+```ruby
+unit.wait(exid, 'tasker:bob')
+  # block until the execution (exid) reaches tasker "bob"
+```
 
 TODO
 
