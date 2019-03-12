@@ -710,8 +710,8 @@ module Flor
             case v; when Numeric, String, TrueClass, FalseClass, NilClass
               a << [ dom, exid, '0', 'var', k, v.to_s, now, u ]
             when Array, Hash
-              v = '(array)'; v = '(object)' if v.is_a?(Hash)
-              a << [ dom, exid, '0', 'var', k, v, now, u ]
+              s = '(array)'; s = '(object)' if v.is_a?(Hash)
+              a << [ dom, exid, '0', 'var', k, s, now, u ]
             else
               a << [ dom, exid, '0', 'var', k, nil, now, u ]
             end } if vs

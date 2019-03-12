@@ -255,6 +255,25 @@ describe Flor::Waiter do
       expect(ptr.name).to eq('c')
       expect(ptr.value).to eq('deux')
     end
+
+    it 'lets the launcher wait for a variable (#full_value)' do
+
+      ptr = @unit1.launch(
+        %q{
+          set a 0
+          set b { age: 12, role: 'captain' }
+          stall _
+        },
+        wait: 'var:b')
+
+      expect(ptr.nid).to eq('0')
+        # pointers only care about variables at node "0" (root)
+
+      expect(ptr.type).to eq('var')
+      expect(ptr.name).to eq('b')
+      expect(ptr.value).to eq('(object)')
+      expect(ptr.full_value).to eq({ 'age' => 12, 'role' => 'captain' })
+    end
   end
 end
 
