@@ -105,16 +105,15 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq({ 'a' => 'yellow', 'if' => false })
     end
 
-    it 'evaluate keys (v.a)' do
+    it 'evaluate keys (v.a and f.b)' do
 
       r = @executor.launch(
-        %q{
-          set a "colour"
-          { v.a: 'yellow' }
-        })
+        %q{ { v.a: "A", f.b: "B" } },
+        payload: { 'b' => 'bravo' },
+        vars: { 'a' => 'alpha' })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq({ 'colour' => 'yellow' })
+      expect(r['payload']['ret']).to eqd({ alpha: 'A', bravo: 'B' })
     end
 
     it 'evaluates keys (_dqs)' do
