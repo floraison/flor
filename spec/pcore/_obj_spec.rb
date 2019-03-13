@@ -22,7 +22,7 @@ describe 'Flor procedures' do
       r = @executor.launch(%{ {} })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq({})
+      expect(r['payload']['ret']).to eqd({})
     end
 
     it 'works  {} tag: t' do
@@ -30,7 +30,7 @@ describe 'Flor procedures' do
       r = @executor.launch(%{ {} tag: 't' })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq({})
+      expect(r['payload']['ret']).to eqd({})
 
       expect(
         @executor.journal
@@ -60,7 +60,7 @@ describe 'Flor procedures' do
       r = @executor.launch(%{ { 'a': 'A' } tag: 't' })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq({ 'a' => 'A' })
+      expect(r['payload']['ret']).to eqd({ 'a' => 'A' })
 
       expect(
         @executor.journal
@@ -90,7 +90,7 @@ describe 'Flor procedures' do
       r = @executor.launch(%{ { 7: 'sept' } })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq({ '7' => 'sept' })
+      expect(r['payload']['ret']).to eqd({ '7' => 'sept' })
     end
 
     it 'does not evaluate variable keys' do
@@ -102,18 +102,18 @@ describe 'Flor procedures' do
         })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq({ 'a' => 'yellow', 'if' => false })
+      expect(r['payload']['ret']).to eqd({ a: 'yellow', if: false })
     end
 
     it 'evaluate keys (v.a and f.b)' do
 
       r = @executor.launch(
-        %q{ { v.a: "A", f.b: "B" } },
+        %q{ { a: 1, b: 2, v.a: "A", f.b: "B" } },
         payload: { 'b' => 'bravo' },
         vars: { 'a' => 'alpha' })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eqd({ alpha: 'A', bravo: 'B' })
+      expect(r['payload']['ret']).to eqd({ a: 1, b: 2, alpha: 'A', bravo: 'B' })
     end
 
     it 'evaluates keys (_dqs)' do
@@ -125,7 +125,7 @@ describe 'Flor procedures' do
         })
 
       expect(r['point']).to eq('terminated')
-      expect(r['payload']['ret']).to eq({ 'colors' => %w[ yellow blue ] })
+      expect(r['payload']['ret']).to eqd({ colors: %w[ yellow blue ] })
     end
 
   # keys are now (2019-01-01) quoted by default, see above.
@@ -140,10 +140,8 @@ describe 'Flor procedures' do
 #            { a: 'red', (a _): 'green' } quote: 'keys'
 #          })
 #
-#        expect(r['point']).to eq(
-#          'terminated')
-#        expect(r['payload']['ret']).to eq(
-#          { 'a' => 'red', 'colour' => 'green' })
+#        expect(r['point']).to eq('terminated')
+#        expect(r['payload']['ret']).to eqd({ a: 'red', colour: 'green' })
 #      end
 #    end
   end
