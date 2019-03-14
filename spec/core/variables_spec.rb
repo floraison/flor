@@ -323,6 +323,22 @@ describe 'Flor core' do
       expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ 1, 1, 2 ])
     end
+
+    they 'may be set directly from child scopes' do
+
+      r = @executor.launch(
+        %q{
+          set a 1
+          define f x
+            set a x + 1
+            set gv.a x + 2 + a
+          f 2
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['vars']['a']).to eq(7)
+      expect(r['payload']['ret']).to eq(2)
+    end
   end
 end
 
