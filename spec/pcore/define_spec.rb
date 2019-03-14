@@ -176,21 +176,33 @@ describe 'Flor procedures' do
       expect(r['error']['lin']).to eq(2)
     end
 
-#    it 'accepts fields in its signature' do ############################# FIXME
-#
-#      r = @executor.launch(
-#        %q{
-#          define f a f.b
-#            + a f.b
-#          f 1 2
-#        })
-#
-##puts "r.vars:"
-##pp r['vars']
-#      expect(r).to have_terminated_as_point
-#      expect(r['payload']['b']).to eq(2)
-#      expect(r['payload']['ret']).to eq(3)
-#    end
+    it 'accepts fields in its signature' do ############################# FIXME
+
+      # * it's all fine and dandy, but the field "attribution" lasts
+      #   after the function call
+      # * isn't it introducing confusion points?
+      # * what if the field is already set, could the argument become
+      #   optional?
+      #     #
+      #     set f.b 2
+      #     define f f.b \ + 1 f.b
+      #     f _ # => yields `3`
+
+      r = @executor.launch(
+        %q{
+          define f a f.b
+            + a f.b
+          f 1 2
+        })
+
+#puts "## r.vars:"
+#pp r['vars']
+#puts "## r.payload:"
+#pp r['payload']
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['b']).to eq(2)
+      expect(r['payload']['ret']).to eq(3)
+    end
 
     it 'accepts fields wrapped in parentheses in its signature'
   end

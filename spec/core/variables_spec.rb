@@ -27,7 +27,7 @@ describe 'Flor core' do
             2
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(2)
     end
 
@@ -50,7 +50,7 @@ describe 'Flor core' do
           a 2
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(1)
     end
 
@@ -61,7 +61,7 @@ describe 'Flor core' do
 #          a 2
 #        })
 #
-#      expect(r['point']).to eq('terminated')
+#      expect(r).to have_terminated_as_point
 #      expect(r['payload']['ret']).to eq(nil)
 #    end
 
@@ -73,7 +73,7 @@ describe 'Flor core' do
         },
         vars: { 'a' => 1 })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(1)
 
       ent = @executor.journal.find { |m| m['point'] == 'entered' }
@@ -95,7 +95,7 @@ describe 'Flor core' do
             2
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(2)
     end
   end
@@ -110,7 +110,7 @@ describe 'Flor core' do
         },
         vars: { 'key' => 'a major' })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['vars']['key']).to eq('a major')
       expect(r['payload']['ret']).to eq([ 'a major' ] * 2)
     end
@@ -173,7 +173,7 @@ describe 'Flor core' do
         },
         vars: { 'a' => [ { 'b' => 'c' } ] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['vars']['c']).to eq({ 'b' => 'c' })
       expect(r['payload']['ret']).to eq('c')
     end
@@ -186,7 +186,7 @@ describe 'Flor core' do
         },
         vars: { 'a' => [], 'h' => {} })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq([ nil, nil ])
     end
 
@@ -233,7 +233,7 @@ describe 'Flor core' do
         },
         payload: { 'a' => %w[ a b c d e f ], 'l' => []})
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       expect(r['payload']['l']).to eq([
         'a', %w[ b c ], %w[ a c e ], %w[ c e ] ])
@@ -253,7 +253,7 @@ describe 'Flor core' do
         },
         payload: { 'l' => [] })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ 0_0_1 0_1_1_0_0_0 _ref _ref ])
     end
   end
@@ -273,7 +273,7 @@ describe 'Flor core' do
         })
         #domain: 'gevrey_chambertin')
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       n = Time.now.utc
 
@@ -301,7 +301,7 @@ describe 'Flor core' do
           set f.l2 (olength a)
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['l0']).to eq(4)
       expect(r['payload']['l1']).to eq(-1)
       expect(r['payload']['l2']).to eq(4)

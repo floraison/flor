@@ -51,6 +51,18 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
 
   protected
 
+  def compute_param_key(t)
+
+    t0 = t[0]
+    k = t0[0]
+
+    if k == '_ref' && t0[1].is_a?(Array) && t0[1].length > 0
+      t[0][1].collect { |tt| tt[1].to_s }.join('.')
+    else
+      k
+    end
+  end
+
   def map_arguments_to_parameters
 
     @node['vars'] = {}
@@ -62,7 +74,12 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
     tr = tree
     retree = nil
 
-    params = tr[1].inject([]) { |a, t| a << t[1] if t[0] == '_att'; a }
+    params = tr[1]
+      .select { |t| t[0] == '_att' }
+      .inject([]) { |a, t|
+        t1 = t[1]
+        a << [ compute_param_key(t1), t[1][0], t[1][1] ]
+        a }
     args = args.dup
 #puts "\n---"
 #puts "== params:"
@@ -79,7 +96,8 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
 
     seen = []
 
-    params.each do |(param_key, _), _|
+    params.each do |param_key, param_tree|
+      next if param_tree[0] == '_ref'
       arg_i = args.index { |arg_key, arg_val| arg_key == param_key }
       next unless arg_i
       arg_key, arg_val = args.delete_at(arg_i)
@@ -87,8 +105,9 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
       set_param(param_key, arg_val)
     end
 #puts "== 0 vars:"; pp @node['vars']
-    params.each_with_index do |((param_key, _), param_val), param_i|
-      next if @node['vars'].has_key?(param_key)
+    params.each_with_index do |(param_key, param_tree, param_val), param_i|
+      ref = param_tree[0] == '_ref'
+      next if ! ref && @node['vars'].has_key?(param_key)
       seen << param_key
       if param_i < args.length
         arg_key, arg_val = args[param_i]
@@ -108,6 +127,8 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
     end
 
 #puts "\n== 1 vars: "; pp @node['vars']
+#puts "\n== 1 fields: "; pp payload.current
+  #
 #print "vars: "
 #pp @node['vars'].collect { |k, v| [ k, JSON.dump(v)[0, 20] + "..." ] }
 #print "vars: "
@@ -119,7 +140,17 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
 
   def set_param(key, val)
 
-    @node['vars'][key] = val
+# TODO root variables...
+    return unless key
+
+    if m = key.match(/\A(?:field|fld|f)\.(.+)\z/)
+      Dense.set(payload.copy, m[1], val)
+    elsif m = key.match(/\A(?:variable|var|v)\.(.+)\z/)
+      Dense.set(@node['vars'], m[1], val)
+    else
+      #@node['vars'][key] = val
+      Dense.set(@node['vars'], key, val)
+    end
   end
 end
 
