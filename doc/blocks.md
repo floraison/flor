@@ -62,5 +62,8 @@ detect                    find          detect, find
                           any
                           every         all?
 each                      for-each      each
+
+ccollect                  cmap
+                          c-for-each
 ```
 
