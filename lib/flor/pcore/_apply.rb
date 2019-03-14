@@ -88,7 +88,7 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
 #args.each_with_index { |a, i| printf "%2d: %s\n", i, a.inspect }
 #puts
 
-    # first, make 2 passes on atts
+    # first, make 2 passes on params
     # 1). grab named args
     # 2). grab remaining args
     # then make 1 pass on still remaining args
@@ -118,7 +118,7 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
         retree ||= Flor.dup(tr)
         retree[1][param_i] = [ 'set', [ [ param_key, [], l ], param_val ], l ]
       else
-        set_param(param_key, nil)
+        set_param(param_key, nil) unless ref
       end
     end
 #puts "== seen:"; p seen

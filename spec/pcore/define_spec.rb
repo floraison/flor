@@ -205,6 +205,22 @@ describe 'Flor procedures' do
       expect(r['payload']['b']).to eq(2)
       expect(r['payload']['ret']).to eq(3)
     end
+
+    it 'does not mind if a field parameter is omitted from the arguments' do
+
+      r = @executor.launch(
+        %q{
+          define f (a f.b)
+            + a f.b
+          set f.b 3
+          f 1
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['vars'].keys).to eq(%w[ f ])
+      expect(r['payload']['b']).to eq(3)
+      expect(r['payload']['ret']).to eq(4)
+    end
   end
 
   describe 'def' do
