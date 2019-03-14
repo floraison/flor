@@ -140,7 +140,6 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
 
   def set_param(key, val)
 
-# TODO root variables...
     return unless key
 
     if m = key.match(/\A(?:field|fld|f)\.(.+)\z/)
@@ -148,7 +147,6 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
     elsif m = key.match(/\A(?:variable|var|v)\.(.+)\z/)
       Dense.set(@node['vars'], m[1], val)
     else
-      #@node['vars'][key] = val
       Dense.set(@node['vars'], key, val)
     end
   end

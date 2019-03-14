@@ -307,5 +307,22 @@ describe 'Flor core' do
       expect(r['payload']['l2']).to eq(4)
     end
   end
+
+  describe 'global variables' do
+
+    they 'are optionally prefixed with gv.' do
+
+      r = @executor.launch(
+        %q{
+          set a 1
+          define f a
+            [ gv.a, gvar.a, a ]
+          f 2
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq([ 1, 1, 2 ])
+    end
+  end
 end
 

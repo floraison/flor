@@ -39,7 +39,7 @@ describe 'Flor unit' do
       expect(r['payload']).to eq({ 'ret' => 'ACME' })
     end
 
-    it 'are prefixed optionally with dv.' do
+    they 'are prefixed optionally with dv.' do
 
       r =
         @unit.launch(%{

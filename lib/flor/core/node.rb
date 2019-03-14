@@ -443,10 +443,10 @@ class Flor::Node
     return lookup_arg_container(key) \
       if mod == '' && %w[ arga args argv argh argd ].include?(key)
 
-    if vwl = node['vwlist']
+    if vwl = node['vwlist'] # variable white list
       return lookup_dvar_container(mod, key) unless var_match?(vwl, key)
     end
-    if vbl = node['vblist']
+    if vbl = node['vblist'] # variable black list
       return lookup_dvar_container(mod, key) if var_match?(vbl, key)
     end
 
