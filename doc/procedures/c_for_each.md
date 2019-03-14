@@ -8,7 +8,7 @@ of the incoming collection.
 c-for-each [ 'alice' 'bob' 'charly' ]
   def user \ task user 'contact customer group'
     #
-    # is thus equivlent to
+    # is thus equivalent to
     #
 task 'alice' 'contact customer group'
 task 'bob' 'contact customer group'

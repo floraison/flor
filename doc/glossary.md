@@ -283,7 +283,25 @@ FLOR = Flor::Unit.new('envs/test/etc/conf.json')
 ```
 that is pointing to the configuration file for a given flor [environment](#environment).
 
+[Multiple units](multi_instance.md) may share the same database and thus work together on making the executions progress.
+
 ## variable
 
-TODO
+Flor has [fields](#fields) in the [payload](#payload) found in the messages it passes from [tasker](#tasker) to tasker (from [procedure](#procedure) to procedure).
+
+It also has variables. Whereas fields are seen by taskers, variables stay in the execution.
+
+```
+sequence
+  set a 'alpha'
+  set f.a 'allegro'
+  task 'alice'
+    # the task handled to Alice will mostly look like { 'a' => 'allegro' }
+```
+
+Variables are mostly used as information for flow control and as [function](#function) parameters/arguments. It's easy to copy values from and back variables and fields with [set](procedures/set.md).
+
+Note that a tasker may be presented the variables as seen in its execution branch if its configuration sports `include_vars: true`.
+
+Read more about [variables](variables.md).
 

@@ -9,6 +9,7 @@ class Flor::Pro::Set < Flor::Procedure
   #   set a false      # sets the `false` in the variable 'a'
   #   set v.b [ 1 2 ]  # sets `[ 1, 2 ]` in the variable 'b'
   #   set v.c.0 -1     # sets `-1` in first slot of the array in var 'c'
+  #   set v.a f.a.0    # copy the value in field 'a' (first elt) into var 'a'
   # ```
   #
   # When set has a single child, it uses as value to copy the content of
@@ -26,6 +27,15 @@ class Flor::Pro::Set < Flor::Procedure
   # ```
   #
   # ## splat
+  #
+  # There is a splat system using underscores to extract array values and
+  # assign them to variables.
+  #
+  # 3 underscores following a variable name instructs "set" to place
+  # as many values as possible into an array under the given variable name.
+  # 2 underscores following a variable name and followed by an integer
+  # restrict the number of values thus globbed.
+  # Underscores following nothing simply discard the array values.
   #
   # ```
   # sequence
@@ -56,10 +66,10 @@ class Flor::Pro::Set < Flor::Procedure
   # value set by its last child (usually the value set).
   #
   # ```
-  #   sequence
-  #     123         # payload.ret is set to `123`
-  #     set a 456   # var 'a' is set to 456, payload.ret is reset to `123`
-  #     setr b 789  # var 'b' is set to `789`, payload.ret as well
+  # sequence
+  #   123         # payload.ret is set to `123`
+  #   set a 456   # var 'a' is set to 456, payload.ret is reset to `123`
+  #   setr b 789  # var 'b' is set to `789`, payload.ret as well
   # ```
 
   names %w[ set setr ]
