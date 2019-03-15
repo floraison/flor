@@ -276,6 +276,38 @@ module Flor
     end
     alias reapply re_apply
 
+    def add_branch(exid, *as)
+
+      m = prepare_message('add', [ exid, *as ]).first
+#pp m
+
+      exe = @storage.executions[exid: m['exid']]
+      nid = m['nid']
+      pnid = Flor.parent_nid(nid)
+      ptree = exe.lookup_tree(pnid)
+
+      fail ArgumentError.new(
+        "parent #{pnid} is a leaf, cannot add branch at #{nid}"
+      ) unless ptree[1].is_a?(Array)
+        #
+        # not likely to happen, since leaves reply immediately
+
+      cid = Flor.child_id(nid)
+      size = ptree[1].size
+
+      fail ArgumentError.new(
+        "target #{nid} too low" # FIXME
+      ) if cid < size
+
+      fail ArgumentError.new(
+        "target #{nid} is off by #{cid - size}, " +
+        "node #{pnid} has #{size} branch#{size == 1 ? '' : 'es'}"
+      ) if cid > size
+
+fail 'NO TREE' unless m['tree']
+      queue(m)
+    end
+
     def schedule(message)
 
       @storage.put_timer(message)

@@ -48,12 +48,20 @@ module Flor
 
       tree = nodes['0']['tree']
 
-      nodes.each do |nid, n|
-        next if nid == '0'
-        t = n['tree']; next unless t
-      end
+      #nodes.each do |nid, n|
+      #  next if nid == '0'
+      #  t = n['tree']; next unless t
+      #end
+        #
+        # FIXME
 
       tree
+    end
+
+    def lookup_tree(nid)
+
+      Flor::Node.new(self.data, nodes[nid], nil)
+        .lookup_tree(nid)
     end
 
     def zero_variables
