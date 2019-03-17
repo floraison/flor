@@ -295,7 +295,7 @@ module Flor
       cid = Flor.child_id(nid)
       size = ptree[1].size
 
-      tide = nil; tcid = nil; (0..size - 1).each do |i|
+      tide, tcid = nil; (0..size - 1).reverse_each do |i|
         tcid = Flor.make_child_nid(pnid, i)
         next unless exe.nodes[tcid]
         tide = i; break
