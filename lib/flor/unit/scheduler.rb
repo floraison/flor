@@ -295,9 +295,15 @@ module Flor
       cid = Flor.child_id(nid)
       size = ptree[1].size
 
+      tide = nil; tcid = nil; (0..size - 1).each do |i|
+        tcid = Flor.make_child_nid(pnid, i)
+        next unless exe.nodes[tcid]
+        tide = i; break
+      end
+
       fail ArgumentError.new(
-        "target #{nid} too low" # FIXME
-      ) if cid < size
+        "target #{nid} too low, execution has already reached #{tcid}"
+      ) if tide && cid < tide
 
       fail ArgumentError.new(
         "target #{nid} is off by #{cid - size}, " +

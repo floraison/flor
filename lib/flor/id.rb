@@ -76,6 +76,7 @@ module Flor
 
       "#{nid}_#{i}#{subnid ? "-#{subnid}" : ''}"
     end
+    alias make_child_nid child_nid
 
     def parent_id(nid)
 

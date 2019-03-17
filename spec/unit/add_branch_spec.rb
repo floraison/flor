@@ -49,7 +49,29 @@ describe 'Flor unit' do
       )
     end
 
-    it 'fails immediately if the target node is past'
+    it 'fails immediately if the target node is past' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            india _
+            india _
+            stall _
+        },
+        wait: 'task;task;end;end')
+
+      expect {
+
+        @unit.add_branch(
+          exid: r['exid'],
+          nid: '0_1',
+          tree: %q{ bob 'do important job' })
+
+      }.to raise_error(
+        ArgumentError,
+        "target 0_1 too low, execution has already reached 0_2"
+      )
+    end
 
     it 'works inserting in a "sequence"'
     it 'works appending to a "sequence"'
