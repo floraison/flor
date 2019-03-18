@@ -279,7 +279,10 @@ module Flor
     def add_branch(exid, *as)
 
       m = prepare_message('add', [ exid, *as ]).first
-#pp m
+
+      fail ArgumentError.new(
+        'missing tree:'
+      ) unless m['tree']
 
       exe = @storage.executions[exid: m['exid']]
       nid = m['nid']
@@ -310,7 +313,6 @@ module Flor
         "node #{pnid} has #{size} branch#{size == 1 ? '' : 'es'}"
       ) if cid > size
 
-fail 'NO TREE' unless m['tree']
       queue(m)
     end
 
@@ -434,7 +436,7 @@ fail 'NO TREE' unless m['tree']
       end
 
       h.each do |k, v|
-        if %w[ exid name nid payload on_receive_last ].include?(k)
+        if %w[ exid name nid payload on_receive_last tree ].include?(k)
           msg[k] = v
         else
           opts[k.to_sym] = v
