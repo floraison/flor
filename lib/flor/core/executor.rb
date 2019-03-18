@@ -453,7 +453,7 @@ end
         ms = []
         ms += @unit.notify(self, message) # pre
 
-        ms += self.send(message['point'], message)
+        ms += send(message['point'], message)
 
         message['payload'] = message.delete('pld') if message.has_key?('pld')
         message['consumed'] = Flor.tstamp
@@ -482,11 +482,6 @@ end
 
       []
     end
-
-    def entered(message); []; end
-    def left(message); []; end
-
-    def ceased(message); []; end
 
     def terminated(message)
 
@@ -523,6 +518,13 @@ end
     end
 
     def signal(message); []; end
+    def entered(message); []; end
+    def left(message); []; end
+    def ceased(message); []; end
+      #
+      # Return an empty array of new messages. No direct effect.
+      #
+      # Some trap, hook, and/or waiter might lie in wait though.
 
     def lookup_on_error_parent(message)
 
