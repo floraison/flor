@@ -435,8 +435,11 @@ module Flor
         msg['flavour'] = 'kill'
       end
 
+      msg_keys = %w[ exid name nid payload on_receive_last ]
+      msg_keys << 'tree' if point == 'add'
+
       h.each do |k, v|
-        if %w[ exid name nid payload on_receive_last tree ].include?(k)
+        if msg_keys.include?(k)
           msg[k] = v
         else
           opts[k.to_sym] = v
