@@ -576,6 +576,14 @@ module Flor
         File.join(
           File.dirname(__FILE__), 'migrations'))
     end
+
+    def caller_fname
+
+      caller
+        .find { |l| ! l.match(/\/lib\/flor\//) }
+        .match(/\A([^:]+:\d+)/)[1]
+        .strip
+    end
   end
 end
 

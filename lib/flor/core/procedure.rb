@@ -900,6 +900,27 @@ class Flor::Procedure < Flor::Node
     wrap_cancel_children('flavour' => 'kill') +
     wrap_cancelled
   end
+
+  def do_add
+
+    # Middle point between the executor and the procedure potential
+    # re-implementation of #add.
+    # Nothing for now.
+
+    add
+  end
+
+  def add
+
+#puts " === add " + ("=" * 40)
+#pp message
+#puts " === add. " + ("=" * 39)
+    t = tree
+    i = Flor.child_id(message['tnid'])
+    t[1].insert(i, *message['trees'])
+
+    []
+  end
 end
 
 

@@ -178,6 +178,11 @@ module Flor
       [ m ]
     end
 
+    def add(message)
+
+      apply(@execution['nodes'][message['nid']], message)
+    end
+
     def on_do_run_exc(e)
 
       io = StringIO.new

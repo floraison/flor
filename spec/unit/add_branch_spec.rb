@@ -86,32 +86,34 @@ describe 'Flor unit' do
         #@unit.add_branch(exid: r['exid'], nid: '0_1') # no :tree
         @unit.add_branch(exid: 'nada-123', nid: '0_1') # no :tree
       }.to raise_error(
-        ArgumentError, "missing tree:"
+        ArgumentError, "missing trees: or tree:"
       )
     end
 
-#    it 'works inserting in a "sequence"' do
-#
-#      r = @unit.launch(
-#        %q{
-#          sequence
-#            stall _
-#        },
-#        wait: 'end')
-#
-#      @unit.add_branch(
-#        exid: r['exid'],
-#        nid: '0_1',
-#        tree: %q{ alpha 'do important job' })
-#
-#      @unit.cancel(exid: r['exid'], nid: '0_0')
-#
-#      r = @unit.wait(r['exid'], 'terminated')
-#pp r
-#    end
+    it 'works inserting in a "sequence"' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            stall _
+        },
+        wait: 'end')
+
+      @unit.add_branch(
+        exid: r['exid'],
+        nid: '0_1',
+        tree: %q{ alpha 'do important job' })
+
+      @unit.cancel(exid: r['exid'], nid: '0_0')
+
+      r = @unit.wait(r['exid'], 'terminated')
+
+      expect(r['payload']['ret']).to eq('do important job')
+      expect(r['payload']['seen'][0][0]).to eq('alpha')
+      expect(r['m']).to eq(22)
+    end
 
     it 'works appending to a "sequence"'
-
     it 'works appending to a "concurrence"'
   end
 end

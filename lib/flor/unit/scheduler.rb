@@ -280,41 +280,39 @@ module Flor
 
       m = prepare_message('add', [ exid, *as ]).first
 
-      fail ArgumentError.new(
-        'missing tree:'
-      ) unless m['tree']
-
       exe = @storage.executions[exid: m['exid']]
-      nid = m['nid']
-      pnid = Flor.parent_nid(nid)
+      tnid = m['tnid']
+      pnid = m['nid']
       ptree = exe.lookup_tree(pnid)
 
       fail ArgumentError.new(
-        "parent #{pnid} is a leaf, cannot add branch at #{nid}"
+        "parent #{pnid} is a leaf, cannot add branch at #{tnid}"
       ) unless ptree[1].is_a?(Array)
         #
         # not likely to happen, since leaves reply immediately
 
-      cid = Flor.child_id(nid)
+      cid = Flor.child_id(tnid)
       size = ptree[1].size
 
-      tide, tcid = nil; (0..size - 1).reverse_each do |i|
-        tcid = Flor.make_child_nid(pnid, i)
-        next unless exe.nodes[tcid]
-        tide = i; break
-      end
+      tide, tcid = nil
+        (0..size - 1).reverse_each do |i|
+          tcid = Flor.make_child_nid(pnid, i)
+          next unless exe.nodes[tcid]
+          tide = i; break
+        end
 
       fail ArgumentError.new(
-        "target #{nid} too low, execution has already reached #{tcid}"
+        "target #{tnid} too low, execution has already reached #{tcid}"
       ) if tide && cid < tide
 
       fail ArgumentError.new(
-        "target #{nid} is off by #{cid - size}, " +
+        "target #{tnid} is off by #{cid - size}, " +
         "node #{pnid} has #{size} branch#{size == 1 ? '' : 'es'}"
       ) if cid > size
 
       queue(m)
     end
+    alias add_branches add_branch
 
     def schedule(message)
 
@@ -403,20 +401,6 @@ module Flor
       puts on_start_exc(ex)
     end
 
-    def prepare_re_apply_messages(msg, opts)
-
-      fail ArgumentError.new("missing 'payload' to re_apply") \
-        unless msg['payload']
-
-      t = Flor.parse(opts[:tree], 're_apply', {})
-
-      [ { 'point' => 'execute',
-          'exid' => msg['exid'], 'nid' => msg['nid'],
-          'from' => 'parent',
-          'tree' => t,
-          'payload' => msg['payload'] } ]
-    end
-
     def prepare_message(point, args)
 
       h =
@@ -430,23 +414,28 @@ module Flor
       msg = { 'point' => point }
       opts = {}
 
-      if point == 'kill'
-        msg['point'] = 'cancel'
-        msg['flavour'] = 'kill'
-      end
-
-      msg_keys = %w[ exid name nid payload on_receive_last ]
-      msg_keys << 'tree' if point == 'add'
-
       h.each do |k, v|
-        if msg_keys.include?(k)
+        if %w[ exid name nid payload on_receive_last ].include?(k)
           msg[k] = v
         else
           opts[k.to_sym] = v
         end
       end
 
+      if point == 'kill'
+
+        msg['point'] = 'cancel'
+        msg['flavour'] = 'kill'
+
+      elsif point == 'add'
+
+        msg['trees'] = prepare_trees(opts)
+        msg['tnid'] = tnid = msg['nid']
+        msg['nid'] = Flor.parent_nid(tnid)
+      end
+
       if opts[:re_apply]
+
         msg['on_receive_last'] = prepare_re_apply_messages(msg, opts)
       end
 
@@ -456,6 +445,33 @@ module Flor
         if point == 'signal' && ! msg['name'].is_a?(String)
 
       [ msg, opts ]
+    end
+
+    def prepare_trees(opts)
+
+      fname = Flor.caller_fname
+
+      ts = (opts[:trees] || [ opts[:tree] ].compact)
+        .collect { |t| Flor.parse(t, fname, {}) }
+
+      fail ArgumentError.new('missing trees: or tree:') \
+        unless ts.any?
+
+      ts
+    end
+
+    def prepare_re_apply_messages(msg, opts)
+
+      fail ArgumentError.new("missing 'payload' to re_apply") \
+        unless msg['payload']
+
+      t = Flor.parse(opts[:tree], Flor.caller_fname, {})
+
+      [ { 'point' => 'execute',
+          'exid' => msg['exid'], 'nid' => msg['nid'],
+          'from' => 'parent',
+          'tree' => t,
+          'payload' => msg['payload'] } ]
     end
 
     def make_idle_message
