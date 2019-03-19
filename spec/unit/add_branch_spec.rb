@@ -90,7 +90,7 @@ describe 'Flor unit' do
       )
     end
 
-    it 'works inserting in a "sequence"' do
+    it 'works appending to a "sequence"' do
 
       r = @unit.launch(
         %q{
@@ -113,7 +113,30 @@ describe 'Flor unit' do
       expect(r['m']).to eq(22)
     end
 
-    it 'works appending to a "sequence"'
+    it 'works inserting in a "sequence"' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            stall _
+            alpha 'one'
+        },
+        wait: 'end')
+
+      @unit.add_branch(
+        exid: r['exid'],
+        nid: '0_1',
+        tree: %q{ alpha 'two' })
+
+      @unit.cancel(exid: r['exid'], nid: '0_0')
+
+      r = @unit.wait(r['exid'], 'terminated')
+
+      expect(r['payload']['ret']).to eq('one')
+      expect(r['payload']['seen'].collect { |e| e[1] }).to eq(%w[ two one ])
+      expect(r['m']).to eq(35)
+    end
+
     it 'works appending to a "concurrence"'
   end
 end
