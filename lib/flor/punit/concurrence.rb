@@ -320,7 +320,6 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   protected
 
-
   def receive_from_child_when_closed
 
     ms = receive

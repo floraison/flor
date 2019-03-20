@@ -903,9 +903,8 @@ class Flor::Procedure < Flor::Node
 
   def do_add
 
-    # Middle point between the executor and the procedure potential
-    # re-implementation of #add.
-    # Nothing for now.
+    return [] unless node_open?
+      # if the node is closed or ended, discard the add message
 
     add
   end
