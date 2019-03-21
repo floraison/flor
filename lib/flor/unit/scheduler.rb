@@ -281,7 +281,6 @@ module Flor
       m = prepare_message('add', [ exid, *as ]).first
 
       exe = @storage.executions[exid: m['exid']]
-      tnid = m['tnid']
       pnid = m['nid']
       ptree = exe.lookup_tree(pnid)
 
@@ -291,8 +290,10 @@ module Flor
         #
         # not likely to happen, since leaves reply immediately
 
-      cid = Flor.child_id(tnid)
       size = ptree[1].size
+      tnid = (m['tnid'] ||= Flor.make_child_nid(pnid, size))
+
+      cid = Flor.child_id(tnid)
 
       tide, tcid = nil
         (0..size - 1).reverse_each do |i|
@@ -429,9 +430,13 @@ module Flor
 
       elsif point == 'add'
 
-        msg['trees'] = prepare_trees(opts)
-        msg['tnid'] = tnid = msg['nid']
-        msg['nid'] = Flor.parent_nid(tnid)
+        msg['trees'] =
+          prepare_trees(opts)
+
+        msg['tnid'] = tnid =
+          opts.delete(:tnid) || msg.delete('nid')
+        msg['nid'] =
+          msg.delete('nid') || opts.delete(:pnid) || Flor.parent_nid(tnid)
       end
 
       if opts[:re_apply]

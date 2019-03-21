@@ -90,7 +90,34 @@ describe 'Flor unit' do
       )
     end
 
-    it 'works appending to a "sequence"' do
+    #
+    # pnid: parent nid, appending...
+    # nid: nid, inserting...
+
+    it 'works appending to a "sequence" (pnid:)' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            stall _
+        },
+        wait: 'end')
+
+      @unit.add_branch(
+        exid: r['exid'],
+        pnid: '0',
+        tree: %q{ alpha 'do important job' })
+
+      @unit.cancel(exid: r['exid'], nid: '0_0')
+
+      r = @unit.wait(r['exid'], 'terminated')
+
+      expect(r['payload']['ret']).to eq('do important job')
+      expect(r['payload']['seen'][0][0]).to eq('alpha')
+      expect(r['m']).to eq(22)
+    end
+
+    it 'works inserting at the end of a "sequence" (nid:)' do
 
       r = @unit.launch(
         %q{
@@ -113,7 +140,7 @@ describe 'Flor unit' do
       expect(r['m']).to eq(22)
     end
 
-    it 'works inserting in a "sequence"' do
+    it 'works inserting in a "sequence" (nid:)' do
 
       r = @unit.launch(
         %q{
