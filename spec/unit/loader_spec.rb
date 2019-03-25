@@ -89,6 +89,9 @@ describe Flor::Loader do
       [ 'org.example.bob', nil ] =>
         [ 'org.example bob', %w[ description bo _path root ] ],
 
+      [ '', 'zebulon' ] =>
+        [ "zebulon's conf", %w[ description _path ] ],
+
     }.each do |ks, (desc, keys)|
 
       it "loads tasker conf at #{ks.inspect}" do

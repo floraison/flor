@@ -62,7 +62,7 @@ module Flor
 
       domain, name = split_dn(domain, name)
 
-      pat, _, nam = Dir[File.join(@root, '**/*.json')]
+      pat, _, nam = Dir[File.join(@root, '**/*.{json,rb}')]
         .select { |pa| pa.index('/lib/taskers/') }
         .collect { |pa| [ pa, *expose_dn(pa, {}) ] }
         .select { |pa, d, n|
@@ -136,7 +136,7 @@ module Flor
         .sub(libregex, '/')
         .sub(/\/\z/, '')
         .sub(/\/(flo|flor|dot|hooks)\.json\z/, '')
-        .sub(/\.(flo|flor|json)\z/, '')
+        .sub(/\.(flo|flor|json|rb)\z/, '')
         .sub(/\A\//, '')
         .gsub(/\//, '.')
     end
@@ -154,6 +154,9 @@ module Flor
 
     def eval(path, context)
 
+      ext =
+        File.extname(path)
+
       src =
         @mutex.synchronize do
 
@@ -162,12 +165,36 @@ module Flor
 
           if val && mt1 == mt0
             val
+          elsif ext == '.rb'
+            (@cache[path] = [ File.read(path), mt1 ]).first
           else
             (@cache[path] = [ Flor::ConfExecutor.load(path), mt1 ]).first
           end
         end
 
+      case ext
+      when '.rb' then eval_ruby(path, src, context)
+      else eval_json(path, src, context)
+      end
+    end
+
+    def eval_json(path, src, context)
+
       Flor::ConfExecutor.interpret(path, src, context)
+    end
+
+    def eval_ruby(path, src, context)
+
+      src = "context = #{context.inspect}\n#{src}"
+
+      r = Kernel.eval(src, nil, path, 2)
+
+      r = JSON.parse(JSON.dump(r)) #if r.keys.find { |k| k.is_a?(Symbol) }
+        #
+        # so that symbols may be used in the .rb file, but plain JSON-like
+        # string keys are on the output
+
+      r.merge!('_path' => path)
     end
   end
 end
