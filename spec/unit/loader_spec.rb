@@ -90,7 +90,7 @@ describe Flor::Loader do
         [ 'org.example bob', %w[ description bo _path root ] ],
 
       [ '', 'zebulon', { 'payload' => { 'a' => 0 } } ] =>
-        [ "zebulon's conf", %w[ description point payload_size _path ] ],
+        [ "zebulon's conf", %w[ description payload_size _path ] ],
 
     }.each do |ks, (desc, keys)|
 

@@ -185,7 +185,15 @@ module Flor
 
     def eval_ruby(path, src, context)
 
-      r = OpenStruct.new(context).instance_eval(src, path)
+      ks = context.keys.select { |k| k.match(/\A[a-z][a-zA-Z0-9_]+\z/) }
+
+      s = StringIO.new
+      s << "lambda {\n"
+      ks.each { |k| s << k << " = " << context[k].inspect << "\n" }
+      s << src
+      s << "\n}.call\n"
+
+      r = Kernel.eval(s.string, nil, path, - ks.size)
 
       r = JSON.parse(JSON.dump(r)) #if r.keys.find { |k| k.is_a?(Symbol) }
         #
