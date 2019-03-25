@@ -185,9 +185,7 @@ module Flor
 
     def eval_ruby(path, src, context)
 
-      src = "context = #{context.inspect}\n#{src}"
-
-      r = Kernel.eval(src, nil, path, 2)
+      r = OpenStruct.new(context).instance_eval(src, path)
 
       r = JSON.parse(JSON.dump(r)) #if r.keys.find { |k| k.is_a?(Symbol) }
         #
