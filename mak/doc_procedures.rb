@@ -101,7 +101,7 @@ def make_proc_doc(path, names_and_lines)
   [ File.basename(File.dirname(path))[1..-1], names, "#{fname}.md", summary ]
 end
 
-def make_procedures_doc
+def make_doc_procedures
 
   procs = NAMES_AND_LINES
     .collect { |path, nsls| make_proc_doc(path, nsls) }
