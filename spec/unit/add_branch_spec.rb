@@ -18,6 +18,8 @@ describe 'Flor unit' do
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
+
+    system('rm tmp/pile/task__*.json')
   end
 
   after :each do
@@ -164,7 +166,30 @@ describe 'Flor unit' do
       expect(r['m']).to eq(35)
     end
 
-    it 'works appending to a "concurrence"'
+    it 'works appending to a "concurrence"' do
+
+      exid = @unit.launch(
+        %q{
+          concurrence
+            pile 'a'
+            pile 'b'
+        },
+        payload: { 'age' => 88 })
+
+      wait_until { Dir['tmp/pile/task__*.json'].size == 2 }
+
+      @unit.add_branch(
+        exid: exid,
+        pnid: '0',
+        tree: %q{ pile 'c' },
+        payload: { age: 77 })
+
+      wait_until { Dir['tmp/pile/task__*.json'].size == 3 }
+
+      task = JSON.parse(File.read(Dir['tmp/pile/task_*_0_2.json'].first))
+
+      expect(task['payload']['age']).to eq(77)
+    end
   end
 end
 

@@ -291,7 +291,6 @@ class Flor::Pro::Concurrence < Flor::Procedure
     @node['receiver'] = determine_receiver
     @node['merger'] = determine_merger
 
-
     branches = (@ncid..children.size - 1).to_a
     @node['branch_count'] = branches.count
 
@@ -316,6 +315,22 @@ class Flor::Pro::Concurrence < Flor::Procedure
     else
       receive_from_merger
     end
+  end
+
+  def add
+
+    super
+
+    i = Flor.child_id(message['tnid'])
+    ts = message['trees']
+
+    @node['branch_count'] += ts.size
+
+    ts
+      .collect.with_index { |t, j|
+        pl = Flor.dup(message['payload'] || node_payload.copy)
+        execute_child(i + j, 0, 'payload' => pl) }
+      .flatten(1)
   end
 
   protected

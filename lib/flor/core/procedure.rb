@@ -911,6 +911,11 @@ class Flor::Procedure < Flor::Node
 
   def add
 
+    # TODO fail if the procedure changed
+    #      could the message contain a SHA for the node as was when the
+    #      that message got emitted?
+    #      well, could that be applied to other messages? too late?
+
 #puts " === add " + ("=" * 40)
 #pp message
 #puts " === add. " + ("=" * 39)
