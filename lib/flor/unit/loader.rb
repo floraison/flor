@@ -193,7 +193,7 @@ module Flor
       s << src
       s << "\n}.call\n"
 
-      r = Kernel.eval(s.string, nil, path, - ks.size)
+      r = Kernel.module_eval(s.string, path, - ks.size)
 
       r = JSON.parse(JSON.dump(r)) #if r.keys.find { |k| k.is_a?(Symbol) }
         #
