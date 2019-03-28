@@ -150,7 +150,10 @@ TODO
 
 ## launching manually
 
-(launching with a passive or active flor unit, simply by insering a launch message in the `:flor_messages` table of the flor database)
+(launching with a passive or active flor unit, simply by inserting a launch message in the `:flor_messages` table of the flor database)
+
+### launching by inserting a message in the flor database
+### launching by inserting a message in the spool/ directory
 
 TODO
 
