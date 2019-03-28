@@ -185,6 +185,7 @@ describe 'Flor unit' do
         payload: { age: 77 })
 
       wait_until { Dir['tmp/pile/task__*.json'].size == 3 }
+      sleep 0.350 # give tasker time to write files
 
       task = JSON.parse(File.read(Dir['tmp/pile/task_*_0_2.json'].first))
 

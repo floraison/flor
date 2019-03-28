@@ -62,9 +62,11 @@ describe 'Flor unit' do
         wait: 'end')
 
       wait_until { Dir['tmp/pile/task__*.json'].size == 2 }
+      sleep 0.350 # give tasker time to write files
 
       expect(
         Dir['tmp/pile/task__*.json']
+          .sort
           .collect { |pa| JSON.parse(File.read(pa))['attd']['x'] }
       ).to eq(%w[
         alpha bravo
@@ -74,9 +76,11 @@ describe 'Flor unit' do
         exid: r['exid'], pnid: '0', elt: 'charly')
 
       wait_until { Dir['tmp/pile/task__*.json'].size == 3 }
+      sleep 0.350 # give tasker time to write files
 
       expect(
         Dir['tmp/pile/task__*.json']
+          .sort
           .collect { |pa| JSON.parse(File.read(pa))['attd']['x'] }
       ).to eq(%w[
         alpha bravo charly
