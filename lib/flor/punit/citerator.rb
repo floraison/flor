@@ -30,6 +30,42 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
     end
   end
 
+  def add
+
+    col = @node['col']
+    elts = message['elements']
+
+    fail Flor::FlorError.new(
+      "cannot add branches to #{heap}", self
+    ) unless elts
+
+    tcol = Flor.type(col)
+    telts = Flor.type(elts)
+
+    fail Flor::FlorError.new(
+      "cannot add #{telts} to #{tcol}", self
+    ) unless tcol == telts
+
+    if col.is_a?(Array)
+      col.concat(elts)
+    else
+      col.merge!(elts)
+    end
+
+    cnt = @node['cnt']
+    @node['cnt'] += elts.size
+
+    pl = message['payload'] || node_payload.current
+
+    elts
+      .collect
+      .with_index { |e, i|
+        apply(
+          @node['fun'], determine_iteration_args(col, cnt + i), tree[2],
+          payload: Flor.dup(pl)) }
+      .flatten(1)
+  end
+
   protected
 
   def receive_last_argument
@@ -52,11 +88,12 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
 
     @node['col'] = col
     @node['cnt'] = col.size
+    @node['fun'] = fun
 
     col
       .collect
       .with_index { |e, i|
-        apply(fun, determine_iteration_args(col, i), tree[2]) }
+        apply( fun, determine_iteration_args(col, i), tree[2]) }
       .flatten(1)
   end
 

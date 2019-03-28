@@ -19,7 +19,7 @@ describe 'Flor unit' do
     @unit.storage.migrate
     @unit.start
 
-    system('rm tmp/pile/task__*.json')
+    system('rm -f tmp/pile/task__*.json')
   end
 
   after :each do

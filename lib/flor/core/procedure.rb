@@ -794,6 +794,10 @@ class Flor::Procedure < Flor::Node
       #
       # an idea from "sort" apply, may be useful later on...
 
+    if pl = opts[:payload]
+      ms.first['payload'] = pl
+    end
+
     ms
   end
 
@@ -910,6 +914,10 @@ class Flor::Procedure < Flor::Node
   end
 
   def add
+
+    fail Flor::FlorError.new(
+      "procedure does not accept add-iteration", self
+    ) if message['elements']
 
     # TODO fail if the procedure changed
     #      could the message contain a SHA for the node as was when the

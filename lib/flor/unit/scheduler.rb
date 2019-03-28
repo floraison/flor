@@ -276,9 +276,9 @@ module Flor
     end
     alias reapply re_apply
 
-    def add_branch(exid, *as)
+    def add_branches(exid, *as)
 
-      m = prepare_message('add', [ exid, *as ]).first
+      m = prepare_message('add-branches', [ exid, *as ]).first
 
       exe = @storage.executions[exid: m['exid']]
       pnid = m['nid']
@@ -313,7 +313,16 @@ module Flor
 
       queue(m)
     end
-    alias add_branches add_branch
+    alias add_branch add_branches
+
+    def add_iterations(exid, *as)
+
+      m = prepare_message('add-iterations', [ exid, *as ]).first
+# TODO checks
+
+      queue(m)
+    end
+    alias add_iteration add_iterations
 
     def schedule(message)
 
@@ -428,15 +437,21 @@ module Flor
         msg['point'] = 'cancel'
         msg['flavour'] = 'kill'
 
-      elsif point == 'add'
+      elsif point == 'add-branches'
 
-        msg['trees'] =
-          prepare_trees(opts)
+        msg['point'] = 'add'
+        msg['trees'] = prepare_trees(opts)
 
         msg['tnid'] = tnid =
           opts.delete(:tnid) || msg.delete('nid')
         msg['nid'] =
           msg.delete('nid') || opts.delete(:pnid) || Flor.parent_nid(tnid)
+
+      elsif point == 'add-iterations'
+
+        msg['point'] = 'add'
+        msg['elements'] = prepare_elements(opts)
+        msg['nid'] = msg.delete('nid') || opts.delete(:pnid)
       end
 
       if opts[:re_apply]
@@ -459,10 +474,20 @@ module Flor
       ts = (opts[:trees] || [ opts[:tree] ].compact)
         .collect { |t| Flor.parse(t, fname, {}) }
 
-      fail ArgumentError.new('missing trees: or tree:') \
-        unless ts.any?
+      fail ArgumentError.new('missing trees: or tree:') if ts.empty?
 
       ts
+    end
+
+    def prepare_elements(opts)
+
+      if elts = opts[:elements] || opts[:elts]
+        elts
+      elsif elt = opts[:element] || opts[:elt]
+        [ elt ]
+      else
+        fail ArgumentError.new('missing elements: or element:')
+      end
     end
 
     def prepare_re_apply_messages(msg, opts)
