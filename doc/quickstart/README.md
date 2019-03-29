@@ -11,6 +11,10 @@ bundle install
 bundle exec ruby quickstart.rb
 ```
 
+### the outcome
+
+TODO
+
 ## the structure
 
 Flor, by default, relies on a flor directory with configuration and tasker implementations.
@@ -30,15 +34,19 @@ quickstart/
 │   ├── lib
 │   │   └── taskers
 │   │       └── org.example
-│   │           ├── alice
-│   │           │   ├── dot.json
-│   │           │   └── tasker.rb
-│   │           └── bob
-│   │               ├── dot.json
-│   │               └── tasker.rb
+│   │           ├── alice.rb
+│   │           └── bob.rb
 │   └── var
 │       ├── flor.db
 │       └── log
 └── quickstart.rb
 ```
+
+## the flow
+
+TODO
+
+## the taskers
+
+TODO
 

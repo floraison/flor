@@ -1,6 +1,0 @@
-
-# alice tasker
-
-require: 'tasker.rb'
-class: AliceTasker
-

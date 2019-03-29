@@ -1,5 +1,8 @@
 
-# tasker.rb
+# alice.rb
+
+
+## tasker implementation
 
 class AliceTasker < Flor::BasicTasker
 
@@ -10,4 +13,11 @@ class AliceTasker < Flor::BasicTasker
     reply
   end
 end
+
+
+## tasker configuration
+
+{
+  class: 'AliceTasker'
+}
 

@@ -1,5 +1,8 @@
 
-# tasker.rb
+# bob.rb
+
+
+## tasker implementation
 
 class BobTasker < Flor::BasicTasker
 
@@ -10,4 +13,11 @@ class BobTasker < Flor::BasicTasker
     reply
   end
 end
+
+
+## tasker configuration
+
+{
+  class: 'BobTasker'
+}
 
