@@ -47,5 +47,6 @@ If you have any question feel free to ask in the [flor chat room](https://gitter
 * [traps.md](traps.md) - setting event traps in flor definitions
 * [variables.md](variables.md) - the flor language and variables
 * [procedures/](procedures) - documentation directory for flor procedures
+* [quickstart/](quickstart) - flor quickstart
 * [services/](services) - pieces of documentation about flor services
 
