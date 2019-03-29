@@ -42,9 +42,16 @@ msg =
 sleep 0.5
   # Give time to executor to shutdown and stop spitting debug info
 
+puts
+puts 'final message:'
 pp msg
   # Pretty print the "terminated" message (could be a "failed" message if
   # something went wrong)
 
 #FLOR.join
+  #
+  # Commented out but shows how to join the scheduler's thread and
+  # not exit directly.
+  # Such a #join call is necessary only when one sets up a Ruby process
+  # dedicated to a flor scheduler.
 
