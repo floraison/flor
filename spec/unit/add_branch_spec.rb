@@ -177,6 +177,7 @@ describe 'Flor unit' do
         payload: { 'age' => 88 })
 
       wait_until { Dir['tmp/pile/task__*.json'].size == 2 }
+      sleep 0.350 # give execution time to settle
 
       @unit.add_branch(
         exid: exid,
