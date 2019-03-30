@@ -29,27 +29,47 @@ describe 'Flor unit' do
 
   describe '#add_iteration' do
 
-#    it 'fails immediately if overshooting' do
-#
-#      r = @unit.launch(
-#        %q{
-#          sequence
-#            stall _
-#        },
-#        wait: 'end')
-#
-#      expect {
-#
-#        @unit.add_branch(
-#          exid: r['exid'],
-#          nid: '0_5',
-#          tree: %q{ bob 'do important job' })
-#
-#      }.to raise_error(
-#        ArgumentError,
-#        "target 0_5 is off by 4, node 0 has 1 branch"
-#      )
-#    end
+    it 'fails if elements: or elts: is missing' do
+
+      expect {
+        @unit.add_iteration(exid: 'xxx', nid: '0_0')
+      }.to raise_error(
+        ArgumentError, 'missing elements: or element:'
+      )
+    end
+
+    it 'fails if the execution is not present' do
+
+      expect {
+        @unit.add_iteration(exid: 'xxx', nid: '0_0', elts: %w[ a b c ])
+      }.to raise_error(
+        ArgumentError, 'cannot add iteration to missing execution "xxx"'
+      )
+    end
+
+    it 'fails if nid: or pnid: is missing' do
+
+      r = @unit.launch(%q{ stall _ }, wait: 'end')
+
+      expect {
+        @unit.add_iteration(exid: r['exid'], elements: %w[ a b ])
+      }.to raise_error(
+        ArgumentError, 'missing nid: or pnid:'
+      )
+    end
+
+    it 'fails if the target nid: is not present' do
+
+      r = @unit.launch(%q{ stall _ }, wait: 'end')
+
+      expect {
+        @unit.add_iteration(
+          exid: r['exid'], nid: '0_1', elements: %w[ a b ])
+      }.to raise_error(
+        ArgumentError,
+        'cannot add iteration to missing node "0_1"'
+      )
+    end
 
     it 'adds iteration to "c-for-each"' do
 

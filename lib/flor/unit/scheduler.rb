@@ -318,7 +318,21 @@ module Flor
     def add_iterations(exid, *as)
 
       m = prepare_message('add-iterations', [ exid, *as ]).first
-# TODO checks
+
+      exe = @storage.executions[exid: m['exid']]
+      nid = m['nid']
+
+      fail ArgumentError.new(
+        "cannot add iteration to missing execution #{m['exid'].inspect}"
+      ) unless exe
+
+      fail ArgumentError.new(
+        "missing nid: or pnid:"
+      ) unless nid
+
+      fail ArgumentError.new(
+        "cannot add iteration to missing node #{nid.inspect}"
+      ) unless exe.lookup_tree(nid)
 
       queue(m)
     end
