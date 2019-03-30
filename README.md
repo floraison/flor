@@ -26,7 +26,7 @@ Flor is a "Ruby workflow engine", if that makes any sense.
 
 ## quickstart
 
-See [doc/quickstart/](doc/quickstart/).
+See [doc/quickstart0/](doc/quickstart0/) for a minimal, one Ruby file, quickstart program, then [doc/quickstart1/](doc/quickstart1/) for a more complex example with a configuration tree and taskers in that tree.
 
 
 ## documentation

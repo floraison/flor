@@ -1,12 +1,12 @@
 
-# flor quickstart/
+# flor quickstart1/
 
 For now, the quickstart just shows how to initialize a flor instance and run a minimal execution in it. The quickstart ends (the Ruby process exits) when the flor execution ends (flor is told to wait for the execution to ends (or fail)).
 
 ## running it
 
 ```
-cd quickstart/
+cd doc/quickstart1/
 bundle install
 bundle exec ruby quickstart.rb
 ```
@@ -26,7 +26,7 @@ Flor, by default, relies on a flor directory with configuration and tasker imple
 `var/` where flor writes. In this quickstart the sqlite flor.db file lies there.
 
 ```
-quickstart/
+quickstart1/
 ├── Gemfile
 ├── Gemfile.lock
 ├── README.md
