@@ -71,7 +71,7 @@ describe 'Flor unit' do
       )
     end
 
-    it 'adds iteration to "c-for-each"' do
+    it 'adds iterations to "c-for-each" (array)' do
 
       r = @unit.launch(
         %q{
@@ -106,6 +106,35 @@ describe 'Flor unit' do
         alpha bravo charly
       ])
     end
+
+    it 'adds iterations to "c-for-each" (object)'
+
+    it 'adds iterations to "for-each" (array)' do
+
+      r = @unit.launch(
+        %q{
+          for-each [ 'alpha' ]
+            def f.x
+              stall _
+        },
+        wait: '0_1_1-1 receive')
+      @unit.wait(r['exid'], 'end')
+
+      expect(r['payload']['x']).to eq('alpha')
+
+      @unit.add_iteration(
+        exid: r['exid'], nid: '0', elt: 'bravo')
+
+      @unit.wait(r['exid'], 'add')
+
+      @unit.cancel(r['exid'], '0_1_1-1')
+
+      r = @unit.wait(r['exid'], '0_1_1-2 receive')
+
+      expect(r['payload']['x']).to eq('bravo')
+    end
+
+    it 'adds iterations to "for-each" (object)'
   end
 end
 

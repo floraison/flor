@@ -26,6 +26,13 @@ class Flor::Pro::Iterator < Flor::Procedure
     end
   end
 
+  def add
+
+    @node['col'].concat(message['elements'])
+
+    []
+  end
+
   protected
 
   def receive_argument
