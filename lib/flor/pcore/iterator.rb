@@ -28,9 +28,14 @@ class Flor::Pro::Iterator < Flor::Procedure
 
   def add
 
-    @node['col'].concat(message['elements'])
+    elts = message['elements']
 
-    []
+    elts = elts.inject([]) { |a, e| a.concat(e.to_a) } \
+      if @node['ocol'].is_a?(Hash)
+
+    @node['col'].concat(elts)
+
+    [] # no new messages to queue
   end
 
   protected

@@ -40,16 +40,23 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
     ) unless elts
 
     tcol = Flor.type(col)
-    telts = Flor.type(elts)
 
-    fail Flor::FlorError.new(
-      "cannot add #{telts} to #{tcol}", self
-    ) unless tcol == telts
+    x =
+      if tcol == :object
+        elts.inject(nil) { |r, e|
+          next r if r
+          t = Flor.type(e)
+          t != :object ? t : r }
+      else
+        nil
+      end
+    fail Flor::FlorError.new("cannot add #{x} to object", self) \
+      if x
 
-    if col.is_a?(Array)
+    if tcol == :array
       col.concat(elts)
-    else
-      col.merge!(elts)
+    else # tcol == :object
+      elts.each { |e| col.merge!(e) }
     end
 
     cnt = @node['cnt']

@@ -495,13 +495,15 @@ module Flor
 
     def prepare_elements(opts)
 
-      if elts = opts[:elements] || opts[:elts]
-        elts
-      elsif elt = opts[:element] || opts[:elt]
-        [ elt ]
-      else
-        fail ArgumentError.new('missing elements: or element:')
-      end
+      elts =
+        opts[:elements] || opts[:elts] ||
+        opts[:element] || opts[:elt]
+
+      fail ArgumentError.new('missing elements: or element:') unless elts
+
+      elts = [ elts ] unless elts.is_a?(Array)
+
+      elts
     end
 
     def prepare_re_apply_messages(msg, opts)

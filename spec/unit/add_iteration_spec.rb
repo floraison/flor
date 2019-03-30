@@ -18,8 +18,6 @@ describe 'Flor unit' do
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
-
-    system('rm -f tmp/pile/task__*.json')
   end
 
   after :each do
@@ -73,21 +71,22 @@ describe 'Flor unit' do
 
     it 'adds iterations to "c-for-each" (array)' do
 
+      @unit.hook('journal', Flor::Journal)
+
       r = @unit.launch(
         %q{
           c-for-each [ 'alpha' 'bravo' ]
-            def x
-              pile 'x': x
+            def f.x
+              stall _
         },
         wait: 'end')
 
-      wait_until { Dir['tmp/pile/task__*.json'].size == 2 }
-      sleep 0.350 # give tasker time to write files
-
       expect(
-        Dir['tmp/pile/task__*.json']
-          .sort
-          .collect { |pa| JSON.parse(File.read(pa))['attd']['x'] }
+        @unit.journal
+          .select { |m|
+            m['point'] == 'receive' && m['nid'].match(/^0_1_1-\d+$/) }
+          .collect { |m|
+            m['payload']['x'] }
       ).to eq(%w[
         alpha bravo
       ])
@@ -95,19 +94,58 @@ describe 'Flor unit' do
       @unit.add_iteration(
         exid: r['exid'], pnid: '0', elt: 'charly')
 
-      wait_until { Dir['tmp/pile/task__*.json'].size == 3 }
-      sleep 0.350 # give tasker time to write files
+      @unit.wait(r['exid'], 'end')
 
       expect(
-        Dir['tmp/pile/task__*.json']
-          .sort
-          .collect { |pa| JSON.parse(File.read(pa))['attd']['x'] }
+        @unit.journal
+          .select { |m|
+            m['point'] == 'receive' && m['nid'].match(/^0_1_1-\d+$/) }
+          .collect { |m|
+            m['payload']['x'] }
       ).to eq(%w[
         alpha bravo charly
       ])
     end
 
-    it 'adds iterations to "c-for-each" (object)'
+    it 'adds iterations to "c-for-each" (object)' do
+
+      @unit.hook('journal', Flor::Journal)
+
+      r = @unit.launch(
+        %q{
+          c-for-each { a: 'A', b: 'B' }
+            def f.k f.v
+              stall _
+        },
+        wait: 'end')
+
+      expect(
+        @unit.journal
+          .select { |m|
+            m['point'] == 'receive' && m['nid'].match(/^0_1_2-\d+$/) }
+          .collect { |m|
+            [ m['payload']['k'], m['payload']['v'] ] }
+          .flatten
+      ).to eq(%w[
+        a A b B
+      ])
+
+      @unit.add_iteration(
+        exid: r['exid'], nid: '0', elts: [ { c: 'C' }, { d: 'D' } ])
+
+      @unit.wait(r['exid'], 'end')
+
+      expect(
+        @unit.journal
+          .select { |m|
+            m['point'] == 'receive' && m['nid'].match(/^0_1_2-\d+$/) }
+          .collect { |m|
+            [ m['payload']['k'], m['payload']['v'] ] }
+          .flatten
+      ).to eq(%w[
+        a A b B c C d D
+      ])
+    end
 
     it 'adds iterations to "for-each" (array)' do
 
@@ -134,7 +172,35 @@ describe 'Flor unit' do
       expect(r['payload']['x']).to eq('bravo')
     end
 
-    it 'adds iterations to "for-each" (object)'
+    it 'adds iterations to "for-each" (object)' do
+
+      r = @unit.launch(
+        %q{
+          for-each { a: 'A' }
+            def f.k f.v
+              stall _
+        },
+        wait: 'end')
+
+      @unit.add_iteration(
+        exid: r['exid'], nid: '0', elts: { b: 'B', c: 'C' })
+
+      @unit.wait(r['exid'], 'add')
+
+      @unit.cancel(r['exid'], '0_1_2-1')
+
+      r = @unit.wait(r['exid'], '0_1_2-2 receive')
+
+      expect(r['payload']['k']).to eq('b')
+      expect(r['payload']['v']).to eq('B')
+
+      @unit.cancel(r['exid'], '0_1_2-2')
+
+      r = @unit.wait(r['exid'], '0_1_2-3 receive')
+
+      expect(r['payload']['k']).to eq('c')
+      expect(r['payload']['v']).to eq('C')
+    end
   end
 end
 
