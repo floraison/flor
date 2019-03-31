@@ -23,7 +23,7 @@ If you disagree with a solution proposed here, you are much welcome to [raise an
 * [Multi-Choice](#abs-multi-choice)
 * [Structured Synchronizing Merge](#abs-structured-synchronizing-merge)
 * [Multi-Merge](#abs-multi-merge)
-* Structured Discriminator
+* [Structured Discriminator](#abs-structured-discriminator)
 * Blocking Discriminator
 * Cancelling Discriminator
 * Structured Partial Join
@@ -187,7 +187,7 @@ The [concurrence](procedures/concurrence.md) procedure, by default, waits for al
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp7.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp7_animation.php) | [top](#top)
 
 ### Multi-Merge
-<a id="abs-multi-merge" />Here is the given example for this merge:
+<a id="abs-multi-merge" />Here is the example given for this merge:
 
 > The lay_foundations, order_materials and book_labourer tasks occur in parallel as separate process branches. After each of them completes the quality_review task is run before that branch of the process finishes.
 
@@ -241,6 +241,23 @@ sequence
 TODO: alternatives...
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp8.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp8_animation.php) | [top](#top)
+
+### Structured Discriminator
+<a id="abs-structured-discriminator" />Here is the example given for this merge:
+
+> When handling a cardiac arrest, the _check_breathing_ and _check_pulse_ tasks run in parallel. Once the first of these has completed, the _triage_ task is commenced. Completion of the other task is ignored and does not result in a second instance of the _triage_ task.
+
+```python
+sequence
+  concurrence expect: 1 remaining: 'forget'
+    check_breathing _
+    check_pulse _
+  triage _
+```
+
+The "concurrence" expects one reply and then cancels the remaining branch.
+
+[wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp9.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp9_animation.php) | [top](#top)
 
 <!-- --------------------------------------------------------------------- -->
 ## Multiple Instance Patterns
