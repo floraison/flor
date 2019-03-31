@@ -9,6 +9,14 @@ module Flor
 
       @unit = unit
 
+      class << unit
+
+        def hook(*args, &block)
+
+          @hooker.add(*args, &block)
+        end
+      end
+
       @hooks = []
     end
 

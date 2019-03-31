@@ -111,11 +111,6 @@ module Flor
       @ganger.shutdown
     end
 
-    def hook(*args, &block)
-
-      @hooker.add(*args, &block)
-    end
-
     def on_start_exc(e)
 
       io = StringIO.new
