@@ -1,0 +1,33 @@
+
+# org.example/flow0.flor
+
+# the "workflow definition",
+# the 'program' that flor interprets
+
+# Launch a simple flow handing work tasks to alice and bob concurrently
+# "concurrence" will wait for alice and bob to reply
+# `wait: true` tells the #launch to wait for the flow to end
+# The flow will end when its root procedure ("concurrence" here) ends
+#
+# "alice" and "bob" are 'taskers', their implementations can be found
+# under quickstart/flor/lib/taskers/org.example/alice/ and
+# quickstart/flor/lib/taskers/org.example/bob/ respectively
+
+concurrence
+  alice _
+  bob _
+
+# Writing simply `alice` lets flor return the value behind the word "alice",
+# a simple reference to the tasker.
+# By appending an empty argument, the `_` (underscore), the tasker is actually
+# called.
+#
+# Compare this with the following Javascript:
+# ```javascript
+# function alice() {
+#   return "done";
+# }
+# alice;    # returns something like `function alice() { return "done"; }`
+# alice();  # returns `"done"`
+# ```
+
