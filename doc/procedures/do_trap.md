@@ -23,4 +23,5 @@ terminated(f:0)
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/do_trap.rb)
+* [do-trap spec](https://github.com/floraison/flor/tree/master/spec/punit/do_trap_spec.rb)
 

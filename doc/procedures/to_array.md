@@ -23,4 +23,5 @@ to-object [ 'a' 'A' 'b' 'B' 'c' 'C' ]
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/to_array.rb)
+* [to-array spec](https://github.com/floraison/flor/tree/master/spec/pcore/to_array_spec.rb)
 

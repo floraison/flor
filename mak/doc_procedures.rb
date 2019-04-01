@@ -86,10 +86,9 @@ def make_proc_doc(path, names_and_lines)
       path.match(/\/pcore\//) ? 'pcore' : 'punit'
     spec_paths =
       names.inject([]) { |a, name|
-        spa = "spec/#{cat}/#{name}_spec.rb"
+        spa = "spec/#{cat}/#{name.gsub('-', '_')}_spec.rb"
         a << [ name, spa ] if File.exist?(spa)
-        a
-      }
+        a }
 
     f.puts("\n* [source](#{File.join(PURI, path)})")
     spec_paths.each do |name, spath|

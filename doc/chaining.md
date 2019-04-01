@@ -39,7 +39,7 @@ Procedures able to "chain":
 * [length](procedures/length.md)
 * [map](procedures/map.md) and [collect](procedures/select.md)
 * [merge](procedures/merge.md)
-* [cmap](procedures/cmap.md) and [ccollect](procedures/ccollect.md)
+* [c_map](procedures/c_map.md) and [c_collect](procedures/c_collect.md)
 * [reduce](procedures/reduce.md) and [inject](procedures/inject.md)
 * [reverse](procedures/reverse.md)
 * [slice](procedures/slice.md) and [index](procedures/slice.md)

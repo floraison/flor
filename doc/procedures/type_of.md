@@ -20,4 +20,5 @@ type true  # ==> 'boolean'
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/type_of.rb)
+* [type-of spec](https://github.com/floraison/flor/tree/master/spec/pcore/type_of_spec.rb)
 

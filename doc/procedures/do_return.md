@@ -23,4 +23,5 @@ return
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/do_return.rb)
+* [do-return spec](https://github.com/floraison/flor/tree/master/spec/pcore/do_return_spec.rb)
 

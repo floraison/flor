@@ -1,5 +1,5 @@
 
-# ccollect
+# ccollect, c-collect
 
 A concurrent version of [collect](collect.md).
 
@@ -28,9 +28,9 @@ When iterating over an object (a hash), the variables will be `key`, `val`,
 
 ## see also
 
-[Collect](collect.md), [map](map.md), [cmap](cmap.md).
+[Collect](collect.md), [map](map.md), [c-map](c_map.md).
 
 
-* [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/ccollect.rb)
-* [ccollect spec](https://github.com/floraison/flor/tree/master/spec/punit/ccollect_spec.rb)
+* [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/c_collect.rb)
+* [c-collect spec](https://github.com/floraison/flor/tree/master/spec/punit/c_collect_spec.rb)
 

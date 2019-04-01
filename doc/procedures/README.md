@@ -64,10 +64,10 @@
 
 ## unit
 
+* [ccollect, c-collect](c_collect.md) - A concurrent version of [collect](collect.md).
 * [c-for-each](c_for_each.md) - Concurrent "for-each", launches a concurrent branch for each elt or entry of the incoming collection.
+* [cmap, c-map](c_map.md) - Concurrent version of "map". Spins a concurrent child for each element of the incoming/argument collection.
 * [cancel, kill](cancel.md) - Cancels an execution branch
-* [ccollect](ccollect.md) - A concurrent version of [collect](collect.md).
-* [cmap](cmap.md) - Concurrent version of "map". Spins a concurrent child for each element of the incoming/argument collection.
 * [concurrence](concurrence.md) - Executes its children concurrently.
 * [cron](cron.md) - A macro-procedure, rewriting itself to `schedule cron: ...`.
 * [do-trap](do_trap.md) - A version of trap that accepts a block instead of a function.
@@ -103,9 +103,9 @@
     * [Flor::Pro::Arr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_arr.rb) : [_arr](_arr.md)
     * [Flor::Pro::Obj](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_obj.rb) : [_obj](_obj.md)
   * [Flor::Pro::Concurrence](https://github.com/floraison/flor/blob/master/lib/flor/punit/concurrence.rb) : [concurrence](concurrence.md)
-  * [Flor::Pro::ConcurrentIterator](https://github.com/floraison/flor/blob/master/lib/flor/punit/citerator.rb) : 
+  * [Flor::Pro::ConcurrentIterator](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_iterator.rb) : 
     * [Flor::Pro::CforEach](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_for_each.rb) : [c-for-each](c_for_each.md)
-    * [Flor::Pro::Cmap](https://github.com/floraison/flor/blob/master/lib/flor/punit/cmap.rb) : [cmap](cmap.md)
+    * [Flor::Pro::Cmap](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_map.rb) : [cmap, c-map](c_map.md)
   * [Flor::Pro::Cond](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cond.rb) : [cond](cond.md)
   * [Flor::Pro::Cursor](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cursor.rb) : [cursor](cursor.md)
     * [Flor::Pro::Loop](https://github.com/floraison/flor/blob/master/lib/flor/pcore/loop.rb) : [loop](loop.md)
@@ -154,7 +154,7 @@
   * [Flor::Pro::Push](https://github.com/floraison/flor/blob/master/lib/flor/pcore/push.rb) : [push, pushr](push.md)
   * [Flor::Pro::Rand](https://github.com/floraison/flor/blob/master/lib/flor/pcore/rand.rb) : [rand](rand.md)
   * [Flor::Pro::Range](https://github.com/floraison/flor/blob/master/lib/flor/pcore/range.rb) : [range](range.md)
-  * [Flor::Pro::Ref](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_ref.rb) : _ref, _rep
+  * [Flor::Pro::Ref](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_ref.rb) : _ref, _rep, _reff
   * [Flor::Pro::RegularExpressionString](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_rxs.rb) : _rxs
   * [Flor::Pro::Return](https://github.com/floraison/flor/blob/master/lib/flor/pcore/return.rb) : return
   * [Flor::Pro::Reverse](https://github.com/floraison/flor/blob/master/lib/flor/pcore/reverse.rb) : [reverse](reverse.md)

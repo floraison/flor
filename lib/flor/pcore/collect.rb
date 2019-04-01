@@ -38,7 +38,7 @@ class Flor::Pro::Collect < Flor::Macro::Iterator
   #
   # ## see also
   #
-  # Map, cmap, ccollect.
+  # Map, c_map, c_collect.
 
   name 'collect'
 

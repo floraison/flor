@@ -41,4 +41,5 @@ set in the closure for the function call.
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/for_each.rb)
+* [for-each spec](https://github.com/floraison/flor/tree/master/spec/pcore/for_each_spec.rb)
 

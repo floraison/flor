@@ -1,5 +1,5 @@
 
-# cmap
+# cmap, c-map
 
 Concurrent version of "map". Spins a concurrent child for each
 element of the incoming/argument collection.
@@ -26,6 +26,6 @@ concurrent behaviours, look at [concurrence](concurrence.md).
 [Map](map.md), [concurrence](concurrence.md).
 
 
-* [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/cmap.rb)
-* [cmap spec](https://github.com/floraison/flor/tree/master/spec/punit/cmap_spec.rb)
+* [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/c_map.rb)
+* [c-map spec](https://github.com/floraison/flor/tree/master/spec/punit/c_map_spec.rb)
 

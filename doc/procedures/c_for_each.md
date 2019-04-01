@@ -24,8 +24,9 @@ c-for-each
 
 ## see also
 
-[For-each](for_each.md) and [cmap](cmap.md).
+[For-each](for_each.md), [cmap](c_map.md), and ceach.
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/c_for_each.rb)
+* [c-for-each spec](https://github.com/floraison/flor/tree/master/spec/punit/c_for_each_spec.rb)
 
