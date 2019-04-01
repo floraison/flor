@@ -1,7 +1,7 @@
 
 class Flor::Pro::Ref < Flor::Procedure
 
-  names %w[ _ref _rep ]
+  names %w[ _ref _rep _reff ]
 
   def pre_execute
 
@@ -44,6 +44,7 @@ class Flor::Pro::Ref < Flor::Procedure
     return nil if field?(ke.work_path)
     return nil if child_id == 1 && (n = parent_node) && n['heat0'] == '_head'
     return nil if ke.miss[1].any? && ke.miss[4].empty?
+    return nil if tree[0] == '_reff'
 
     raise
   end

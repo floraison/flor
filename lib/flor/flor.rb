@@ -469,7 +469,7 @@ module Flor
     def is_ref_tree?(o)
 
       o.is_a?(Array) &&
-      o[0] == '_ref' &&
+      (o[0] == '_ref' || o[0] == '_reff') &&
       o[2].is_a?(Integer) &&
       o[1].is_a?(Array) &&
       o[1].all? { |e| is_sqs_tree?(e) || is_num_tree?(e) }

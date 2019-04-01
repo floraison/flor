@@ -8,6 +8,7 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
     @node['args'] = []
     @node['col'] = nil
 
+    reff_att_children
     unatt_unkeyed_children
   end
 
@@ -77,15 +78,23 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
 
   def receive_last_argument
 
+    t1 = tree[1]
+
     col = nil
     fun = nil
+    refs = []
+      #
     @node['args'].each_with_index do |a, i|
       if ( ! fun) && Flor.is_func_tree?(a)
         fun = a
       elsif ( ! col) && Flor.is_collection?(a)
         col = a
+      else
+        tt = t1[i]
+        refs << Flor.ref_to_path(tt) if Flor.is_ref_tree?(tt)
       end
     end
+      #
     col ||= node_payload_ret
 
     fail Flor::FlorError.new("collection not given to #{heap.inspect}", self) \
@@ -96,6 +105,7 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
     @node['col'] = col
     @node['cnt'] = col.size
     @node['fun'] = fun
+    @node['refs'] = refs
 
     col
       .collect
@@ -106,17 +116,39 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
 
   def determine_iteration_args(col, idx)
 
+    refs = @node['refs'].dup
+
     args =
       if col.is_a?(Array)
-        [ [ 'elt', col[idx] ] ]
+        [ [ refs.shift || 'elt', col[idx] ] ]
       else
         e = col.to_a[idx]
-        [ [ 'key', e[0] ], [ 'val', e[1] ] ]
+        [ [ refs.shift || 'key', e[0] ], [ refs.shift || 'val', e[1] ] ]
       end
-    args << [ 'idx', idx ]
-    args << [ 'len', col.length ]
+    args << [ refs.shift || 'idx', idx ]
+    args << [ refs.shift || 'len', col.length ]
 
     args
+  end
+
+    # TODO: eventually move me up to Flor::Procedure, as Flor::Iterator might
+    #       use me
+    #
+  def reff_att_children
+
+    t = tree
+    t1 = t[1]
+
+    is = t1.each.with_index.inject([]) { |a, (tt, i)|
+      a << i \
+        if tt[0] == '_att' && tt[1].size == 1 && Flor.is_ref_tree?(tt[1][0])
+      a }
+
+    return if is.empty?
+
+    is.each { |i| t1[i][1][0][0] = '_reff' }
+
+    @node['tree'] = [ t[0], t1, *t[2..-1] ]
   end
 end
 
