@@ -27,7 +27,7 @@ class Flor::Pro::CforEach < Flor::Pro::ConcurrentIterator
   #
   # ## see also
   #
-  # For-each and cmap.
+  # For-each, cmap, and ceach.
 
   name 'c-for-each'
 
@@ -35,11 +35,11 @@ class Flor::Pro::CforEach < Flor::Pro::ConcurrentIterator
 
   def receive_ret
 
-    @node['cnt'] = @node['cnt'] - 1
-
-    return [] if @node['cnt'] > 0 # still waiting for answers
-
-    wrap('ret' => @node['col']) # over
+    if (@node['cnt'] -= 1) > 0 # still waiting for answers
+      []
+    else # over
+      wrap('ret' => @node['col'])
+    end
   end
 end
 
