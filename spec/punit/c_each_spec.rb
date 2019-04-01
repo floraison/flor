@@ -14,7 +14,7 @@ describe 'Flor punit' do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf['unit'] = 'pu_cmap'
-    @unit.hooker.add('journal', Flor::Journal)
+    #@unit.hooker.add('journal', Flor::Journal)
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
@@ -57,20 +57,20 @@ describe 'Flor punit' do
       expect(r['payload']['ret']).to eq([ 10, 11, 12 ])
     end
 
-    it 'accepts custom keys' do
-
-      r = @unit.launch(
-        %q{
-          set l []
-          ceach [ 10 11 ] f.elt f.idx
-            push l [ f.idx f.elt ]
-        },
-        wait: true)
-
-      expect(r).to have_terminated_as_point
-      expect(r['vars']['l']).to eq([ [ 0, 10 ], [ 1, 11 ] ])
-      expect(r['payload']['ret']).to eq([ 10, 11 ])
-    end
+#    it 'accepts custom keys' do
+#
+#      r = @unit.launch(
+#        %q{
+#          set l []
+#          ceach [ 10 11 ] f.elt f.idx
+#            push l [ f.idx f.elt ]
+#        },
+#        wait: true)
+#
+#      expect(r).to have_terminated_as_point
+#      expect(r['vars']['l']).to eq([ [ 0, 10 ], [ 1, 11 ] ])
+#      expect(r['payload']['ret']).to eq([ 10, 11 ])
+#    end
   end
 end
 
