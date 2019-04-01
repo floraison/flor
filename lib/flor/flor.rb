@@ -450,6 +450,36 @@ module Flor
       o[1].match(/\A\/.*\/[a-zA-Z]*\z/)
     end
 
+    def is_sqs_tree?(o)
+
+      o.is_a?(Array) &&
+      o[0] == '_sqs' &&
+      o[2].is_a?(Integer) &&
+      o[1].is_a?(String)
+    end
+
+    def is_num_tree?(o)
+
+      o.is_a?(Array) &&
+      o[0] == '_num' &&
+      o[2].is_a?(Integer) &&
+      o[1].is_a?(Numeric)
+    end
+
+    def is_ref_tree?(o)
+
+      o.is_a?(Array) &&
+      o[0] == '_ref' &&
+      o[2].is_a?(Integer) &&
+      o[1].is_a?(Array) &&
+      o[1].all? { |e| is_sqs_tree?(e) || is_num_tree?(e) }
+    end
+
+    def ref_to_path(t)
+
+      t[1].collect { |tt| tt[1].to_s }.join('.')
+    end
+
     # Returns [ st, i ], the parent subtree for the final i index of the nid
     # Used when inserting updated subtrees.
     #

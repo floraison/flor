@@ -56,6 +56,21 @@ describe 'Flor punit' do
       expect(r['vars']['l']).to eq([ [ 0, 10 ], [ 1, 11 ], [ 2, 12 ] ])
       expect(r['payload']['ret']).to eq([ 10, 11, 12 ])
     end
+
+    it 'accepts custom keys' do
+
+      r = @unit.launch(
+        %q{
+          set l []
+          ceach [ 10 11 ] f.elt f.idx
+            push l [ f.idx f.elt ]
+        },
+        wait: true)
+
+      expect(r).to have_terminated_as_point
+      expect(r['vars']['l']).to eq([ [ 0, 10 ], [ 1, 11 ] ])
+      expect(r['payload']['ret']).to eq([ 10, 11 ])
+    end
   end
 end
 
