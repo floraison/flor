@@ -77,18 +77,13 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
 
   def receive_last_argument
 
-    t = tree
-
     col = nil
     fun = nil
-    refs = []
     @node['args'].each_with_index do |a, i|
       if ( ! fun) && Flor.is_func_tree?(a)
         fun = a
       elsif ( ! col) && Flor.is_collection?(a)
         col = a
-      elsif tt = t[1][i]
-        refs << Flor.ref_to_path(tt) if Flor.is_ref_tree?(tt)
       end
     end
     col ||= node_payload_ret
@@ -105,23 +100,21 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
     col
       .collect
       .with_index { |e, i|
-        apply(fun, determine_iteration_args(refs, col, i), tree[2]) }
+        apply(fun, determine_iteration_args(col, i), tree[2]) }
       .flatten(1)
   end
 
-  def determine_iteration_args(refs, col, idx)
-
-    refs = Flor.dup(refs)
+  def determine_iteration_args(col, idx)
 
     args =
       if col.is_a?(Array)
-        [ [ refs.shift || 'elt', col[idx] ] ]
+        [ [ 'elt', col[idx] ] ]
       else
         e = col.to_a[idx]
-        [ [ refs.shift || 'key', e[0] ], [ refs.shift || 'val', e[1] ] ]
+        [ [ 'key', e[0] ], [ 'val', e[1] ] ]
       end
-    args << [ refs.shift || 'idx', idx ]
-    args << [ refs.shift || 'len', col.length ]
+    args << [ 'idx', idx ]
+    args << [ 'len', col.length ]
 
     args
   end
