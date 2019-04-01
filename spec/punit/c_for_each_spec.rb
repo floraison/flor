@@ -272,7 +272,7 @@ describe 'Flor punit' do
 
       expect(r).to have_terminated_as_point
       expect(r['vars']['l']).to eq([ [ 'a', 0 ], [ 'b', 1 ] ])
-      expect(r['payload']['ret']).to eq(%[ a b ])
+      expect(r['payload']['ret']).to eq(%w[ a b ])
     end
   end
 end
