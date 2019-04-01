@@ -1,5 +1,5 @@
 
-require 'flor/punit/citerator'
+require 'flor/punit/c_iterator'
 
 
 class Flor::Pro::CforEach < Flor::Pro::ConcurrentIterator

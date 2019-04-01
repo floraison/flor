@@ -1,5 +1,5 @@
 
-require 'flor/punit/citerator'
+require 'flor/punit/c_iterator'
 
 
 class Flor::Pro::Cmap < Flor::Pro::ConcurrentIterator
@@ -28,7 +28,7 @@ class Flor::Pro::Cmap < Flor::Pro::ConcurrentIterator
   #
   # Map, concurrence.
 
-  name 'cmap'
+  names %w[ cmap c-map ]
 
   def pre_execute
 

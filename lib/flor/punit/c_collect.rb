@@ -30,7 +30,7 @@ class Flor::Pro::Ccollect < Flor::Macro::Iterator
   #
   # Collect, map, cmap.
 
-  name 'ccollect'
+  names %w[ ccollect c-collect ]
 
   def rewrite_tree
 

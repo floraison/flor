@@ -258,6 +258,22 @@ describe 'Flor punit' do
       expect(r['vars']['a']).to eq([ 3, 4, 5 ])
       expect(r['payload']['ret']).to eq([ 0, 1, 2 ])
     end
+
+    it 'ignores "c_each" custom keys' do
+
+      r = @unit.launch(
+        %q{
+          c-for-each [ 'a' 'b' ] f.elt
+            def elt idx
+              push l [ elt idx ]
+        },
+        vars: { l: [] },
+        wait: true)
+
+      expect(r).to have_terminated_as_point
+      expect(r['vars']['l']).to eq([ [ 'a', 0 ], [ 'b', 1 ] ])
+      expect(r['payload']['ret']).to eq(%[ a b ])
+    end
   end
 end
 
