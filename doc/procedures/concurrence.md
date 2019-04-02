@@ -144,7 +144,7 @@ concurrence tag: 'x'
   + 56 78
 ```
 
-## on_merge: / merger:
+## on_merge: / merger: / merge:
 
 the function given to `on_merge:` or `merger:` is called once the
 concurrence has gathered enough replies (or the right replies,
@@ -179,6 +179,25 @@ The signature for the merge function looks like:
   like `{"0_1"=>{"ret"=>12}, "0_2"=>{"ret"=>21}, "0_3"=>{"ret"=>6}}`.
 * _branch_count_ simply contains the count of branches. It should be
   superior or equal to the size of _rets_ and _replies_.
+
+### merge: and string values
+
+By default, the merge technique is a deep merge favouring the first
+branches to reply. By passing a string value to merge:/merger:/on_merge:
+one can select a different merge technique.
+
+* "first" (the default) - the first branch to reply has priority in the deep  #   merge
+* "last" - the last branch to reply has priority in the deep merge
+* "top" or "north" - the branch are prioritized in the order they are
+  in the flow definition
+* "bottom" or "south" - the branch are prioritized in the reverse order of
+  the flow definition
+
+Adding "plain" (for example "south plain") tells the "concurrence" not to
+use a deep merge but the plain/vanilla merge found in Ruby.
+
+"north plain" can be abbreviated to "np", "bottom" to "b", "first plain" to
+"fp", etc...
 
 ## on_merge (non-attribute)
 

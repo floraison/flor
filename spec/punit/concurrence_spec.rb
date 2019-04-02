@@ -441,6 +441,272 @@ ms-e3p3-end-
           '0_1_2' => { 'ret' => 7 }
         )
       end
+
+      #it 'accepts "first"' # that's the default...
+
+      it 'accepts "first plain"' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence merge: 'fp'
+              sequence
+                set f.x 0
+                set f.h { a: 'a' }
+                set f.a [ 0 ]
+              sequence
+                set f.x 1
+                set f.h { b: 'B' }
+                set f.a [ 1 1 ]
+              sequence
+                set f.x 2
+                set f.h { a: 'A' }
+                set f.a [ 2 ]
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+
+        expect(
+          msg['payload']
+        ).to eq({
+          'ret' => nil,
+          'x' => 0,
+          'a' => [ 0 ],
+          'h' => { 'a' => 'a' }
+        })
+      end
+
+      it 'accepts "last"/"l"' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence merge: 'last'
+              sequence
+                set f.x 0
+                set f.h { a: 'a' }
+                set f.a [ 0 ]
+              sequence
+                set f.x 1
+                set f.h { b: 'B' }
+                set f.a [ 1 1 ]
+              sequence
+                set f.x 2
+                set f.h { a: 'A' }
+                set f.a [ 2 ]
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+
+        expect(
+          msg['payload']
+        ).to eq({
+          'ret' => nil,
+          'x' => 2,
+          'a' => [ 2, 1 ],
+          'h' => { 'a' => 'A', 'b' => 'B' }
+        })
+      end
+
+      it 'accepts "plain"' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence merge: 'plain'
+              sequence
+                set f.x 0
+                set f.h { a: 'a' }
+                set f.a [ 0 ]
+              sequence
+                set f.x 1
+                set f.h { b: 'B' }
+                set f.a [ 1 1 ]
+              sequence
+                set f.x 2
+                set f.h { a: 'A' }
+                set f.a [ 2 ]
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+
+        expect(
+          msg['payload']
+        ).to eq({
+          'ret' => nil,
+          'x' => 0,
+          'a' => [ 0 ],
+          'h' => { 'a' => 'a' }
+        })
+      end
+
+      it 'accepts "last plain"' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence merge: 'last plain'
+              sequence
+                set f.x 0
+                set f.h { a: 'a' }
+                set f.a [ 0 ]
+              sequence
+                set f.x 1
+                set f.h { b: 'B' }
+                set f.a [ 1 1 ]
+              sequence
+                set f.x 2
+                set f.h { a: 'A' }
+                set f.a [ 2 ]
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+
+        expect(
+          msg['payload']
+        ).to eq({
+          'ret' => nil,
+          'x' => 2,
+          'a' => [ 2 ],
+          'h' => { 'a' => 'A' }
+        })
+      end
+
+      it 'accepts "top"' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence merge: 'top'
+              sequence
+                _skip 2 # ensure this branch replies last
+                set f.x 0
+                set f.h { a: 'a' }
+                set f.a [ 0 ]
+              sequence
+                _skip 1 # ensure this branch replies second
+                set f.x 1
+                set f.h { b: 'B' }
+                set f.a [ 1 1 ]
+              sequence
+                set f.x 2
+                set f.h { a: 'A' }
+                set f.a [ 2 ]
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+
+        expect(
+          msg['payload']
+        ).to eq({
+          'ret' => nil,
+          'x' => 0,
+          'a' => [ 0, 1 ],
+          'h' => { 'a' => 'a', 'b' => 'B' }
+        })
+      end
+
+      it 'accepts "top plain"' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence merge: 'tp'
+              sequence
+                _skip 2 # ensure this branch replies last
+                set f.x 0
+                set f.h { a: 'a' }
+                set f.a [ 0 ]
+              sequence
+                _skip 1 # ensure this branch replies second
+                set f.x 1
+                set f.h { b: 'B' }
+                set f.a [ 1 1 ]
+              sequence
+                set f.x 2
+                set f.h { a: 'A' }
+                set f.a [ 2 ]
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+
+        expect(
+          msg['payload']
+        ).to eq({
+          'ret' => nil,
+          'x' => 0,
+          'a' => [ 0 ],
+          'h' => { 'a' => 'a' }
+        })
+      end
+
+      it 'accepts "bottom"' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence merge: 'bottom'
+              sequence
+                _skip 2 # ensure this branch replies last
+                set f.x 0
+                set f.h { a: 'a' }
+                set f.a [ 0 ]
+              sequence
+                _skip 1 # ensure this branch replies second
+                set f.x 1
+                set f.h { b: 'B' }
+                set f.a [ 1 1 ]
+              sequence
+                set f.x 2
+                set f.h { a: 'A' }
+                set f.a [ 2 ]
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+
+        expect(
+          msg['payload']
+        ).to eq({
+          'ret' => nil,
+          'x' => 2,
+          'a' => [ 2, 1 ],
+          'h' => { 'a' => 'A', 'b' => 'B' }
+        })
+      end
+
+      it 'accepts "bottom plain"' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence merge: 'bottom plain'
+              sequence
+                _skip 2 # ensure this branch replies last
+                set f.x 0
+                set f.h { a: 'a' }
+                set f.a [ 0 ]
+              sequence
+                _skip 1 # ensure this branch replies second
+                set f.x 1
+                set f.h { b: 'B' }
+                set f.a [ 1 1 ]
+              sequence
+                set f.x 2
+                set f.h { a: 'A' }
+                set f.a [ 2 ]
+          },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+
+        expect(
+          msg['payload']
+        ).to eq({
+          'ret' => nil,
+          'x' => 2,
+          'a' => [ 2 ],
+          'h' => { 'a' => 'A' }
+        })
+      end
     end
 
     describe 'on_merge' do

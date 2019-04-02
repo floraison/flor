@@ -144,7 +144,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
   #   + 56 78
   # ```
   #
-  # ## on_merge: / merger:
+  # ## on_merge: / merger: / merge:
   #
   # the function given to `on_merge:` or `merger:` is called once the
   # concurrence has gathered enough replies (or the right replies,
@@ -179,6 +179,25 @@ class Flor::Pro::Concurrence < Flor::Procedure
   #   like `{"0_1"=>{"ret"=>12}, "0_2"=>{"ret"=>21}, "0_3"=>{"ret"=>6}}`.
   # * _branch_count_ simply contains the count of branches. It should be
   #   superior or equal to the size of _rets_ and _replies_.
+  #
+  # ### merge: and string values
+  #
+  # By default, the merge technique is a deep merge favouring the first
+  # branches to reply. By passing a string value to merge:/merger:/on_merge:
+  # one can select a different merge technique.
+  #
+  # * "first" (the default) - the first branch to reply has priority in the deep  #   merge
+  # * "last" - the last branch to reply has priority in the deep merge
+  # * "top" or "north" - the branch are prioritized in the order they are
+  #   in the flow definition
+  # * "bottom" or "south" - the branch are prioritized in the reverse order of
+  #   the flow definition
+  #
+  # Adding "plain" (for example "south plain") tells the "concurrence" not to
+  # use a deep merge but the plain/vanilla merge found in Ruby.
+  #
+  # "north plain" can be abbreviated to "np", "bottom" to "b", "first plain" to
+  # "fp", etc...
   #
   # ## on_merge (non-attribute)
   #
@@ -487,11 +506,64 @@ class Flor::Pro::Concurrence < Flor::Procedure
     @node['payloads'].size >= att(:expect)
   end
 
-  def mm__default_merge
+  def mm__default_merge # should be mm__first, better to keep initial default
 
     @node['payloads'].values
       .reverse
       .inject { |h, pl| Flor.deep_merge!(h, pl) }
+  end
+
+  def mm__last
+
+    @node['payloads'].values
+      .inject { |h, pl| Flor.deep_merge!(h, pl) }
+  end
+
+  def mm__first_plain
+
+    @node['payloads'].values
+      .reverse
+      .inject { |h, pl| h.merge!(pl) }
+  end
+
+  def mm__last_plain
+
+    @node['payloads'].values
+      .inject { |h, pl| h.merge!(pl) }
+  end
+
+  def mm__top
+
+    @node['payloads']
+      .sort_by { |k, _| k }
+      .collect(&:last)
+      .reverse
+      .inject { |h, pl| Flor.deep_merge!(h, pl) }
+  end
+
+  def mm__bottom
+
+    @node['payloads']
+      .sort_by { |k, _| k }
+      .collect(&:last)
+      .inject { |h, pl| Flor.deep_merge!(h, pl) }
+  end
+
+  def mm__top_plain
+
+    @node['payloads']
+      .sort_by { |k, _| k }
+      .collect(&:last)
+      .reverse
+      .inject { |h, pl| h.merge!(pl) }
+  end
+
+  def mm__bottom_plain
+
+    @node['payloads']
+      .sort_by { |k, _| k }
+      .collect(&:last)
+      .inject { |h, pl| h.merge!(pl) }
   end
 
   def determine_remainder
@@ -510,7 +582,21 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   def determine_merger
 
-    att(:on_merge, :merger) || 'default_merge'
+    # first or last to reply
+    # top or bottom of the list (the concurrence)
+
+    case m = att(:on_merge, :merger, :merge)
+    when nil, 'f', 'first' then 'default_merge'
+    when 'l' then 'last'
+    when 'p', 'plain', 'fp' then 'first_plain'
+    when 'lp' then 'last_plain'
+    when 't', 'n', 'north' then 'top'
+    when 'b', 's', 'south' then 'bottom'
+    when 'tp', 'np', 'north plain' then 'top_plain'
+    when 'bp', 'sp', 'south plain' then 'bottom_plain'
+    when String then  m.to_s.gsub(/\s+/, '_')
+    else m
+    end
   end
 
   def cancel_children(rem)
