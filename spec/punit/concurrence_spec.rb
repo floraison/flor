@@ -107,14 +107,31 @@ describe 'Flor punit' do
         msg = @unit.launch(
           %q{
             concurrence
-              set f.a 0
-              set f.a 1
-              set f.b 2
+              sequence
+                set f.x 0
+                set f.h { a: 'a' }
+                set f.a [ 0 ]
+              sequence
+                set f.x 1
+                set f.h { b: 'B' }
+                set f.a [ 1 1 ]
+              sequence
+                set f.x 2
+                set f.h { a: 'A' }
+                set f.a [ 2 ]
           },
           wait: true)
 
         expect(msg).to have_terminated_as_point
-        expect(msg['payload']).to eq({ 'ret' => nil, 'a' => 0, 'b' => 2 })
+
+        expect(
+          msg['payload']
+        ).to eq({
+          'ret' => nil,
+          'x' => 0,
+          'a' => [ 0, 1 ],
+          'h' => { 'a' => 'a', 'b' => 'B' }
+        })
       end
     end
 

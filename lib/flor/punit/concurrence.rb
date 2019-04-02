@@ -491,7 +491,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     @node['payloads'].values
       .reverse
-      .inject({}) { |h, pl| h.merge!(pl) }
+      .inject { |h, pl| Flor.deep_merge!(h, pl) }
   end
 
   def determine_remainder
