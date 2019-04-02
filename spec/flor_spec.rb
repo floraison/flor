@@ -420,5 +420,33 @@ describe Flor do
       end
     end
   end
+
+  describe '.deep_merge' do
+
+    [
+      [
+        [ 1, 2 ],
+        [ 1, 3, 4 ],
+        # ==>
+        [ 1, 3, 4 ]
+      ],
+      [
+        { h: { a: 0 }, a: [ 0, { c: 3 } ] },
+        { h: { b: 1 }, a: [ :one, { d: 4 }, 2 ] },
+        # ==>
+        { h: { a: 0, b: 1 }, a: [ :one, { c: 3, d: 4 }, 2 ] }
+      ],
+    ].each do |a, b, result|
+
+      it "merges #{a.inspect} and #{b.inspect}" do
+
+        expect(
+          Flor.deep_merge(a, b)
+        ).to eq(
+          result
+        )
+      end
+    end
+  end
 end
 

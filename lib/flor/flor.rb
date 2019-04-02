@@ -63,6 +63,26 @@ module Flor
       o.freeze
     end
 
+    def deep_merge(o0, o1)
+
+      t0 = type(o0)
+      t1 = type(o1)
+
+      return o1 if t1 != t0
+
+      if t0 == :array
+        o1.each_with_index.inject(o0.dup) { |a, (e1, i)|
+          a[i] = deep_merge(o0[i], e1)
+          a }
+      elsif t0 == :object
+        o1.inject(o0.dup) { |h, (k, v1)|
+          h[k] = deep_merge(o0[k], v1)
+          h }
+      else
+        o1
+      end
+    end
+
     def false?(o)
 
       o == nil || o == false
