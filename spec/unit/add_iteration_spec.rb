@@ -14,7 +14,7 @@ describe 'Flor unit' do
 
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf['unit'] = 'additeration'
-    #@unit.hook('journal', Flor::Journal)
+    @unit.hook('journal', Flor::Journal)
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
@@ -71,8 +71,6 @@ describe 'Flor unit' do
 
     it 'adds iterations to "c-for-each" (array)' do
 
-      @unit.hook('journal', Flor::Journal)
-
       r = @unit.launch(
         %q{
           c-for-each [ 'alpha' 'bravo' ]
@@ -108,8 +106,6 @@ describe 'Flor unit' do
     end
 
     it 'adds iterations to "c-for-each" (object)' do
-
-      @unit.hook('journal', Flor::Journal)
 
       r = @unit.launch(
         %q{
@@ -149,14 +145,16 @@ describe 'Flor unit' do
 
     it 'adds iterations to "for-each" (array)' do
 
-      r = @unit.launch(
+      @unit.launch(
         %q{
           for-each [ 'alpha' ]
             def f.x
               stall _
         },
-        wait: '0_1_1-1 receive')
-      @unit.wait(r['exid'], 'end')
+        wait: 'end')
+
+      r = @unit.journal
+        .find { |m| m['point'] == 'receive' && m['nid'] == '0_1_1-1' }
 
       expect(r['payload']['x']).to eq('alpha')
 
