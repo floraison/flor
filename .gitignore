@@ -18,6 +18,7 @@
 
 tmp/*.db
 tmp/*.log
+tmp/pile/
 .tmp.*
 
 doc/**/*.db
