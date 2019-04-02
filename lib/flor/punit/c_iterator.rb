@@ -25,7 +25,7 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
   def receive_last
 
     if @node['col']
-      super
+      super # which replies to the parent node
     else
       receive_last_argument
     end

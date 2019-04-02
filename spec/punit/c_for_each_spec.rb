@@ -42,6 +42,23 @@ describe 'Flor punit' do
       expect(r['vars']['l']).to eq([ 2, 4, 6 ])
     end
 
+    it 'does not mind children replying in any order' do
+
+      r = @unit.launch(
+        %q{
+          set l []
+          c-for-each [ 1 2 3 ]
+            def x
+              _skip (- 4 x) # delay response
+              push l (* x 2)
+        },
+        wait: true)
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq([ 1, 2, 3 ])
+      expect(r['vars']['l']).to eq([ 6, 4, 2 ])
+    end
+
     it 'shows the index via the "idx" var' do
 
       r = @unit.launch(
