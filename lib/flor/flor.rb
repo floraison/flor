@@ -52,17 +52,6 @@ module Flor
     end
     def dupm(h, hh); self.dup_and_merge(h, hh); end
 
-    def deep_freeze(o)
-
-      if o.is_a?(Array)
-        o.each { |e| e.freeze }
-      elsif o.is_a?(Hash)
-        o.each { |k, v| k.freeze; v.freeze }
-      end
-
-      o.freeze
-    end
-
     def deep_merge(o0, o1, in_place=false)
 
       t0 = type(o0)
