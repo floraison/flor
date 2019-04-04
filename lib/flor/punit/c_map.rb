@@ -42,11 +42,12 @@ class Flor::Pro::Cmap < Flor::Pro::ConcurrentIterator
   def receive_ret
 
     @node['result'] << [ from_sub_nid, payload['ret'] ]
-    @node['cnt'] = @node['cnt'] - 1
 
-    return [] if @node['cnt'] > 0 # still waiting for answers
-
-    wrap('ret' => @node['result'].sort_by(&:first).collect(&:last)) # over
+    if (@node['cnt'] -= 1) > 0 # still waiting for answers
+      []
+    else # over
+      wrap('ret' => @node['result'].sort_by(&:first).collect(&:last))
+    end
   end
 end
 
