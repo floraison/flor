@@ -312,9 +312,6 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
     return wrap_reply unless children[@ncid]
 
-    @node['receiver'] = determine_receiver
-    @node['merger'] = determine_merger
-
     branches = (@ncid..children.size - 1).to_a
     @node['branch_count'] = branches.count
 

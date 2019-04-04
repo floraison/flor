@@ -9,6 +9,8 @@ module Flor::Pro::ReceiveAndMerge
 
   def apply_receiver
 
+    @node['receiver'] ||= determine_receiver
+
     if @node['receiver'].is_a?(String)
       apply_receiver_method
     else
@@ -85,6 +87,8 @@ module Flor::Pro::ReceiveAndMerge
   end
 
   def apply_merger
+
+    @node['merger'] = determine_merger
 
     if @node['merger'].is_a?(String)
       apply_merger_method
@@ -212,13 +216,42 @@ module Flor::Pro::ReceiveAndMerge
     att(:on_receive, :receiver) || 'default_receive'
   end
 
+  def default_merger
+
+    'default_merge'
+  end
+
   def determine_merger
 
-    # first or last to reply
-    # top or bottom of the list (the concurrence)
+    m = att(:on_merge, :merger, :merge)
 
-    case m = att(:on_merge, :merger, :merge)
-    when nil, 'f', 'first' then 'default_merge'
+    return default_merger if m == nil
+    return m unless m.is_a?(String)
+
+    # ruote's :merge_type
+    #
+    # * override (ruote's default)
+    # * mix (flor:plain)
+    # * isolate(0, 1, ...),
+    # * stack
+    # * union
+    # * concat
+    # * deep
+    # * ignore :-)
+
+    # flor:
+    #
+    # * first, last (to reply)
+    # * top/north, bottom/south (of the concurrence)
+    #
+    # * default (ruote's deep)
+    # * plain (ruote's mix)
+    # * ?
+
+    # merge order vs merge type
+
+    case m
+    when 'f', 'first' then 'default_merge'
     when 'l' then 'last'
     when 'p', 'plain', 'fp' then 'first_plain'
     when 'lp' then 'last_plain'
@@ -226,8 +259,7 @@ module Flor::Pro::ReceiveAndMerge
     when 'b', 's', 'south' then 'bottom'
     when 'tp', 'np', 'north plain' then 'top_plain'
     when 'bp', 'sp', 'south plain' then 'bottom_plain'
-    when String then  m.to_s.gsub(/\s+/, '_')
-    else m
+    else m.to_s.gsub(/\s+/, '_')
     end
   end
 end

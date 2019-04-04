@@ -397,7 +397,7 @@ ms-e3p3-end-
       end
     end
 
-    describe 'on_merge:/merger:' do
+    describe 'on_merge:/merger:/merge:' do
 
       it 'calls its function before the concurrence replies' do
 
