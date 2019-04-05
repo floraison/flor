@@ -708,6 +708,38 @@ ms-e3p3-end-
           'h' => { 'a' => 'A' }
         })
       end
+
+      it 'accepts "ignore"' do
+
+        msg = @unit.launch(
+          %q{
+            concurrence on_merge: 'ignore'
+              sequence
+                _skip 2 # ensure this branch replies last
+                set f.x 0
+                set f.h { a: 'a' }
+                set f.a [ 0 ]
+              sequence
+                _skip 1 # ensure this branch replies second
+                set f.x 1
+                set f.h { b: 'B' }
+                set f.a [ 1 1 ]
+              sequence
+                set f.x 2
+                set f.h { a: 'A' }
+                set f.a [ 2 ]
+          },
+          payload: { 'x' => -1 },
+          wait: true)
+
+        expect(msg).to have_terminated_as_point
+
+        expect(
+          msg['payload']
+        ).to eq({
+          'x' => -1
+        })
+      end
     end
 
     describe 'on_merge' do

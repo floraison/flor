@@ -161,7 +161,7 @@ module Flor::Pro::ReceiveAndMerge
   # ruote's :merge_type
   #
   # * override (ruote's default)
-  # * mix (flor:plain)
+  # * mix
   # * isolate(0, 1, ...),
   # * stack
   # * union
@@ -175,19 +175,18 @@ module Flor::Pro::ReceiveAndMerge
   # * top/north, bottom/south (of the concurrence)
   # fltnbs
   #
-  # * default (ruote's deep)
-  # * plain (ruote's mix)
-  # * ?
-  # dp
+  # * deep
+  # * mix
+  # * override
+  # * ignore
 
   MORDERS = {
-    /f/ => :first, /l/ => :last, /[tn]/ => :north, /[bs]/ => :south }
+    'f' => :first, 'l' => :last, /[tn]/ => :north, /[bs]/ => :south }
   MMERGERS = {
-    /d/ => :deep, /p/ => :plain }
+    'd' => :deep, /[mp]/ => :mix, 'o' => :override, 'i' => :ignore }
 
   def default_merger
 
-    #'default_merge'
     { order: :first, merger: :deep }
   end
 
@@ -229,8 +228,14 @@ module Flor::Pro::ReceiveAndMerge
   def mmm__deep(ordered_payloads)
     ordered_payloads.inject { |h, pl| Flor.deep_merge!(h, pl) }
   end
-  def mmm__plain(ordered_payloads)
+  def mmm__mix(ordered_payloads)
     ordered_payloads.inject { |h, pl| h.merge!(pl) }
+  end
+  def mmm__override(ordered_payloads)
+    ordered_payloads.last
+  end
+  def mmm__ignore(_)
+    node_payload.copy
   end
 end
 
