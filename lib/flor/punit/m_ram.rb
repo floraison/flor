@@ -100,8 +100,8 @@ module Flor::Pro::ReceiveAndMerge
     o = h[:order] || h['order']
     m = h[:merger] || h['merger']
 
-    payloads = send("mom__#{o}", @node['payloads'])
-    payload = send("mmm__#{m}", payloads)
+    payloads = send("mom__#{o}", h, @node['payloads'])
+    payload = send("mmm__#{m}", h, payloads)
     msg = { 'payload' => payload }
 
     receive_from_merger(msg)
@@ -183,7 +183,10 @@ module Flor::Pro::ReceiveAndMerge
   MORDERS = {
     'f' => :first, 'l' => :last, /[tn]/ => :north, /[bs]/ => :south }
   MMERGERS = {
-    'd' => :deep, /[mp]/ => :mix, 'o' => :override, 'i' => :ignore }
+    'd' => :deep, /[mp]/ => :mix, 'o' => :override, 'i' => :ignore,
+    'k' => :stack }
+
+  TRANSLATORS = { /stack(:[-_a-zA-Z0-9]+)?/ => 'k' }
 
   def default_merger
 
@@ -200,42 +203,52 @@ module Flor::Pro::ReceiveAndMerge
 
     mm = m.split(/[-\s_]+/)
     mm = mm[0].chars if mm.size == 1 && mm[0].size < 3
-    m = mm.collect { |s| s[0, 1] }.join
+      #
+    d = mm
+      .collect { |s| TRANSLATORS.inject(s) { |r, (k, v)| r.match(k) ? v : r } }
+      .collect { |s| s[0, 1] }.join
 
     MORDERS.each do |rex, order|
-      if m.match(rex); h[:order] = order; break; end
+      if d.match(rex); h[:order] = order; break; end
     end
     MMERGERS.each do |rex, merger|
-      if m.match(rex); h[:merger] = merger; break; end
+      if d.match(rex); h[:merger] = merger; break; end
     end
+
+    h[:key] = m.match(/stack:([-_a-zA-Z0-9]+)/)[1] \
+      if h[:merger] == :stack
 
     h
   end
 
-  def mom__first(payloads)
-    mom__last(payloads).reverse
+  def mom__first(h, payloads)
+    mom__last(h, payloads).reverse
   end
-  def mom__last(payloads)
+  def mom__last(_, payloads)
     payloads.values
   end
-  def mom__north(payloads)
-    mom__south(payloads).reverse
+  def mom__north(h, payloads)
+    mom__south(h, payloads).reverse
   end
-  def mom__south(payloads)
+  def mom__south(_, payloads)
     payloads.sort_by { |k, _| k }.collect(&:last)
   end
 
-  def mmm__deep(ordered_payloads)
+  def mmm__deep(_, ordered_payloads)
     ordered_payloads.inject { |h, pl| Flor.deep_merge!(h, pl) }
   end
-  def mmm__mix(ordered_payloads)
+  def mmm__mix(_, ordered_payloads)
     ordered_payloads.inject { |h, pl| h.merge!(pl) }
   end
-  def mmm__override(ordered_payloads)
+  def mmm__override(_, ordered_payloads)
     ordered_payloads.last
   end
-  def mmm__ignore(_)
+  def mmm__ignore(_, _)
     node_payload.copy
+  end
+  def mmm__stack(h, ordered_payloads)
+    k = h[:key] || 'ret'
+    node_payload.copy.merge!(k => ordered_payloads.reverse)
   end
 end
 
