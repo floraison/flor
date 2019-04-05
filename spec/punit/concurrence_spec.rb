@@ -448,6 +448,7 @@ ms-e3p3-end-
 
         msg = @unit.launch(
           %q{
+            #concurrence merge: { order: 'first', merger: 'plain' }
             concurrence merge: 'fp'
               sequence
                 set f.x 0

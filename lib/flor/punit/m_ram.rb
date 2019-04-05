@@ -88,26 +88,28 @@ module Flor::Pro::ReceiveAndMerge
 
   def apply_merger
 
-    @node['merger'] = determine_merger
-
-    if @node['merger'].is_a?(String)
-      apply_merger_method
+    if (m = determine_merger).is_a?(Hash)
+      apply_merger_method(m)
     else
-      apply_merger_function
+      apply_merger_function(m)
     end
   end
 
-  def apply_merger_method
+  def apply_merger_method(h)
 
-    pld = send('mm__' + @node['merger'])
-    msg = { 'payload' => pld }
+    o = h[:order] || h['order']
+    m = h[:merger] || h['merger']
+
+    payloads = send("mom__#{o}", @node['payloads'])
+    payload = send("mmm__#{m}", payloads)
+    msg = { 'payload' => payload }
 
     receive_from_merger(msg)
   end
 
-  def apply_merger_function
+  def apply_merger_function(func_tree)
 
-    apply(@node['merger'], merger_args, tree[2])
+    apply(func_tree, merger_args, tree[2])
   end
 
   def merger_args
@@ -147,66 +149,6 @@ module Flor::Pro::ReceiveAndMerge
     @node['payloads'].size >= att(:expect)
   end
 
-  def mm__default_merge # should be mm__first, better to keep initial default
-
-    @node['payloads'].values
-      .reverse
-      .inject { |h, pl| Flor.deep_merge!(h, pl) }
-  end
-
-  def mm__last
-
-    @node['payloads'].values
-      .inject { |h, pl| Flor.deep_merge!(h, pl) }
-  end
-
-  def mm__first_plain
-
-    @node['payloads'].values
-      .reverse
-      .inject { |h, pl| h.merge!(pl) }
-  end
-
-  def mm__last_plain
-
-    @node['payloads'].values
-      .inject { |h, pl| h.merge!(pl) }
-  end
-
-  def mm__top
-
-    @node['payloads']
-      .sort_by { |k, _| k }
-      .collect(&:last)
-      .reverse
-      .inject { |h, pl| Flor.deep_merge!(h, pl) }
-  end
-
-  def mm__bottom
-
-    @node['payloads']
-      .sort_by { |k, _| k }
-      .collect(&:last)
-      .inject { |h, pl| Flor.deep_merge!(h, pl) }
-  end
-
-  def mm__top_plain
-
-    @node['payloads']
-      .sort_by { |k, _| k }
-      .collect(&:last)
-      .reverse
-      .inject { |h, pl| h.merge!(pl) }
-  end
-
-  def mm__bottom_plain
-
-    @node['payloads']
-      .sort_by { |k, _| k }
-      .collect(&:last)
-      .inject { |h, pl| h.merge!(pl) }
-  end
-
   def determine_receiver
 
     ex = att(:expect)
@@ -216,51 +158,79 @@ module Flor::Pro::ReceiveAndMerge
     att(:on_receive, :receiver) || 'default_receive'
   end
 
+  # ruote's :merge_type
+  #
+  # * override (ruote's default)
+  # * mix (flor:plain)
+  # * isolate(0, 1, ...),
+  # * stack
+  # * union
+  # * concat
+  # * deep
+  # * ignore :-)
+
+  # flor:
+  #
+  # * first, last (to reply)
+  # * top/north, bottom/south (of the concurrence)
+  # fltnbs
+  #
+  # * default (ruote's deep)
+  # * plain (ruote's mix)
+  # * ?
+  # dp
+
+  MORDERS = {
+    /f/ => :first, /l/ => :last, /[tn]/ => :north, /[bs]/ => :south }
+  MMERGERS = {
+    /d/ => :deep, /p/ => :plain }
+
   def default_merger
 
-    'default_merge'
+    #'default_merge'
+    { order: :first, merger: :deep }
   end
 
   def determine_merger
 
     m = att(:on_merge, :merger, :merge)
+    h = default_merger
 
-    return default_merger if m == nil
+    return h if m == nil
     return m unless m.is_a?(String)
 
-    # ruote's :merge_type
-    #
-    # * override (ruote's default)
-    # * mix (flor:plain)
-    # * isolate(0, 1, ...),
-    # * stack
-    # * union
-    # * concat
-    # * deep
-    # * ignore :-)
+    mm = m.split(/[-\s_]+/)
+    mm = mm[0].chars if mm.size == 1 && mm[0].size < 3
+    m = mm.collect { |s| s[0, 1] }.join
 
-    # flor:
-    #
-    # * first, last (to reply)
-    # * top/north, bottom/south (of the concurrence)
-    #
-    # * default (ruote's deep)
-    # * plain (ruote's mix)
-    # * ?
-
-    # merge order vs merge type
-
-    case m
-    when 'f', 'first' then 'default_merge'
-    when 'l' then 'last'
-    when 'p', 'plain', 'fp' then 'first_plain'
-    when 'lp' then 'last_plain'
-    when 't', 'n', 'north' then 'top'
-    when 'b', 's', 'south' then 'bottom'
-    when 'tp', 'np', 'north plain' then 'top_plain'
-    when 'bp', 'sp', 'south plain' then 'bottom_plain'
-    else m.to_s.gsub(/\s+/, '_')
+    MORDERS.each do |rex, order|
+      if m.match(rex); h[:order] = order; break; end
     end
+    MMERGERS.each do |rex, merger|
+      if m.match(rex); h[:merger] = merger; break; end
+    end
+
+    h
+  end
+
+  def mom__first(payloads)
+    mom__last(payloads).reverse
+  end
+  def mom__last(payloads)
+    payloads.values
+  end
+  def mom__north(payloads)
+    mom__south(payloads).reverse
+  end
+  def mom__south(payloads)
+    payloads.sort_by { |k, _| k }.collect(&:last)
+  end
+
+  def mmm__deep(ordered_payloads)
+    ordered_payloads.inject { |h, pl| Flor.deep_merge!(h, pl) }
+  end
+  def mmm__plain(ordered_payloads)
+    ordered_payloads.inject { |h, pl| h.merge!(pl) }
   end
 end
 
