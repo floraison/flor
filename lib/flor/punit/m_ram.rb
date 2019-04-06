@@ -158,35 +158,15 @@ module Flor::Pro::ReceiveAndMerge
     att(:on_receive, :receiver) || 'default_receive'
   end
 
-  # ruote's :merge_type
-  #
-  # * override (ruote's default)
-  # * mix
-  # * isolate(0, 1, ...),
-  # * stack
-  # * union
-  # * concat
-  # * deep
-  # * ignore :-)
-
-  # flor:
-  #
-  # * first, last (to reply)
-  # * top/north, bottom/south (of the concurrence)
-  # fltnbs
-  #
-  # * deep
-  # * mix
-  # * override
-  # * ignore
-
   MORDERS = {
     'f' => :first, 'l' => :last, /[tn]/ => :north, /[bs]/ => :south }
   MMERGERS = {
     'd' => :deep, /[mp]/ => :mix, 'o' => :override, 'i' => :ignore,
     'k' => :stack }
 
-  TRANSLATORS = { /stack(:[-_a-zA-Z0-9]+)?/ => 'k' }
+  STACK_REX = /\Astack(?::([-_a-zA-Z0-9]+))?\z/
+
+  TRANSLATORS = { STACK_REX => 'k' }
 
   def default_merger
 
@@ -215,7 +195,7 @@ module Flor::Pro::ReceiveAndMerge
       if d.match(rex); h[:merger] = merger; break; end
     end
 
-    h[:key] = m.match(/stack:([-_a-zA-Z0-9]+)/)[1] \
+    h[:key] = m.match(STACK_REX)[1] \
       if h[:merger] == :stack
 
     h
