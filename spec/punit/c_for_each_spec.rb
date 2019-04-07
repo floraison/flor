@@ -291,6 +291,47 @@ describe 'Flor punit' do
       expect(r['vars']['l']).to eq([ [ 'a', 0 ], [ 'b', 1 ] ])
       expect(r['payload']['ret']).to eq(%w[ a b ])
     end
+
+    context 'on_merge:/merger:/merge:' do
+
+      it 'defauts to "first merge"' do
+
+        r = @unit.launch(
+          %q{
+            c-for-each [ 'a' 'b' ]
+              def elt idx
+                _skip 3 - idx
+                set "f.k$(idx)" elt
+          },
+          wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['k0']).to eq('a')
+        expect(r['payload']['k1']).to eq('b')
+        expect(r['payload']['ret']).to eq(%w[ a b ])
+      end
+
+      it 'accepts "head override"' do
+
+        r = @unit.launch(
+          %q{
+            c-for-each [ 'a' 'b' ] merge: 'head override'
+              def elt idx
+                set "f.k$(idx)" elt
+          },
+          wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['k0']).to eq('a')
+        expect(r['payload'].keys).not_to include('k1')
+        expect(r['payload']['ret']).to eq(%w[ a b ])
+      end
+    end
+
+    context 'on_receive:/receive:/receive:' do
+
+      it 'receives'
+    end
   end
 end
 

@@ -300,10 +300,6 @@ class Flor::Pro::Concurrence < Flor::Procedure
   def pre_execute
 
     @node['atts'] = []
-    @node['payloads'] = {}
-
-    @node['on_receive_nids'] = nil
-    @node['on_receive_queue'] = []
 
     pre_execute_rewrite
   end
@@ -356,6 +352,9 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   protected
 
+  alias branch_count non_att_count
+    # used by ReceiveAndMerge to determine procedure end
+
   def receive_from_child_when_closed
 
     ms = receive
@@ -363,35 +362,6 @@ class Flor::Pro::Concurrence < Flor::Procedure
     return [] if ms.empty?
 
     pop_on_receive_last || ms
-  end
-
-  def receive_from_branch
-
-    @node['payloads'][from] = @message['payload']
-
-    apply_receiver
-  end
-
-  def determine_remainder
-
-    att(:remaining, :rem) || 'cancel'
-  end
-
-  def cancel_children(rem)
-
-    (rem && rem != 'forget') ? wrap_cancel_children : []
-  end
-
-  def reply_to_parent(rem)
-
-    return [] \
-      if @node['replied']
-    return [] \
-      if @node['payloads'].size < non_att_count && ( ! rem || rem == 'wait')
-
-    @node['replied'] = true
-
-    wrap_reply('payload' => @node['merged_payload'])
   end
 
   def make_on_def(cn, l)

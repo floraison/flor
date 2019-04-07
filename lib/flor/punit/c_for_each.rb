@@ -33,13 +33,9 @@ class Flor::Pro::CforEach < Flor::Pro::ConcurrentIterator
 
   protected
 
-  def receive_ret
+  def post_merge
 
-    if (@node['cnt'] -= 1) > 0 # still waiting for answers
-      []
-    else # over
-      wrap('ret' => @node['col'])
-    end
+    @node['merged_payload'].merge!('ret' => @node['col'])
   end
 end
 

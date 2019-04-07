@@ -30,24 +30,14 @@ class Flor::Pro::Cmap < Flor::Pro::ConcurrentIterator
 
   names %w[ cmap c-map ]
 
-  def pre_execute
-
-    @node['result'] = []
-
-    super
-  end
-
   protected
 
-  def receive_ret
+  def post_merge
 
-    @node['result'] << [ from_sub_nid, payload['ret'] ]
-
-    if (@node['cnt'] -= 1) > 0 # still waiting for answers
-      []
-    else # over
-      wrap('ret' => @node['result'].sort_by(&:first).collect(&:last))
-    end
+    @node['merged_payload'].merge!(
+      'ret' => @node['payloads']
+        .sort_by { |k, v| k.split('-').last }
+        .collect { |_, v| v['ret'] })
   end
 end
 

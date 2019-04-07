@@ -7,6 +7,13 @@ module Flor::Pro::ReceiveAndMerge
 
   protected
 
+  def receive_from_branch
+
+    (@node['payloads'] ||= {})[from] = @message['payload']
+
+    apply_receiver
+  end
+
   def apply_receiver
 
     @node['receiver'] ||= determine_receiver
@@ -28,7 +35,7 @@ module Flor::Pro::ReceiveAndMerge
 
   def apply_receiver_function
 
-    @node['on_receive_queue'] << from
+    (@node['on_receive_queue'] ||= []) << from
 
     dequeue_receiver_function
   end
@@ -37,7 +44,7 @@ module Flor::Pro::ReceiveAndMerge
 
     if @node['on_receive_nids']
       []
-    elsif f = @node['on_receive_queue'].shift
+    elsif f = (@node['on_receive_queue'] || []).shift
       ms = apply(@node['receiver'], receiver_args(f), tree[2])
       @node['on_receive_nids'] = [ ms.first['nid'], f ]
       ms
@@ -100,7 +107,7 @@ module Flor::Pro::ReceiveAndMerge
     o = h[:order] || h['order']
     m = h[:merger] || h['merger']
 
-    payloads = send("mom__#{o}", h, @node['payloads'])
+    payloads = send("mom__#{o}", h, Flor.dup(@node['payloads']))
     payload = send("mmm__#{m}", h, payloads)
     msg = { 'payload' => payload }
 
@@ -108,6 +115,8 @@ module Flor::Pro::ReceiveAndMerge
   end
 
   def apply_merger_function(func_tree)
+
+    @node['merging'] = true
 
     apply(func_tree, merger_args, tree[2])
   end
@@ -141,7 +150,7 @@ module Flor::Pro::ReceiveAndMerge
 
   def rm__default_receive
 
-    @node['payloads'].size >= non_att_count
+    @node['payloads'].size >= branch_count
   end
 
   def rm__expect_integer_receive
@@ -158,15 +167,26 @@ module Flor::Pro::ReceiveAndMerge
     att(:on_receive, :receiver) || 'default_receive'
   end
 
-  MORDERS = {
-    'f' => :first, 'l' => :last, /[tn]/ => :north, /[bs]/ => :south }
-  MMERGERS = {
-    'd' => :deep, /[mp]/ => :mix, 'o' => :override, 'i' => :ignore,
-    'k' => :stack }
+  # order:
+  # * first, last: first or last to reply
+  # * top/north/head, bottom/south/tail: position in concurrence, in collection
+  #
+  # merge:
+  # * deep
+  # * mix/plain
+  # * override
+  # * ignore
+  # * stack
 
   STACK_REX = /\Astack(?::([-_a-zA-Z0-9]+))?\z/
 
-  TRANSLATORS = { STACK_REX => 'k' }
+  TRANSLATORS = { STACK_REX => 'k', /\Atail\z/ => 'a' }
+
+  MORDERS = {
+    'f' => :first, 'l' => :last, /[tnh]/ => :north, /[bsa]/ => :south }
+  MMERGERS = {
+    'd' => :deep, /[mp]/ => :mix, 'o' => :override, 'i' => :ignore,
+    'k' => :stack }
 
   def default_merger
 
@@ -229,6 +249,33 @@ module Flor::Pro::ReceiveAndMerge
   def mmm__stack(h, ordered_payloads)
     k = h[:key] || 'ret'
     node_payload.copy.merge!(k => ordered_payloads.reverse)
+  end
+
+  def determine_remainder
+
+    att(:remaining, :rem) || 'cancel'
+  end
+
+  def cancel_children(rem)
+
+    (rem && rem != 'forget') ? wrap_cancel_children : []
+  end
+
+  def reply_to_parent(rem)
+
+    return [] \
+      if @node['replied']
+    return [] \
+      if @node['payloads'].size < branch_count && ( ! rem || rem == 'wait')
+
+    @node['replied'] = true
+
+    wrap_reply('payload' => post_merge)
+  end
+
+  def post_merge
+
+    @node['merged_payload']
   end
 end
 

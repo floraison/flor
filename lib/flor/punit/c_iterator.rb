@@ -1,10 +1,16 @@
 
+require 'flor/punit/m_ram'
+
+
 # Parent class for "c-for-each" and "c-map"
 #
 class Flor::Pro::ConcurrentIterator < Flor::Procedure
 
+  include Flor::Pro::ReceiveAndMerge
+
   def pre_execute
 
+    @node['atts'] = []
     @node['args'] = []
     @node['col'] = nil
 
@@ -14,21 +20,54 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
 
   def receive_non_att
 
-    if @node['col']
-      receive_ret
-    else
+    if Flor.same_sub?(nid, from)
       @node['args'] << payload['ret']
       super
+    elsif @node['on_receive_nids'] && @node['on_receive_nids'][0] == from
+      receive_from_receiver
+    elsif @node['merging']
+      receive_from_merger
+    else
+      receive_from_branch
     end
   end
 
   def receive_last
 
-    if @node['col']
-      super # which replies to the parent node
-    else
-      receive_last_argument
+    t1 = tree[1]
+
+    col = nil
+    fun = nil
+    refs = []
+      #
+    @node['args'].each_with_index do |a, i|
+      if ( ! fun) && Flor.is_func_tree?(a)
+        fun = a
+      elsif ( ! col) && Flor.is_collection?(a)
+        col = a
+      else
+        tt = t1[i]
+        refs << Flor.ref_to_path(tt) if Flor.is_ref_tree?(tt)
+      end
     end
+      #
+    col ||= node_payload_ret
+
+    fail Flor::FlorError.new("collection not given to #{heap.inspect}", self) \
+      unless Flor.is_collection?(col)
+    return wrap('ret' => col) \
+      unless Flor.is_func_tree?(fun)
+
+    @node['col'] = col
+    @node['cnt'] = col.size
+    @node['fun'] = fun
+    @node['refs'] = refs
+
+    col
+      .collect
+      .with_index { |e, i|
+        apply(fun, determine_iteration_args(col, i), tree[2]) }
+      .flatten(1)
   end
 
   def add
@@ -76,42 +115,9 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
 
   protected
 
-  def receive_last_argument
+  def branch_count
 
-    t1 = tree[1]
-
-    col = nil
-    fun = nil
-    refs = []
-      #
-    @node['args'].each_with_index do |a, i|
-      if ( ! fun) && Flor.is_func_tree?(a)
-        fun = a
-      elsif ( ! col) && Flor.is_collection?(a)
-        col = a
-      else
-        tt = t1[i]
-        refs << Flor.ref_to_path(tt) if Flor.is_ref_tree?(tt)
-      end
-    end
-      #
-    col ||= node_payload_ret
-
-    fail Flor::FlorError.new("collection not given to #{heap.inspect}", self) \
-      unless Flor.is_collection?(col)
-    return wrap('ret' => col) \
-      unless Flor.is_func_tree?(fun)
-
-    @node['col'] = col
-    @node['cnt'] = col.size
-    @node['fun'] = fun
-    @node['refs'] = refs
-
-    col
-      .collect
-      .with_index { |e, i|
-        apply(fun, determine_iteration_args(col, i), tree[2]) }
-      .flatten(1)
+    @node['col'].size
   end
 
   def determine_iteration_args(col, idx)
