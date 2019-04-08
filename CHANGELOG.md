@@ -2,8 +2,11 @@
 # CHANGELOG.md
 
 
-## flor 0.16.2  not yet released
+## flor 0.17.0  not yet released
 
+## flor 0.16.2  released 2019-04-08
+
+- Many improvements
 - Allow for `[ 'he' 'll' 'o' ] | + join: '.'` (yields "he.ll.o")
 - Allow for `[ 1 2 3 ] | + _` (yields `6`)
 - Make "child_on_error:"/"children_on_error:" a common attribute
