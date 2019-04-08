@@ -108,8 +108,8 @@ See [doc/](doc/).
 
 ## blog posts and presentations
 
-* [flor workflow engine](http://jmettraux.skepti.ch/20190407.html?t=flor_workflow_engine) - on flor itself
-* [the flor language](http://jmettraux.skepti.ch/20180927.html?t=the_flor_language) - on the flor workflow definition language itself
+* [flor workflow engine](http://jmettraux.skepti.ch/20190407.html?t=flor_workflow_engine&f=readme) - on flor itself
+* [the flor language](http://jmettraux.skepti.ch/20180927.html?t=the_flor_language&f=readme) - on the flor workflow definition language itself
 * [Flor, hubristic interpreter](http://rubykaigi.org/2017/presentations/jmettraux.html) - RubyKaigi 2017, Hiroshima - presentation
 * [flor design 0](http://jmettraux.skepti.ch/20171021.html?t=flor_design_0&f=readme) - running a simple execution, what happens - blog post
 * [flor, branch to branch](https://speakerdeck.com/jmettraux/flor-branch-to-branch) - q1 2017 - very dry deck
