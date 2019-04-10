@@ -116,6 +116,22 @@ See [doc/](doc/).
 * [flor 2017](https://speakerdeck.com/jmettraux/flor-2017) - q1 2017 - very dry deck
 
 
+## other Ruby projects about workflows
+
+There are various other Ruby and Ruby on Rails projects about workflows and business processes, each with its own take on them.
+
+* [Dynflow](http://dynflow.github.io/) - "Dynflow (DYNamic workFLOW) is a workflow engine written in Ruby"
+* [rails_workflow](https://github.com/madzhuga/rails_workflow) - "Rails Workflow Engine allows you to organize your application business logic by joining user- and auto- operations in processes"
+* [rails_engine/workflow_core](https://github.com/rails-engine/workflow_core) - "A Rails engine which providing essential infrastructure of workflow. It's based on Workflow Nets"
+* [Trailblazer](http://trailblazer.to/) - "The Advanced Business Logic Framework"
+
+There is a [workflow engine](https://ruby.libhunt.com/categories/5786-workflow-engine) category on [Awesome Ruby](https://ruby.libhunt.com/).
+
+If you want your engine/library to be added in this list, don't hesitate to ask me on [Gitter](https://gitter.im/floraison/flor) or via a pull request.
+
+It's not limited to Ruby, but there is a wider list at [meirwah/awesome-workflow-engines](https://github.com/meirwah/awesome-workflow-engines).
+
+
 ## license
 
 MIT, see [LICENSE.txt](LICENSE.txt)
