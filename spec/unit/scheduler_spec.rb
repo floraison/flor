@@ -393,6 +393,19 @@ describe 'Flor unit' do
 
         wait_until { @unit.executions.where(status: 'active').count < 1 }
       end
+
+      it 'may cancel a whole execution' do
+
+        exid = @unit.launch(%q{ stall _ })
+
+        wait_until { @unit.executions[exid: exid] }
+
+        r = @unit.cancel(exid, wait: true)
+
+        expect(r['point']).to eq('terminated')
+
+        wait_until { @unit.executions.where(status: 'active').count < 1 }
+      end
     end
 
     describe '#kill' do

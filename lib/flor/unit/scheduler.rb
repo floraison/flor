@@ -249,12 +249,18 @@ module Flor
 
     def cancel(exid, *as)
 
-      queue(*prepare_message('cancel', [ exid, *as ]))
+      msg, opts = prepare_message('cancel', [ exid, *as ])
+      msg['nid'] ||= '0'
+
+      queue(msg, opts)
     end
 
     def kill(exid, *as)
 
-      queue(*prepare_message('kill', [ exid, *as ]))
+      msg, opts = prepare_message('kill', [ exid, *as ])
+      msg['nid'] ||= '0'
+
+      queue(msg, opts)
     end
 
     def signal(name, h={})
