@@ -20,6 +20,7 @@ If you have any question feel free to ask in the [flor chat room](https://gitter
 ## pieces of documentation
 
 * [blocks.md](blocks.md) - flor blocks vs Ruby blocks
+* [cancelling.md](cancelling.md) - cancelling or killing an execution or part of it
 * [chaining.md](chaining.md) - piping/chaining procedure calls
 * [common_attributes.md](common_attributes.md) - attributes common to all procedures
 * [domains.md](domains.md) - the flor domain layering system
@@ -40,7 +41,9 @@ If you have any question feel free to ask in the [flor chat room](https://gitter
 * [patterns__data.md](patterns__data.md) - workflow data patterns
 * [patterns__exception_handling.md](patterns__exception_handling.md) - workflow exception handling patterns
 * [patterns__resource.md](patterns__resource.md) - workflow resource patterns
+* [re_applying.md](re_applying.md) - cancelling part of an execution to force it to a new definition tree
 * [recipes.md](recipes.md) - good/best practices
+* [signalling.md](signalling.md) - sending a signal to an execution (to trigger a reaction)
 * [strings.md](strings.md) - dealing with strings in the flor language
 * [tags.md](tags.md) - the `tag:` attribute and its uses
 * [tasks.md](tasks.md) - handing tasks to gangers and taskers
