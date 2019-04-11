@@ -258,6 +258,9 @@ module Flor
     def kill(exid, *as)
 
       msg, opts = prepare_message('kill', [ exid, *as ])
+
+      msg['point'] = 'cancel'
+      msg['flavour'] = 'kill'
       msg['nid'] ||= '0'
 
       queue(msg, opts)
@@ -268,21 +271,38 @@ module Flor
       h[:payload] ||= {}
       h[:name] ||= name
 
-      queue(*prepare_message('signal', [ h ]))
+      msg, opts = prepare_message('signal', [ h ])
+
+      fail ArgumentError.new('missing :name string key') \
+        unless msg['name'].is_a?(String)
+
+      queue(msg, opts)
     end
 
     def re_apply(exid, *as)
 
-      queue(*prepare_message('cancel', [ exid, *as, { re_apply: true } ]))
+      msg, opts = prepare_message('cancel', [ exid, *as ])
+
+      msg['on_receive_last'] = prepare_re_apply_messages(msg, opts)
+
+      queue(msg, opts)
     end
     alias reapply re_apply
 
     def add_branches(exid, *as)
 
-      m = prepare_message('add-branches', [ exid, *as ]).first
+      msg, opts = prepare_message('add-branches', [ exid, *as ])
 
-      exe = @storage.executions[exid: m['exid']]
-      pnid = m['nid']
+      msg['point'] = 'add'
+      msg['trees'] = prepare_trees(opts)
+
+      msg['tnid'] = tnid =
+        opts.delete(:tnid) || msg.delete('nid')
+      msg['nid'] =
+        msg.delete('nid') || opts.delete(:pnid) || Flor.parent_nid(tnid)
+
+      exe = @storage.executions[exid: msg['exid']]
+      pnid = msg['nid']
       ptree = exe.lookup_tree(pnid)
 
       fail ArgumentError.new(
@@ -292,7 +312,7 @@ module Flor
         # not likely to happen, since leaves reply immediately
 
       size = ptree[1].size
-      tnid = (m['tnid'] ||= Flor.make_child_nid(pnid, size))
+      tnid = (msg['tnid'] ||= Flor.make_child_nid(pnid, size))
 
       cid = Flor.child_id(tnid)
 
@@ -312,19 +332,23 @@ module Flor
         "node #{pnid} has #{size} branch#{size == 1 ? '' : 'es'}"
       ) if cid > size
 
-      queue(m)
+      queue(msg, opts)
     end
     alias add_branch add_branches
 
     def add_iterations(exid, *as)
 
-      m = prepare_message('add-iterations', [ exid, *as ]).first
+      msg, opts = prepare_message('add-iterations', [ exid, *as ])
 
-      exe = @storage.executions[exid: m['exid']]
-      nid = m['nid']
+      msg['point'] = 'add'
+      msg['elements'] = prepare_elements(opts)
+      msg['nid'] = msg.delete('nid') || opts.delete(:pnid)
+
+      exe = @storage.executions[exid: msg['exid']]
+      nid = msg['nid']
 
       fail ArgumentError.new(
-        "cannot add iteration to missing execution #{m['exid'].inspect}"
+        "cannot add iteration to missing execution #{msg['exid'].inspect}"
       ) unless exe
 
       fail ArgumentError.new(
@@ -335,7 +359,7 @@ module Flor
         "cannot add iteration to missing node #{nid.inspect}"
       ) unless exe.lookup_tree(nid)
 
-      queue(m)
+      queue(msg, opts)
     end
     alias add_iteration add_iterations
 
@@ -428,8 +452,8 @@ module Flor
 
     def prepare_message(point, args)
 
-      h =
-        args.inject({}) { |hh, a|
+      h = args
+        .inject({}) { |hh, a|
           if a.is_a?(Hash) then a.each { |k, v| hh[k.to_s] = v }
           elsif ! hh.has_key?('exid') then hh['exid'] = a
           elsif ! hh.has_key?('nid') then hh['nid'] = a
@@ -447,37 +471,8 @@ module Flor
         end
       end
 
-      if point == 'kill'
-
-        msg['point'] = 'cancel'
-        msg['flavour'] = 'kill'
-
-      elsif point == 'add-branches'
-
-        msg['point'] = 'add'
-        msg['trees'] = prepare_trees(opts)
-
-        msg['tnid'] = tnid =
-          opts.delete(:tnid) || msg.delete('nid')
-        msg['nid'] =
-          msg.delete('nid') || opts.delete(:pnid) || Flor.parent_nid(tnid)
-
-      elsif point == 'add-iterations'
-
-        msg['point'] = 'add'
-        msg['elements'] = prepare_elements(opts)
-        msg['nid'] = msg.delete('nid') || opts.delete(:pnid)
-      end
-
-      if opts[:re_apply]
-
-        msg['on_receive_last'] = prepare_re_apply_messages(msg, opts)
-      end
-
       fail ArgumentError.new('missing :exid key') \
         unless msg['exid'].is_a?(String)
-      fail ArgumentError.new('missing :name string key') \
-        if point == 'signal' && ! msg['name'].is_a?(String)
 
       [ msg, opts ]
     end
