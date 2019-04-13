@@ -349,6 +349,7 @@ describe 'Flor unit' do
         r = @unit.launch(
           %q{
             sequence
+              set f.x 'y'
               sequence
                 stall _
           },
@@ -360,10 +361,11 @@ describe 'Flor unit' do
 
         xd = @unit.executions[exid: exid].data
 
-        expect(xd['nodes'].keys).to eq(%w[ 0 0_0 0_0_0 ])
+        expect(xd['nodes'].keys).to eq(%w[ 0 0_1 0_1_0 ])
 
-        r = @unit.cancel(exid: exid, nid: '0_0', wait: true)
+        r = @unit.cancel(exid: exid, nid: '0_1', wait: true)
 
+        expect(r['payload']['x']).to eq('y')
         expect(r['point']).to eq('terminated')
 
         wait_until { @unit.executions.where(status: 'active').count < 1 }
@@ -374,8 +376,8 @@ describe 'Flor unit' do
         r = @unit.launch(
           %q{
             sequence
-              sequence
-                stall _
+              set f.a 0
+              stall _
           },
           wait: 'end')
 
@@ -385,10 +387,11 @@ describe 'Flor unit' do
 
         xd = @unit.executions[exid: exid].data
 
-        expect(xd['nodes'].keys).to eq(%w[ 0 0_0 0_0_0 ])
+        expect(xd['nodes'].keys).to eq(%w[ 0 0_1 ])
 
-        r = @unit.cancel(exid, '0_0', wait: true)
+        r = @unit.cancel(exid, '0_1', wait: true)
 
+        expect(r['payload']['a']).to eq(0)
         expect(r['point']).to eq('terminated')
 
         wait_until { @unit.executions.where(status: 'active').count < 1 }
@@ -396,12 +399,13 @@ describe 'Flor unit' do
 
       it 'may cancel a whole execution' do
 
-        exid = @unit.launch(%q{ stall _ })
+        exid = @unit.launch(%q{ stall _ }, payload: { 'a' => 0 })
 
         wait_until { @unit.executions[exid: exid] }
 
         r = @unit.cancel(exid, wait: true)
 
+        expect(r['payload']['a']).to eq(0)
         expect(r['point']).to eq('terminated')
 
         wait_until { @unit.executions.where(status: 'active').count < 1 }

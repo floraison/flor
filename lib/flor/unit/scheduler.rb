@@ -504,8 +504,9 @@ module Flor
 
     def prepare_re_apply_messages(msg, opts)
 
-      fail ArgumentError.new("missing 'payload' to re_apply") \
-        unless msg['payload']
+      pl = msg['payload']
+
+      fail ArgumentError.new("missing 'payload' to re_apply") unless pl
 
       t = Flor.parse(opts[:tree], Flor.caller_fname, {})
 
@@ -513,7 +514,7 @@ module Flor
           'exid' => msg['exid'], 'nid' => msg['nid'],
           'from' => 'parent',
           'tree' => t,
-          'payload' => msg['payload'] } ]
+          'payload' => pl } ]
     end
 
     def make_idle_message
