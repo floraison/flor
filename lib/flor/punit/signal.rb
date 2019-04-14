@@ -85,8 +85,8 @@ class Flor::Pro::Signal < Flor::Procedure
   def receive_last
 
     na = att('name', nil)
-    ei = att('exid', exid)
-    pl = att('payload', payload.copy_current)
+    ei = att('exid') || exid
+    pl = att('payload') || payload.copy_current
 
     return super unless na
 
