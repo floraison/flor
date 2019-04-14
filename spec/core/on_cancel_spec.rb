@@ -134,7 +134,27 @@ describe 'Flor core' do
       expect(m['payload']['l']).to eq([ 'cancel:0_0', 1 ])
     end
 
-    it 'is disregarded if the cancel is a "kill"'
+    it 'is disregarded if the cancel is a "kill"' do
+
+      r = @executor.launch(
+        %q{
+          sequence on_cancel: (def msg \ push f.l "$(msg.point):$(msg.nid)")
+            push f.l 0
+            stall _
+          push f.l 1
+        },
+        payload: { 'l' => [] },
+        wait: '0_1 receive')
+
+      m = @executor.walk([
+        { 'point' => 'cancel',
+          'flavour' => 'kill',
+          'nid' => '0_0',
+          'exid' => @executor.exid } ])
+
+      expect(m['point']).to eq('terminated')
+      expect(m['payload']['l']).to eq([ 1 ])
+    end
   end
 end
 

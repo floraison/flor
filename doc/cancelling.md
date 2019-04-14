@@ -93,9 +93,7 @@ p m['point']                     # ==> terminated
 p m['payload']['got_cancelled']  # ==> true
 ```
 
-### middle of the way cancel handlers
-
-TODO
+Read about setting cancel handlers in [on_cancel / on cancel](on_cancel.md).
 
 
 ## killing an execution or part of it
