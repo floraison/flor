@@ -139,12 +139,10 @@ describe 'Flor punit' do
         m0 = ms.find { |m| m['exid'] == exid0 }
         m1 = ms.find { |m| m['exid'] == exid1 }
 
-        expect(m0['point']).to eq('terminated')
-        expect(m0['payload']['done']).to eq(true)
-
-        expect(m1['point']).to eq('terminated')
-        expect(m1['payload']['a']).to eq('a')
-        expect(m1['payload']['b']).to eq('b')
+        expect(m0['payload']).to eq({
+          'exid0' => exid0, 'ret' => 'green', 'a' => 'a', 'done' => true })
+        expect(m1['payload']).to eq({
+          'exid0' => exid0, 'ret' => 'green', 'a' => 'a', 'b' => 'b' })
       end
     end
   end
