@@ -4,6 +4,8 @@
 
 ## flor 0.17.1  not yet released
 
+- Make payload optional when cancelling (default to payload as it was
+  upon reaching the cancelled node)
 
 
 ## flor 0.17.0  released 2019-04-08

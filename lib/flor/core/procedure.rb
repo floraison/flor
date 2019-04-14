@@ -828,6 +828,11 @@ class Flor::Procedure < Flor::Node
   #
   def do_cancel
 
+    @message['payload'] ||= Flor.dup(@node['payload'])
+      #
+      # Ensure the 'cancel' message has a payload.
+      # If not, let's use the payload as it was upon reaching this node.
+
     if orl = @message['on_receive_last']
       #
       # the message on_receive_last is used by the re_apply feature
