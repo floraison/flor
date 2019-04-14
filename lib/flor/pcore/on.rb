@@ -100,6 +100,20 @@ class Flor::Pro::On < Flor::Macro
   # If it were, it would trap the signal named "timeout".
   #
   #
+  # ## blocking mode
+  #
+  # When "on" is given no code block, it will block.
+  # ```
+  # sequence
+  #   # ...
+  #   on 'green'  # execution (branch) blocks here until signal 'green' comes
+  #   # ...
+  # ```
+  #
+  # Behind the scenes, it simply rewrites the "on" to a "trap" without a
+  # function, a blocking trap.
+  #
+  #
   # ## see also
   #
   # Trap and signal.
@@ -171,11 +185,14 @@ class Flor::Pro::On < Flor::Macro
     th[1] << [ '_att', [ [ 'payload', [], l ], [ '_sqs', 'event', l ] ], l ]
     atts.each { |ac| th[1] << Flor.dup(ac) }
 
-    td = [ 'def', [], l ]
-    td[1] << [ '_att', [ [ 'msg', [], l ] ], l ]
-    non_att_children.each { |nac| td[1] << Flor.dup(nac) }
+    if (nac = non_att_children).any?
 
-    th[1] << td
+      td = [ 'def', [], l ]
+      td[1] << [ '_att', [ [ 'msg', [], l ] ], l ]
+      non_att_children.each { |nac| td[1] << Flor.dup(nac) }
+
+      th[1] << td
+    end
 
     th
   end

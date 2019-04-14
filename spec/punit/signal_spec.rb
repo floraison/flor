@@ -118,7 +118,8 @@ describe 'Flor punit' do
 
         exid0 = @unit.launch(
           %q{
-            trap signal: 'green'
+            #trap signal: 'green'
+            on 'green'
               # blocks until receiving the 'green' signal
             set f.done true
           })

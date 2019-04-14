@@ -185,6 +185,30 @@ describe 'Flor punit' do
         expect(r['payload']['l']).to eq([ 'a', 'b', 'b' ])
       end
     end
+
+    context 'blocking' do
+
+      it 'sets a blocking trap when given no block (sic)' do
+
+        r = @unit.launch(
+          %q{
+            on 'green'
+          },
+          wait: '0 receive')
+
+        x = wait_until { @unit.executions[exid: r['exid']] }
+
+        expect(
+          x.nodes['0']['tree']
+        ).to eq(
+          [ 'trap',
+            [ [ '_att', [ [ 'point', [], 2 ], [ '_sqs', 'signal', 2 ] ], 2 ],
+              [ '_att', [ [ 'name', [], 2 ], [ '_sqs', 'green', 2 ] ], 2 ],
+              [ '_att', [ [ 'payload', [], 2 ], ['_sqs', 'event', 2 ] ], 2 ] ],
+            2 ]
+        )
+      end
+    end
   end
 end
 

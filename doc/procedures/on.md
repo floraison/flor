@@ -100,6 +100,20 @@ Please note that "timeout" in `on timeout` is not quoted, nor double quoted.
 If it were, it would trap the signal named "timeout".
 
 
+## blocking mode
+
+When "on" is given no code block, it will block.
+```
+sequence
+  # ...
+  on 'green'  # execution (branch) blocks here until signal 'green' comes
+  # ...
+```
+
+Behind the scenes, it simply rewrites the "on" to a "trap" without a
+function, a blocking trap.
+
+
 ## see also
 
 [Trap](trap.md) and [signal](signal.md).
