@@ -19,14 +19,14 @@ INDEX = (
     h }
 INDEX
   .each { |k, v|
-    a = v[:ancestors][1]
-    a = INDEX[a]
-    next unless a
-    (a[:children] ||= []) << k }
-
+    v[:ancestors][1..-1].each { |a|
+      a = INDEX[a]
+      next unless a
+      (a[:children] ||= []) << k } }
 Dir['lib/flor/{pcore,punit}/*.rb']
   .each { |path|
     m = File.read(path).match(/^class (Flor::.+) < /)
+    next unless m
     k = Flor.const_lookup(m[1])
     INDEX[k][:spath] = path }
 Dir['doc/procedures/*.md']
@@ -60,5 +60,6 @@ def render(level, klass)
     .sort_by { |c| c.to_s }
     .each { |c| render(level + 1, c) }
 end
+
 render(0, Flor::Procedure)
 
