@@ -51,6 +51,26 @@ Externally, you can signal with a specific payload thanks to:
 flor_unit.signal('close', exid: execution_id, payload: { 'f0' => 'zero' })
 ```
 
+## signalling another execution
+
+If the exid of execution A is known in execution B, execution B can
+send a signal to A.
+
+```ruby
+exid0 = @unit.launch(
+  %q{
+    trap signal: 'green' # block until receiving the 'green' signal
+    set f.done true
+  })
+@unit.launch(
+  %q{
+    set f.a 'a'
+    signal exid: f.exid0 'green' # send 'green' signal to exid0
+    set f.b 'b'
+  },
+  payload: { 'exid0' => exid0 })
+```
+
 ## see also
 
 [On](on.md) and [trap](trap.md).

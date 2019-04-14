@@ -111,6 +111,41 @@ describe 'Flor punit' do
         'ret' => [ 0, 1, 2 ], 'a' => 'A', 'b' => 'B'
       })
     end
+
+    context 'cross-executions' do
+
+      it 'emits a signal towards another execution' do
+
+        exid0 = @unit.launch(
+          %q{
+            trap signal: 'green'
+              # blocks until receiving the 'green' signal
+            set f.done true
+          })
+        exid1 = @unit.launch(
+          %q{
+            set f.a 'a'
+            signal exid: f.exid0 'green'
+            set f.b 'b'
+          },
+          payload: { 'exid0' => exid0 })
+
+        @unit.wait(exid0, 'terminated')
+        sleep 0.350
+
+        ms = @unit.journal.select { |m| m['point'] == 'terminated' }
+
+        m0 = ms.find { |m| m['exid'] == exid0 }
+        m1 = ms.find { |m| m['exid'] == exid1 }
+
+        expect(m0['point']).to eq('terminated')
+        expect(m0['payload']['done']).to eq(true)
+
+        expect(m1['point']).to eq('terminated')
+        expect(m1['payload']['a']).to eq('a')
+        expect(m1['payload']['b']).to eq('b')
+      end
+    end
   end
 end
 

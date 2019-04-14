@@ -4,6 +4,7 @@
 
 ## flor 0.17.1  not yet released
 
+- Unlock `signal exid: other_execution_id "xxx"`
 - Make payload optional when cancelling (default to payload as it was
   upon reaching the cancelled node)
 

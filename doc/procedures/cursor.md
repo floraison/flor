@@ -30,7 +30,7 @@ cursor
   sales_team "fill in customer details"
   ops_team "attribute account number"
   continue _ if f.ops_decision == 'reject'
-  create_account
+  create_account _
 ```
 
 ## move
