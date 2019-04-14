@@ -176,6 +176,22 @@ will trigger when the execution enters the tag 'x', but will trigger only
 twice.
 
 
+## blocking trap
+
+One can use a trap without a function. It will block the execution branch
+until the expect event, signal, etc occurs
+```
+sequence
+  technical_writer 'prepare documentation'
+  team_manager 'submit documentation to review team'
+  trap signal: 'green' # go on after the 'green' signal...
+  team_manager 'deploy documentation'
+```
+Here the execution will block after the team manager submits the doc
+for review. When the 'green' signal comes, the flow resumes to 'deploy
+documentation'.
+
+
 ## see also
 
 [On](on.md) and [signal](signal.md).
