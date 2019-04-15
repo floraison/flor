@@ -31,7 +31,7 @@ Read more about [taskers](taskers.md).
 
 Between the flor executor and the taskers sits the ganger. In fact, the executor hands the task to the ganger and it then decides which tasker gets the task.
 
-Read more about the [ganger service](ganger.md).
+Read more about the [ganger service](services/ganger.md).
 
 
 ## environment

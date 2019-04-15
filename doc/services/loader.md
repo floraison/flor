@@ -59,6 +59,11 @@ The loader looks at all the file in its tree and builds an expanded structure, w
 TODO
 
 
+## the HashLoader
+
+TODO
+
+
 ## links
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/unit/loader.rb)
