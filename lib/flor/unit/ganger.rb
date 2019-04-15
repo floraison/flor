@@ -22,6 +22,12 @@ module Flor
     def shutdown
     end
 
+    # Used by flor when it looks up for a variable and finds nothing.
+    # The last step is to ask the ganger if it knows about a tasker under
+    # the given (domain and) name.
+    #
+    # If it returns true, flor knows there is a tasker under that name.
+    #
     def has_tasker?(exid, name)
 
       #return false if RESERVED_NAMES.include?(name)
@@ -34,6 +40,9 @@ module Flor
         @unit.loader.tasker(d, name))
     end
 
+    # Called by Flor::Scheduler. The ganger then has to hand the task
+    # (the message) to the proper tasker.
+    #
     def task(executor, message)
 
       domain = message['exid'].split('-', 2).first
@@ -73,6 +82,9 @@ module Flor
         # especially if it's a domain tasker
     end
 
+    # Called by the tasker implementations when they're done with a task
+    # and want to hand it back to flor. It might be a failure message.
+    #
     def return(message)
 
       @unit.return(message)
@@ -119,6 +131,10 @@ module Flor
       }.compact
     end
 
+    # By default, taskers don't see the flor variables in the execution.
+    # If 'include_vars' or 'exclude_vars' is present in the configuration
+    # of the tasker, some or all of the variables are passed.
+    #
     def gather_vars(executor, tconf, message)
 
       # try to return before a potentially costly call to executor.vars(nid)
