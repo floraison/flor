@@ -17,15 +17,22 @@ sequence
   bob 'phase 2'
 ```
 
+
 ## tasker
 
 A tasker is a piece of code that, upon receiving a task from flor, performs some work and then hands back the task with updated information to flor.
 
 Usually, taskers are pieces of Ruby code, but that can be broadened.
 
+Read more about [taskers](taskers.md).
+
+
 ## ganger
 
 Between the flor executor and the taskers sits the ganger. In fact, the executor hands the task to the ganger and it then decides which tasker gets the task.
+
+Read more about the [ganger service](ganger.md).
+
 
 ## environment
 
