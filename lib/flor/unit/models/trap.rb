@@ -107,9 +107,15 @@ module Flor
       if sig = (message['point'] == 'signal' && message['name'])
         args << [ 'sig', sig ]
       end
-      if dat['pl'] == 'event'
+
+      case pl = dat['pl']
+      when 'event'
         args << [ 'payload', msg['payload'] ]
-        msg['payload'] = Flor.dup(message['payload']) # FIXME try without this line...
+        msg['payload'] = Flor.dup(message['payload'])
+      #when 'trap'
+      when Hash
+        msg['payload'] = Flor.dup(pl)
+      #else
       end
 
       { 'point' => 'trigger',

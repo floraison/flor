@@ -180,10 +180,17 @@ class Flor::Pro::On < Flor::Macro
     l = tree[2]
 
     th = [ 'trap', [], l, *tree[3] ]
+
     th[1] << [ '_att', [ [ 'point', [], l ], [ '_sqs', 'signal', l ] ], l ]
     th[1] << [ '_att', [ [ 'name', [], l ], tname ], l ]
-    th[1] << [ '_att', [ [ 'payload', [], l ], [ '_sqs', 'event', l ] ], l ]
-    atts.each { |ac| th[1] << Flor.dup(ac) }
+
+    att_names = []
+    atts.each { |at|
+      att_names << at[1][0][0]
+      th[1] << Flor.dup(at) }
+
+    th[1] << [ '_att', [ [ 'payload', [], l ], [ '_sqs', 'event', l ] ], l ] \
+      unless att_names.include?('payload')
 
     if (nac = non_att_children).any?
 

@@ -176,6 +176,21 @@ will trigger when the execution enters the tag 'x', but will trigger only
 twice.
 
 
+## the payload: directive
+
+The `payload:` attribute tells the trap what payload to hand to the
+trap handler.
+
+When `payload: 'event'`, the handler is given a copy of the fields as
+seen in the event that triggered the trap.
+
+When `payload: 'trap'`, the handler is given a copy of the fields as
+they were when and where the trap was set.
+
+When `payload: { a: 'A' }`, the given payload is used (here
+`{ 'a' => 'A' }`).
+
+
 ## blocking trap
 
 One can use a trap without a function. It will block the execution branch

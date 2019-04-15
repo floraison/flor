@@ -1312,6 +1312,26 @@ describe 'Flor punit' do
           s0:["_func",{"nid":"0_0_3","tree":["def",[["_att",[["msg",[],3]],3],["trace",[["_att",[["_dqs",[["_sqs","s0:",4],["_dol",[["_dmute",[["_ref",[["_sqs","f",4],["_sqs","ret",4]],4]],4]],4],["_sqs",":",4],["_dol",[["_dmute",[["_ref",[["_sqs","msg",4],["_sqs","payload",4],["_sqs","ret",4]],4]],4]],4]],4]],4]],4],["trace",[["_att",[["_dqs",[["_sqs","s0:",5],["_dol",[["_dmute",[["_ref",[["_sqs","payload",5],["_sqs","ret",5]],5]],5]],5]],5]],5]],5]],3],"cnid":"0_0","fun":0},3]
         }.strip)
       end
+
+      it 'uses the event payload if {object}"' do
+
+        r = @unit.launch(
+          %q{
+            trap point: 'signal' name: 's0' payload: { trap: 'trap1' }
+              def msg
+                trace "s0:$(f.trap)"
+            signal 's0'
+              [ 1, 2, 3 ]
+          },
+          wait: true)
+
+        expect(r).to have_terminated_as_point
+
+        wait_until { @unit.traces.count > 0 }
+
+        expect(@unit.traces.count).to eq(1)
+        expect(@unit.traces.first.text).to eq('s0:trap1')
+      end
     end
 
     context 'multiple criteria' do
