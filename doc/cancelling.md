@@ -108,5 +108,42 @@ TODO
 
 ## taskers and cancellation
 
-TODO
+When the node of a tasker invocation gets cancelled, the tasker itself receives a 'detask' message. Flor then proceeds to call the `#cancel` method of the tasker. If it's not present, it searches for `#detask` or `#on_cancel`.
+
+Here is a fictitious tasker implementation. It expects to be bound behind the usernames of the AcmeApp. Upon receiving a task, it creates a workitem then notifies the user. When the user is done with the app, she/he can call the `#on_task_done` method which replies to flor. When the branch of execution to which our task/workitem belongs gets cancelled, flor arranges for `#on_cancel` to be called. The Tasker implementation is responsible for cleaning up its side (here cancelling the workitem and notifying the user) and replying when this is done.
+```ruby
+class AcmeApp::UserTasker < Flor::BasicTasker
+
+  def on_task
+
+    u = lookup_user
+    wi = AcmeApp::WorkItem.create(message, u)
+    AcmeApp.notify(u.email, 'new workitem in', wi)
+
+    []
+  end
+
+  def on_cancel
+
+    u = lookup_user
+    wi = AcmeApp::WorkItem.cancel(message, u)
+    AcmeApp.notify(u.email, 'workitem cancelled', wi)
+
+    reply(set: { cancelled_workitem_id: wi.id })
+  end
+
+  def on_task_done(workitem)
+
+    reply(set: { done_workitem_id: workitem.id })
+  end
+
+  protected
+
+  def lookup_user
+    AcmeApp.lookup_user(tasker)
+  end
+end
+```
+
+If the tasker implementation doesn't respond to `#on_detask`, `#detask`, `#on_cancel`, `#cancel`, or the generic `#on_message` or `#on`, an error will be launched and the flow will stall. It's thus a good idea to have an `#on_cancel` implementation for such taskers, those that "hoard" the task for a while, not immediately doing something quick with it and replying.
 
