@@ -55,7 +55,11 @@ module Flor
 
     def reply(message=@message, force=false)
 
-      @ganger.return(message) if force || @ganger
+      fail ArgumentError.new(
+        "argument to reply must be a Hash but is #{message.class}"
+      ) unless message.is_a?(Hash)
+
+      @ganger.return(refine_message(message)) if force || @ganger
 
       [] # very important, return no further messages
     end
@@ -64,6 +68,29 @@ module Flor
 
       reply(
         Flor.to_error_message(@message, error))
+    end
+
+    def refine_message(m)
+
+      exid = m['exid']
+      nid = m['nid']
+      pl = m['payload']
+
+      return m if Flor.is_exid?(exid) && Flor.is_nid?(nid) && pl.is_a?(Hash)
+
+      m = Flor.to_string_keyed_hash(m)
+      h = Flor.dup(@message)
+      ks = m.keys
+
+      if ks == [ 'ret' ]
+        (h['payload'] ||= {})['ret'] = m['ret']
+      elsif ks == [ 'payload' ]
+        h['payload'] = m['payload']
+      else
+        h['payload'] = m
+      end
+
+      h
     end
   end
 end

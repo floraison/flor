@@ -4,6 +4,7 @@
 
 ## flor 0.17.1  not yet released
 
+- Refine BasicTasker#reply (more arg patterns)
 - Allow for `trap 'signal0' payload: { a: 'A' }`
 - Allow for "on" in blocking mode (no block given)
 - Unlock `signal exid: other_execution_id "xxx"`
