@@ -59,7 +59,7 @@ module Flor
         "argument to reply must be a Hash but is #{message.class}"
       ) unless message.is_a?(Hash)
 
-      @ganger.return(refine_message(message)) if force || @ganger
+      @ganger.return(derive_message(message)) if force || @ganger
 
       [] # very important, return no further messages
     end
@@ -70,7 +70,16 @@ module Flor
         Flor.to_error_message(@message, error))
     end
 
-    def refine_message(m)
+    # So that #reply may be called with
+    # ```
+    # reply
+    # reply(@message)
+    # reply(payload: {})
+    # reply(ret: 123)
+    # reply(ret: 123, set: { a: 1 }, unset: [ :b ])
+    # ```
+    #
+    def derive_message(m)
 
       exid = m['exid']
       nid = m['nid']
@@ -82,11 +91,20 @@ module Flor
       h = Flor.dup(@message)
       ks = m.keys
 
-      if ks == [ 'ret' ]
-        (h['payload'] ||= {})['ret'] = m['ret']
-      elsif ks == [ 'payload' ]
+      if ks == [ 'payload' ]
+
         h['payload'] = m['payload']
+
+      elsif (ks & %w[ ret set unset ]).size > 0
+
+        pl = (h['payload'] ||= {})
+
+        pl['ret'] = m['ret'] if m.has_key?('ret')
+        (m['set'] || {}).each { |k, v| pl[k] = v }
+        (m['unset'] || []).each { |k| pl.delete(k.to_s) }
+
       else
+
         h['payload'] = m
       end
 
