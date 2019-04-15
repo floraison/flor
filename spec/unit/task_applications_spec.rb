@@ -156,7 +156,7 @@ describe 'Flor unit' do
         #wait: '0_1 task')
         wait: 'end') # wait until end of session
 
-      sleep 0.350
+      wait_until { @unit.executions.count > 0 }
 
       e = @unit.executions.first(exid: r['exid'])
       ps = @unit.pointers.where(exid: r['exid']).all
@@ -183,7 +183,7 @@ describe 'Flor unit' do
       expect(r['point']).to eq('task')
       expect(r['nid']).to eq('0')
 
-      sleep 0.420
+      wait_until { @unit.executions.count > 0 }
 
       r = @unit.queue(
         { 'point' => 'cancel', 'exid' => r['exid'], 'nid' => '0' },
@@ -489,11 +489,11 @@ describe 'Flor unit' do
         },
         wait: 'terminated')
 
-      sleep 0.350 # ensure the 'terminatd' gets logged in the journal
-
       expect(r['point']).to eq('terminated')
       expect(r['pr']).to eq(3)
       expect(r['payload']['ret']).to eq('broken')
+
+      wait_until { @unit.journal.find { |m| m['point'] == 'terminated' } }
 
       expect(
         @unit.journal
