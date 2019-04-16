@@ -108,7 +108,10 @@ describe 'Flor unit' do
             []
           end
           def on_cancel
-            reply(theo_cancel: true)
+            reply(
+              theo_cancel: true,
+              taskname: taskname
+            )
           end
         end
 
@@ -127,8 +130,8 @@ describe 'Flor unit' do
         r = @unit.wait(r['exid'], 'terminated')
 
         expect(r['payload']['theo_cancel']).to eq(true)
+        expect(r['payload']['taskname']).to eq('take out the garbage')
       end
     end
   end
 end
-

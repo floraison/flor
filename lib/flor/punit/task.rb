@@ -103,6 +103,7 @@ class Flor::Pro::Task < Flor::Procedure
       'exid' => exid, 'nid' => nid,
       'tags' => list_tags,
       'tasker' => att(nil),
+      'taskname' => @node['task']['name'],
       'attl' => attl, 'attd' => attd,
       'payload' => determine_payload)
   end
@@ -129,4 +130,3 @@ class Flor::Pro::Task < Flor::Procedure
     payload.copy_current
   end
 end
-
