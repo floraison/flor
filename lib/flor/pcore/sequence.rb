@@ -10,6 +10,27 @@ class Flor::Pro::Sequence < Flor::Procedure
   #   task 'charly'
   # ```
   #
+  # Giving a string as attribute result to "sequence" lets it interpret
+  # that string as a tag name, as in:
+  # ```
+  # sequence 'phase one'
+  #   alice 'gather customer requirements'
+  #   bob 'establish offer'
+  # sequence 'phase two'
+  #   alice 'present offer to customer'
+  #   bob 'sign contract'
+  # ```
+  # It is equivalent to:
+  # ```
+  # sequence tag: 'phase one'
+  #   alice 'gather customer requirements'
+  #   bob 'establish offer'
+  # sequence tag: 'phase two'
+  #   alice 'present offer to customer'
+  #   bob 'sign contract'
+  # ```
+  # Learn more about [tags](../tags.md).
+  #
   # ## see also
   #
   # Concurrence, loop
@@ -20,13 +41,8 @@ class Flor::Pro::Sequence < Flor::Procedure
 
     ms = []
 
-    if
-      @node['tags'].nil? &&
-      payload_ret.is_a?(String) &&
-      tree[1][@fcid][1].size == 1
-    then
-      ms = enter_tag
-    end
+    ms = enter_tag \
+      if @node['tags'].nil? && payload_ret.is_a?(String) && from_unkeyed_att?
 
     ms + super
   end

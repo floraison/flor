@@ -447,8 +447,21 @@ class Flor::Procedure < Flor::Node
 
     @fcid &&
     Flor.same_branch?(nid, from) &&
-    (c = children[@fcid]) &&
-    c[0] == '_att'
+    (c = children[@fcid]) && c[0] == '_att'
+  end
+
+  def from_keyed_att?
+
+    @fcid &&
+    Flor.same_branch?(nid, from) &&
+    (c = children[@fcid]) && c[0] == '_att' && c[1].size == 2
+  end
+
+  def from_unkeyed_att?
+
+    @fcid &&
+    Flor.same_branch?(nid, from) &&
+    (c = children[@fcid]) && c[0] == '_att' && c[1].size == 1
   end
 
   def from_sub_nid

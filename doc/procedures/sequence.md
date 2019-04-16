@@ -10,6 +10,31 @@ sequence
   task 'charly'
 ```
 
+Giving a string as attribute result to "sequence" lets it interpret
+that string as a tag name, as in:
+```
+sequence 'phase one'
+  alice 'gather customer requirements'
+  bob 'establish offer'
+sequence 'phase two'
+  alice 'present offer to customer'
+  bob 'sign contract'
+```
+It is equivalent to:
+```
+sequence tag: 'phase one'
+  alice 'gather customer requirements'
+  bob 'establish offer'
+sequence tag: 'phase two'
+  alice 'present offer to customer'
+  bob 'sign contract'
+```
+Learn more about [tags](../tags.md).
+
+## see also
+
+[Concurrence](concurrence.md), [loop](loop.md)
+
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/sequence.rb)
 * [sequence spec](https://github.com/floraison/flor/tree/master/spec/pcore/sequence_spec.rb)
