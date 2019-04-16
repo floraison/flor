@@ -56,7 +56,7 @@ describe 'Flor procedures' do
     it 'keeps track of its children' do
 
       r = @executor.launch(
-        %{
+        %q{
           sequence
             0
             stall _
@@ -67,6 +67,31 @@ describe 'Flor procedures' do
       n = @executor.execution['nodes']['0']
 
       expect(n['cnodes']).to eq(%w[ 0_1 ])
+    end
+
+    it 'turns lonely att string results to tags' do
+
+      r = @executor.launch(
+        %q{
+          sequence 'phase one'
+            1
+          sequence tags: [ 'phase two', 'intermediate' ] # counter-example
+            2
+          sequence 'phase three'
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('phase three')
+
+      expect(
+        @executor.journal
+          .select { |m| %w[ entered left ].include?(m['point']) }
+          .collect { |m| "#{m['point']}:#{m['tags'].join(',')}" }
+      ).to eq([
+        'entered:phase one', 'left:phase one',
+        'entered:phase two,intermediate', 'left:phase two,intermediate',
+        'entered:phase three', 'left:phase three',
+      ])
     end
   end
 end
