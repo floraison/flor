@@ -31,6 +31,10 @@ class Flor::Pro::Sequence < Flor::Procedure
   # ```
   # Learn more about [tags](../tags.md).
   #
+  # Please note that it sets only 1 tag, and if there are already tags
+  # sets (`sequence tags: [ 'a' 'b' ] "this won't become a tag"`), it won't set
+  # further tags.
+  #
   # ## see also
   #
   # Concurrence, loop
