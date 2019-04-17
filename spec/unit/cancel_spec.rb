@@ -42,7 +42,7 @@ describe 'Flor unit' do
         { 'point' => 'cancel', 'exid' => exid, 'nid' => '0' },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
 
       wait_until { @unit.executions.where(status: 'active').count < 1 }
 
@@ -71,7 +71,7 @@ describe 'Flor unit' do
         { 'point' => 'cancel', 'exid' => exid, 'nid' => '0_0' },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']).to eq({ 'x' => 'y' })
 
       wait_until { @unit.executions.where(status: 'active').count < 1 }
@@ -100,7 +100,7 @@ describe 'Flor unit' do
           'payload' => { 'x' => 1 } },
         wait: true)
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']).to eq({ 'x' => 1 })
     end
   end
@@ -134,6 +134,52 @@ describe 'Flor unit' do
       expect(
         @unit.executions.first(exid: exid).data['nodes'].keys
       ).to eq(%w[ 0 0_0 0_0_0 ])
+    end
+  end
+
+  describe 'cancelling a parent node or above' do
+
+    it 'works for a simple sequence' do
+
+      r = @unit.launch(
+        %q{
+          push f.l 0
+          sequence
+            push f.l 1
+            cancel '0_1'
+            push f.l 2
+          push f.l 3
+          'over'
+        },
+        payload: { 'l' => [] },
+        wait: true)
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq('over')
+      expect(r['payload']['l']).to eq([ 0, 1, 3 ])
+    end
+
+    it 'works' do
+
+      r = @unit.launch(
+        %q{
+          push f.l 0
+          cursor
+            push f.l 1
+            stall on_cancel: (def \ break 'breaking...')
+            push f.l 2
+          push f.l 3
+        },
+        payload: { 'l' => [] },
+        wait: 'end')
+
+      @unit.cancel(r['exid'], '0_1_1')
+
+      r = @unit.wait(r['exid'], 'terminated')
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq('breaking...')
+      expect(r['payload']['l']).to eq([ 0, 1, 3 ])
     end
   end
 end

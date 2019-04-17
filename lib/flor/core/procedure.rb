@@ -386,10 +386,23 @@ class Flor::Procedure < Flor::Node
     end
   end
 
+  # From the incoming message, return the most recent cause for this node
+  #
   def message_cause
 
     (@message['cause'] || [])
       .find { |c| c['nid'] == nid }
+  end
+
+  # Given the current node status and the incoming message, returns the
+  # upstream cause that lead to the status.
+  # Returns nil if the incoming message is not related to the current status.
+  #
+  def status_cause
+
+    m = node_status['m']
+
+    (@message['cause'] || []).find { |c| c['m'] == m }
   end
 
   def pop_on_receive_last
@@ -845,6 +858,11 @@ class Flor::Procedure < Flor::Node
       #
       # Ensure the 'cancel' message has a payload.
       # If not, let's use the payload as it was upon reaching this node.
+
+    return wrap if node_closed? && status_cause
+      #
+      # if the node is cancelled and that is caused by a message upstream
+      # that caused the incoming message, simply reply immediately...
 
     if orl = @message['on_receive_last']
       #

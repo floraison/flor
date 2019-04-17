@@ -419,14 +419,13 @@ end
 
       last = (message['cause'] ||= [])[0]
 
-      c = {
-        'cause' => cause,
-        'm' => message['m'],
-        'nid' => message['nid'],
-        'type' => message['type'],
-        'at' => last && last['at'] }
+      c = { 'cause' => cause, 'at' => last && last['at'] }
+      %w[ m sm nid type ].each { |k| c[k] = message[k] }
 
       return if c == last
+
+      # argh, the causes in the messages go most recent first
+      # while the statuses in the nodes go most recent last
 
       message['cause'] =
         [ c.tap { |h| h['at'] = Flor.tstamp } ] +

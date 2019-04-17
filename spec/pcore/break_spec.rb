@@ -33,7 +33,7 @@ describe 'Flor pcore' do
               break ref: 'x0'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(nil)
       expect(r['vars']['l']).to eq([ 1, 0 ])
 
@@ -64,7 +64,7 @@ describe 'Flor pcore' do
               break ref: 'x0'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(nil)
       expect(r['vars']['l']).to eq([ 1, 0 ])
 
@@ -102,7 +102,7 @@ describe 'Flor pcore' do
               continue ref: 'x0'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(nil)
       expect(r['vars']['l']).to eq([ 0 ])
 
@@ -135,9 +135,36 @@ describe 'Flor pcore' do
               break ref: 'x'
         })
 
-      expect(r['point']).to eq('terminated')
+      expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(nil)
       expect(r['vars']['l']).to eq(%w[ b a c a ])
+    end
+  end
+
+  describe 'break vs on_cancel:' do
+
+    it 'does not bite its tail' do
+
+      @executor.launch(
+        %q{
+          push f.l 0
+          cursor
+            stall on_cancel: (def \ break 'break-on-cancel')
+            push f.l 1
+          push f.l 2
+        },
+        payload: { 'l' => [] })
+
+      m = @executor.journal.last
+
+      expect(m['payload']['l']).to eq([ 0 ])
+
+      m = @executor.walk([
+        { 'point' => 'cancel', 'nid' => m['nid'], 'exid' => @executor.exid } ])
+
+      expect(m).to have_terminated_as_point
+      expect(m['payload']['l']).to eq([ 0, 2 ])
+      expect(m['payload']['ret']).to eq('break-on-cancel')
     end
   end
 end
