@@ -153,11 +153,7 @@ module Flor
 
     def return(message)
 
-      [ { 'point' => 'receive',
-          'exid' => message['exid'],
-          'nid' => message['nid'],
-          'payload' => message['payload'],
-          'tasker' => message['tasker'] } ]
+      [ message.dup.merge!('point' => 'receive') ]
     end
 
     def schedule(message)

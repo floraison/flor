@@ -106,6 +106,12 @@ module Flor
         a << " #{_c.dg}#{k}:#{m[k]}" if m.has_key?(k)
       end
 
+      #a << " #{_c.dim}#{_c.dg}"
+      #a << "pl#{Flor.to_d(m['payload'], compact: true, colors: false)}"
+        #
+        # keep that around for when debugging payload shifts
+        # eventually consider FLOR_DEBUG flag
+
       a << _c.rs
 
       a.join

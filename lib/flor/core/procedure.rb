@@ -409,9 +409,9 @@ class Flor::Procedure < Flor::Node
 
     orl = @node['on_receive_last']
 
-    return nil unless orl
-    return nil if orl.empty?
+    return nil if orl.nil? || orl.empty?
 
+#pp message
     c = message_cause
 
     open_node \
@@ -424,15 +424,20 @@ class Flor::Procedure < Flor::Node
 
     @node['mtime'] = Flor.tstamp
 
-    orl.each do |m|
-
-      m['from'] = @node['parent'] if m['from'] == 'parent'
-
-      #m['payload'] ||= Flor.dup(@node['payload'])
-        # No, let re_applier supply payload
-    end
-
     orl
+      .each do |m|
+
+        m['from'] = @node['parent'] if m['from'] == 'parent'
+
+        #m['payload'] ||= Flor.dup(@node['payload'])
+          # No, let the re-applier supply the payload
+
+        #m['payload'] = Flor.dup(message['payload'])
+          # Need that for
+          # it 'does not bite its tail (task)' do # gh-26
+          # spec/unit/cancel_spec.rb:242
+          # :-(
+      end
   end
 
   def receive_from_child_when_closed

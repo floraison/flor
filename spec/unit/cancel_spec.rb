@@ -159,7 +159,7 @@ describe 'Flor unit' do
       expect(r['payload']['l']).to eq([ 0, 1, 3 ])
     end
 
-    it 'works' do
+    it 'does not bite its tail' do
 
       r = @unit.launch(
         %q{
@@ -180,6 +180,69 @@ describe 'Flor unit' do
       expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq('breaking...')
       expect(r['payload']['l']).to eq([ 0, 1, 3 ])
+    end
+  end
+end
+
+describe 'Flor unit' do
+
+  before :each do
+
+    sto_uri = RUBY_PLATFORM.match(/java/) ?
+      'jdbc:sqlite://tmp/test.db' : 'sqlite://tmp/test.db'
+
+    @unit = Flor::Unit.new(loader: Flor::HashLoader, sto_uri: 'sqlite:/')
+    @unit.conf['unit'] = 'u'
+    @unit.storage.delete_tables
+    @unit.storage.migrate
+    @unit.start
+  end
+
+  after :each do
+
+    @unit.shutdown
+  end
+
+  describe 'cancelling a parent node or above' do
+
+    it 'does not bite its tail (task)' do # gh-26
+
+      @unit.add_tasker(
+        'alice',
+        class SpucAliceTasker < Flor::BasicTasker
+          def on_task
+#p :task!
+            []
+          end
+          def on_detask
+#p :detask!
+            payload['l'] << "dt_m#{message['m']}"
+            reply
+          end
+          self
+        end)
+
+      r = @unit.launch(
+        %q{
+          push f.l 0
+          cursor
+            push f.l 1
+            alice on_cancel: (def \ break 'breaking...')
+            push f.l 2
+          push f.l 3 if f.ret == 'breaking...'
+          push f.l 4
+        },
+        payload: { 'l' => [] },
+        wait: 'end')
+
+      @unit.cancel(r['exid'], '0_1_1')
+
+      r = @unit.wait(r['exid'], 'terminated')
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['ret']).to eq(true)
+      expect(r['payload']['l']).to eq([ 0, 1, 3, 4 ])
+      #expect(r['payload']['l']).to eq([ 0, 1, 'dt_m36', 3, 4 ])
     end
   end
 end

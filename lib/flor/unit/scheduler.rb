@@ -238,7 +238,7 @@ module Flor
           message
         else
           message
-            .select { |k, _| %w[ exid nid payload tasker ].include?(k) }
+            .select { |k, _| %w[ exid nid payload tasker cause ].include?(k) }
             .merge!('point' => 'return')
         end
 
