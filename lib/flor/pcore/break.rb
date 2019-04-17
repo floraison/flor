@@ -59,7 +59,8 @@ class Flor::Pro::Break < Flor::Procedure
   def receive_last
 
     ref = att('ref')
-    nid = tags_to_nids(ref).first || @node['heat'][1]['nid']
+    nid = tags_to_nids(ref).first || target_nid
+      # nid derived from tag or target nid given by parent "cursor"
 
     payload['ret'] = att(nil) if has_att?(nil)
 
@@ -79,6 +80,16 @@ class Flor::Pro::Break < Flor::Procedure
     end
 
     ms
+  end
+
+  protected
+
+  def target_nid
+
+    # this nid is given by the parent "cursor" via a "break" or "continue"
+    # variable
+
+    @node['heat'][1]['nid']
   end
 end
 
