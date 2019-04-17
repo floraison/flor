@@ -191,8 +191,8 @@ describe 'Flor unit' do
     sto_uri = RUBY_PLATFORM.match(/java/) ?
       'jdbc:sqlite://tmp/test.db' : 'sqlite://tmp/test.db'
 
-    @unit = Flor::Unit.new(loader: Flor::HashLoader, sto_uri: 'sqlite:/')
-    @unit.conf['unit'] = 'u'
+    @unit = Flor::Unit.new(loader: Flor::HashLoader, sto_uri: sto_uri)
+    @unit.conf['unit'] = 'ucapnoa'
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
