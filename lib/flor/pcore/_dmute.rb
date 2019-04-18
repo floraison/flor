@@ -12,7 +12,10 @@ class Flor::Pro::Dmute < Flor::Procedure
           'from' => Flor.child_nid(nid, 999 + tree[1].size),
             # "#{nid}_#{999 + child.count}"
           'exid' => exid,
-          'payload' => @message['payload'].merge('ret' => '') } ] ]
+          'force_payload' => @message['payload'].merge('ret' => '') } ] ]
+            #
+            # using 'force_payload' to tell Procedure#pop_on_receive_last
+            # to use this payload
   end
 end
 

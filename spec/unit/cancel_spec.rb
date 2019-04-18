@@ -241,8 +241,7 @@ describe 'Flor unit' do
 
       expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(true)
-      expect(r['payload']['l']).to eq([ 0, 1, 3, 4 ])
-      #expect(r['payload']['l']).to eq([ 0, 1, 'dt_m36', 3, 4 ])
+      expect(r['payload']['l']).to eq([ 0, 1, 'dt_m36', 3, 4 ])
     end
   end
 end

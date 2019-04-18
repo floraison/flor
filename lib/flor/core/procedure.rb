@@ -411,7 +411,6 @@ class Flor::Procedure < Flor::Node
 
     return nil if orl.nil? || orl.empty?
 
-#pp message
     c = message_cause
 
     open_node \
@@ -427,16 +426,12 @@ class Flor::Procedure < Flor::Node
     orl
       .each do |m|
 
-        m['from'] = @node['parent'] if m['from'] == 'parent'
+        m['from'] = @node['parent'] \
+          if m['from'] == 'parent'
 
-        #m['payload'] ||= Flor.dup(@node['payload'])
-          # No, let the re-applier supply the payload
-
-        #m['payload'] = Flor.dup(message['payload'])
-          # Need that for
-          # it 'does not bite its tail (task)' do # gh-26
-          # spec/unit/cancel_spec.rb:242
-          # :-(
+        m['payload'] =
+          m.delete('force_payload') ||
+          message['payload']
       end
   end
 
