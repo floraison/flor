@@ -380,6 +380,16 @@ class Hash
         end
     end
   end
+
+  #alias :original_set :[]=
+  #def []=(k, v)
+  #  if k == 'payload'
+  #    puts "  --- Hash#[#{[k.inspect]}]=#{v.inspect}"
+  #    caller[0, 9].each { |l| print "  "; puts l }
+  #    puts "  --- Hash#[]= ."
+  #  end
+  #  original_set(k, v)
+  #end
 end
 
 class Array
