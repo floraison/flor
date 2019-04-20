@@ -9,7 +9,17 @@ Throughout documentation (and commit messages), attributes are suffixed with a c
 
 ## branch
 
-TODO
+Most likely, "branch of execution". As flor parses the workflow definitions to trees, those trees get executed.
+```python
+concurrence
+  sequence 'blue customers'
+    alice 'gather feedback'
+    brad 'prepare meeting'
+  sequence 'green customers'
+    carla 'gather feedback'
+    david 'prepare meeting'
+```
+In the code above, any subtree might be a "branch of execution". The "concurrence" has two branch of executions running concurrently, 'blue customers' and 'green customers'.
 
 ## caller
 
@@ -142,7 +152,18 @@ Read more at [hooks.md](hooks.md).
 
 ## launch
 
-TODO
+Starting a workflow execution is called a "launch". The unit/scheduler method to start an execution is `#launch`.
+```ruby
+exid = flor.launch(
+  %q{
+    sequence
+      alice 'hello' times: 2
+      bob 'world'
+  },
+  payload: { log: [ "started at #{Time.now}" ] })
+    # launch a new execution, one that chains alice and bob work
+```
+(taken from [quickstart0](quickstart0/)).
 
 ## loader
 
@@ -263,13 +284,19 @@ Taskers or pointers to them are found (by the [loader](#loader) in the `lib/` di
 
 ## timer
 
-TODO
+A timer is the data structure used by flor to keep track of time triggers. It corresponds to a "flor_timers" SQL table. Basically, flor keeps there a message serialized as JSON and the time at which this message has to be queued for execution.
+
+Flor uses timers for procedures like [schedule](procedures/schedule.md), [cron](procedures/cron.md), and for the [timeout](#timeout) system.
 
 ## timeout
 
 TODO
 
 ## trap
+
+TODO
+
+## tree
 
 TODO
 
