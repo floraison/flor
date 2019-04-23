@@ -2,7 +2,7 @@
 # CHANGELOG.md
 
 
-## flor 0.17.1  not yet released
+## flor 0.18.0  not yet released
 
 - Refine BasicTasker#reply (more arg patterns)
 - Allow for `trap 'signal0' payload: { a: 'A' }`
