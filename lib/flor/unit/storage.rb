@@ -115,9 +115,15 @@ module Flor
       end
     end
 
+    # Delete tables in the storage database that begin with "flor_"
+    # and have more than 2 columns (the Sequel schema_info table has 1 column
+    # as of this writing)
+    #
     def delete_tables
 
-      @db.tables.each { |t| @db[t].delete if t.to_s.match(/^flor_/) }
+      @db.tables.each { |t|
+        @db[t].delete \
+          if t.to_s.match(/^flor_/) && @db[t].columns.size > 2 }
     end
 
     def load_execution(exid)
