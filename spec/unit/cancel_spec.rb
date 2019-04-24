@@ -243,6 +243,42 @@ describe 'Flor unit' do
       expect(r['payload']['ret']).to eq(true)
       expect(r['payload']['l']).to eq([ 0, 1, 'dt_m36', 3, 4 ])
     end
+
+    it 'does not bite its tail (task) and the "cause" is preserved' do # gh-26
+
+      @unit.add_tasker(
+        'bob',
+        class SpucBobTasker < Flor::BasicTasker
+          def on_task
+#p :task!
+            payload['l'] << 'ot'
+            []
+          end
+          def on_detask
+#p :detask!
+            message.delete('cause')
+            payload['l'] << 'odt'
+            reply
+          end
+          self
+        end)
+
+      r = @unit.launch(
+        %q{
+          loop
+            bob on_cancel: (def \ push f.l 'oc' | break _)
+        },
+        payload: { 'l' => [] },
+        wait: 'end')
+
+      @unit.cancel(r['exid'], '0_0')
+
+      r = @unit.wait(r['exid'], 'terminated')
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['l']).to eq(%w[ odt oc ])
+      expect(r['cause'].collect { |m| m['m'] }).to eq([ 33, 32, 14 ])
+    end
   end
 end
 

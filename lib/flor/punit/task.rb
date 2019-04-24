@@ -68,6 +68,9 @@ class Flor::Pro::Task < Flor::Procedure
     # clean_up assign: 'alan'
     # "clean up" assign: 'alan'
 
+    @node['message'] = message
+      # keep copy for Executor#return integrity enforcement
+
     nis = atts(nil)
     ta = att('by', 'for', 'assign')
     tn = att('with', 'task')
@@ -79,8 +82,7 @@ class Flor::Pro::Task < Flor::Procedure
 
     attl, attd = determine_atts
 
-    @node['task'] =
-      { 'tasker' => tasker, 'name' => taskname }
+    @node['task'] = { 'tasker' => tasker, 'name' => taskname }
 
     wrap(
       'point' => 'task',
@@ -95,6 +97,9 @@ class Flor::Pro::Task < Flor::Procedure
   def cancel
 
     close_node
+
+    @node['message'] = message
+      # keep copy for Executor#return integrity enforcement
 
     attl, attd = determine_atts
 
@@ -130,3 +135,4 @@ class Flor::Pro::Task < Flor::Procedure
     payload.copy_current
   end
 end
+

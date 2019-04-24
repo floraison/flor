@@ -153,7 +153,15 @@ module Flor
 
     def return(message)
 
-      [ message.dup.merge!('point' => 'receive') ]
+      n = @execution['nodes'][message['nid']] || {}
+      m = n['message'] || {}
+      c = m['cause']
+
+      rm = message.dup
+      rm['point'] = 'receive'
+      rm['cause'] = c if c # preserve 'cause' for routing
+
+      [ rm ]
     end
 
     def schedule(message)
