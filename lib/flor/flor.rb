@@ -616,9 +616,7 @@ module Flor
     #
     def migration_dir
 
-      File.absolute_path(
-        File.join(
-          File.dirname(__FILE__), 'migrations'))
+      File.join(__dir__, 'migrations')
     end
 
     def caller_fname

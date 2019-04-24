@@ -78,10 +78,19 @@ module Flor
       opts = [ to, from, opts ].find { |e| e.is_a?(Hash) } || {}
       opts[:target] ||= to if to.is_a?(Integer)
       opts[:current] ||= from if from.is_a?(Integer)
-        #
-        # defaults for the migration version table:
-        # { table: :schema_info,
-        #   column: :version }
+
+      opts[:table] = (
+        @unit.conf['db_migration_table'] ||
+        @unit.conf['sto_migration_table'] ||
+        :schema_info).to_sym
+      opts[:column] = (
+        @unit.conf['db_migration_column'] ||
+        @unit.conf['sto_migration_column'] ||
+        :version).to_sym
+          #
+          # defaults for the migration version table:
+          # { table: :schema_info,
+          #   column: :version }
 
       skip =
         @unit.conf['db_sparse_migrations'] ||
