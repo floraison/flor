@@ -161,7 +161,7 @@ describe 'Flor unit' do
       e = @unit.executions.first(exid: r['exid'])
       ps = @unit.pointers.where(exid: r['exid']).all
 
-      expect(e._data['tasks']).to eq(nil)
+      expect(e.send(:_data)['tasks']).to eq(nil)
         # legacy check
 
       expect(
