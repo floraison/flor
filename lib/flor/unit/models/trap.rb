@@ -88,9 +88,11 @@ module Flor
 
       c = c - 1
       data['count'] = c
-      self[:status] = c > 0 ? 'active' : 'consumed'
+      self[:status] = s = (c > 0) ? 'active' : 'consumed'
 
-      self.update(content: Flor::Storage.to_blob(@data), status: self[:status])
+      self.update(
+        content: Flor::Storage.to_blob(@flor_model_cache_data),
+        status: s)
 
       c < 1
     end

@@ -42,9 +42,9 @@ module Flor
 
       exid = @values[:exid]; return nil unless exid
 
-      @execution = nil if reload
+      @flor_model_cache_execution = nil if reload
 
-      @execution ||= unit.executions[exid: exid]
+      @flor_model_cache_execution ||= unit.executions[exid: exid]
     end
 
     # Returns the node hash linked to this model
@@ -64,17 +64,20 @@ module Flor
       nod ? nod['payload'] : nil
     end
 
-    def _data
-
-      d = Flor::Storage.from_blob(content)
-      d['id'] = id if d.is_a?(Hash)
-
-      d
-    end
-
     def data(cache=true)
 
-      cache ? (@data = _data) : _data
+      cache ? (@flor_model_cache_data = _data) : _data
+    end
+
+    def refresh
+
+      instance_variables
+        .each do |k|
+          instance_variable_set(k, nil) \
+            if k.to_s.start_with?('flor_model_cache_')
+        end
+
+      super
     end
 
     def to_h
@@ -87,6 +90,16 @@ module Flor
         end
         h
       end
+    end
+
+    protected
+
+    def _data
+
+      d = Flor::Storage.from_blob(content)
+      d['id'] = id if d.is_a?(Hash)
+
+      d
     end
   end
 
