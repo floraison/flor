@@ -74,7 +74,7 @@ module Flor
       instance_variables
         .each do |k|
           instance_variable_set(k, nil) \
-            if k.to_s.start_with?('flor_model_cache_')
+            if k.to_s.start_with?('@flor_model_cache_')
         end
 
       super
