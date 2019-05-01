@@ -29,7 +29,15 @@ class Flor::Pro::Cancel < Flor::Procedure
   # ```
   # But it's kind of brittle compared to using tags.
   #
-  # # TODO document "kill"
+  # ## kill
+  #
+  # "kill" is equivalent to "cancel", but once called, cancel handlers are
+  # ignored, it cancels through.
+  #
+  #
+  # ## see also
+  #
+  # On_cancel, on
 
   name 'cancel', 'kill'
     # ruote had "undo" as well...

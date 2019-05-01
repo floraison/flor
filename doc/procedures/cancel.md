@@ -29,7 +29,15 @@ concurrence         # 0
 ```
 But it's kind of brittle compared to using tags.
 
-# TODO document "kill"
+## kill
+
+"kill" is equivalent to "cancel", but once called, cancel handlers are
+ignored, it cancels through.
+
+
+## see also
+
+[On_cancel](on_cancel.md), [on](on.md)
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/cancel.rb)
