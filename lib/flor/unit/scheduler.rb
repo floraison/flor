@@ -417,7 +417,10 @@ module Flor
       ex ? ex.execution : nil
     end
 
-    def dump(opts={})
+    def dump(io=nil, opts=nil)
+
+      io, opts = nil, io if io.is_a?(Hash)
+      opts ||= {}
 
       ei = opts[:exid]
       dm = opts[:domain]
@@ -439,12 +442,17 @@ module Flor
             filter[traps].collect(&:to_h),
             filter[pointers].collect(&:to_h) ] }
 
+      o = io ? io : StringIO.new
+
       JSON.dump(
-        timestamp: Flor.tstamp,
-        executions: exs,
-        timers: tms,
-        traps: tps,
-        pointers: pts)
+        { timestamp: Flor.tstamp,
+          executions: exs,
+          timers: tms,
+          traps: tps,
+          pointers: pts },
+        o)
+
+      io ? io : o.string
     end
 
     protected

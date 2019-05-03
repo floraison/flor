@@ -536,6 +536,8 @@ describe 'Flor unit' do
         @exid2 = @unit.launch(%q{ on 'cancel' \ _ }, domain: 'org.acme.it')
         @exid3 = @unit.launch(%q{ hole 'take out cans' }, domain: 'org.acme')
         wait_until { @unit.executions.count == 4 }
+
+        FileUtils.rm_f('tmp/dump.json')
       end
 
       context '()' do
@@ -609,6 +611,28 @@ describe 'Flor unit' do
             ).to eq([])
           expect(h['pointers'].collect { |e| e['exid'] }
             ).to eq([ @exid3 ])
+        end
+      end
+
+      context '(io)' do
+
+        it 'dumps there (StringIO)' do
+
+          o = StringIO.new
+          @unit.dump(o)
+          h = JSON.load(o.string)
+
+          expect(h['executions'].collect { |e| e['exid'] }.sort
+            ).to eq([ @exid0, @exid1, @exid2, @exid3 ].sort)
+        end
+
+        it 'dumps there (File)' do
+
+          File.open('tmp/dump.json', 'wb') { |f| @unit.dump(f) }
+          h = JSON.load(File.read('tmp/dump.json'))
+
+          expect(h['executions'].collect { |e| e['exid'] }.sort
+            ).to eq([ @exid0, @exid1, @exid2, @exid3 ].sort)
         end
       end
     end
