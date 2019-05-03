@@ -417,6 +417,20 @@ module Flor
       ex ? ex.execution : nil
     end
 
+    def dump(opts={})
+
+      exs = executions.collect(&:to_h)
+      tms = timers.collect(&:to_h)
+      tps = traps.collect(&:to_h)
+      pts = pointers.collect(&:to_h)
+
+      JSON.dump(
+        executions: exs,
+        timers: tms,
+        traps: tps,
+        pointers: pts)
+    end
+
     protected
 
     def tick

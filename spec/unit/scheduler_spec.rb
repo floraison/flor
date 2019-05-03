@@ -5,6 +5,8 @@
 # Wed May  4 15:59:30 JST 2016
 # Golden Week
 #
+# Golden Week 2019 #dump and #load (Shinkansen from Shinyoko to Hiroshima)
+#
 
 require 'spec_helper'
 
@@ -522,6 +524,49 @@ describe 'Flor unit' do
 
         expect(r['point']).to eq('terminated')
         expect(r['exid']).to eq(exid)
+      end
+    end
+
+    describe '#dump' do
+
+      before :each do
+
+        @exid0 = @unit.launch(%q{ stall _ })
+        @exid1 = @unit.launch(%q{ stall timeout: '2h' })
+        @exid2 = @unit.launch(%q{ on 'cancel' \ _ }, domain: 'org.acme.it')
+        @exid3 = @unit.launch(%q{ hole 'take out cans' }, domain: 'org.acme')
+        wait_until { @unit.executions.count == 4 }
+      end
+
+      context '(without arguments)' do
+
+        it 'dumps all of the executions into a string' do
+
+          s = @unit.dump
+#puts "v" * 80
+#puts s
+#puts "^" * 80
+
+          h = JSON.load(s)
+#pp h
+
+          expect(h['executions'].collect { |e| e['exid'] }.sort
+            ).to eq([ @exid0, @exid1, @exid2, @exid3 ].sort)
+          expect(h['timers'].collect { |e| e['exid'] }
+            ).to eq([ @exid1 ])
+          expect(h['traps'].collect { |e| e['exid'] }
+            ).to eq([ @exid2 ])
+          expect(h['pointers'].collect { |e| e['exid'] }
+            ).to eq([ @exid3 ])
+        end
+      end
+    end
+
+    describe '#load' do
+
+      context '(string)' do
+
+        it 'fails if the string is not a valid dump'
       end
     end
   end
