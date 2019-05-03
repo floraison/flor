@@ -538,17 +538,12 @@ describe 'Flor unit' do
         wait_until { @unit.executions.count == 4 }
       end
 
-      context '(without arguments)' do
+      context '()' do
 
         it 'dumps all of the executions into a string' do
 
           s = @unit.dump
-#puts "v" * 80
-#puts s
-#puts "^" * 80
-
           h = JSON.load(s)
-#pp h
 
           expect(h['timestamp']).to be_a(String)
 
@@ -558,6 +553,60 @@ describe 'Flor unit' do
             ).to eq([ @exid1 ])
           expect(h['traps'].collect { |e| e['exid'] }
             ).to eq([ @exid2 ])
+          expect(h['pointers'].collect { |e| e['exid'] }
+            ).to eq([ @exid3 ])
+        end
+      end
+
+      context '(exid: i)' do
+
+        it 'dumps only a specific execution' do
+
+          s = @unit.dump(exid: @exid3)
+          h = JSON.load(s)
+
+          expect(h['executions'].collect { |e| e['exid'] }
+            ).to eq([ @exid3 ])
+          expect(h['timers'].collect { |e| e['exid'] }
+            ).to eq([])
+          expect(h['traps'].collect { |e| e['exid'] }
+            ).to eq([])
+          expect(h['pointers'].collect { |e| e['exid'] }
+            ).to eq([ @exid3 ])
+        end
+      end
+
+      context '(domain: d)' do
+
+        it 'dumps only a specific domain' do
+
+          s = @unit.dump(domain: 'org.acme')
+          h = JSON.load(s)
+
+          expect(h['executions'].collect { |e| e['exid'] }
+            ).to eq([ @exid2, @exid3 ])
+          expect(h['timers'].collect { |e| e['exid'] }
+            ).to eq([])
+          expect(h['traps'].collect { |e| e['exid'] }
+            ).to eq([ @exid2 ])
+          expect(h['pointers'].collect { |e| e['exid'] }
+            ).to eq([ @exid3 ])
+        end
+      end
+
+      context '(strict_domain: d)' do
+
+        it 'dumps only a specific domain' do
+
+          s = @unit.dump(sdomain: 'org.acme')
+          h = JSON.load(s)
+
+          expect(h['executions'].collect { |e| e['exid'] }
+            ).to eq([ @exid3 ])
+          expect(h['timers'].collect { |e| e['exid'] }
+            ).to eq([])
+          expect(h['traps'].collect { |e| e['exid'] }
+            ).to eq([])
           expect(h['pointers'].collect { |e| e['exid'] }
             ).to eq([ @exid3 ])
         end

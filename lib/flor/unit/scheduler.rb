@@ -419,10 +419,25 @@ module Flor
 
     def dump(opts={})
 
-      exs = executions.collect(&:to_h)
-      tms = timers.collect(&:to_h)
-      tps = traps.collect(&:to_h)
-      pts = pointers.collect(&:to_h)
+      ei = opts[:exid]
+      dm = opts[:domain]
+      sd = opts[:strict_domain] || opts[:sdomain]
+        #
+      filter = lambda { |q|
+        q = q.where(
+          exid: ei) if ei
+        q = q.where {
+          Sequel.|({ domain: dm }, Sequel.like(:domain, dm + '.%')) } if dm
+        q = q.where(
+          domain: sd) if sd
+        q }
+
+      exs, tms, tps, pts =
+        storage.db.transaction {
+          [ filter[executions].collect(&:to_h),
+            filter[timers].collect(&:to_h),
+            filter[traps].collect(&:to_h),
+            filter[pointers].collect(&:to_h) ] }
 
       JSON.dump(
         timestamp: Flor.tstamp,
