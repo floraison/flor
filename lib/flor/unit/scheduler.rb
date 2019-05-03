@@ -425,6 +425,7 @@ module Flor
       pts = pointers.collect(&:to_h)
 
       JSON.dump(
+        timestamp: Flor.tstamp,
         executions: exs,
         timers: tms,
         traps: tps,

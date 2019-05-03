@@ -550,6 +550,8 @@ describe 'Flor unit' do
           h = JSON.load(s)
 #pp h
 
+          expect(h['timestamp']).to be_a(String)
+
           expect(h['executions'].collect { |e| e['exid'] }.sort
             ).to eq([ @exid0, @exid1, @exid2, @exid3 ].sort)
           expect(h['timers'].collect { |e| e['exid'] }
