@@ -583,8 +583,8 @@ describe 'Flor unit' do
           s = @unit.dump(domain: 'org.acme')
           h = JSON.load(s)
 
-          expect(h['executions'].collect { |e| e['exid'] }
-            ).to eq([ @exid2, @exid3 ])
+          expect(h['executions'].collect { |e| e['exid'] }.sort
+            ).to eq([ @exid2, @exid3 ].sort)
           expect(h['timers'].collect { |e| e['exid'] }
             ).to eq([])
           expect(h['traps'].collect { |e| e['exid'] }
