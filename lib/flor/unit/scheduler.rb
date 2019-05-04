@@ -508,8 +508,11 @@ module Flor
         notify(nil, make_idle_message)
       end
 
-      sleep [ @heart_rate - (Time.now - t0), 0 ].max #\
-        #unless should_wake_up?
+      if @idle_count < 1
+        sleep 0.001
+      else
+        sleep([ @heart_rate - (Time.now - t0), 0.001 ].max)
+      end
 
     rescue Exception => ex
 
