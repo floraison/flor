@@ -467,12 +467,22 @@ module Flor
       mks = DUMP_KEYS - h.keys
       fail Flor::FlorError.new("missing keys #{mks.inspect}") if mks.any?
 
+      exi = opts[:exid]
+      dom = opts[:domain]; dom = /\A#{dom}(\.#{Flor::NAME_REX})*\z/ if dom
+      sdm = opts[:strict_domain] || opts[:sdomain]
+
       count = 0
 
       storage.db.transaction do
 
         (DUMP_KEYS - %w[ timestamp ]).each do |k|
+
           h[k].each do |hh|
+
+            next if exi && hh['exid'] != exi
+            next if dom && ! dom.match(hh['domain'])
+            next if sdm && hh['domain'] != sdm
+
             storage.send(k).from_h(hh)
             count = count + 1
           end

@@ -706,6 +706,11 @@ describe 'Flor unit' do
             [ @exid0, @exid1, @exid2, @exid3 ].sort
           )
 
+          expect(
+            %w[ executions timers traps pointers ]
+              .collect { |k| @unit.storage.db["flor_#{k}".to_sym].count }
+          ).to eq([ 4, 1, 1, 1 ])
+
           f.rewind
           h = JSON.load(f.read)
 
@@ -728,7 +733,66 @@ describe 'Flor unit' do
             [ @exid0, @exid1, @exid2, @exid3 ].sort
           )
 
+          expect(
+            %w[ executions timers traps pointers ]
+              .collect { |k| @unit.storage.db["flor_#{k}".to_sym].count }
+          ).to eq([ 4, 1, 1, 1 ])
+
           expect { f.rewind }.to raise_error(IOError, 'closed stream')
+        end
+      end
+
+      context '(s, exid: "xxx")' do
+
+        it 'loads only a certain execution' do
+
+          i = @unit.load(File.read('tmp/dump.json'), exid: @exid1)
+
+          expect(i).to eq(2)
+
+          expect( @unit.storage.db[:flor_executions].map(:exid)
+            ).to eq([ @exid1 ])
+
+          expect(
+            %w[ executions timers traps pointers ]
+              .collect { |k| @unit.storage.db["flor_#{k}".to_sym].count }
+          ).to eq([ 1, 1, 0, 0 ])
+        end
+      end
+
+      context '(s, domain: "org.acme")' do
+
+        it 'loads only the executions in a domain and its subdomains' do
+
+          i = @unit.load(File.read('tmp/dump.json'), domain: 'org.acme')
+
+          expect(i).to eq(4)
+
+          expect( @unit.storage.db[:flor_executions].map(:exid).sort
+            ).to eq([ @exid2, @exid3 ].sort)
+
+          expect(
+            %w[ executions timers traps pointers ]
+              .collect { |k| @unit.storage.db["flor_#{k}".to_sym].count }
+          ).to eq([ 2, 0, 1, 1 ])
+        end
+      end
+
+      context '(s, strict_domain: "org.acme")' do
+
+        it 'loads only the executions in a domain and not its subdomains' do
+
+          i = @unit.load(File.read('tmp/dump.json'), sdomain: 'org.acme')
+
+          expect(i).to eq(2)
+
+          expect( @unit.storage.db[:flor_executions].map(:exid)
+            ).to eq([ @exid3 ])
+
+          expect(
+            %w[ executions timers traps pointers ]
+              .collect { |k| @unit.storage.db["flor_#{k}".to_sym].count }
+          ).to eq([ 1, 0, 0, 1 ])
         end
       end
     end
