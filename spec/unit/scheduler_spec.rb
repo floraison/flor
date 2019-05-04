@@ -690,6 +690,47 @@ describe 'Flor unit' do
           )
         end
       end
+
+      context '(io)' do
+
+        it 'loads' do
+
+          f = File.open('tmp/dump.json')
+          i = @unit.load(f)
+
+          expect(i).to eq(7)
+
+          expect(
+            @unit.storage.db[:flor_executions].map(:exid).sort
+          ).to eq(
+            [ @exid0, @exid1, @exid2, @exid3 ].sort
+          )
+
+          f.rewind
+          h = JSON.load(f.read)
+
+          expect(h.keys).to include('executions')
+        end
+      end
+
+      context '(io, close: true)' do
+
+        it 'loads from and then closes the io' do
+
+          f = File.open('tmp/dump.json')
+          i = @unit.load(f, close: true)
+
+          expect(i).to eq(7)
+
+          expect(
+            @unit.storage.db[:flor_executions].map(:exid).sort
+          ).to eq(
+            [ @exid0, @exid1, @exid2, @exid3 ].sort
+          )
+
+          expect { f.rewind }.to raise_error(IOError, 'closed stream')
+        end
+      end
     end
   end
 end

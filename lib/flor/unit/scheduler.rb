@@ -461,6 +461,7 @@ module Flor
 
       s = string_or_io
       s = s.read if s.respond_to?(:read)
+      string_or_io.close if string_or_io.respond_to?(:close) && opts[:close]
       h = JSON.load(s)
 
       mks = DUMP_KEYS - h.keys
