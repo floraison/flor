@@ -96,15 +96,17 @@ module Flor
 
       def from_h(h)
 
-        insert(
-          h.inject({}) { |r, (k, v)|
+        cols = columns
+
+        h
+          .inject({}) { |r, (k, v)|
             k = k.to_sym
             if k == :data
               r[:content] = Flor.to_blob(v)
-            elsif columns.include?(k)
+            elsif cols.include?(k)
               r[k] = v
             end
-            r })
+            r }
       end
     end
 

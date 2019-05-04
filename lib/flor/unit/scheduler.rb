@@ -477,15 +477,19 @@ module Flor
 
         (DUMP_KEYS - %w[ timestamp ]).each do |k|
 
-          h[k].each do |hh|
+          cla = storage.send(k)
+          cols = cla.columns
 
-            next if exi && hh['exid'] != exi
-            next if dom && ! dom.match(hh['domain'])
-            next if sdm && hh['domain'] != sdm
+          rows = h[k]
+            .inject([]) { |a, hh|
+              next a if exi && hh['exid'] != exi
+              next a if dom && ! dom.match(hh['domain'])
+              next a if sdm && hh['domain'] != sdm
+              count = count + 1
+              vals = cla.from_h(hh)
+              a << cols.collect { |c| vals[c] } }
 
-            storage.send(k).from_h(hh)
-            count = count + 1
-          end
+          cla.import(cols, rows) if rows.any?
         end
 
         block.call(h) if block
