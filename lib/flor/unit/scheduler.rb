@@ -455,6 +455,34 @@ module Flor
       io ? io : o.string
     end
 
+    DUMP_KEYS = %w[ timestamp executions timers traps pointers ]
+
+    def load(string_or_io, opts={}, &block)
+
+      s = string_or_io
+      s = s.read if s.respond_to?(:read)
+      h = JSON.load(s)
+
+      mks = DUMP_KEYS - h.keys
+      fail Flor::FlorError.new("missing keys #{mks.inspect}") if mks.any?
+
+      count = 0
+
+      storage.db.transaction do
+
+        (DUMP_KEYS - %w[ timestamp ]).each do |k|
+          h[k].each do |hh|
+            storage.send(k).from_h(hh)
+            count = count + 1
+          end
+        end
+
+        block.call(h) if block
+      end
+
+      count
+    end
+
     protected
 
     def tick

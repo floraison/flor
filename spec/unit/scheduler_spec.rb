@@ -540,6 +540,11 @@ describe 'Flor unit' do
         FileUtils.rm_f('tmp/dump.json')
       end
 
+      after :each do
+
+        FileUtils.rm_f('tmp/dump.json')
+      end
+
       context '()' do
 
         it 'dumps all of the executions into a string' do
@@ -639,9 +644,51 @@ describe 'Flor unit' do
 
     describe '#load' do
 
+      before :each do
+
+        @exid0 = @unit.launch(%q{ stall _ })
+        @exid1 = @unit.launch(%q{ stall timeout: '2h' })
+        @exid2 = @unit.launch(%q{ on 'cancel' \ _ }, domain: 'org.acme.it')
+        @exid3 = @unit.launch(%q{ hole 'take out cans' }, domain: 'org.acme')
+        wait_until { @unit.executions.count == 4 }
+
+        File.open('tmp/dump.json', 'wb') { |f| @unit.dump(f) }
+
+        @unit.storage.delete_tables
+      end
+
+      after :each do
+
+        FileUtils.rm_f('tmp/dump.json')
+      end
+
       context '(string)' do
 
-        it 'fails if the string is not a valid dump'
+        it 'fails if the string is not a valid dump' do
+
+          h = JSON.load(File.read('tmp/dump.json'))
+          h.delete('executions')
+          s = JSON.dump(h)
+
+          expect {
+            @unit.load(s)
+          }.to raise_error(
+            Flor::FlorError, 'missing keys ["executions"]'
+          )
+        end
+
+        it 'loads' do
+
+          i = @unit.load(File.read('tmp/dump.json'))
+
+          expect(i).to eq(7)
+
+          expect(
+            @unit.storage.db[:flor_executions].map(:exid).sort
+          ).to eq(
+            [ @exid0, @exid1, @exid2, @exid3 ].sort
+          )
+        end
       end
     end
   end

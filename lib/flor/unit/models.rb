@@ -92,6 +92,22 @@ module Flor
       end
     end
 
+    class << self
+
+      def from_h(h)
+
+        insert(
+          h.inject({}) { |r, (k, v)|
+            k = k.to_sym
+            if k == :data
+              r[:content] = Flor.to_blob(v)
+            elsif columns.include?(k)
+              r[k] = v
+            end
+            r })
+      end
+    end
+
     protected
 
     def _data
