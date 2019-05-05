@@ -783,9 +783,22 @@ describe 'Flor unit' do
 
           expect(
             @unit.storage.db[:flor_executions].map(:exid).sort
-          ).to eq(
-            [ @exid0, @exid1, @exid2, @exid3 ].sort
-          )
+              ).to eq([ @exid0, @exid1, @exid2, @exid3 ].sort)
+        end
+
+        it "doesn't mind extra info" do
+
+          h = JSON.load(File.read('tmp/dump.json'))
+          h['tasks'] = (1..100).collect { |i| { task_id: i } }
+          s = JSON.dump(h)
+
+          i = @unit.load(s)
+
+          expect(i).to eq(7)
+
+          expect(
+            @unit.storage.db[:flor_executions].map(:exid).sort
+              ).to eq([ @exid0, @exid1, @exid2, @exid3 ].sort)
         end
       end
 
@@ -952,6 +965,29 @@ describe 'Flor unit' do
             %w[ executions timers traps pointers ]
               .collect { |k| @unit.storage.db["flor_#{k}".to_sym].count }
           ).to eq([ 3, 1, 0, 1 ])
+        end
+      end
+
+      context '(s) { |h| ... }' do
+
+        it 'loads and yields to the block' do
+
+          h = JSON.load(File.read('tmp/dump.json'))
+          h['tasks'] = (1..100).collect { |i| { task_id: i } }
+          s = JSON.dump(h)
+
+          tc = nil
+
+          i = @unit.load(s) { |hh|
+            tc = hh['tasks'].collect { |e| e['task_id'] } }
+
+          expect(i).to eq(7)
+
+          expect(
+            @unit.storage.db[:flor_executions].map(:exid).sort
+              ).to eq([ @exid0, @exid1, @exid2, @exid3 ].sort)
+
+          expect(tc).to eq((1..100).to_a)
         end
       end
     end
