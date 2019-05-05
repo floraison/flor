@@ -793,7 +793,8 @@ describe 'Flor unit' do
 
           i = @unit.load(File.read('tmp/dump.json'))
 
-          expect(i).to eq(7)
+          expect(i).to eq({
+            executions: 4, timers: 1, traps: 1, pointers: 1, total: 7 })
 
           expect(
             @unit.storage.db[:flor_executions].map(:exid).sort
@@ -808,7 +809,8 @@ describe 'Flor unit' do
 
           i = @unit.load(s)
 
-          expect(i).to eq(7)
+          expect(i).to eq({
+            executions: 4, timers: 1, traps: 1, pointers: 1, total: 7 })
 
           expect(
             @unit.storage.db[:flor_executions].map(:exid).sort
@@ -823,7 +825,8 @@ describe 'Flor unit' do
           f = File.open('tmp/dump.json')
           i = @unit.load(f)
 
-          expect(i).to eq(7)
+          expect(i).to eq({
+            executions: 4, timers: 1, traps: 1, pointers: 1, total: 7 })
 
           expect(
             @unit.storage.db[:flor_executions].map(:exid).sort
@@ -850,7 +853,8 @@ describe 'Flor unit' do
           f = File.open('tmp/dump.json')
           i = @unit.load(f, close: true)
 
-          expect(i).to eq(7)
+          expect(i).to eq({
+            executions: 4, timers: 1, traps: 1, pointers: 1, total: 7 })
 
           expect(
             @unit.storage.db[:flor_executions].map(:exid).sort
@@ -873,7 +877,8 @@ describe 'Flor unit' do
 
           i = @unit.load(File.read('tmp/dump.json'), exid: @exid1)
 
-          expect(i).to eq(2)
+          expect(i).to eq({
+            executions: 1, timers: 1, traps: 0, pointers: 0, total: 2 })
 
           expect( @unit.storage.db[:flor_executions].map(:exid)
             ).to eq([ @exid1 ])
@@ -892,7 +897,8 @@ describe 'Flor unit' do
           i = @unit.load(File.read('tmp/dump.json'), exid: [ @exid1, @exid3 ])
             # exid: or exids:
 
-          expect(i).to eq(4)
+          expect(i).to eq({
+            executions: 2, timers: 1, traps: 0, pointers: 1, total: 4 })
 
           expect( @unit.storage.db[:flor_executions].map(:exid).sort
             ).to eq([ @exid1, @exid3 ].sort)
@@ -910,7 +916,8 @@ describe 'Flor unit' do
 
           i = @unit.load(File.read('tmp/dump.json'), domain: 'org.acme')
 
-          expect(i).to eq(4)
+          expect(i).to eq({
+            executions: 2, timers: 0, traps: 1, pointers: 1, total: 4 })
 
           expect( @unit.storage.db[:flor_executions].map(:exid).sort
             ).to eq([ @exid2, @exid3 ].sort)
@@ -931,7 +938,8 @@ describe 'Flor unit' do
             domains: %w[ org.acme.it test ])
               # domain: or domains:
 
-          expect(i).to eq(5)
+          expect(i).to eq({
+            executions: 3, timers: 1, traps: 1, pointers: 0, total: 5 })
 
           expect( @unit.storage.db[:flor_executions].map(:exid).sort
             ).to eq([ @exid0, @exid1, @exid2 ].sort)
@@ -949,7 +957,8 @@ describe 'Flor unit' do
 
           i = @unit.load(File.read('tmp/dump.json'), sdomain: 'org.acme')
 
-          expect(i).to eq(2)
+          expect(i).to eq({
+            executions: 1, timers: 0, traps: 0, pointers: 1, total: 2 })
 
           expect( @unit.storage.db[:flor_executions].map(:exid)
             ).to eq([ @exid3 ])
@@ -970,7 +979,8 @@ describe 'Flor unit' do
             sdomains: %w[ org.acme test ])
               # sdomain: or sdomains: or strict_domain: or strict_domains:
 
-          expect(i).to eq(5)
+          expect(i).to eq({
+            executions: 3, timers: 1, traps: 0, pointers: 1, total: 5 })
 
           expect( @unit.storage.db[:flor_executions].map(:exid).sort
             ).to eq([ @exid0, @exid1, @exid3 ].sort)
@@ -995,7 +1005,8 @@ describe 'Flor unit' do
           i = @unit.load(s) { |hh|
             tc = hh['tasks'].collect { |e| e['task_id'] } }
 
-          expect(i).to eq(7)
+          expect(i).to eq({
+            executions: 4, timers: 1, traps: 1, pointers: 1, total: 7 })
 
           expect(
             @unit.storage.db[:flor_executions].map(:exid).sort

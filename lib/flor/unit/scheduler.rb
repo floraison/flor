@@ -417,6 +417,23 @@ module Flor
       ex ? ex.execution : nil
     end
 
+    DUMP_KEYS = %w[ timestamp executions timers traps pointers ]
+
+    # Dumps all or some of the executions to a JSON string.
+    # See Scheduler#load for importing.
+    #
+    # unit.dump -> string  # returns a JSON string of all executions
+    # unit.dump(io) -> io  # dumps the JSON to the given IO instance
+    #
+    # unit.dump(exid: i)  # dumps only the given execution
+    # unit.dump(exids: [ i0, i1 ])  # dumps only the givens executions
+    # unit.dump(domain: d)            # dumps exes from domains,
+    # unit.dump(domains: [ d0, d1 ])  # and their subdomains
+    # unit.dump(sdomain: d)            # dumps strictly from given domains,
+    # unit.dump(sdomains: [ d0, d1 ])  # doesn't look at subdomains
+    #
+    # unit.dump() { |h| ... }  # modify the has right before it's turned to JSON
+    #
     def dump(io=nil, opts=nil, &block)
 
       io, opts = nil, io if io.is_a?(Hash)
@@ -464,8 +481,22 @@ module Flor
       io ? io : o.string
     end
 
-    DUMP_KEYS = %w[ timestamp executions timers traps pointers ]
-
+    # Read a previous JSON dump and loads it into the storage.
+    # Can be useful when testing, dumping once and reloading multiple times
+    # to test variants.
+    #
+    # load(string) -> h  # load all executions from given JSON string
+    #                    # returns object inserted stat hash
+    # load(io)  # load all executions from the given IO
+    # load(io, close: true)  # load from the given IO and close it after read
+    #
+    # load(x, exid: i)            # load only given executions,
+    # load(x, exids: [ i0, i1 ])  # ignore the rest of the data in the source
+    # load(x, domain: d)            # load only exes from given domains,
+    # load(x, domains: [ d0, d1 ])  # and their subdomains
+    # load(x, sdomain: d)            # load only exes from strict domains,
+    # load(x, sdomains: [ d0, d1 ])  # ignores exes in their subdomains
+    #
     def load(string_or_io, opts={}, &block)
 
       s = string_or_io
@@ -484,21 +515,26 @@ module Flor
         #
       doms = doms.collect { |d| /\A#{d}(\.#{Flor::NAME_REX})*\z/ } if doms
 
-      count = 0
+      counts = { executions: 0, timers: 0, traps: 0, pointers: 0, total: 0 }
 
       storage.db.transaction do
 
         (DUMP_KEYS - %w[ timestamp ]).each do |k|
 
+          y = k.to_sym
           cla = storage.send(k)
           cols = cla.columns
 
           rows = h[k]
             .inject([]) { |a, hh|
+
               next a if exis && ! exis.include?(hh['exid'])
               next a if doms && ! doms.find { |d| d.match(hh['domain']) }
               next a if sdms && ! sdms.include?(hh['domain'])
-              count = count + 1
+
+              counts[y] += 1
+              counts[:total] += 1
+
               vals = cla.from_h(hh)
               a << cols.collect { |c| vals[c] } }
 
@@ -508,7 +544,7 @@ module Flor
         block.call(h) if block
       end
 
-      count
+      counts
     end
 
     protected
