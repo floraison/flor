@@ -2,13 +2,27 @@
 # CHANGELOG.md
 
 
-## flor 0.18.0  not yet released
+## flor 0.18.0  released 2019-05-05
 
-- Refine BasicTasker#reply (more arg patterns)
-- Allow for `trap 'signal0' payload: { a: 'A' }`
-- Allow for "on" in blocking mode (no block given)
-- Unlock `signal exid: other_execution_id "xxx"`
-- Make payload optional when cancelling (default to payload as it was
+* Refine BasicTasker#reply (more arg patterns)
+* Fix "signal" vs exid: and payload:
+* Make payload optional when cancelling
+* Unlock `signal exid: other_execution_id "xxx"`
+* Allow for `trap 'signal0' payload: { a: 'A' }`
+* Allow for "on" in blocking mode (no block given)
+* Turn "sequence" single string att results to tags
+* gh-26, refine cancel / on_cancel and payload return
+* Allow for custom :schema_info migration table
+* Introduce a dedicated #refresh for all flor models
+* Let scheduler sleep only 0.001s if @idle_count less than 1
+* Implement Scheduler #dump and #load
+* Default target #cancel and #kill to node '0'
+* Expose taskname to tasker on detasking (@Subtletree)
+* Refine BasicTasker#reply (more arg patterns)
+* Allow for `trap 'signal0' payload: { a: 'A' }`
+* Allow for "on" in blocking mode (no block given)
+* Unlock `signal exid: other_execution_id "xxx"`
+* Make payload optional when cancelling (default to payload as it was
   upon reaching the cancelled node)
 
 
