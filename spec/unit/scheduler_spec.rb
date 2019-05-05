@@ -562,6 +562,10 @@ describe 'Flor unit' do
             ).to eq([ @exid2 ])
           expect(h['pointers'].collect { |e| e['exid'] }
             ).to eq([ @exid3 ])
+
+          expect(
+            %w[ executions timers traps pointers ].collect { |k| h[k].count }
+              ).to eq([ 4, 1, 1, 1 ])
         end
       end
 
@@ -580,6 +584,34 @@ describe 'Flor unit' do
             ).to eq([])
           expect(h['pointers'].collect { |e| e['exid'] }
             ).to eq([ @exid3 ])
+
+          expect(
+            %w[ executions timers traps pointers ].collect { |k| h[k].count }
+              ).to eq([ 1, 0, 0, 1 ])
+        end
+      end
+
+      context '(exids: [ i0, ie1 ])' do
+
+        it 'dumps only specific executions' do
+
+          s = @unit.dump(exids: [ @exid1, @exid3, 'nada' ])
+            # exid: or exids:
+
+          h = JSON.load(s)
+
+          expect(h['executions'].collect { |e| e['exid'] }.sort
+            ).to eq([ @exid1, @exid3 ].sort)
+          expect(h['timers'].collect { |e| e['exid'] }
+            ).to eq([ @exid1 ])
+          expect(h['traps'].collect { |e| e['exid'] }
+            ).to eq([])
+          expect(h['pointers'].collect { |e| e['exid'] }
+            ).to eq([ @exid3 ])
+
+          expect(
+            %w[ executions timers traps pointers ].collect { |k| h[k].count }
+              ).to eq([ 2, 1, 0, 1 ])
         end
       end
 
@@ -598,14 +630,44 @@ describe 'Flor unit' do
             ).to eq([ @exid2 ])
           expect(h['pointers'].collect { |e| e['exid'] }
             ).to eq([ @exid3 ])
+
+          expect(
+            %w[ executions timers traps pointers ].collect { |k| h[k].count }
+              ).to eq([ 2, 0, 1, 1 ])
+        end
+      end
+
+      context '(domains: [ "org.acme.it", "test" ])' do
+
+        it 'dumps only specific domains' do
+
+          s = @unit.dump(domain: %w[ org.acme.it test ])
+            # domain: or domains:
+
+          h = JSON.load(s)
+
+          expect(h['executions'].collect { |e| e['exid'] }.sort
+            ).to eq([ @exid0, @exid1, @exid2 ].sort)
+          expect(h['timers'].collect { |e| e['exid'] }
+            ).to eq([ @exid1])
+          expect(h['traps'].collect { |e| e['exid'] }
+            ).to eq([ @exid2 ])
+          expect(h['pointers'].collect { |e| e['exid'] }
+            ).to eq([])
+
+          expect(
+            %w[ executions timers traps pointers ].collect { |k| h[k].count }
+              ).to eq([ 3, 1, 1, 0 ])
         end
       end
 
       context '(strict_domain: d)' do
 
-        it 'dumps only a specific domain' do
+        it 'dumps only a specific domain (and not its subdomains)' do
 
           s = @unit.dump(sdomain: 'org.acme')
+            # sdomain: or strict_domain:
+
           h = JSON.load(s)
 
           expect(h['executions'].collect { |e| e['exid'] }
@@ -616,6 +678,34 @@ describe 'Flor unit' do
             ).to eq([])
           expect(h['pointers'].collect { |e| e['exid'] }
             ).to eq([ @exid3 ])
+
+          expect(
+            %w[ executions timers traps pointers ].collect { |k| h[k].count }
+              ).to eq([ 1, 0, 0, 1 ])
+        end
+      end
+
+      context '(strict_domains: %w[ org.acme test ])' do
+
+        it 'dumps only specific domains (and not their subdomains)' do
+
+          s = @unit.dump(sdomain: %w[ org.acme test ])
+            # sdomain: or strict_domain: or sdomains: or strict_domains:
+
+          h = JSON.load(s)
+
+          expect(h['executions'].collect { |e| e['exid'] }.sort
+            ).to eq([ @exid0, @exid1, @exid3 ].sort)
+          expect(h['timers'].collect { |e| e['exid'] }
+            ).to eq([ @exid1 ])
+          expect(h['traps'].collect { |e| e['exid'] }
+            ).to eq([])
+          expect(h['pointers'].collect { |e| e['exid'] }
+            ).to eq([ @exid3 ])
+
+          expect(
+            %w[ executions timers traps pointers ].collect { |k| h[k].count }
+              ).to eq([ 3, 1, 0, 1 ])
         end
       end
 
@@ -629,6 +719,10 @@ describe 'Flor unit' do
 
           expect(h['executions'].collect { |e| e['exid'] }.sort
             ).to eq([ @exid0, @exid1, @exid2, @exid3 ].sort)
+
+          expect(
+            %w[ executions timers traps pointers ].collect { |k| h[k].count }
+              ).to eq([ 4, 1, 1, 1 ])
         end
 
         it 'dumps there (File)' do
@@ -638,6 +732,10 @@ describe 'Flor unit' do
 
           expect(h['executions'].collect { |e| e['exid'] }.sort
             ).to eq([ @exid0, @exid1, @exid2, @exid3 ].sort)
+
+          expect(
+            %w[ executions timers traps pointers ].collect { |k| h[k].count }
+              ).to eq([ 4, 1, 1, 1 ])
         end
       end
     end

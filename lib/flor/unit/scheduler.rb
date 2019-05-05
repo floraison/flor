@@ -422,17 +422,23 @@ module Flor
       io, opts = nil, io if io.is_a?(Hash)
       opts ||= {}
 
-      ei = opts[:exid]
-      dm = opts[:domain]
-      sd = opts[:strict_domain] || opts[:sdomain]
+      o = lambda { |k| v = opts[k] || opts["#{k}s".to_sym]; v ? Array(v) : nil }
+        #
+      exis = o[:exid]
+      doms = o[:domain]
+      sdms = o[:strict_domain] || o[:sdomain]
         #
       filter = lambda { |q|
         q = q.where(
-          exid: ei) if ei
+          exid: exis) if exis
         q = q.where {
-          Sequel.|({ domain: dm }, Sequel.like(:domain, dm + '.%')) } if dm
+          Sequel.|(*doms
+            .inject([]) { |a, d|
+              a.concat([
+                { domain: d },
+                Sequel.like(:domain, d + '.%') ]) }) } if doms
         q = q.where(
-          domain: sd) if sd
+          domain: sdms) if sdms
         q }
 
       exs, tms, tps, pts =
