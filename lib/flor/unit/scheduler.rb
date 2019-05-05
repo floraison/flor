@@ -467,9 +467,13 @@ module Flor
       mks = DUMP_KEYS - h.keys
       fail Flor::FlorError.new("missing keys #{mks.inspect}") if mks.any?
 
-      exi = opts[:exid]
-      dom = opts[:domain]; dom = /\A#{dom}(\.#{Flor::NAME_REX})*\z/ if dom
-      sdm = opts[:strict_domain] || opts[:sdomain]
+      o = lambda { |k| v = opts[k] || opts["#{k}s".to_sym]; v ? Array(v) : nil }
+        #
+      exis = o[:exid]
+      doms = o[:domain]
+      sdms = o[:strict_domain] || o[:sdomain]
+        #
+      doms = doms.collect { |d| /\A#{d}(\.#{Flor::NAME_REX})*\z/ } if doms
 
       count = 0
 
@@ -482,9 +486,9 @@ module Flor
 
           rows = h[k]
             .inject([]) { |a, hh|
-              next a if exi && hh['exid'] != exi
-              next a if dom && ! dom.match(hh['domain'])
-              next a if sdm && hh['domain'] != sdm
+              next a if exis && ! exis.include?(hh['exid'])
+              next a if doms && ! doms.find { |d| d.match(hh['domain']) }
+              next a if sdms && ! sdms.include?(hh['domain'])
               count = count + 1
               vals = cla.from_h(hh)
               a << cols.collect { |c| vals[c] } }
