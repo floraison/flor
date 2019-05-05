@@ -738,6 +738,20 @@ describe 'Flor unit' do
               ).to eq([ 4, 1, 1, 1 ])
         end
       end
+
+      context '() { |h| ... }' do
+
+        it 'passes the resulting Hash to its block' do
+
+          s = @unit.dump { |h| h[:team] = 'Hiroshima Toyo Carp' }
+          h = JSON.load(s)
+
+          expect(h.keys.sort
+            ).to eq(%w[ executions pointers team timers timestamp traps ])
+          expect(h['team']
+            ).to eq('Hiroshima Toyo Carp')
+        end
+      end
     end
 
     describe '#load' do

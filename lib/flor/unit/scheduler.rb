@@ -417,7 +417,7 @@ module Flor
       ex ? ex.execution : nil
     end
 
-    def dump(io=nil, opts=nil)
+    def dump(io=nil, opts=nil, &block)
 
       io, opts = nil, io if io.is_a?(Hash)
       opts ||= {}
@@ -450,13 +450,16 @@ module Flor
 
       o = io ? io : StringIO.new
 
-      JSON.dump(
-        { timestamp: Flor.tstamp,
-          executions: exs,
-          timers: tms,
-          traps: tps,
-          pointers: pts },
-        o)
+      h = {
+        timestamp: Flor.tstamp,
+        executions: exs,
+        timers: tms,
+        traps: tps,
+        pointers: pts }
+
+      block.call(h) if block
+
+      JSON.dump(h, o)
 
       io ? io : o.string
     end
