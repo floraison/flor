@@ -441,11 +441,7 @@ module Flor
       io, opts = nil, io if io.is_a?(Hash)
       opts ||= {}
 
-      o = lambda { |k| v = opts[k] || opts["#{k}s".to_sym]; v ? Array(v) : nil }
-        #
-      exis = o[:exid]
-      doms = o[:domain]
-      sdms = o[:strict_domain] || o[:sdomain]
+      exis, doms, sdms = extract_dump_and_load_filters(opts)
         #
       filter = lambda { |q|
         q = q.where(
@@ -460,10 +456,10 @@ module Flor
           domain: sdms) if sdms
         q }
 
+      o = io ? io : StringIO.new
+
       hash =
         storage.db.transaction {
-
-          o = io ? io : StringIO.new
 
           h = {
             timestamp: Flor.tstamp,
@@ -509,12 +505,7 @@ module Flor
       mks = DUMP_KEYS - h.keys
       fail Flor::FlorError.new("missing keys #{mks.inspect}") if mks.any?
 
-      o = lambda { |k| v = opts[k] || opts["#{k}s".to_sym]; v ? Array(v) : nil }
-        #
-      exis = o[:exid]
-      doms = o[:domain]
-      sdms = o[:strict_domain] || o[:sdomain]
-        #
+      exis, doms, sdms = extract_dump_and_load_filters(opts)
       doms = doms.collect { |d| /\A#{d}(\.#{Flor::NAME_REX})*\z/ } if doms
 
       counts = { executions: 0, timers: 0, traps: 0, pointers: 0, total: 0 }
@@ -550,6 +541,13 @@ module Flor
     end
 
     protected
+
+    def extract_dump_and_load_filters(opts)
+
+      o = lambda { |k| v = opts[k] || opts["#{k}s".to_sym]; v ? Array(v) : nil }
+
+      [ o[:exid], o[:domain], o[:strict_domain] || o[:sdomain] ]
+    end
 
     def tick
 
