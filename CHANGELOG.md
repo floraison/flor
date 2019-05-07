@@ -2,6 +2,9 @@
 # CHANGELOG.md
 
 
+## flor 0.19.0  not yet released
+
+
 ## flor 0.18.0  released 2019-05-05
 
 * Refine BasicTasker#reply (more arg patterns)
