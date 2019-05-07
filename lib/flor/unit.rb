@@ -5,6 +5,7 @@ require 'sequel/extensions/migration'
 require 'fugit'
 
 require 'flor'
+require 'flor/unit/dump'
 require 'flor/unit/hook'
 require 'flor/unit/hooker'
 require 'flor/unit/caller'

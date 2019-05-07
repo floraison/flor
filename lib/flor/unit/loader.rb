@@ -12,7 +12,8 @@ module Flor
       @cache = {}
       @mutex = Mutex.new
 
-      @root = File.absolute_path(@unit.conf['lod_path'] || @unit.conf['root'])
+      @root = File.absolute_path(
+        @unit.conf['lod_path'] || @unit.conf['root'] || '.')
     end
 
     def shutdown
