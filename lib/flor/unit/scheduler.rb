@@ -456,8 +456,6 @@ module Flor
           domain: sdms) if sdms
         q }
 
-      o = io ? io : StringIO.new
-
       hash =
         storage.db.transaction {
 
@@ -473,6 +471,8 @@ module Flor
           h }
 
       return hash if opts[:hash] || opts[:h]
+
+      o = io ? io : StringIO.new
 
       JSON.dump(hash, o)
 
