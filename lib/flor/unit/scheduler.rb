@@ -434,6 +434,8 @@ module Flor
     #
     # unit.dump() { |h| ... }  # modify the has right before it's turned to JSON
     #
+    # unit.dump(hash: true)  # returns the hash (instead of JSONing it)
+    #
     def dump(io=nil, opts=nil, &block)
 
       io, opts = nil, io if io.is_a?(Hash)
@@ -458,25 +460,25 @@ module Flor
           domain: sdms) if sdms
         q }
 
-      exs, tms, tps, pts =
+      hash =
         storage.db.transaction {
-          [ filter[executions].collect(&:to_h),
-            filter[timers].collect(&:to_h),
-            filter[traps].collect(&:to_h),
-            filter[pointers].collect(&:to_h) ] }
 
-      o = io ? io : StringIO.new
+          o = io ? io : StringIO.new
 
-      h = {
-        timestamp: Flor.tstamp,
-        executions: exs,
-        timers: tms,
-        traps: tps,
-        pointers: pts }
+          h = {
+            timestamp: Flor.tstamp,
+            executions: filter[executions].collect(&:to_h),
+            timers: filter[timers].collect(&:to_h),
+            traps: filter[traps].collect(&:to_h),
+            pointers: filter[pointers].collect(&:to_h) }
 
-      block.call(h) if block
+          block.call(h) if block
 
-      JSON.dump(h, o)
+          h }
+
+      return hash if opts[:hash] || opts[:h]
+
+      JSON.dump(hash, o)
 
       io ? io : o.string
     end
