@@ -534,7 +534,7 @@ module Flor
           cla.import(cols, rows) if rows.any?
         end
 
-        block.call(h) if block
+        block.call(h, counts) if block
       end
 
       counts
