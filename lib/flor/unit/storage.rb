@@ -801,13 +801,16 @@ module Flor
     def derive_db
 
       db = @unit.conf['sto_db']
+
       return db if db
 
       uri = @unit.conf['sto_uri']
 
-      #uri = DB.uri if uri == 'DB' && defined?(DB)
-      uri = (Kernel.const_get(uri).uri rescue uri) if uri.match(/\A[A-Z]+\z/)
-        # for cases where `sto_uri: "DB"`
+      fail ArgumentError.new("no 'sto_uri' conf, cannot connect to db") \
+        unless uri
+
+      #uri = uri.to_s
+      #return Kernel.const_get(uri) if uri.match(/\A[A-Z]+\z/)
 
       Sequel.connect(uri)
     end
