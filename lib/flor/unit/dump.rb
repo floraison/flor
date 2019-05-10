@@ -25,7 +25,7 @@ module Flor
 
       case o = db_or_unit_or_uri
       when Flor::Unit then o
-      when Sequel::Database then Flor::Unit.new(sto_uri: o.uri)
+      when Sequel::Database then Flor::Unit.new(sto_db: o)
       when String then Flor::Unit.new(sto_uri: o)
       else fail ArgumentError.new("cannot derive flor Unit out of #{o.inspect}")
       end

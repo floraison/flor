@@ -108,6 +108,20 @@ describe 'Flor unit' do
             executions: 1, timers: 0, traps: 0, pointers: 0, total: 1 })
         end
       end
+
+      context '(db)' do
+
+        it 'loads' do
+
+          i = Flor.load(@unit.storage.db, File.read('tmp/dump.json'))
+
+          expect(@unit.storage.db[:flor_executions].map(:exid)).to eq([
+            @exid0 ])
+
+          expect(i).to eq({
+            executions: 1, timers: 0, traps: 0, pointers: 0, total: 1 })
+        end
+      end
     end
   end
 end

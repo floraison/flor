@@ -135,7 +135,7 @@ module Flor
 
       @models[key] ||=
         parent_module.const_set(
-          "#{c}#{@db.object_id.to_s.gsub('-', 'M')}",
+          "#{c}#{self.object_id.to_s.gsub('-', 'M')}",
           Class.new(parent_module.const_get(c)) do
             self.dataset = s.db["#{table_prefix}#{key}".to_sym]
             self.unit = s.unit

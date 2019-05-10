@@ -798,7 +798,10 @@ module Flor
       def error(msg); @unit.logger.db_log(:error, msg); end
     end
 
-    def connect
+    def derive_db
+
+      db = @unit.conf['sto_db']
+      return db if db
 
       uri = @unit.conf['sto_uri']
 
@@ -806,7 +809,12 @@ module Flor
       uri = (Kernel.const_get(uri).uri rescue uri) if uri.match(/\A[A-Z]+\z/)
         # for cases where `sto_uri: "DB"`
 
-      @db = Sequel.connect(uri)
+      Sequel.connect(uri)
+    end
+
+    def connect
+
+      @db = derive_db
 
       class << @db; attr_accessor :flor_unit; end
       @db.flor_unit = @unit
