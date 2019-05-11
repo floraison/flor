@@ -63,8 +63,8 @@ module Flor
       stp = Flor.tstamp(n)
 
       dbi =
-        case @unit.storage.db
-        when Sequel::SQLite::Database then @unit.storage.db.uri
+        case @unit.storage.db.to_s
+        when /SQLite/ then @unit.storage.db.uri
         else ''
         end
       dbi = ' ' + dbi if dbi.length > 0
