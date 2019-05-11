@@ -79,7 +79,7 @@ module Flor
         @out.puts(head + dig + ' ' + txt)
         err.backtrace.each { |lin| @out.puts("  #{dig} #{@uni} #{lin}") }
       else
-        @out.puts(line)
+        @out.puts(head + txt)
       end
     end
 
