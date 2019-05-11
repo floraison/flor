@@ -17,7 +17,8 @@ module Flor
     brown yellow purple magenta dark_grey dark_gray light_grey light_gray
 
     rd red bl blue bu blue ba black bk black gn green gr green dg dark_gray
-    gy light_gray lg light_gray yl yellow y yellow ma magenta rs reset
+    gy light_gray lg light_gray yl yellow y yellow ma magenta wt white
+    rs reset
     br bright bri bright un underlined rv reverse bn blink blg bg_light_gray
     und underlined rev reverse
   ]]

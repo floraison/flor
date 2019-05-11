@@ -113,7 +113,17 @@ module Flor
         #
       msg = summarize_blob(msg)
 
-      @out.puts "#{_c.blg}sto#{_c.rs} t#{Thread.current.object_id} #{level.upcase} #{msg}"
+      msg = "#{_c.dg}#{msg}"
+      msg = msg.gsub(/\b(INSERT|UPDATE)\b/) { |m| "#{_c.rs}#{m}#{_c.dg}" }
+
+      dbi = @unit.storage.db.object_id.to_s(16)
+      tid = Thread.current.object_id.to_s(16)
+      lvl = level.upcase
+
+      @out.puts(
+        "#{_c.blg}sto#{_c.rs} " +
+        "#{_c.dg}db#{dbi} th#{tid} " +
+        "#{_c.rs}#{lvl}#{_c.rs} #{msg}#{_c.rs}")
     end
 
     def size_to_s(s)
