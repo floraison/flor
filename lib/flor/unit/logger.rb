@@ -62,14 +62,21 @@ module Flor
       n = Time.now.utc
       stp = Flor.tstamp(n)
 
+      dbi =
+        case @unit.storage.db
+        when Sequel::SQLite::Database then @unit.storage.db.uri
+        else ''
+        end
+      dbi = ' ' + dbi if dbi.length > 0
+
       txt = elts.collect(&:to_s).join(' ')
       err = elts.find { |e| e.is_a?(Exception) }
 
-      line = "#{stp} #{@uni} #{lvl} #{txt}"
+      head = "#{stp} #{@uni}#{dbi} #{lvl} "
 
       if err
-        dig = lvl[0, 1] + Digest::MD5.hexdigest(line)[0, 4]
-        @out.puts("#{stp} #{@uni} #{lvl} #{dig} #{txt}")
+        dig = lvl[0, 1] + Digest::MD5.hexdigest(head + txt)[0, 4]
+        @out.puts(head + dig + ' ' + txt)
         err.backtrace.each { |lin| @out.puts("  #{dig} #{@uni} #{lin}") }
       else
         @out.puts(line)
@@ -116,13 +123,14 @@ module Flor
       msg = "#{_c.dg}#{msg}"
       msg = msg.gsub(/\b(INSERT|UPDATE)\b/) { |m| "#{_c.rs}#{m}#{_c.dg}" }
 
+      tim = Time.now.utc.strftime('%T.%L') # HH:MM:SS.123
       dbi = @unit.storage.db.object_id.to_s(16)
       tid = Thread.current.object_id.to_s(16)
       lvl = level.upcase
 
       @out.puts(
         "#{_c.blg}sto#{_c.rs} " +
-        "#{_c.dg}db#{dbi} th#{tid} " +
+        "#{tim} #{_c.dg}db#{dbi} th#{tid} " +
         "#{_c.rs}#{lvl}#{_c.rs} #{msg}#{_c.rs}")
     end
 
