@@ -92,6 +92,12 @@ module Flor
       end
     end
 
+    alias to_dump_h to_h
+      #
+      # Downsteam, #to_h answers are more complete, more standalone
+      # whereas, #to_dump_h answers are more compact (see florist).
+      # For now, they're just the same, it specializes downstream.
+
     class << self
 
       def from_h(h)

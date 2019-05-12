@@ -124,7 +124,7 @@ module Flor
         'exid' => self.exid,
         'nid' => self.nid,
         'type' => 'trap',
-        'trap' => to_hash,
+        'trap' => to_trap_h,
         'trap_id' => self.id,
         'message' => msg,
         'sm' => message['m'] }
@@ -133,7 +133,7 @@ module Flor
             #'dbg' => xx }
     end
 
-    def to_hash
+    def to_trap_h
 
       values
         .inject({}) { |h, (k, v)| h[k.to_s] = v if k != :content; h }
