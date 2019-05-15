@@ -65,6 +65,7 @@
 ## unit
 
 * [ccollect, c-collect](c_collect.md) - A concurrent version of [collect](collect.md).
+* [ceach, c-each](c_each.md) - Concurrent "each".
 * [c-for-each](c_for_each.md) - Concurrent "for-each", launches a concurrent branch for each elt or entry of the incoming collection.
 * [cmap, c-map](c_map.md) - Concurrent version of "map". Spins a concurrent child for each element of the incoming/argument collection.
 * [cancel, kill](cancel.md) - Cancels an execution branch
@@ -86,7 +87,7 @@
 * [Flor::Procedure](https://github.com/floraison/flor/blob/master/) : 
   * [Flor::Macro](https://github.com/floraison/flor/blob/master/) : 
     * [Flor::Pro::Ccollect](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_collect.rb) : [ccollect, c-collect](c_collect.md)
-    * [Flor::Pro::Ceach](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_each.rb) : ceach, c-each
+    * [Flor::Pro::Ceach](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_each.rb) : [ceach, c-each](c_each.md)
     * [Flor::Pro::Collect](https://github.com/floraison/flor/blob/master/lib/flor/pcore/collect.rb) : [collect](collect.md)
     * [Flor::Pro::Cron](https://github.com/floraison/flor/blob/master/lib/flor/punit/cron.rb) : [cron](cron.md)
     * [Flor::Pro::Detect](https://github.com/floraison/flor/blob/master/lib/flor/pcore/detect.rb) : [detect](detect.md)
@@ -111,7 +112,7 @@
   * [Flor::Pro::Case](https://github.com/floraison/flor/blob/master/lib/flor/pcore/case.rb) : [case](case.md)
     * [Flor::Pro::Match](https://github.com/floraison/flor/blob/master/lib/flor/pcore/match.rb) : [match](matchr.md)
   * [Flor::Pro::Ccollect](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_collect.rb) : [ccollect, c-collect](c_collect.md)
-  * [Flor::Pro::Ceach](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_each.rb) : ceach, c-each
+  * [Flor::Pro::Ceach](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_each.rb) : [ceach, c-each](c_each.md)
   * [Flor::Pro::CforEach](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_for_each.rb) : [c-for-each](c_for_each.md)
   * [Flor::Pro::Cmap](https://github.com/floraison/flor/blob/master/lib/flor/punit/c_map.rb) : [cmap, c-map](c_map.md)
   * [Flor::Pro::Cmp](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cmp.rb) : =, ==, <, >, <=, >=, !=, <>

@@ -27,7 +27,7 @@ class Flor::Pro::CforEach < Flor::Pro::ConcurrentIterator
   #
   # ## see also
   #
-  # For-each, cmap, and ceach.
+  # For-each, c_map, and c_each.
 
   name 'c-for-each'
 
