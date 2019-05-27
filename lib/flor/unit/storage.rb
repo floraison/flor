@@ -336,34 +336,39 @@ module Flor
       n = Flor.tstamp
       u = @unit.identifier
 
-      synchronize(syn) do
+      id =
+        synchronize(syn) do
 
-        stored, unstored = ms.partition { |m| m['mid'] }
+          stored, unstored = ms.partition { |m| m['mid'] }
 
-        #
-        # de-reserve any previously stored message, might happen
-        # for "terminated" messages that got queued back to let
-        # other messages get processed
+          #
+          # de-reserve any previously stored message, might happen
+          # for "terminated" messages that got queued back to let
+          # other messages get processed
 
-        @db[:flor_messages]
-          .where(id: stored.collect { |m| m['mid'] })
-          .update(status: 'created', mtime: n, munit: u) \
-            if stored.any?
+          @db[:flor_messages]
+            .where(id: stored.collect { |m| m['mid'] })
+            .update(status: 'created', mtime: n, munit: u) \
+              if stored.any?
 
-        #
-        # store new messages
+          #
+          # store new messages
 
-        @db[:flor_messages]
-          .import(
-            [ :domain, :exid, :point, :content,
-              :status, :ctime, :mtime, :cunit, :munit ],
-            unstored.map { |m|
-              [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
-                'created', n, n, u, u ] }) \
-                  if unstored.any?
-      end
+          @db[:flor_messages]
+            .import(
+              [ :domain, :exid, :point, :content,
+                :status, :ctime, :mtime, :cunit, :munit ],
+              unstored.map { |m|
+                [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
+                  'created', n, n, u, u ] }) \
+                    if unstored.any?
+
+          @db[:flor_messages].max(:id)
+        end
 
       @unit.wake_up
+
+      id
 
     rescue => err
 

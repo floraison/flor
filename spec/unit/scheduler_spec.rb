@@ -527,6 +527,18 @@ describe 'Flor unit' do
       end
     end
 
+    describe '#last_queued_message_id' do
+
+      it 'returns the id of the last queued message' do
+
+        id = @unit.last_queued_message_id
+
+        @unit.launch(%q{ stall _ })
+
+        expect(@unit.last_queued_message_id).not_to eq(id)
+      end
+    end
+
     describe '#dump' do
 
       before :each do

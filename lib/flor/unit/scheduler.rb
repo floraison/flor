@@ -9,6 +9,7 @@ module Flor
     attr_reader :logger
 
     attr_reader :thread_status
+    attr_reader :last_queued_message_id
 
     attr_reader :archive
 
@@ -222,7 +223,8 @@ module Flor
 
     def queue(message, opts={})
 
-      @storage.put_message(message)
+      @last_queued_message_id =
+        @storage.put_message(message)
 
       if opts[:wait]
         wait(message['exid'], opts)
