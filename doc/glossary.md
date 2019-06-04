@@ -205,6 +205,8 @@ A key for the node in its execution. Is of the form `/^\d+(_\d+)*$/`, the root n
 
 A nid is implicitely suffixed with `-0`. Nids with a `-\d+` suffix may appear for loops and [branches](#branch) executing multiple times.
 
+See [subnid](#subnid).
+
 ## payload
 
 Most of the [messages](#message) and the "execute" and "receive" messages in particular have a payload.
@@ -261,6 +263,21 @@ It is mostly a wrapper around a [Sequel](https://github.com/jeremyevans/sequel) 
 `org.example.shop` is a sub-domain to `org.example` which is a sub-domain to `org`.
 
 See [domain](#domain).
+
+## subnid
+
+A nid like `0_0_1-1` is composed of the pure nid (`0_0_1`) and of subnid (`-1`). A nide like `0_0_1` only has a pure nid, but in reality, it has an implicit sub of `-0`.
+
+Subnids bigger than 0 are useful in case of loops and function invocations.
+
+```
+loop
+  bob 'gather information'
+  break _ if f.enough_info
+```
+The node `0_0` points a bob, but in execution, each pass to bob gets a different subnid.
+
+See [nid](#nid).
 
 ## task
 
