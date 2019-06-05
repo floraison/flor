@@ -65,7 +65,31 @@ describe 'Flor unit' do
           exid: r['exid'], nid: '0_1', elements: %w[ a b ])
       }.to raise_error(
         ArgumentError,
-        'cannot add iteration to missing node "0_1"'
+        'cannot add iteration to node "0_1" not present in tree'
+      )
+    end
+
+    it 'fails if the target nid: is not present (2)' do
+
+      r = @unit.launch(
+        %q{
+          define f
+            c-each [ 'alpha' 'bravo' ]
+              stall _
+          f _
+        },
+        wait: 'end')
+
+      expect {
+        @unit.add_iteration(
+          exid: r['exid'],
+          nid: '0_0_1',
+            # and not
+          #nid: '0_0_1-1',
+          elt: 'C')
+      }.to raise_error(
+        ArgumentError,
+        'cannot add iteration to node "0_0_1" not present in execution'
       )
     end
 

@@ -358,8 +358,12 @@ module Flor
       ) unless nid
 
       fail ArgumentError.new(
-        "cannot add iteration to missing node #{nid.inspect}"
+        "cannot add iteration to node #{nid.inspect} not present in tree"
       ) unless exe.lookup_tree(nid)
+
+      fail ArgumentError.new(
+        "cannot add iteration to node #{nid.inspect} not present in execution"
+      ) unless exe.nodes.has_key?(nid)
 
       queue(msg, opts)
     end
