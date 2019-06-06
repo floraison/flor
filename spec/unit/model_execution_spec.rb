@@ -62,6 +62,82 @@ describe 'Flor unit' do
         expect(m[:nids][:failures]).to eq(%w[ 0 0_3 ])
       end
     end
+
+    describe "#lookup_nodes(/^0_0_1-/)" do
+
+      it 'returns the matching nodes' do
+
+        exid =
+          @unit.launch(%{
+            c-each [ 0 1 2 3 ]
+              stall _
+          })
+
+        execution = wait_until {
+          @unit.executions.first(exid: exid) }
+
+        ns = execution.lookup_nodes(/^0_1_0-/)
+
+        expect(ns.class
+          ).to eq(Array)
+        expect(ns.size
+          ).to eq(4)
+        expect(ns.first.class
+          ).to eq(Hash)
+        expect(ns.collect { |n| n['nid'] }
+          ).to eq(%w[ 0_1_0-1 0_1_0-2 0_1_0-3 0_1_0-4 ])
+      end
+    end
+
+    describe "#lookup_nodes('c-each f.customers')" do
+
+      it 'returns the matching nodes'
+    end
+
+    describe "#lookup_node(/^0_0_1-/)" do
+
+      it 'returns the first matching node' do
+
+        exid =
+          @unit.launch(%{
+            c-each [ 0 1 ]
+              stall _
+          })
+
+        execution = wait_until {
+          @unit.executions.first(exid: exid) }
+
+        n = execution.lookup_node(/^0_1_0-/)
+
+        expect(n.class).to eq(Hash)
+        expect(n['nid']).to eq('0_1_0-1')
+      end
+    end
+
+    describe "#lookup_node('c-each f.customers')" do
+
+      it 'returns the first matching node'
+    end
+
+    describe "#lookup_node('0_0_1-1')" do
+
+      it 'returns the first matching node' do
+
+        exid =
+          @unit.launch(%{
+            c-each [ 0 1 ]
+              stall _
+          })
+
+        execution = wait_until {
+          @unit.executions.first(exid: exid) }
+
+        n = execution.lookup_node('0_1_0-1')
+
+        expect(n.class).to eq(Hash)
+        expect(n['nid']).to eq('0_1_0-1')
+      end
+    end
   end
 end
 

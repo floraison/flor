@@ -98,6 +98,27 @@ module Flor
       h
     end
 
+    def lookup_nodes(query, opts={})
+
+      @node_index ||= nodes
+        .inject({}) { |h, (k, v)|
+          h[k] = v
+          h }
+
+      @node_index
+        .select { |k, v|
+          case query
+          when Regexp then k.match(query)
+          else k == query
+          end }
+        .values
+    end
+
+    def lookup_node(query, opts={})
+
+      lookup_nodes(query, opts).first
+    end
+
     class << self
 
       def by_status(s)
