@@ -385,13 +385,22 @@ module Flor
       (s ? (t[1] == s) : t[1].is_a?(String))
     end
 
-    def is_leaf_tree?(t)
+#    def is_leaf_tree?(t)
+#
+#      t.is_a?(Array) &&
+#      t[2].is_a?(Integer) &&
+#      Flor::Pro::Atom.names.include?(t[0])
+#    end
+#    alias is_atom_tree? is_leaf_tree?
 
-      t.is_a?(Array) &&
-      t[2].is_a?(Integer) &&
-      Flor::Pro::Atom.names.include?(t[0])
-    end
-    alias is_atom_tree? is_leaf_tree?
+#  # Array, object or atom tree
+#  #
+#  def is_value_tree?(o)
+#
+#    o.is_a?(Array) &&
+#    %w[ _num _boo _sqs _dqs _rxs _nul _arr _obj ].include?(o[0]) &&
+#    o[2].is_a?(Integer)
+#  end
 
     def is_att_tree?(t)
 
@@ -425,15 +434,6 @@ module Flor
 
       t.is_a?(Array) && t[0].is_a?(String) && t[0] != '_' && t[1] == []
     end
-
-#  # Array, object or atom tree
-#  #
-#  def is_value_tree?(o)
-#
-#    o.is_a?(Array) &&
-#    %w[ _num _boo _sqs _dqs _rxs _nul _arr _obj ].include?(o[0]) &&
-#    o[2].is_a?(Integer)
-#  end
 
     def is_proc_tree?(o)
 
@@ -527,46 +527,48 @@ module Flor
       st[1][i]
     end
 
-    # Given a tree returns the equivalent flor piece of code
-    #
-    def tree_to_flor(t, opts={})
-
-      o = opts[:o] ||= StringIO.new
-      i = opts[:ind] || ''
-
-      t1 = t[1]
-
-      if t[0, 2] == [ '_', [] ]
-        o << '_'
-      elsif is_leaf_tree?(t)
-        o << JSON.dump(t1)
-      else
-        o << i << t[0]
-      end
-
-      if t1.is_a?(Array)
-
-        atts, ctrees = t1.partition { |ct| is_att_tree?(ct) }
-
-        atts.each do |at|
-          ats = at[1]
-          o << ' '
-          if ats.length == 1
-            tree_to_flor(ats[0], opts)
-          else
-            o << ats[0].first << ': '
-            tree_to_flor(ats[1], opts)
-          end
-        end
-
-        ctrees.each do |ct|
-          o << "\n"
-          tree_to_flor(ct, opts.merge(ind: '  ' + i))
-        end unless opts[:chop]
-      end
-
-      i == '' ? o.string : nil
-    end
+#    # Given a tree returns the equivalent flor piece of code
+#    #
+#    def tree_to_flor(t, opts={})
+#
+#      o = opts[:o] ||= StringIO.new
+#      i = opts[:ind] || ''
+#
+#      t1 = t[1]
+#
+#      if t[0, 2] == [ '_', [] ]
+#        o << '_'
+#      elsif is_leaf_tree?(t)
+#        o << JSON.dump(t1)
+#      else
+#        o << i << t[0]
+#      end
+#
+#      if t1.is_a?(Array)
+#
+#        atts, ctrees = t1.partition { |ct| is_att_tree?(ct) }
+#
+#        atts.each do |at|
+#          ats = at[1]
+#          o << ' '
+#          if ats.length == 1
+#            tree_to_flor(ats[0], opts)
+#          else
+#            o << ats[0].first << ': '
+#            tree_to_flor(ats[1], opts)
+#          end
+#        end
+#
+#        ctrees.each do |ct|
+#          o << "\n"
+#          tree_to_flor(ct, opts.merge(ind: '  ' + i))
+#        end unless opts[:chop]
+#      end
+#
+#      i == '' ? o.string : nil
+#    end
+  #
+  # shelved for now 2019-06-08
 
 
     #
