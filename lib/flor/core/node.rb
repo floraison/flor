@@ -156,19 +156,6 @@ class Flor::Node
     nil
   end
 
-  #def lookup_tree(nid)
-  #  climb_down_for_tree(nid) ||
-  #  climb_up_for_tree(nid) ||
-  #end
-  #def climb_up_for_tree(nid)
-  #  # ...
-  #end
-  #def climb_down_for_tree(nid)
-  #  # ...
-  #end
-    #
-    # that might be the way...
-
   def lookup_value(path)
 
     original_path = path
