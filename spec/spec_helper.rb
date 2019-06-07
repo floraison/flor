@@ -356,6 +356,14 @@ class String
         a }
       .join("\n")
   end
+
+  def itrim
+
+    lines = self.split("\n").select { |l| l.strip.length > 0 }
+    indent = lines.collect { |l| l.match(/\A( *)/)[1].length }.min
+
+    lines.collect { |l| l[indent..-1] }.join("\n")
+  end
 end
 
 class Hash
