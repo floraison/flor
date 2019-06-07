@@ -448,5 +448,43 @@ describe Flor do
       end
     end
   end
+
+  describe '.tree_to_floor' do
+
+    {
+
+      '1' =>
+        '1',
+      'stall _' =>
+        'stall _',
+      'task "bob"' =>
+        'task "bob"',
+      'task "bob" tag: "nada"' =>
+        'task "bob" tag: "nada"',
+      'sequence \ a 1; b _' =>
+        %{
+          sequence
+            a 1
+            b _
+        }.itrim
+
+    }.each do |source, target|
+
+      chop = false
+      source, chop = *source if source.is_a?(Array)
+
+      st = Flor.parse(source)
+
+      title = "turns #{st.inspect} to #{target.inspect}"
+      title += " (chop: true)" if chop
+
+      it(title) do
+
+        opts = chop ? { chop: chop } : {}
+
+        expect(Flor.tree_to_flor(st, opts)).to eq(target)
+      end
+    end
+  end
 end
 
