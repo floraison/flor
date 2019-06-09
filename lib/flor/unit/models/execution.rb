@@ -101,6 +101,7 @@ module Flor
     def lookup_nodes(query, opts={})
 
       @node_index ||= nodes
+        .sort_by { |k, _| k }
         .inject({}) { |h, (k, v)|
           #
           # nid => [ node ]
@@ -114,6 +115,11 @@ module Flor
             lookup_tree(v['nid'])
           s = Flor.tree_to_flor(t, chop: true)
           (h[s] ||= []) << v
+          #
+          # tag => [ node0, node1, ... ]
+          #
+          ts = v['tags']
+          ts.each { |t| (h[t] ||= []) << v } if ts
           #
           h }
 
