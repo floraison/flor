@@ -186,6 +186,7 @@ module Flor
     def row_match_status?(unit, rs, _, cdr)
 
       rs[0].find { |exe|
+p [ exe.status, cdr.first ]
         (@exid == nil || exe.exid == @exid) &&
         exe.status == cdr.first }
     end
