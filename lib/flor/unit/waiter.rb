@@ -203,14 +203,18 @@ p [ exe.status, cdr.first ]
 
     def row_match_var?(unit, rs, nid, (name, value))
 
+p [ :row_match_var?, nid, [ name, value ] ]
       rs[1].find { |ptr|
         ptr.type == 'var' &&
+begin
+  p [ :rmv, ptr ]
+end &&
         (@exid == nil || ptr.exid == @exid) &&
         (nid == nil || ptr.nid == nid) &&
         (name == nil || ptr.name == name) &&
         (value == nil || ptr.value == value.to_s) }
     end
-    alias row_match_variable?  row_match_var?
+    alias row_match_variable? row_match_var?
 
     def row_match_tasker?(unit, rs, nid, (name, value))
 
