@@ -51,13 +51,13 @@ module Flor
       "given launch variables should come in a Hash, but it's a #{vs.class}"
     ) unless vs.is_a?(Hash)
 
-    msg =
-      { 'point' => 'execute',
-        'exid' => exid,
-        'nid' => '0',
-        'tree' => t,
-        'payload' => pl,
-        'vars' => vs }
+    msg = {
+      'point' => 'execute',
+      'exid' => exid,
+      'nid' => '0',
+      'tree' => t,
+      'payload' => pl,
+      'vars' => vs }
 
     msg['vdomain'] = opts[:vdomain] \
       if opts.has_key?(:vdomain)

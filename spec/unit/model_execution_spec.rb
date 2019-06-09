@@ -91,7 +91,31 @@ describe 'Flor unit' do
 
     describe "#lookup_nodes('c-each f.customers')" do
 
-      it 'returns the matching nodes'
+      it 'returns the matching nodes' do
+
+        exid =
+          @unit.launch(%{
+            concurrence
+              c-each f.customers
+                #bob "meet customer" customer: elt
+                stall _
+              c-each [ 0 1 ]
+                stall _
+          },
+          payload: { 'customers' => %w[ aa bb ] })
+
+        execution = wait_until {
+          @unit.executions.first(exid: exid) }
+
+        ns = execution.lookup_nodes('c-each f.customers')
+
+        expect(ns.class).to eq(Array)
+        expect(ns.collect { |n| n['nid'] }).to eq(%w[ 0_0 ])
+
+        ns = execution.lookup_nodes(/c-each/)
+
+        expect(ns.collect { |n| n['nid'] }).to eq(%w[ 0_0 0_1 ])
+      end
     end
 
     describe "#lookup_node(/^0_0_1-/)" do
@@ -116,7 +140,30 @@ describe 'Flor unit' do
 
     describe "#lookup_node('c-each f.customers')" do
 
-      it 'returns the first matching node'
+      it 'returns the first matching node' do
+
+        exid =
+          @unit.launch(%{
+            concurrence
+              c-each f.customers
+                #bob "meet customer" customer: elt
+                stall _
+              c-each [ 0 1 ]
+                stall _
+          },
+          payload: { 'customers' => %w[ aa bb ] })
+
+        execution = wait_until {
+          @unit.executions.first(exid: exid) }
+
+        n = execution.lookup_node('c-each f.customers')
+
+        expect(n['nid']).to eq('0_0')
+
+        n = execution.lookup_node(/c-each/)
+
+        expect(n['nid']).to eq('0_0')
+      end
     end
 
     describe "#lookup_node('0_0_1-1')" do

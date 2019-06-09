@@ -102,7 +102,19 @@ module Flor
 
       @node_index ||= nodes
         .inject({}) { |h, (k, v)|
-          h[k] = v
+          #
+          # nid => [ node ]
+          #
+          h[k] = [ v ]
+          #
+          # code => [ node0, node1, ... ]
+          #
+          t =
+            (lookup_tree(v['parent'])[1][Flor.child_id(v['nid'])] rescue nil) ||
+            lookup_tree(v['nid'])
+          s = Flor.tree_to_flor(t, chop: true)
+          (h[s] ||= []) << v
+          #
           h }
 
       @node_index
@@ -112,6 +124,7 @@ module Flor
           else k == query
           end }
         .values
+        .flatten(1)
     end
 
     def lookup_node(query, opts={})
