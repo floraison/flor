@@ -138,6 +138,16 @@ module Flor
       lookup_nodes(query, opts).first
     end
 
+    def lookup_nids(query, opts={})
+
+      lookup_nodes(query, opts).collect { |n| n['nid'] }
+    end
+
+    def lookup_nid(query, opts={})
+
+      lookup_node(query, opts)['nid']
+    end
+
     class << self
 
       def by_status(s)

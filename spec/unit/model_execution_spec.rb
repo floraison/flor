@@ -134,8 +134,7 @@ describe 'Flor unit' do
                   stall tag: 'alpha'
                   stall tag: 'alpha'
                   stall tag: 'bravo'
-              },
-              payload: { 'customers' => %w[ aa bb ] })
+              })
 
           execution = wait_until {
             @unit.executions.first(exid: exid) }
@@ -157,8 +156,7 @@ describe 'Flor unit' do
                   stall tag: 'alice'
                   stall tag: 'alfred'
                   stall tag: 'bob'
-              },
-              payload: { 'customers' => %w[ aa bb ] })
+              })
 
           execution = wait_until {
             @unit.executions.first(exid: exid) }
@@ -200,15 +198,16 @@ describe 'Flor unit' do
         it 'returns the first matching node' do
 
           exid =
-            @unit.launch(%{
-              concurrence
-                c-each f.customers
-                  #bob "meet customer" customer: elt
-                  stall _
-                c-each [ 0 1 ]
-                  stall _
-            },
-            payload: { 'customers' => %w[ aa bb ] })
+            @unit.launch(
+              %{
+                concurrence
+                  c-each f.customers
+                    #bob "meet customer" customer: elt
+                    stall _
+                  c-each [ 0 1 ]
+                    stall _
+              },
+              payload: { 'customers' => %w[ aa bb ] })
 
           execution = wait_until {
             @unit.executions.first(exid: exid) }
@@ -241,6 +240,50 @@ describe 'Flor unit' do
           expect(n.class).to eq(Hash)
           expect(n['nid']).to eq('0_1_0-1')
         end
+      end
+    end
+
+    describe '#lookup_nids' do
+
+      it 'returns the nids of the matching nodes' do
+
+        exid =
+          @unit.launch(
+            %{
+              concurrence
+                stall tag: 'alice'
+                stall tag: 'alfred'
+                stall tag: 'bob'
+            })
+
+        execution = wait_until {
+          @unit.executions.first(exid: exid) }
+
+        nids = execution.lookup_nids(/^al/)
+
+        expect(nids).to eq(%w[ 0_0 0_1 ])
+      end
+    end
+
+    describe '#lookup_nid' do
+
+      it 'returns the nid of the first matching node' do
+
+        exid =
+          @unit.launch(
+            %{
+              concurrence
+                stall tag: 'alice'
+                stall tag: 'alfred'
+                stall tag: 'bob'
+            })
+
+        execution = wait_until {
+          @unit.executions.first(exid: exid) }
+
+        nid = execution.lookup_nid(/^al/)
+
+        expect(nid).to eq('0_0')
       end
     end
   end
