@@ -380,12 +380,7 @@ end
 
     def error_reply(node, message, err)
 
-      m = message
-        .select { |k, v| %w[ sm exid nid from payload tree ].include?(k) }
-
-      m['point'] = 'failed'
-      m['fpoint'] = message['point']
-      m['error'] = Flor.to_error(err)
+      m = Flor.to_error_message(message, err)
 
       @unit.logger.log_err(self, m, flag: true)
 

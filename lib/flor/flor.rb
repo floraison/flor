@@ -112,16 +112,16 @@ module Flor
       h
     end
 
-    def to_error_message(message, err)
+    TO_ERROR_MESSAGE_KEYS = %w[ sm exid nid from payload tree er tasker ]
 
-      m = message
-        .select { |k, v|
-          %w[ sm exid nid from payload tree er tasker ].include?(k) }
+    def to_error_message(message, error)
+
+      m = message.select { |k, v| TO_ERROR_MESSAGE_KEYS.include?(k) }
 
       m['point'] = 'failed'
       m['fpoint'] = message['point']
       m['fm'] = message['m']
-      m['error'] = to_error(err)
+      m['error'] = to_error(error)
 
       m
     end
