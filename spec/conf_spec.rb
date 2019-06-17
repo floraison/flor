@@ -36,6 +36,15 @@ describe Flor::Conf do
       })
     end
 
+    it 'does not use "unit" procedures' do
+
+      expect(
+        Flor::Conf.prepare(%{\n point: cancel }, {})
+      ).to eq({
+        'point' => 'cancel', '_path' => '.', 'root' => '.'
+      })
+    end
+
     it 'fails if it cannot parse' do
 
       expect {
@@ -45,13 +54,28 @@ describe Flor::Conf do
       )
     end
 
-    it 'does not use "unit" procedures' do
+    it 'fails if it cannot parse (2)' do
 
-      expect(
-        Flor::Conf.prepare(%{\n point: cancel }, {})
-      ).to eq({
-        'point' => 'cancel', '_path' => '.', 'root' => '.'
-      })
+      expect {
+        p Flor::Conf.prepare(%q{
+require 'alpha.rb'
+class: AlphaTasker
+        }, {})
+      }.to raise_error(
+        Flor::ParseError, "syntax error at line 1 column 1"
+      )
+    end
+
+    it 'fails if it cannot parse (3)' do
+
+      expect {
+        p Flor::Conf.prepare(%q{
+require 'alpha.rb'
+class AlphaTasker
+        }, {})
+      }.to raise_error(
+        ArgumentError, /\Acannot extract conf out of \["require", "alpha\.rb", /
+      )
     end
   end
 end

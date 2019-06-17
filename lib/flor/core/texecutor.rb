@@ -250,7 +250,7 @@ module Flor
           o['_path'] = path
           o['root'] ||= Flor.relativize_path(vs['root'])
         elsif o.is_a?(Array)
-          o.each { |ee| ee['_path'] = path }
+          o.each { |ee| ee['_path'] = path if ee.is_a?(Hash) }
         end
 
         o
