@@ -66,6 +66,10 @@ module Flor
         tconf = tconf.find { |h| points.include?(h['point']) }
       end
 
+      fail ArgumentError.new(
+        "tconf #{tconf.inspect} not a hash"
+      ) unless tconf.is_a?(Hash)
+
       message['tconf'] = tconf unless tconf['include_tconf'] == false
 
       message['vars'] = gather_vars(executor, tconf, message)
