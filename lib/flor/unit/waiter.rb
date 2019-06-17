@@ -186,7 +186,6 @@ module Flor
     def row_match_status?(unit, rs, _, cdr)
 
       rs[0].find { |exe|
-p [ exe.status, cdr.first ]
         (@exid == nil || exe.exid == @exid) &&
         exe.status == cdr.first }
     end
@@ -203,12 +202,8 @@ p [ exe.status, cdr.first ]
 
     def row_match_var?(unit, rs, nid, (name, value))
 
-p [ :row_match_var?, nid, [ name, value ] ]
       rs[1].find { |ptr|
         ptr.type == 'var' &&
-begin
-  p [ :rmv, ptr ]
-end &&
         (@exid == nil || ptr.exid == @exid) &&
         (nid == nil || ptr.nid == nid) &&
         (name == nil || ptr.name == name) &&

@@ -94,7 +94,6 @@ describe Flor::Waiter do
         })
 
       wait_until do
-p [ @unit0.journal.count, @unit1.journal.count ]
         @unit0.journal.count > 0
       end
       wait_until do
