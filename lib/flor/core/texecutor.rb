@@ -235,7 +235,7 @@ module Flor
 
         c = ! (ENV['FLOR_DEBUG'] || '').match(/conf/)
         e = self.new('conf' => c)
-        r = e.launch(source, payload: fs, vars: vs)
+        r = e.launch(source, payload: fs, vars: vs, path: path)
 
         unless r['point'] == 'terminated'
           ae = ArgumentError.new(

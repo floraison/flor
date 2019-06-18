@@ -28,7 +28,7 @@ module Flor
 
     t =
       tree.is_a?(String) ?
-      Flor.parse(tree, opts[:fname], opts) :
+      Flor.parse(tree, opts[:fname] || opts[:path], opts) :
       tree
 
     unless t

@@ -26,7 +26,10 @@ module Flor
       @line, @column, @offset, @msg, @visual = error_array
       @fname = fname
 
-      super("syntax error at line #{@line} column #{@column}")
+      m = "syntax error at line #{@line} column #{@column}"
+      m += " in #{fname}" if fname
+
+      super(m)
     end
   end
 

@@ -28,7 +28,7 @@ sequence
       expect {
         Flor.parse(flor, 'x.flor')
       }.to raise_error(
-        Flor::ParseError, 'syntax error at line 3 column 1'
+        Flor::ParseError, 'syntax error at line 3 column 1 in x.flor'
       )
     end
   end

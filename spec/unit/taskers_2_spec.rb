@@ -15,6 +15,7 @@ describe 'Flor unit' do
     before :each do
       @path = 'envs/test/lib/taskers/alpha/dot.json'
       @original = File.read(@path)
+      @apath = File.absolute_path(@path)
     end
     after :each do
       File.open(@path, 'wb') { |f| f.write(@original) }
@@ -69,11 +70,14 @@ class: AlphaTasker
         },
         wait: true)
 
-      expect(m['point']).to eq('failed')
-      expect(m['m']).to eq(2)
-      expect(m['error']['kla']).to eq('Flor::ParseError')
-      expect(m['error']['msg']).to eq('syntax error at line 1 column 1')
-# TODO let error message indicate it's in tasker conf!
+      expect(m['point']
+        ).to eq('failed')
+      expect(m['m']
+        ).to eq(2)
+      expect(m['error']['kla']
+        ).to eq('Flor::ParseError')
+      expect(m['error']['msg']
+        ).to eq("syntax error at line 1 column 1 in #{@apath}")
 
       sleep 0.420
 

@@ -62,7 +62,7 @@ require 'alpha.rb'
 class: AlphaTasker
         }, {})
       }.to raise_error(
-        Flor::ParseError, "syntax error at line 1 column 1"
+        Flor::ParseError, "syntax error at line 1 column 1 in ."
       )
     end
 

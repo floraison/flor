@@ -203,7 +203,10 @@ describe 'Flor unit' do
             @unit.launch('com.acme.flow99')
           }.to raise_error(
             #ArgumentError, /\Aflow parsing failed: /
-            Flor::ParseError, 'syntax error at line 6 column 3'
+            Flor::ParseError,
+            'syntax error' +
+            ' at line 6 column 3' +
+            ' in envs/test/lib/flows/com.acme/flow99.flor'
           )
         end
 
