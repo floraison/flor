@@ -47,29 +47,38 @@ class AlphaTasker
       expect(m['error']['msg']).to eq('tconf "require" not a hash')
     end
 
-#    it 'fails with a ParseError if the conf is invalid' do
-#
-#      File.open(@path, 'wb') do |f|
-#        f.write(%q{
-#require 'alpha.rb'
-#class: AlphaTasker
-#        })
-#      end
-#
-#      unit = Flor::Unit.new('envs/test/etc/conf.json')
-#      unit.conf['unit'] = 'taskertypo'
-#      #@unit.hook('journal', Flor::Journal)
-#      unit.storage.delete_tables
-#      unit.storage.migrate
-#      unit.start
-#
-#      m = unit.launch(
-#        %q{
-#          alpha _
-#        },
-#        wait: true)
-#pp m
-#    end
+    it 'fails with a ParseError if the conf is invalid' do
+
+      File.open(@path, 'wb') do |f|
+        f.write(%q{
+require 'alpha.rb'
+class: AlphaTasker
+        })
+      end
+
+      unit = Flor::Unit.new('envs/test/etc/conf.json')
+      unit.conf['unit'] = 'taskertypo'
+      unit.hook('journal', Flor::Journal)
+      unit.storage.delete_tables
+      unit.storage.migrate
+      unit.start
+
+      m = unit.launch(
+        %q{
+          alpha _
+        },
+        wait: true)
+
+      expect(m['point']).to eq('failed')
+      expect(m['m']).to eq(2)
+      expect(m['error']['kla']).to eq('Flor::ParseError')
+      expect(m['error']['msg']).to eq('syntax error at line 1 column 1')
+# TODO let error message indicate it's in tasker conf!
+
+      sleep 0.420
+
+      expect(unit.journal.map { |m| m['point'] }).to eq(%w[ failed end ])
+    end
   end
 end
 

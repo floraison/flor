@@ -442,7 +442,11 @@ end
         stack_cause(message) \
           if %w[ trigger cancel ].include?(message['point'])
 
-        determine_heat(message)
+        begin
+          determine_heat(message)
+        rescue => e
+          raise e unless message['point'] == 'failed'
+        end
 
         ms = []
         ms += @unit.notify(self, message) # pre

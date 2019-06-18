@@ -116,6 +116,8 @@ module Flor
 
     def to_error_message(message, error)
 
+#puts "---"
+#puts caller
       m = message.select { |k, v| TO_ERROR_MESSAGE_KEYS.include?(k) }
 
       m['point'] = 'failed'
