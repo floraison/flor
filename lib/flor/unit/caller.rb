@@ -41,16 +41,44 @@ module Flor
       root == '.' ? path : File.join(root, path)
     end
 
-    def ruby_call(service, conf, message)
+    def do_require(conf, path)
+
+      fail ArgumentError.new('".." not allowed in paths') \
+        if path =~ /\.\./
+
+      begin
+        require(path)
+        return
+      rescue LoadError
+      end
 
       root = File.dirname(conf['_path'] || '.')
 
-      Flor.h_fetch_a(conf, 'require').each { |pa|
-        fail ArgumentError.new('".." not allowed in paths') if pa =~ /\.\./
-        require(fjoin(root, pa)) }
-      Flor.h_fetch_a(conf, 'load').each { |pa|
-        fail ArgumentError.new('".." not allowed in paths') if pa =~ /\.\./
-        load(fjoin(root, pa)) }
+      require(fjoin(root, path))
+    end
+
+    def do_load(conf, path)
+
+      fail ArgumentError.new('".." not allowed in paths') \
+        if path =~ /\.\./
+
+      path += '.rb' unless path.match(/\.rb\z/)
+
+      begin
+        load(path)
+        return
+      rescue LoadError
+      end
+
+      root = File.dirname(conf['_path'] || '.')
+
+      load(fjoin(root, path))
+    end
+
+    def ruby_call(service, conf, message)
+
+      Flor.h_fetch_a(conf, 'require').each { |pa| do_require(conf, pa) }
+      Flor.h_fetch_a(conf, 'load').each { |pa| do_load(conf, pa) }
 
       #
       # initialize

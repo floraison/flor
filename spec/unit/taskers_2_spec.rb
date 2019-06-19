@@ -84,5 +84,173 @@ class: AlphaTasker
       expect(unit.journal.map { |m| m['point'] }).to eq(%w[ failed end ])
     end
   end
+
+  describe 'a tasker with a require: in its configuration' do # gh-24
+
+    before :each do
+
+      @unit = Flor::Unit.new('envs/test/etc/conf.json')
+      @unit.conf['unit'] = 'ut2r'
+      #@unit.hook('journal', Flor::Journal)
+      @unit.storage.delete_tables
+      @unit.storage.migrate
+      @unit.start
+
+      @tasker_path = 'envs/test/lib/taskers/ted.rb'
+      @constant_path = 'envs/test/lib/taskers/ted_constant.rb'
+
+      File.open(@tasker_path, 'wb') do |f|
+        f.write(%{
+          class TedTasker < Flor::BasicTasker
+            def task
+              message['payload']['ted'] = 'was here'
+              message['payload']['constant'] = Flor::CONSTANT \
+                if defined?(Flor::CONSTANT)
+              reply
+            end
+          end
+        })
+      end
+    end
+
+    after :each do
+
+      @unit.shutdown
+
+      FileUtils.rm(@tasker_path)
+      FileUtils.rm(@constant_path) rescue nil
+
+      Flor.send(:remove_const, 'CONSTANT') if defined?(Flor::CONSTANT)
+    end
+
+    it 'requires from the Ruby loadpath' do
+
+      File.open(@tasker_path, 'ab') do |f|
+        f.write(%q{
+          { require: 'flor', class: 'TedTasker' }
+        })
+      end
+
+      m = @unit.launch(
+        %q{
+          ted _
+        },
+        wait: true)
+
+      expect(m['point']).to eq('terminated')
+
+      expect(m['payload']).to eq({
+        'ret' => 'ted', 'ted' => 'was here' })
+    end
+
+    it 'requires from the flor environment' do
+
+      File.open(@tasker_path, 'ab') do |f|
+        f.write(%q{
+          { require: 'ted_constant', class: 'TedTasker' }
+        })
+      end
+      File.open(@constant_path, 'wb') do |f|
+        f.write(%q{
+          Flor::CONSTANT = 'ted req'
+        })
+      end
+
+      m = @unit.launch(
+        %q{
+          ted _
+        },
+        wait: true)
+
+      expect(m['point']).to eq('terminated')
+
+      expect(m['payload']).to eq({
+        'ret' => 'ted', 'ted' => 'was here', 'constant' => 'ted req' })
+    end
+  end
+
+  describe 'a tasker with a load: in its configuration' do # gh-24
+
+    before :each do
+
+      @unit = Flor::Unit.new('envs/test/etc/conf.json')
+      @unit.conf['unit'] = 'ut2l'
+      #@unit.hook('journal', Flor::Journal)
+      @unit.storage.delete_tables
+      @unit.storage.migrate
+      @unit.start
+
+      @tasker_path = 'envs/test/lib/taskers/ted.rb'
+      @constant_path = 'envs/test/lib/taskers/ted_constant.rb'
+
+      File.open(@tasker_path, 'wb') do |f|
+        f.write(%{
+          class TedTasker < Flor::BasicTasker
+            def task
+              message['payload']['ted'] = 'was here'
+              message['payload']['constant'] = Flor::CONSTANT \
+                if defined?(Flor::CONSTANT)
+              reply
+            end
+          end
+        })
+      end
+    end
+
+    after :each do
+
+      @unit.shutdown
+
+      FileUtils.rm(@tasker_path)
+      FileUtils.rm(@constant_path) rescue nil
+
+      Flor.send(:remove_const, 'CONSTANT') if defined?(Flor::CONSTANT)
+    end
+
+    it 'loads from the Ruby loadpath' do
+
+      File.open(@tasker_path, 'ab') do |f|
+        f.write(%q{
+          { load: 'flor.rb', class: 'TedTasker' }
+        })
+      end
+
+      m = @unit.launch(
+        %q{
+          ted _
+        },
+        wait: true)
+
+      expect(m['point']).to eq('terminated')
+
+      expect(m['payload']).to eq({
+        'ret' => 'ted', 'ted' => 'was here' })
+    end
+
+    it 'loads from the flor environment' do
+
+      File.open(@tasker_path, 'ab') do |f|
+        f.write(%q{
+          { load: 'ted_constant.rb', class: 'TedTasker' }
+        })
+      end
+      File.open(@constant_path, 'wb') do |f|
+        f.write(%q{
+          Flor::CONSTANT = 'ted load'
+        })
+      end
+
+      m = @unit.launch(
+        %q{
+          ted _
+        },
+        wait: true)
+
+      expect(m['point']).to eq('terminated')
+
+      expect(m['payload']).to eq({
+        'ret' => 'ted', 'ted' => 'was here', 'constant' => 'ted load' })
+    end
+  end
 end
 
