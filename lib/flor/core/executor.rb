@@ -429,6 +429,7 @@ end
 
     def process(message)
 
+p message if env['FLOR_DEBUG__']
       fail ArgumentError.new("incoming message has non nil or Hash payload") \
         unless message['payload'] == nil || message['payload'].is_a?(Hash)
           #
