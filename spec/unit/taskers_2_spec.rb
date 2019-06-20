@@ -121,10 +121,12 @@ class: AlphaTasker
       FileUtils.rm(@constant_path) rescue nil
 
       Flor.send(:remove_const, 'CONSTANT') if defined?(Flor::CONSTANT)
+ENV.delete('FLOR_DEBUG')
     end
 
     it 'requires from the Ruby loadpath' do
 
+ENV['FLOR_DEBUG'] = 'stdout,dbg' if jruby?
       File.open(@tasker_path, 'ab') do |f|
         f.write(%q{
           { require: 'flor', class: 'TedTasker' }
