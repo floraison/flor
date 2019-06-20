@@ -43,18 +43,30 @@ module Flor
 
     def do_require(conf, path)
 
+puts "*** cwd is " + Dir.pwd
+puts "*** $: is"
+pp $:
+puts
+p path
       fail ArgumentError.new('".." not allowed in paths') \
         if path =~ /\.\./
 
       begin
         require(path)
         return
-      rescue LoadError
+      rescue LoadError => le
+p 0
+p le
       end
 
       root = File.dirname(conf['_path'] || '.')
+p root
+p fjoin(root, path)
 
       require(fjoin(root, path))
+rescue LoadError => le
+p 1
+p le
     end
 
     def do_load(conf, path)
