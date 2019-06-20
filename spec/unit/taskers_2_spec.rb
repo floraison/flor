@@ -89,6 +89,7 @@ class: AlphaTasker
 
     before :each do
 
+STDOUT.sync = true
 ENV['FLOR_DEBUG'] = 'stdout,dbg' if jruby?
       @unit = Flor::Unit.new('envs/test/etc/conf.json')
       @unit.conf['unit'] = 'ut2r'
