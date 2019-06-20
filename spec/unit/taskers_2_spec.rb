@@ -89,6 +89,7 @@ class: AlphaTasker
 
     before :each do
 
+ENV['FLOR_DEBUG'] = 'stdout,dbg' if jruby?
       @unit = Flor::Unit.new('envs/test/etc/conf.json')
       @unit.conf['unit'] = 'ut2r'
       #@unit.hook('journal', Flor::Journal)
@@ -126,7 +127,6 @@ ENV.delete('FLOR_DEBUG')
 
     it 'requires from the Ruby loadpath' do
 
-ENV['FLOR_DEBUG'] = 'stdout,dbg' if jruby?
       File.open(@tasker_path, 'ab') do |f|
         f.write(%q{
           { require: 'flor', class: 'TedTasker' }
