@@ -137,7 +137,7 @@ class: AlphaTasker
         },
         wait: true)
 
-      expect(m['point']).to eq('terminated')
+      expect(m).to have_terminated_as_point
 
       expect(m['payload']).to eq({
         'ret' => 'ted', 'ted' => 'was here' })
@@ -162,7 +162,7 @@ class: AlphaTasker
         },
         wait: true)
 
-      expect(m['point']).to eq('terminated')
+      expect(m).to have_terminated_as_point
 
       expect(m['payload']).to eq({
         'ret' => 'ted', 'ted' => 'was here', 'constant' => 'ted req' })
@@ -221,7 +221,7 @@ class: AlphaTasker
         },
         wait: true)
 
-      expect(m['point']).to eq('terminated')
+      expect(m).to have_terminated_as_point
 
       expect(m['payload']).to eq({
         'ret' => 'ted', 'ted' => 'was here' })
@@ -246,7 +246,7 @@ class: AlphaTasker
         },
         wait: true)
 
-      expect(m['point']).to eq('terminated')
+      expect(m).to have_terminated_as_point
 
       expect(m['payload']).to eq({
         'ret' => 'ted', 'ted' => 'was here', 'constant' => 'ted load' })
