@@ -42,18 +42,19 @@ module Flor
 
     def notify(executor, message)
 
+      return [] unless message['consumed']
+      return [] if @msg_waiters.empty?
+
       @mutex.synchronize do
 
-        to_remove = []
-
-        @msg_waiters.each do |w|
-          remove = w.notify(executor, message)
-          to_remove << w if remove
-        end
+        to_remove =
+          @msg_waiters.each_with_object([]) do |w, a|
+            remove = w.notify(executor, message)
+            a << w if remove
+          end
 
         @msg_waiters -= to_remove
-
-      end if message['consumed']
+      end
 
       [] # no new messages
     end

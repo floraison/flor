@@ -21,7 +21,6 @@ describe 'Flor unit' do
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
-
   end
 
   after :each do
