@@ -13,11 +13,23 @@ describe 'Flor unit' do
   describe 'a tasker with a typo in its configuration' do # gh-23
 
     before :each do
+
+      @unit = Flor::Unit.new('envs/test/etc/conf.json')
+      @unit.conf['unit'] = 'taskertypo'
+      @unit.hook('journal', Flor::Journal)
+      @unit.storage.delete_tables
+      @unit.storage.migrate
+      @unit.start
+
       @path = 'envs/test/lib/taskers/alpha/dot.json'
       @original = File.read(@path)
       @apath = File.absolute_path(@path)
     end
+
     after :each do
+
+      @unit.shutdown
+
       File.open(@path, 'wb') { |f| f.write(@original) }
     end
 
@@ -30,14 +42,7 @@ class AlphaTasker
         })
       end
 
-      unit = Flor::Unit.new('envs/test/etc/conf.json')
-      unit.conf['unit'] = 'taskertypo'
-      #@unit.hook('journal', Flor::Journal)
-      unit.storage.delete_tables
-      unit.storage.migrate
-      unit.start
-
-      m = unit.launch(
+      m = @unit.launch(
         %q{
           alpha _
         },
@@ -57,14 +62,7 @@ class: AlphaTasker
         })
       end
 
-      unit = Flor::Unit.new('envs/test/etc/conf.json')
-      unit.conf['unit'] = 'taskertypo'
-      unit.hook('journal', Flor::Journal)
-      unit.storage.delete_tables
-      unit.storage.migrate
-      unit.start
-
-      m = unit.launch(
+      m = @unit.launch(
         %q{
           alpha _
         },
@@ -81,7 +79,7 @@ class: AlphaTasker
 
       sleep 0.420
 
-      expect(unit.journal.map { |m| m['point'] }).to eq(%w[ failed end ])
+      expect(@unit.journal.map { |m| m['point'] }).to eq(%w[ failed end ])
     end
   end
 
