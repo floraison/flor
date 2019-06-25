@@ -35,7 +35,7 @@ current key/val), and `len` (the length of the object).
 
 ## see also
 
-[Map](map.md), c_map, c_collect.
+[Map](map.md), [c-map](c_map.md), [c-collect](c_collect.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/pcore/collect.rb)

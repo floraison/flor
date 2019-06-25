@@ -17,7 +17,7 @@ class Flor::Pro::Ceach < Flor::Macro::Iterator
   #
   # ## see also
   #
-  # For-each, c_map, and c_each.
+  # For-each, c-map, and c-for-each.
 
   names %w[ ceach c-each ]
 

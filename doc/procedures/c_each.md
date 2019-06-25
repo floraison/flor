@@ -17,7 +17,7 @@ concurrence
 
 ## see also
 
-[For-each](for_each.md), c_map, and c_each.
+[For-each](for_each.md), [c-map](c_map.md), and [c-for-each](c_for_each.md).
 
 
 * [source](https://github.com/floraison/flor/tree/master/lib/flor/punit/c_each.rb)
