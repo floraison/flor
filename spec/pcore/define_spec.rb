@@ -191,6 +191,23 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(3)
     end
 
+    it 'accepts "deep" fields in its signature' do
+
+      r = @executor.launch(
+        %q{
+          set f.a [ 0 1 2 3 4 5]
+          set f.h {}
+          define f a f.h.b f.a.2
+            + a f.h.b f.a.0 f.a.1 f.a.2
+          f 3 2 4
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['vars'].keys).to eq(%w[ f ])
+      expect(r['payload']['h']).to eq({ 'b' => 2 })
+      expect(r['payload']['ret']).to eq(10)
+    end
+
     it 'accepts fields wrapped in parentheses in its signature' do
 
       r = @executor.launch(
