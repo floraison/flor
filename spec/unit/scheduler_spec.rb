@@ -300,63 +300,43 @@ describe 'Flor unit' do
 
     describe '#prepare_message (protected)' do
 
-      it 'works for #cancel(exid: a, nid: b)' do
+      {
 
-        msg, opts = @unit.send(:prepare_message,
-          'cancel', [ { exid: 'exid', nid: 'nid' } ])
+        [ { exid: 'exid', nid: 'nid' } ] =>
+          [ { point: 'cancel', exid: 'exid', nid: 'nid' },
+            {} ],
+        [ { exid: 'exid', nid: 'nid', 'nada' => 'c' } ] =>
+          [ { point: 'cancel', exid: 'exid', nid: 'nid' },
+            { nada: 'c' } ],
+        [ 'exid', 'nid' ] =>
+          [ { point: 'cancel', exid: 'exid', nid: 'nid' },
+            {} ],
+        [ 'exid', 'nid', { c: 0 }, { c: 1 } ] =>
+          [ { point: 'cancel', exid: 'exid', nid: 'nid' },
+            { c: 1 } ],
+        [ 'exid' ] =>
+          [ { point: 'cancel', exid: 'exid' },
+            {} ],
+        [ 'exid', { c: 0 }, { d: 1 } ] =>
+          [ { point: 'cancel', exid: 'exid' },
+            { c: 0, d: 1 } ],
+        [ 'exid', 'tagname' ] =>
+          [ { point: 'cancel', exid: 'exid', nid: 'tagname' },
+            {} ],
+        [ 'exid', /regex/ ] =>
+          [ { point: 'cancel', exid: 'exid', nid: /regex/ },
+            {} ],
 
-        expect(msg).to eqj(point: 'cancel', exid: 'exid', nid: 'nid')
-        expect(opts).to eq({})
+      }.each do |args, (message, options)|
+
+        it "works for #cancel(#{args.inspect})" do
+
+          msg, opts = @unit.send(:prepare_message, 'cancel', args)
+
+          expect(msg).to eqj(message)
+          expect(opts).to eq(options)
+        end
       end
-
-      it 'works for #cancel(exid: a, nid: b, opts*)' do
-
-        msg, opts = @unit.send( :prepare_message,
-          'cancel', [ { exid: 'exid', nid: 'nid', 'nada' => 'c' } ])
-
-        expect(msg).to eqj(point: 'cancel', exid: 'exid', nid: 'nid')
-        expect(opts).to eq(nada: 'c')
-      end
-
-      it 'works for #cancel([ exid, nid ])' do
-
-        msg, opts = @unit.send(:prepare_message,
-          'cancel', [ 'exid', 'nid' ])
-
-        expect(msg).to eqj(point: 'cancel', exid: 'exid', nid: 'nid')
-        expect(opts).to eq({})
-      end
-
-      it 'works for #cancel(exid, nid, opts*)' do
-
-        msg, opts = @unit.send(:prepare_message,
-          'cancel', [ 'exid', 'nid', { c: 0 }, { c: 1 } ])
-
-        expect(msg).to eqj(point: 'cancel', exid: 'exid', nid: 'nid')
-        expect(opts).to eq(c: 1)
-      end
-
-      it 'works for #cancel(exid)' do
-
-        msg, opts = @unit.send(:prepare_message,
-          'cancel', [ 'exid' ])
-
-        expect(msg).to eqj(point: 'cancel', exid: 'exid')
-        expect(opts).to eq({})
-      end
-
-      it 'works for #cancel(exid, opts*)' do
-
-        msg, opts = @unit.send(:prepare_message,
-          'cancel', [ 'exid', { c: 0 }, { d: 1 } ])
-
-        #expect(msg).to eqj(point: 'cancel', exid: 'a', nid: 'b')
-        expect(msg).to eqj(point: 'cancel', exid: 'exid')
-        expect(opts).to eq(c: 0, d: 1)
-      end
-
-      it 'works for #cancel(exid, tagname)'
-      it 'works for #cancel(exid, regex)' # really?
     end
 
     describe '#cancel' do
