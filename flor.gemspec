@@ -11,7 +11,6 @@ Gem::Specification.new do |s|
   s.authors = [ 'John Mettraux' ]
   s.email = [ 'jmettraux+flor@gmail.com' ]
   s.homepage = 'http://github.com/floraison'
-  #s.rubyforge_project = 'flor'
   s.license = 'MIT'
   s.summary = 'A Ruby workflow engine'
 
