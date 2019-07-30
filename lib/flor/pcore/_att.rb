@@ -238,51 +238,6 @@ class Flor::Pro::Att < Flor::Procedure
   alias receive_off receive_disabled
   alias receive_disable receive_disabled
 
-  def split(s, r); s.split(r).collect(&:strip).reject(&:empty?); end
-
-  def timers_to_arrays(o)
-
-    ts = o
-
-    ts = split(ts, ';') \
-      if ts.is_a?(String)
-    ts = ts.collect { |t| split(t, ',') } \
-      if ts.collect(&:class).uniq == [ String ]
-
-    ts = ts.collect { |t| t.collect { |st| split(st, / *: *| +/) }.flatten }
-
-    ts
-
-    #  else
-    #    fail Flor::FlorError.new(
-    #      "Cannot extract timelines out of #{o.inspect}",
-    #      self)
-    #  end
-  end
-
-    # ruote:                      http://ruote.io/common_attributes.html#timers
-    #   '5d: reminder, 12d: final_reminder, 15d: timeout'
-    #   '1h: reminder, 12h: error it went wrong' <-- error "error message"
-    #
-    # flor:
-    #   x timers: [ '5d', reminder1, '12h', reminder2 ]
-    #   x timers: [ '5d', reminder1, '12h', reminder2 ]
-    #   x timers: [ [ '5d', r0, '1d', r1 ], [ '6d', r3 ] ]
-    #   x timers: '5d r0, 1d r1; 6d r3'
-    #
-  def receive_timers
-
-pp timers_to_array(payload['ret'])
-fail
-#    n = parent
-#    m = wrap_cancel('nid' => n, 'flavour' => 'timeout').first
-#    t = payload['ret']
-#
-#    wrap_schedule('type' => 'in', 'string' => t, 'nid' => n, 'message' => m) +
-#    wrap_reply
-  end
-  alias receive_timer receive_timers
-
   def receive_child_on_error
     if pn = parent_node; pn['child_on_error'] = payload_ret; end; wrap_reply
   end
