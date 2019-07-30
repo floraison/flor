@@ -320,6 +320,8 @@ describe 'Flor unit' do
         [ 'exid', { c: 0 }, { d: 1 } ] =>
           [ { point: 'cancel', exid: 'exid' },
             { c: 0, d: 1 } ],
+
+### special
         [ 'exid', 'tagname' ] =>
           [ { point: 'cancel', exid: 'exid', nid: 'tagname' },
             {} ],
