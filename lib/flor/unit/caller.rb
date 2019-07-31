@@ -134,16 +134,16 @@ module Flor
 
     def cmd_call(service, conf, message)
 
-      h = conf.dup # shallow
-      h['m'] = message
-      h['f'] = message['payload']
-      h['v'] = message['vars']
-      h['tag'] = (message['tags'] || []).first
+      #h = conf.dup # shallow
+      #h['m'] = message
+      #h['f'] = message['payload']
+      #h['v'] = message['vars']
+      #h['tag'] = (message['tags'] || []).first
 
-      cmd = h['cmd']
+      #cmd = h['cmd']
 
       m = encode(conf, message)
-      out, _ = spawn(cmd, m)
+      out, _ = spawn(conf, m)
       r = decode(conf, out)
 
       to_messages(r)
@@ -171,24 +171,32 @@ module Flor
         .load(data)
     end
 
-    def spawn(cmd, data)
+    def spawn(conf, data)
 
       i, o = IO.pipe # _ / stdout
       f, e = IO.pipe # _ / stderr
       r, w = IO.pipe # stdin / _
 
-      pid = Kernel.spawn(cmd, in: r, out: o, err: e)
+      pid = Kernel.spawn(conf['cmd'], in: r, out: o, err: e)
+
       w.write(data)
       w.close
       o.close
       e.close
-      _, status = Process.wait2(pid)
+
+      _, status =
+        Timeout.timeout(conf['timeout'] || 14) do
+
+          Process.wait2(pid)
+        end
 
       fail SpawnError.new(status, i.read, f.read) if status.exitstatus != 0
 
       [ i.read, status ]
 
     ensure
+
+      Process.kill('TERM', pid)
 
       [ i, o, f, e, r, w ].each { |x| x.close rescue nil }
     end
