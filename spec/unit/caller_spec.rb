@@ -76,6 +76,9 @@ describe Flor::Caller do
 
     context 'external' do
 
+if RUBY_PLATFORM.match(/java/)
+      it 'calls basic scripts'
+else
       it 'calls basic scripts' do
 
         r = @caller.call(
@@ -92,6 +95,7 @@ describe Flor::Caller do
             'payload' => { 'items' => 2, 'price' => 'CHF 5.00' } }
         ])
       end
+end
 
       context 'on call error' do
 
@@ -116,6 +120,9 @@ describe Flor::Caller do
 
       context 'on exit code != 1' do
 
+if RUBY_PLATFORM.match(/java/)
+        it 'returns a failed message'
+else
         it 'returns a failed message' do
 
           r = @caller.call(
@@ -135,6 +142,7 @@ describe Flor::Caller do
           expect(e['msg']).to match(/[Pp]ython: can't open file 'spec\/unit\//)
           expect(e['msg']).to match(/ \[Errno 2\] No such file or directory/)
         end
+end
       end
     end
   end
