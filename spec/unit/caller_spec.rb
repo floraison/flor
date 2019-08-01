@@ -77,7 +77,7 @@ describe Flor::Caller do
     context 'external' do
 
 if RUBY_PLATFORM.match(/java/)
-      it 'calls basic scripts'
+      it 'calls basic scripts (JRuby)'
 else
       it 'calls basic scripts' do
 
@@ -121,7 +121,7 @@ end
       context 'on exit code != 1' do
 
 if RUBY_PLATFORM.match(/java/)
-        it 'returns a failed message'
+        it 'returns a failed message (JRuby)'
 else
         it 'returns a failed message' do
 

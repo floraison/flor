@@ -209,6 +209,10 @@ module Flor
       end
     end
 
+#    def spawn(cmd, data)
+#fail NotImplementedError.new
+#    end if RUBY_PLATFORM.match(/java/)
+
     def to_messages(o)
 
       case o
