@@ -144,6 +144,36 @@ else
         end
 end
       end
+
+      context 'on timeout' do
+
+#if RUBY_PLATFORM.match(/java/)
+if false
+        it 'fails (JRuby)'
+else
+        it 'fails' do
+
+          t0 = Time.now
+
+          r = @caller.call(
+            nil,
+            { 'cmd' => 'ruby -e "sleep"',
+              '_path' => 'spec/',
+              'timeout' => '2s' },
+            { 'point' => 'execute', 'payload' => {} })
+
+          expect(r.class).to eq(Array)
+          expect(r.size).to eq(1)
+          expect(r[0].keys.sort).to eq(%w[ error fm fpoint payload point ])
+
+          e = r[0]['error']
+          expect(e['kla']).to eq('Timeout::Error')
+          expect(e['msg']).to eq('execution expired')
+
+          # TODO check that process has been killed
+        end
+end
+      end
     end
   end
 end

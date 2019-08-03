@@ -87,6 +87,20 @@ module Flor
       o != nil && o != false
     end
 
+    def yes?(o)
+
+      oo = o.respond_to?(:downcase) ? o.downcase : o
+
+      [ 'y', 'yes', 'true', true ].include?(o)
+    end
+
+    def no?(o)
+
+      oo = o.respond_to?(:downcase) ? o.downcase : o
+
+      [ 'n', 'no', 'false', false ].include?(o)
+    end
+
     def to_error(o)
 
       h = {}
@@ -108,6 +122,8 @@ module Flor
       h['trc'] = t[0..(t.rindex { |l| l.match(/\/lib\/flor\//) }) + 1] if t
       h['cwd'] = Dir.pwd
       h['rlp'] = $: if o.is_a?(::LoadError)
+
+      h['details'] = o.flor_details if o.respond_to?(:flor_details)
 
       h
     end

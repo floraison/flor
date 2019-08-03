@@ -140,10 +140,8 @@ module Flor
       h['v'] = message['vars']
       h['tag'] = (message['tags'] || []).first
 
-      cmd = h['cmd']
-
       m = encode(conf, message)
-      out, _ = spawn(cmd, m)
+      out, _ = spawn(conf, m)
       r = decode(conf, out)
 
       to_messages(r)
@@ -171,7 +169,14 @@ module Flor
         .load(data)
     end
 
-    def spawn(cmd, data)
+    def spawn(conf, data)
+
+      t0 = Time.now
+
+      cmd = conf['cmd']
+
+      to = Fugit.parse(conf['timeout'] || '14s')
+      to = to.is_a?(Fugit::Duration) ? to.to_sec : 14
 
       i, o = IO.pipe # _ / stdout
       f, e = IO.pipe # _ / stderr
@@ -182,11 +187,30 @@ module Flor
       w.close
       o.close
       e.close
-      _, status = Process.wait2(pid)
+
+      #_, status = Process.wait2(pid)
+      _, status = Timeout.timeout(to) { Process.wait2(pid) }
 
       fail SpawnError.new(status, i.read, f.read) if status.exitstatus != 0
 
       [ i.read, status ]
+
+    rescue => err
+
+      class << err; attr_accessor :flor_details; end
+
+      ha = Flor.yes?(conf['hide_all'])
+      cd = (ha || Flor.yes?(conf['hide_cmd'])) ? '(hidden)' : cmd
+      cf = (ha || Flor.yes?(conf['hide_conf'])) ? '(hidden)' : conf
+
+      err.flor_details = {
+        cmd: cd, conf: cf,
+        timeout: to,
+        pid: pid,
+        start: Flor.tstamp(t0),
+        duration: Fugit.parse(Time.now - t0).to_plain_s }
+
+      raise
 
     ensure
 
