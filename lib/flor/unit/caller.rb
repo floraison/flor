@@ -177,6 +177,7 @@ module Flor
 
       to = Fugit.parse(conf['timeout'] || '14s')
       to = to.is_a?(Fugit::Duration) ? to.to_sec : 14
+      to = 0 if to < 0 # no timeout
 
       i, o = IO.pipe # _ / stdout
       f, e = IO.pipe # _ / stderr
@@ -188,7 +189,6 @@ module Flor
       o.close
       e.close
 
-      #_, status = Process.wait2(pid)
       _, status = Timeout.timeout(to) { Process.wait2(pid) }
 
       fail SpawnError.new(status, i.read, f.read) if status.exitstatus != 0
