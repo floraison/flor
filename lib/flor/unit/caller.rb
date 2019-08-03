@@ -199,9 +199,9 @@ module Flor
 
       class << err; attr_accessor :flor_details; end
 
-      ha = Flor.yes?(conf['hide_all'])
-      cd = (ha || Flor.yes?(conf['hide_cmd'])) ? '(hidden)' : cmd
-      cf = (ha || Flor.yes?(conf['hide_conf'])) ? '(hidden)' : conf
+      ha = Flor.yes?(conf['on_error_hide_all'])
+      cd = (ha || Flor.yes?(conf['on_error_hide_cmd'])) ? '(hidden)' : cmd
+      cf = (ha || Flor.yes?(conf['on_error_hide_conf'])) ? '(hidden)' : conf
 
       err.flor_details = {
         cmd: cd, conf: cf,
@@ -209,6 +209,9 @@ module Flor
         pid: pid,
         start: Flor.tstamp(t0),
         duration: Fugit.parse(Time.now - t0).to_plain_s }
+
+      (Process.kill(9, pid) rescue nil) \
+        unless Flor.no?(conf['on_error_kill'])
 
       raise
 
