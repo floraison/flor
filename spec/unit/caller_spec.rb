@@ -147,8 +147,7 @@ end
 
       context 'on timeout' do
 
-#if RUBY_PLATFORM.match(/java/)
-if false
+if RUBY_PLATFORM.match(/java/)
         it 'fails (JRuby)'
 else
         it 'fails' do
