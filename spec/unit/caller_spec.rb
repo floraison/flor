@@ -76,9 +76,6 @@ describe Flor::Caller do
 
     context 'external' do
 
-if RUBY_PLATFORM.match(/java/)
-      it 'calls basic scripts (JRuby)'
-else
       it 'calls basic scripts' do
 
         r = @caller.call(
@@ -95,7 +92,6 @@ else
             'payload' => { 'items' => 2, 'price' => 'CHF 5.00' } }
         ])
       end
-end
 
       context 'on call error' do
 
@@ -113,8 +109,13 @@ end
           expect(r[0].keys.sort).to eq(%w[ error fm fpoint payload point ])
 
           e = r[0]['error']
-          expect(e['kla']).to eq('Errno::ENOENT')
-          expect(e['msg']).to eq('No such file or directory - cobra')
+
+          expect(e['kla']).to eq(
+             RUBY_PLATFORM.match(/java/) ?
+             'Java::JavaIo::IOException' :
+             'Errno::ENOENT')
+
+          expect(e['msg']).to match(/No such file or directory/)
         end
       end
 

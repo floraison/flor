@@ -236,10 +236,6 @@ module Flor
       end
     end
 
-#    def spawn(cmd, data)
-#fail NotImplementedError.new
-#    end if RUBY_PLATFORM.match(/java/)
-
     def to_messages(o)
 
       case o
@@ -248,6 +244,53 @@ module Flor
       else []
       end
     end
+
+    def split_cmd(cmd)
+
+      cmd.split(/ +/)
+        # FIXME too naive
+        # or look at Java's Process Builder documentation, there should be
+        # a way to pass cmd strings and not string arrays...
+    end
+
+    def spawn(conf, data)
+
+      t0 = Time.now
+
+      cmd = conf['cmd']
+      acmd = split_cmd(cmd)
+
+      to = Fugit.parse(conf['timeout'] || '14s')
+      to = to.is_a?(Fugit::Duration) ? to.to_sec : 14
+      to = 0 if to < 0 # no timeout
+
+      builder = java.lang.ProcessBuilder.new(*acmd)
+      #pp builder.environment
+      process = builder.start
+
+      w =
+        java.io.BufferedWriter.new(
+          java.io.OutputStreamWriter.new(
+            process.outputStream))
+      w.write(data)
+      w.close
+
+      i = process.inputStream.to_io
+      f = process.errorStream.to_io
+
+      #_, status = Timeout.timeout(to) { Process.wait2(pid) }
+      status = Timeout.timeout(to) { process.waitFor }
+
+      fail SpawnError.new(status, i.read, f.read) if status != 0
+        # FIXME status
+
+      [ i.read, status ]
+
+    #rescue => err
+      # TODO
+    ensure
+      # TODO
+    end if RUBY_PLATFORM.match(/java/)
   end
 end
 
