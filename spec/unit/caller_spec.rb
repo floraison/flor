@@ -170,7 +170,9 @@ else
           expect(e['kla']).to eq('Timeout::Error')
           expect(e['msg']).to eq('execution expired')
 
-          # TODO check that process has been killed
+          pid = e['details'][:pid]
+          expect(`ps -p #{pid}`.strip.split("\n").size).to eq(1)
+            # ensure child process has vanished
         end
 end
       end

@@ -210,6 +210,8 @@ module Flor
         start: Flor.tstamp(t0),
         duration: Fugit.parse(Time.now - t0).to_plain_s }
 
+      Process.detach(pid) if pid
+
       (Process.kill(9, pid) rescue nil) \
         unless Flor.no?(conf['on_error_kill'])
 
