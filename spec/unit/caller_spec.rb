@@ -121,9 +121,6 @@ describe Flor::Caller do
 
       context 'on exit code != 1' do
 
-if RUBY_PLATFORM.match(/java/)
-        it 'returns a failed message (JRuby)'
-else
         it 'returns a failed message' do
 
           r = @caller.call(
@@ -143,7 +140,6 @@ else
           expect(e['msg']).to match(/[Pp]ython: can't open file 'spec\/unit\//)
           expect(e['msg']).to match(/ \[Errno 2\] No such file or directory/)
         end
-end
       end
 
       context 'on timeout' do

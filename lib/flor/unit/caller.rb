@@ -191,7 +191,8 @@ module Flor
 
       _, status = Timeout.timeout(to) { Process.wait2(pid) }
 
-      fail SpawnError.new(status, i.read, f.read) if status.exitstatus != 0
+      fail SpawnError.new(status, i.read, f.read) \
+        if status.exitstatus != 0
 
       [ i.read, status ]
 
@@ -255,6 +256,20 @@ module Flor
         # a way to pass cmd strings and not string arrays...
     end
 
+    class ProcessStatus
+
+      attr_reader :process, :exitstatus
+
+      def initialize(process, exitstatus)
+
+        @process = process
+        @exitstatus = exitstatus
+      end
+
+      def pid; @process.pid; end
+
+    end if RUBY_PLATFORM.match(/java/)
+
     def spawn(conf, data)
 
       t0 = Time.now
@@ -280,11 +295,12 @@ module Flor
       i = process.inputStream.to_io
       f = process.errorStream.to_io
 
-      #_, status = Timeout.timeout(to) { Process.wait2(pid) }
-      status = Timeout.timeout(to) { process.waitFor }
+      ex = Timeout.timeout(to) { process.waitFor }
 
-      fail SpawnError.new(status, i.read, f.read) if status != 0
-        # FIXME status
+      status = ProcessStatus.new(process, ex)
+
+      fail SpawnError.new(status, i.read, f.read) \
+        if status.exitstatus != 0
 
       [ i.read, status ]
 
