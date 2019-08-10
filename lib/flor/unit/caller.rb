@@ -339,15 +339,12 @@ module Flor
       process = builder.start
       pid = process.pid
 
-      w =
-        java.io.BufferedWriter.new(
-          java.io.OutputStreamWriter.new(
-            process.outputStream))
-      w.write(data)
-      w.close
-
+      o = process.outputStream.to_io
       i = process.inputStream.to_io
       f = process.errorStream.to_io
+
+      o.write(data)
+      o.close
 
       ex = Timeout.timeout(to) { process.waitFor }
 
@@ -370,7 +367,7 @@ module Flor
 
     ensure
 
-      [ i, f ].each { |x| x.close rescue nil }
+      [ i, o, f ].each { |x| x.close rescue nil }
 
     end if RUBY_PLATFORM.match(/java/)
   end
