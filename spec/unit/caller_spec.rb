@@ -110,12 +110,18 @@ describe Flor::Caller do
 
           e = r[0]['error']
 
+pp e
           expect(e['kla']).to eq(
              RUBY_PLATFORM.match(/java/) ?
              'Java::JavaIo::IOException' :
              'Errno::ENOENT')
 
           expect(e['msg']).to match(/No such file or directory/)
+
+          ed = e['details']
+          expect(ed[:cmd]).to eq('cobra spec/unit/hooks/for_caller.py')
+          expect(ed[:pid]).to eq(nil)
+          expect(ed[:timeout]).to eq(14)
         end
       end
 
@@ -139,6 +145,11 @@ describe Flor::Caller do
           expect(e['msg']).to match(/\A\(code: 2, pid: \d+\) /)
           expect(e['msg']).to match(/[Pp]ython: can't open file 'spec\/unit\//)
           expect(e['msg']).to match(/ \[Errno 2\] No such file or directory/)
+
+          ed = e['details']
+          expect(ed[:cmd]).to eq('python spec/unit/hooks/no_such_caller.py')
+          expect(ed[:pid]).to be_an(Integer)
+          expect(ed[:timeout]).to eq(14)
         end
       end
 
@@ -166,9 +177,16 @@ else
           expect(e['kla']).to eq('Timeout::Error')
           expect(e['msg']).to eq('execution expired')
 
-          pid = e['details'][:pid]
+          ed = e['details']
+          pid = ed[:pid]
+
           expect(`ps -p #{pid}`.strip.split("\n").size).to eq(1)
             # ensure child process has vanished
+
+          expect(ed[:cmd]).to eq('ruby -e "sleep"')
+          expect(ed[:pid]).to be_an(Integer)
+          expect(ed[:timeout]).to eq(2)
+          expect(ed[:conf]['timeout']).to eq('2s')
         end
 end
       end

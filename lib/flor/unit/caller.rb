@@ -198,18 +198,7 @@ module Flor
 
     rescue => err
 
-      class << err; attr_accessor :flor_details; end
-
-      ha = Flor.yes?(conf['on_error_hide_all'])
-      cd = (ha || Flor.yes?(conf['on_error_hide_cmd'])) ? '(hidden)' : cmd
-      cf = (ha || Flor.yes?(conf['on_error_hide_conf'])) ? '(hidden)' : conf
-
-      err.flor_details = {
-        cmd: cd, conf: cf,
-        timeout: to,
-        pid: pid,
-        start: Flor.tstamp(t0),
-        duration: Fugit.parse(Time.now - t0).to_plain_s }
+      add_details_to_error(conf, to, t0, pid, err)
 
       Process.detach(pid) if pid
 
@@ -221,6 +210,26 @@ module Flor
     ensure
 
       [ i, o, f, e, r, w ].each { |x| x.close rescue nil }
+    end
+
+    def add_details_to_error(conf, to, t0, pid, err)
+
+      class << err; attr_accessor :flor_details; end
+
+      ha = Flor.yes?(conf['on_error_hide_all'])
+      hcd = Flor.yes?(conf['on_error_hide_cmd'])
+      hcf = Flor.yes?(conf['on_error_hide_conf'])
+
+      cd = (ha || hcd) ? '(hidden)' : conf['cmd']
+      cf = (ha || hcf) ? '(hidden)' : conf.dup
+      cf['cmd'] = '(hidden)' if hcd && cf.is_a?(Hash)
+
+      err.flor_details = {
+        cmd: cd, conf: cf,
+        timeout: to,
+        pid: pid,
+        start: Flor.tstamp(t0),
+        duration: Fugit.parse(Time.now - t0).to_plain_s }
     end
 
     class SpawnError < StandardError
@@ -284,6 +293,7 @@ module Flor
       builder = java.lang.ProcessBuilder.new(*acmd)
       #pp builder.environment
       process = builder.start
+      pid = process.pid
 
       w =
         java.io.BufferedWriter.new(
@@ -304,10 +314,19 @@ module Flor
 
       [ i.read, status ]
 
-    #rescue => err
-      # TODO
+    rescue => err
+
+      add_details_to_error(conf, to, t0, pid, err)
+
+      Process.detach(pid) if pid
+
+      (Process.kill(9, pid) rescue nil) \
+        unless Flor.no?(conf['on_error_kill'])
+
     ensure
-      # TODO
+
+      [ i, f ].each { |x| x.close rescue nil }
+
     end if RUBY_PLATFORM.match(/java/)
   end
 end
