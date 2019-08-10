@@ -123,6 +123,7 @@ module Flor
       h['cwd'] = Dir.pwd
       h['rlp'] = $: if o.is_a?(::LoadError)
 
+      h['details'] = o.details if o.respond_to?(:details)
       h['details'] = o.flor_details if o.respond_to?(:flor_details)
 
       h

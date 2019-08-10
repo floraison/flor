@@ -109,13 +109,8 @@ describe Flor::Caller do
           expect(r[0].keys.sort).to eq(%w[ error fm fpoint payload point ])
 
           e = r[0]['error']
-
-pp e
-          expect(e['kla']).to eq(
-             RUBY_PLATFORM.match(/java/) ?
-             'Java::JavaIo::IOException' :
-             'Errno::ENOENT')
-
+#pp e
+          expect(e['kla']).to eq('Flor::Caller::WrappedSpawnError')
           expect(e['msg']).to match(/No such file or directory/)
 
           ed = e['details']
@@ -141,6 +136,7 @@ pp e
           expect(r[0].keys.sort).to eq(%w[ error fm fpoint payload point ])
 
           e = r[0]['error']
+#pp e
           expect(e['kla']).to eq('Flor::Caller::SpawnNonZeroExitError')
           expect(e['msg']).to match(/\A\(code: 2, pid: \d+\) /)
           expect(e['msg']).to match(/[Pp]ython: can't open file 'spec\/unit\//)
@@ -174,8 +170,9 @@ else
           expect(r[0].keys.sort).to eq(%w[ error fm fpoint payload point ])
 
           e = r[0]['error']
-          expect(e['kla']).to eq('Timeout::Error')
-          expect(e['msg']).to eq('execution expired')
+#pp e
+          expect(e['kla']).to eq('Flor::Caller::WrappedSpawnError')
+          expect(e['msg']).to eq('wrapped: Timeout::Error: execution expired')
 
           ed = e['details']
           pid = ed[:pid]
@@ -187,6 +184,9 @@ else
           expect(ed[:pid]).to be_an(Integer)
           expect(ed[:timeout]).to eq(2)
           expect(ed[:conf]['timeout']).to eq('2s')
+
+          expect(ed[:cause]
+            ).to eq(kla: 'Timeout::Error', msg: 'execution expired')
         end
 end
       end

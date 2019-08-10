@@ -191,60 +191,104 @@ module Flor
 
       _, status = Timeout.timeout(to) { Process.wait2(pid) }
 
-      fail SpawnNonZeroExitError.new(status, i.read, f.read) \
+      fail SpawnNonZeroExitError.new(conf, { to: to, t0: t0 }, status, i, f) \
         if status.exitstatus != 0
 
       [ i.read, status ]
 
     rescue => err
 
-      add_details_to_error(conf, to, t0, pid, err)
-
-      Process.detach(pid) if pid
-
+      Process.detach(pid) \
+        if pid
       (Process.kill(9, pid) rescue nil) \
         unless Flor.no?(conf['on_error_kill'])
 
-      raise
+      raise err if err.is_a?(SpawnError)
+      raise WrappedSpawnError.new(conf, { to: to, t0: t0, pid: pid }, err)
 
     ensure
 
       [ i, o, f, e, r, w ].each { |x| x.close rescue nil }
     end
 
-    def add_details_to_error(conf, to, t0, pid, err)
+    class SpawnError < StandardError
 
-      class << err; attr_accessor :flor_details; end
+      attr_accessor :conf, :ctx
 
-      ha = Flor.yes?(conf['on_error_hide_all'])
-      hcd = Flor.yes?(conf['on_error_hide_cmd'])
-      hcf = Flor.yes?(conf['on_error_hide_conf'])
+      def initialize(conf, ctx, msg)
 
-      cd = (ha || hcd) ? '(hidden)' : conf['cmd']
-      cf = (ha || hcf) ? '(hidden)' : conf.dup
-      cf['cmd'] = '(hidden)' if hcd && cf.is_a?(Hash)
+        @conf = conf
+        @ctx = ctx
 
-      err.flor_details = {
-        cmd: cd, conf: cf,
-        timeout: to,
-        pid: pid,
-        start: Flor.tstamp(t0),
-        duration: Fugit.parse(Time.now - t0).to_plain_s }
+        super(msg)
+      end
+
+      def details
+
+        ha = Flor.yes?(@conf['on_error_hide_all'])
+        hcd = Flor.yes?(@conf['on_error_hide_cmd'])
+        hcf = Flor.yes?(@conf['on_error_hide_conf'])
+
+        cd = (ha || hcd) ? '(hidden)' : @conf['cmd']
+        cf = (ha || hcf) ? '(hidden)' : @conf.dup
+        cf['cmd'] = '(hidden)' if hcd && cf.is_a?(Hash)
+
+        d = {
+          cmd: cd, conf: cf,
+          timeout: ctx[:to],
+          pid: ctx[:pid],
+          start: Flor.tstamp(ctx[:t0]),
+          duration: Fugit.parse(Time.now - ctx[:t0]).to_plain_s,
+          cause: cause }
+
+        add_details(d) \
+          if respond_to?(:add_details)
+
+        d
+      end
     end
 
-    class SpawnNonZeroExitError < StandardError
+    class WrappedSpawnError < SpawnError
+
+      attr_reader :cause
+
+      def initialize(conf, ctx, err)
+
+        @cause = err
+
+        super(conf, ctx, "wrapped: #{err.class.name}: #{err.message}")
+
+        set_backtrace(err.backtrace)
+      end
+
+      def add_details(details)
+
+        details[:cause] = { kla: @cause.class.name, msg: @cause.message }
+      end
+    end
+
+    class SpawnNonZeroExitError < SpawnError
 
       attr_reader :status, :out, :err
 
-      def initialize(status, out, err)
+      def initialize(conf, ctx, status, stdout, stderr)
 
-        @status = status
-        @out = out
-        @err = err
+        @status = s = status
+        @stdout = stdout.read
+        @stderr = stderr.read
 
-        msg = err.strip.split("\n").last
+        ctx[:pid] ||= status.pid
 
-        super("(code: #{status.exitstatus}, pid: #{status.pid}) #{msg}")
+        msg = @stderr.strip.split("\n").last
+
+        super(conf, ctx, "(code: #{s.exitstatus}, pid: #{s.pid}) #{msg}")
+      end
+
+      def add_details(details)
+
+        details[:status] = status.to_s
+        details[:stdout] = @stdout
+        details[:stderr] = @stderr
       end
     end
 
