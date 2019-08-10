@@ -353,19 +353,20 @@ module Flor
 
       status = ProcessStatus.new(process, ex)
 
-      fail SpawnNonZeroExitError.new(status, i.read, f.read) \
+      fail SpawnNonZeroExitError.new(conf, { to: to, t0: t0 }, status, i, f) \
         if status.exitstatus != 0
 
       [ i.read, status ]
 
     rescue => err
 
-      add_details_to_error(conf, to, t0, pid, err)
-
-      Process.detach(pid) if pid
-
+      Process.detach(pid) \
+        if pid
       (Process.kill(9, pid) rescue nil) \
         unless Flor.no?(conf['on_error_kill'])
+
+      raise err if err.is_a?(SpawnError)
+      raise WrappedSpawnError.new(conf, { to: to, t0: t0, pid: pid }, err)
 
     ensure
 
