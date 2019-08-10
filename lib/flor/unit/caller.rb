@@ -191,7 +191,7 @@ module Flor
 
       _, status = Timeout.timeout(to) { Process.wait2(pid) }
 
-      fail SpawnError.new(status, i.read, f.read) \
+      fail SpawnNonZeroExitError.new(status, i.read, f.read) \
         if status.exitstatus != 0
 
       [ i.read, status ]
@@ -232,7 +232,7 @@ module Flor
         duration: Fugit.parse(Time.now - t0).to_plain_s }
     end
 
-    class SpawnError < StandardError
+    class SpawnNonZeroExitError < StandardError
 
       attr_reader :status, :out, :err
 
@@ -309,7 +309,7 @@ module Flor
 
       status = ProcessStatus.new(process, ex)
 
-      fail SpawnError.new(status, i.read, f.read) \
+      fail SpawnNonZeroExitError.new(status, i.read, f.read) \
         if status.exitstatus != 0
 
       [ i.read, status ]

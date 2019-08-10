@@ -141,7 +141,7 @@ pp e
           expect(r[0].keys.sort).to eq(%w[ error fm fpoint payload point ])
 
           e = r[0]['error']
-          expect(e['kla']).to eq('Flor::Caller::SpawnError')
+          expect(e['kla']).to eq('Flor::Caller::SpawnNonZeroExitError')
           expect(e['msg']).to match(/\A\(code: 2, pid: \d+\) /)
           expect(e['msg']).to match(/[Pp]ython: can't open file 'spec\/unit\//)
           expect(e['msg']).to match(/ \[Errno 2\] No such file or directory/)
