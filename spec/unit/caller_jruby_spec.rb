@@ -8,7 +8,7 @@
 require 'spec_helper'
 
 
-describe 'Flor::Caller (JRuby)' do
+describe 'Flor::Caller (JRuby)', if: RUBY_PLATFORM.match(/java/) do
 
   before :all do
 
@@ -23,13 +23,18 @@ describe 'Flor::Caller (JRuby)' do
         %w[ python lib/for_caller.py ],
       'python lib/for_caller.py "hello world"' =>
         [ 'python', 'lib/for_caller.py', 'hello world' ],
+      "python lib/for_caller.py 'hello world'" =>
+        [ 'python', 'lib/for_caller.py', 'hello world' ],
+      'python x.py "hello \'enchanted\' world"' =>
+        [ 'python', 'x.py', "hello 'enchanted' world" ],
 
     }.each do |cmd, a|
 
-      it "splits #{cmd.inspect}"# do
-      #  expect(@caller.send(:split_cmd, cmd)).to eq(a)
-      #end
+      it "splits #{cmd.inspect}" do
+
+        expect(@caller.send(:split_cmd, cmd)).to eq(a)
+      end
     end
-  end if RUBY_PLATFORM.match(/java/) # <----------------------------------- !
+  end
 end
 

@@ -5,10 +5,11 @@ module Flor
 
     def split_cmd(cmd)
 
-      cmd.split(/ +/)
-        # FIXME too naive
-        # or look at Java's Process Builder documentation, there should be
-        # a way to pass cmd strings and not string arrays...
+      #cmd.split(/ +/)
+        # too naive
+
+#Raabro.pp(Flor::Caller::CmdParser.parse(cmd, debug: 3), colours: true)
+      Flor::Caller::CmdParser.parse(cmd)
     end
 
     class ProcessStatus
@@ -22,7 +23,6 @@ module Flor
       end
 
       def pid; @process.pid; end
-
     end
 
     def spawn(conf, data)
@@ -71,6 +71,50 @@ module Flor
 
       [ i, o, f ].each { |x| x.close rescue nil }
 
+    end
+
+    module CmdParser include Raabro
+
+      # parsing
+
+      def separator(i); rex(nil, i, /[ 	]+/); end
+
+      def dqstring(i)
+        rex(:string, i, %r{
+          "(
+            \\["\\\/bfnrt] |
+            \\u[0-9a-fA-F]{4} |
+            [^"\\\b\f\n\r\t]
+          )*"
+        }x)
+      end
+
+      def sqstring(i)
+        rex(:string, i, %r{
+          '(
+            \\['\\\/bfnrt] |
+            \\u[0-9a-fA-F]{4} |
+            [^'\\\b\f\n\r\t]
+          )*'
+        }x)
+      end
+
+      def word(i); rex(:word, i, /[^ 	"']+/); end
+
+      def item(i); alt(nil, i, :word, :sqstring, :dqstring); end
+
+      def cmd(i); jseq(:cmd, i, :item, :separator); end
+
+      # rewriting
+
+      def rewrite_word(t); t.string; end
+      def rewrite_string(t); t.string[1..-2]; end
+
+      def rewrite_cmd(t)
+
+#Raabro.pp(t, colours: true)
+        t.subgather(nil).collect { |tt| rewrite(tt) }
+      end
     end
   end
 end
