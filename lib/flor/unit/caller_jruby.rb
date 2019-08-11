@@ -108,7 +108,13 @@ module Flor
       # rewriting
 
       def rewrite_word(t); t.string; end
-      def rewrite_string(t); t.string[1..-2]; end
+
+      def rewrite_string(t)
+        s = t.string[1..-2]
+        s == 'sleep' ? t.string : s # ah, the awful thing :-(
+      end
+        #
+        # because of `ruby -e "sleep"` :-( is there another way?
 
       def rewrite_cmd(t)
 
