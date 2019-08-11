@@ -93,6 +93,28 @@ describe Flor::Caller do
         ])
       end
 
+if RUBY_PLATFORM.match(/java/)
+      it 'calls basic scripts (with arguments) (JRuby)'
+else
+      it 'calls basic scripts (with arguments)' do
+
+        r = @caller.call(
+          nil,
+          { 'cmd' => 'python spec/unit/hooks/for_caller.py "hello python"',
+            '_path' => 'spec/' },
+          { 'point' => 'execute',
+            'payload' => { 'items' => 2 } })
+
+        expect(
+          r
+        ).to eq([
+          { 'argument' => 'hello python',
+            'point' => 'receive',
+            'payload' => { 'items' => 2, 'price' => 'CHF 5.00' } }
+        ])
+      end
+end
+
       context 'on call error' do
 
         it 'returns a failed message' do
