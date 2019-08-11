@@ -151,9 +151,6 @@ describe Flor::Caller do
 
       context 'on timeout' do
 
-if RUBY_PLATFORM.match(/java/)
-        it 'fails (JRuby)'
-else
         it 'fails' do
 
           t0 = Time.now
@@ -188,7 +185,6 @@ else
           expect(ed[:cause]
             ).to eq(kla: 'Timeout::Error', msg: 'execution expired')
         end
-end
       end
     end
   end
