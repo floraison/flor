@@ -301,7 +301,7 @@ module Flor
       end
     end
 
-    require 'flor/unit/jruby_caller' if RUBY_PLATFORM.match(/java/)
+    require 'flor/unit/caller_jruby' if RUBY_PLATFORM.match(/java/)
   end
 end
 
