@@ -30,14 +30,15 @@ module Flor
       t0 = Time.now
 
       cmd = conf['cmd']
-      acmd = split_cmd(cmd)
+      henv, *acmd = split_cmd(cmd)
 
       to = Fugit.parse(conf['timeout'] || '14s')
       to = to.is_a?(Fugit::Duration) ? to.to_sec : 14
       to = 0 if to < 0 # no timeout
 
       builder = java.lang.ProcessBuilder.new(*acmd)
-      #pp builder.environment
+      henv.each { |k, v| builder.environment.put(k, v) }
+
       process = builder.start
       pid = process.pid
 
@@ -88,6 +89,7 @@ module Flor
           )*"
         }x)
       end
+        # TODO simplify (this is taken from JSON parsing)
 
       def sqstring(i)
         rex(:string, i, %r{
@@ -98,12 +100,18 @@ module Flor
           )*'
         }x)
       end
+        # TODO simplify (this is taken from JSON parsing)
 
       def word(i); rex(:word, i, /[^ 	"']+/); end
-
       def item(i); alt(nil, i, :word, :sqstring, :dqstring); end
-
       def cmd(i); jseq(:cmd, i, :item, :separator); end
+
+      def equal(i); rex(nil, i, /[ 	]*=[ 	]*/); end
+      def vval(i); alt(:vval, i, :word, :sqstring, :dqstring); end
+      def vkey(i); rex(:vkey, i, /[a-zA-Z_][a-zA-Z_0-9]*/); end
+      def var(i); seq(:var, i, :vkey, :equal, :vval, :separator); end
+
+      def cmdline(i); seq(:cmdline, i, :var, '*', :cmd) end
 
       # rewriting
 
@@ -118,8 +126,23 @@ module Flor
 
       def rewrite_cmd(t)
 
-#Raabro.pp(t, colours: true)
         t.subgather(nil).collect { |tt| rewrite(tt) }
+      end
+
+      def rewrite_vars(ts)
+
+        ts.inject({}) { |h, t|
+          k = t.lookup(:vkey).string
+          v = t.lookup(:vval).string; v = v[1..-2] unless t.lookup(:word)
+          h[k] = v
+          h }
+      end
+
+      def rewrite_cmdline(t)
+
+#Raabro.pp(t, colours: true)
+        [ rewrite_vars(t.subgather(:var)),
+          *t.lookup(:cmd).subgather(nil).collect { |tt| rewrite(tt) } ]
       end
     end
   end

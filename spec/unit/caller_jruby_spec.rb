@@ -20,13 +20,17 @@ describe 'Flor::Caller (JRuby)', if: RUBY_PLATFORM.match(/java/) do
     {
 
       'python lib/for_caller.py' =>
-        %w[ python lib/for_caller.py ],
+        [ {}, 'python', 'lib/for_caller.py' ],
       'python lib/for_caller.py "hello world"' =>
-        [ 'python', 'lib/for_caller.py', 'hello world' ],
+        [ {}, 'python', 'lib/for_caller.py', 'hello world' ],
       "python lib/for_caller.py 'hello world'" =>
-        [ 'python', 'lib/for_caller.py', 'hello world' ],
+        [ {}, 'python', 'lib/for_caller.py', 'hello world' ],
       'python x.py "hello \'enchanted\' world"' =>
-        [ 'python', 'x.py', "hello 'enchanted' world" ],
+        [ {}, 'python', 'x.py', "hello 'enchanted' world" ],
+      'ENV_VAR=1 python x.py' =>
+        [ { 'ENV_VAR' => '1' }, 'python', 'x.py' ],
+      'ENV_VAR="hello world" python x.py' =>
+        [ { 'ENV_VAR' => 'hello world' }, 'python', 'x.py' ],
 
     }.each do |cmd, a|
 

@@ -111,6 +111,24 @@ describe Flor::Caller do
         ])
       end
 
+      it 'calls basic scripts (with env var)' do
+
+        r = @caller.call(
+          nil,
+          { 'cmd' => 'ENV_VAR=hello python spec/unit/hooks/for_caller.py',
+            '_path' => 'spec/' },
+          { 'point' => 'execute',
+            'payload' => { 'items' => 2 } })
+
+        expect(
+          r
+        ).to eq([
+          { 'env_var' => 'hello',
+            'point' => 'receive',
+            'payload' => { 'items' => 2, 'price' => 'CHF 5.00' } }
+        ])
+      end
+
       context 'on call error' do
 
         it 'returns a failed message' do
