@@ -80,27 +80,8 @@ module Flor
 
       def separator(i); rex(nil, i, /[ 	]+/); end
 
-      def dqstring(i)
-        rex(:string, i, %r{
-          "(
-            \\["\\\/bfnrt] |
-            \\u[0-9a-fA-F]{4} |
-            [^"\\\b\f\n\r\t]
-          )*"
-        }x)
-      end
-        # TODO simplify (this is taken from JSON parsing)
-
-      def sqstring(i)
-        rex(:string, i, %r{
-          '(
-            \\['\\\/bfnrt] |
-            \\u[0-9a-fA-F]{4} |
-            [^'\\\b\f\n\r\t]
-          )*'
-        }x)
-      end
-        # TODO simplify (this is taken from JSON parsing)
+      def dqstring(i); rex(:string, i, /"(\\"|[^"])*"/); end
+      def sqstring(i); rex(:string, i, /'(\\'|[^'])*'/); end
 
       def word(i); rex(:word, i, /[^ 	"']+/); end
       def item(i); alt(nil, i, :word, :sqstring, :dqstring); end
