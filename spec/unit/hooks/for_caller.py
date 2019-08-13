@@ -15,12 +15,10 @@ message["payload"]["price"] = "CHF 5.00"
 #
 # other inputs
 
-if len(sys.argv) > 1:
-  message["argument"] = sys.argv[1]
+if len(sys.argv) > 1: message["argument"] = sys.argv[1]
 
 fcv = os.environ.get('ENV_VAR')
-if fcv:
-  message["env_var"] = fcv
+if fcv: message["env_var"] = fcv
 
 #
 # output
