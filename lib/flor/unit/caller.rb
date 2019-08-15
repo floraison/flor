@@ -169,6 +169,23 @@ module Flor
         .load(data)
     end
 
+    def timeout(t, &block)
+
+      #Timeout.timeout(t, &block)
+        # avoid using Ruby Timeout :-( It was 2008, is that still relevant?
+
+      t0 = Time.now
+      th = Thread.new { Thread.current[:return] = block.call }
+      while (Time.now - t0 < t) do
+        break if th.key?(:return)
+        sleep 0.014
+      end
+
+      fail TimeoutError.new('execution expired') unless th.key?(:return)
+
+      th[:return]
+    end
+
     def spawn(conf, data)
 
       t0 = Time.now
@@ -189,7 +206,7 @@ module Flor
       o.close
       e.close
 
-      _, status = Timeout.timeout(to) { Process.wait2(pid) }
+      _, status = timeout(to) { Process.wait2(pid) }
 
       fail SpawnNonZeroExitError.new(conf, { to: to, t0: t0 }, status, i, f) \
         if status.exitstatus != 0
@@ -247,6 +264,8 @@ module Flor
         d
       end
     end
+
+    class TimeoutError < StandardError; end
 
     class WrappedSpawnError < SpawnError
 

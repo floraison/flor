@@ -204,8 +204,10 @@ describe Flor::Caller do
 
           e = r[0]['error']
 #pp e
-          expect(e['kla']).to eq('Flor::Caller::WrappedSpawnError')
-          expect(e['msg']).to eq('wrapped: Timeout::Error: execution expired')
+          expect(e['kla']
+            ).to eq('Flor::Caller::WrappedSpawnError')
+          expect(e['msg']
+            ).to eq('wrapped: Flor::Caller::TimeoutError: execution expired')
 
           ed = e['details']
           pid = ed[:pid]
@@ -219,7 +221,9 @@ describe Flor::Caller do
           expect(ed[:conf]['timeout']).to eq('2s')
 
           expect(ed[:cause]
-            ).to eq(kla: 'Timeout::Error', msg: 'execution expired')
+            ).to eq(
+              kla: 'Flor::Caller::TimeoutError',
+              msg: 'execution expired')
         end
       end
     end

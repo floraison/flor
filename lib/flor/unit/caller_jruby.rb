@@ -49,7 +49,7 @@ module Flor
       o.write(data)
       o.close
 
-      ex = Timeout.timeout(to) { process.waitFor }
+      ex = timeout(to) { process.waitFor }
 
       status = ProcessStatus.new(process, ex)
 
