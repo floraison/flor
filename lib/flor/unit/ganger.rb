@@ -74,7 +74,7 @@ module Flor
 
       message['vars'] = gather_vars(executor, tconf, message)
 
-      m = dup_message(message)
+      m = Flor.dup_message(message)
         #
         # the tasker gets a copy of the message (and it can play with it
         # to its heart content), meanwhile the message is handed to the
@@ -95,17 +95,6 @@ module Flor
     end
 
     protected
-
-    def dup_message(m)
-
-      tc = m.delete('tconf')
-      m1 = Flor.dup(m)
-      m1['tconf'] = tc.inject({}) { |h, (k, v)|
-        h[k] = k == 'class' ? v : Flor.dup(v); h } \
-          if tc
-
-      m1
-    end
 
     def var_match(k, filter)
 

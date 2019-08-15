@@ -77,6 +77,23 @@ module Flor
       deep_merge(o0, o1, true)
     end
 
+    def dup_message(m)
+
+      tc = m.delete('tconf')
+      m1 = Flor.dup(m)
+      m1['tconf'] = tc
+        .inject({}) { |h, (k, v)|
+          h[k] =
+            case k
+            when 'class' then v
+            else Flor.dup(v)
+            end
+          h
+        } if tc
+
+      m1
+    end
+
     def false?(o)
 
       o == nil || o == false

@@ -88,7 +88,7 @@ module Flor
       return m if Flor.is_exid?(exid) && Flor.is_nid?(nid) && pl.is_a?(Hash)
 
       m = Flor.to_string_keyed_hash(m)
-      h = Flor.dup(@message)
+      h = Flor.dup_message(@message)
       ks = m.keys
 
       if ks == [ 'payload' ]

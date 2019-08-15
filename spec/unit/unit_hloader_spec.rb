@@ -126,6 +126,34 @@ describe 'Flor unit' do
           expect(r['payload']['ret']).to eq('Alice was here')
         end
       end
+
+      it 'accepts a block' do
+
+        @unit.add_tasker(:alice) { reply(ret: 1 + 2 + 3) }
+
+        r = @unit.launch(
+          %q{
+            alice _
+          },
+          wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq(6)
+      end
+
+      it 'accepts a lambda'# do
+#
+#        @unit.add_tasker(:alice, lambda { 1 + 2 + 3 })
+#
+#        r = @unit.launch(
+#          %q{
+#            alice _
+#          },
+#          wait: true)
+#
+#        expect(r).to have_terminated_as_point
+#        expect(r['payload']['ret']).to eq(6)
+#      end
     end
 
     describe '#add_sub / #add_lib' do
