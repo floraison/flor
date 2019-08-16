@@ -11,6 +11,17 @@ Flor is a "Ruby workflow engine", if that makes any sense.
 * [twitter.com/@flor_workflow](https://twitter.com/flor_workflow)
 
 
+## use
+
+As a workflow engine, flor takes as input process definitions and executes them. Those executions may in turn call pieces of Ruby code or external scripts that perform the actual work. Those pieces of code and scripts are called "taskers".
+
+The classical way to use a language interpreter is to instantiate it as needed and let it die as the host execution ends. A workflow engine is more like a server, it may host multiple executions. And if the workflow engine stops, it may be restarted and pick the work back, when it was when it stopped.
+
+Flor process definitions are written in the flor language, a programming language mostly inspired by Scheme and Ruby. As always with programming languages, readability is hoped for, for a workflow engine this is especially necessary since those business processes are the bread and butter of business users.
+
+Using flor in your Ruby project requires you to clearly separate business process definitions from taskers. Since a flor instance may host multiple process executions based on one or more process definitions, many of the taskers may be reused from one definition to the other. For instance, if a "send-invoice-to-customer" tasker is created it might get used in the "process-retail-order" and the "process-big-distribution-order" processes.
+
+
 ## design
 
 * Strives to propose a scheming interpreter for long running executions
