@@ -53,9 +53,14 @@ module Flor
       path = path.to_s
       path = path + '.' if c == 'hooks' && path.length > 0 && path[-1, 1] != '.'
 
-      value = block ?
-        block_to_class(c, block) :
-        Flor.to_string_keyed_hash(value)
+      value =
+        if block
+          block_to_class(c, block)
+        elsif value.is_a?(Proc)
+          block_to_class(c, value)
+        else
+          Flor.to_string_keyed_hash(value)
+        end
 
       e = (@environment[c] ||= [])
       e << [ *split(path), value ]

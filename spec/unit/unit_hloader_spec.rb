@@ -141,19 +141,22 @@ describe 'Flor unit' do
         expect(r['payload']['ret']).to eq(6)
       end
 
-      it 'accepts a lambda'# do
-#
-#        @unit.add_tasker(:alice, lambda { 1 + 2 + 3 })
-#
-#        r = @unit.launch(
-#          %q{
-#            alice _
-#          },
-#          wait: true)
-#
-#        expect(r).to have_terminated_as_point
-#        expect(r['payload']['ret']).to eq(6)
-#      end
+      it 'accepts a lambda' do
+
+        @unit.add_tasker(
+          :alice,
+          lambda { |x| reply(ret: payload['numbers'].reduce(&:+)) })
+
+        r = @unit.launch(
+          %q{
+            alice _
+          },
+          payload: { numbers: [ 1, 2, 3 ] },
+          wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(r['payload']['ret']).to eq(6)
+      end
     end
 
     describe '#add_sub / #add_lib' do
