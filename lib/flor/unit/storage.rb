@@ -80,10 +80,12 @@ module Flor
       opts[:current] ||= from if from.is_a?(Integer)
 
       opts[:table] = (
+        opts[:migration_table] ||
         @unit.conf['db_migration_table'] ||
         @unit.conf['sto_migration_table'] ||
         :schema_info).to_sym
       opts[:column] = (
+        opts[:migration_column] ||
         @unit.conf['db_migration_column'] ||
         @unit.conf['sto_migration_column'] ||
         :version).to_sym
@@ -93,20 +95,20 @@ module Flor
           #   column: :version }
 
       skip =
+        opts[:sparse_migrations] ||
         @unit.conf['db_sparse_migrations'] ||
-        @unit.conf['sto_sparse_migrations'] ||
-        opts[:sparse_migrations]
+        @unit.conf['sto_sparse_migrations']
       if skip && ! opts.has_key?(:allow_missing_migration_files)
         opts[:allow_missing_migration_files] = true
       end
 
       dir =
+        opts[:migrations] ||
+        opts[:migration_dir] ||
         @unit.conf['db_migrations'] ||
         @unit.conf['db_migration_dir'] ||
         @unit.conf['sto_migrations'] ||
         @unit.conf['sto_migration_dir'] ||
-        opts[:migrations] ||
-        opts[:migration_dir] ||
         Flor.migration_dir
 
       synchronize do
