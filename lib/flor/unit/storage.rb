@@ -30,9 +30,11 @@ module Flor
 #p [ :disconnected, @db.object_id ]
     end
 
-    def db_version
+    def db_version(opts={})
 
-      (@db[:schema_info].first rescue {})[:version]
+      table, column = migration_table_and_column(opts)
+
+      (@db[table].first rescue {})[column]
     end
 
     def migration_version
@@ -79,20 +81,11 @@ module Flor
       opts[:target] ||= to if to.is_a?(Integer)
       opts[:current] ||= from if from.is_a?(Integer)
 
-      opts[:table] = (
-        opts[:migration_table] ||
-        @unit.conf['db_migration_table'] ||
-        @unit.conf['sto_migration_table'] ||
-        :schema_info).to_sym
-      opts[:column] = (
-        opts[:migration_column] ||
-        @unit.conf['db_migration_column'] ||
-        @unit.conf['sto_migration_column'] ||
-        :version).to_sym
-          #
-          # defaults for the migration version table:
-          # { table: :schema_info,
-          #   column: :version }
+      opts[:table], opts[:column] = migration_table_and_column(opts)
+        #
+        # defaults for the migration version table:
+        # { table: :schema_info,
+        #   column: :version }
 
       skip =
         opts[:sparse_migrations] ||
@@ -563,6 +556,18 @@ module Flor
     end
 
     protected
+
+    def migration_table_and_column(opts={})
+
+      [ (opts[:migration_table] ||
+         @unit.conf['db_migration_table'] ||
+         @unit.conf['sto_migration_table'] ||
+         :schema_info).to_sym,
+        (opts[:migration_column] ||
+          @unit.conf['db_migration_column'] ||
+          @unit.conf['sto_migration_column'] ||
+          :version).to_sym ]
+    end
 
     def _commaify(o)
 

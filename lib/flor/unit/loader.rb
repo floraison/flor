@@ -99,8 +99,8 @@ module Flor
         .select { |pa, d| Flor.sub_domain?(d, domain) }
         .sort_by { |pa, d| d.count('.') }
         .collect { |pa, d|
-          eval(pa, {}).each_with_index { |h, i|
-            h['_path'] = pa + ":#{i}" } }
+          eval(pa, {})
+            .each_with_index { |h, i| h['_path'] = pa + ":#{i}" } }
         .flatten(1)
     end
 
