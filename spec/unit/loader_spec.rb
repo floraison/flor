@@ -264,5 +264,32 @@ describe Flor::Loader do
         .to point_to('envs/uspec_loader/usr/mil.example/lib/hooks/hooks.json:0')
     end
   end
+
+  describe '#domains' do
+
+    ALL_DOMAINS = %w[
+      com.example com.example.alpha com.example.bravo edu.example
+      mil.example mil.example.air mil.example.ground net net.example
+      net.example.alpha org.example org.example.charly zebulon ]
+
+    {
+
+      nil =>
+        ALL_DOMAINS,
+      :none =>
+        ALL_DOMAINS,
+
+    }.each do |start, expected|
+
+      s = start == :none ? '(none)' : start.inspect
+
+      it "lists domains under #{s}" do
+
+        ds = start == :none ? @loader.domains : @loader.domains(start)
+
+        expect(ds).to eq(expected)
+      end
+    end
+  end
 end
 

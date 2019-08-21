@@ -110,7 +110,63 @@ module Flor
         .collect { |h| Flor::Hook.new(@unit, exid, h) }
     end
 
+    def domains(start='')
+
+      Dir[File.join(@root, '**/*.{json,flo,flor,rb}')]
+        .collect { |pa| pa[@root.length..-1] }
+        .sort
+        .collect { |pa|
+          pa = pa[4..-1] if pa.match(/^\/usr\//)
+          case pa
+          when /\.flor?$/ then extract_flow_domain(pa)
+          when /\/lib\/hooks\// then extract_hook_domain(pa)
+          when /\/lib\/taskers\// then extract_tasker_domain(pa)
+          when /\/etc\/variables\// then extract_variable_domain(pa)
+          else nil
+          end }
+        .compact
+        .select { |pa| pa.length > 1 }
+        .collect { |pa|
+          pa = pa[1..-1] if pa[0, 1] == '/'
+          pa = pa[0..-2] if pa.match(/\/$/)
+          pa.gsub('/', '.') }
+        .sort
+        .uniq
+    end
+
     protected
+
+    def extract_flow_domain(pa)
+#o = pa
+      pa
+        .gsub(/\/lib\/(sub)?flows\//, '/')
+        .split('/')[0..-2].join('/')
+#.tap { |x| p 'flow:' + o + ':' + x }
+    end
+    def extract_hook_domain(pa)
+#o = pa
+      pa
+        .gsub(/\/lib\/hooks\//, '/')
+        .gsub(/\/(dot|hooks)\.(json|rb)$/, '/')
+        .gsub(/\.(json|rb)$/, '')
+#.tap { |x| p 'hook:' + o + ':' + x }
+    end
+    def extract_tasker_domain(pa)
+#o = pa
+      pa
+        .gsub(/\/lib\/taskers\//, '/')
+        .gsub(/\/[^\/]+\/(dot|flor|tasker)\.(json|rb)$/, '/')
+        .gsub(/\.(json|rb)$/, '')
+#.tap { |x| p 'tasker: ' + o + ': ' + x }
+    end
+    def extract_variable_domain(pa)
+#o = pa
+      pa
+        .gsub(/\/etc\/variables\//, '/')
+        .gsub(/\/(dot|flor)\.(json|rb)$/, '/')
+        .gsub(/\.(json|rb)$/, '')
+#.tap { |x| p 'variable: ' + o + ': ' + x }
+    end
 
     def split_dn(domain, name)
 
