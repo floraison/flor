@@ -294,6 +294,38 @@ describe Flor::HashLoader do
     end
   end
 
+  describe '#domains' do
+
+    before :each do
+
+      @loader.add(:hook, '', [ { point: 'execute' } ])
+      @loader.add(:hook, 'org.example', [ { point: 'execute' } ])
+      @loader.add(:hook, 'org.example', [ { point: 'execute' } ]) # same domain
+      @loader.add(:hook, 'org.example.accounting', [ { point: 'execute' } ])
+      @loader.add(:hook, 'com.example', [ { point: 'execute' } ])
+      @loader.add(:hook, 'com.example.top', [ { point: 'execute' } ])
+      @loader.add(:hook, 'mil.example.alpha', [ { point: 'execute' } ])
+    end
+
+    it 'returns all the domains in the loader' do
+
+      ds = @loader.domains
+
+      expect(ds).to eq(%w[
+        com.example com.example.top
+        mil.example.alpha
+        org.example org.example.accounting ])
+    end
+
+    it 'returns all the subdomains of "org.example" in the loader' do
+
+      ds = @loader.domains('org.example')
+
+      expect(ds).to eq(%w[
+        org.example org.example.accounting ])
+    end
+  end
+
   context 'when empty environment' do
 
     describe '#variables' do
@@ -335,6 +367,23 @@ describe Flor::HashLoader do
       it 'returns []' do
 
         r = @loader.hooks('org.example')
+
+        expect(r).to eq([])
+      end
+    end
+
+    describe '#domains' do
+
+      it 'returns []' do
+
+        r = @loader.domains()
+
+        expect(r).to eq([])
+      end
+
+      it 'returns [] for start="org.example"' do
+
+        r = @loader.domains('org.example')
 
         expect(r).to eq([])
       end

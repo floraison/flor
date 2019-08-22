@@ -137,6 +137,17 @@ module Flor
         .collect { |h| Flor::Hook.new(@unit, exid, h) }
     end
 
+    def domains(start='')
+
+      @environment.values
+        .flatten(1)
+        .collect { |x| x.first }
+        .select { |dm| dm && dm.length > 0 }
+        .select { |dm| Flor.sub_domain?(start, dm) }
+        .uniq
+        .sort
+    end
+
     protected
 
     def recompose(h)
