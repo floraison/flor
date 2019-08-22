@@ -373,6 +373,7 @@ module Flor
       sub == dom ||
       sub[0, dom.length + 1] == dom + '.'
     end
+    alias subdomain? sub_domain?
 
     def split_domain_unit(s)
 

@@ -278,6 +278,10 @@ describe Flor::Loader do
         ALL_DOMAINS,
       :none =>
         ALL_DOMAINS,
+      'com.example' =>
+        %w[ com.example com.example.alpha com.example.bravo ],
+      'com.example.alpha' =>
+        %w[ com.example.alpha ],
 
     }.each do |start, expected|
 

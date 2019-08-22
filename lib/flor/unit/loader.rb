@@ -112,6 +112,8 @@ module Flor
 
     def domains(start='')
 
+      start = '' unless start
+
       Dir[File.join(@root, '**/*.{json,flo,flor,rb}')]
         .collect { |pa| pa[@root.length..-1] }
         .sort
@@ -132,6 +134,7 @@ module Flor
           pa.gsub('/', '.') }
         .sort
         .uniq
+        .select { |dm| Flor.sub_domain?(start, dm) }
     end
 
     protected
