@@ -258,6 +258,12 @@ module Flor
 
       def interpret_path(path, context=nil)
 
+        path = File.join(path, 'etc/conf.json') if File.directory?(path)
+
+        fail ArgumentError.new(
+          "flor configuration file not found #{path.inspect}"
+        ) unless File.exist?(path)
+
         interpret(path, load(path), context || {})
       end
 
