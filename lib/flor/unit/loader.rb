@@ -110,9 +110,9 @@ module Flor
         .collect { |h| Flor::Hook.new(@unit, exid, h) }
     end
 
-    def domains(start='')
+    def domains(start=nil)
 
-      start = '' unless start
+      start ||= ''
 
       Dir[File.join(@root, '**/*.{json,flo,flor,rb}')]
         .collect { |pa| pa[@root.length..-1] }

@@ -137,7 +137,9 @@ module Flor
         .collect { |h| Flor::Hook.new(@unit, exid, h) }
     end
 
-    def domains(start='')
+    def domains(start=nil)
+
+      start ||= ''
 
       @environment.values
         .flatten(1)
