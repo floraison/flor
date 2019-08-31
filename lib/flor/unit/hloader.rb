@@ -150,6 +150,17 @@ module Flor
         .sort
     end
 
+    def definitions(start=nil)
+
+      start ||= ''
+
+      @environment.values
+        .flatten(1)
+        .collect { |x| x[0, 2].join('.') }
+        .select { |fl| Flor.sub_domain?(start, fl) }
+        .sort
+    end
+
     protected
 
     def recompose(h)

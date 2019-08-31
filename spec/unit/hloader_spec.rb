@@ -326,6 +326,38 @@ describe Flor::HashLoader do
     end
   end
 
+  describe '#definitions' do
+
+    before :each do
+
+      @loader.add(:flow, 'net.example.flow0', "task 'alpha'")
+      @loader.add(:flow, 'org.example.flow0', "task 'bravo'")
+      @loader.add(:library, 'net.example.flow1', "task 'charly'")
+      @loader.add(:library, 'org.example.flow1', "task 'delta'")
+      @loader.add(:flow, 'org.example.one.flow2', "task 'echo'")
+      @loader.add(:flow, 'net.example.two.flow2', "task 'fox'")
+    end
+
+    it 'returns all the definitions in the loader' do
+
+      expect(
+        @loader.definitions
+      ).to eq(%w[
+        net.example.flow0 net.example.flow1 net.example.two.flow2
+        org.example.flow0 org.example.flow1 org.example.one.flow2
+      ])
+    end
+
+    it 'returns all the definitions in the loader under "org.example"' do
+
+      expect(
+        @loader.definitions('org.example')
+      ).to eq(%w[
+        org.example.flow0 org.example.flow1 org.example.one.flow2
+      ])
+    end
+  end
+
   context 'when empty environment' do
 
     describe '#variables' do
@@ -376,16 +408,25 @@ describe Flor::HashLoader do
 
       it 'returns []' do
 
-        r = @loader.domains()
-
-        expect(r).to eq([])
+        expect(@loader.domains()).to eq([])
       end
 
       it 'returns [] for start="org.example"' do
 
-        r = @loader.domains('org.example')
+        expect(@loader.domains('org.example')).to eq([])
+      end
+    end
 
-        expect(r).to eq([])
+    describe '#definitions' do
+
+      it 'returns []' do
+
+        expect(@loader.definitions('org.example')).to eq([])
+      end
+
+      it 'returns [] for start="org.example"' do
+
+        expect(@loader.definitions('org.example')).to eq([])
       end
     end
   end
