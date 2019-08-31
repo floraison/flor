@@ -137,6 +137,21 @@ module Flor
         .select { |dm| Flor.sub_domain?(start, dm) }
     end
 
+    def definitions(start=nil)
+
+      start ||= ''
+
+      Dir[File.join(@root, '**/*.{flo,flor}')]
+        .collect { |pa| pa[@root.length..-1] }
+        .collect { |pa| pa.gsub(/\A\/usr\//, '/') }
+        .collect { |pa| pa.gsub(/\/lib\/(sub)?flows\//, '/') }
+        .collect { |pa| pa.gsub(/\.flor?\z/, '') }
+        .collect { |pa| pa.gsub(/\//, '.') }
+        .collect { |pa| pa.gsub(/\A\./, '') }
+        .sort
+        .select { |pa| Flor.sub_domain?(start, pa) }
+    end
+
     protected
 
     def extract_flow_domain(pa)

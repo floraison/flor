@@ -295,5 +295,34 @@ describe Flor::Loader do
       end
     end
   end
+
+  describe '#definitions' do
+
+    {
+      nil => %w[
+        net.example.flow0 net.example.flow1
+        org.example.flow0 org.example.flow1 ],
+      :none => %w[
+        net.example.flow0 net.example.flow1
+        org.example.flow0 org.example.flow1 ],
+      'org' => %w[
+        org.example.flow0 org.example.flow1 ],
+      'net.example' => %w[
+        net.example.flow0 net.example.flow1 ],
+      'net.example.nada' => [
+        ],
+
+    }.each do |start, expected|
+
+      s = start == :none ? '(none)' : start.inspect
+
+      it "lists definitions under #{s}" do
+
+        ds = start == :none ? @loader.definitions : @loader.definitions(start)
+
+        expect(ds).to eq(expected)
+      end
+    end
+  end
 end
 
