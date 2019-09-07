@@ -1017,6 +1017,68 @@ parses to
     [ 'c', [], 1 ]
   ], 1 ]
 ```
+---
+
+```flor
+  set original_value 'test'
+```
+parses to
+```ruby
+  [ 'set', [
+    [ '_att', [
+      [ 'original_value', [], 1 ]
+    ], 1 ],
+    [ '_att', [
+      [ '_sqs', "test", 1 ]
+    ], 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  set andermatt 'town'
+```
+parses to
+```ruby
+  [ 'set', [
+    [ '_att', [
+      [ 'andermatt', [], 1 ]
+    ], 1 ],
+    [ '_att', [
+      [ '_sqs', "town", 1 ]
+    ], 1 ]
+  ], 1 ]
+```
+---
+
+```flor
+  set original_value 'test'
+  alice original_value
+  original_value 1
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ 'set', [
+      [ '_att', [
+        [ 'original_value', [], 1 ]
+      ], 1 ],
+      [ '_att', [
+        [ '_sqs', "test", 1 ]
+      ], 1 ]
+    ], 1 ],
+    [ 'alice', [
+      [ '_att', [
+        [ 'original_value', [], 2 ]
+      ], 2 ]
+    ], 2 ],
+    [ 'original_value', [
+      [ '_att', [
+        [ '_num', 1, 3 ]
+      ], 3 ]
+    ], 3 ]
+  ], 0 ]
+```
 
 ## comparison operations
 

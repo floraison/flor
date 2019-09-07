@@ -38,8 +38,11 @@ module Flor
     # parsing
 
     def wstar(i); rex(nil, i, /[ \t]*/); end
+    def wplus(i); rex(nil, i, /[ \t]+/); end
 
-    def retnew(i); rex(nil, i, /[\r\n]*/); end
+    def rnstar(i); rex(nil, i, /[\r\n]*/); end
+    def rnplus(i); rex(nil, i, /[\r\n]+/); end
+
     def dot(i); str(nil, i, '.'); end
     def colon(i); str(nil, i, ':'); end
     def semicolon(i); str(nil, i, ';'); end
@@ -163,8 +166,9 @@ module Flor
 
     def comment(i); rex(nil, i, /#[^\r\n]*/); end
 
-    def eol(i); seq(nil, i, :wstar, :comment, '?', :retnew); end
-    def eol_wstar(i); seq(nil, i, :wstar, :comment, '?', :retnew, :wstar); end
+    def eol(i); seq(nil, i, :wstar, :comment, '?', :rnstar); end
+    def eol_wstar(i); seq(nil, i, :wstar, :comment, '?', :rnstar, :wstar); end
+    def eol_plus(i); seq(nil, i, :wstar, :comment, '?', :rnplus); end
     def postval(i); rep(nil, i, :eol, 0); end
 
     def comma_eol(i); seq(nil, i, :comma, :eol, :wstar); end
@@ -172,6 +176,8 @@ module Flor
 
     def comma_qmark_eol(i); seq(nil, i, :comma, '?', :eol); end
     def coll_sep(i); alt(nil, i, :comma_qmark_eol, :wstar); end
+
+    def woreol(i); alt(:woreol, i, :wplus, :eol_plus); end
 
     def ent(i)
       seq(:ent, i, :key, :postval, :colon, :postval, :exp, :postval)
@@ -215,8 +221,8 @@ module Flor
     def ssum(i); seq(nil, i, :sssum, :eol, '?'); end
     def slgt(i); seq(nil, i, :sslgt, :eol, '?'); end
     def sequ(i); seq(nil, i, :ssequ, :eol, '?'); end
-    def sand(i); seq(nil, i, :ssand, :eol, '?'); end
-    def sor(i); seq(nil, i, :ssor, :eol, '?'); end
+    def sand(i); seq(nil, i, :ssand, :woreol); end # space or eol
+    def sor(i); seq(nil, i, :ssor, :woreol); end # space or eol
 
     def emod(i); jseq(:exp, i, :val_ws, :smod); end
     def eprd(i); jseq(:exp, i, :emod, :sprd); end
@@ -233,7 +239,7 @@ module Flor
 
     def att(i); seq(:att, i, :sep, :keycol, '?', :exp); end
     def riou(i); rex(:iou, i, /(if|unless)/); end
-    def iou(i); seq(nil, i, :sep, :riou); end
+    def iou(i); seq(nil, i, :sep, :riou); end # If Or Unless
     def natt(i); alt(nil, i, :iou, :att); end
 
     def head(i); seq(:head, i, :exp); end
@@ -241,8 +247,8 @@ module Flor
     def node(i); seq(:node, i, :indent, :head, :natt, '*'); end
 
     def linjoin(i); rex(nil, i, /[ \t]*(\\|\|(?!\|)|;)[ \t]*/); end
-    def outjnl(i); seq(nil, i, :linjoin, :comment, '?', :retnew); end
-    def outnlj(i); seq(nil, i, :wstar, :comment, '?', :retnew, :linjoin); end
+    def outjnl(i); seq(nil, i, :linjoin, :comment, '?', :rnstar); end
+    def outnlj(i); seq(nil, i, :wstar, :comment, '?', :rnstar, :linjoin); end
     def outdent(i); alt(:outdent, i, :outjnl, :outnlj, :eol); end
 
     def line(i)
