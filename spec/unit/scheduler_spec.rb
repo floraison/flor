@@ -483,6 +483,52 @@ describe 'Flor unit' do
           s0:
         ])
       end
+
+      it 'triggers a blocking trap' do
+
+        r = @unit.launch(
+          %q{
+            trace 'a'
+            trace 'b'
+            trap signal: 'S0'
+            trace 'c'
+          })
+        wait_until { @unit.traps.count == 1 }
+
+        @unit.signal('S0', exid: r)
+
+        wait_until { @unit.traces.count == 3 }
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          a b c
+        ])
+      end
+
+      it 'triggers a nested blocking trap' do
+
+        r = @unit.launch(
+          %q{
+            trace 'a'
+            sequence
+              trace 'b'
+              trap signal: 'S0'
+              trace 'c'
+          })
+
+        wait_until { @unit.traps.count == 1 }
+
+        @unit.signal('S0', exid: r)
+
+        wait_until { @unit.traces.count == 3 }
+
+        expect(
+          @unit.traces.collect(&:text)
+        ).to eq(%w[
+          a b c
+        ])
+      end
     end
 
     context 'sch_msg_max_res_time' do
@@ -1025,4 +1071,3 @@ describe 'Flor unit' do
     end
   end
 end
-
