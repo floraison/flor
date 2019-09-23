@@ -211,7 +211,8 @@ module Flor
         #
         # tag: et al
 
-        node['tree'] = message['tree'] = t = [ '_sqs', tree[0], tree[2] ]
+        node['tree'] = message['tree'] = t =
+          [ '_sqs', tree[0], tree[2] ]
 
         node['heat0'] = t[0]
         node['heat'] = h = n.deref(t[0])
@@ -221,14 +222,16 @@ module Flor
         #
         # rewrite `alpha` into `task alpha`
 
-        l = message['tree'][2]
+        mt = message['tree']
+        l = mt[2]
 
-        message['otree'] = Flor.dup(message['tree'])
+        message['otree'] = mt
 
-        message['tree'][0] =
-          'task'
-        message['tree'][1].unshift(
-          [ '_att', [ [ '_sqs', heat[1]['tasker'], l ] ], l ])
+        node['tree'] = message['tree'] =
+          [ 'task', [
+            [ '_att', [ [ '_sqs', heat[1]['tasker'], l ] ], l ],
+            *mt[1]
+          ], l ]
       end
     end
 
