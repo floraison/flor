@@ -4,7 +4,7 @@ module Flor
   # A loader which keeps everything in a Hash, while the traditional/default
   # Flor::Loader reads from a file tree.
   #
-  class HashLoader
+  class HashLoader < CoreLoader
 
     # NB: tasker configuration entries start with "loa_", like for Flor::Loader
 
@@ -25,9 +25,6 @@ module Flor
       class << @unit; include Flor::HashLoader::UnitAdders; end
 
       self.environment = (@unit.conf['lod_environment'] || {})
-    end
-
-    def shutdown
     end
 
     HCATS = {

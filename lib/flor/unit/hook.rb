@@ -14,6 +14,8 @@ module Flor
 
     def to_hook
 
+      @unit.loader.require(@h)
+
       if @h['class']
         class_to_hook
       elsif @h['instance']

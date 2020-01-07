@@ -1,7 +1,29 @@
 
 module Flor
 
-  class Loader
+  class CoreLoader
+
+    def shutdown
+    end
+
+    # Called to interpret require: confs from hooks and friends
+    #
+    def require(conf)
+
+      re = conf['require']
+
+      return unless re
+
+      ::Kernel.require(
+        if path = conf['_path']
+          File.join(File.dirname(path), re)
+        else
+          re
+        end)
+    end
+  end
+
+  class Loader < CoreLoader
 
     # NB: tasker configuration entries start with "loa_"
 
@@ -14,9 +36,6 @@ module Flor
 
       @root = File.absolute_path(
         @unit.conf['lod_path'] || @unit.conf['root'] || '.')
-    end
-
-    def shutdown
     end
 
     def variables(domain)

@@ -452,5 +452,50 @@ end
       end
     end
   end
+
+  describe 'hooks' do
+
+    before :each do
+
+      FileUtils.mkdir('envs/test/lib/hooks/polo')
+      File.open('envs/test/lib/hooks/polo/zero.rb', 'wb') do |f|
+        f.write(%{
+          class PoloZeroHook
+            def on(message)
+              message['payload']['hello'] = 'world'
+              [] # return empty list of new messages
+            end
+          end
+        })
+      end
+      File.open('envs/test/lib/hooks/hooks.json', 'wb') do |f|
+        f.write(%{
+          [
+            { point: terminated, consumed: true, require: 'polo/zero.rb', class: 'PoloZeroHook' }
+          ]
+        })
+      end
+    end
+
+    after :each do
+
+      FileUtils.rm_rf('envs/test/lib/hooks/polo')
+      FileUtils.rm_f('envs/test/lib/hooks/hooks.json')
+    end
+
+    they 'may be placed under <env>/lib/hooks' do
+
+      r =
+        @unit.launch(
+          %{
+            sequence
+              _
+          },
+          wait: true)
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']).to eq('hello' => 'world')
+    end
+  end
 end
 
