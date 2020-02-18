@@ -134,7 +134,7 @@ There are various other Ruby and Ruby on Rails projects about workflows and busi
 
 * [Dynflow](http://dynflow.github.io/) - "Dynflow (DYNamic workFLOW) is a workflow engine written in Ruby"
 * [rails_workflow](https://github.com/madzhuga/rails_workflow) - "Rails Workflow Engine allows you to organize your application business logic by joining user- and auto- operations in processes"
-* [rails_engine/workflow_core](https://github.com/rails-engine/workflow_core) - "A Rails engine which providing essential infrastructure of workflow. It's based on Workflow Nets"
+* [rails_engine/flow_core](https://github.com/rails-engine/flow_core) - "A multi purpose, extendable, Workflow-net-based workflow engine for Rails applications"
 * [Trailblazer](http://trailblazer.to/) - "The Advanced Business Logic Framework"
 
 There is a [workflow engine](https://ruby.libhunt.com/categories/5786-workflow-engine) category on [Awesome Ruby](https://ruby.libhunt.com/).
