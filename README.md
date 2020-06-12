@@ -136,6 +136,9 @@ There are various other Ruby and Ruby on Rails projects about workflows and busi
 * [rails_workflow](https://github.com/madzhuga/rails_workflow) - "Rails Workflow Engine allows you to organize your application business logic by joining user- and auto- operations in processes"
 * [rails_engine/flow_core](https://github.com/rails-engine/flow_core) - "A multi purpose, extendable, Workflow-net-based workflow engine for Rails applications"
 * [Trailblazer](http://trailblazer.to/) - "The Advanced Business Logic Framework"
+* [Petri Flow](https://github.com/hooopo/petri_flow) - "Petri Net Workflow Engine for Ruby" (Rails)
+* [Pallets](https://github.com/linkyndy/pallets) - "Simple and reliable workflow engine, written in Ruby"
+* [Gush](https://github.com/chaps-io/gush) - "Fast and distributed workflow runner using ActiveJob and Redis"
 
 There is a [workflow engine](https://ruby.libhunt.com/categories/5786-workflow-engine) category on [Awesome Ruby](https://ruby.libhunt.com/).
 
