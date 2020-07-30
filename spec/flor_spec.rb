@@ -18,7 +18,7 @@ describe Flor do
       c = Flor.colours
       s = c.dg('nothing') + ' ' + c.yl('surf')
 
-      expect(s).to eq("\e[90mnothing\e[0;9m \e[33msurf\e[0;9m")
+      expect(s).to eq("\e[90mnothing\e[0;0m \e[33msurf\e[0;0m")
       expect(Flor.decolour(s)).to eq('nothing surf')
     end
   end
@@ -42,8 +42,8 @@ describe Flor do
       #(0..Flor.no_colour_length(s) + 1).each do |i|
       #  puts Flor.truncate_string(s, i)
       #end
-      expect(Flor.truncate_string(s, 7)).to eq("\e[90mtribu\e[0;9m d...")
-      expect(Flor.truncate_string(s, 6)).to eq("\e[90mtribu\e[0;9m ...")
+      expect(Flor.truncate_string(s, 7)).to eq("\e[90mtribu\e[0;0m d...")
+      expect(Flor.truncate_string(s, 6)).to eq("\e[90mtribu\e[0;0m ...")
       expect(Flor.truncate_string(s, 5)).to eq("\e[90mtribu...")
       expect(Flor.truncate_string(s, 4)).to eq("\e[90mtrib...")
     end
@@ -62,7 +62,7 @@ describe Flor do
 
       c = Flor.colours; s = c.dg('tribu') + ' de ' + c.yl('dana')
 
-      expect(Flor.truncate_string(s, 7, '<<<')).to eq("\e[90mtribu\e[0;9m d<<<")
+      expect(Flor.truncate_string(s, 7, '<<<')).to eq("\e[90mtribu\e[0;0m d<<<")
     end
 
     it 'truncates (no colours)' do
@@ -82,13 +82,13 @@ describe Flor do
       expect(
         Flor.truncate_string(s, 7, Proc.new { |x, y, z| [ x, y, z ].inspect })
       ).to eq(
-        "\e[90mtribu\e[0;9m d[13, 7, \"\\e[90mtribu\\e[0;9m de " +
-        "\\e[33mdana\\e[0;9m\"]"
+        "\e[90mtribu\e[0;0m d[13, 7, \"\\e[90mtribu\\e[0;0m de " +
+        "\\e[33mdana\\e[0;0m\"]"
       )
       expect(
         Flor.truncate_string(s, 7, Proc.new { |x| "... (L#{x})" })
       ).to eq(
-        "\e[90mtribu\e[0;9m d... (L13)"
+        "\e[90mtribu\e[0;0m d... (L13)"
       )
     end
 
