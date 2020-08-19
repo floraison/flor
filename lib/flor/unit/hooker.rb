@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 module Flor
 
   class Hooker
@@ -186,4 +186,3 @@ module Flor
     end
   end
 end
-
