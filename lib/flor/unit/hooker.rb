@@ -7,6 +7,20 @@ module Flor
 
     attr_reader :hooks
 
+    KEYS = {
+      consumed:   [:consumed, :c].freeze,
+      point:      [:point, :p].freeze,
+      nid:        [:nid].freeze,
+      exid:       [:exid].freeze,
+      domain:     [:domain, :d].freeze,
+      subdomain:  [:subdomain, :sd].freeze,
+      tag:        [:tag, :t].freeze,
+      name:       [:name, :n].freeze,
+      subnid:     [:subnid].freeze,
+      heap:       [:heap, :hp].freeze,
+      heat:       [:heat, :ht].freeze
+    }.freeze
+
     def initialize(unit)
 
       @unit = unit
@@ -87,10 +101,10 @@ module Flor
 
     protected
 
-    def o(opts, *keys, array: false)
+    def o(opts, key, array: false)
 
       r = nil
-      keys.each { |k| break r = opts[k] if opts.has_key?(k) }
+      KEYS[key].each { |k| break r = opts[k] if opts.has_key?(k) }
 
       return nil if r == nil
       array ? Array(r) : r
@@ -106,7 +120,7 @@ module Flor
 
       opts = hook.opts if hook.respond_to?(:opts) && opts.empty?
 
-      c = o(opts, :consumed, :c)
+      c = o(opts, :consumed)
       return false if c == true && ! message['consumed']
       return false if c == false && message['consumed']
 
@@ -115,7 +129,7 @@ module Flor
         return false if hook.within_itself?(executor, message)
       end
 
-      ps = o(opts, :point, :p, array: true)
+      ps = o(opts, :point, array: true)
       return false if ps && ! ps.include?(message['point'])
 
       if nid = o(opts, :nid)
@@ -130,24 +144,24 @@ module Flor
 
       dm = Flor.domain(message['exid'])
 
-      if dm && ds = o(opts, :domain, :d, array: true)
+      if dm && ds = o(opts, :domain, array: true)
         return false \
           unless ds.find { |d| d.is_a?(Regexp) ? (!! d.match(dm)) : (d == dm) }
       end
 
-      if dm && sds = o(opts, :subdomain, :sd, array: true)
+      if dm && sds = o(opts, :subdomain, array: true)
         return false \
           unless sds.find do |sd|
             dm[0, sd.length] == sd
           end
       end
 
-      if ts = o(opts, :tag, :t, array: true)
+      if ts = o(opts, :tag, array: true)
         return false unless %w[ entered left ].include?(message['point'])
         return false unless includes?(ts, message['tags'])
       end
 
-      if ns = o(opts, :name, :n)
+      if ns = o(opts, :name)
         name = message['name']
         return false \
           unless ns.find { |n|
@@ -169,12 +183,12 @@ module Flor
         end
       end
 
-      if hps = o(opts, :heap, :hp, array: true)
+      if hps = o(opts, :heap, array: true)
         return false unless node ||= executor.node(message['nid'])
         return false unless includes?(hps, node['heap'])
       end
 
-      if hts = o(opts, :heat, :ht, array: true)
+      if hts = o(opts, :heat, array: true)
         return false unless node ||= executor.node(message['nid'])
         return false unless includes?(hts, node['heat0'])
       end
