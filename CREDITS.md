@@ -3,6 +3,7 @@
 
 ## Contributors
 
+* Olle Jonsson - https://github.com/olleolleolle
 * Ryan Scott - https://github.com/Subtletree
 * Jeffrey Hicks - https://github.com/jrhicks
 * David Verrier - https://github.com/dverrier
