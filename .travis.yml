@@ -28,7 +28,6 @@ branches:
   #except:
   #  - master
 
-sudo: false
 cache: bundler
 
 #env:
