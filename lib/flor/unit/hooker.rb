@@ -5,6 +5,8 @@ module Flor
 
     # NB: logger configuration entries start with "hok_"
 
+    attr_reader :hooks
+
     def initialize(unit)
 
       @unit = unit

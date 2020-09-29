@@ -374,6 +374,45 @@ end
         expect(r).to have_terminated_as_point
         expect(r['payload']['count']).to eq(7)
       end
+
+      class UhSpecTwo
+
+        attr_reader :unit
+
+        def initialize(unit)
+
+          @unit = unit
+        end
+
+        def opts; { point: 'execute' }; end
+
+        def notify(executor, message)
+
+          [] # add no further messages
+        end
+      end
+
+      it 'receives the scheduler upon initialization' do
+
+        @unit.hook('spec2', UhSpecTwo)
+
+        r =
+          @unit.launch(
+            %{
+              sequence tag: 'blue'
+                _
+            },
+            wait: true)
+
+        expect(r).to have_terminated_as_point
+
+        expect(@unit.hooker.hooks.collect(&:first))
+          .to eq(%w[ logger wlist journal spec2 ])
+        expect(@unit.hooker['spec2'].class)
+          .to eq(UhSpecTwo)
+        expect(@unit.hooker['spec2'].unit)
+          .to eq(@unit)
+      end
     end
 
     context 'an instance' do
