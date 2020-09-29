@@ -408,10 +408,14 @@ end
 
         expect(@unit.hooker.hooks.collect(&:first))
           .to eq(%w[ logger wlist journal spec2 ])
+
         expect(@unit.hooker['spec2'].class)
           .to eq(UhSpecTwo)
         expect(@unit.hooker['spec2'].unit)
           .to eq(@unit)
+
+        expect(@unit.hooker['spec2'].unit.conf['env'])
+          .to eq('test')
       end
     end
 
