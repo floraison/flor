@@ -40,7 +40,7 @@ describe 'Flor unit' do
           noret _
       }, wait: true)
 
-      sleep 0.770 # the wait might exit before the hook, especially on JRuby
+      wait_until { msgs.count > 7 && @unit.journal.count > 7 }
 
       expect(
         msgs
@@ -141,7 +141,7 @@ end
 
       expect(rs.collect { |r| r['point'] }.uniq).to eq(%w[ terminated ])
 
-      sleep 0.4
+      wait_until { ms2.size > 32 }
 
       expect(ms0.size).to eq(11)
       expect(ms1.size).to eq(22)
@@ -165,7 +165,7 @@ end
 
       expect(rs.collect { |r| r['point'] }.uniq).to eq(%w[ terminated ])
 
-      sleep 0.4
+      wait_until { ms1.size > 32 }
 
       expect(ms0.size).to eq(22)
       expect(ms1.size).to eq(33)
@@ -318,6 +318,33 @@ end
       ).to eq(%w[ entered:0_0 left:0_0 entered:0_1 left:0_1 ])
     end
 
+    context 'a block' do
+
+      it 'is hooked under nil by default' do
+
+        @unit.hook do |message|
+          [] # nada
+        end
+
+        expect(@unit.hooker.hooks.collect(&:first))
+          .to eq([ 'logger', 'wlist', 'journal', nil ])
+        expect(@unit.hooker[nil].class)
+          .to eq(Proc)
+      end
+
+      it 'may get hooked under a name' do
+
+        @unit.hook('meat') do |message|
+          [] # nada
+        end
+
+        expect(@unit.hooker.hooks.collect(&:first))
+          .to eq([ 'logger', 'wlist', 'journal', 'meat' ])
+        expect(@unit.hooker['meat'].class)
+          .to eq(Proc)
+      end
+    end
+
     context 'a class' do
 
       class UhSpecZero
@@ -373,6 +400,9 @@ end
 
         expect(r).to have_terminated_as_point
         expect(r['payload']['count']).to eq(7)
+
+        expect(@unit.hooker.hooks.collect(&:first))
+          .to eq([ 'logger', 'wlist', 'journal', nil ])
       end
 
       class UhSpecTwo
