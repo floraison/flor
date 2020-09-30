@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 module Flor
 
   def self.parse(input, fname=nil, opts={})
@@ -727,4 +727,3 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
     sio.string
   end
 end
-
