@@ -56,7 +56,11 @@ module Flor
         end
       end
 
-      hook = Flor::Hook.instantiate(@unit, hook) if hook.is_a?(Class)
+      hook = Flor::Hook.instantiate(@unit, hook) \
+        if hook.is_a?(Class)
+
+      name ||= hook.name \
+        if hook.respond_to?(:name) && hook.method(:name).arity < 1
 
       @hooks << [ name, opts, hook, block ]
     end

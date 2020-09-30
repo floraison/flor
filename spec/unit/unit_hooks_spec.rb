@@ -447,6 +447,25 @@ end
         expect(@unit.hooker['spec2'].unit.conf['env'])
           .to eq('test')
       end
+
+      class UhSpecThree
+        def name; 'uhs3'; end
+        def notify(executor, message); []; end
+      end
+
+      it 'gives its name via #name' do
+
+        @unit.hook(UhSpecThree)
+
+        expect(@unit.hooker.hooks.collect(&:first))
+          .to eq(%w[ logger wlist journal uhs3 ])
+
+        @unit.hook('uhs3b', UhSpecThree)
+          # name at hook time takes precedence
+
+        expect(@unit.hooker.hooks.collect(&:first))
+          .to eq(%w[ logger wlist journal uhs3 uhs3b ])
+      end
     end
 
     context 'an instance' do
