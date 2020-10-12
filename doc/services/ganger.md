@@ -13,6 +13,6 @@ TODO
 
 ## links
 
-* [source](https://github.com/floraison/flor/tree/master/lib/flor/unit/ganger.rb)
-* [spec](https://github.com/floraison/flor/tree/master/spec/unit/ganger_spec.rb)
+* [source](../lib/flor/unit/ganger.rb)
+* [spec](../spec/unit/ganger_spec.rb)
 

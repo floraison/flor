@@ -66,6 +66,6 @@ TODO
 
 ## links
 
-* [source](https://github.com/floraison/flor/tree/master/lib/flor/unit/loader.rb)
-* [spec](https://github.com/floraison/flor/tree/master/spec/unit/loader_spec.rb)
+* [source](../lib/flor/unit/loader.rb)
+* [spec](../spec/unit/loader_spec.rb)
 

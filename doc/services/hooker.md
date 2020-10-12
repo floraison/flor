@@ -14,7 +14,7 @@ TODO
 
 ## links
 
-* [source](https://github.com/floraison/flor/tree/master/lib/flor/unit/hooker.rb)
-* [conf hook spec](https://github.com/floraison/flor/tree/master/spec/unit/conf_hooks_spec.rb)
-* [unit hook spec](https://github.com/floraison/flor/tree/master/spec/unit/unit_hooks_spec.rb)
+* [source](../lib/flor/unit/hooker.rb)
+* [conf hook spec](../spec/unit/conf_hooks_spec.rb)
+* [unit hook spec](../spec/unit/unit_hooks_spec.rb)
 

@@ -15,6 +15,6 @@ If, upon unit start, the spool dir is not present or is not a dir, the spooler w
 
 ## links
 
-* [source](https://github.com/floraison/flor/tree/master/lib/flor/unit/spooler.rb)
-* [spec](https://github.com/floraison/flor/tree/master/spec/unit/spooler_spec.rb)
+* [source](../lib/flor/unit/spooler.rb)
+* [spec](../spec/unit/spooler_spec.rb)
 

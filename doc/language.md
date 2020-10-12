@@ -33,7 +33,7 @@ sequence
 
 ## procedures
 
-Flor comes with a set of [predefined procedures](https://github.com/floraison/flor/tree/master/doc/procedures#procedures).
+Flor comes with a set of [predefined procedures](procedures#procedures).
 
 ### arrays and objects
 
