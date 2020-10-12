@@ -5,8 +5,8 @@
 
 ## core services
 
-* ganger - receives tasks from the scheduler and hands them to the right tasker
-* hooker - sees any message passing and may alter them, mostly triggers
+* [ganger](ganger.md) - receives tasks from the scheduler and hands them to the right tasker
+* [hooker](hooker.md) - sees any message passing and may alter them, mostly triggers
 * [loader](loader.md) - used by other services to load start variables, taskers, libraries, definitions
 * runner - used by hooker and ganger to run/invoke taskers and hooks
 * storage - the service between flor and Sequel
