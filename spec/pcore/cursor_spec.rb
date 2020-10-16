@@ -422,7 +422,7 @@ describe 'Flor pcore' do
           %q{
             set l []
             concurrence
-              cursor tag: 'x3'
+              cursor 'x3'
                 push l 'a'
                 sequence ref: 'z'
                   stall _
@@ -448,8 +448,8 @@ describe 'Flor pcore' do
         expect(
           F.to_s(cursor, :status)
         ).to eq(%{
-          (status ended pt:receive fro:0_1_0 m:75)
-          (status closed pt:cancel fla:break fro:0_1_1_2 m:65)
+          (status ended pt:receive fro:0_1_0 m:73)
+          (status closed pt:cancel fla:break fro:0_1_1_2 m:63)
           (status o pt:execute)
         }.ftrim)
       end
@@ -471,6 +471,59 @@ describe 'Flor pcore' do
       expect(r).to have_terminated_as_point
       expect(r['payload']['ret']).to eq(0)
       expect(r['vars'].keys).to eq(%w[ break continue move a b ])
+    end
+
+    context 'start:/:initial attribute' do
+
+      it 'accepts a initial:/start: attribute' do
+
+        r = @executor.launch(
+          %q{
+            set l []
+            cursor start: 'bravo'
+              push l 'a'
+              push l 'b' tag: 'bravo'
+            push l 'c'
+          },
+          wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(r['vars']['l']).to eq(%w[ b c ])
+      end
+
+      it 'does not affect continue' do
+
+        r = @executor.launch(
+          %q{
+            set l []
+            cursor initial: 'bravo'
+              push l 'a'
+              push l 'b' tag: 'bravo'
+              continue _ if (length l) < 2
+            push l 'c'
+          },
+          wait: true)
+
+        expect(r).to have_terminated_as_point
+        expect(r['vars']['l']).to eq(%w[ b a b c ])
+      end
+
+      it 'fails if the start: cannot be found' do
+
+        r = @executor.launch(
+          %q{
+            set l []
+            cursor start: 'charly'
+              push l 'a'
+              push l 'b' tag: 'bravo'
+            push l 'c'
+          },
+          wait: true)
+
+        expect(r['point']).to eq('failed')
+        expect(r['error']['lin']).to eq(3)
+        expect(r['error']['msg']).to eq('move target "charly" not found')
+      end
     end
   end
 end

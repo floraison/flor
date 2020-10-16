@@ -46,6 +46,7 @@ class Flor::Pro::Cursor < Flor::Procedure
   #   do-that-other-thing _
   # ```
   #
+  #
   # ## cursor and tags
   #
   # ```
@@ -57,6 +58,18 @@ class Flor::Pro::Cursor < Flor::Procedure
   # Tags on cursors are useful for "break" and "continue" (as well as "cancel"),
   # letting them act on other cursors.
   #
+  #
+  # ## cursor and start: / initial: attribute
+  #
+  # ```
+  # task 'create mandate'
+  # cursor start: 'approve mandate'
+  #   task 'amend mandate'
+  #   task 'approve mandate'               # <-- first "cycle" will start here
+  #   continue _ if f.outcome == 'reject'  # <-- will go to "amend mandate"
+  # task 'activate mandate'
+  # ```
+  #
   # ## see also
   #
   # Break, continue, loop.
@@ -65,6 +78,7 @@ class Flor::Pro::Cursor < Flor::Procedure
 
   def pre_execute
 
+    @node['atts'] = []
     @node['subs'] = []
   end
 
@@ -101,6 +115,15 @@ class Flor::Pro::Cursor < Flor::Procedure
     else
       execute_child(@ncid, @node['subs'].last)
     end
+  end
+
+  def receive_last_att
+
+    start = att('start', 'initial')
+    cid = start && find_child_id(start)
+    @ncid = cid if cid
+
+    super
   end
 
   def cancel_when_closed
@@ -143,6 +166,11 @@ class Flor::Pro::Cursor < Flor::Procedure
     fail Flor::FlorError.new(
       "move target #{to.inspect} is not a string", self
     ) unless to.is_a?(String)
+
+    find_child_id(to)
+  end
+
+  def find_child_id(to)
 
     find_tag_target(to) ||
     find_string_arg_target(to) ||
