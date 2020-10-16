@@ -10,7 +10,9 @@ class Flor::Pro::Cursor < Flor::Procedure
   #   task 'charly'
   # ```
   #
-  # ## break
+  # ## "orders" understood by cursors
+  #
+  # ### break
   #
   # Cursor understands `break`. For example, this execution will go from
   # "alpha" to "charly", task "bravo" will not be visited.
@@ -22,7 +24,7 @@ class Flor::Pro::Cursor < Flor::Procedure
   # task 'charly'
   # ```
   #
-  # ## continue
+  # ### continue
   #
   # Cursor also understands `continue`. It's useful to rewind a cursor:
   # ```
@@ -33,7 +35,7 @@ class Flor::Pro::Cursor < Flor::Procedure
   #   create_account _
   # ```
   #
-  # ## move
+  # ### move
   #
   # Cursor accepts move orders, as in:
   # ```
@@ -43,6 +45,17 @@ class Flor::Pro::Cursor < Flor::Procedure
   #   do-that _ # got skipped
   #   do-that-other-thing _
   # ```
+  #
+  # ## cursor and tags
+  #
+  # ```
+  # cursor 'main'
+  #   # is equivalent to
+  # cursor tag: 'main'
+  # ```
+  #
+  # Tags on cursors are useful for "break" and "continue" (as well as "cancel"),
+  # letting them act on other cursors.
   #
   # ## see also
   #
