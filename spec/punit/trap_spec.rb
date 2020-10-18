@@ -1395,6 +1395,46 @@ describe 'Flor punit' do
           0 0_0 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 0_4 0_0_1-3 0_0_1_1-3
         ])
       end
+
+      it 'cancels its children upon kill' do
+
+        r = @unit.launch(
+          %q{
+            trap point: 'left'
+              def msg \ stall _
+            sequence tag: 'x'
+            sequence tag: 'y'
+            stall _
+          },
+          wait: '0_3 receive; end')
+
+        exid = r['exid']
+
+        expect(
+          @unit.journal.select { |m| m['point'] == 'trigger' }.count
+        ).to eq(2)
+
+        exe = @unit.executions[exid: r['exid']]
+
+        expect(
+          exe.nodes.keys
+        ).to eq(%w[
+          0 0_0 0_0_1-1 0_0_1_1-1 0_3 0_0_1-2 0_0_1_1-2
+        ])
+
+        @unit.kill(exid: exid, nid: '0_0')
+
+        @unit.wait(exid, 'end')
+
+        exe = @unit.executions[exid: r['exid']]
+
+        expect(exe.status).to eq('active')
+        expect(exe.nodes['0_0']['status'].last['status']).to eq('ended')
+        expect(exe.nodes['0_0']['cnodes']).to eq([])
+#pp exe.nodes['0_0']
+
+        expect(exe.nodes.keys).to eq(%w[ 0 0_0 0_3 ])
+      end
     end
   end
 end
