@@ -211,6 +211,20 @@ describe 'Flor punit' do
         ])
       end
     end
+
+    it "cancels all when '0'" do
+
+      r = @unit.launch(
+        %q{
+          concurrence
+            stall _
+            cancel '0'
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(r['cause'].size).to eq(2)
+    end
   end
 
   describe 'kill' do
