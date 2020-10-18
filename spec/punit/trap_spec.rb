@@ -204,49 +204,6 @@ describe 'Flor punit' do
       expect(m1['sm']).to eq(m0['m'])
     end
 
-    it 'does not cancel its children' do
-
-      r = @unit.launch(
-        %q{
-          trap point: 'left'
-            def msg \ stall _
-          sequence tag: 'x'
-          sequence tag: 'y'
-          sequence tag: 'z'
-          stall _
-        },
-        wait: '0_4 receive; end')
-
-      exid = r['exid']
-
-      expect(
-        @unit.journal.select { |m| m['point'] == 'trigger' }.count
-      ).to eq(3)
-
-      exe = @unit.executions[exid: r['exid']]
-
-      expect(
-        exe.nodes.keys
-      ).to eq(%w[
-        0 0_0 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 0_4 0_0_1-3 0_0_1_1-3
-      ])
-
-      @unit.cancel(exid: exid, nid: '0_0')
-
-      @unit.wait(exid, 'end')
-
-      exe = @unit.executions[exid: r['exid']]
-
-      expect(exe.status).to eq('active')
-      expect(exe.nodes['0_0']['status'].last['status']).to eq('ended')
-
-      expect(
-        exe.nodes.keys
-      ).to eq(%w[
-        0 0_0 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 0_4 0_0_1-3 0_0_1_1-3
-      ])
-    end
-
     it 'traps multiple times' do
 
       #@unit.hooker.add('spec_hook') do |m|
@@ -396,941 +353,944 @@ describe 'Flor punit' do
       expect(t.bnid).to eq('0')
     end
 
-    context 'count:' do
+    context 'attributes' do
 
-      it 'determines how many times a trap triggers at max' do
+      describe 'count:' do
 
-        r = @unit.launch(
-          %q{
-            sequence
-              trap tag: 'b', count: 2
-                def msg \ trace "A>$(node.nid)"
+        it 'determines how many times a trap triggers at max' do
+
+          r = @unit.launch(
+            %q{
               sequence
-                sleep 0.8
-                noret tag: 'b'
-                trace "B>$(node.nid)"
-                noret tag: 'b'
-                trace "B>$(node.nid)"
-                noret tag: 'b'
-                trace "B>$(node.nid)"
-          },
-          wait: true)
+                trap tag: 'b', count: 2
+                  def msg \ trace "A>$(node.nid)"
+                sequence
+                  sleep 0.8
+                  noret tag: 'b'
+                  trace "B>$(node.nid)"
+                  noret tag: 'b'
+                  trace "B>$(node.nid)"
+                  noret tag: 'b'
+                  trace "B>$(node.nid)"
+            },
+            wait: true)
 
-        expect(r).to have_terminated_as_point
+          expect(r).to have_terminated_as_point
 
-        wait_until { @unit.traces.count > 4 }
+          wait_until { @unit.traces.count > 4 }
 
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%{
-          0:B>0_1_2_0_0_1_0_0
-          1:A>0_0_2_1_0_0_1_0_0-1
-          2:B>0_1_4_0_0_1_0_0
-          3:A>0_0_2_1_0_0_1_0_0-2
-          4:B>0_1_6_0_0_1_0_0
-        }.ftrim)
-      end
-    end
-
-    context 'heap:' do
-
-      it 'traps given procedures' do
-
-        r = @unit.launch(
-          %q{
-            trap heap: 'sequence'
-              def msg
-                trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
-            sequence
-              noret _
-          },
-          wait: 'terminated')
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count >= 2 }
-
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%{
-          0:execute-sequence-0_1<-0
-          1:receive--0_1<-0_1_0
-          2:receive--0<-0_1
-        }.ftrim)
+          expect(
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+          ).to eq(%{
+            0:B>0_1_2_0_0_1_0_0
+            1:A>0_0_2_1_0_0_1_0_0-1
+            2:B>0_1_4_0_0_1_0_0
+            3:A>0_0_2_1_0_0_1_0_0-2
+            4:B>0_1_6_0_0_1_0_0
+          }.ftrim)
+        end
       end
 
-      it 'is OK with $(dollar) failing' do
+      describe 'heap:' do
 
-        r = @unit.launch(
-          %q{
-            trap heap: 'sequence'
-              def msg
-                trace "$(msg.nid):$(msg.tree.0)"
-            sequence
-              noret _
-          },
-          wait: 'terminated')
+        it 'traps given procedures' do
 
-        expect(r).to have_terminated_as_point
+          r = @unit.launch(
+            %q{
+              trap heap: 'sequence'
+                def msg
+                  trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
+              sequence
+                noret _
+            },
+            wait: 'terminated')
 
-        wait_until { @unit.traces.count >= 2 }
+          expect(r).to have_terminated_as_point
 
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%{
-          0:0_1:sequence
-          1:0_1:
-          2:0:
-        }.ftrim)
+          wait_until { @unit.traces.count >= 2 }
+
+          expect(
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+          ).to eq(%{
+            0:execute-sequence-0_1<-0
+            1:receive--0_1<-0_1_0
+            2:receive--0<-0_1
+          }.ftrim)
+        end
+
+        it 'is OK with $(dollar) failing' do
+
+          r = @unit.launch(
+            %q{
+              trap heap: 'sequence'
+                def msg
+                  trace "$(msg.nid):$(msg.tree.0)"
+              sequence
+                noret _
+            },
+            wait: 'terminated')
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count >= 2 }
+
+          expect(
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+          ).to eq(%{
+            0:0_1:sequence
+            1:0_1:
+            2:0:
+          }.ftrim)
+        end
+
+        it 'traps multiple given procedures' do
+
+          r = @unit.launch(
+            %q{
+              trap heap: [ 'sequence' 'concurrence' ]
+                def msg
+                  trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
+              concurrence
+                sequence
+                  noret _
+                sequence
+                  noret _
+            },
+            wait: 'terminated')
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 2 }
+
+          expect(
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+          ).to eq(%{
+            0:execute-concurrence-0_1<-0
+            1:execute-sequence-0_1_0<-0_1
+            2:execute-sequence-0_1_1<-0_1
+            3:receive--0_1_0<-0_1_0_0
+            4:receive--0_1_1<-0_1_1_0
+            5:receive--0_1<-0_1_0
+            6:receive--0_1<-0_1_1
+            7:receive--0<-0_1
+          }.ftrim)
+        end
+
+        it 'traps a procedure and a point' do
+
+          r = @unit.launch(
+            %q{
+              trap heap: [ 'sequence' 'concurrence' ] point: 'receive'
+                def msg
+                  trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
+              concurrence
+                sequence
+                  noret _
+                sequence
+                  noret _
+            },
+            wait: 'terminated')
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 2 }
+
+          expect(
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+          ).to eq(%{
+            0:receive--0_1_0<-0_1_0_0
+            1:receive--0_1_1<-0_1_1_0
+            2:receive--0_1<-0_1_0
+            3:receive--0_1<-0_1_1
+            4:receive--0<-0_1
+          }.ftrim)
+        end
+
+        #it 'traps a heap regex'
+          # no, this is not necessary, "heat", on the other side, is
+          # better suited for regexes
       end
 
-      it 'traps multiple given procedures' do
+      describe 'heat:' do
 
-        r = @unit.launch(
-          %q{
-            trap heap: [ 'sequence' 'concurrence' ]
-              def msg
-                trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
+        it 'traps given head of trees' do
+
+          r = @unit.launch(
+            %q{
+              trap heat: 'fun0' \ def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
+              define fun0 \ trace "c-fun0-$(node.nid)"
+              sequence
+                fun0 # not a call
+                fun0 # not a call
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 1 }
+
+          expect(
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+          ).to eq(%{
+            0:t-fun0-0_2_0
+            1:t-fun0-0_2_1
+          }.ftrim)
+        end
+
+        it 'traps given functions' do
+
+          r = @unit.launch(
+            %q{
+              trap heat: '_apply' \ def msg \ trace "t-heat-$(msg.nid)"
+              define fun0 \ trace "c-fun0-$(node.nid)"
+              sequence
+                fun0 _
+                fun0 _
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count >= 6 }
+
+          expect(
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+          ).to eq(%{
+            0:c-fun0-0_1_1_0_0_1_0_0-1
+            1:t-heat-0_1-1
+            2:t-heat-0_1-1
+            3:c-fun0-0_1_1_0_0_1_0_0-4
+            4:t-heat-0_1-4
+            5:t-heat-0_1-4
+          }.ftrim)
+        end
+
+        it 'traps multiple heat:' do
+
+          r = @unit.launch(
+            %q{
+              trap heat: [ 'fun0' 'fun1' ]
+                def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
+              define fun0 \ trace "c-fun0-$(node.nid)"
+              define fun1 \ trace "c-fun1-$(node.nid)"
+              sequence
+                fun0 _
+                fun1 _
+                fun0
+            },
+            wait: 'terminated')
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 1 }
+
+          expect(
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+          ).to eq(%{
+            0:c-fun0-0_1_1_0_0_1_0_0-2
+            1:t-fun0-0_3_0
+            2:t--0_3_0
+            3:c-fun1-0_2_1_0_0_1_0_0-6
+            4:t-fun1-0_3_1
+            5:t--0_3_0
+            6:t--0_3_1
+            7:t-fun0-0_3_2
+            8:t--0_3_1
+          }.ftrim)
+        end
+
+        it 'traps a heat regex' do
+
+          r = @unit.launch(
+            %q{
+              trap heat: [ /^fun\d+$/ 'funx' ]
+                def msg \ trace "t-$(msg.point)-$(msg.tree.0)-$(msg.nid)"
+              define fun0 \ trace "c-fun0-$(node.nid)"
+              define fun1 \ trace "c-fun1-$(node.nid)"
+              define funx \ trace "c-funx-$(node.nid)"
+              sequence
+                fun0 _
+                fun1 _
+                fun0
+                funx _
+            },
+            wait: 'terminated')
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count >= 1 }
+
+          expect(
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+          ).to eq(%{
+            0:c-fun0-0_1_1_0_0_1_0_0-2
+            1:c-fun1-0_2_1_0_0_1_0_0-6
+            2:t-execute-fun0-0_4_0
+            3:t-receive--0_4_0
+            4:t-execute-fun1-0_4_1
+            5:t-receive--0_4_0
+            6:c-funx-0_3_1_0_0_1_0_0-11
+            7:t-receive--0_4_1
+            8:t-execute-fun0-0_4_2
+            9:t-receive--0_4_1
+            10:t-execute-funx-0_4_3
+            11:t-receive--0_4_3
+            12:t-receive--0_4_3
+          }.ftrim)
+        end
+
+        it 'traps a tree head and a point' do
+
+          r = @unit.launch(
+            %q{
+              trap heat: [ /^fun\d+$/ 'funx' ] point: 'execute'
+                def msg \ trace "t-$(msg.point)-$(msg.tree.0)-$(msg.nid)"
+              define fun0 \ trace "c-fun0-$(node.nid)"
+              define fun1 \ trace "c-fun1-$(node.nid)"
+              define funx \ trace "c-funx-$(node.nid)"
+              sequence
+                fun0 _
+                fun1 _
+                fun0
+                funx _
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 1 }
+
+          expect(
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+          ).to eq(%{
+            0:c-fun0-0_1_1_0_0_1_0_0-2
+            1:c-fun1-0_2_1_0_0_1_0_0-4
+            2:t-execute-fun0-0_4_0
+            3:t-execute-fun1-0_4_1
+            4:c-funx-0_3_1_0_0_1_0_0-7
+            5:t-execute-fun0-0_4_2
+            6:t-execute-funx-0_4_3
+          }.ftrim)
+        end
+      end
+
+      describe 'range: subnid (default)' do
+
+        it 'traps only subnids' do
+
+          r = @unit.launch(%q{
             concurrence
               sequence
-                noret _
+                trap tag: 't0' #range: 'subnid'
+                  def msg \ trace "in-$(msg.nid)"
+                stall tag: 't0' ### gets trapped
               sequence
-                noret _
-          },
-          wait: 'terminated')
+                sleep '1s' # give it time to process the trap
+                noret tag: 't0' ### doesn't get trapped
+          }, wait: '0_1_1 receive')
 
-        expect(r).to have_terminated_as_point
+          expect(r['point']).to eq('receive')
 
-        wait_until { @unit.traces.count > 2 }
+          wait_until { @unit.traces.count > 0 }
 
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%{
-          0:execute-concurrence-0_1<-0
-          1:execute-sequence-0_1_0<-0_1
-          2:execute-sequence-0_1_1<-0_1
-          3:receive--0_1_0<-0_1_0_0
-          4:receive--0_1_1<-0_1_1_0
-          5:receive--0_1<-0_1_0
-          6:receive--0_1<-0_1_1
-          7:receive--0<-0_1
-        }.ftrim)
+          expect(
+            @unit.traces
+              .each_with_index
+              .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
+          ).to eq(%w{
+            0:in-0_0_1
+          }.collect(&:strip).join("\n"))
+            #
+            # where 1:in-0_1_1 is not trapped
+        end
       end
 
-      it 'traps a procedure and a point' do
+      describe 'range: execution' do
 
-        r = @unit.launch(
-          %q{
-            trap heap: [ 'sequence' 'concurrence' ] point: 'receive'
-              def msg
-                trace "$(msg.point)-$(msg.tree.0)-$(msg.nid)<-$(msg.from)"
+        it 'traps in the same execution' do
+
+          r = @unit.launch(%q{
             concurrence
+              sequence # <--- trap is bound here
+                trap tag: 't1' range: 'execution'
+                  def msg \ trace "t1_$(msg.exid)"
               sequence
-                noret _
-              sequence
-                noret _
-          },
-          wait: 'terminated')
+                sleep '1s'
+                sequence tag: 't1'
+                  trace 'exe0'
+                  stall _
+          }, wait: 'trigger')
 
-        expect(r).to have_terminated_as_point
+          expect(r['point']).to eq('trigger')
 
-        wait_until { @unit.traces.count > 2 }
+          exid0 = r['exid']
 
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%{
-          0:receive--0_1_0<-0_1_0_0
-          1:receive--0_1_1<-0_1_1_0
-          2:receive--0_1<-0_1_0
-          3:receive--0_1<-0_1_1
-          4:receive--0<-0_1
-        }.ftrim)
-      end
-
-      #it 'traps a heap regex'
-        # no, this is not necessary, "heat", on the other side, is
-        # better suited for regexes
-    end
-
-    context 'heat:' do
-
-      it 'traps given head of trees' do
-
-        r = @unit.launch(
-          %q{
-            trap heat: 'fun0' \ def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
-            define fun0 \ trace "c-fun0-$(node.nid)"
-            sequence
-              fun0 # not a call
-              fun0 # not a call
-          },
-          wait: true)
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count > 1 }
-
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%{
-          0:t-fun0-0_2_0
-          1:t-fun0-0_2_1
-        }.ftrim)
-      end
-
-      it 'traps given functions' do
-
-        r = @unit.launch(
-          %q{
-            trap heat: '_apply' \ def msg \ trace "t-heat-$(msg.nid)"
-            define fun0 \ trace "c-fun0-$(node.nid)"
-            sequence
-              fun0 _
-              fun0 _
-          },
-          wait: true)
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count >= 6 }
-
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%{
-          0:c-fun0-0_1_1_0_0_1_0_0-1
-          1:t-heat-0_1-1
-          2:t-heat-0_1-1
-          3:c-fun0-0_1_1_0_0_1_0_0-4
-          4:t-heat-0_1-4
-          5:t-heat-0_1-4
-        }.ftrim)
-      end
-
-      it 'traps multiple heat:' do
-
-        r = @unit.launch(
-          %q{
-            trap heat: [ 'fun0' 'fun1' ]
-              def msg \ trace "t-$(msg.tree.0)-$(msg.nid)"
-            define fun0 \ trace "c-fun0-$(node.nid)"
-            define fun1 \ trace "c-fun1-$(node.nid)"
-            sequence
-              fun0 _
-              fun1 _
-              fun0
-          },
-          wait: 'terminated')
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count > 1 }
-
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%{
-          0:c-fun0-0_1_1_0_0_1_0_0-2
-          1:t-fun0-0_3_0
-          2:t--0_3_0
-          3:c-fun1-0_2_1_0_0_1_0_0-6
-          4:t-fun1-0_3_1
-          5:t--0_3_0
-          6:t--0_3_1
-          7:t-fun0-0_3_2
-          8:t--0_3_1
-        }.ftrim)
-      end
-
-      it 'traps a heat regex' do
-
-        r = @unit.launch(
-          %q{
-            trap heat: [ /^fun\d+$/ 'funx' ]
-              def msg \ trace "t-$(msg.point)-$(msg.tree.0)-$(msg.nid)"
-            define fun0 \ trace "c-fun0-$(node.nid)"
-            define fun1 \ trace "c-fun1-$(node.nid)"
-            define funx \ trace "c-funx-$(node.nid)"
-            sequence
-              fun0 _
-              fun1 _
-              fun0
-              funx _
-          },
-          wait: 'terminated')
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count >= 1 }
-
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%{
-          0:c-fun0-0_1_1_0_0_1_0_0-2
-          1:c-fun1-0_2_1_0_0_1_0_0-6
-          2:t-execute-fun0-0_4_0
-          3:t-receive--0_4_0
-          4:t-execute-fun1-0_4_1
-          5:t-receive--0_4_0
-          6:c-funx-0_3_1_0_0_1_0_0-11
-          7:t-receive--0_4_1
-          8:t-execute-fun0-0_4_2
-          9:t-receive--0_4_1
-          10:t-execute-funx-0_4_3
-          11:t-receive--0_4_3
-          12:t-receive--0_4_3
-        }.ftrim)
-      end
-
-      it 'traps a tree head and a point' do
-
-        r = @unit.launch(
-          %q{
-            trap heat: [ /^fun\d+$/ 'funx' ] point: 'execute'
-              def msg \ trace "t-$(msg.point)-$(msg.tree.0)-$(msg.nid)"
-            define fun0 \ trace "c-fun0-$(node.nid)"
-            define fun1 \ trace "c-fun1-$(node.nid)"
-            define funx \ trace "c-funx-$(node.nid)"
-            sequence
-              fun0 _
-              fun1 _
-              fun0
-              funx _
-          },
-          wait: true)
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count > 1 }
-
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%{
-          0:c-fun0-0_1_1_0_0_1_0_0-2
-          1:c-fun1-0_2_1_0_0_1_0_0-4
-          2:t-execute-fun0-0_4_0
-          3:t-execute-fun1-0_4_1
-          4:c-funx-0_3_1_0_0_1_0_0-7
-          5:t-execute-fun0-0_4_2
-          6:t-execute-funx-0_4_3
-        }.ftrim)
-      end
-    end
-
-    context 'range: subnid (default)' do
-
-      it 'traps only subnids' do
-
-        r = @unit.launch(%q{
-          concurrence
-            sequence
-              trap tag: 't0' #range: 'subnid'
-                def msg \ trace "in-$(msg.nid)"
-              stall tag: 't0' ### gets trapped
-            sequence
-              sleep '1s' # give it time to process the trap
-              noret tag: 't0' ### doesn't get trapped
-        }, wait: '0_1_1 receive')
-
-        expect(r['point']).to eq('receive')
-
-        wait_until { @unit.traces.count > 0 }
-
-        expect(
-          @unit.traces
-            .each_with_index
-            .collect { |t, i| "#{i}:#{t.text}" }.join("\n")
-        ).to eq(%w{
-          0:in-0_0_1
-        }.collect(&:strip).join("\n"))
-          #
-          # where 1:in-0_1_1 is not trapped
-      end
-    end
-
-    context 'range: execution' do
-
-      it 'traps in the same execution' do
-
-        r = @unit.launch(%q{
-          concurrence
-            sequence # <--- trap is bound here
-              trap tag: 't1' range: 'execution'
-                def msg \ trace "t1_$(msg.exid)"
-            sequence
-              sleep '1s'
+          @unit.launch(
+            %{
               sequence tag: 't1'
-                trace 'exe0'
-                stall _
-        }, wait: 'trigger')
+                trace 'exe1'
+            }, wait: true)
 
-        expect(r['point']).to eq('trigger')
+          wait_until { @unit.traces.count > 2 }
 
-        exid0 = r['exid']
-
-        @unit.launch(
-          %{
-            sequence tag: 't1'
-              trace 'exe1'
-          }, wait: true)
-
-        wait_until { @unit.traces.count > 2 }
-
-        expect(
-          @unit.traces.collect(&:text).join("\n")
-        ).to eq([
-          'exe0', "t1_#{exid0}", 'exe1'
-        ].join("\n"))
-      end
-    end
-
-    context 'range: domain' do
-
-      it 'traps the events in execution domain' do
-
-        # 0
-        exid0 = @unit.launch(%q{
-          trap tag: 't0' range: 'domain' \ def msg \ trace "t0_$(msg.exid)"
-          trace "stalling_$(exe.exid)"
-          stall _
-        }, domain: 'net.acme')
-
-        wait_until { @unit.traps.count == 1 }
-
-        # 1
-        r = @unit.launch("noret tag: 't0'", domain: 'org.acme', wait: true)
-        #exid1 = r['exid']
-        expect(r).to have_terminated_as_point
-          # completely different domain, not trapped
-
-        # 2
-        r = @unit.launch("noret tag: 't0'", domain: 'net.acme', wait: true)
-        exid2 = r['exid']
-        expect(r).to have_terminated_as_point
-          # same domain, trapped
-
-        # 3
-        r = @unit.launch("noret tag: 't0'", domain: 'net.acme.s0', wait: true)
-        #exid3 = r['exid']
-        expect(r).to have_terminated_as_point
-          # subdomain, not trapped
-
-        wait_until { @unit.traces.count == 2 }
-
-        expect(
-          (
-            @unit.traces
-              .each_with_index
-              .collect { |t, i| "#{i}:#{t.text}" }
-          ).join("\n")
-        ).to eq([
-          "0:stalling_#{exid0}",
-          "1:t0_#{exid2}"
-        ].join("\n"))
-      end
-    end
-
-    context 'range: subdomain' do
-
-      it 'traps the events in range domain and its subdomains' do
-
-        # 0
-        exid0 = @unit.launch(%q{
-          trap tag: 't0' range: 'subdomain' \ def msg \ trace "t0_$(msg.exid)"
-          trace "stalling_$(exe.exid)"
-          stall _
-        }, domain: 'net.acme')
-
-        wait_until { @unit.traps.count == 1 }
-
-        # 1
-        r = @unit.launch("noret tag: 't0'", domain: 'org.acme', wait: true)
-        #exid1 = r['exid']
-        expect(r).to have_terminated_as_point
-          # completely different domain, not trapped
-
-        # 2
-        r = @unit.launch("noret tag: 't0'", domain: 'net.acme', wait: true)
-        exid2 = r['exid']
-        expect(r).to have_terminated_as_point
-          # same domain, trapped
-
-        # 3
-        r = @unit.launch("noret tag: 't0'", domain: 'net.acme.s0', wait: true)
-        exid3 = r['exid']
-        expect(r).to have_terminated_as_point
-          # subdomain of net.acme, trapped
-
-        wait_until { @unit.traces.count == 3 }
-
-        expect(
-          (
-            @unit.traces
-              .each_with_index
-              .collect { |t, i| "#{i}:#{t.text}" }
-          ).join("\n")
-        ).to eq([
-          "0:stalling_#{exid0}",
-          "1:t0_#{exid2}",
-          "2:t0_#{exid3}"
-        ].join("\n"))
-      end
-    end
-
-    context 'tag:' do
-
-      it 'traps tag entered by default' do
-
-        r = @unit.launch(
-          %q{
-            sequence
-              trace 'a'
-              trap tag: 'x'
-                def msg \ trace msg.point
-              sequence tag: 'x'
-                trace 'c'
-          },
-          wait: true)
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count > 2 }
-
-        expect(
-          @unit.traces.collect(&:text).join(' ')
-        ).to eq(
-          'a c entered'
-        )
+          expect(
+            @unit.traces.collect(&:text).join("\n")
+          ).to eq([
+            'exe0', "t1_#{exid0}", 'exe1'
+          ].join("\n"))
+        end
       end
 
-      it 'traps tag left' do
+      describe 'range: domain' do
 
-        r = @unit.launch(
-          %q{
-            sequence
-              trace 'a'
-              trap tag: 'x' point: 'left'
-              #trap tag: 'x' point: [ 'entered' 'left' ]
-                def msg \ trace "$(msg.tags.-1)-$(msg.point)"
-              sequence tag: 'x'
-                trace 'x'
-              sequence tag: 'y'
-                trace 'y'
-          },
-          wait: true)
+        it 'traps the events in execution domain' do
 
-        expect(r).to have_terminated_as_point
+          # 0
+          exid0 = @unit.launch(%q{
+            trap tag: 't0' range: 'domain' \ def msg \ trace "t0_$(msg.exid)"
+            trace "stalling_$(exe.exid)"
+            stall _
+          }, domain: 'net.acme')
 
-        wait_until { @unit.traces.count > 2 }
+          wait_until { @unit.traps.count == 1 }
 
-        expect(
-          @unit.traces.collect(&:text).join(' ')
-        ).to eq(
-          'a x y x-left'
-        )
+          # 1
+          r = @unit.launch("noret tag: 't0'", domain: 'org.acme', wait: true)
+          #exid1 = r['exid']
+          expect(r).to have_terminated_as_point
+            # completely different domain, not trapped
+
+          # 2
+          r = @unit.launch("noret tag: 't0'", domain: 'net.acme', wait: true)
+          exid2 = r['exid']
+          expect(r).to have_terminated_as_point
+            # same domain, trapped
+
+          # 3
+          r = @unit.launch("noret tag: 't0'", domain: 'net.acme.s0', wait: true)
+          #exid3 = r['exid']
+          expect(r).to have_terminated_as_point
+            # subdomain, not trapped
+
+          wait_until { @unit.traces.count == 2 }
+
+          expect(
+            (
+              @unit.traces
+                .each_with_index
+                .collect { |t, i| "#{i}:#{t.text}" }
+            ).join("\n")
+          ).to eq([
+            "0:stalling_#{exid0}",
+            "1:t0_#{exid2}"
+          ].join("\n"))
+        end
       end
 
-      it 'traps multiple tags' do
+      describe 'range: subdomain' do
 
-        r = @unit.launch(
-          %q{
-            sequence
-              trace 'in'
-              trap tags: [ 'x', 'y' ]
-                def msg \ trace "$(msg.tags.-1)-$(msg.point)"
-              sequence tag: 'x'
+        it 'traps the events in range domain and its subdomains' do
+
+          # 0
+          exid0 = @unit.launch(%q{
+            trap tag: 't0' range: 'subdomain' \ def msg \ trace "t0_$(msg.exid)"
+            trace "stalling_$(exe.exid)"
+            stall _
+          }, domain: 'net.acme')
+
+          wait_until { @unit.traps.count == 1 }
+
+          # 1
+          r = @unit.launch("noret tag: 't0'", domain: 'org.acme', wait: true)
+          #exid1 = r['exid']
+          expect(r).to have_terminated_as_point
+            # completely different domain, not trapped
+
+          # 2
+          r = @unit.launch("noret tag: 't0'", domain: 'net.acme', wait: true)
+          exid2 = r['exid']
+          expect(r).to have_terminated_as_point
+            # same domain, trapped
+
+          # 3
+          r = @unit.launch("noret tag: 't0'", domain: 'net.acme.s0', wait: true)
+          exid3 = r['exid']
+          expect(r).to have_terminated_as_point
+            # subdomain of net.acme, trapped
+
+          wait_until { @unit.traces.count == 3 }
+
+          expect(
+            (
+              @unit.traces
+                .each_with_index
+                .collect { |t, i| "#{i}:#{t.text}" }
+            ).join("\n")
+          ).to eq([
+            "0:stalling_#{exid0}",
+            "1:t0_#{exid2}",
+            "2:t0_#{exid3}"
+          ].join("\n"))
+        end
+      end
+
+      describe 'tag:' do
+
+        it 'traps tag entered by default' do
+
+          r = @unit.launch(
+            %q{
+              sequence
                 trace 'a'
-              sequence tag: 'y'
-                trace 'b'
-              sequence tag: 'z'
-                trace 'c'
-              trace 'out'
-          },
-          wait: true)
+                trap tag: 'x'
+                  def msg \ trace msg.point
+                sequence tag: 'x'
+                  trace 'c'
+            },
+            wait: true)
 
-        expect(r).to have_terminated_as_point
+          expect(r).to have_terminated_as_point
 
-        wait_until { @unit.traces.count > 2 }
+          wait_until { @unit.traces.count > 2 }
 
-        expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
-          in a b x-entered c out y-entered
-        ])
+          expect(
+            @unit.traces.collect(&:text).join(' ')
+          ).to eq(
+            'a c entered'
+          )
+        end
+
+        it 'traps tag left' do
+
+          r = @unit.launch(
+            %q{
+              sequence
+                trace 'a'
+                trap tag: 'x' point: 'left'
+                #trap tag: 'x' point: [ 'entered' 'left' ]
+                  def msg \ trace "$(msg.tags.-1)-$(msg.point)"
+                sequence tag: 'x'
+                  trace 'x'
+                sequence tag: 'y'
+                  trace 'y'
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 2 }
+
+          expect(
+            @unit.traces.collect(&:text).join(' ')
+          ).to eq(
+            'a x y x-left'
+          )
+        end
+
+        it 'traps multiple tags' do
+
+          r = @unit.launch(
+            %q{
+              sequence
+                trace 'in'
+                trap tags: [ 'x', 'y' ]
+                  def msg \ trace "$(msg.tags.-1)-$(msg.point)"
+                sequence tag: 'x'
+                  trace 'a'
+                sequence tag: 'y'
+                  trace 'b'
+                sequence tag: 'z'
+                  trace 'c'
+                trace 'out'
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 2 }
+
+          expect(
+            @unit.traces.collect(&:text)
+          ).to eq(%w[
+            in a b x-entered c out y-entered
+          ])
+        end
+
+        it 'traps tags by regex' do
+
+          r = @unit.launch(
+            %q{
+              sequence
+                trace 'in'
+                trap tags: r/^x-/
+                  def msg \ trace "$(msg.tags.-1)-$(msg.point)"
+                sequence tag: 'x-0' \ trace 'a'
+                sequence tag: 'y' \ trace 'b'
+                sequence tag: 'x-1' \ trace 'c'
+                trace 'out'
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 2 }
+
+          expect(
+            @unit.traces.collect(&:text)
+          ).to eq(%w[
+            in a b x-0-entered c out x-1-entered
+          ])
+        end
       end
 
-      it 'traps tags by regex' do
+      describe 'consumed:' do
 
-        r = @unit.launch(
-          %q{
-            sequence
-              trace 'in'
-              trap tags: r/^x-/
-                def msg \ trace "$(msg.tags.-1)-$(msg.point)"
-              sequence tag: 'x-0' \ trace 'a'
-              sequence tag: 'y' \ trace 'b'
-              sequence tag: 'x-1' \ trace 'c'
-              trace 'out'
-          },
-          wait: true)
+        # It's nice and all, but by the time the msg is run through the trap
+        # it has already been consumed...
 
-        expect(r).to have_terminated_as_point
+        it 'traps after the message consumption' do
 
-        wait_until { @unit.traces.count > 2 }
-
-        expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
-          in a b x-0-entered c out x-1-entered
-        ])
-      end
-    end
-
-    context 'consumed:' do
-
-      # It's nice and all, but by the time the msg is run through the trap
-      # it has already been consumed...
-
-      it 'traps after the message consumption' do
-
-        r = @unit.launch(
-          %q{
-            trace 'a'
-            trap point: 'signal', consumed: true
-              def msg \ trace "0con:m$(msg.m)sm$(msg.sm)"
-            trap point: 'signal', consumed: true
-              def msg \ trace "1con:m$(msg.m)sm$(msg.sm)"
-            trap point: 'signal'
-              def msg \ trace "0nocon:m$(msg.m)sm$(msg.sm)"
-            signal 'S'
-            trace 'b'
-          },
-          wait: true)
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count > 4 }
-
-        expect(
-          @unit.traces.collect(&:text).join(' ')
-        ).to eq(%{
-          a b 0con:m58sm57 1con:m58sm57 0nocon:m58sm57
-        }.strip)
-      end
-    end
-
-    context 'point:' do
-
-      it 'traps "signal"' do
-
-        r = @unit.launch(
-          %q{
-            sequence
+          r = @unit.launch(
+            %q{
               trace 'a'
+              trap point: 'signal', consumed: true
+                def msg \ trace "0con:m$(msg.m)sm$(msg.sm)"
+              trap point: 'signal', consumed: true
+                def msg \ trace "1con:m$(msg.m)sm$(msg.sm)"
               trap point: 'signal'
-                def msg \ trace "S"
-              trace 'b'
+                def msg \ trace "0nocon:m$(msg.m)sm$(msg.sm)"
               signal 'S'
-              trace 'c'
-          },
-          wait: true)
+              trace 'b'
+            },
+            wait: true)
 
-        expect(r).to have_terminated_as_point
+          expect(r).to have_terminated_as_point
 
-        wait_until { @unit.traces.count > 3 }
+          wait_until { @unit.traces.count > 4 }
 
-        expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
-          a b c S
-        ])
+          expect(
+            @unit.traces.collect(&:text).join(' ')
+          ).to eq(%{
+            a b 0con:m58sm57 1con:m58sm57 0nocon:m58sm57
+          }.strip)
+        end
       end
 
-      it 'traps "signal" and name:' do
+      describe 'point:' do
 
-        r = @unit.launch(
-          %q{
-            sequence
-              trace 'a'
+        it 'traps "signal"' do
+
+          r = @unit.launch(
+            %q{
+              sequence
+                trace 'a'
+                trap point: 'signal'
+                  def msg \ trace "S"
+                trace 'b'
+                signal 'S'
+                trace 'c'
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 3 }
+
+          expect(
+            @unit.traces.collect(&:text)
+          ).to eq(%w[
+            a b c S
+          ])
+        end
+
+        it 'traps "signal" and name:' do
+
+          r = @unit.launch(
+            %q{
+              sequence
+                trace 'a'
+                trap point: 'signal', name: 's0'
+                  def msg \ trace "s0"
+                trap point: 'signal', name: 's1'
+                  def msg \ trace "s1"
+                signal 's0'
+                signal 's1'
+                signal 's2'
+                trace 'b'
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 3 }
+
+          expect(
+            @unit.traces.collect(&:text)
+          ).to eq(%w[
+            a s0 s1 b
+          ])
+        end
+
+        it 'traps "signal" and its payload' do
+
+          r = @unit.launch(
+            %q{
               trap point: 'signal', name: 's0'
-                def msg \ trace "s0"
-              trap point: 'signal', name: 's1'
-                def msg \ trace "s1"
+                def msg \ trace "s0:$(msg.payload.ret)"
               signal 's0'
-              signal 's1'
-              signal 's2'
-              trace 'b'
-          },
-          wait: true)
+                [ 1, 2, 3 ]
+            },
+            wait: true)
 
-        expect(r).to have_terminated_as_point
+          expect(r).to have_terminated_as_point
 
-        wait_until { @unit.traces.count > 3 }
+          wait_until { @unit.traces.count > 0 }
 
-        expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
-          a s0 s1 b
-        ])
+          expect(
+            @unit.traces.collect(&:text)
+          ).to eq(%w[
+            s0:[1,2,3]
+          ])
+        end
+
+        it 'traps multiple points: (array)' do
+
+          r = @unit.launch(
+            %q{
+              trap point: [ 'left', 'entered' ]
+                def msg \ trace "$(msg.nid)-$(msg.point)"
+              sequence tag: 'x'
+                0
+              sequence tag: 'y'
+                1
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 0 }
+
+          expect(
+            @unit.traces.collect(&:text)
+          ).to eq(%w[
+            0_1-entered 0_1-left 0_2-entered 0_2-left
+          ])
+        end
+
+        it 'traps multiple points: (string)' do
+
+          r = @unit.launch(
+            %q{
+              trap point: 'left, entered'
+                def msg \ trace "$(msg.nid)-$(msg.point)"
+              sequence tag: 'x'
+                0
+              sequence tag: 'y'
+                1
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 0 }
+
+          expect(
+            @unit.traces.collect(&:text)
+          ).to eq(%w[
+            0_1-entered 0_1-left 0_2-entered 0_2-left
+          ])
+        end
       end
 
-      it 'traps "signal" and its payload' do
+      describe 'signal:' do
 
-        r = @unit.launch(
-          %q{
-            trap point: 'signal', name: 's0'
-              def msg \ trace "s0:$(msg.payload.ret)"
-            signal 's0'
-              [ 1, 2, 3 ]
-          },
-          wait: true)
+        it "traps the 'signal' point with the given name" do
 
-        expect(r).to have_terminated_as_point
+          r = @unit.launch(
+            %q{
+              sequence
+                trace 'a'
+                trap signal: 'S0'
+                  def msg \ trace "S0"
+                trace 'b'
+                signal 'S0'
+                trace 'c'
+                signal 'S1'
+                trace 'd'
+            },
+            wait: true)
 
-        wait_until { @unit.traces.count > 0 }
+          expect(r).to have_terminated_as_point
 
-        expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
-          s0:[1,2,3]
-        ])
+          wait_until { @unit.traces.count > 3 }
+
+          expect(
+            @unit.traces.collect(&:text)
+          ).to eq(%w[
+            a b c S0 d
+          ])
+        end
+
+        it 'traps an array of signals' do
+
+          r = @unit.launch(
+            %q{
+              sequence
+                trace 'a'
+                trap signal: [ 'S0' 'S1' ]
+                  def msg \ trace sig
+                trace 'b'
+                signal 'S0'
+                trace 'c'
+                signal 'S1'
+                trace 'd'
+                trace 'e'
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 3 }
+
+          expect(
+            @unit.traces.collect(&:text)
+          ).to eq(%w[
+            a b c S0 d S1 e
+          ])
+        end
+
+        it 'traps a signal by regex' do
+
+          r = @unit.launch(
+            %q{
+              sequence
+                trace 'a'
+                #trap signal: [ /^S\d+$/, 'Sx' ]
+                trap signal: /^S\d+$/
+                  def msg \ trace sig
+                trace 'b'
+                signal 'S0'
+                trace 'c'
+                signal 'S1'
+                trace 'd'
+                signal 'S2x'
+                trace 'e'
+            },
+            wait: true)
+
+          expect(r).to have_terminated_as_point
+
+          wait_until { @unit.traces.count > 3 }
+
+          expect(
+            @unit.traces.collect(&:text)
+          ).to eq(%w[
+            a b c S0 d S1 e
+          ])
+        end
       end
 
-      it 'traps multiple points: (array)' do
+      describe 'payload:' do
 
-        r = @unit.launch(
-          %q{
-            trap point: [ 'left', 'entered' ]
-              def msg \ trace "$(msg.nid)-$(msg.point)"
-            sequence tag: 'x'
-              0
-            sequence tag: 'y'
-              1
-          },
-          wait: true)
+        it 'uses the trap payload if "trap" (default)' do
 
-        expect(r).to have_terminated_as_point
+          r = @unit.launch(
+            %q{
+              trap point: 'signal' name: 's0' payload: 'trap'
+                def msg \ trace "s0:$(f.ret):$(msg.payload.ret)"
+              signal 's0'
+                [ 1, 2, 3 ]
+            },
+            wait: true)
 
-        wait_until { @unit.traces.count > 0 }
+          expect(r).to have_terminated_as_point
 
-        expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
-          0_1-entered 0_1-left 0_2-entered 0_2-left
-        ])
-      end
+          wait_until { @unit.traces.count > 0 }
 
-      it 'traps multiple points: (string)' do
+          expect(@unit.traces.count).to eq(1)
 
-        r = @unit.launch(
-          %q{
-            trap point: 'left, entered'
-              def msg \ trace "$(msg.nid)-$(msg.point)"
-            sequence tag: 'x'
-              0
-            sequence tag: 'y'
-              1
-          },
-          wait: true)
+          expect(
+            @unit.traces.first.text
+          ).to eq(%w[
+            s0
+            ["_func",{"nid":"0_0_3","tree":["def",[["_att",[["msg",[],3]],3],["trace",[["_att",[["_dqs",[["_sqs","s0:",3],["_dol",[["_dmute",[["_ref",[["_sqs","f",3],["_sqs","ret",3]],3]],3]],3],["_sqs",":",3],["_dol",[["_dmute",[["_ref",[["_sqs","msg",3],["_sqs","payload",3],["_sqs","ret",3]],3]],3]],3]],3]],3]],3]],3],"cnid":"0_0","fun":0},3]
+            [1,2,3]
+          ].join(':'))
+        end
 
-        expect(r).to have_terminated_as_point
+        it 'uses the event payload if "event"' do
 
-        wait_until { @unit.traces.count > 0 }
+          r = @unit.launch(
+            %q{
+              trap point: 'signal' name: 's0' payload: 'event'
+                def msg
+                  trace "s0:$(f.ret):$(msg.payload.ret)"
+                  trace "s0:$(payload.ret)"
+              signal 's0'
+                [ 1, 2, 3 ]
+            },
+            wait: true)
 
-        expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
-          0_1-entered 0_1-left 0_2-entered 0_2-left
-        ])
-      end
-    end
+          expect(r).to have_terminated_as_point
 
-    context 'signal:' do
+          wait_until { @unit.traces.count > 0 }
 
-      it "traps the 'signal' point with the given name" do
+          ts = @unit.traces.all
 
-        r = @unit.launch(
-          %q{
-            sequence
-              trace 'a'
-              trap signal: 'S0'
-                def msg \ trace "S0"
-              trace 'b'
-              signal 'S0'
-              trace 'c'
-              signal 'S1'
-              trace 'd'
-          },
-          wait: true)
+          expect(ts.size).to eq(2)
 
-        expect(r).to have_terminated_as_point
+          expect(
+            ts[0].text
+          ).to eq(%{
+            s0:[1,2,3]:[1,2,3]
+          }.strip)
 
-        wait_until { @unit.traces.count > 3 }
+          expect(
+            ts[1].text
+          ).to eq(%{
+            s0:["_func",{"nid":"0_0_3","tree":["def",[["_att",[["msg",[],3]],3],["trace",[["_att",[["_dqs",[["_sqs","s0:",4],["_dol",[["_dmute",[["_ref",[["_sqs","f",4],["_sqs","ret",4]],4]],4]],4],["_sqs",":",4],["_dol",[["_dmute",[["_ref",[["_sqs","msg",4],["_sqs","payload",4],["_sqs","ret",4]],4]],4]],4]],4]],4]],4],["trace",[["_att",[["_dqs",[["_sqs","s0:",5],["_dol",[["_dmute",[["_ref",[["_sqs","payload",5],["_sqs","ret",5]],5]],5]],5]],5]],5]],5]],3],"cnid":"0_0","fun":0},3]
+          }.strip)
+        end
 
-        expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
-          a b c S0 d
-        ])
-      end
+        it 'uses the event payload if {object}"' do
 
-      it 'traps an array of signals' do
+          r = @unit.launch(
+            %q{
+              trap point: 'signal' name: 's0' payload: { trap: 'trap1' }
+                def msg
+                  trace "s0:$(f.trap)"
+              signal 's0'
+                [ 1, 2, 3 ]
+            },
+            wait: true)
 
-        r = @unit.launch(
-          %q{
-            sequence
-              trace 'a'
-              trap signal: [ 'S0' 'S1' ]
-                def msg \ trace sig
-              trace 'b'
-              signal 'S0'
-              trace 'c'
-              signal 'S1'
-              trace 'd'
-              trace 'e'
-          },
-          wait: true)
+          expect(r).to have_terminated_as_point
 
-        expect(r).to have_terminated_as_point
+          wait_until { @unit.traces.count > 0 }
 
-        wait_until { @unit.traces.count > 3 }
-
-        expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
-          a b c S0 d S1 e
-        ])
-      end
-
-      it 'traps a signal by regex' do
-
-        r = @unit.launch(
-          %q{
-            sequence
-              trace 'a'
-              #trap signal: [ /^S\d+$/, 'Sx' ]
-              trap signal: /^S\d+$/
-                def msg \ trace sig
-              trace 'b'
-              signal 'S0'
-              trace 'c'
-              signal 'S1'
-              trace 'd'
-              signal 'S2x'
-              trace 'e'
-          },
-          wait: true)
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count > 3 }
-
-        expect(
-          @unit.traces.collect(&:text)
-        ).to eq(%w[
-          a b c S0 d S1 e
-        ])
-      end
-    end
-
-    context 'payload:' do
-
-      it 'uses the trap payload if "trap" (default)' do
-
-        r = @unit.launch(
-          %q{
-            trap point: 'signal' name: 's0' payload: 'trap'
-              def msg \ trace "s0:$(f.ret):$(msg.payload.ret)"
-            signal 's0'
-              [ 1, 2, 3 ]
-          },
-          wait: true)
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count > 0 }
-
-        expect(@unit.traces.count).to eq(1)
-
-        expect(
-          @unit.traces.first.text
-        ).to eq(%w[
-          s0
-          ["_func",{"nid":"0_0_3","tree":["def",[["_att",[["msg",[],3]],3],["trace",[["_att",[["_dqs",[["_sqs","s0:",3],["_dol",[["_dmute",[["_ref",[["_sqs","f",3],["_sqs","ret",3]],3]],3]],3],["_sqs",":",3],["_dol",[["_dmute",[["_ref",[["_sqs","msg",3],["_sqs","payload",3],["_sqs","ret",3]],3]],3]],3]],3]],3]],3]],3],"cnid":"0_0","fun":0},3]
-          [1,2,3]
-        ].join(':'))
-      end
-
-      it 'uses the event payload if "event"' do
-
-        r = @unit.launch(
-          %q{
-            trap point: 'signal' name: 's0' payload: 'event'
-              def msg
-                trace "s0:$(f.ret):$(msg.payload.ret)"
-                trace "s0:$(payload.ret)"
-            signal 's0'
-              [ 1, 2, 3 ]
-          },
-          wait: true)
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count > 0 }
-
-        ts = @unit.traces.all
-
-        expect(ts.size).to eq(2)
-
-        expect(
-          ts[0].text
-        ).to eq(%{
-          s0:[1,2,3]:[1,2,3]
-        }.strip)
-
-        expect(
-          ts[1].text
-        ).to eq(%{
-          s0:["_func",{"nid":"0_0_3","tree":["def",[["_att",[["msg",[],3]],3],["trace",[["_att",[["_dqs",[["_sqs","s0:",4],["_dol",[["_dmute",[["_ref",[["_sqs","f",4],["_sqs","ret",4]],4]],4]],4],["_sqs",":",4],["_dol",[["_dmute",[["_ref",[["_sqs","msg",4],["_sqs","payload",4],["_sqs","ret",4]],4]],4]],4]],4]],4]],4],["trace",[["_att",[["_dqs",[["_sqs","s0:",5],["_dol",[["_dmute",[["_ref",[["_sqs","payload",5],["_sqs","ret",5]],5]],5]],5]],5]],5]],5]],3],"cnid":"0_0","fun":0},3]
-        }.strip)
-      end
-
-      it 'uses the event payload if {object}"' do
-
-        r = @unit.launch(
-          %q{
-            trap point: 'signal' name: 's0' payload: { trap: 'trap1' }
-              def msg
-                trace "s0:$(f.trap)"
-            signal 's0'
-              [ 1, 2, 3 ]
-          },
-          wait: true)
-
-        expect(r).to have_terminated_as_point
-
-        wait_until { @unit.traces.count > 0 }
-
-        expect(@unit.traces.count).to eq(1)
-        expect(@unit.traces.first.text).to eq('s0:trap1')
+          expect(@unit.traces.count).to eq(1)
+          expect(@unit.traces.first.text).to eq('s0:trap1')
+        end
       end
     end
 
@@ -1388,6 +1348,52 @@ describe 'Flor punit' do
         ).to eq(%{
           0:B>0_1_3_0_0_1_0_0
         }.ftrim)
+      end
+    end
+
+    context 'and cancel/kill' do
+
+      it 'does not cancel its children' do
+
+        r = @unit.launch(
+          %q{
+            trap point: 'left'
+              def msg \ stall _
+            sequence tag: 'x'
+            sequence tag: 'y'
+            sequence tag: 'z'
+            stall _
+          },
+          wait: '0_4 receive; end')
+
+        exid = r['exid']
+
+        expect(
+          @unit.journal.select { |m| m['point'] == 'trigger' }.count
+        ).to eq(3)
+
+        exe = @unit.executions[exid: r['exid']]
+
+        expect(
+          exe.nodes.keys
+        ).to eq(%w[
+          0 0_0 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 0_4 0_0_1-3 0_0_1_1-3
+        ])
+
+        @unit.cancel(exid: exid, nid: '0_0')
+
+        @unit.wait(exid, 'end')
+
+        exe = @unit.executions[exid: r['exid']]
+
+        expect(exe.status).to eq('active')
+        expect(exe.nodes['0_0']['status'].last['status']).to eq('ended')
+
+        expect(
+          exe.nodes.keys
+        ).to eq(%w[
+          0 0_0 0_0_1-1 0_0_1_1-1 0_0_1-2 0_0_1_1-2 0_4 0_0_1-3 0_0_1_1-3
+        ])
       end
     end
   end
