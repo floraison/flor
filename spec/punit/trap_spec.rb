@@ -1292,6 +1292,56 @@ describe 'Flor punit' do
           expect(@unit.traces.first.text).to eq('s0:trap1')
         end
       end
+
+      describe 'bnid: / bind:' do
+
+        it 'binds the trap at a given nid' do
+
+          m = @unit.launch(%q{
+            concurrence
+              sequence
+                stall _
+              sequence
+                trap tag: 't0' bnid: '0_0_0'
+                  def msg \ trace "t0_$(msg.exid)"
+                stall _
+          }, wait: '0_1_1 receive')
+
+          expect(m['point']).to eq('receive')
+
+          tra = @unit.traps.first
+
+          expect(tra.nid).to eq('0_1_0')
+          expect(tra.onid).to eq('0_1_0')
+          expect(tra.bnid).to eq('0_0_0')
+        end
+
+        it 'triggers a nested blocking trap' do
+          # thanks @Subtletree Ryan Scott
+
+          r = @unit.launch(
+            %q{
+              trace 'a'
+              sequence
+                trace 'b'
+                #trap signal: 'S0' bnid: '0'
+                trap signal: 'S0' bind: '0'
+                trace 'c'
+            })
+
+          wait_until { @unit.traps.count == 1 }
+
+          @unit.signal('S0', exid: r)
+
+          wait_until { @unit.traces.count == 3 }
+
+          expect(
+            @unit.traces.collect(&:text)
+          ).to eq(%w[
+            a b c
+          ])
+        end
+      end
     end
 
     context 'multiple criteria' do

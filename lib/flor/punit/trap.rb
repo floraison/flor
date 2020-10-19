@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 # Would it be worth the pain implementing bind:?
 
@@ -168,6 +169,12 @@ class Flor::Pro::Trap < Flor::Procedure
   # (org.acme.accounting, org.acme.engineering, org.acme.whatever.x.y.z, ...)
   #
   #
+  # ## the bnid: directive
+  #
+  # "bound nid" by default is the nid of the parent expression to the "trap".
+  # With `bnid:`, one can bind a trap to another expression.
+  #
+  #
   # ## the count: limit
   #
   # ```
@@ -244,6 +251,8 @@ class Flor::Pro::Trap < Flor::Procedure
     points = points.uniq if points
     names = names.uniq if names
 
+    bnid = att('bnid', 'bind') || parent || '0'
+
     msg =
       if fun
         apply(fun, [], tree[2], anid: false).first
@@ -253,7 +262,7 @@ class Flor::Pro::Trap < Flor::Procedure
 
     tra = {}
     tra['nid'] = nid
-    tra['bnid'] = parent || '0'
+    tra['bnid'] = bnid
     tra['points'] = points
     tra['tags'] = tags
     tra['heaps'] = heaps

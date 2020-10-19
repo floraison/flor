@@ -166,6 +166,12 @@ Will trap all signals in the domain "org.acme" and its subdomains,
 (org.acme.accounting, org.acme.engineering, org.acme.whatever.x.y.z, ...)
 
 
+## the bnid: directive
+
+"bound nid" by default is the nid of the parent expression to the "trap".
+With `bnid:`, one can bind a trap to another expression.
+
+
 ## the count: limit
 
 ```
