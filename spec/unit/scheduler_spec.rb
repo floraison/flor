@@ -513,7 +513,7 @@ describe 'Flor unit' do
             trace 'a'
             sequence
               trace 'b'
-              trap signal: 'S0'
+              trap signal: 'S0' range: 'execution'
               trace 'c'
           })
 
@@ -1071,3 +1071,4 @@ describe 'Flor unit' do
     end
   end
 end
+
