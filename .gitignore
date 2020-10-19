@@ -38,3 +38,5 @@ envs/shell/var/flor.db
   #
 .log.txt
 
+__spec/
+
