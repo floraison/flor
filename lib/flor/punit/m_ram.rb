@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 # Module extracted out of "concurrence", deals with receivers and mergers.
 #

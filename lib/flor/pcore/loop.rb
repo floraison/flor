@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 class Flor::Pro::Loop < Flor::Pro::Cursor
   #

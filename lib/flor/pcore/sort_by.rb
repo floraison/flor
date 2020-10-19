@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 class Flor::Pro::SortBy < Flor::Pro::Iterator
   #
