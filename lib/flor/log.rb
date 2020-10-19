@@ -76,7 +76,7 @@ module Flor
       a << hp
 
       msr = " #{_c.dg}m#{m['m']}s#{m['sm'] || '_'}"
-      msr << "r#{m['er']}>#{m['pr']}" if m['er'] && m['er'] > -1
+      msr += "r#{m['er']}>#{m['pr']}" if m['er'] && m['er'] > -1
       a << msr
 
       a << (m['from'] ? " from #{m['from']}" : '')
