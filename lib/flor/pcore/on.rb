@@ -126,13 +126,13 @@ class Flor::Pro::On < Flor::Macro
     if att = find_catch # 22
       rewrite_as_catch_tree(att)
     else
-      rewrite_as_trap_tree
+      rewrite_as_signal_trap_tree
     end
   end
 
   protected
 
-  CATCHES = %w[ error cancel timeout ]
+  CATCHES = %w[ error cancel timeout ].freeze
 
   def find_catch
 
@@ -166,7 +166,7 @@ class Flor::Pro::On < Flor::Macro
     th
   end
 
-  def rewrite_as_trap_tree
+  def rewrite_as_signal_trap_tree
 
     atts = att_children
     signame_i = atts.index { |at| at[1].size == 1 }

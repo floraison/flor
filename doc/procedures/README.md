@@ -64,6 +64,7 @@
 
 ## unit
 
+* [abort, kabort](abort.md) - Cancels the current execution.
 * [ccollect, c-collect](c_collect.md) - A concurrent version of [collect](collect.md).
 * [ceach, c-each](c_each.md) - Concurrent "each".
 * [c-for-each](c_for_each.md) - Concurrent "for-each", launches a concurrent branch for each elt or entry of the incoming collection.
@@ -98,6 +99,7 @@
     * [Flor::Pro::Inject](https://github.com/floraison/flor/blob/master/lib/flor/pcore/inject.rb) : [inject](inject.md)
     * [Flor::Pro::On](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on.rb) : [on](on.md)
     * [Flor::Pro::Select](https://github.com/floraison/flor/blob/master/lib/flor/pcore/select.rb) : [select, reject](select.md)
+  * [Flor::Pro::Abort](https://github.com/floraison/flor/blob/master/lib/flor/punit/abort.rb) : [abort, kabort](abort.md)
   * [Flor::Pro::All](https://github.com/floraison/flor/blob/master/lib/flor/pcore/all.rb) : [all?](all.md)
   * [Flor::Pro::Andor](https://github.com/floraison/flor/blob/master/lib/flor/pcore/andor.rb) : [and, or](andor.md)
   * [Flor::Pro::Any](https://github.com/floraison/flor/blob/master/lib/flor/pcore/any.rb) : [any?](any.md)
