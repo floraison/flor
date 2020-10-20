@@ -6,6 +6,9 @@ Cancels the current execution.
 Cancels all the root nodes at once. Is usually the equivalent of
 `cancel '0'` but sometimes the root nodes are gone...
 
+"kabort" is like "abort" but the cancel flavour is 'kill', so that
+cancel handlers are ignored.
+
 ```
 # ...
 cursor

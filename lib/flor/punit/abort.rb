@@ -7,6 +7,9 @@ class Flor::Pro::Abort < Flor::Procedure
   # Cancels all the root nodes at once. Is usually the equivalent of
   # `cancel '0'` but sometimes the root nodes are gone...
   #
+  # "kabort" is like "abort" but the cancel flavour is 'kill', so that
+  # cancel handlers are ignored.
+  #
   # ```
   # # ...
   # cursor
@@ -24,7 +27,7 @@ class Flor::Pro::Abort < Flor::Procedure
 
   def receive_last
 
-    fla = 'cancel' # FIXME 'kill' if kabort...
+    fla = heap == 'kabort' ? 'kill' : 'cancel'
 
     nodes = @execution['nodes']
     nids = nodes.keys.dup

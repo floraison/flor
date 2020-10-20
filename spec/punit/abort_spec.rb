@@ -70,7 +70,32 @@ describe 'Flor punit' do
 
   describe 'kabort' do
 
-    it 'kills at the root'
+    it 'kills at the root' do
+
+      r = @unit.launch(
+        %q{
+          trace "before"
+          part cancellable: true on_cancel: (def \ trace "ca")
+            stall _
+          part cancellable: false on_cancel: (def \ trace "cb")
+            stall _
+          concurrence
+            stall _
+            sequence
+              trace "kabort"
+              kabort _
+          trace "after"
+        },
+        wait: true)
+
+      expect(r['point']).to eq('terminated')
+
+      expect(
+        @unit.traces.collect(&:text)
+      ).to eq(%w[
+        before kabort
+      ])
+    end
   end
 end
 
