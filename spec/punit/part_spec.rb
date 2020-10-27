@@ -127,10 +127,10 @@ describe 'Flor punit' do
       expect(r['payload']['parted']).to eq('0_0_1_1')
 
       expect(
-        @unit.traces.collect(&:text).join(' ')
-      ).to eq(
-        'main0 parted0 main1 parted1 main2 main3'
-      )
+        @unit.traces.collect(&:text)
+      ).to eq(%w[
+        main0 parted0 main1 parted1 main2 main3
+      ])
     end
 
     it 'does not get cancelled when its parent gets cancelled' do

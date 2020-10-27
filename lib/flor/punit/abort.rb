@@ -34,12 +34,13 @@ class Flor::Pro::Abort < Flor::Procedure
 
     @execution['nodes'].values.each do |n|
 
-      #p n.select { |k, v| %w[ nid can parent cnodes ].include?(k) }
+#p n.select { |k, v| %w[ nid can parent cnodes ].include?(k) }
       nid = n['nid']
       pa = nodes[n['parent']]
 
       nids.delete(nid) if pa && pa['cnodes'].include?(nid)
     end
+#p nids
 
     wrap_cancel_nodes(nids, { 'flavour' => fla })
       .each { |m| m['from'] = '9' }

@@ -831,8 +831,16 @@ class Flor::Procedure < Flor::Node
   def wrap_cancel_nodes(nids, h)
 
     (nids || [])
-      .collect { |i| wrap_cancel(h.merge('nid' => i, 'from' => nid)) }
+      .collect { |i|
+        n = @execution['nodes'][i]
+        s = n && n['status'].last
+        if n == nil || (s['status'] == 'closed' && s['point'] == 'cancel')
+          nil
+        else
+          wrap_cancel(h.merge('nid' => i, 'from' => nid))
+        end }
       .flatten(1)
+      .compact
   end
 
   def wrap_cancelled

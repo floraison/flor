@@ -274,10 +274,11 @@ describe 'Flor unit' do
       @unit.cancel(r['exid'], '0_0')
 
       r = @unit.wait(r['exid'], 'terminated')
+#Flor.tt(r)
 
       expect(r).to have_terminated_as_point
       expect(r['payload']['l']).to eq(%w[ odt oc ])
-      expect(r['cause'].collect { |m| m['m'] }).to eq([ 33, 32, 14 ])
+      expect(r['cause'].collect { |m| m['m'] }).to eq([ 32, 14 ])
     end
   end
 end

@@ -107,7 +107,6 @@ describe 'Flor unit' do
           (msg 0_0 receive from:0_0_1)
           (msg  receive from:0)
           (msg  receive from:0_0)
-          (msg 0_0 cancel from:0)
           (msg  ceased from:0_0)
           (msg  terminated from:0)
         }.ftrim)

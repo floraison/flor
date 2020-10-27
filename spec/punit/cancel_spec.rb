@@ -296,7 +296,6 @@ describe 'Flor punit' do
         0:receive:
         0:receive:
         0_0:receive:
-        0_0_0:cancel:
         :receive:
         :terminated:
       ].join("\n"))

@@ -11,6 +11,7 @@ require 'ostruct'
 require 'jruby/synchronized' if RUBY_PLATFORM.match(/java/)
 
 require 'flor'
+require 'flor/tt'
 require 'flor/unit'
 require 'fileutils'
 

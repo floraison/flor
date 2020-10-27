@@ -291,9 +291,8 @@ end
 
     def receive(message)
 
-      messages = leave_node(message)
-
       nid = message['nid']
+      messages = leave_node(message)
 
       return messages + toc_messages(message) unless nid
         # 'terminated' or 'ceased'
@@ -323,7 +322,9 @@ end
       cls = node['closures']
 
       pro = Flor::Procedure.make(self, node, message)
+
       pro.end
+        # do end the node
 
       cancels = pro.send(:wrap_cancel_children, 'cancel_trailing' => true)
 
