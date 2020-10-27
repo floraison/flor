@@ -7,24 +7,24 @@ module Flor
 
   class << self
 
-    def to_tt(o)
+    def to_tt(o, opts={})
 
       h = o.is_a?(Hash) ? o : nil
 
-      if h && h['status'].is_a?(Array) && h['tree'].is_a?(Array)
-        node_tt(h)
+      if h && h['status'].is_a?(Array) && h['nid'].is_a?(String)
+        node_tt(h, opts)
       elsif h && h['point'].is_a?(String) && h['sm'].is_a?(Integer)
-        message_tt(h)
+        message_tt(h, opts)
       elsif h
-        djan_tt(h)
+        djan_tt(h, opts)
       else
-        pp_tt(o)
+        pp_tt(o, opts)
       end
     end
 
-    def tt(o)
+    def tt(o, opts={})
 
-      puts(to_tt(o))
+      puts(to_tt(o, opts))
     end
 
     protected
@@ -32,7 +32,21 @@ module Flor
     #def columns; `tput cols`.to_i rescue 80; end
     def columns; IO.console.winsize[1] rescue 80; end
 
-    def message_tt(m)
+    def make_tt_table(opts, &block)
+
+      c = Flor.colours(opts)
+
+      table = Terminal::Table.new
+      table.style.border_x = opts[:border_x] || c.dg('-')
+      table.style.border_i = opts[:border_i] || c.dg('.')
+      table.style.border_y = opts[:border_y] || c.dg('|')
+
+      block.call(table) if block
+
+      table
+    end
+
+    def message_tt(m, opts)
 
       cols = columns.to_f
       w = (cols * 0.49).to_i
@@ -44,12 +58,10 @@ module Flor
         "cause:\n\n" +
         Flor.to_d(m['cause'], width: w)
 
-      table = Terminal::Table.new
-      table.add_row([ west, east ])
-      table.to_s
+      make_tt_table(opts) { |t| t.add_row([ west, east ]) }.to_s
     end
 
-    def node_tt(n)
+    def node_tt(n, opts)
 
       cols = columns.to_f
       w = (cols * 0.49).to_i
@@ -61,26 +73,20 @@ module Flor
         "status:\n\n" +
         Flor.to_d(n['status'], width: w)
 
-      table = Terminal::Table.new
-      table.add_row([ west, east ])
-      table.to_s
+      make_tt_table(opts) { |t| t.add_row([ west, east ]) }.to_s
     end
 
-    def pp_tt(o)
+    def pp_tt(o, opts)
 
-      table = Terminal::Table.new
-      table.add_row([ pp_s(o) ])
-      table.to_s
+      make_tt_table(opts) { |t| t.add_row([ pp_s(o, opts) ]) }.to_s
     end
 
-    def djan_tt(o)
+    def djan_tt(o, opts)
 
-      table = Terminal::Table.new
-      table.add_row([ Flor.to_d(o) ])
-      table.to_s
+      make_tt_table(opts) { |t| t.add_row([ Flor.to_d(o) ]) }.to_s
     end
 
-    def pp_s(o)
+    def pp_s(o, opts)
 
       s = StringIO.new
       PP.pp(o, s)
