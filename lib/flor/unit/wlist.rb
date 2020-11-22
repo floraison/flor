@@ -12,6 +12,15 @@ module Flor
     # `wtl_row_frequency`:
     #   sleep time between row waiter checks, defaults to 1
 
+    # Regular waiters are message waiters, they wait for a message
+    # that matches a pattern
+    #
+    # Row waiters are waiting for the pattern to realize in the database
+    # a better name would probably have been "query waiter".
+    # Row waiters need their own thread for checking at interval.
+    # Row waiters can live in a different Ruby process from the Ruby process
+    # performing the executions.
+
     DEFAULT_TIMEOUT = Flor.env_i('FLOR_DEFAULT_TIMEOUT')
 
     def initialize(unit)

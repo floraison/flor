@@ -23,7 +23,7 @@ module Flor
       @executor = nil
     end
 
-    ROW_PSEUDO_POINTS = %w[ status tag tasker var variable ]
+    ROW_PSEUDO_POINTS = %w[ status tag tasker var variable ].freeze
       # "tasker", not "task", since "task" is already a message point
 
     def row_waiter?
