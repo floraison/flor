@@ -4,10 +4,12 @@
 
 ## flor 1.0.1  not yet released
 
+* Accept sto_uri strings pointing to constant like 'DB'
+
 
 ## flor 1.0.0  released 2020-11-22
 
-* lots of incremental improvements
+* Lots of incremental improvements
 
 
 ## flor 0.18.0  released 2019-05-05
