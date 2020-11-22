@@ -20,90 +20,60 @@ describe Flor::Waiter do
 
   describe '#expand_args' do
 
-    it 'expands single points' do
+    {
 
-      expect(
-        @waiter.expand_args(wait: 'terminated')
-      ).to eq([
+      'terminated' => [
         [ [ nil, [ 'terminated' ] ] ],
         nil,
-        'fail'
-      ])
-    end
+        'fail' ],
 
-    it 'expands single points with nid' do
-
-      expect(
-        @waiter.expand_args(wait: '0_0 task')
-      ).to eq([
+      '0_0 task' => [
         [ [ '0_0', [ 'task' ] ] ],
         nil,
-        'fail'
-      ])
-    end
+        'fail' ],
 
-    it 'expands multiple points' do
-
-      expect(
-        @waiter.expand_args(wait: '0_0 task; terminated')
-      ).to eq([
-        [
-          [ '0_0', [ 'task' ] ],
-          [ nil, [ 'terminated' ] ]
-        ],
+      '0_0 task; terminated' => [
+        [ [ '0_0', [ 'task' ] ],
+          [ nil, [ 'terminated' ] ] ],
         nil,
-        'fail'
-      ])
-    end
+        'fail' ],
 
-    it 'expands multiple points for a nid' do
-
-      expect(
-        @waiter.expand_args(wait: '0_0 task|cancel; terminated')
-      ).to eq([
-        [
-          [ '0_0', [ 'task', 'cancel' ] ],
-          [ nil, [ 'terminated' ] ]
-        ],
+      '0_0 task|cancel; terminated' => [
+        [ [ '0_0', [ 'task', 'cancel' ] ],
+          [ nil, [ 'terminated' ] ] ],
         nil,
-        'fail'
-      ])
-    end
+        'fail' ],
 
-    it 'accepts comma or pipe to "or" points' do
-
-      expect(
-        @waiter.expand_args(wait: '0_0 task,cancel; 0_1 task|cancel')
-      ).to eq([
-        [
-          [ '0_0', [ 'task', 'cancel' ] ],
-          [ '0_1', [ 'task', 'cancel' ] ]
-        ],
+      '0_0 task,cancel; 0_1 task|cancel' => [
+        [ [ '0_0', [ 'task', 'cancel' ] ],
+          [ '0_1', [ 'task', 'cancel' ] ] ],
         nil,
-        'fail'
-      ])
-    end
+        'fail' ],
 
-    it 'accepts a timeout:' do
+      '0_0 task , cancel ; 0_1 task | cancel' => [
+        [ [ '0_0', [ 'task', 'cancel' ] ],
+          [ '0_1', [ 'task', 'cancel' ] ] ],
+        nil,
+        'fail' ],
 
-      expect(
-        @waiter.expand_args(wait: '0_0 task', timeout: 12)
-      ).to eq([
+      { wait: '0_0 task', timeout: 12 } => [
         [ [ '0_0', [ 'task' ] ] ],
         12,
-        'fail'
-      ])
-    end
+        'fail' ],
 
-    it 'accepts an on_timeout:' do
-
-      expect(
-        @waiter.expand_args(wait: '0_0 task', on_timeout: 'shutup')
-      ).to eq([
+      { wait: '0_0 task', on_timeout: 'shutup' } => [
         [ [ '0_0', [ 'task' ] ] ],
         nil,
-        'shutup'
-      ])
+        'shutup' ],
+
+    }.each do |k, v|
+
+      as = k.is_a?(String) ? { wait: k } : k
+
+      it "expands #{as.inspect[1..-2]} correctly" do
+
+        expect(@waiter.expand_args(as)).to eq(v)
+      end
     end
   end
 end

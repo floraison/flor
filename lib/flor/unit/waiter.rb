@@ -247,15 +247,7 @@ module Flor
       end
     end
 
-    WAIT_REX =
-      %r{
-        \A
-        ([0-9_\-]+)?[ ]*
-        (
-          [a-z]+(?::[^:|;,\s]+){0,2}
-          (?:[|, ][a-z]+(:[^:|;,\s]+){0,2})*
-        )\z
-      }x
+    PT_REX = /[a-z]+(?::[^:|,\s]+){0,2}/.freeze
 
     def parse_serie(s)
 
@@ -263,11 +255,23 @@ module Flor
 
       (s.is_a?(String) ? s.split(';') : s)
         .collect { |ss|
-          m = ss.strip.match(WAIT_REX)
+
+          k = StringScanner.new(ss.strip)
+
+          ni = k.scan(Flor::START_NID_REX)
+
+          k.scan(/\s*/)
+
+          pts = []; loop do
+              pt = k.scan(PT_REX); break unless pt
+              pts << pt
+              k.scan(/\s*[|,]\s*/)
+            end
+
           fail ArgumentError.new(
-            "cannot parse #{ss.strip.inspect} wait directive") unless m
-          ni, pt = m[1, 2]
-          [ ni, pt.split(/[|,]/).collect(&:strip) ] }
+            "cannot parse #{ss.strip.inspect} wait directive") unless k.eos?
+
+          [ ni, pts ] }
     end
   end
 end

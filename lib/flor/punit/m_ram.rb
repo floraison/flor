@@ -179,15 +179,15 @@ module Flor::Pro::ReceiveAndMerge
   # * ignore
   # * stack
 
-  STACK_REX = /\Astack(?::([-_a-zA-Z0-9]+))?\z/
+  STACK_REX = /\Astack(?::([-_a-zA-Z0-9]+))?\z/.freeze
 
-  TRANSLATORS = { STACK_REX => 'k', /\Atail\z/ => 'a' }
+  TRANSLATORS = { STACK_REX => 'k', /\Atail\z/ => 'a' }.freeze
 
   MORDERS = {
-    'f' => :first, 'l' => :last, /[tnh]/ => :north, /[bsa]/ => :south }
+    'f' => :first, 'l' => :last, /[tnh]/ => :north, /[bsa]/ => :south }.freeze
   MMERGERS = {
     'd' => :deep, /[mp]/ => :mix, 'o' => :override, 'i' => :ignore,
-    'k' => :stack }
+    'k' => :stack }.freeze
 
   def default_merger
 

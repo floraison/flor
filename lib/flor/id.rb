@@ -2,6 +2,9 @@
 
 module Flor
 
+  NID_REX = /\A[0-9]+(?:_[0-9]+)*(?:-[0-9]+)?\z/.freeze
+  START_NID_REX = /\A[0-9]+(?:_[0-9]+)*(?:-[0-9]+)?/.freeze
+
   class << self
 
     #
@@ -99,7 +102,7 @@ module Flor
 
     def is_nid?(s)
 
-      !! (s.is_a?(String) && s.match(/\A[0-9]+(?:_[0-9]+)*(?:-[0-9]+)?\z/))
+      !! (s.is_a?(String) && s.match(NID_REX))
     end
 
     def split_exid(s)
