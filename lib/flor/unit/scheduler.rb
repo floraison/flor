@@ -227,6 +227,9 @@ module Flor
       @last_queued_message_id =
         @storage.put_message(message)
 
+      # Nota bene:
+      # the #wait method is added to the Scheduler by Flor::WaitList
+
       if opts[:wait]
         wait(message['exid'], opts)
       else
