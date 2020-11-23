@@ -121,7 +121,7 @@ module Flor
         case o.method(m).arity
         when 1 then o.send(m, message)
         when 2 then o.send(m, conf, message)
-        when 3 then o.send(m, executor, conf, message)
+        when 3 then o.send(m, service, conf, message)
         when -1 then o.send(m, {
           service: service, configuration: conf, message: message })
         else o.send(m)

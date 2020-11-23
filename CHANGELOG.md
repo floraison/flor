@@ -4,6 +4,8 @@
 
 ## flor 1.0.2  not yet released
 
+* Fix service/executor issue in Caller
+
 
 ## flor 1.0.1  released 2020-11-23
 
