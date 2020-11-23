@@ -2,7 +2,7 @@
 # CHANGELOG.md
 
 
-## flor 1.0.1  not yet released
+## flor 1.0.1  released 2020-11-23
 
 * Accept sto_uri strings pointing to constant like 'DB'
 
