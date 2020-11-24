@@ -53,7 +53,7 @@ module Flor
 
       @mutex.synchronize do
 
-        return false unless match?(message)
+        return false unless msg_match?(message)
 
         @serie.shift
         return false if @serie.any?
@@ -151,7 +151,7 @@ module Flor
 
     protected
 
-    def match?(message)
+    def msg_match?(message)
 
       mpoint = message['point']
 
