@@ -2,8 +2,9 @@
 # CHANGELOG.md
 
 
-## flor 1.0.2  not yet released
+## flor 1.1.0  not yet released
 
+* Introduce Flor::StagedBasicTasker
 * Fix service/executor issue in Caller
 
 
