@@ -112,5 +112,50 @@ module Flor
       h
     end
   end
+
+  # A BasicTasker with stages (pre / on / post)
+  #
+  class StagedBasicTasker < BasicTasker
+
+    def call_task
+
+      call_one_of(:pre_task)
+      call_one_of(:on_task, :task)
+    end
+
+    def call_detask
+
+      call_one_of(:pre_detask, :pre_cancel)
+      call_one_of(:on_detask, :on_cancel, :detask, :cancel)
+    end
+
+    protected
+
+    def call_one_of(*ms)
+
+      m = ms.flatten.find { |mm| respond_to?(mm) }
+
+      send(m) if m
+    end
+
+    def reply(message=@message, force=false)
+
+      fail ArgumentError.new(
+        "argument to reply must be a Hash but is #{message.class}"
+      ) unless message.is_a?(Hash)
+
+      pt = @message['point']
+
+      ms = [ "post_#{pt}" ]; ms << :post_cancel if pt == 'detask'
+        #
+      call_one_of(ms)
+
+      msg = derive_message(message)
+
+      @ganger.return(msg) if force || @ganger
+
+      [] # very important, return no further messages
+    end
+  end
 end
 

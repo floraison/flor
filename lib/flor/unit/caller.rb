@@ -107,9 +107,11 @@ module Flor
       #
       # call
 
-      p = message['point']
-      ms = [ "on_#{p}", :on_message, :on, p ]
-      ms = ms + [ :on_cancel, :cancel ] if p == 'detask'
+      pt = message['point']
+
+      ms = [ "call_#{pt}", "on_#{pt}", :on_message, :on, pt ]
+      ms = ms + [ :on_cancel, :cancel ] if pt == 'detask'
+
       m = ms.find { |mm| o.respond_to?(mm) }
 
       fail(

@@ -109,8 +109,7 @@ describe 'Flor unit' do
           def on_cancel
             reply(
               theo_cancel: true,
-              taskname: taskname
-            )
+              taskname: taskname)
           end
         end
 
