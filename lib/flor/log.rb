@@ -324,6 +324,7 @@ module Flor
     def msg_to_detail_s(executor, m, opts={})
 
       return if m['_detail_msg_flag']
+        #
       m['_detail_msg_flag'] = true if opts[:flag]
 
       o = StringIO.new
