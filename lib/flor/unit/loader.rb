@@ -102,12 +102,11 @@ module Flor
 
       return nil unless conf1
 
-      reqs = conf.select { |k, v| k == 'require' }.values
+      extras = conf.select { |_, v| ! v.is_a?(Hash) }
+      extras['_path'] = pat
 
       (conf1.is_a?(Array) ? conf1 : [ conf1 ])
-        .each { |h|
-          h['_path'] = pat
-          h['require'] = reqs }
+        .each { |h| h.merge!(extras) }
 
       conf1
     end
