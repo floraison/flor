@@ -87,7 +87,7 @@ module Flor
         .select { |pa| pa.index('/lib/taskers/') }
         .collect { |pa| [ pa, *expose_dn(pa, {}) ] }
         .select { |pa, d, n|
-          Flor.sub_domain?([ d, n ].join('.'), domain) ||
+          Flor.sub_domain?([ d, n ], domain) ||
           (n == name && Flor.sub_domain?(d, domain)) }
         .sort_by { |pa, d, n| d.count('.') }
         .last
@@ -98,14 +98,18 @@ module Flor
 
       return conf if nam == name
 
-      conf = conf[name]
+      conf1 = conf[name]
 
-      return nil unless conf
+      return nil unless conf1
 
-      (conf.is_a?(Array) ? conf : [ conf ])
-        .each { |h| h['_path'] = pat }
+      reqs = conf.select { |k, v| k == 'require' }.values
 
-      conf
+      (conf1.is_a?(Array) ? conf1 : [ conf1 ])
+        .each { |h|
+          h['_path'] = pat
+          h['require'] = reqs }
+
+      conf1
     end
 
     def hooks(domain)

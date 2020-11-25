@@ -367,11 +367,18 @@ module Flor
       sub_domain?(dom, sub)
     end
 
+    def dot_join(*elts)
+
+      elts.collect(&:to_s).select { |e| e.length > 0 }.join('.')
+    end
+
     def sub_domain?(dom, sub)
 
-      dom == '' ||
-      sub == dom ||
-      sub[0, dom.length + 1] == dom + '.'
+      d = dom.is_a?(Array) ? dot_join(*dom) : dom.to_s
+
+      d == '' ||
+      sub == d ||
+      sub[0, d.length + 1] == d + '.'
     end
     alias subdomain? sub_domain?
 

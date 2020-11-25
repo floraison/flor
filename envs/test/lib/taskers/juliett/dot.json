@@ -1,0 +1,9 @@
+
+# juliett taskers
+
+{
+  require: 'lib/juliett.rb'
+  alfa: { class: AlfaTasker }
+  brafo: { class: BrafoTasker }
+}
+

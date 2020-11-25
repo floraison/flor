@@ -12,15 +12,48 @@ describe Flor::Ganger do
 
   before :each do
 
-#    unit = OpenStruct.new(conf: { 'lod_path' => 'envs/uspec_loader' })
-#      # force a specific file hierarchy root on the loader via 'lod_path'
-#
-#    @loader = Flor::Loader.new(unit)
+    @unit = Flor::Unit.new('envs/test/etc/conf.json')
+    @unit.conf['unit'] = 'gangloaspec'
+    #@unit.hook('journal', Flor::Journal)
+    @unit.storage.delete_tables
+    @unit.storage.migrate
+    @unit.start
   end
 
-  describe '#xyz' do
+  after :each do
 
-    it 'works'
+    @unit.shutdown
+  end
+
+  describe 'tasker/dot.json' do
+
+    it 'points to a tasker' do
+
+      r = @unit.launch(
+        %{ alpha _ },
+        wait: 'terminated')
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('alpha')
+    end
+  end
+
+  describe 'domain/dot.json' do
+
+    it 'points to multiple taskers' do
+
+      r = @unit.launch(
+        %{
+          alfa _
+          brafo _
+        },
+        domain: 'juliett',
+        wait: 'terminated')
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('brafo')
+      expect(r['payload']['seen']).to eq(%w[ alfa brafo ])
+    end
   end
 end
 
