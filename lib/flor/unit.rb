@@ -22,6 +22,7 @@ require 'flor/unit/loader'
 require 'flor/unit/hloader'
 require 'flor/unit/ganger'
 require 'flor/unit/spooler'
+require 'flor/unit/gangers'
 require 'flor/unit/taskers'
 
 Flor.load_procedures('punit')

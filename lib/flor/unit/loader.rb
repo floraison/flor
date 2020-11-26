@@ -98,17 +98,17 @@ module Flor
 
       return conf if nam == name
 
-      conf1 = conf[name]
+      cnf = conf[name]
 
-      return nil unless conf1
+      return nil unless cnf
 
       extras = conf.select { |_, v| ! v.is_a?(Hash) }
       extras['_path'] = pat
 
-      (conf1.is_a?(Array) ? conf1 : [ conf1 ])
+      (cnf.is_a?(Array) ? cnf : [ cnf ])
         .each { |h| h.merge!(extras) }
 
-      conf1
+      cnf
     end
 
     def hooks(domain)

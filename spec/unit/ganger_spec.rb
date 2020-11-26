@@ -38,7 +38,7 @@ describe Flor::Ganger do
     end
   end
 
-  describe 'domain/dot.json' do
+  describe 'domain/dot.json and tasker: {}' do
 
     it 'points to multiple taskers' do
 
@@ -53,6 +53,24 @@ describe Flor::Ganger do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('brafo')
       expect(r['payload']['seen']).to eq(%w[ alfa brafo ])
+    end
+  end
+
+  describe 'domain/dot.json and module:' do
+
+    it 'points to multiple taskers' do
+
+      r = @unit.launch(
+        %{
+          karamel _
+          mofon _
+        },
+        domain: 'kilo',
+        wait: 'terminated')
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('mofon')
+      expect(r['payload']['seen']).to eq(%w[ karamel mofon ])
     end
   end
 end

@@ -4,6 +4,7 @@
 
 ## flor 1.1.0  not yet released
 
+* Introduce the ModuleGanger
 * Allow for domain/dot.json taskers
 * Introduce Flor::StagedBasicTasker
 * Fix service/executor issue in Caller

@@ -1,0 +1,7 @@
+
+# kilo taskers
+
+require: 'lib/kilo.rb'
+module: Kilo
+class: 'Flor::ModuleGanger'
+
