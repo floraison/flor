@@ -46,7 +46,7 @@ module Flor
         .collect { |pa| [ pa, expose_d(pa, {}) ] }
         .select { |pa, d| Flor.sub_domain?(d, domain) }
         .sort_by { |pa, d| d.count('.') }
-        .inject({}) { |vars, (pa, _)| vars.merge!(eval(pa, {})) }
+        .inject({}) { |vars, (pa, _)| vars.merge!(eval_variables(pa, {})) }
     end
 
     #def procedures(path)
@@ -94,7 +94,7 @@ module Flor
 
       return nil unless pat
 
-      conf = eval(pat, message)
+      conf = eval_tasker_conf(pat, message)
 
       return conf if nam == name
 
@@ -122,9 +122,8 @@ module Flor
         .select { |pa, d| Flor.sub_domain?(d, domain) }
         .sort_by { |pa, d| d.count('.') }
         .collect { |pa, d|
-# TODO, here, if the hook conf is not an array, the message is too cryptic...
-          eval(pa, {})
-            .each_with_index { |h, i| h['_path'] = pa + ":#{i}" } }
+          eval_hook_conf(pa, {})
+            .each_with_index { |h, i| h['_path'] = "#{pa}:#{i}" } }
         .flatten(1)
     end
 
@@ -249,6 +248,35 @@ module Flor
       else
         [ '', pa ]
       end
+    end
+
+    def eval_variables(path, context)
+      eval(path, context)
+    end
+    def eval_tasker_conf(path, context)
+      eval(path, context)
+    end
+# TODO like in eval_hook_conf, reject fautly tasker confs...
+# TODO like in eval_hook_conf, reject fautly variables...
+
+    def eval_hook_conf(path, context)
+
+      a = eval(path, context)
+
+      fail ArgumentError.new(
+        "hook conf at #{path} must be an array of hashes"
+      ) unless a.is_a?(Array)
+
+      a.each do |e|
+        fail ArgumentError.new(
+          "hook conf at #{path} has non-hash entry #{e.inspect}"
+        ) unless e.is_a?(Hash)
+        fail ArgumentError.new(
+          "hook conf at #{path} has incorrect point #{e['point'].inspect}"
+        ) unless e['point'].is_a?(String)
+      end
+
+      a
     end
 
     def eval(path, context)
