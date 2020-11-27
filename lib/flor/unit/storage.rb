@@ -7,6 +7,14 @@ module Flor
 
   class Storage
 
+    MESSAGE_COLUMNS = [
+      :domain, :exid, :point, :content,
+      :status, :ctime, :mtime, :cunit, :munit
+        ].freeze
+    POINTER_COLUMNS = [
+      :domain, :exid, :nid, :type, :name, :value, :ctime, :cunit
+        ].freeze
+
     attr_reader :unit, :db, :models
 
     attr_reader :mutex
@@ -352,8 +360,7 @@ module Flor
 
           @db[:flor_messages]
             .import(
-              [ :domain, :exid, :point, :content,
-                :status, :ctime, :mtime, :cunit, :munit ],
+              MESSAGE_COLUMNS,
               unstored.map { |m|
                 [ Flor.domain(m['exid']), m['exid'], m['point'], to_blob(m),
                   'created', n, n, u, u ] }) \
@@ -604,8 +611,7 @@ module Flor
 
         @db[:flor_messages]
           .import(
-            [ :domain, :exid, :point, :content,
-              :status, :ctime, :mtime, :cunit, :munit ],
+            MESSAGE_COLUMNS,
             messages
               .select { |m|
                 ! m['mid'] && POINTS_TO_ARCHIVE.include?(m['point']) }
@@ -762,7 +768,7 @@ module Flor
 
       @db[:flor_pointers]
         .import(
-          [ :domain, :exid, :nid, :type, :name, :value, :ctime, :cunit ],
+          POINTER_COLUMNS,
           pointers)
     end
 
