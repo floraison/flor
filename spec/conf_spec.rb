@@ -22,6 +22,7 @@ describe Flor::Conf do
             version: '3.2.1'
             count: 7
             blah: [ 'a', 'b', 2 ]
+            point: return
           },
           {})
 
@@ -32,7 +33,8 @@ describe Flor::Conf do
         'count' => 7,
         'blah' => [ 'a', 'b', 2 ],
         '_path' => '.',
-        'root' => '.'
+        'root' => '.',
+        'point' => 'return'
       })
     end
 

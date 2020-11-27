@@ -254,7 +254,7 @@ module Flor
           o.each { |ee| ee['_path'] = path if ee.is_a?(Hash) }
         end
 
-        o
+        rework_conf(o)
       end
 
       def interpret_path(path, context=nil)
@@ -298,6 +298,31 @@ module Flor
         ps = dir.split(File::SEPARATOR)
 
         ps.last == 'etc' ? File.absolute_path(File.join(dir, '..')) : dir
+      end
+
+      protected
+
+      # For now, only the return procedure has to be marshalled back
+      # to the "return" string, gh-36
+      #
+      def rework_conf(o)
+
+        case o
+        when Array
+          o.collect { |e|
+            rework_conf(e) }
+        when Hash
+          o.inject({}) { |h, (k, v)|
+            h[k] =
+              if Flor.is_proc_tree?(v) && v[1]['proc'] == 'return'
+                'return'
+              else
+                rework_conf(v)
+              end
+            h }
+        else
+          o
+        end
       end
     end
   end

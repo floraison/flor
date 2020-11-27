@@ -20,7 +20,7 @@ module Flor
     signal cancel
     terminated failed ceased
     idle
-  ]
+      ].freeze
 
   class << self
 
