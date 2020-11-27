@@ -63,7 +63,7 @@ describe Flor::Ganger do
       r = @unit.launch(
         %{
           karamel _
-          mofon _
+          task 'mofon'
         },
         domain: 'kilo',
         wait: 'terminated')
@@ -71,6 +71,32 @@ describe Flor::Ganger do
       expect(r['point']).to eq('terminated')
       expect(r['payload']['ret']).to eq('mofon')
       expect(r['payload']['seen']).to eq(%w[ karamel mofon ])
+    end
+
+    it 'fails if there is no corresponding tasker' do
+
+      r = @unit.launch(
+        %q{
+          task 'foo'
+        },
+        domain: 'kilo',
+        wait: true)
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('tasker "foo" not found')
+    end
+
+    it 'fails if there is no corresponding tasker' do
+
+      r = @unit.launch(
+        %q{
+          foo _
+        },
+        domain: 'kilo',
+        wait: true)
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq("don't know how to apply \"foo\"")
     end
   end
 end

@@ -224,6 +224,57 @@ describe 'Flor punit' do
       expect(td['tags']).to eq(%w[ b c a ])
     end
 
+    it 'lets the execution fails if the tasker is not found' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            task 'nemo'
+        },
+        wait: 'failed')
+
+      sleep 0.7
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq('tasker "nemo" not found')
+      expect(r['nid']).to eq('0_0')
+      expect(r['tasker']).to eq('nemo')
+      expect(r['pr']).to eq(1) # processing run is the second run
+
+      expect(
+        @unit.journal
+          .each_with_index
+          .collect { |m, i| "#{i}:#{m['point']}:#{m['from']}->#{m['nid']}" }
+          .join("\n")
+      ).to eq(%{
+        0:execute:->0
+        1:execute:0->0_0
+        2:execute:0_0->0_0_0
+        3:execute:0_0_0->0_0_0_0
+        4:receive:0_0_0_0->0_0_0
+        5:receive:0_0_0->0_0
+        6:failed:0_0->0_0
+        7:end:->
+      }.ftrim)
+    end
+
+    it 'lets the execution fails if the tasker is not found' do
+
+      r = @unit.launch(
+        %q{
+          sequence
+            nemo _
+        },
+        wait: 'failed')
+
+      sleep 0.7
+
+      expect(r['point']).to eq('failed')
+      expect(r['error']['msg']).to eq("don't know how to apply \"nemo\"")
+
+      # Nota Bene: not the same error message as when `task 'nemo'` !!!
+    end
+
     #it 'does not alter the incoming f.ret' do
     #
     #  r = @unit.launch(

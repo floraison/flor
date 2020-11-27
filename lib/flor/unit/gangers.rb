@@ -9,7 +9,6 @@ module Flor
   # Among the tasker classes (classes that respond to on_task, on_detask, ...)
   # it selects the first tasker that matches the tasker name.
   #
-  #
   class ModuleGanger
 
     def initialize(service, conf, message)
@@ -25,7 +24,7 @@ module Flor
       clas = list_tasker_classes
       cla = clas.find { |c| tasker_name(c) == tas }
 
-      fail "cannot find tasker for #{tas.inspect} among #{clas.inspect}" \
+      return [ Flor.dup_and_merge(@message, 'routed' => false) ] \
         unless cla
 
       call_tasker(cla)

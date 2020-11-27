@@ -140,13 +140,17 @@ module Flor
 
     def task(message)
 
-      return error_reply(
-        node(message['nid']),
-        message,
-        "don't know how to apply #{message['tasker'].inspect}"
-      ) if message['routed'] == false
-        #
-        # use an error message similar to what the core executor would emit
+      if message['routed'] == false
+
+        t = message['tasker']
+        n = node(message['nid'])
+
+        msg = n['heat0'] != t ?
+          "tasker #{t.inspect} not found" :
+          "don't know how to apply #{t.inspect}"
+
+        return error_reply(n, message, msg)
+      end
 
       @unit.ganger.task(self, message)
     end

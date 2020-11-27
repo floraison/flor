@@ -468,11 +468,24 @@ describe 'Flor unit' do
         %q{ unknown_alpha _ },
         domain: 'net.acme', wait: true)
 
-      expect(r['point']).to eq('failed')
+      expect(r['point']
+        ).to eq('failed')
+      expect(r['error']['msg']
+        ).to eq("don't know how to apply \"unknown_alpha\"")
+    end
 
-      expect(
-        r['error']['msg']
-      ).to eq("don't know how to apply \"unknown_alpha\"")
+    it "fails explicitely if the domain tasker doesn't know where to reroute" do
+
+      r = @unit.launch(
+        %q{
+          task 'unknown_alpha'
+        },
+        domain: 'net.acme', wait: true)
+
+      expect(r['point']
+        ).to eq('failed')
+      expect(r['error']['msg']
+        ).to eq('tasker "unknown_alpha" not found')
     end
   end
 
