@@ -21,6 +21,21 @@ class Kilo::KaramelTasker < Flor::BasicTasker
   end
 end
 
+class Kilo::KinkTasker < Flor::BasicTasker
+
+  def task
+
+    # simply receive
+  end
+
+  def detask
+
+    (payload['cancelled'] ||= []) << 'kink'
+
+    reply
+  end
+end
+
 module Kilo::Gram; end
 
 class Kilo::Gram::MofonTasker < Flor::BasicTasker

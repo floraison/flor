@@ -30,6 +30,8 @@ module Flor
       call_tasker(cla)
     end
 
+    alias detask task
+
     protected
 
     def list_tasker_classes
