@@ -1,0 +1,14 @@
+#!/bin/sh
+
+#
+# (this is work in progress)
+#
+# attempt at providing a IRB shell for flor debugging
+#
+
+SCRIPT=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+LIBPATH=$SCRIPTPATH/../lib
+
+bundle exec ruby -I$LIBPATH $LIBPATH/flor/tools/firb.rb $*
+
