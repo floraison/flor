@@ -680,7 +680,7 @@ module Flor
       return true if @wake_up
       return true if Time.now - @reloaded_at >= reload_after
 
-      @next_time && @next_time <= Flor.tstamp.split('.').first
+      @next_time && (@next_time <= Flor.tstam)
     end
 
     def unreserve_messages

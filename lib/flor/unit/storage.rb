@@ -634,12 +634,9 @@ module Flor
 
     def load_timers
 
-      now = Flor.tstamp
-      no = now[0, now.rindex('.')]
-
       timers
         .where(status: 'active')
-        .where { ntime <= no }
+        .where { ntime <= Flor.tstam }
         .order(:ntime)
         .all
 

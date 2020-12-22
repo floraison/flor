@@ -279,13 +279,19 @@ module Flor
     #
     # functions about time
 
+    # Used by the storage in its next_time endeavours
+    #
+    def tstam
+      Time.now.utc.strftime('%FT%T')
+    end
+
     def isostamp(show_date, show_time, show_usec, time)
 
       t = (time || Time.now).utc
       s = StringIO.new
 
-      s << t.strftime('%Y-%m-%d') if show_date
-      s << t.strftime('T%H:%M:%S') if show_time
+      s << t.strftime('%F') if show_date   # YYYY-mm-dd
+      s << t.strftime('T%T') if show_time  # THH:MM:SS
       s << sprintf('.%06d', t.usec) if show_time && show_usec
       s << 'Z' if show_time
 
