@@ -138,11 +138,7 @@ module Flor
 
       # TODO heartbeat, every x minutes, when idle, log something
 
-      fail(
-        "database not ready, " +
-        "db ver: #{@storage.db_version.inspect}, " +
-        "mig ver: #{@storage.migration_version}"
-      ) if !! @conf['sto_migration_check'] && @storage.ready?
+      check_migration_version
 
       @thread_status = :running
 
@@ -590,7 +586,7 @@ module Flor
 
     rescue Exception => ex
 
-      puts on_start_exc(ex)
+      puts(on_start_exc(ex))
     end
 
     def prepare_message(point, args)
@@ -678,7 +674,7 @@ module Flor
     def should_wake_up?
 
       return true if @wake_up
-      return true if Time.now - @reloaded_at >= reload_after
+      return true if (Time.now - @reloaded_at) >= reload_after
 
       @next_time && (@next_time <= Flor.tstam)
     end
@@ -732,6 +728,15 @@ module Flor
     def reload_wake_up
 
       @wake_up = @storage.any_message?
+    end
+
+    def check_migration_version
+
+      fail(
+        "database not ready, " +
+        "db ver: #{@storage.db_version.inspect}, " +
+        "mig ver: #{@storage.migration_version}"
+      ) if !! @conf['sto_migration_check'] && @storage.ready?
     end
   end
 end
