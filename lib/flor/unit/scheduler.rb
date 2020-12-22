@@ -158,6 +158,15 @@ module Flor
       self
     end
 
+    def check_migration_version
+
+      fail(
+        "database not ready, " +
+        "db ver: #{@storage.db_version.inspect}, " +
+        "mig ver: #{@storage.migration_version}"
+      ) if !! @conf['sto_migration_check'] && @storage.ready?
+    end
+
     def stop
 
       @thread_status = :stop
@@ -728,15 +737,6 @@ module Flor
     def reload_wake_up
 
       @wake_up = @storage.any_message?
-    end
-
-    def check_migration_version
-
-      fail(
-        "database not ready, " +
-        "db ver: #{@storage.db_version.inspect}, " +
-        "mig ver: #{@storage.migration_version}"
-      ) if !! @conf['sto_migration_check'] && @storage.ready?
     end
   end
 end

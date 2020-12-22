@@ -15,11 +15,16 @@ module Flor::Tools
     def initialize(argv=nil)
 
       env = ENV['FLOR_ENV'] || 'shell'
-      @root = "envs/#{env}"
+
+      @root = File.directory?(env) ? env : "envs/#{env}"
 
       prepare_home
 
-      @unit = Flor::Unit.new("#{@root}/etc/conf.json")
+      over_conf = {}
+        #
+      c = ENV['FLOR_STO_URI']; over_conf['sto_uri'] = c if c
+
+      @unit = Flor::Unit.new("#{@root}/etc/conf.json", over_conf)
 
       @unit.conf['unit'] = 'cli'
       #unit.hooker.add('journal', Flor::Journal)
@@ -31,7 +36,11 @@ module Flor::Tools
       @mute = false
       @paging = true
 
-      @unit.start
+      if ENV['FLOR_NO_START']
+        @unit.check_migration_version
+      else
+        @unit.start
+      end
 
       @flow_path = File.join(@root, 'home/scratch.flo')
       @ra_flow_path = File.join(@root, 'home/ra_scratch.flo')

@@ -1,5 +1,17 @@
 #!/bin/sh
 
-#bundle exec ruby -Ilib -r 'flor/tools/shell' -e 'Flor::Tools::Shell.new'
-bundle exec ruby -Ilib lib/flor/tools/shell.rb $*
+#
+# runs flosh, the flor shell
+#
+# FLOR_ENV       should point to the flor environment dir
+# FLOR_STO_URI   can override the database uri
+# FLOR_NO_START  when step, prevents the scheduler from starting and
+#                processing messages
+#
+
+SCRIPT=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+LIBPATH=$SCRIPTPATH/../lib
+
+bundle exec ruby -I$LIBPATH $LIBPATH/flor/tools/shell.rb $*
 
