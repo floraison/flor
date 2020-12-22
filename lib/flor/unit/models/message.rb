@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+
 module Flor
 
   class Message < FlorModel
@@ -19,6 +20,10 @@ module Flor
     #
     #  index :exid
     #end
+
+    def nid; data['nid']; end
+    def tasker; data['tasker']; end
+    alias payload data
   end
 end
 
