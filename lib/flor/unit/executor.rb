@@ -117,7 +117,7 @@ module Flor
         ].collect(&:to_s).join('_') + '.dump'
 
       @unit.logger.error(
-        "#{self.class}#do_run()", exc, "(dumping to #{fn})")
+        "#{self.class}#do_run()", exc, "(dumping to #{fn} ...)")
 
       File.open(fn, 'wb') do |f|
         f.puts(Flor.to_pretty_s({
@@ -133,6 +133,9 @@ module Flor
         f.puts('-' * 80)
         f.puts(on_do_run_exc(exc))
       end
+
+      @unit.logger.error(
+        "#{self.class}#do_run()", exc, "(dumped to #{fn})")
 
       #puts on_do_run_exc(exc)
         # dump notification above
