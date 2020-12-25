@@ -4,6 +4,7 @@
 
 ## flor 1.1.0  not yet released
 
+* Add #payload= and #fields= to the BasicTasker
 * Introduce the ModuleGanger
 * Allow for domain/dot.json taskers
 * Introduce Flor::StagedBasicTasker
