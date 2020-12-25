@@ -567,6 +567,8 @@ end
           ]
         })
       end
+
+      sleep 0.350
     end
 
     after :each do
