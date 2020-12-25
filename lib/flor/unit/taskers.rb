@@ -21,15 +21,6 @@ module Flor
     def payload; @message['payload']; end
     alias fields payload
 
-    def payload=(h)
-
-      fail ArgumentError.new("payload must be a Hash, not a #{h.class}") \
-        unless h.is_a?(Hash)
-
-      @message['payload'] = h
-    end
-    alias fields= payload=
-
     def attd; @message['attd']; end
     def attl; @message['attl']; end
 
