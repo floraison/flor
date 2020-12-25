@@ -29,6 +29,29 @@ module Flor
     alias task_name taskname
 
     def vars; @message['vars']; end
+    alias variables vars
+
+    def set_payload(h)
+      fail TypeError.new("not a hash but a #{fs.class}") unless h.is_a?(Hash)
+      @message['payload'] = h
+    end
+    alias set_fields set_payload
+
+    def set_vars(h)
+      fail TypeError.new("not a hash but a #{fs.class}") unless h.is_a?(Hash)
+      @message['vars'] = h
+    end
+    alias set_variables set_vars
+
+    #def merge_into_payload(h)
+    #  @message['payload'].merge(h)
+    #end
+    #alias merge_into_fields merge_into_payload
+    #def merge_into_vars(h)
+    #  @message['vars'].merge(h)
+    #end
+      #
+      # no for now, payload.merge(h) and vars.merge(h) do suffice
 
     def execution
 
