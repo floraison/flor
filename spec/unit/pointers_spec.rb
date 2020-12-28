@@ -74,6 +74,35 @@ describe 'Flor unit' do
       expect(exes.collect(&:exid)).to eq([ exid ])
     end
 
+    it 'keeps the message and atts given to taskers' do
+
+      r =
+        @unit.launch(%{
+          sequence
+            set f.x 1
+            set f.y 2
+            hole task: 'cleanup', detail_level: { a: 1, b: 2 }
+        }, wait: 'task')
+
+      expect(r['point']).to eq('task')
+      expect(r['nid']).to eq('0_2')
+
+      exid = r['exid']
+
+      ptr = wait_until { @unit.pointers.where(type: 'tasker').first }
+
+      c = ptr.data
+      m = c['message']
+      a = c['atts']
+
+      expect(m['point']).to eq('receive')
+      expect(m['payload']).to eq('ret' => nil, 'x' => 1, 'y' => 2)
+
+      expect(a).to eq([
+        [ nil, "hole" ], [ "task", "cleanup" ],
+        [ "detail_level", { "a"=>1, "b"=>2 } ] ])
+    end
+
     it 'removes pointers to taskers when done' do
 
       r =
