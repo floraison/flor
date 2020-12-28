@@ -109,12 +109,10 @@ module Flor
     rescue Exception => exc
 
 # TODO eventually, have a dump dir
+
       fn =
-        [
-          'flor',
-          @unit.conf['env'], @unit.identifier, @exid,
-          'r' + counter('runs').to_s
-        ].collect(&:to_s).join('_') + '.dump'
+        [ 'flor', @unit.conf['env'], @unit.identifier, @exid,
+          'r' + counter('runs').to_s ].collect(&:to_s).join('_') + '.dump'
 
       @unit.logger.error(
         "#{self.class}#do_run()", exc, "(dumping to #{fn} ...)")

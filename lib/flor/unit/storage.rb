@@ -524,25 +524,6 @@ module Flor
       end
     end
 
-    def put_task_pointer(msg, tname, tconf)
-
-      exid = msg['exid']
-      dom = Flor.domain(exid)
-
-      synchronize do
-
-        @db[:flor_pointers]
-          .insert(
-            domain: dom,
-            exid: exid,
-            nid: msg['nid'],
-            type: 'tasker',
-            name: tname,
-            ctime: Flor.tstamp,
-            cunit: @unit.identifier)
-      end
-    end
-
     def fetch_next_time
 
       t =
@@ -706,9 +687,9 @@ module Flor
 
     def update_pointers(exe, status, now)
 
-# Q Should we archive old pointers?
-#   Well, it might be better to only archive the execution and leave
-#   in there enough information...
+# Q  Should we archive old pointers?
+# A  Well, it might be better to only archive the execution and leave
+#    in there enough information...
 
       exid = exe['exid']
 
