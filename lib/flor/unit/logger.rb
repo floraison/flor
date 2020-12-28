@@ -71,7 +71,8 @@ module Flor
       dbi = ' ' + dbi if dbi.length > 0
 
       txt = elts.collect(&:to_s).join(' ')
-      err = elts.find { |e| e.is_a?(Exception) }
+
+      err = find_err(elts)
 
       head = "#{stp} #{@uni}#{dbi} #{lvl} "
 
@@ -244,6 +245,13 @@ module Flor
       end
 
       message[0..k + 2 + 4] + "(...len#{i - (k + 2 + 1)})" + message[i..-1]
+    end
+
+    def find_err(elts)
+
+      elts.find { |e| e.is_a?(Exception) } ||
+      (defined?(Java) &&
+       elts.find { |e| e.class.ancestors.include?(Java::JavaLang::Error) })
     end
 
     class Out
