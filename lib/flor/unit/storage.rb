@@ -586,7 +586,7 @@ module Flor
 
         @db[:flor_messages]
           .where(
-            id: messages.collect { |m| m['mid'] }.compact)
+            id: messages.collect { |m| m['mid'] }.uniq.compact)
           .update(
             status: 'consumed', mtime: n, munit: u)
 
@@ -608,7 +608,7 @@ module Flor
 
         @db[:flor_messages]
           .where(
-            id: messages.collect { |m| m['mid'] }.compact)
+            id: messages.collect { |m| m['mid'] }.uniq.compact)
           .delete
       end
     end
