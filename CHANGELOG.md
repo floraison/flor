@@ -2,7 +2,7 @@
 # CHANGELOG.md
 
 
-## flor 1.1.0  not yet released
+## flor 1.1.0  released 2021-01-06
 
 * Introduce Tasker #set_payload and #set_vars
 * Introduce the ModuleGanger
