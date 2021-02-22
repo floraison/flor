@@ -77,6 +77,9 @@ module Flor
 
     o = opts[:out] || $stdout
 
+puts "-" * 80
+p $0
+p $0[-6..-1]
     return @colours if (
       (o.respond_to?(:log_colours?) ? o.log_colours? : o.tty?) ||
       ($0[-6..-1] == '/rspec' &&
