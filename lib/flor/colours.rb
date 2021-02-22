@@ -80,10 +80,12 @@ module Flor
 puts "-" * 80
 p $0
 p $0[-6..-1]
+p ARGV
     return @colours if (
       (o.respond_to?(:log_colours?) ? o.log_colours? : o.tty?) ||
       ($0[-6..-1] == '/rspec' &&
         (ARGV.include?('--tty') || ARGV.include?('--color'))))
+p :NO_COLOURS
 
     @no_colours
   end
