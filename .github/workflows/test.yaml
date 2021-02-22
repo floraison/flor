@@ -31,6 +31,5 @@ jobs:
       - run: gem --version
       - run: bundle --version
       - run: bundle install
-      - run: bundle exec rspec --force-color --format documentation spec/unit/caller_spec.rb
-      #- run: bundle exec rspec --force-color --format documentation
+      - run: bundle exec rspec --force-color --format documentation
 
