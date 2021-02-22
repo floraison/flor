@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'flor/punit/m_ram'
+require 'flor/punit/m_receive_and_merge'
 
 
 class Flor::Pro::Concurrence < Flor::Procedure
