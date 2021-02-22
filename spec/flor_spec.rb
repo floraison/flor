@@ -15,7 +15,7 @@ describe Flor do
 
     it 'removes colour codes' do
 
-      c = Flor.colours
+      c = Flor.colours(colour: true)
       s = c.dg('nothing') + ' ' + c.yl('surf')
 
       expect(s).to eq("\e[90mnothing\e[0;0m \e[33msurf\e[0;0m")
@@ -27,7 +27,13 @@ describe Flor do
 
     it 'returns the string length, escape code put aside' do
 
-      c = Flor.colours; s = c.dg('tribu') + ' ' + c.yl('dana')
+      c = Flor.colours(colour: true)
+      s = c.dg('tribu') + ' ' + c.yl('dana')
+
+      expect(Flor.bw_length(s)).to eq(10)
+
+      c = Flor.colours(colour: false)
+      s = c.dg('tribu') + ' ' + c.yl('dana')
 
       expect(Flor.bw_length(s)).to eq(10)
     end
@@ -37,7 +43,8 @@ describe Flor do
 
     it 'truncates' do
 
-      c = Flor.colours; s = c.dg('tribu') + ' de ' + c.yl('dana')
+      c = Flor.colours(colour: true)
+      s = c.dg('tribu') + ' de ' + c.yl('dana')
 
       #(0..Flor.no_colour_length(s) + 1).each do |i|
       #  puts Flor.truncate_string(s, i)
@@ -60,7 +67,8 @@ describe Flor do
 
     it 'truncates' do
 
-      c = Flor.colours; s = c.dg('tribu') + ' de ' + c.yl('dana')
+      c = Flor.colours(colour: true)
+      s = c.dg('tribu') + ' de ' + c.yl('dana')
 
       expect(Flor.truncate_string(s, 7, '<<<')).to eq("\e[90mtribu\e[0;0m d<<<")
     end
@@ -77,7 +85,8 @@ describe Flor do
 
     it 'truncates' do
 
-      c = Flor.colours; s = c.dg('tribu') + ' de ' + c.yl('dana')
+      c = Flor.colours(colour: true)
+      s = c.dg('tribu') + ' de ' + c.yl('dana')
 
       expect(
         Flor.truncate_string(s, 7, Proc.new { |x, y, z| [ x, y, z ].inspect })
