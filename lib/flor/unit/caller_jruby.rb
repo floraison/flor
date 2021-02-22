@@ -41,7 +41,7 @@ module Flor
       henv.each { |k, v| builder.environment.put(k, v) }
 
       process = builder.start
-      pid = process.pid
+      pid = process.respond_to?(:pid) ?  process.pid : nil
 
       o = process.outputStream.to_io
       i = process.inputStream.to_io
@@ -61,10 +61,12 @@ module Flor
 
     rescue => err
 
-      Process.detach(pid) \
-        if pid
-      (Process.kill(9, pid) rescue nil) \
-        unless Flor.no?(conf['on_error_kill'])
+      if pid
+        Process.detach(pid)
+        (Process.kill(9, pid) rescue nil) unless Flor.no?(conf['on_error_kill'])
+      else
+        process.destroy rescue nil
+      end
 
       raise err if err.is_a?(SpawnError)
       raise WrappedSpawnError.new(conf, { to: to, t0: t0, pid: pid }, err)
@@ -72,7 +74,6 @@ module Flor
     ensure
 
       [ i, o, f ].each { |x| x.close rescue nil }
-
     end
 
     module CmdParser include Raabro
