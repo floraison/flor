@@ -14,9 +14,8 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        ruby: [ '2.5', '2.6', '2.7', jruby-9.2 ]
+        ruby: [ '2.1', '2.3', '2.5', '2.6', '2.7', jruby-9.2 ]
         experimental: [ false ]
-        tz: [ '', 'UTC', 'Asia/Tokyo', 'America/Chicago' ]
       fail-fast: false
     runs-on: ${{matrix.os}}
     continue-on-error: ${{matrix.experimental}}
