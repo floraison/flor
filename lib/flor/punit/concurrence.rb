@@ -387,10 +387,11 @@ class Flor::Pro::Concurrence < Flor::Procedure
 
   REWRITE_AS_ATTS = %w[
     on_receive on_merge
-    child_on_error children_on_error ]
-      #
-      # heads of the child nodes that should get rewritten as attributes
-      # of the concurrence ...
+    child_on_error children_on_error
+      ].freeze
+        #
+        # heads of the child nodes that should get rewritten as attributes
+        # of the concurrence ...
 
   def pre_execute_rewrite
 
