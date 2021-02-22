@@ -1,7 +1,7 @@
 
 # flor
 
-[![Build Status](https://secure.travis-ci.org/floraison/flor.svg)](http://travis-ci.org/floraison/flor)
+[![tests](https://github.com/floraison/flor/workflows/test/badge.svg)](https://github.com/floraison/flor/actions)
 [![Gem Version](https://badge.fury.io/rb/flor.svg)](http://badge.fury.io/rb/flor)
 
 Flor is a "Ruby workflow engine", if that makes any sense.
