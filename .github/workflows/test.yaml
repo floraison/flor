@@ -14,7 +14,8 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-        ruby: [ '2.1', '2.3', '2.5', '2.6', '2.7', jruby-9.2 ]
+        ruby: [ jruby ]
+        #ruby: [ '2.1', '2.3', '2.5', '2.6', '2.7', jruby-9.2 ]
         experimental: [ false ]
       fail-fast: false
     runs-on: ${{matrix.os}}
@@ -30,5 +31,6 @@ jobs:
       - run: gem --version
       - run: bundle --version
       - run: bundle install
-      - run: bundle exec rspec --force-color --format documentation
+      - run: bundle exec rspec --force-color --format documentation spec/unit/caller_spec.rb
+      #- run: bundle exec rspec --force-color --format documentation
 
