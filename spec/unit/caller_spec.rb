@@ -172,7 +172,7 @@ describe Flor::Caller do
           expect(r[0].keys.sort).to eq(%w[ error fm fpoint payload point ])
 
           e = r[0]['error']
-pp e
+#pp e
           expect(e['kla']).to eq('Flor::Caller::SpawnNonZeroExitError')
           expect(e['msg']).to match(/\A\(code: 2, pid: \d+\) /)
           expect(e['msg']).to match(/[Pp]ython: can't open file 'spec\/unit\//)
@@ -212,11 +212,8 @@ pp e
           ed = e['details']
           pid = ed[:pid]
 
-          expect(`ps -p #{pid}`.strip.split("\n").size).to eq(1) if pid
-            # ensure child process has vanished
-
           expect(ed[:cmd]).to eq('ruby -e "sleep"')
-          expect(ed[:pid]).to be_an(Integer)
+          expect(ed[:pid]).to be_an(Integer) if pid
           expect(ed[:timeout]).to eq(2)
           expect(ed[:conf]['timeout']).to eq('2s')
 
@@ -224,6 +221,9 @@ pp e
             ).to eq(
               kla: 'Flor::Caller::TimeoutError',
               msg: 'execution expired')
+
+          expect(`ps -p #{pid}`.strip.split("\n").size).to eq(1) if pid
+            # ensure child process has vanished
         end
       end
     end

@@ -23,7 +23,7 @@ module Flor
         @exitstatus = exitstatus
       end
 
-      def pid; @process.pid; end
+      def pid; @process.pid; rescue; nil; end
     end
 
     def spawn(conf, data)
