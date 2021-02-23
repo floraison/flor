@@ -329,6 +329,11 @@ module Flor
       isostamp(false, true, true, t)
     end
 
+    def monow
+
+      Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    end
+
 #  def to_time(ts)
 #
 #    m = ts.match(/\A(\d{4})(\d{2})(\d{2})\.(\d{2})(\d{2})(\d{2})(\d+)([uU]?)\z/)

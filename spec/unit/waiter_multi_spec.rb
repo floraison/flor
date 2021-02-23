@@ -86,17 +86,17 @@ describe Flor::Waiter do
       )
     end
 
-    it 'launches in 1 and processes in 0' do
+    it 'launches in unit1 and processes in unit0' do
 
       exid = @unit1.launch(
         %q{
           + 1 2 3
         })
 
-      wait_until do
+      wait_until(21) do
         @unit0.journal.count > 0
       end
-      wait_until do
+      wait_until(21) do
         exe = @unit1.storage.executions[exid: exid]
         exe && exe.status == 'terminated'
       end
