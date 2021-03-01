@@ -2,6 +2,7 @@
 
 require 'pp'
 require 'json'
+require 'yaml'
 require 'logger'
 require 'thread'
 require 'digest'

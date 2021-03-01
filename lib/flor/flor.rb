@@ -420,19 +420,6 @@ module Flor
       sio.string
     end
 
-    def to_compact_s(h)
-
-      o = StringIO.new
-
-      h.keys.each_with_index do |k, i|
-        o << (i == 0 ? '{ ' : ",\n  ")
-        o << k << ': ' << h[k].inspect
-      end
-      o << ' }'
-
-      o.string
-    end
-
 
     #
     # tree
