@@ -334,15 +334,39 @@ module Flor
       n = executor.execution['nodes'][nid]
       node = n ? Flor::Node.new(executor, n, m) : nil
 
-      o.puts "#{_c.dg}<Flor.msg_to_detail_s>#{_c.rs}#{_c.yl}"
-      o.puts Flor.to_pretty_s(m)
-      o.puts "#{_c.dg}payload:#{_c.yl}"
-      o.puts Flor.to_pretty_s(m['payload'], 0)
-      o.puts "#{_c.dg}tree:"
+      mpl = m['payload']
+      mer = m['error']
+      m1 = m.merge('payload' => '(below)', 'error' => '(below)')
+      m1.delete('error') unless mer
+
+      nfai = n && n['failure']
+      nmsg = n && n['message']
+      n1 = n && n.merge('message' => '(below)', 'failure' => '(below)')
+      n1.delete('failure') if n1 && ! nfai
+
+      o.puts "#{_c.rs}#{_c.dg}<Flor.msg_to_detail_s>"
+      o.puts "#{_c.dg}message:#{_c.yl}"
+      o.puts Flor.to_compact_s(m1)
+      o.puts "#{_c.dg}message.payload:#{_c.yl}"
+      o.puts Flor.to_compact_s(mpl)
+      if mer
+        o.puts "#{_c.dg}message.error:#{_c.yl}"
+        o.puts Flor.to_compact_s(mer)
+      end
+      o.puts "#{_c.dg}tree:#{_c.yl}"
       o.puts(tree_to_s(node.lookup_tree(nid), nid, out: o)) if node
       o.puts "#{_c.dg}node:#{_c.yl}"
-      o.puts(Flor.to_pretty_s(n)) if n
-      o.puts "#{_c.dg}nodes:"
+      #o.puts(Flor.to_compact_s(n)) if n
+      if n
+        o.puts Flor.to_compact_s(n1)
+        o.puts "#{_c.dg}node.message:#{_c.yl}"
+        o.puts Flor.to_compact_s(nmsg)
+        if nfai
+          o.puts "#{_c.dg}node.failure:#{_c.yl}"
+          o.puts Flor.to_compact_s(nfai)
+        end
+      end
+      o.puts "#{_c.dg}nodes:#{_c.yl}"
       o.puts nods_to_s(executor, m, opts)
       z = executor.execution['nodes'].size
       o.puts "#{_c.yl}#{z} node#{z == 1 ? '' : 's'}."
