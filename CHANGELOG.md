@@ -2,7 +2,9 @@
 # CHANGELOG.md
 
 
-## flor 1.1.1  not yet released
+## flor 1.1.1  released 2021-03-03
+
+* Use YAML to have more compact msg_to_detail_s
 
 
 ## flor 1.1.0  released 2021-01-06
