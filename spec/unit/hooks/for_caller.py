@@ -23,5 +23,5 @@ if fcv: message["env_var"] = fcv
 #
 # output
 
-print json.dumps(message)
+print(json.dumps(message))
 
