@@ -101,6 +101,12 @@ describe 'Flor unit' do
       expect(a).to eq([
         [ nil, "hole" ], [ "task", "cleanup" ],
         [ "detail_level", { "a"=>1, "b"=>2 } ] ])
+
+      expect(ptr.attd).to eq({
+        'detail_level' => { 'a' => 1, 'b' => 2 },
+        'task' => 'cleanup' })
+      expect(ptr.attl).to eq([
+        'hole' ])
     end
 
     it 'removes pointers to taskers when done' do
@@ -228,6 +234,62 @@ describe 'Flor unit' do
 
       # use this one alone with `FLOR_DEBUG=db,dbg` and observe how
       # it avoids deleting and re-inserting pointers
+    end
+  end
+
+  describe Flor::Pointer do
+
+    describe '#full_value' do
+
+      it 'returns the expected info'
+    end
+
+    describe '#attd, #attl, and #att_texts' do
+
+      it 'returns the expected info' do
+
+        r =
+          @unit.launch(%{
+            concurrence
+              hole 't0'
+              hole task: 't1'
+              hole task: 't2' title: 'title2'
+              hole 't3' 'title3'
+              hole 't4' 'title4' 44.44 { a: 4 }
+          }, wait: '0_3 task')
+
+        expect(r['point']).to eq('task')
+
+        wait_until { @unit.pointers.where(type: 'tasker').count === 5 }
+
+        ps = @unit.pointers.where(type: 'tasker').order(:ctime).all
+
+        expect(ps[0].attd).to eq({})
+        expect(ps[0].attl).to eq([ 'hole', 't0' ])
+        expect(ps[0].att_texts).to eq([ 'hole', 't0' ])
+        expect(ps[0].value).to eq('t0')
+
+        expect(ps[1].attd).to eq({ 'task' => 't1' })
+        expect(ps[1].attl).to eq([ 'hole' ])
+        expect(ps[1].att_texts).to eq([ 'hole' ])
+        expect(ps[1].value).to eq('t1')
+
+        expect(ps[2].attd).to eq({ 'task' => 't2', 'title' => 'title2' })
+        expect(ps[2].attl).to eq([ 'hole' ])
+        expect(ps[2].att_texts).to eq([ 'hole' ])
+        expect(ps[2].value).to eq('t2')
+
+        expect(ps[3].attd).to eq({})
+        expect(ps[3].attl).to eq([ 'hole', 't3', 'title3' ])
+        expect(ps[3].att_texts).to eq([ 'hole', 't3', 'title3' ])
+        expect(ps[3].value).to eq('t3')
+
+#i = 4; p ps[i].attd; p ps[i].attl; p ps[i].att_texts; p ps[i].value
+        expect(ps[4].attd).to eq({})
+        expect(ps[4].attl).to eq([ 'hole', 't4', 'title4', 44.44, { 'a' => 4 } ])
+        expect(ps[4].att_texts).to eq([ 'hole', 't4', 'title4' ])
+        expect(ps[4].value).to eq('t4')
+      end
     end
   end
 end

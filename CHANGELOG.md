@@ -4,6 +4,8 @@
 
 ## flor 1.2.0  not yet released
 
+* Add #attd, #attl, #att_texts to Flor::Pointer
+
 
 ## flor 1.1.1  released 2021-03-03
 

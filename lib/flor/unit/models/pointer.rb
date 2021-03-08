@@ -30,13 +30,32 @@ module Flor
     #end
 
     # If the pointer is a "var" pointer, returns the full value
-    # for the variable, as fund in the execution's node "0".
+    # for the variable, as found in the execution's node "0".
     #
     def full_value
 
       return nil unless type == 'var'
 
       node['vars'][name]
+    end
+
+    def attd
+
+      data['atts'].inject({}) { |h, (k, v)| h[k] = v if k; h }
+
+    rescue; []
+    end
+
+    def attl
+
+      data['atts'].inject([]) { |a, (k, v)| a << v if k == nil; a }
+
+    rescue; []
+    end
+
+    def att_texts
+
+      attl.select { |e| e.is_a?(String) }
     end
   end
 end
