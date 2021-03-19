@@ -2,6 +2,9 @@
 # CHANGELOG.md
 
 
+## flor 1.2.1  not yet released
+
+
 ## flor 1.2.0  released 2021-03-15
 
 * Add #attd, #attl, #att_texts to Flor::Pointer
