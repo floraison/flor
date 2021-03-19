@@ -32,7 +32,8 @@ describe Flor::Waiter do
       @unit1.hook('journal', Flor::Journal)
       #@unit1.start # no, no starting
 
-      2.times { Thread.pass }
+      #2.times { Thread.pass }
+      sleep 0.350
     end
 
     after :each do
