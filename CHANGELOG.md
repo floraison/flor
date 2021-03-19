@@ -4,6 +4,8 @@
 
 ## flor 1.2.1  not yet released
 
+* If conf sto_db_logger is false, do not attach a logger to the db connection
+
 
 ## flor 1.2.0  released 2021-03-15
 

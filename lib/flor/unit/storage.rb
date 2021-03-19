@@ -849,8 +849,11 @@ module Flor
           # NB: -1 means "check at every use"
       end
 
-      @db_logger = DbLogger.new(@unit)
-      @db.loggers << @db_logger
+      if @unit.conf['sto_db_logger'] != false
+
+        @db_logger = DbLogger.new(@unit)
+        @db.loggers << @db_logger
+      end
     end
 
     class << self
