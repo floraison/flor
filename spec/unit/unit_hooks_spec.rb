@@ -568,7 +568,7 @@ end
         })
       end
 
-      sleep 0.350
+      sleep 0.770
     end
 
     after :each do
