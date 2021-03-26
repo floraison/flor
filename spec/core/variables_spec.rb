@@ -238,6 +238,22 @@ describe 'Flor core' do
       expect(r['payload']['l']).to eq([
         'a', %w[ b c ], %w[ a c e ], %w[ c e ] ])
     end
+
+    it 'is OK with if/unless postfix' do
+
+      r = @executor.launch(
+        %q{
+          push f.l launcher.role
+          push f.l 0 unless launcher.role == 'psp'
+          push f.l 1 if launcher.role == 'psp'
+        },
+        vars: { 'launcher' => { 'id' => 1234, 'role' => 'psp' } },
+        payload: { 'l' => [] })
+
+      expect(r).to have_terminated_as_point
+
+      expect(r['payload']['l']).to eq([ 'psp', 1 ])
+    end
   end
 
   describe 'the "node" pseudo-variable' do
