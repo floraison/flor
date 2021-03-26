@@ -2,6 +2,9 @@
 # CHANGELOG.md
 
 
+## flor 1.2.2  not yet released
+
+
 ## flor 1.2.1  released 2021-03-22
 
 * If conf sto_db_logger is false, do not attach a logger to the db connection
