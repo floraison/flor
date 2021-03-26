@@ -730,7 +730,7 @@ module Flor
 
           if ta = node['task']
             tasker = ta['tasker']
-            name = ta['name']
+            n = ta['name']; name = n.is_a?(String) ? n : JSON.dump(n)
             content = { message: node['message'], atts: node['atts'] }
             a << [ dom, exid, nid, 'tasker', tasker, name, now, u, content ]
           end

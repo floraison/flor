@@ -4,6 +4,8 @@
 
 ## flor 1.2.2  not yet released
 
+* Ensure flor_pointers name is a string
+
 
 ## flor 1.2.1  released 2021-03-22
 
