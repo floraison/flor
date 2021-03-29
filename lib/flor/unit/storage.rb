@@ -12,8 +12,9 @@ module Flor
       :status, :ctime, :mtime, :cunit, :munit
         ].freeze
     POINTER_COLUMNS = [
-      :domain, :exid, :nid, :type, :name, :value, :ctime, :cunit
-        ].freeze
+      :domain, :exid, :nid, :type, :name, :value, :ctime, :cunit,
+        :content
+          ].freeze
 
     attr_reader :unit, :db, :models
 
@@ -720,12 +721,12 @@ module Flor
           vs = nid == '0' ? node['vars'] : nil
           vs.each { |k, v|
             case v; when Numeric, String, TrueClass, FalseClass, NilClass
-              a << [ dom, exid, '0', 'var', k, v.to_s, now, u, nil ]
+              a << [ dom, exid, '0', 'var', k, v.to_s, now, u, v ]
             when Array, Hash
               s = '(array)'; s = '(object)' if v.is_a?(Hash)
-              a << [ dom, exid, '0', 'var', k, s, now, u, nil ]
+              a << [ dom, exid, '0', 'var', k, s, now, u, v ]
             else
-              a << [ dom, exid, '0', 'var', k, nil, now, u, nil ]
+              a << [ dom, exid, '0', 'var', k, nil, now, u, v ]
             end } if vs
 
           if ta = node['task']
@@ -746,29 +747,30 @@ module Flor
           #
           # don't insert when already inserted
 
-      if pointer_columns.include?(:content)
-        pointers.each { |ptr|
-          c = ptr[8]; ptr[8] = to_blob(c) if c }
-      else
-        pointers.each { |ptr|
-          ptr.pop }
-      end
+      #if pointer_columns.include?(:content)
+      pointers.each { |ptr| c = ptr[8]; ptr[8] = to_blob(c) if c }
+      #else
+      #  pointers.each { |ptr| ptr.pop }
+      #end
 
+      #@db[:flor_pointers]
+      #  .import(
+      #    pointer_columns,
+      #    pointers)
       @db[:flor_pointers]
         .import(
-          pointer_columns,
+          POINTER_COLUMNS,
           pointers)
     end
 
-    def pointer_columns
-
-      @pointer_columns ||=
-        if @db[:flor_pointers].columns.include?(:content)
-          POINTER_COLUMNS + [ :content ]
-        else
-          POINTER_COLUMNS
-        end
-    end
+    #def pointer_columns
+    #  @pointer_columns ||=
+    #    if @db[:flor_pointers].columns.include?(:content)
+    #      POINTER_COLUMNS + [ :content ]
+    #    else
+    #      POINTER_COLUMNS
+    #    end
+    #end
 
     def determine_type_and_schedule(message)
 

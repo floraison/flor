@@ -4,6 +4,7 @@
 
 ## flor 1.2.2  not yet released
 
+* Include data in flor_pointers
 * Ensure flor_pointers name is a string
 
 
