@@ -2,7 +2,7 @@
 # CHANGELOG.md
 
 
-## flor 1.2.2  not yet released
+## flor 1.2.2  released 2021-03-29
 
 * Include data in flor_pointers
 * Ensure flor_pointers name is a string
