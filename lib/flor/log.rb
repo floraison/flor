@@ -343,7 +343,7 @@ module Flor
       o.puts(tree_to_s(node.lookup_tree(nid), nid, out: o)) if node
 
       o.puts "#{_c.dg}node:#{_c.yl}"
-      o.puts YAML.dump(n.merge('tree' => '(above)'))
+      o.puts n ? YAML.dump(n.merge('tree' => '(above)')) : 'nil'
 
       o.puts "#{_c.dg}nodes:#{_c.yl}"
       o.puts nods_to_s(executor, m, opts)
