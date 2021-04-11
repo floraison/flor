@@ -16,7 +16,7 @@ require 'dense'
 
 module Flor
 
-  VERSION = '1.2.2'
+  VERSION = '1.3.0'
 end
 
 require 'flor/colours'
