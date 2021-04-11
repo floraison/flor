@@ -242,18 +242,18 @@ module Flor
       end
     end
 
+    RETURN_KEYS = %w[ exid nid payload tasker cause ].freeze
+
     def return(message)
 
-      m =
+      queue(
         if message['point'] == 'failed'
           message
         else
           message
-            .select { |k, _| %w[ exid nid payload tasker cause ].include?(k) }
+            .select { |k, _| RETURN_KEYS.include?(k) }
             .merge!('point' => 'return')
-        end
-
-      queue(m)
+        end)
 
       nil
     end
@@ -432,7 +432,7 @@ module Flor
       ex ? ex.execution : nil
     end
 
-    DUMP_KEYS = %w[ timestamp executions timers traps pointers ]
+    DUMP_KEYS = %w[ timestamp executions timers traps pointers ].freeze
 
     # Dumps all or some of the executions to a JSON string.
     # See Scheduler#load for importing.
@@ -598,6 +598,8 @@ module Flor
       puts(on_start_exc(ex))
     end
 
+    PREP_KEYS = %w[ exid name nid payload on_receive_last ].freeze
+
     def prepare_message(point, args)
 
       h = args
@@ -612,7 +614,7 @@ module Flor
       opts = {}
 
       h.each do |k, v|
-        if %w[ exid name nid payload on_receive_last ].include?(k)
+        if PREP_KEYS.include?(k)
           msg[k] = v
         else
           opts[k.to_sym] = v

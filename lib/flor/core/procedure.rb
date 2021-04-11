@@ -5,7 +5,7 @@ class Flor::Procedure < Flor::Node
   # "Returning vars" variables to pass back to pass upon reply.
   # In the 'receive' messages, it's a hash under the key 'rvars'.
   #
-  RVARS = %w[ idx ]
+  RVARS = %w[ idx ].freeze
 
   # Attributes that when given alone are turned to "true" attributes.
   #
@@ -13,7 +13,7 @@ class Flor::Procedure < Flor::Node
   #
   # The transformation occurs in Flor::Pro::Att ("_att").
   #
-  TRUE_ATTS = %w[ flank off disabled ]
+  TRUE_ATTS = %w[ flank off disabled ].freeze
 
   class << self
 
@@ -550,6 +550,8 @@ class Flor::Procedure < Flor::Node
     wrap_reply
   end
 
+  IF_UNLESS = %w[ _if _unless ].freeze
+
   # Grab on_error proc from incoming payload and stores it into parent node.
   #
   # Has no effect if there is no parent node.
@@ -562,7 +564,7 @@ class Flor::Procedure < Flor::Node
       @node; loop do
         pnode = parent_node(pnode)
         return unless pnode
-        break unless %w[ _if _unless ].include?(pnode['heap'])
+        break unless IF_UNLESS.include?(pnode['heap'])
       end
 
     flavour = "on_#{key}"
@@ -597,6 +599,8 @@ class Flor::Procedure < Flor::Node
 
     wrap('point' => 'entered', 'nid' => nid, 'tags' => ret)
   end
+
+  WRAP_KEYS = %w[ error cancel timeout ].freeze
 
   def wrap(h={})
 
@@ -642,7 +646,7 @@ class Flor::Procedure < Flor::Node
       # was considering passing the whole vars back (as 'varz'), but
       # it got in the way... and it might be heavy
 
-    %w[ error cancel timeout ]
+    WRAP_KEYS
       .each { |k|
         co = @node["child_on_#{k}"]
         next unless co
