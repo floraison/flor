@@ -4,6 +4,8 @@
 
 ## flor 1.3.0  not yet released
 
+* Insert a row flor_pointers for 'failure'
+
 
 ## flor 1.2.2  released 2021-03-29
 

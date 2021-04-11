@@ -235,6 +235,56 @@ describe 'Flor unit' do
       # use this one alone with `FLOR_DEBUG=db,dbg` and observe how
       # it avoids deleting and re-inserting pointers
     end
+
+    context 'errors' do
+
+      it 'points to errors' do
+
+        r =
+          @unit.launch(%{
+            concurrence
+              hole task: 'a'
+              fail 'nada'
+          }, wait: true)
+
+        expect(r['point']).to eq('failed')
+
+        wait_until { @unit.pointers.count == 2 }
+
+        fa = @unit.pointers.where(type: 'failure').first
+
+        expect(fa.type).to eq('failure')
+        expect(fa.name).to eq('Flor::FlorError l4')
+        expect(fa.value).to eq('nada')
+        expect(fa.data.keys.sort).to eq(%w[ error id nid ])
+      end
+
+#      it 'is removed when the error is gone' do
+#
+#        r =
+#          @unit.launch(%{
+#            concurrence
+#              hole task: 'a'
+#              #fail 'nada'
+#              fuck _
+#          }, wait: true)
+#
+#        expect(r['point']).to eq('failed')
+#
+#        wait_until { @unit.pointers.map(:type).sort == %w[ failure tasker ] }
+#
+#puts "x" * 80
+#        @unit.cancel(exid: r['exid'], nid: '0_1')
+#sleep 3
+#
+#        #wait_until { @unit.pointers.map(:type).sort == %w[ tasker ] }
+#
+#        pp @unit.executions[exid: r['exid']].data
+#        pp @unit.pointers.select(:id, :exid, :nid, :type).all
+#
+#        expect(@unit.pointers.count).to eq(1)
+#      end
+    end
   end
 
   describe Flor::Pointer do

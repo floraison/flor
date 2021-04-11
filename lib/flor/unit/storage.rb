@@ -220,6 +220,9 @@ module Flor
       raise err
     end
 
+    CRECON_STATUSES = %w[ created consumed ].freeze
+    RESCON_STATUSES = %w[ reserved consumed ].freeze
+
     def load_messages(exe_count)
 
       exe_count += 2
@@ -230,12 +233,12 @@ module Flor
         _exids_being_processed =
           @db[:flor_messages]
             .select(:exid)
-            .exclude(status: %w[ created consumed ])
+            .exclude(status: CRECON_STATUSES)
         _exids =
           @db[:flor_messages]
             .select(:exid)
             .exclude(exid: _exids_being_processed)
-            .exclude(status: %w[ reserved consumed ])
+            .exclude(status: RESCON_STATUSES)
             .limit(exe_count)
         @db[:flor_messages]
           .where(exid: _exids, status: 'created')
@@ -318,7 +321,7 @@ module Flor
       []
     end
 
-    POINTS_TO_ARCHIVE = %w[ terminated failed ceased ]
+    POINTS_TO_ARCHIVE = %w[ terminated failed ceased ].freeze
 
     def consume(messages)
 
@@ -686,6 +689,8 @@ module Flor
         # done in update_pointers
     end
 
+    FP_TYPES = %[ var ].freeze
+
     def update_pointers(exe, status, now)
 
 # Q  Should we archive old pointers?
@@ -701,7 +706,7 @@ module Flor
 
       @db[:flor_pointers]
         .where(exid: exid)
-        .where(Sequel.|({ type: %w[ var ] }, Sequel.~(nid: exe['nodes'].keys)))
+        .where(Sequel.|({ type: FP_TYPES }, Sequel.~(nid: exe['nodes'].keys)))
         .delete
           #
           # Delete all pointer to vars, their value might have changed,
@@ -714,9 +719,13 @@ module Flor
       pointers = exe['nodes']
         .inject([]) { |a, (nid, node)|
 
+          # add a pointer for each tag
+
           ts = node['tags']
           ts.each { |t|
             a << [ dom, exid, nid, 'tag', t, nil, now, u, nil ] } if ts
+
+          # add a pointer for each var (if nid == '0')
 
           vs = nid == '0' ? node['vars'] : nil
           vs.each { |k, v|
@@ -729,12 +738,37 @@ module Flor
               a << [ dom, exid, '0', 'var', k, nil, now, u, v ]
             end } if vs
 
+          # add a pointer for the task if any
+
           if ta = node['task']
             tasker = ta['tasker']
             n = ta['name']; name = n.is_a?(String) ? n : JSON.dump(n)
             content = { message: node['message'], atts: node['atts'] }
             a << [ dom, exid, nid, 'tasker', tasker, name, now, u, content ]
           end
+
+          # add a pointer for the error if any
+
+          if fa = node['failure']
+
+#puts "-" * 80; pp node; puts "-" * 80
+            a <<
+              if er = fa['error']
+                ni = fa['from'] || nid # not nid /!\
+                nam = "#{er['kla']} l#{er['lin']}"
+                val = er['msg']
+                con = { error: fa, nid: ni }
+                [ dom, exid, ni, 'failure', nam, val, now, u, con ]
+              else
+                nam = fa['tasker'] || 'failure'
+                val = [ fa['attl'] || [], fa['attd'] || {} ]
+                  .collect(&:inspect).join(' ')
+                con = { error: fa, nid: nid }
+                [ dom, exid, nid, 'failure', nam, val, now, u, con ]
+              end
+          end
+
+          # done
 
           a }
 
@@ -747,16 +781,8 @@ module Flor
           #
           # don't insert when already inserted
 
-      #if pointer_columns.include?(:content)
       pointers.each { |ptr| c = ptr[8]; ptr[8] = to_blob(c) if c }
-      #else
-      #  pointers.each { |ptr| ptr.pop }
-      #end
 
-      #@db[:flor_pointers]
-      #  .import(
-      #    pointer_columns,
-      #    pointers)
       @db[:flor_pointers]
         .import(
           POINTER_COLUMNS,
