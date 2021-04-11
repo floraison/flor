@@ -259,31 +259,38 @@ describe 'Flor unit' do
         expect(fa.data.keys.sort).to eq(%w[ error id nid ])
       end
 
-#      it 'is removed when the error is gone' do
-#
-#        r =
-#          @unit.launch(%{
-#            concurrence
-#              hole task: 'a'
-#              #fail 'nada'
-#              fuck _
-#          }, wait: true)
-#
-#        expect(r['point']).to eq('failed')
-#
-#        wait_until { @unit.pointers.map(:type).sort == %w[ failure tasker ] }
-#
-#puts "x" * 80
-#        @unit.cancel(exid: r['exid'], nid: '0_1')
-#sleep 3
-#
-#        #wait_until { @unit.pointers.map(:type).sort == %w[ tasker ] }
-#
-#        pp @unit.executions[exid: r['exid']].data
-#        pp @unit.pointers.select(:id, :exid, :nid, :type).all
-#
-#        expect(@unit.pointers.count).to eq(1)
-#      end
+      it 'is removed when the error is gone' do
+
+        r =
+          @unit.launch(%{
+            sequence
+              task 'bobo'
+              task 'hole'
+          }, wait: true)
+
+        expect(r['point']).to eq('failed')
+
+        wait_until {
+          @unit.pointers.count == 2 }
+
+        expect(
+          @unit.pointers.reverse(:type).map([ :nid, :type, :name, :value ])
+        ).to eq([
+          [ '0_0', 'tasker', 'bobo', 'null' ],
+          [ '0_0', 'failure', 'ArgumentError l', 'tasker "bobo" not found' ]
+        ])
+
+        @unit.kill(r['exid'], '0_0')
+
+        wait_until {
+          @unit.pointers.where(type: 'tasker', name: 'hole').count == 1 }
+
+        expect(
+          @unit.pointers.reverse(:type).map([ :nid, :type, :name, :value ])
+        ).to eq([
+          [ '0_1', 'tasker', 'hole', 'null' ],
+        ])
+      end
     end
   end
 

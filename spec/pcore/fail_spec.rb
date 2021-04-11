@@ -24,7 +24,7 @@ describe 'Flor procedures' do
           fail 'not enough flour'
         })
 
-      #pp r
+#pp r
       expect(r['point']).to eq('failed')
       expect(r['error']['kla']).to eq('Flor::FlorError')
       expect(r['error']['msg']).to eq('not enough flour')
