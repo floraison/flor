@@ -2,7 +2,7 @@
 # CHANGELOG.md
 
 
-## flor 1.3.0  not yet released
+## flor 1.3.0  released 2021-04-13
 
 * Insert a row flor_pointers for 'failure'
 
