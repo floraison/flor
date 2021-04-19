@@ -689,7 +689,7 @@ module Flor
         # done in update_pointers
     end
 
-    FP_TYPES = %[ var ].freeze
+    FP_TYPES = %w[ var ].freeze
 
     def update_pointers(exe, status, now)
 

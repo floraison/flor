@@ -139,6 +139,29 @@ describe 'Flor unit' do
       expect(@unit.pointers.count).to eq(0)
     end
 
+    # Trying to fight against DELETE FROM flor_pointers WHERE type = ' var '...
+    # Not conclusive at all though.
+    #
+    it 'removes and re-inserts var pointers' do
+
+      r =
+        @unit.launch(%{
+          set a 1
+          set b 2
+          set a 3
+          stall _
+        }, wait: '0_3 receive')
+
+      expect(r['point']).to eq('receive')
+
+      sleep 0.350
+
+      vars = @unit.pointers.where(type: 'var').all
+
+      expect(vars.collect { |v| [ v.name, v.value ] }
+        ).to eq([ [ 'a', '3' ], [ 'b', '2' ] ])
+    end
+
     it 'points to executions by var name (and value)' do
 
       r =
