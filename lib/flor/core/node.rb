@@ -149,7 +149,7 @@ class Flor::Node
     tree = lookup_tree(Flor.parent_nid(nid))
     return tree[1][cid] if tree
 
-    #tree = lookup_tree(Flor.parent_nid(nid, true))
+    #tree = lookup_tree(Flor.parent_nid(nid, remove_subnid=true))
     #return tree[1][cid] if tree
       #
       # might become necessary at some point
