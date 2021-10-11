@@ -48,15 +48,21 @@ module Flor
     def full_tree
 
       tree = nodes['0']['tree']
+      tree1 = nil
 
-      #nodes.each do |nid, n|
-      #  next if nid == '0'
-      #  t = n['tree']; next unless t
-      #end
-        #
-        # FIXME
+      nodes.each do |nid, n|
 
-      tree
+        next if nid == '0'
+        t = n['tree']; next unless t
+
+        tree1 ||= Flor.dup(tree)
+        snid = n['parent'].split('-')[0].split('_').collect(&:to_i)
+        cid = snid.pop
+        ptree = get_tree(tree1, snid)
+        ptree[1][cid] = t
+      end
+
+      tree1 || tree
     end
 
     def lookup_tree(nid)
@@ -147,6 +153,13 @@ module Flor
     def lookup_nid(query, opts={})
 
       lookup_node(query, opts)['nid']
+    end
+
+    protected
+
+    def get_tree(tree, split_nid)
+
+      split_nid.empty? ? tree : get_tree(tree[1][split_nid.shift], split_nid)
     end
 
     class << self

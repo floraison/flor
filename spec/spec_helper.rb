@@ -432,5 +432,23 @@ class Array
         end
     end
   end
+
+  # When a filename is give as 4th elt of the tree array, make it
+  # relative
+  #
+  def tree_trim
+
+    h, cs, l, f = self
+
+    r = [
+      h,
+      cs.is_a?(Array) ?
+        cs.collect { |e| e.respond_to?(:tree_trim) ? e.tree_trim : e } :
+        cs,
+      l ]
+    r << Pathname.new(f).relative_path_from(Pathname.pwd).to_s if f
+
+    r
+  end
 end
 
