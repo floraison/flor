@@ -2,6 +2,9 @@
 # CHANGELOG.md
 
 
+## flor 1.3.2  not yet released
+
+
 ## flor 1.3.1  released 2021-04-19
 
 * Fix flor_pointers var deletion mechanism (type = ' var ')
