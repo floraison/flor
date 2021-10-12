@@ -86,21 +86,22 @@ module Flor
       cs = m[:counts] = {}
       is = m[:nids] = { tasks: [], failures: [] }
 
-      fs = 0
-      ts = 0
+      cs[:failures] = 0
+      cs[:tasks] = 0
+      cs[:nodes] = nodes.count
+        #
       nodes.each do |k, v|
         if v['task']
-          ts += 1
+          cs[:tasks] += 1
           is[:tasks] << k
         end
         if v['failure']
-          fs += 1
+          cs[:failures] += 1
           is[:failures] << k
         end
       end
-      cs[:nodes] = nodes.count
-      cs[:failures] = fs
-      cs[:tasks] = ts
+
+      h[:tree] = full_tree
 
       h
     end
