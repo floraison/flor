@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#
+# turns a .flo to a .json
+#
+
+SCRIPT=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+LIBPATH=$SCRIPTPATH/../lib
+
+bundle exec ruby -I$LIBPATH $LIBPATH/flor/tools/flotojson.rb $*
+
