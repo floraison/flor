@@ -80,7 +80,7 @@ Note the slope in the indented version just above. The backslash symbolizes it.
 
 ### pipe or semicolon
 
-Pipe `|` and semicolon `;` have the same effect, the bind the two nodes they stand between in a sibling relationship.
+Pipe `|` and semicolon `;` have the same effect, they bind the two nodes they stand between in a sibling relationship.
 
 ```
 sequence \ a | b | c
