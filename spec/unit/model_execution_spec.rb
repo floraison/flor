@@ -63,13 +63,15 @@ describe 'Flor unit' do
         expect(m[:nids][:failures]).to eq(%w[ 0 0_3 ])
 
         expect(h[:tree]).to eq(
-          ["concurrence", [
-            ["task", [
-              ["_att", [["_sqs", "bravo", 5]], 5],
-              ["_att", [["_sqs", "do the job", 5]], 5]], 5],
-            ["fail", [["_att", [["_sqs", "nada", 4]], 4]], 4],
-            ["bravo", [["_att", [["_sqs", "do the job", 5]], 5]], 5],
-            ["nemo", [], 6]], 2])
+          ['concurrence',
+           [['stall', [['_att', [['_', [], 3]], 3]], 3],
+            ['fail', [['_att', [['_sqs', 'nada', 4]], 4]], 4],
+            ['task',
+             [['_att', [['_sqs', 'bravo', 5]], 5],
+              ['_att', [['_sqs', 'do the job', 5]], 5]],
+             5],
+            ['nemo', [], 6]],
+           2])
       end
     end
 

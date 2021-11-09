@@ -20,7 +20,29 @@ module Flor
     #end
 
     def nodes; data['nodes']; end
+
     def zero_node; nodes['0']; end
+
+    # Returns the nids, the lower in the tree, the earlier in the returned
+    # array.
+    #
+    def sorted_nids
+
+      nodes.keys
+        .inject([]) { |a, nid|
+          l = nid.split('_').length
+          (a[l] ||= []) << nid
+          a }
+        .compact
+        .collect(&:sort)
+        .flatten(1)
+    end
+
+    def lowest_node
+
+      nodes[sorted_nids.first]
+    end
+
     def closing_messages; data['closing_messages']; end
 
     def execution(reload=false); self; end
@@ -47,22 +69,18 @@ module Flor
 
     def full_tree
 
-      tree = nodes['0']['tree']
-      tree1 = nil
+      nids = sorted_nids
+      nid0 = nids.shift
 
-      nodes.each do |nid, n|
+      return nil unless nid0
 
-        next if nid == '0'
-        t = n['tree']; next unless t
+      tree = Flor.dup(nodes[nid0]['tree'])
 
-        tree1 ||= Flor.dup(tree)
-        snid = n['parent'].split('-')[0].split('_').collect(&:to_i)
-        cid = snid.pop
-        ptree = get_tree(tree1, snid)
-        ptree[1][cid] = t
-      end
+      nids.each { |nid|
+        next unless nid.split('_', 2).first == nid0
+        replace_sub_tree(tree, nid, nodes[nid]['tree']) }
 
-      tree1 || tree
+      tree
     end
 
     def lookup_tree(nid)
@@ -158,9 +176,26 @@ module Flor
 
     protected
 
-    def get_tree(tree, split_nid)
+    def replace_sub_tree(tree, nid, t)
 
-      split_nid.empty? ? tree : get_tree(tree[1][split_nid.shift], split_nid)
+      return unless t
+      return if nid.index('-') # stay vanilla
+
+      snid = nid.split('_').collect(&:to_i)[1..-1]
+      a = get_child_array(tree, snid)
+
+      return unless a # shouldn't we fail?
+
+      a[snid.first] = Flor.dup(t)
+    end
+
+    def get_child_array(tree, snid)
+
+      return nil if tree.nil?
+      return nil if snid.length < 1
+      return nil unless tree[1].is_a?(Array)
+      return tree[1] if snid.length == 1
+      n = snid.shift; get_child_array(tree[1][n], snid)
     end
 
     class << self

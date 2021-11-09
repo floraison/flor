@@ -171,6 +171,7 @@ describe 'Flor unit' do
 
       r = @unit.wait(exid, '0_0_1 receive; end')
       exe = @unit.executions[exid: exid]
+#puts Flor.tree_to_s(exe.full_tree)
 
       expect(exe.full_tree.tree_trim).to eq(
         ["sequence", [
