@@ -16,7 +16,16 @@ if (ARGV & [ '-h', '--help']).any?
   puts "  turns a flor .flo process definition to its tree representation"
   puts
   puts "  flags:"
-  puts "    --pp   pretty prints instead of dumping as JSON"
+  puts "    --pp    pretty prints instead of dumping as JSON"
+  puts
+  puts "    --pj"
+  puts "    --jp    pretty prints the JSON output"
+  puts
+  puts "    -y"
+  puts "    -yaml   dumps as YAML"
+  puts
+  puts "    -h"
+  puts "    --help  prints this help message"
   puts
   exit 0
 end
@@ -53,11 +62,28 @@ end
 #    end
 
 fname = files.first
-content = File.read(fname)
+
+content =
+  if fname
+    abort("File #{fname.inspect} not found") unless File.exist?(fname)
+    File.read(fname)
+  else
+    STDIN.read
+  end
+
 tree = Flor.parse(content, fname, {})
 
 if flags['--pp']
   pp tree
+elsif flags['--jp'] || flags['--pj']
+  puts(
+    JSON.pretty_generate(tree)
+      .gsub(/\[\s+/, '[ ')
+      .gsub(/\]\s+/, ']')
+      .gsub(/,\s+(\d+)\s+\]/, ', \1]')
+        )
+elsif flags['-y'] || flags['--yaml']
+  puts YAML.dump(tree)
 else
   puts JSON.dump(tree)
 end
