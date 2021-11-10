@@ -2,7 +2,10 @@
 # CHANGELOG.md
 
 
-## flor 1.3.2  not yet released
+## flor 1.4.0  released 2021-11-10
+
+* Add :tree to Execution#to_h
+* Scaffold bin/flotojson
 
 
 ## flor 1.3.1  released 2021-04-19
