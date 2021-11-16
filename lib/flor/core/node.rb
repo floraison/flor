@@ -88,7 +88,7 @@ class Flor::Node
   def domain; Flor.domain(@execution['exid']); end
 
   def point; @message['point']; end
-  def from; @message['from']; end
+  def from; @from || @message['from']; end
 
   def cnodes; @node['cnodes']; end
   def cnodes_any?; cnodes && cnodes.any?; end

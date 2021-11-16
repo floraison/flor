@@ -381,7 +381,16 @@ class Flor::Procedure < Flor::Node
 
       receive_when_ended
 
+    elsif should_apply_on_receive?
+
+      apply_on_receive
+
     else
+
+      orn = @node['on_receive_nid']
+      @from = orn[1] if orn && orn[0] == from
+        #
+        # in order to move on to the next child...
 
       receive
     end
@@ -981,6 +990,22 @@ class Flor::Procedure < Flor::Node
     t[1].insert(i, *message['trees'])
 
     []
+  end
+
+  def should_apply_on_receive?
+
+    orn = @node['on_receive_nid']
+    return false if orn && orn[0] == from
+
+    orc = @node['on_receive']; orc && orc.any?
+  end
+
+  def apply_on_receive
+
+    ms = apply(@node['on_receive'][0][1], [ @message ], tree[2])
+    @node['on_receive_nid'] = [ ms[0]['nid'], from ]
+
+    ms
   end
 end
 
