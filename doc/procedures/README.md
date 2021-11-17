@@ -180,6 +180,7 @@
   * [Flor::Pro::On](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on.rb) : [on](on.md)
   * [Flor::Pro::OnCancel](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_cancel.rb) : [on_cancel](on_cancel.md)
   * [Flor::Pro::OnError](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_error.rb) : [on_error](on_error.md)
+  * [Flor::Pro::OnReceive](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_receive.rb) : on_receive
   * [Flor::Pro::OnTimeout](https://github.com/floraison/flor/blob/master/lib/flor/punit/on_timeout.rb) : [on_timeout](on_timeout.md)
   * [Flor::Pro::Part](https://github.com/floraison/flor/blob/master/lib/flor/punit/part.rb) : part, flank
   * [Flor::Pro::PatArr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_arr.rb) : _pat_arr

@@ -93,6 +93,22 @@ describe 'Flor procedures' do
       expect(r['vars']['l']).to eq([ 0, 'a', 1, 'a', ])
       expect(r['payload']['l']).to eq([ 0, 'fa', 1, 'fa', ])
     end
+
+    it 'plays well with cursor' do
+
+      r = @executor.launch(
+        %q{
+          set l []
+          cursor
+            on_receive (def \ break _ if l[-1] == 1)
+            #on_receive (def \ break _ if l.-1 == 1)
+            push l 0
+            push l 1
+            push l 2
+        })
+
+      expect(r['vars']['l']).to eq([ 0, 1 ])
+    end
   end
 end
 
