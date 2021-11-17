@@ -35,6 +35,7 @@ If you have any question feel free to ask in the [flor chat room](https://gitter
 * [nodes.md](nodes.md) - flor nodes and their interactions
 * [on_cancel.md](on_cancel.md) - tying "on cancel" handlers to flor nodes
 * [on_error.md](on_error.md) - tying "on error" handlers to flor nodes
+* [on_receive.md](on_receive.md) - tying "on receive" handlers to flor nodes
 * [on_timeout.md](on_timeout.md) - tying "on timeout" handlers to flor nodes
 * [patterns.md](patterns.md) - flor in the light of the [workflow patterns](http://www.workflowpatterns.com)
 * [patterns__control_flow.md](patterns__control_flow.md) - workflow control flow patterns

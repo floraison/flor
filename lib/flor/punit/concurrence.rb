@@ -139,7 +139,7 @@ class Flor::Pro::Concurrence < Flor::Procedure
   #   + 12 34
   #   + 56 78
   # ```
-  # One can even express the function has a 'block':
+  # One can even express the function as a 'block':
   # ```
   # concurrence tag: 'x'
   #   on_receive
