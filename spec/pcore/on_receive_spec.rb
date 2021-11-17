@@ -73,7 +73,13 @@ describe 'Flor procedures' do
           set l []
           set f.l []
           sequence
-            on_receive (def msg \ push l 'a'; push f.l 'fa')
+            #on_receive (def msg \ push l 'a'; push f.l 'fa')
+            #on_receive
+            #  def msg \ push l 'a'; push f.l 'fa'
+            on_receive
+              def msg
+                push l 'a'
+                push f.l 'fa'
             sequence
               push l 0
               push f.l 0

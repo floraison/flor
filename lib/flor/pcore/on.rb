@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+
 class Flor::Pro::On < Flor::Macro
   #
   # Catches signals or errors.
@@ -132,7 +133,7 @@ class Flor::Pro::On < Flor::Macro
 
   protected
 
-  CATCHES = %w[ error cancel timeout ].freeze
+  CATCHES = %w[ error cancel timeout receive ].freeze
 
   def find_catch
 

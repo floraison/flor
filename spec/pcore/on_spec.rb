@@ -239,6 +239,27 @@ describe 'Flor pcore' do
 
       # see spec/punit/on_spec.rb
     end
+
+    context 'receive' do
+
+      it 'catches receives' do
+
+        r = @executor.launch(
+          %q{
+            set l []
+            sequence
+              on receive
+                push l 'x'
+                #push l "$(msg.point):$(msg.nid)"
+              push l 0
+              push l 1
+              push l 2
+          })
+
+        expect(r['point']).to eq('terminated')
+        expect(r['vars']['l']).to eq([ 0, 'x', 1, 'x', 2, 'x' ])
+      end
+    end
   end
 end
 
