@@ -65,6 +65,27 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq([ 0, 'a', 1, 'a', 2, 'a' ])
     end
+
+    it 'is triggered on each receive (2)' do
+
+      r = @executor.launch(
+        %q{
+          set l []
+          set f.l []
+          sequence
+            on_receive (def msg \ push l 'a'; push f.l 'fa')
+            sequence
+              push l 0
+              push f.l 0
+            sequence
+              push l 1
+              push f.l 1
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['l']).to eq([ 0, 'a', 1, 'a', ])
+      expect(r['payload']['l']).to eq([ 0, 'fa', 1, 'fa', ])
+    end
   end
 end
 
