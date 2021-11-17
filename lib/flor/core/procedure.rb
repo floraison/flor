@@ -994,10 +994,18 @@ class Flor::Procedure < Flor::Node
 
   def should_apply_on_receive?
 
+    return false if @message['from_on'] == 'receive'
+      #
+      # no, since the message comes from an on_receive...
+      # how about nested on_receives?
+
+    orc = @node['on_receive']
+    return false if orc.nil? || orc.empty?
+
     orn = @node['on_receive_nid']
     return false if orn && orn[0] == from
 
-    orc = @node['on_receive']; orc && orc.any?
+    true
   end
 
   def apply_on_receive

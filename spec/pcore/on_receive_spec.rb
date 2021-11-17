@@ -62,9 +62,7 @@ describe 'Flor procedures' do
             push l 2
         })
 
-pp r
       expect(r['point']).to eq('terminated')
-      #expect(r['vars']['l']).to eq([ 'a', 0, 'a', 1, 'a', 2, 'a' ])
       expect(r['vars']['l']).to eq([ 0, 'a', 1, 'a', 2, 'a' ])
     end
   end
