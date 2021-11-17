@@ -8,7 +8,6 @@ class Flor::Pro::OnReceive < Flor::Procedure
 
     unatt_unkeyed_children
 
-    @node['atts'] = []
     @node['rets'] = []
   end
 
