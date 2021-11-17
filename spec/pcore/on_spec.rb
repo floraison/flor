@@ -249,15 +249,14 @@ describe 'Flor pcore' do
             set l []
             sequence
               on receive
-                push l 'x'
-                #push l "$(msg.point):$(msg.nid)"
+                push l "f$(msg.from)"
               push l 0
               push l 1
               push l 2
           })
 
         expect(r['point']).to eq('terminated')
-        expect(r['vars']['l']).to eq([ 0, 'x', 1, 'x', 2, 'x' ])
+        expect(r['vars']['l']).to eq([ 0, 'f0_1_1', 1, 'f0_1_2', 2, 'f0_1_3' ])
       end
     end
   end

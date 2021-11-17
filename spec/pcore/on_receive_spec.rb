@@ -56,14 +56,15 @@ describe 'Flor procedures' do
         %q{
           set l []
           sequence
-            on_receive (def msg \ push l 'a')
+            #on_receive (def msg \ push l 'a')
+            on_receive (def msg \ push l "f$(msg.from)")
             push l 0
             push l 1
             push l 2
         })
 
       expect(r['point']).to eq('terminated')
-      expect(r['vars']['l']).to eq([ 0, 'a', 1, 'a', 2, 'a' ])
+      expect(r['vars']['l']).to eq([ 0, 'f0_1_1', 1, 'f0_1_2', 2, 'f0_1_3' ])
     end
 
     it 'is triggered on each receive (2)' do

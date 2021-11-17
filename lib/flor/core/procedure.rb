@@ -1010,7 +1010,10 @@ class Flor::Procedure < Flor::Node
 
   def apply_on_receive
 
-    ms = apply(@node['on_receive'][0][1], [ @message ], tree[2])
+    args = [
+      [ 'msg', @message ] ]
+
+    ms = apply(@node['on_receive'][0][1], args, tree[2])
     @node['on_receive_nid'] = [ ms[0]['nid'], from ]
 
     ms

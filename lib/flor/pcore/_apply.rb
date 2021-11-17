@@ -99,7 +99,7 @@ class Flor::Pro::UnderscoreApply < Flor::Procedure
 
     params.each do |param_key, param_tree|
       next if param_tree[0] == '_ref'
-      arg_i = args.index { |arg_key, arg_val| arg_key == param_key }
+      arg_i = args.index { |arg_key, _| arg_key == param_key }
       next unless arg_i
       arg_key, arg_val = args.delete_at(arg_i)
       seen << arg_key
