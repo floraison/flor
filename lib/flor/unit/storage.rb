@@ -666,10 +666,11 @@ module Flor
     def reschedule_timer(t)
 
       w = { id: t.id.to_i, status: 'active', mtime: t.mtime, munit: t.munit }
+      r = nil
 
       if t.type != 'at' && t.type != 'in'
 
-        @db[:flor_timers]
+        r = @db[:flor_timers]
           .where(w)
           .update(
             count: t.count.to_i + 1,
@@ -682,7 +683,7 @@ module Flor
 
       elsif @archive
 
-        @db[:flor_timers]
+        r = @db[:flor_timers]
           .where(w)
           .update(
             count: t.count.to_i + 1,
@@ -694,12 +695,14 @@ module Flor
 
       else
 
-        @db[:flor_timers]
+        r = @db[:flor_timers]
           .where(w)
           .delete
 
         callback(:timers, :delete, w, t)
       end
+
+      r
     end
 
     def remove_nodes(exe, status, now)
@@ -869,17 +872,17 @@ module Flor
         .inject([]) { |a, elt| a << [ a.last, elt ].compact.join('.'); a }
     end
 
-    def callback(table, action, extra=nil)
+    def callback(table, action, *rest)
 
       (@callbacks[table] || [])
         .each { |as, block|
-          call_back(block, table, action, extra) \
+          call_back(block, table, action, *rest) \
             if as.empty? || as.include?(action) }
     end
 
-    def call_back(block, table, action, extra)
+    def call_back(block, table, action, *rest)
 
-      block.call(*[ table, action, extra ][0, block.arity])
+      block.call(*[ table, action, *rest ][0, block.arity])
     end
 
     class DbLogger
