@@ -113,27 +113,6 @@ module Flor
       @ganger.shutdown
     end
 
-    def on_start_exc(e)
-
-      io = StringIO.new
-
-      head, kind =
-        e.is_a?(StandardError) ? [ '=sch', 'error' ] : [ '!sch', 'exception' ]
-      thr = Thread.current
-
-      t = head[0, 2] + Time.now.to_f.to_s.split('.').last
-      io.puts ' /' + t + ' ' + head * 17
-      io.puts " |#{t} + in #{self.class}#start"
-      io.puts " |#{t} db: #{@storage.db.class} #{@storage.db.object_id}"
-      io.puts " |#{t} thread: t#{thr.object_id} #{thr.inspect}"
-      io.puts " |#{t} #{kind}: #{e.inspect}"
-      io.puts " |#{t} backtrace:"
-      e.backtrace.each { |l| io.puts "|#{t} #{l}" }
-      io.puts ' \\' + t + ' ' + (head * 17) + ' .'
-
-      io.string
-    end
-
     def start
 
       # TODO heartbeat, every x minutes, when idle, log something
@@ -556,6 +535,27 @@ module Flor
     end
 
     protected
+
+    def on_start_exc(e)
+
+      io = StringIO.new
+
+      head, kind =
+        e.is_a?(StandardError) ? [ '=sch', 'error' ] : [ '!sch', 'exception' ]
+      thr = Thread.current
+
+      t = head[0, 2] + Time.now.to_f.to_s.split('.').last
+      io.puts ' /' + t + ' ' + head * 17
+      io.puts " |#{t} + in #{self.class}#start"
+      io.puts " |#{t} db: #{@storage.db.class} #{@storage.db.object_id}"
+      io.puts " |#{t} thread: t#{thr.object_id} #{thr.inspect}"
+      io.puts " |#{t} #{kind}: #{e.inspect}"
+      io.puts " |#{t} backtrace:"
+      e.backtrace.each { |l| io.puts "|#{t} #{l}" }
+      io.puts ' \\' + t + ' ' + (head * 17) + ' .'
+
+      io.string
+    end
 
     def extract_dump_and_load_filters(opts)
 

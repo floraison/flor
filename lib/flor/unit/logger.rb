@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+
 module Flor
 
   # TODO ::Logger has a formatting callback
@@ -11,7 +12,7 @@ module Flor
 
     # NB: logger configuration entries start with "log_"
 
-    LEVELS_I = %w[ DEBUG INFO WARN ERROR FATAL UNKNOWN ]
+    LEVELS_I = %w[ DEBUG INFO WARN ERROR FATAL UNKNOWN ].freeze
 
     def initialize(unit)
 
