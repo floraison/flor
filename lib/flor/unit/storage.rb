@@ -16,7 +16,7 @@ module Flor
         :content
           ].freeze
 
-    attr_reader :unit, :db, :models
+    attr_reader :unit, :db, :models, :callbacks
 
     attr_reader :mutex
       # might be useful for some implementations
@@ -30,6 +30,8 @@ module Flor
       @models = {}
       @archive = @unit.conf['sto_archive']
       @mutex = @unit.conf['sto_sync'] ? Mutex.new : nil
+
+      @callbacks = {}
 
       connect
     end
@@ -191,6 +193,8 @@ module Flor
               mtime: now,
               munit: u)
 
+          callback(:executions, :update, id)
+
         else
 
           exe['id'] =
@@ -205,6 +209,8 @@ module Flor
                 cunit: u,
                 munit: u)
               .to_i
+
+          callback(:executions, :insert, exe['id'])
         end
 
         remove_nodes(exe, status, now)
@@ -418,26 +424,29 @@ module Flor
       now = Flor.tstamp
       u = @unit.identifier
 
-      synchronize do
+      id =
+        synchronize do
 
-        @db[:flor_timers]
-          .insert(
-            domain: Flor.domain(message['exid']),
-            exid: message['exid'],
-            nid: message['nid'],
-            onid: message['onid'] || message['nid'],
-            bnid: message['nid'],
-            type: type,
-            schedule: string,
-            ntime: next_time,
-            content: to_blob(message),
-            count: 0,
-            status: 'active',
-            ctime: now,
-            mtime: now,
-            cunit: u,
-            munit: u)
-      end
+          @db[:flor_timers]
+            .insert(
+              domain: Flor.domain(message['exid']),
+              exid: message['exid'],
+              nid: message['nid'],
+              onid: message['onid'] || message['nid'],
+              bnid: message['nid'],
+              type: type,
+              schedule: string,
+              ntime: next_time,
+              content: to_blob(message),
+              count: 0,
+              status: 'active',
+              ctime: now,
+              mtime: now,
+              cunit: u,
+              munit: u)
+        end
+
+      callback(:timers, :insert, id)
 
       @unit.wake_up
 
@@ -502,6 +511,8 @@ module Flor
               munit: u)
         end
 
+      callback(:traps, :insert, id)
+
       traps[id]
 
     rescue => err
@@ -546,6 +557,21 @@ module Flor
         "#{self.class}#fetch_next_time()", err, '(returning nil)')
 
       nil
+    end
+
+    def on(key, actions=[], &block)
+
+      as =
+        case actions
+        when :any, 'any' then []
+        when Array then actions
+        when Symbol then [ actions ]
+        when String then actions.split(/\s*[;,]\s*/)
+        else []
+        end
+          .collect(&:to_sym)
+
+      (@callbacks[key] ||= []) << [ as, block ]
     end
 
     protected
@@ -652,6 +678,8 @@ module Flor
             mtime: Flor.tstamp,
             munit: @unit.identifier)
 
+        callback(:timers, :update, w, t)
+
       elsif @archive
 
         @db[:flor_timers]
@@ -662,11 +690,15 @@ module Flor
             mtime: Flor.tstamp,
             munit: @unit.identifier)
 
+        callback(:timers, :update, w, t)
+
       else
 
         @db[:flor_timers]
           .where(w)
           .delete
+
+        callback(:timers, :delete, w, t)
       end
     end
 
@@ -787,6 +819,8 @@ module Flor
         .import(
           POINTER_COLUMNS,
           pointers)
+
+      callback(:pointers, :update, exid)
     end
 
     #def pointer_columns
@@ -833,6 +867,19 @@ module Flor
       Flor.domain(exid)
         .split('.')
         .inject([]) { |a, elt| a << [ a.last, elt ].compact.join('.'); a }
+    end
+
+    def callback(table, action, extra=nil)
+
+      (@callbacks[table] || [])
+        .each { |as, block|
+          call_back(block, table, action, extra) \
+            if as.empty? || as.include?(action) }
+    end
+
+    def call_back(block, table, action, extra)
+
+      block.call(*[ table, action, extra ][0, block.arity])
     end
 
     class DbLogger

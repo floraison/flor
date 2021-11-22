@@ -132,6 +132,22 @@ describe Flor::Storage do
       expect(ms['cc'].map { |m| m[:point] }).to eq(%w[ cancel ])
     end
   end
+
+  describe '#on(type, callback)' do
+
+    it 'registers a callback' do
+
+      @unit.storage.on(:pointers) { puts 'a' }
+      @unit.storage.on(:pointers, :update) { puts 'b' }
+      @unit.storage.on(:pointers, :any) { puts 'c' }
+
+      expect(@unit.storage.callbacks.keys).to eq([ :pointers ])
+      expect(@unit.storage.callbacks[:pointers].size).to eq(3)
+      expect(@unit.storage.callbacks[:pointers][0][0, 1]).to eq([ [] ])
+      expect(@unit.storage.callbacks[:pointers][1][0, 1]).to eq([ [ :update ] ])
+      expect(@unit.storage.callbacks[:pointers][2][0, 1]).to eq([ [] ])
+    end
+  end
 end
 
 describe Flor::Storage do
@@ -238,6 +254,45 @@ describe Flor::Storage do
 
       expect(m1[:id]).not_to eq(m0[:id])
       expect(m1[:id]).to eq(m0[:id] + 1)
+    end
+  end
+
+  context 'callbacks' do
+
+    before :each do
+
+      @unit = Flor::Unit.new('envs/test/etc/conf.json')
+      @unit.conf[:unit] = 'u_storage_cbacks'
+      #@unit.hooker.add('journal', Flor::Journal)
+      #@unit.storage.archive = true
+      @unit.storage.delete_tables
+      @unit.storage.migrate
+      @unit.start
+    end
+
+    they 'are called for :pointers' do
+
+      seen = []
+        #
+      @unit.storage.on(:pointers, :update) do |table, action|
+        seen << [ table, action ]
+      end
+      @unit.storage.on(:pointers, :update) do |table|
+        seen << [ table ]
+      end
+      @unit.storage.on(:executions, :any) do |table, action, id|
+        seen << [ table, action, id ]
+      end
+
+      r = @unit.launch('hole task: "nada"', wait: '0 task')
+
+      id = wait_until { @unit.storage.db[:flor_executions].get(:id) }
+
+      expect(seen).to eq([
+        [ :executions, :insert, id ],
+        [ :pointers, :update ],
+        [ :pointers ],
+      ])
     end
   end
 end
