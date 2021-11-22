@@ -100,14 +100,18 @@ describe 'Flor procedures' do
         %q{
           set l []
           cursor
-            on_receive (def \ break _ if l[-1] == 1)
+            #on_receive (def \ break _ if l[-1] == 1)
             #on_receive (def \ break _ if l.-1 == 1)
+            on receive
+              break _ if l.-1 == 1
             push l 0
             push l 1
             push l 2
+          push l 'z'
         })
 
-      expect(r['vars']['l']).to eq([ 0, 1 ])
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['l']).to eq([ 0, 1, 'z' ])
     end
   end
 end
