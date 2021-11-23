@@ -45,6 +45,7 @@ If you have any question feel free to ask in the [flor chat room](https://gitter
 * [re_applying.md](re_applying.md) - cancelling part of an execution to force it to a new definition tree
 * [recipes.md](recipes.md) - good/best practices
 * [signalling.md](signalling.md) - sending a signal to an execution (to trigger a reaction)
+* [storage_callbacks.md](storage_callbacks.md) - setting callbacks after storage insert/update/delete
 * [strings.md](strings.md) - dealing with strings in the flor language
 * [tags.md](tags.md) - the `tag:` attribute and its uses
 * [tasks.md](tasks.md) - handing tasks to gangers and taskers
