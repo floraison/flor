@@ -43,6 +43,7 @@
 * [on](on.md) - Catches signals or errors.
 * [on_cancel](on_cancel.md) - Counterpart to the on_cancel: attribute.
 * [on_error](on_error.md) - Counterpart to the on_error: attribute.
+* [on_receive](on_receive.md) - Binds a function to the parent node, the function will be called each time the parent node "receives".
 * [push, pushr](push.md) - Pushes a value into an array (in a variable or a field).
 * [rand](rand.md) - Returns a randomly generated number.
 * [range](range.md) - Generates ranges of integers.
@@ -180,7 +181,7 @@
   * [Flor::Pro::On](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on.rb) : [on](on.md)
   * [Flor::Pro::OnCancel](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_cancel.rb) : [on_cancel](on_cancel.md)
   * [Flor::Pro::OnError](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_error.rb) : [on_error](on_error.md)
-  * [Flor::Pro::OnReceive](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_receive.rb) : on_receive
+  * [Flor::Pro::OnReceive](https://github.com/floraison/flor/blob/master/lib/flor/pcore/on_receive.rb) : [on_receive](on_receive.md)
   * [Flor::Pro::OnTimeout](https://github.com/floraison/flor/blob/master/lib/flor/punit/on_timeout.rb) : [on_timeout](on_timeout.md)
   * [Flor::Pro::Part](https://github.com/floraison/flor/blob/master/lib/flor/punit/part.rb) : part, flank
   * [Flor::Pro::PatArr](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_pat_arr.rb) : _pat_arr
