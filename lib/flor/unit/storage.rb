@@ -882,7 +882,11 @@ module Flor
 
     def call_back(block, table, action, *rest)
 
-      block.call(*[ table, action, *rest ][0, block.arity])
+      block.call(
+        *(
+          block.arity < 0 ?
+          [ table, action, *rest ] :
+          [ table, action, *rest ][0, block.arity]))
     end
 
     class DbLogger

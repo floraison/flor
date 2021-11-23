@@ -283,12 +283,16 @@ describe Flor::Storage do
       @unit.storage.on(:executions, :any) do |table, action, id|
         seen << [ table, action, id ]
       end
+      @unit.storage.on(:executions, :insert) do |*args|
+        seen << args
+      end
 
       r = @unit.launch('hole task: "nada"', wait: '0 task')
 
       id = wait_until { @unit.storage.db[:flor_executions].get(:id) }
 
       expect(seen).to eq([
+        [ :executions, :insert, id ],
         [ :executions, :insert, id ],
         [ :pointers, :update ],
         [ :pointers ],
