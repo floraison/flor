@@ -1010,8 +1010,11 @@ class Flor::Procedure < Flor::Node
 
   def apply_on_receive
 
+    determine_fcid_and_ncid
+
     args = [
-      [ 'msg', @message ] ]
+      [ 'msg', @message ],
+      [ 'fcid', @fcid ] ]
 
     ms = apply(@node['on_receive'][0][1], args, tree[2])
     @node['on_receive_nid'] = [ ms[0]['nid'], from ]

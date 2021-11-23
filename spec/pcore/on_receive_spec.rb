@@ -113,6 +113,24 @@ describe 'Flor procedures' do
       expect(r['point']).to eq('terminated')
       expect(r['vars']['l']).to eq([ 0, 1, 'z' ])
     end
+
+    it 'hands msg and fcid' do
+
+      r = @executor.launch(
+        %q{
+          set l []
+          cursor
+            on_receive (def msg, fcid \ push l [ msg.from, fcid ])
+            push l 0
+            push l 1
+            push l 2
+        })
+
+      expect(r['point']
+        ).to eq('terminated')
+      expect(r['vars']['l']
+        ).to eq([ 0, [ '0_1_1', 1 ], 1, [ '0_1_2', 2 ], 2, [ '0_1_3', 3 ] ])
+    end
   end
 end
 

@@ -37,6 +37,21 @@ push l 'z'
 will result in the variable `l` holding `[ 0, 1, 'z' ]`.
 
 
+## arguments to the on_receive function
+
+`msg` and `fcid` (from child id) are passed to the function
+```
+set l []
+cursor
+  on_receive (def msg, fcid \ push l [ msg.from, fcid ])
+  push l 0
+  push l 1
+  push l 2
+```
+will result in the variable `l` holding
+`[ 0, [ '0_1_1', 1 ], 1, [ '0_1_2', 2 ], 2, [ '0_1_3', 3 ] ]`.
+
+
 ## on_receive and on receive
 
 A "lighter" notation is available (it's translated automatically to a
