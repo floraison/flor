@@ -18,6 +18,8 @@ describe 'Flor unit' do
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
+
+    sleep 0.350
   end
 
   after :each do

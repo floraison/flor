@@ -27,6 +27,8 @@ describe Flor::Waiter do
       class << @unit.wlist
         attr_reader :waiters
       end
+
+      sleep 0.350
     end
 
     after :each do
