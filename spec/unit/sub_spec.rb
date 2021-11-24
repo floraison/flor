@@ -12,20 +12,22 @@ describe 'Flor unit' do
 
   before :each do
 
-@flor_debug = ENV['FLOR_DEBUG']
-ENV['FLOR_DEBUG'] = 'dbg,stdout'
+#@flor_debug = ENV['FLOR_DEBUG']
+#ENV['FLOR_DEBUG'] = 'dbg,stdout' if jruby?
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf['unit'] = 'u_sub'
     @unit.hook('journal', Flor::Journal)
     @unit.storage.delete_tables
     @unit.storage.migrate
     @unit.start
+
+    sleep 0.350
   end
 
   after :each do
 
     @unit.shutdown
-ENV['FLOR_DEBUG'] = @flor_debug
+#ENV['FLOR_DEBUG'] = @flor_debug
   end
 
   describe 'flor' do
