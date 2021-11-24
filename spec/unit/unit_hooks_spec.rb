@@ -549,12 +549,14 @@ end
 
     before :each do
 
+      @text = "world#{Time.now.to_i}"
+
       FileUtils.mkdir('envs/test/lib/hooks/polo')
       File.open('envs/test/lib/hooks/polo/zero.rb', 'wb') do |f|
         f.write(%{
           class PoloZeroHook
             def on(message)
-              message['payload']['hello'] = 'world'
+              message['payload']['hello'] = '#{@text}'
               [] # return empty list of new messages
             end
           end
@@ -568,7 +570,11 @@ end
         })
       end
 
-      sleep 0.770
+      wait_until {
+        File.exist?('envs/test/lib/hooks/hooks.json') &&
+        File.exist?('envs/test/lib/hooks/polo/zero.rb') }
+
+      sleep 0.840
     end
 
     after :each do
@@ -588,7 +594,7 @@ end
           wait: true)
 
       expect(r).to have_terminated_as_point
-      expect(r['payload']).to eq('hello' => 'world')
+      expect(r['payload']).to eq('hello' => @text)
     end
   end
 end
