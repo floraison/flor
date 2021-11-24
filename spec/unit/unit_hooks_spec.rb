@@ -184,7 +184,7 @@ end
       @unit.launch(%{
         sequence
           noret _
-      }, wait: true)
+      }, wait: 21)
 
       expect(
         F.to_s(ms0.reject { |m| ! m['consumed'] })

@@ -84,6 +84,8 @@ describe 'Flor punit' do
 
       expect(msg).to have_terminated_as_point
 
+      sleep 0.420
+
       expect(
         @unit.traces.collect(&:text).join(' ')
       ).to eq(
