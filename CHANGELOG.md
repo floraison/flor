@@ -2,7 +2,10 @@
 # CHANGELOG.md
 
 
-## flor 1.5.0  not yet released
+## flor 1.5.0  released 2021-11-24
+
+* Add storage callbacks `on(:pointers, :any) { do_that }`
+* Add `on_receive` (and `on receive`)
 
 
 ## flor 1.4.0  released 2021-11-10
