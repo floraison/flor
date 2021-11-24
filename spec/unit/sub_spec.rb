@@ -85,11 +85,11 @@ describe 'Flor unit' do
                 trace "$(node.nid):i$(i):j$(j)"
                 set j (j - 1)
                 continue _ if (> j 0)
-        }, wait: true)
+        }, wait: 21)
 
       expect(r).to have_terminated_as_point
 
-      sleep 0.210
+      sleep 0.350
 
       nids_with_subs = @unit.journal
         .select { |m| m['point'] == 'execute' && m['nid'].index('-') }
