@@ -126,6 +126,8 @@ describe Flor::Waiter do
         },
         wait: 'status:terminated')
 
+      wait_until(21) { @unit0.journal.count >= 10 }
+
       expect(@unit0.journal.count).to eq(10)
       expect(@unit1.journal.count).to eq(0)
 
@@ -144,6 +146,8 @@ describe Flor::Waiter do
             stall _
         },
         wait: 'tag:alpha')
+
+      wait_until(21) { @unit0.journal.count >= 15 }
 
       expect(@unit0.journal.count).to eq(15)
       expect(@unit1.journal.count).to eq(0)
@@ -166,6 +170,8 @@ describe Flor::Waiter do
         },
         payload: { target: 'Talos IV' },
         wait: 'tasker:hole')
+
+      wait_until(21) { @unit0.journal.count >= 9 }
 
       expect(@unit0.journal.count).to eq(9)
       expect(@unit1.journal.count).to eq(0)
@@ -191,6 +197,8 @@ describe Flor::Waiter do
             hole 'take 2'
         },
         wait: '0_1 tasker:hole')
+
+      wait_until(21) { @unit0.journal.count >= 22 }
 
       expect(@unit0.journal.count).to eq(22)
       expect(@unit1.journal.count).to eq(0)
