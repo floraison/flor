@@ -12,6 +12,8 @@ describe 'Flor unit' do
 
   before :each do
 
+@flor_debug = ENV['FLOR_DEBUG']
+ENV['FLOR_DEBUG'] = 'dbg,stdout'
     @unit = Flor::Unit.new('envs/test/etc/conf.json')
     @unit.conf['unit'] = 'u_sub'
     @unit.hook('journal', Flor::Journal)
@@ -23,6 +25,7 @@ describe 'Flor unit' do
   after :each do
 
     @unit.shutdown
+ENV['FLOR_DEBUG'] = @flor_debug
   end
 
   describe 'flor' do
