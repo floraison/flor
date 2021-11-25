@@ -19,7 +19,7 @@ describe 'Flor unit' do
     @unit.storage.migrate
     @unit.start
 
-    sleep 0.350
+    sleep 0.770
   end
 
   after :each do
