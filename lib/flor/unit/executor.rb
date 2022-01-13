@@ -48,7 +48,7 @@ module Flor
 
     protected
 
-    CLOSING_POINTS = %w[ task terminated ceased ]
+    CLOSING_POINTS = %w[ task terminated ceased ].freeze
       #
       # point for messages that, after consumption, are conserved
       # in the execution's "closing_messages" array
