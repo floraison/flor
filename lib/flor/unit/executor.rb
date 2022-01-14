@@ -160,14 +160,18 @@ module Flor
     def return(message)
 
       n = @execution['nodes'][message['nid']] || {}
-      m = n['message'] || {}
-      c = m['cause']
+      c = (n['message'] || {})['cause']
 
-      rm = message.dup
-      rm['point'] = 'receive'
-      rm['cause'] = c if c # preserve 'cause' for routing
+      ms =
+        if n['task']
+          @unit.ganger.task(self, message)
+        else
+          [ message.dup ]
+        end
 
-      [ rm ]
+      ms.each { |m|
+        m['point'] = 'receive'
+        m['cause'] = c if c }
     end
 
     def schedule(message)

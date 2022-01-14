@@ -110,9 +110,15 @@ module Flor
       pt = message['point']
 
       ms = [ "call_#{pt}", "on_#{pt}", :on_message, :on, pt ]
-      ms = ms + [ :on_cancel, :cancel ] if pt == 'detask'
+      case pt
+      when 'detask' then ms = ms + [ :on_cancel, :cancel ]
+      when 'return' then ms = [ :on_return, :return, :post_task ] # /!\
+      end
 
       m = ms.find { |mm| o.respond_to?(mm) }
+
+      return [ message ] if pt == 'return' && ! m
+        # don't call if :post_task not present
 
       fail(
         "#{k.class.to_s.downcase} #{k} doesn't respond to " +
@@ -316,10 +322,12 @@ module Flor
 
     def to_messages(o)
 
-      case o
-      when Hash then [ o ]
-      when Array then o
-      else []
+      if Flor.is_array_of_messages?(o)
+        o
+      elsif Flor.is_message?(o)
+        [ o ]
+      else
+        []
       end
     end
 

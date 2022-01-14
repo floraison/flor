@@ -169,9 +169,12 @@ module Flor
 
       pt = @message['point']
 
-      ms = [ "post_#{pt}" ]; ms << :post_cancel if pt == 'detask'
+      #ms = [ "post_#{pt}" ]; ms << :post_cancel if pt == 'detask'
+      #call_one_of(ms)
         #
-      call_one_of(ms)
+        # :post_task is called by, well, the caller
+        #
+      call_one_of([ :post_detask, :post_cancel ]) if pt == 'detask'
 
       msg = derive_message(message)
 

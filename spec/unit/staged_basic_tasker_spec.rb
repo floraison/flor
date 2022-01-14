@@ -60,19 +60,63 @@ describe 'Flor unit' do
 
         class SbtOneTasker < Flor::StagedBasicTasker
           def on_task
+            payload['l'] << 'on_task'
             reply
           end
           def post_task
             payload['b'] = 1
+            payload['l'] << 'post_task'
+            [ message ]
           end
         end
 
         @unit.add_tasker('alice', SbtOneTasker)
 
-        r = @unit.launch(%q{ alice _ }, payload: { a: 0, b: 0 }, wait: true)
+        r = @unit.launch(
+          %q{ alice _ },
+          payload: { a: 0, b: 0, l: [] },
+          wait: true)
 
         expect(r).to have_terminated_as_point
-        expect(r['payload']).to eq('ret' => 'alice', 'a' => 0, 'b' => 1)
+        expect(r['payload']).to eq(
+          'ret' => 'alice', 'a' => 0, 'b' => 1,
+          'l' => [ 'on_task', 'post_task' ])
+      end
+
+      it 'is called on return' do
+
+        class SbtFourTasker < Flor::StagedBasicTasker
+          def on_task
+            # do nothing, just sit here
+            payload['l'] << 'on_task'
+            []
+          end
+          def post_task
+            payload['l'] << 'post_task'
+            payload['b'] = 1
+            [ message ]
+          end
+        end
+
+        @unit.add_tasker('alpha', SbtFourTasker)
+
+        r0 = @unit.launch(
+          %q{ alpha _ },
+          payload: { 'a' => 0, 'l' => [] },
+          wait: '0 receive')
+
+        wait_until { @unit.executions.count > 0 }
+#e = @unit.executions.first
+#pp e.to_h
+
+        r1 = @unit.queue(
+          { 'point' => 'return', 'exid' => r0['exid'], 'nid' => r0['nid'],
+            'payload' => r0['payload'] },
+          wait: true)
+
+#pp r1
+        expect(r1['payload']).to eq({
+          'a' => 0, 'ret' => 'alpha', 'b' => 1, 'l' => [ 'post_task' ] })
       end
     end
 

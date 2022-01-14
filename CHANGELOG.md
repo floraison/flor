@@ -4,6 +4,8 @@
 
 ## flor 1.6.0  not yet released
 
+* Call post_task when tasker hands back task
+
 
 ## flor 1.5.0  released 2021-11-24
 

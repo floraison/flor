@@ -47,7 +47,13 @@ module Flor
     def task(executor, message)
 
       domain = message['exid'].split('-', 2).first
-      tname = message['tasker']
+      #tname = message['tasker']
+      tname = determine_tasker_name(executor, message)
+#puts "=" * 80
+#p message
+#puts "." * 80
+#p tname
+#puts "=" * 80
 
       tconf =
         ( ! message['routed'] &&
@@ -66,6 +72,7 @@ module Flor
 
         points = [ nil, message['point'] ]
         points << 'detask' if points.include?('cancel')
+        points << 'task' if points.include?('return')
 
         tconf = tconf.find { |h| points.include?(h['point']) }
       end
@@ -153,6 +160,17 @@ module Flor
       vars = vars.reject { |k, v| var_match(k, ev) } if ev
 
       vars
+    end
+
+    def determine_tasker_name(executor, message)
+
+      tname = message['tasker']
+
+      return tname if tname
+
+      n = executor.node(message)
+
+      n['task']['tasker']
     end
   end
 end
