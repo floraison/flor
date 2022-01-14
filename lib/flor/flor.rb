@@ -199,7 +199,7 @@ module Flor
     def is_array_of_messages?(o)
 
       o.is_a?(Array) &&
-      o.all? { |e| is_message?(o) }
+      o.all? { |e| is_message?(e) }
     end
 
     def h_fetch(h, *keys)
