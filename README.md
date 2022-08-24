@@ -47,7 +47,7 @@ require 'flor/unit'
   # uncomment to see the flor activity
 
 sto_uri = 'sqlite://flor_qs.db'
-sto_uri = 'jdbc:sqlite://flor_qs.db' if RUBY_PLATFORM.match(/java/)
+sto_uri = 'jdbc:sqlite://flor_qs.db' if RUBY_PLATFORM.match?(/java/)
 
 flor = Flor::Unit.new(loader: Flor::HashLoader, sto_uri: sto_uri)
   # instantiate flor unit
