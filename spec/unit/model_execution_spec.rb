@@ -54,7 +54,11 @@ describe 'Flor unit' do
         d = h[:data]
         m = h[:meta]
 
-        expect(h[:size]).to be_between(805, 945)
+        expect(h[:size]).to be_between(805, 959)
+          #
+          # jruby 9.3.7.0 (2.6.8) 2022-08-16 c79ef237e0
+          # OpenJDK 64-Bit Server VM 11.0.16+8 on 11.0.16+8 +jit [x86_64-linux]
+          #   --> 952
 
         expect(m[:counts][:nodes]).to eq(5)
         expect(m[:counts][:tasks]).to eq(1)
