@@ -24,6 +24,8 @@ module Flor
     def nid; data['nid']; end
     def tasker; data['tasker']; end
     alias payload data
+
+    def fei; [ exid, nid ].join('-') rescue nil; end
   end
 end
 

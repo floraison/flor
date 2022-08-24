@@ -17,6 +17,8 @@ module Flor
     #
     #  index :exid
     #end
+
+    def fei; [ exid, nid ].join('-') rescue nil; end
   end
 end
 

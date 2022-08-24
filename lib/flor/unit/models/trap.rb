@@ -34,6 +34,8 @@ module Flor
     #  index [ :exid, :nid ]
     #end
 
+    def fei; [ exid, nid ].join('-') rescue nil; end
+
     def to_hook
 
       opts = {}

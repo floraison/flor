@@ -27,6 +27,8 @@ module Flor
     #  index [ :exid, :nid ]
     #end
 
+    def fei; [ exid, nid ].join('-'); end
+
     def to_trigger_message
 
       d = self.data(false)

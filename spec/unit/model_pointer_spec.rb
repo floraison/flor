@@ -50,6 +50,8 @@ describe 'Flor unit' do
           ).to eq('0')
         expect(pointer.node['task']
           ).to eq('tasker' => 'bravo', 'name' => 'do the job')
+
+        expect(pointer.fei).to eq("#{exid}-0")
       end
     end
   end

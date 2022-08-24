@@ -29,6 +29,8 @@ module Flor
     #    # we don't care, pointers are cleaned anyway when the flow dies
     #end
 
+    def fei; [ exid, nid ].join('-'); end
+
     # If the pointer is a "var" pointer, returns the full value
     # for the variable, as found in the execution's node "0".
     #
