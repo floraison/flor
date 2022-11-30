@@ -908,11 +908,11 @@ module Flor
       fail ArgumentError.new("no 'sto_uri' conf, cannot connect to db") \
         unless uri
 
-      return Kernel.const_get(uri) \
-        if uri.is_a?(String) && uri.match(/\A[A-Z]+\z/)
-          # for cases where uri == 'DB'
-
-      Sequel.connect(uri)
+      begin
+        Kernel.const_get(uri)
+      rescue NameError
+        Sequel.connect(uri)
+      end
     end
 
     def connect
