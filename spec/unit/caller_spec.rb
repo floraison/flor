@@ -172,11 +172,15 @@ describe Flor::Caller do
           expect(r[0].keys.sort).to eq(%w[ error fm fpoint payload point ])
 
           e = r[0]['error']
-#pp e
-          expect(e['kla']).to eq('Flor::Caller::SpawnNonZeroExitError')
-          expect(e['msg']).to match(/\A\(code: 2, pid: \d*\) /)
-          expect(e['msg']).to match(/[Pp]ython: can't open file 'spec\/unit\//)
-          expect(e['msg']).to match(/ \[Errno 2\] No such file or directory/)
+
+          expect(e['kla']
+            ).to eq('Flor::Caller::SpawnNonZeroExitError')
+          expect(e['msg']
+            ).to match(/\A\(code: 2, pid: \d*\) /)
+          expect(e['msg']
+            ).to match(/[Pp]ython: can't open file '.*spec\/unit\/hooks\//)
+          expect(e['msg']
+            ).to match(/ \[Errno 2\] No such file or directory/)
 
           ed = e['details']
           expect(ed[:cmd]).to eq('python spec/unit/hooks/no_such_caller.py')
