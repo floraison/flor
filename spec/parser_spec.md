@@ -1500,9 +1500,9 @@ parses to
 ---
 
 ```flor
-  sequence # slash slash
+  sequence // slash slash
     a
-    b # baby
+    b // baby
 ```
 parses to
 ```ruby

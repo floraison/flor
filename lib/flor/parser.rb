@@ -6,6 +6,9 @@ module Flor
 
 #Raabro.pp(Flor::Parser.parse(input, debug: 2), colours: true)
 #Raabro.pp(Flor::Parser.parse(input, debug: 3), colours: true)
+  #
+  # turn one or the other when debugging the parser...
+
     opts = fname if fname.is_a?(Hash) && opts.empty?
 
     if r = Flor::Parser.parse(input, opts)
@@ -49,7 +52,7 @@ module Flor
     def semicolon(i); str(nil, i, ';'); end
     def comma(i); str(nil, i, ','); end
     def dquote(i); str(nil, i, '"'); end
-    def slash(i); str(nil, i, '/'); end
+    def slash(i); rex(nil, i, /\/(?!\/)/); end
     def dollar(i); str(nil, i, '$'); end
     def pipepipe(i); str(nil, i, '||'); end
 
@@ -95,7 +98,11 @@ module Flor
       seq(nil, i, :dot, :rf_symbol)
     end
     def rf_index(i); alt(nil, i, :rf_dot_idx, :rf_sqa_idx); end
-    def rf_symbol(i); rex(:refsym, i, /[^.:;| \b\f\n\r\t"',()\[\]{}#\\]+/); end
+      #
+    def rf_symbol(i)
+      rex(:refsym, i, /([^.:;| \b\f\n\r\t"',()\[\]{}#\\\/]|\/(?!\/))+/)
+        # anything but... a slash is ok, but not a double slash...
+    end
       #
     def reference(i); seq(:ref, i, :rf_symbol, :rf_index, '*'); end
 
@@ -165,7 +172,7 @@ module Flor
       }x)
     end
 
-    def comment(i); rex(nil, i, /#[^\r\n]*/); end
+    def comment(i); rex(nil, i, /(#|\/\/)[^\r\n]*/); end
 
     def eol(i); seq(nil, i, :wstar, :comment, '?', :rnstar); end
     def eol_wstar(i); seq(nil, i, :wstar, :comment, '?', :rnstar, :wstar); end
@@ -210,7 +217,7 @@ module Flor
     #  %w[ equ == != <> ], %w[ lgt < > <= >= ], %w[ sum + - ], %w[ prd * / % ],
 
     def ssmod(i); str(:sop, i, /%/); end
-    def ssprd(i); rex(:sop, i, /[\*\/]/); end
+    def ssprd(i); rex(:sop, i, /(\*|\/(?!\/))/); end
     def sssum(i); rex(:sop, i, /[+-]/); end
     def sslgt(i); rex(:sop, i, /(<=?|>=?)/); end
     def ssequ(i); rex(:sop, i, /(==?|!=|<>)/); end
