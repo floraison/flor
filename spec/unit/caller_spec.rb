@@ -50,7 +50,7 @@ describe Flor::Caller do
           expect(r[0]['error']['kla']).to eq(
             'NameError')
           expect(r[0]['error']['msg']).to match(
-            /\Auninitialized constant (Kernel::)?Does\z/)
+            /\Auninitialized constant (Kernel::)?Does\b/)
         end
       end
 
