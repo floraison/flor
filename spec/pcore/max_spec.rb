@@ -25,7 +25,8 @@ describe 'Flor procedures' do
 
       %q{ max [ false 1 ] },
 
-    ].test_each_fail(self, /comparison of (Fixnum|Integer) with .+ failed/)
+    ].test_each_fail(
+      self, /comparison of (Fixnum|Integer|FalseClass) with .+ failed/)
 
     context 'loose:/lax: true' do
 
