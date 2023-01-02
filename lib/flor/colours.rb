@@ -27,7 +27,7 @@ module Flor
   class Colours
 
     Flor::COLS.each do |k, v|
-      if v.match(/\A\d/)
+      if v.match?(/\A\d/)
         class_eval(%{
           def #{k}(s=nil)
            s ? "[#{v}m" + s + "[0;0m" : "[#{v}m"
@@ -42,7 +42,7 @@ module Flor
   class NoColours
 
     Flor::COLS.each do |k, v|
-      if v.match(/\A\d/)
+      if v.match?(/\A\d/)
         class_eval("def #{k}(s=''); s; end")
       else
         class_eval("alias #{k} #{v}")
