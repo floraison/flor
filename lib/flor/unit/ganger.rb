@@ -49,20 +49,12 @@ module Flor
       domain = message['exid'].split('-', 2).first
       #tname = message['tasker']
       tname = determine_tasker_name(executor, message)
-#puts "=" * 80
-#p message
-#puts "." * 80
-#p tname
-#puts "=" * 80
 
       tconf =
         ( ! message['routed'] &&
          (@unit.loader.tasker(domain, 'ganger', message) ||
           @unit.loader.tasker(domain, 'tasker', message))) ||
         @unit.loader.tasker(domain, tname, message)
-#puts "=" * 80
-#pp tconf
-#puts "=" * 80
 
       fail ArgumentError.new(
         "tasker #{tname.inspect} not found"
