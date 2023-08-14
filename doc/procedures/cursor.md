@@ -61,6 +61,10 @@ letting them act on other cursors.
 
 ## cursor and start: / initial: attribute
 
+Sometimes, it is necessary to enter a cursor not at its first child, but
+its second or third. Once such a cursor is entered and a `continue` is
+met it will "rewind" to the first child (not the "start" child).
+
 ```
 task 'create mandate'
 cursor start: 'approve mandate'
@@ -69,6 +73,15 @@ cursor start: 'approve mandate'
   continue _ if f.outcome == 'reject'  # <-- will go to "amend mandate"
 task 'activate mandate'
 ```
+
+The string passed to start:/initial: is looked up (down) in the cursor
+in the order: (example `cursor start: 'bravo'`)
+
+* tag (for example `push l 'b' tag: 'bravo'`)
+* string argument (for example `task 'toto' context: 'bravo'`)
+* string target (for example `task 'bravo'`)
+* name target (for example `bravo _`)
+* att target (for example `task 'toto' bravo: 'ok'`)
 
 ## see also
 
