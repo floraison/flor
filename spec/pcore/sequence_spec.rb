@@ -93,6 +93,40 @@ describe 'Flor procedures' do
         'entered:phase three', 'left:phase three',
       ])
     end
+
+    it 'can be aliased' do
+
+      r = @executor.launch(
+        %q{
+          set block sequence
+          set then sequence
+          set else sequence
+
+          set f.l []
+          push f.l 'a'
+          block
+            push f.l 'b'
+            push f.l 'c'
+          if (length f.l) > 10
+            then
+              push f.l 'd'
+              push f.l 'e'
+            else
+              push f.l 'f'
+              push f.l 'g'
+          if (length f.l) > 1
+            then
+              push f.l 'h'
+              push f.l 'i'
+            else
+              push f.l 'j'
+              push f.l 'k'
+          push f.l 'l'
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['l']).to eq(%w[ a b c f g h i l ])
+    end
   end
 end
 
