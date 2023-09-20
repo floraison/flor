@@ -101,31 +101,38 @@ describe 'Flor procedures' do
           set block sequence
           set then sequence
           set else sequence
+          set do sequence
 
           set f.l []
           push f.l 'a'
           block
             push f.l 'b'
             push f.l 'c'
+          do if (length f.l) > 10
+            push f.l 'd'
+            push f.l 'e'
           if (length f.l) > 10
             then
-              push f.l 'd'
-              push f.l 'e'
-            else
               push f.l 'f'
               push f.l 'g'
-          if (length f.l) > 1
-            then
+            else
               push f.l 'h'
               push f.l 'i'
-            else
+          if (length f.l) > 1
+            then
               push f.l 'j'
               push f.l 'k'
-          push f.l 'l'
+            else
+              push f.l 'l'
+              push f.l 'm'
+          do if (length f.l) > 1
+            push f.l 'o'
+            push f.l 'p'
+          push f.l 'q'
         })
 
       expect(r).to have_terminated_as_point
-      expect(r['payload']['l']).to eq(%w[ a b c f g h i l ])
+      expect(r['payload']['l']).to eq(%w[ a b c h i j k o p q ])
     end
   end
 end
