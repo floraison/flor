@@ -2298,6 +2298,34 @@ parses to
     ], 1 ]
   ], 1 ]
 ```
+---
+
+```flor
+  sequence if 2 > 1
+    task 'a'
+    task 'b'
+```
+parses to
+```ruby
+  [ '_if', [
+    [ '>', [
+      [ '_num', 2, 1 ],
+      [ '_num', 1, 1 ]
+    ], 1 ],
+    [ 'sequence', [
+      [ 'task', [
+        [ '_att', [
+          [ '_sqs', "a", 2 ]
+        ], 2 ]
+      ], 2 ],
+      [ 'task', [
+        [ '_att', [
+          [ '_sqs', "b", 3 ]
+        ], 3 ]
+      ], 3 ]
+    ], 1 ]
+  ], 1 ]
+```
 
 
 ## misc

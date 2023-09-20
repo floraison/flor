@@ -60,7 +60,26 @@ describe 'Flor core' do
       oe = @executor.execution['nodes']['0']['on_error']
       expect(oe[0][0]).to eq([ '*' ])
       expect(oe[0][1][0]).to eq('_func')
+    end
 
+    it "can be a suffix to a sequence 'block'" do
+
+      r = @executor.launch(
+        %q{
+          set f.l []
+          push f.l 'a'
+          sequence if > (length f.l) 1
+            push f.l 'b'
+            push f.l 'c'
+          push f.l 'd'
+          sequence if > (length f.l) 1
+            push f.l 'e'
+            push f.l 'f'
+          push f.l 'g'
+        })
+
+      expect(r).to have_terminated_as_point
+      expect(r['payload']['l']).to eq(%w[ a d e f g ])
     end
   end
 
