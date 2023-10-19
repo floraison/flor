@@ -22,7 +22,12 @@ if (ARGV & [ '-h', '--help']).any?
   puts "    --jp    pretty prints the JSON output"
   puts
   puts "    -y"
-  puts "    -yaml   dumps as YAML"
+  puts "    --yaml   dumps as YAML"
+  puts
+  puts "    -d"
+  puts "    --djan   dumps as djan"
+  puts
+  puts "    --json   dumps as JSON (it's the default)"
   puts
   puts "    -h"
   puts "    --help  prints this help message"
@@ -84,6 +89,10 @@ elsif flags['--jp'] || flags['--pj']
         )
 elsif flags['-y'] || flags['--yaml']
   puts YAML.dump(tree)
+elsif flags['-d'] || flags['--djan']
+  puts(Flor.to_djan(tree, indent: 2, width: true))
+elsif flags['--json']
+  puts JSON.dump(tree)
 else
   puts JSON.dump(tree)
 end

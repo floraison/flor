@@ -4,6 +4,8 @@
 
 ## flor 1.6.1  not yet released
 
+* accept --djan to flotojson.rb
+
 
 ## flor 1.6.0  released 2023-01-13
 
