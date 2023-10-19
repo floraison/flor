@@ -63,6 +63,23 @@ parses to
 ```
 ---
 
+```flor
+  abc? _
+  def! _
+  ghi?z _
+  jkl!z _
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ 'abc?', [ [ '_att', [ [ '_', [], 1 ] ], 1 ] ], 1 ],
+    [ 'def!', [ [ '_att', [ [ '_', [], 2 ] ], 2 ] ], 2 ],
+    [ 'ghi?z', [ [ '_att', [ [ '_', [], 3 ] ], 3 ] ], 3 ],
+    [ 'jkl!z', [ [ '_att', [ [ '_', [], 4 ] ], 4 ] ], 4 ]
+  ], 0 ]
+```
+---
+
 ### single quoted strings
 
 ```flor
