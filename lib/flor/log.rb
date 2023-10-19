@@ -337,13 +337,18 @@ module Flor
       o.puts "#{_c.rs}#{_c.dg}<Flor.msg_to_detail_s>"
 
       o.puts "#{_c.dg}message:#{_c.yl}"
-      o.puts YAML.dump(m)
+      #o.puts YAML.dump(m)
+      o.puts(Flor.to_djan(m, indent: 2, width: true))
 
       o.puts "#{_c.dg}tree:#{_c.yl}"
       o.puts(tree_to_s(node.lookup_tree(nid), nid, out: o)) if node
 
       o.puts "#{_c.dg}node:#{_c.yl}"
-      o.puts n ? YAML.dump(n.merge('tree' => '(above)')) : 'nil'
+      #o.puts n ? YAML.dump(n.merge('tree' => '(above)')) : 'nil'
+      o.puts(
+        n ?
+        Flor.to_djan(n.merge('tree' => '(above)'), indent: 2, width: true) :
+        'nil')
 
       o.puts "#{_c.dg}nodes:#{_c.yl}"
       o.puts nods_to_s(executor, m, opts)
