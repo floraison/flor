@@ -2,6 +2,9 @@
 # CHANGELOG.md
 
 
+## flor 1.6.1  not yet released
+
+
 ## flor 1.6.0  released 2023-01-13
 
 * Add #fei to Message, Pointer, Timer, Trace and Trap models
