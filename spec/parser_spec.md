@@ -561,6 +561,46 @@ parses to
 ```
 ---
 
+```flor
+  f.abc?
+  f.blue.star?
+  f.blue.bang!
+  f.blue.a.star?x
+  f.blue.a.bang!y
+```
+parses to
+```ruby
+  [ 'sequence', [
+    [ '_ref', [
+      [ '_sqs', "f", 1 ],
+      [ '_sqs', "abc?", 1 ]
+    ], 1 ],
+    [ '_ref', [
+      [ '_sqs', "f", 2 ],
+      [ '_sqs', "blue", 2 ],
+      [ '_sqs', "star?", 2 ]
+    ], 2 ],
+    [ '_ref', [
+      [ '_sqs', "f", 3 ],
+      [ '_sqs', "blue", 3 ],
+      [ '_sqs', "bang!", 3 ]
+    ], 3 ],
+    [ '_ref', [
+      [ '_sqs', "f", 4 ],
+      [ '_sqs', "blue", 4 ],
+      [ '_sqs', "a", 4 ],
+      [ '_sqs', "star?x", 4 ]
+    ], 4 ],
+    [ '_ref', [
+      [ '_sqs', "f", 5 ],
+      [ '_sqs', "blue", 5 ],
+      [ '_sqs', "a", 5 ],
+      [ '_sqs', "bang!y", 5 ]
+    ], 5 ]
+  ], 0 ]
+```
+---
+
 ## arrays
 
 ```flor
