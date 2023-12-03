@@ -2,6 +2,9 @@
 # CHANGELOG.md
 
 
+## flor 1.6.2  not yet released
+
+
 ## flor 1.6.1  released 2023-10-20
 
 * Use djan in Flor.msg_to_detail_s(executor, message)
