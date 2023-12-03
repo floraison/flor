@@ -2,7 +2,7 @@
 # CHANGELOG.md
 
 
-## flor 1.6.2  not yet released
+## flor 1.6.2  released 2012-12-03
 
 * Prevent djan failing on negative indent for hash keys
 
