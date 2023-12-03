@@ -4,6 +4,8 @@
 
 ## flor 1.6.2  not yet released
 
+* Prevent djan failing on negative indent for hash keys
+
 
 ## flor 1.6.1  released 2023-10-20
 

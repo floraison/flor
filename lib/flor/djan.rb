@@ -140,7 +140,7 @@ module Flor
             #
           kml, vml =
             x.inject([ 0, 0 ]) { |(kl, vl), (k, v)|
-              [ [ kl, len(k, opts) ].max, [ vl, len(v, opts) ].max ] }
+              [ [ kl, len(k.to_s, opts) ].max, [ vl, len(v, opts) ].max ] }
           kml += 1
             #
           if i && w && i + kml + 1 + vml < w

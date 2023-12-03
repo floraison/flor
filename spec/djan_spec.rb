@@ -152,6 +152,24 @@ describe Flor do
     "a+b" }
       }.strip)
     end
+
+    it 'is ok with string keys' do
+
+      d =
+        { "0":       { user_id: 0, aum: 0, pitch_aum: 0, review_aum: 0, Pitch: 3, Others: 1, Social: 1, Review: 2 },
+          "313327975":{ user_id: 313327975, aum: 0, pitch_aum: 0, review_aum: 0, items: [], Pitch: 1, Review: 1 },
+          "837":     { user_id: 837, aum: 0, pitch_aum: 0, review_aum: 0, items: [], Pitch: 1 },
+          "899":     { user_id: 899, aum: 0, pitch_aum: 0, review_aum: 0, items: [], Others: 1, Social: 1, Pitch: 1, Review: 1 } }
+
+      expect(
+        Flor.to_djan(d, indent: 2, width: true, colours: false)
+      ).to eq('  ' + %{
+  { "0":         { user_id: 0, aum: 0, pitch_aum: 0, review_aum: 0, Pitch: 3, Others: 1, Social: 1, Review: 2 },
+    "313327975": { user_id: 313327975, aum: 0, pitch_aum: 0, review_aum: 0, items: [], Pitch: 1, Review: 1 },
+    "837":       { user_id: 837, aum: 0, pitch_aum: 0, review_aum: 0, items: [], Pitch: 1 },
+    "899":       { user_id: 899, aum: 0, pitch_aum: 0, review_aum: 0, items: [], Others: 1, Social: 1, Pitch: 1, Review: 1 } }
+      }.strip)
+    end
   end
 end
 
