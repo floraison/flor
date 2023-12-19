@@ -14,7 +14,7 @@ Here are a few entry points into the documentation:
 * [services](services/)
 * [workflow control patterns](patterns.md)
 
-If you have any question feel free to ask in the [flor chat room](https://gitter.im/floraison/flor).
+If you have any question feel free to ask in, well, the [issue tracker](https://github.com/floraison/flor/issues).
 
 
 ## pieces of documentation
