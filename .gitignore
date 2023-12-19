@@ -15,6 +15,7 @@
 #.vimshorts
 .vimmarks
 .vimspec
+.vimfuzz2
 
 tmp/*.db
 tmp/*.log
