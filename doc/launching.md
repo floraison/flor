@@ -5,7 +5,7 @@ This piece of documentation looks at how flor execution are launched from Ruby c
 
 One can launch a flor execution from any SQL-able language by placing a well-formed `flor_messages` row within the database used by flor. See [below](#launching-manually).
 
-Here is an example of execution "launching" taken from the [quickstart](../quickstart):
+Here is an example of execution "launching":
 ```ruby
 msg =
   FLOR.launch(
@@ -18,7 +18,7 @@ msg =
     wait: true)
 ```
 
-In the quickstart, the flor instance is pointed at by a constant `FLOR` (like a project using [Sequel](https://sequel.jeremyevans.net) tends to point to its (usually) single database via the constant `DB`).
+The flor instance is pointed at by a constant `FLOR` (like a project using [Sequel](https://sequel.jeremyevans.net) tends to point to its (usually) single database via the constant `DB`).
 
 Here is another example of execution launching:
 ```ruby
