@@ -97,6 +97,38 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(7)
     end
 
+    it 'does not mind "else" being aliased to "sequence"' do
+
+      r = @executor.launch(
+        %q{
+          set else sequence
+          set a 11
+          cond
+            a < 4 ; "less than four"
+            a < 7 ; "less than seven"
+            else ; "ten or more"
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('ten or more')
+    end
+
+    it 'does not mind "else" being aliased to "sequence" (take 2)' do
+
+      r = @executor.launch(
+        %q{
+          set else sequence
+          set a 6
+          cond
+            a < 4 ; "less than four"
+            a < 7 ; "less than seven"
+            else ; "ten or more"
+        })
+
+      expect(r['point']).to eq('terminated')
+      expect(r['payload']['ret']).to eq('less than seven')
+    end
+
     it 'is OK with a true instead of an "else"' do
 
       # pipe or semicolon, trying with pipe for this one
