@@ -42,6 +42,27 @@ if
 
 Currently, if an "else if" is needed, it's better to use [cond](cond.md).
 
+## improving readability with else and then
+
+"then" and "else" can be aliased to "sequence" and be used within if to
+make the flow definition easier to read, and especially less confusing.
+
+```
+# at the top of the workflow definition
+# alias "then" and "else" to "sequence"
+
+set then sequence
+set else sequence
+
+# ...
+
+if (f.age > 3)
+  then
+    set f.designation 'child'
+  else
+    set f.designation 'baby'
+    order_baby_food _
+```
 
 ## see also
 
