@@ -141,7 +141,7 @@ There are various other Ruby and Ruby on Rails projects about workflows and busi
 
 There is a [workflow engine](https://ruby.libhunt.com/categories/5786-workflow-engine) category on [Awesome Ruby](https://ruby.libhunt.com/).
 
-If you want your engine/library to be added in this list, don't hesitate to ask me on [Gitter](https://gitter.im/floraison/flor) or via a pull request.
+If you want your engine/library to be added in this list, don't hesitate to ask me on via an [issue](https://github.com/floraison/flor/issues) or a pull request.
 
 It's not limited to Ruby, but there is a wider list at [meirwah/awesome-workflow-engines](https://github.com/meirwah/awesome-workflow-engines).
 
