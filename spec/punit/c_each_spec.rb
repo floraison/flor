@@ -86,6 +86,20 @@ describe 'Flor punit' do
       expect(r['vars']['l']).to eq([ [ 0, [ 'a', 'A' ] ], [ 1, [ 'b', 'B' ] ] ])
       expect(r['payload']['ret']).to eq({ 'a' => 'A', 'b' => 'B' })
     end
+
+    it 'accepts expect: and remaining:' do
+
+      r = @unit.launch(
+        %q{
+          set l []
+          c-each [ 0 1 2 ] expect: 1 remaining: 'cancel'
+            sleep for: "$(elt)s"
+            push l (* elt 2)
+        },
+        wait: true)
+
+      expect(r['vars']['l']).to eq([ 0 ])
+    end
   end
 end
 
