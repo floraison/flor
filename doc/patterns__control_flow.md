@@ -255,7 +255,7 @@ sequence
   triage _
 ```
 
-The "concurrence" expects one reply and then forgets the remaining branch.
+The [concurrence](procedures/concurrence.md) expects one reply and then forgets the remaining branch.
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp9.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp9_animation.php) | [top](#top)
 
@@ -274,7 +274,7 @@ sequence
   review_drilling _
 ```
 
-The "concurrence" expects one reply and then cancels the remaining branches.
+The [concurrence](procedures/concurrence.md) expects one reply and then cancels the remaining branches.
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp29.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp29_animation.php) | [top](#top)
 
