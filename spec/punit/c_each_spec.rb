@@ -72,6 +72,20 @@ describe 'Flor punit' do
       expect(r['payload']['ret']).to eq([ 10, 11 ])
     end
 
+    it 'accepts custom keys (arrays) (2)' do
+
+      r = @unit.launch(
+        %q{
+          set l []
+          c-each [ 'lab a', 'lab b' ] v.lab
+            push l lab
+        },
+        wait: true)
+
+      expect(r).to have_terminated_as_point
+      expect(r['vars']['l']).to eq([ 'lab a', 'lab b' ])
+    end
+
     it 'accepts custom keys (objects)' do
 
       r = @unit.launch(
@@ -100,6 +114,40 @@ describe 'Flor punit' do
 
       expect(r['vars']['l']).to eq([ 0 ])
     end
+
+    it 'accepts expect: and remaining: (2)' do
+
+      r = @unit.launch(
+        %q{
+          set l []
+          set labs [ 'lab alpha', 'lab biometa', 'lab cruz' ]
+
+          #c-each labs v.lab expect: 2 remaining: 'cancel'
+          #  push l lab
+          c-each labs expect: 2 remaining: 'cancel'
+            sleep for: "$(idx)s"
+            push l elt
+        },
+        wait: true)
+
+      expect(r['vars']['l']).to eq([ 'lab alpha', 'lab biometa' ])
+    end
+
+    it 'accepts expect: and remaining: (3)'
+#
+#      r = @unit.launch(
+#        %q{
+#          set l []
+#          set labs [ 'lab arcturus', 'lab brizer', 'lab cruz' ]
+#
+#          c-each labs v.lab expect: 2 remaining: 'cancel'
+#            sleep for: "$(idx)s"
+#            push l lab
+#        },
+#        wait: true)
+#
+#      expect(r['vars']['l']).to eq([ 'lab arcturus', 'lab brizer' ])
+#    end
   end
 end
 

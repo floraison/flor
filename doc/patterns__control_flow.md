@@ -271,10 +271,25 @@ sequence
     examine_sample 'laboratory 1'
     examine_sample 'laboratory 2'
     examine_sample 'laboratory 3'
-  review_drilling _
+  drill_review _
 ```
 
 The [concurrence](procedures/concurrence.md) expects one reply and then cancels the remaining branches.
+
+Here is a varient using [c-each](procedures/c_each.md):
+
+```python
+sequence
+
+  set labs [ 'lab alpha', 'lab biometa', 'lab cruz' ]
+
+  # ...
+
+  extract_sample _
+  c-each labs expect: 1 remaining: 'cancel'
+    examine_sample lab: elt
+  drill_review _
+```
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp29.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp29_animation.php) | [top](#top)
 
