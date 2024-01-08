@@ -25,7 +25,7 @@ If you disagree with a solution proposed here, you are much welcome to [raise an
 * [Multi-Merge](#abs-multi-merge)
 * [Structured Discriminator](#abs-structured-discriminator)
 * Blocking Discriminator
-* Cancelling Discriminator
+* [Cancelling Discriminator](#abs-cancelling-discriminator)
 * Structured Partial Join
 * Blocking Partial Join
 * Cancelling Partial Join
@@ -255,9 +255,28 @@ sequence
   triage _
 ```
 
-The "concurrence" expects one reply and then cancels the remaining branch.
+The "concurrence" expects one reply and then forgets the remaining branch.
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp9.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp9_animation.php) | [top](#top)
+
+### Cancelling Discriminator
+<a id="abs-cancelling-discriminator" />The example given for this merge:
+
+> After the extract-sample task has completed, parts of the sample are sent to three distinct laboratories for examination. Once the first of these laboratories completes the sample-analysis, the other two task instances are cancelled and the review-drilling task commences.
+
+```python
+sequence
+  extract_sample _
+  concurrence expect: 1 remaining: 'cancel'
+    examine_sample 'laboratory 1'
+    examine_sample 'laboratory 2'
+    examine_sample 'laboratory 3'
+  review_drilling _
+```
+
+The "concurrence" expects one reply and then cancels the remaining branches.
+
+[wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp29.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp29_animation.php) | [top](#top)
 
 <!-- --------------------------------------------------------------------- -->
 ## Multiple Instance Patterns
