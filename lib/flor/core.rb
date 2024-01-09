@@ -2,80 +2,83 @@
 
 module Flor
 
-  def self.generate_exid(domain, unit)
+  class << self
 
-    @exid_counter ||= 0
-    @exid_mutex ||= Mutex.new
+    def generate_exid(domain, unit)
 
-    t = Time.now.utc
+      @exid_counter ||= 0
+      @exid_mutex ||= Mutex.new
 
-    sus =
-      @exid_mutex.synchronize do
+      t = Time.now.utc
 
-        sus = t.sec * 100000000 + t.usec * 100 + @exid_counter
+      sus =
+        @exid_mutex.synchronize do
 
-        @exid_counter = @exid_counter + 1
-        @exid_counter = 0 if @exid_counter > 99
+          sus = t.sec * 100000000 + t.usec * 100 + @exid_counter
 
-        Munemo.to_s(sus)
-      end
+          @exid_counter = @exid_counter + 1
+          @exid_counter = 0 if @exid_counter > 99
 
-    t = t.strftime('%Y%m%d.%H%M')
+          Munemo.to_s(sus)
+        end
 
-    "#{domain}-#{unit}-#{t}.#{sus}"
-  end
+      t = t.strftime('%Y%m%d.%H%M')
 
-  def self.make_launch_msg(exid, tree, opts)
-
-    t =
-      tree.is_a?(String) ?
-      Flor.parse(tree, opts[:fname] || opts[:path], opts) :
-      tree
-
-    unless t
-
-      #h = opts.merge(prune: false, rewrite: false, debug: 0)
-      #Raabro.pp(Flor.parse(tree, h[:fname], h))
-        # TODO re-parse and indicate what went wrong...
-
-      fail ArgumentError.new(
-        "flow parsing failed: " + tree.inspect[0, 35] + '...')
+      "#{domain}-#{unit}-#{t}.#{sus}"
     end
 
-    pl = opts[:payload] || opts[:fields] || {}
-    vs = opts[:variables] || opts[:vars] || {}
+    def make_launch_msg(exid, tree, opts)
 
-    fail ArgumentError.new(
-      "given launch payload should be a Hash, but it's a #{pl.class}"
-    ) unless pl.is_a?(Hash)
-    fail ArgumentError.new(
-      "given launch variables should come in a Hash, but it's a #{vs.class}"
-    ) unless vs.is_a?(Hash)
+      t =
+        tree.is_a?(String) ?
+        Flor.parse(tree, opts[:fname] || opts[:path], opts) :
+        tree
 
-    msg = {
-      'point' => 'execute',
-      'exid' => exid,
-      'nid' => '0',
-      'tree' => t,
-      'payload' => pl,
-      'vars' => vs }
+      unless t
 
-    msg['vdomain'] = opts[:vdomain] \
-      if opts.has_key?(:vdomain)
+        #h = opts.merge(prune: false, rewrite: false, debug: 0)
+        #Raabro.pp(Flor.parse(tree, h[:fname], h))
+          # TODO re-parse and indicate what went wrong...
 
-    msg
-  end
-
-  def self.load_procedures(dir)
-
-    dirpath =
-      if dir.match(/\A[.\/]/)
-        File.join(dir, '*.rb')
-      else
-        File.join(File.dirname(__FILE__), dir, '*.rb')
+        fail ArgumentError.new(
+          "flow parsing failed: " + tree.inspect[0, 35] + '...')
       end
 
-    Dir[dirpath].sort.each { |path| require(path) }
+      pl = opts[:payload] || opts[:fields] || {}
+      vs = opts[:variables] || opts[:vars] || {}
+
+      fail ArgumentError.new(
+        "given launch payload should be a Hash, but it's a #{pl.class}"
+      ) unless pl.is_a?(Hash)
+      fail ArgumentError.new(
+        "given launch variables should come in a Hash, but it's a #{vs.class}"
+      ) unless vs.is_a?(Hash)
+
+      msg = {
+        'point' => 'execute',
+        'exid' => exid,
+        'nid' => '0',
+        'tree' => t,
+        'payload' => pl,
+        'vars' => vs }
+
+      msg['vdomain'] = opts[:vdomain] \
+        if opts.has_key?(:vdomain)
+
+      msg
+    end
+
+    def load_procedures(dir)
+
+      dirpath =
+        if dir.match(/\A[.\/]/)
+          File.join(dir, '*.rb')
+        else
+          File.join(File.dirname(__FILE__), dir, '*.rb')
+        end
+
+      Dir[dirpath].sort.each { |path| require(path) }
+    end
   end
 end
 

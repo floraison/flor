@@ -5,58 +5,61 @@ module Flor
   # used in procedure, cancel, until, cursor specs
   # when "walking" and "stepping"
 
-  def self.to_s(o=nil, k=nil)
+  class << self
 
-    return 'Flor' if o == nil && k == nil
-      # should it emerge somewhere...
+    def to_s(o=nil, k=nil)
 
-    return o.collect { |e| Flor.to_s(e, k) }.join("\n") if o.is_a?(Array)
+      return 'Flor' if o == nil && k == nil
+        # should it emerge somewhere...
 
-    if o.is_a?(Hash)
+      return o.collect { |e| Flor.to_s(e, k) }.join("\n") if o.is_a?(Array)
 
-      return send("message_#{k}_to_s", o) if k && o['point'].is_a?(String)
-      return message_to_s(o) if o['point'].is_a?(String)
+      if o.is_a?(Hash)
 
-      return send("node_#{k}_to_s", o) if k && o.has_key?('parent')
-      return node_to_s(o) if o['parent'].is_a?(String)
+        return send("message_#{k}_to_s", o) if k && o['point'].is_a?(String)
+        return message_to_s(o) if o['point'].is_a?(String)
+
+        return send("node_#{k}_to_s", o) if k && o.has_key?('parent')
+        return node_to_s(o) if o['parent'].is_a?(String)
+      end
+
+      return [ o, k ].inspect if k
+      o.inspect
     end
 
-    return [ o, k ].inspect if k
-    o.inspect
-  end
+    def message_to_s(m)
 
-  def self.message_to_s(m)
-
-    s = StringIO.new
-    s << '(msg ' << m['nid'] << ' ' << m['point']
-    %w[ from flavour ].each { |k|
-      s << ' ' << k << ':' << m[k].to_s if m.has_key?(k) }
-    s << ')'
-
-    s.string
-  end
-
-  def self.node_status_to_s(n)
-
-    stas = n['status'].reverse
-
-    s = StringIO.new
-    while sta = stas.shift
-      s << '(status ' << (sta['status'] || 'o') # o for open
-      s << ' pt:' << sta['point']
-      if f = sta['flavour']; s << ' fla:' << f; end
-      if f = sta['from']; s << ' fro:' << f; end
-      if m = sta['m']; s << ' m:' << m; end
+      s = StringIO.new
+      s << '(msg ' << m['nid'] << ' ' << m['point']
+      %w[ from flavour ].each { |k|
+        s << ' ' << k << ':' << m[k].to_s if m.has_key?(k) }
       s << ')'
-      s << "\n" if stas.any?
+
+      s.string
     end
 
-    s.string
-  end
+    def node_status_to_s(n)
 
-  def self.node_to_s(n) # there is already a .node_to_s in log.rb
+      stas = n['status'].reverse
 
-    n.inspect
+      s = StringIO.new
+      while sta = stas.shift
+        s << '(status ' << (sta['status'] || 'o') # o for open
+        s << ' pt:' << sta['point']
+        if f = sta['flavour']; s << ' fla:' << f; end
+        if f = sta['from']; s << ' fro:' << f; end
+        if m = sta['m']; s << ' m:' << m; end
+        s << ')'
+        s << "\n" if stas.any?
+      end
+
+      s.string
+    end
+
+    def node_to_s(n) # there is already a .node_to_s in log.rb
+
+      n.inspect
+    end
   end
 end
 

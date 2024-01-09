@@ -208,18 +208,21 @@ module Flor::Tools
 
     ALIASES = {}
 
-    def self.make_alias(a, b)
+    class << self
 
-      define_method("hlp_#{a}") { "alias to #{b.inspect}" }
-      alias_method "man_#{a}", "man_#{b}" rescue nil
-      alias_method "cmd_#{a}", "cmd_#{b}"
+      def make_alias(a, b)
 
-      (ALIASES[b] ||= []) << a
-    end
+        define_method("hlp_#{a}") { "alias to #{b.inspect}" }
+        alias_method "man_#{a}", "man_#{b}" rescue nil
+        alias_method "cmd_#{a}", "cmd_#{b}"
 
-    def self.is_alias?(c)
+        (ALIASES[b] ||= []) << a
+      end
 
-      !! ALIASES.values.find { |a| a.include?(c) }
+      def is_alias?(c)
+
+        !! ALIASES.values.find { |a| a.include?(c) }
+      end
     end
 
     def args(line); line.split(/\s+/); end

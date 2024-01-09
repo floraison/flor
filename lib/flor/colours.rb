@@ -53,78 +53,78 @@ module Flor
   @colours = Colours.new
   @no_colours = NoColours.new
 
-  def self.no_colours
-
-    @no_colours
-  end
-
-  def self.colours(opts={})
-
-    #opts =
-    #  case opts
-    #  when Hash then opts
-    #  when Colours, NoColours then { color: opts }
-    #  else { out: opts }
-    #  end
-
-    c = nil;
-      [ :color, :colour, :colors, :colours ].each do |k|
-        if opts.has_key?(k); c = opts[k]; break; end
-      end
-
-    return @colours if c == true
-    return @no_colours if c == false
-
-    o = opts[:out] || $stdout
-
-    return @colours if (
-      (o.respond_to?(:log_colours?) ? o.log_colours? : o.tty?) ||
-      ($0[-6..-1] == '/rspec' &&
-        (ARGV.include?('--tty') || ARGV.include?('--color'))))
-
-    @no_colours
-  end
-
-  def self.decolour(s)
-
-    s.gsub(/\x1b\[\d+(;\d+)?m/, '')
-  end
-
-  def self.no_colour_length(s)
-
-    decolour(s).length
-  end
-
-  def self.truncate_string(s, maxlen, post='...')
-
-    ncl = no_colour_length(s)
-    r = StringIO.new
-    l = 0
-
-    s.scan(/(\x1b\[\d+(?:;\d+)?m|[^\x1b]+)/) do |ss, _|
-      if ss[0, 1] == ""
-        r << ss
-      else
-#p({ r: r.string, l: l, ssl: ss.length, maxlen: maxlen, reml: maxlen - l })
-        ss = ss[0, maxlen - l]
-        r << ss
-        l += ss.length
-        break if l >= maxlen
-      end
-    end
-
-    return r.string if l < maxlen
-
-    if post.is_a?(String)
-      r << post
-    elsif post.is_a?(Proc)
-      r << post.call(ncl, maxlen, s)
-    end
-
-    r.string
-  end
-
   class << self
+
+    def no_colours
+
+      @no_colours
+    end
+
+    def colours(opts={})
+
+      #opts =
+      #  case opts
+      #  when Hash then opts
+      #  when Colours, NoColours then { color: opts }
+      #  else { out: opts }
+      #  end
+
+      c = nil;
+        [ :color, :colour, :colors, :colours ].each do |k|
+          if opts.has_key?(k); c = opts[k]; break; end
+        end
+
+      return @colours if c == true
+      return @no_colours if c == false
+
+      o = opts[:out] || $stdout
+
+      return @colours if (
+        (o.respond_to?(:log_colours?) ? o.log_colours? : o.tty?) ||
+        ($0[-6..-1] == '/rspec' &&
+          (ARGV.include?('--tty') || ARGV.include?('--color'))))
+
+      @no_colours
+    end
+
+    def decolour(s)
+
+      s.gsub(/\x1b\[\d+(;\d+)?m/, '')
+    end
+
+    def no_colour_length(s)
+
+      decolour(s).length
+    end
+
+    def truncate_string(s, maxlen, post='...')
+
+      ncl = no_colour_length(s)
+      r = StringIO.new
+      l = 0
+
+      s.scan(/(\x1b\[\d+(?:;\d+)?m|[^\x1b]+)/) do |ss, _|
+        if ss[0, 1] == ""
+          r << ss
+        else
+#p({ r: r.string, l: l, ssl: ss.length, maxlen: maxlen, reml: maxlen - l })
+          ss = ss[0, maxlen - l]
+          r << ss
+          l += ss.length
+          break if l >= maxlen
+        end
+      end
+
+      return r.string if l < maxlen
+
+      if post.is_a?(String)
+        r << post
+      elsif post.is_a?(Proc)
+        r << post.call(ncl, maxlen, s)
+      end
+
+      r.string
+    end
 
     alias decolor decolour
 

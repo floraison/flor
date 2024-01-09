@@ -697,42 +697,45 @@ fail "don't know how to invert #{operation.inspect}" # FIXME
     alias rewrite_panode rewrite_flor
   end # module Parser
 
-  def self.unescape_u(cs)
+  class << self
 
-    s = ''; 4.times { s << cs.next }
+    def unescape_u(cs)
 
-    [ s.to_i(16) ].pack('U*')
-  end
+      s = ''; 4.times { s << cs.next }
 
-  def self.unescape(s)
-
-    sio = StringIO.new
-
-    cs = s.each_char
-
-    loop do
-
-      c = cs.next
-
-      break unless c
-
-      if c == '\\'
-        case cn = cs.next
-        when 'u' then sio.print(unescape_u(cs))
-        when '\\', '"', '\'' then sio.print(cn)
-        when 'b' then sio.print("\b")
-        when 'f' then sio.print("\f")
-        when 'n' then sio.print("\n")
-        when 'r' then sio.print("\r")
-        when 't' then sio.print("\t")
-        else sio.print("\\#{cn}")
-        end
-      else
-        sio.print(c)
-      end
+      [ s.to_i(16) ].pack('U*')
     end
 
-    sio.string
+    def unescape(s)
+
+      sio = StringIO.new
+
+      cs = s.each_char
+
+      loop do
+
+        c = cs.next
+
+        break unless c
+
+        if c == '\\'
+          case cn = cs.next
+          when 'u' then sio.print(unescape_u(cs))
+          when '\\', '"', '\'' then sio.print(cn)
+          when 'b' then sio.print("\b")
+          when 'f' then sio.print("\f")
+          when 'n' then sio.print("\n")
+          when 'r' then sio.print("\r")
+          when 't' then sio.print("\t")
+          else sio.print("\\#{cn}")
+          end
+        else
+          sio.print(c)
+        end
+      end
+
+      sio.string
+    end
   end
 end
 
