@@ -146,12 +146,11 @@ class Flor::Macro::Iterator < Flor::Macro
 
   def rewrite_iterator_tree(procedure_name)
 
-    atts = att_children
-
     l = tree[2]
 
     th = [ procedure_name, [], l, *tree[3] ]
-    atts.each { |ac| th[1] << Flor.dup(ac) }
+
+    att_children.each { |ac| th[1] << Flor.dup(ac) }
 
     if non_att_children.any?
 
