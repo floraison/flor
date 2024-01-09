@@ -79,6 +79,16 @@ module Flor
 
       Dir[dirpath].sort.each { |path| require(path) }
     end
+
+    def pp(o, opts={})
+
+      puts Flor.to_djan(o, { indent: 2, width: true }.merge(opts))
+    end
+
+    def pp_to_s(o, opts={})
+
+      Flor.to_djan(o, { indent: 2, width: true }.merge(opts))
+    end
   end
 end
 
