@@ -1,7 +1,15 @@
 # frozen_string_literal: true
 
+
 module Flor
 
+  # As seen in docs/hooks.md
+  #
+  # ```ruby
+  # flor.hooker.add('journal', Flor::Journal)
+  # ```
+  #
+  #
   # A Journal hook, receives only "consumed" messages and
   # keeps a copy of all of them.
   #
