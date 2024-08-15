@@ -41,3 +41,6 @@ envs/shell/var/flor.db
 
 __spec/
 
+.chat.md
+.openai*
+
