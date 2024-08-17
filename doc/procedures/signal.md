@@ -1,7 +1,7 @@
 
 # signal
 
-Used in conjuction with "on".
+Used in conjunction with "on".
 
 An external (or internal) agent may send a signal to an execution and the
 execution may have a "on" handler for it.

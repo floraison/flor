@@ -872,7 +872,7 @@ class Flor::Procedure < Flor::Node
   end
 
   # Called by the executor, in turns call cancel and cancel_when_ methods
-  # which may be overriden.
+  # which may be overridden.
   #
   def do_cancel
 
@@ -908,7 +908,7 @@ class Flor::Procedure < Flor::Node
   end
 
   # Called by the executor, in turns call kill and kill_when_ methods
-  # which may be overriden.
+  # which may be overridden.
   #
   def do_kill
 
@@ -941,7 +941,7 @@ class Flor::Procedure < Flor::Node
     [] # no effect
   end
 
-  # The core cancel work, is overriden by some procedure implementations.
+  # The core cancel work, is overridden by some procedure implementations.
   #
   def cancel
 

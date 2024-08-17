@@ -961,7 +961,7 @@ ms-e3p3-end-
         expect(msg['vars']['l']).to eq([ 'err@0_1_1_1', 'err@0_1_2_1' ])
       end
 
-      it 'is overriden by the child own on_error' do
+      it 'is overridden by the child own on_error' do
 
         msg = @unit.launch(
           %q{

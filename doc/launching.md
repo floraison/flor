@@ -113,7 +113,7 @@ When given an array of strings, the `#launch` will wait for each string to happe
 * `wait: [ '0_0 task', '0_1 task' ]` - same as right above
 * `wait: '0_0 execute'` - wait for the execution to reach node 0_0
 * `wait: '0_0 receive'` - wait for the first receive message handed to 0_0
-* `wait: 'end'` - wait for an execution to pause (usually an execution runs for 77 messages before pausing and yielding for other executions to run, it might alos "end" when sleeping or waiting for external messages)
+* `wait: 'end'` - wait for an execution to pause (usually an execution runs for 77 messages before pausing and yielding for other executions to run, it might also "end" when sleeping or waiting for external messages)
 * `wait: 'terminated'` - wait until the execution terminates (useful for testing or when using small flows without human participants)
 * `wait: 'failed'` - wait until the execution emits a failed message (mostly useful when testing a flow)
 * `wait: 'entered'` - wait until the execution enters a tagged branch

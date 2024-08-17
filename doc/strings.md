@@ -49,7 +49,7 @@ Adding a string to a number yields an error.
 + 1 "lo"  # fails...
 ```
 
-If the first operand to a `+` is a string, then all subsquent operands are turned into strings and the result is the concatenation of all the strings.
+If the first operand to a `+` is a string, then all subsequent operands are turned into strings and the result is the concatenation of all the strings.
 ```
 + '' 1 true [ 1 2 ]  # yields "1true[1, 2]"
 ```

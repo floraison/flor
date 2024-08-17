@@ -16,7 +16,7 @@ Reverses f.ret if there are no arguments
 reverse _     # sets f.ret to [ 4, 6, 5 ]
 ```
 
-Will fail if it finds nothing reversable.
+Will fail if it finds nothing reversible.
 
 # see also
 

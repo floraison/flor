@@ -103,7 +103,7 @@ class Flor::Pro::Define < Flor::Procedure
 
     return [ tre, sig ] unless wrapped?(sig)
 
-    # There is a parenthese around the parameters, let's unwrap that...
+    # There are parentheses around the parameters, let's unwrap that...
 
     hed = Flor.dup(tre[1][0, off])
     sig = Flor.dup(sig)

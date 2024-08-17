@@ -10,7 +10,7 @@ as one of them returns a trueish value. Returns false else.
 and
   false
   true
-    # => evalutes to false
+    # => evaluates to false
 ```
 
 ```

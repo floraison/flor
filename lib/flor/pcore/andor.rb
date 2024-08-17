@@ -11,7 +11,7 @@ class Flor::Pro::Andor < Flor::Procedure
   # and
   #   false
   #   true
-  #     # => evalutes to false
+  #     # => evaluates to false
   # ```
   #
   # ```

@@ -49,7 +49,7 @@ TODO
 
 ## execution
 
-An execution is an instance of a flow or in other words a live occurence of a process/workflow. It's identified by an [execution id](#exid) ([exid](#exid)).
+An execution is an instance of a flow or in other words a live occurrence of a process/workflow. It's identified by an [execution id](#exid) ([exid](#exid)).
 
 ## executor
 
@@ -120,7 +120,7 @@ is equivalent to:
 define f x
   x * 3
 ```
-("def" sets the reference of the new fucntion in f.ret, it gets picked by "set" and placed in the variable 'f')
+("def" sets the reference of the new function in f.ret, it gets picked by "set" and placed in the variable 'f')
 
 Flor wants [functions](#function), [procedures](#procedure), and [taskers](#tasker) calls to look similar. A single way to call.
 
@@ -203,7 +203,7 @@ Or "node id".
 
 A key for the node in its execution. Is of the form `/^\d+(_\d+)*$/`, the root node having the "0" nid.
 
-A nid is implicitely suffixed with `-0`. Nids with a `-\d+` suffix may appear for loops and [branches](#branch) executing multiple times.
+A nid is implicitly suffixed with `-0`. Nids with a `-\d+` suffix may appear for loops and [branches](#branch) executing multiple times.
 
 See [subnid](#subnid).
 

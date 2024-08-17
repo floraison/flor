@@ -156,7 +156,7 @@ class Flor::Pro::Match < Flor::Pro::Case
   #
   # ## "bind"
   #
-  # "bind" binds explicitely a value and allows for a sub-pattern.
+  # "bind" binds explicitly a value and allows for a sub-pattern.
   # ```
   # match [ 1 4 ]
   #   [ 1 (bind y (or 2 3)) ]; "match y:$(y)"

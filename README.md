@@ -36,7 +36,7 @@ Using flor in your Ruby project requires you to clearly separate business proces
 
 ## quickstart
 
-This quickstart sets up a flor unit tied to a SQLite database, resets the databse, binds two taskers and then launches a flow execution involving the two taskers. Finally, it prints out the resulting workitem as the execution has just terminated.
+This quickstart sets up a flor unit tied to a SQLite database, resets the database, binds two taskers and then launches a flow execution involving the two taskers. Finally, it prints out the resulting workitem as the execution has just terminated.
 
 ```ruby
 require 'flor/unit'
@@ -94,7 +94,7 @@ p r['payload']['log']
 
 This quickstart is at [doc/quickstart0/](doc/quickstart0/), it's a minimal, one-file Ruby quickstart.
 
-There is also [doc/quickstart1/](doc/quickstart1/), a more complex example, that shows a flor setup, where taskers and flows are layed out in a flor directory tree.
+There is also [doc/quickstart1/](doc/quickstart1/), a more complex example, that shows a flor setup, where taskers and flows are laid out in a flor directory tree.
 
 
 ## documentation

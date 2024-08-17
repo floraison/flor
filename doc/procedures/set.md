@@ -48,7 +48,7 @@ sequence
   set __2 g h
     [ 9 10 11 12 13 ]
       # ==> g: 11, h: 12
-      # `__` is not prefixed by a var name, so it justs discard
+      # `__` is not prefixed by a var name, so it just discards
       # what it captures
   set i j___
     [ 14 15 16 17 18 19 ]

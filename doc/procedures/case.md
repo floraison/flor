@@ -87,7 +87,7 @@ case 'ovomolzin'
 
 ### defaulting to f.ret
 
-When nothing is explicitely provided for consideration by "case", the
+When nothing is explicitly provided for consideration by "case", the
 incoming `f.ret` is used.
 
 ```

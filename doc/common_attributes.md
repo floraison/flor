@@ -6,7 +6,7 @@ Attributes shared by all the procedures.
 
 ## vars:
 
-Vanilla procedures don't have variables set at their level. The `vars` attribute sets a vanilla hash in the targetted procedure.
+Vanilla procedures don't have variables set at their level. The `vars` attribute sets a vanilla hash in the targeted procedure.
 
 
 ## vars: hash
@@ -46,7 +46,7 @@ sequence vars: { a_0: 'a', a_1: 'A', a_z: 'z', b_0: 'b' }
     # only a_0 and a_1 are visible
 ```
 
-If the first element of the array is "-", "^" or "!", the array is a blacklist. The var names explicitely listed are bound to nil values (shadowing the value in the parent node).
+If the first element of the array is "-", "^" or "!", the array is a blacklist. The var names explicitly listed are bound to nil values (shadowing the value in the parent node).
 
 An array beginning with a "+" is a whitelist.
 
@@ -109,7 +109,7 @@ The tag attribute sets one or more tags on a node. The tag can be used with the 
 
 Read more on [tags](tags.md).
 
-Read also about [sequence](procedures/sequence.md), it can implicitely enter into a tag:
+Read also about [sequence](procedures/sequence.md), it can implicitly enter into a tag:
 ```
   sequence 'second phase' # <-- equivalent to sequence tag: 'second phase'
     doug _
@@ -180,7 +180,7 @@ sequence
   david 'perform task d'
 ```
 
-Alice and Bob have 60 to peform their tasks (they're probably automated) while Charly has 2 days and 12 hours. David has no time constraint.
+Alice and Bob have 60 to perform their tasks (they're probably automated) while Charly has 2 days and 12 hours. David has no time constraint.
 
 When a timeout triggers, the subtree rooted in the node with the timeout: attribute gets cancelled
 
@@ -204,7 +204,7 @@ Read more at [on_timeout](on_timeout.md).
 
 ## flank:
 
-Explicitely flags a procedure as "flanking".
+Explicitly flags a procedure as "flanking".
 
 In this sample, the `a; b` sequence happens in parallel to the `c; d` parent sequence. As soon as `d` replies to its parent sequence, the flanking child will get cancelled.
 
@@ -240,7 +240,7 @@ sequence
   set a 2 disabled
 ```
 
-Please note that the stopping of the node occurs right after the evaluation of the off/disable/disabled, not upon initial evalution of the node. So
+Please note that the stopping of the node occurs right after the evaluation of the off/disable/disabled, not upon initial evaluation of the node. So
 ```
 sequence
   set d true

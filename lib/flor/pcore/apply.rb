@@ -13,7 +13,7 @@ class Flor::Pro::Apply < Flor::Procedure
   #   apply sum 1 2
   # ```
   #
-  # It is usually used implicitely, as in
+  # It is usually used implicitly, as in
   # ```
   # sequence
   #   define sum a b

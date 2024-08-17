@@ -17,7 +17,7 @@ describe 'Flor core' do
 
   describe 'a field as head' do
 
-    it 'is derefenced upon application' do
+    it 'is dereferenced upon application' do
 
       r = @executor.launch(%q{
           set f.a

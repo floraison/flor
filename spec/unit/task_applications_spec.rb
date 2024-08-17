@@ -464,7 +464,7 @@ describe 'Flor unit' do
       expect(r['payload']['seen'].size).to eq(1)
     end
 
-    it "fails explicitely if the domain tasker doesn't know where to reroute" do
+    it "fails explicitly if the domain tasker doesn't know where to reroute" do
 
       r = @unit.launch(
         %q{ unknown_alpha _ },
@@ -476,7 +476,7 @@ describe 'Flor unit' do
         ).to eq("don't know how to apply \"unknown_alpha\"")
     end
 
-    it "fails explicitely if the domain tasker doesn't know where to reroute" do
+    it "fails explicitly if the domain tasker doesn't know where to reroute" do
 
       r = @unit.launch(
         %q{

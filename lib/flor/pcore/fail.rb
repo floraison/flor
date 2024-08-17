@@ -2,7 +2,7 @@
 
 class Flor::Pro::Fail < Flor::Procedure
   #
-  # Explicitely raises an error.
+  # Explicitly raises an error.
   #
   # ```
   # fail "not enough water in the tank"

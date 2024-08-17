@@ -158,7 +158,7 @@ describe 'Flor unit' do
           })
         end
 
-        it 'rejects unparseable flows' do
+        it 'rejects unparsable flows' do
 
           expect {
             @unit.launch('sequence,,,,')

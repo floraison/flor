@@ -2,7 +2,7 @@
 
 class Flor::Pro::Until < Flor::Procedure
   #
-  # Loops until or while a condiation evalutates to true.
+  # Loops until or while a condiation evaluates to true.
   #
   # ```
   # set i 0

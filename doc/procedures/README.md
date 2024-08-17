@@ -22,7 +22,7 @@
 * [do-return](do_return.md) - Takes a set of arguments and returns a function that will return those arguments again.
 * [each](each.md) - Each is a simplified version of [for-each](for_each.md).
 * [empty?](empty.md) - Returns true if the given collection or string is empty.
-* [fail, error](fail.md) - Explicitely raises an error.
+* [fail, error](fail.md) - Explicitly raises an error.
 * [filter, filter-out](filter.md) - Filters a collection
 * [find](find.md) - Finds the first matching element.
 * [flatten](flatten.md) - Flattens the given array
@@ -61,7 +61,7 @@
 * [timestamp, ltimestamp](timestamp.md) - Places a string timestamp in f.ret.
 * [to-array, to-object](to_array.md) - Turns the argument into an array or an object.
 * [type-of, type](type_of.md) - returns the type of argument or the incoming f.ret.
-* [until, while](until.md) - Loops until or while a condiation evalutates to true.
+* [until, while](until.md) - Loops until or while a condiation evaluates to true.
 
 ## unit
 
@@ -78,7 +78,7 @@
 * [graft, import](graft.md) - Graft a subtree into the current execution.
 * [on_timeout](on_timeout.md) - Counterpart to the on_timeout: attribute.
 * [schedule](schedule.md) - Schedules a function in time.
-* [signal](signal.md) - Used in conjuction with "on".
+* [signal](signal.md) - Used in conjunction with "on".
 * [sleep](sleep.md) - Makes a branch of an execution sleep for a while.
 * [task](task.md) - Tasks a tasker with a task.
 * [trap](trap.md) - Watches the messages emitted in the execution and reacts when a message matches certain criteria.

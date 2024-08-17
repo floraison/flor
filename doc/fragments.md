@@ -12,7 +12,7 @@ Fragments of documentation that will be reused later on.
 
 ##### setting FLOR_DEBUG
 
-This is a targetted run of a spec file:
+This is a targeted run of a spec file:
 ```
 FLOR_DEBUG=msg,err bundle exec rspec spec/punit/cancel_spec.rb
 ```

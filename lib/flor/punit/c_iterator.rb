@@ -156,6 +156,7 @@ class Flor::Pro::ConcurrentIterator < Flor::Procedure
     is.each { |i| t1[i][1][0][0] = '_reff' }
 
     @node['tree'] = [ t[0], t1, *t[2..-1] ]
+Flor.pp @node['tree']
   end
 end
 

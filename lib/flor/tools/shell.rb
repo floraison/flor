@@ -645,7 +645,7 @@ module Flor::Tools
         puts Flor.to_d(
           { key: @unit.conf[key] }, colour: true, indent: 1, width: true)
       elsif key
-        # alreay done
+        # already done
       else
         page(Flor.to_d(@unit.conf, colour: true, indent: 1, width: true))
       end

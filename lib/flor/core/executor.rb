@@ -156,7 +156,7 @@ module Flor
       end
         #
         # vars: variables
-        # vdomain: variable domain (used in conjuction with the loader)
+        # vdomain: variable domain (used in conjunction with the loader)
         # cnid: closure nid
         # dbg: used to debug messages (useful @node['dbg'] when 'receive')
 

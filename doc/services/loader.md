@@ -36,7 +36,7 @@ Here is an example tree:
 │       │   └── team_b         # the com/example/team_b tasker
 │       │       ├── dot.json
 │       │       └── tasker.rb
-│       └── com.example.accounting.json   # taskers for com/example/accouting
+│       └── com.example.accounting.json   # taskers for com/example/accounting
 ├── usr
 │   └── com.example.sales
 │       └── co

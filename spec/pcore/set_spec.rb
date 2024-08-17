@@ -164,7 +164,7 @@ describe 'Flor procedures' do
       expect(r['payload']['ret']).to eq(11)
     end
 
-    it 'leaves f.ret unless explicitely setting it' do
+    it 'leaves f.ret unless explicitly setting it' do
 
       r = @executor.launch(
         %q{

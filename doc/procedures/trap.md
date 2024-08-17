@@ -136,7 +136,7 @@ Please note how "on" accepts a block while "trap" accepts a function.
 
 The range limit determines what is the range, or scope of the trap.
 By default the trap only care about nodes below its parent. In other words,
-the trap binds itself to its parent and observes the messages occuring
+the trap binds itself to its parent and observes the messages occurring
 in the execution in the branch of nodes whose root is the parent.
 
 The possible values for `range:` are:

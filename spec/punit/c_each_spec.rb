@@ -133,21 +133,23 @@ describe 'Flor punit' do
       expect(r['vars']['l']).to eq([ 'lab alpha', 'lab biometa' ])
     end
 
-    it 'accepts expect: and remaining: (3)'
-#
-#      r = @unit.launch(
-#        %q{
-#          set l []
-#          set labs [ 'lab arcturus', 'lab brizer', 'lab cruz' ]
-#
-#          c-each labs v.lab expect: 2 remaining: 'cancel'
-#            sleep for: "$(idx)s"
-#            push l lab
-#        },
-#        wait: true)
-#
-#      expect(r['vars']['l']).to eq([ 'lab arcturus', 'lab brizer' ])
-#    end
+    it 'accepts expect: and remaining: (3)' do
+
+      r = @unit.launch(
+        %q{
+          set l []
+          set labs [ 'lab arcturus', 'lab brizer', 'lab cruz' ]
+
+          c-each labs v.lab expect: 2 remaining: 'cancel'
+            sleep for: "$(idx)s"
+            push l lab
+        },
+        wait: true)
+pp r
+
+      expect(r['point']).to eq('terminated')
+      expect(r['vars']['l']).to eq([ 'lab arcturus', 'lab brizer' ])
+    end
   end
 end
 

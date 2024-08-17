@@ -140,7 +140,7 @@ The [case](procedures/case.md) and [match](procedures/match.md) are the other tw
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp4.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp4_animation.php) | [top](#top)
 
 ### Simple Merge
-<a id="bcf-simple-merge" />A simple merge occur when two (or more) exclusive branch converge. As seen in exclusive choice this pattern is implicitely supported. It simply occurs when the ‘then’ or the ‘else’ clause of an [if](procedures/if.md) terminates and the flow resumes.
+<a id="bcf-simple-merge" />A simple merge occur when two (or more) exclusive branch converge. As seen in exclusive choice this pattern is implicitly supported. It simply occurs when the ‘then’ or the ‘else’ clause of an [if](procedures/if.md) terminates and the flow resumes.
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/basic/wcp5.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/basic/wcp5_animation.php) | [top](#top)
 
@@ -182,7 +182,7 @@ sequence
   task "transfer-patient"
   # ...
 ```
-The [concurrence](procedures/concurrence.md) procedure, by default, waits for all its children to respond before ending and replying to its parent procedure (here a [sequence](procecures/sequence.md). The sequence then hands the flow to the `task "transfer-patient"` followup.
+The [concurrence](procedures/concurrence.md) procedure, by default, waits for all its children to respond before ending and replying to its parent procedure (here a [sequence](procedures/sequence.md). The sequence then hands the flow to the `task "transfer-patient"` followup.
 
 [wp/explanation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp7.php) | [wp/animation](http://www.workflowpatterns.com/patterns/control/advanced_branching/wcp7_animation.php) | [top](#top)
 
@@ -276,7 +276,7 @@ sequence
 
 The [concurrence](procedures/concurrence.md) expects one reply and then cancels the remaining branches.
 
-Here is a varient using [c-each](procedures/c_each.md):
+Here is a variant using [c-each](procedures/c_each.md):
 
 ```python
 sequence

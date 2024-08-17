@@ -17,7 +17,7 @@ describe 'Flor core' do
 
   describe 'a variable as head' do
 
-    it 'is derefenced upon application' do
+    it 'is dereferenced upon application' do
 
       r = @executor.launch(%{
           set a
@@ -86,7 +86,7 @@ describe 'Flor core' do
 
   describe 'a variable as head (deep)' do
 
-    it 'is derefenced upon application' do
+    it 'is dereferenced upon application' do
 
       r = @executor.launch(%{
           set a { b: sequence }
