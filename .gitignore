@@ -44,3 +44,5 @@ __spec/
 .chat.md
 .openai*
 
+.codespell-*
+
