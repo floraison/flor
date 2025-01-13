@@ -821,7 +821,8 @@ module Flor
       @db[:flor_pointers]
         .import(
           POINTER_COLUMNS,
-          pointers)
+          pointers,
+          skip_transaction: true)
 
       callback(:pointers, :update, exid)
     end
