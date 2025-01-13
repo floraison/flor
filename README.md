@@ -6,8 +6,10 @@
 
 Flor is a "Ruby workflow engine", if that makes any sense.
 
+<!--
 * [floraison mailing list](https://groups.google.com/forum/#!forum/floraison)
 * [twitter.com/@flor_workflow](https://twitter.com/flor_workflow)
+-->
 
 
 ## use
