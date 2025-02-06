@@ -9,13 +9,7 @@
 
 *.swp
 
-.vimrc
-.viminfo
-.vimgrep
-#.vimshorts
-.vimmarks
-.vimspec
-.vimfuzz2
+.vim*
 
 tmp/*.db
 tmp/*.log
@@ -43,6 +37,8 @@ __spec/
 
 .chat.md
 .openai*
+.deep.md
+.deepseek*
 
 .codespell-*
 
