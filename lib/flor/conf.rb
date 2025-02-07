@@ -30,8 +30,8 @@ module Flor
     #   reload/resync with db after how much time? (defaults to 60 (seconds))
     #   minimizes communication with db in idle periods
     #
-    # * :sch_max_executors
-    #   How many executor thread at most? (defaults to 7, 1 is OK in certain
+    # * :sch_max_executors or :sch_max_executor_count
+    #   How many executor threads at most? (defaults to 7, 1 is OK in certain
     #   environments)
     #
     # * :exe_max_messages
@@ -101,7 +101,7 @@ module Flor
           c.merge!(interpret_env)
         end
 
-        c.merge!(over_conf)
+        c.merge!(Flor.to_string_keyed_hash(over_conf))
       end
 
       def get_class(conf, key)

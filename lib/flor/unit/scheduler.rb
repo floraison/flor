@@ -46,19 +46,22 @@ module Flor
       @spooler =
         (Flor::Conf.get_class(@conf, 'spooler') || Flor::Spooler).new(self)
 
-      @heart_rate = @conf[:sch_heart_rate] || 0.3
-      @reload_after = @conf[:sch_reload_after] || 60
+      @heart_rate = @conf['sch_heart_rate'] || 0.3
+      @reload_after = @conf['sch_reload_after'] || 60
         #
       @wake_up = true
       @next_time = nil
       @reloaded_at = Time.now
 
-      @msg_max_res_time = @conf[:sch_msg_max_res_time] || 10 * 60
+      @msg_max_res_time = @conf['sch_msg_max_res_time'] || 10 * 60
 
       @idle_count = 0
 
-      @max_executors = @conf[:sch_max_executors] || 1
-        #
+      @max_executor_count =
+        @conf['sch_max_executor_count'] ||
+        @conf['sch_max_executors'] ||
+        7
+
       @executors = []
 
       c = @conf['constant']
@@ -710,18 +713,20 @@ module Flor
       @storage.trigger_timers
     end
 
+    def free_executor_count
+
+      [ 0, @max_executor_count - @executors.count ].max
+    end
+
     def trigger_executions
 
       @executors.select! { |e| e.alive? }
         # drop done executors
 
-      free_executor_count = @max_executors - @executors.size
+      @storage.load_messages(free_executor_count).each do |exid, ms|
+        # remember that load_messages load count + 2 executions...
 
-      return if free_executor_count < 1
-
-      messages = @storage.load_messages(free_executor_count)
-
-      messages.each do |exid, ms|
+        break if free_executor_count < 1
 
         next unless @storage.reserve_all_messages(ms)
 
