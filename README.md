@@ -117,6 +117,9 @@ See [doc/](doc/).
 * [floraison/fugit](https://github.com/floraison/fugit) - a time library for flor and [rufus-scheduler](https://github.com/jmettraux/rufus-scheduler)
 * [floraison/raabro](https://github.com/floraison/raabro) - the PEG library flor uses for its parsing needs
 
+* [kiebor81/flor-language-service](https://github.com/kiebor81/flor-language-service) - a Visual Studio Code language service for the Flor language
+* [flor.vim](https://github.com/floraison/flor/blob/master/misc/flor.vim) - a Vim syntax file for flor
+
 
 ## blog posts and presentations
 
