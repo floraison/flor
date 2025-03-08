@@ -143,6 +143,7 @@ There are various other Ruby and Ruby on Rails projects about workflows and busi
 * [Pallets](https://github.com/linkyndy/pallets) - "Simple and reliable workflow engine, written in Ruby"
 * [Gush](https://github.com/chaps-io/gush) - "Fast and distributed workflow runner using ActiveJob and Redis"
 * [Rukawa](https://github.com/joker1007/rukawa) - Hyper simple workflow engine powered by concurrent-ruby
+* [ChronoForge](https://github.com/radioactive-labs/chrono_forge) - durable workflow engine for Ruby on Rails that provides reliable state management, error recovery, and workflow orchestration through ActiveJob
 
 There is a [workflow engine](https://ruby.libhunt.com/categories/5786-workflow-engine) category on [Awesome Ruby](https://ruby.libhunt.com/).
 
