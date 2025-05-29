@@ -753,11 +753,21 @@ describe 'Flor punit' do
 
           wait_until { @unit.traces.count > 2 }
 
-          expect(
-            @unit.traces.collect(&:text).join("\n")
-          ).to eq([
-            'exe0', "t1_#{exid0}", 'exe1'
-          ].join("\n"))
+          #expect(
+          #  @unit.traces.collect(&:text).join("\n")
+          #).to eq([
+          #  'exe0', "t1_#{exid0}", 'exe1'
+          #].join("\n"))
+            #
+            # JRuby 9.4 always puts t1 after exe1... :-(
+
+          ts = @unit.traces.collect(&:text)
+
+          expect(ts.size).to eq(3)
+
+          expect(ts[0]).to eq('exe0')
+          expect(ts).to include('exe1')
+          expect(ts).to include("t1_#{exid0}")
         end
       end
 
