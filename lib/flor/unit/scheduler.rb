@@ -370,20 +370,22 @@ module Flor
       @wake_up = true
     end
 
-    def notify(executor, o)
+    def notify(executor, message)
 
       if executor
-        @hooker.notify(executor, o)
+        @hooker.notify(executor, message)
       else
-        @hooker.wlist.notify(nil, o)
+        @hooker.wlist.notify(nil, message)
       end
 
-    rescue => err
-      puts '-sch' * 19
-      puts "+ error in #{self.class}#notify"
-      p err
-      puts err.backtrace
-      puts ('-sch' * 19) + ' .'
+      # NO, let it fail...
+      #
+    #rescue => err
+    #  puts '-sch' * 19
+    #  puts "+ error in #{self.class}#notify"
+    #  p err
+    #  puts err.backtrace
+    #  puts ('-sch' * 19) + ' .'
     end
 
     def trap(node, tra)

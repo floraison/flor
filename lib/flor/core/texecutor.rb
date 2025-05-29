@@ -20,12 +20,12 @@ module Flor
         @archive = nil
       end
 
-      def notify(executor, msg)
+      def notify(executor, message)
 
-        return [] if msg['consumed']
+        return [] if message['consumed']
 
-        @logger.notify(executor, msg)
-        @journal << msg
+        @logger.notify(executor, message)
+        @journal << message
 
         []
       end
