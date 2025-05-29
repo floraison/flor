@@ -2,7 +2,12 @@
 # CHANGELOG.md
 
 
-## flor 1.6.3  not yet released
+## flor 1.6.3  released 2025-05-29
+
+* Stop Scheduler#notify swallowing errors, gh-43
+* Rework max_execution_count conf and use, gh-41
+* Introduce Flor.pp(o, opts={}) and Flor.pp_to_s
+* Set skip_transaction: true when reimporting ptrs
 
 
 ## flor 1.6.2  released 2023-12-03
