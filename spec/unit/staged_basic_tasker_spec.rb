@@ -34,7 +34,6 @@ describe 'Flor unit' do
 
     describe '#pre_task' do
 
-# TODO
       it 'is called if present' do
 
         class SbtZeroTasker < Flor::StagedBasicTasker
