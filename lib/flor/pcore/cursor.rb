@@ -246,7 +246,7 @@ class Flor::Pro::Cursor < Flor::Procedure
         c[1].find { |cc|
           cc[0] == '_att' &&
           cc[1].is_a?(Array) &&
-          cc[1][0][0, 2] == [ 'here', [] ] } } # FIXME hardcoded...
+          cc[1][0][0, 2] == [ to, [] ] } }
   end
 end
 

@@ -122,9 +122,9 @@ describe 'Flor pcore' do
         %q{
           cursor
             push f.l 'a'
-            move to: here
+            move to: herex
             push f.l 'b'
-            _ here
+            _ herex
             push f.l 'c'
         },
         payload: { 'l' => [] })
