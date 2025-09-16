@@ -72,6 +72,20 @@ describe 'Flor pcore' do
       expect(r['payload']['l']).to eq(%w[ a c ])
     end
 
+    #it 'moves to a string value' do
+    #  r = @executor.launch(
+    #    %q{
+    #      cursor
+    #        push f.l 'a'
+    #        move to: 'out'
+    #        push f.l 'b'
+    #        push f.l 'c' toto: 'out'
+    #    },
+    #    payload: { 'l' => [] })
+    #  expect(r['point']).to eq('terminated')
+    #  expect(r['payload']['l']).to eq(%w[ a c ])
+    #end
+
     it 'moves to a string' do
 
       r = @executor.launch(
@@ -122,9 +136,9 @@ describe 'Flor pcore' do
         %q{
           cursor
             push f.l 'a'
-            move to: herex
+            move to: here
             push f.l 'b'
-            _ herex
+            _ here
             push f.l 'c'
         },
         payload: { 'l' => [] })
