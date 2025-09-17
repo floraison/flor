@@ -18,7 +18,7 @@
 * [cond](cond.md) - Evaluates all its condition children until one evaluates to true (or it's an else), then executes the corresponding clause child.
 * [cursor](cursor.md) - Executes child expressions in sequence, but may be "guided".
 * [def, fun, define](define.md) - Defines a function.
-* [del](del.md) - Removes a field or a variable.
+* [del, delf](del.md) - Removes a field or a variable.
 * [detect](detect.md) - Detect is a simplified version of [find](find.md).
 * [do-return](do_return.md) - Takes a set of arguments and returns a function that will return those arguments again.
 * [each](each.md) - Each is a simplified version of [for-each](for_each.md).
@@ -133,7 +133,7 @@
   * [Flor::Pro::Cursor](https://github.com/floraison/flor/blob/master/lib/flor/pcore/cursor.rb) : [cursor](cursor.md)
     * [Flor::Pro::Loop](https://github.com/floraison/flor/blob/master/lib/flor/pcore/loop.rb) : [loop](loop.md)
   * [Flor::Pro::Define](https://github.com/floraison/flor/blob/master/lib/flor/pcore/define.rb) : [def, fun, define](define.md)
-  * [Flor::Pro::Del](https://github.com/floraison/flor/blob/master/lib/flor/pcore/del.rb) : [del](del.md)
+  * [Flor::Pro::Del](https://github.com/floraison/flor/blob/master/lib/flor/pcore/del.rb) : [del, delf](del.md)
   * [Flor::Pro::Detect](https://github.com/floraison/flor/blob/master/lib/flor/pcore/detect.rb) : [detect](detect.md)
   * [Flor::Pro::Dmute](https://github.com/floraison/flor/blob/master/lib/flor/pcore/_dmute.rb) : _dmute
   * [Flor::Pro::DoReturn](https://github.com/floraison/flor/blob/master/lib/flor/pcore/do_return.rb) : [do-return](do_return.md)

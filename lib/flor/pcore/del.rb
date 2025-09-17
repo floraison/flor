@@ -11,9 +11,12 @@ class Flor::Pro::Del < Flor::Procedure
   #   del a    # blanks variable 'a'
   # ```
   #
-  # Returns the value held in the field or variable or null else.
+  # Returns the value held in the field or variable or `null` else.
+  #
+  # `del` will raise an error if the target field cannot be reached,
+  # but `delf` will not raise and simply return `null`.
 
-  names %w[ del ]
+  names %w[ del delf ]
 
   def pre_execute
 
@@ -42,8 +45,12 @@ class Flor::Pro::Del < Flor::Procedure
 
     @node['refs'].each do |ref|
 
-      ret = lookup_value(ref)
-      unset_value(ref)
+      ret = (lookup_value(ref) rescue nil)
+      begin
+        unset_value(ref)
+      rescue
+        raise unless tree[0] == 'delf'
+      end
     end
 
     wrap('ret' => ret)
