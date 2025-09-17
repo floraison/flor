@@ -7,8 +7,8 @@ class Flor::Pro::Break < Flor::Procedure
   # ```
   # until false
   #   # do something
-  #   continue if f.x == 0
-  #   break if f.x == 1
+  #   continue _ if f.x == 0
+  #   break _ if f.x == 1
   #   # do something more
   # ```
   #
@@ -50,7 +50,7 @@ class Flor::Pro::Break < Flor::Procedure
   #
   # While, until, loop and cursor.
 
-  name 'break', 'continue'
+  names %w[ break continue ]
 
   def pre_execute
 
