@@ -6,8 +6,8 @@ Breaks or continues a "while", "until", "loop" or a "cursor".
 ```
 until false
   # do something
-  continue if f.x == 0
-  break if f.x == 1
+  continue _ if f.x == 0
+  break _ if f.x == 1
   # do something more
 ```
 
