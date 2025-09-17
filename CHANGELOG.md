@@ -2,6 +2,9 @@
 # CHANGELOG.md
 
 
+## flor 1.6.4  not yet released
+
+
 ## flor 1.6.3  released 2025-05-29
 
 * Stop Scheduler#notify swallowing errors, gh-43
