@@ -39,17 +39,17 @@ describe 'Flor procedures' do
       expect(r['vars']).to eq({ 'c' => 3 })
     end
 
-#    it 'deletes multiple variables' do
-#
-#      r = @executor.launch(
-#        %q{ del a v.b },
-#        variables: { 'a' => 1, 'b' => 2, 'c' => 3 })
-#
-#      expect(r).to have_terminated_as_point
-#      expect(r['from']).to eq('0')
-#      expect(r['payload']).to eq({ 'ret' => 2 })
-#      expect(r['vars']).to eq({ 'c' => 3 })
-#    end
+    it 'deletes multiple variables' do
+
+      r = @executor.launch(
+        %q{ del a v.b },
+        variables: { 'a' => 1, 'b' => 2, 'c' => 3 })
+
+      expect(r).to have_terminated_as_point
+      expect(r['from']).to eq('0')
+      expect(r['payload']).to eq({ 'ret' => 2 })
+      expect(r['vars']).to eq({ 'c' => 3 })
+    end
 
     it 'deletes a field' do
 
