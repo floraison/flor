@@ -737,23 +737,28 @@ class Flor::Procedure < Flor::Node
       node = lookup_var_node(@node, mode, path)
       node = lookup_var_node(@node, 'l', path) if node.nil? && mode == ''
 
-      return Dense.set(node['vars'], path, v) if node
+      if node
+        return Dense.unset(node['vars'], path) if v == :UNSET
+        return Dense.set(node['vars'], path, v)
+      end
 
     rescue IndexError
     end
 
     fail IndexError.new(
-      "couldn't set var #{Flor.path_to_s([ "#{mode}v" ] + path)}")
+      "couldn't #{v == :UNSET ? 'un' : ''}set var " +
+      "#{Flor.path_to_s([ "#{mode}v" ] + path)}")
   end
 
   def set_field(path, v)
 
+    return Dense.unset(payload.copy, path) if v == :UNSET
     Dense.set(payload.copy, path, v)
 
   rescue IndexError
 
     fail IndexError.new(
-      "couldn't set field #{Flor.path_to_s(path)}")
+      "couldn't #{v == :UNSET ? 'un' : ''}set field #{Flor.path_to_s(path)}")
   end
 
   def set_value(path, value)
@@ -773,6 +778,11 @@ class Flor::Procedure < Flor::Node
         set_var('', path, value)
       end
     end
+  end
+
+  def unset_value(path)
+
+    set_value(path, :UNSET)
   end
 
   def splat_value(paths, value)
