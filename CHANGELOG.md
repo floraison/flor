@@ -2,7 +2,10 @@
 # CHANGELOG.md
 
 
-## flor 1.6.4  not yet released
+## flor 1.6.4  released 2025-09-18
+
+* Introduce `del` and `delf` to delete vars and fields
+* Fix cursor/move vs symbol target
 
 
 ## flor 1.6.3  released 2025-05-29
