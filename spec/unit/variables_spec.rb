@@ -39,6 +39,18 @@ describe 'Flor unit' do
       expect(r['payload']).to eq({ 'ret' => 'ACME' })
     end
 
+    it 'looks up (2)' do
+
+      r =
+        @unit.launch(%{
+          [ company, activity ]
+        }, domain: 'bleakrock', wait: true)
+
+      expect(r['point']).to eq('terminated')
+      expect(Flor.domain(r['exid'])).to eq('bleakrock')
+      expect(r['payload']).to eq({ 'ret' => [ 'BleakRock', 'Purchasing' ] })
+    end
+
     they 'are prefixed optionally with dv.' do
 
       r =

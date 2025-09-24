@@ -41,7 +41,8 @@ module Flor
 
     def variables(domain)
 
-      Dir[File.join(@root, '**/*.json')]
+      %w[ .json .js .yaml .rb ]
+        .inject([]) { |a, x| a + Dir[File.join(@root, "**/*#{x}")] }
         .select { |f| f.index('/etc/variables/') }
         .collect { |pa| [ pa, expose_d(pa, {}) ] }
         .select { |pa, d| Flor.sub_domain?(d, domain) }
@@ -234,7 +235,7 @@ module Flor
         .sub(libregex, '/')
         .sub(/\/\z/, '')
         .sub(/\/(flo|flor|dot|hooks)\.json\z/, '')
-        .sub(/\.(flo|flor|json|rb)\z/, '')
+        .sub(/\.(flo|flor|json|js|rb|yaml)\z/, '')
         .sub(/\A\//, '')
         .gsub(/\//, '.')
     end
@@ -292,7 +293,7 @@ module Flor
 
           if val && mt1 == mt0
             val
-          elsif ext == '.rb'
+          elsif %w[ .rb .yaml ].include?(ext)
             (@cache[path] = [ File.read(path), mt1 ]).first
           else
             (@cache[path] = [ Flor::ConfExecutor.load(path), mt1 ]).first
@@ -301,13 +302,20 @@ module Flor
 
       case ext
       when '.rb' then eval_ruby(path, src, context)
-      else eval_json(path, src, context)
+      when '.js', '.json' then eval_json(path, src, context)
+      when '.yaml' then eval_yaml(path, src, context)
+      else fail(ArgumentError.new("cannot load variables at #{path}"))
       end
     end
 
     def eval_json(path, src, context)
 
       Flor::ConfExecutor.interpret(path, src, context)
+    end
+
+    def eval_yaml(path, src, context)
+
+      YAML.load(src)
     end
 
     def eval_ruby(path, src, context)
