@@ -2,6 +2,9 @@
 # CHANGELOG.md
 
 
+## flor 1.6.5  not yet released
+
+
 ## flor 1.6.4  released 2025-09-18
 
 * Introduce `del` and `delf` to delete vars and fields
