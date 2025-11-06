@@ -29,8 +29,9 @@ module Flor
 
       call_tasker(cla)
     end
-
+      #
     alias detask task
+    alias post_task task
 
     protected
 
