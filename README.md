@@ -145,6 +145,7 @@ There are various other Ruby and Ruby on Rails projects about workflows and busi
 * [Rukawa](https://github.com/joker1007/rukawa) - Hyper simple workflow engine powered by concurrent-ruby
 * [ChronoForge](https://github.com/radioactive-labs/chrono_forge) - durable workflow engine for Ruby on Rails that provides reliable state management, error recovery, and workflow orchestration through ActiveJob
 * [StepperMotor](https://github.com/stepper-motor/stepper_motor) - Effortless step workflows for Rails
+* [Stepped](https://github.com/envirobly/stepped) - a Rails engine for orchestrating complex workflows as a tree of actions
 
 There is a [workflow engine](https://ruby.libhunt.com/categories/5786-workflow-engine) category on [Awesome Ruby](https://ruby.libhunt.com/).
 
