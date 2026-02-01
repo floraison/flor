@@ -184,8 +184,7 @@ describe Flor::Waiter do
       expect(ptr.type).to eq('tasker')
       expect(ptr.name).to eq('hole')
 
-      #expect(ptr.payload).to eq('target' => 'Talos IV')
-      expect(ptr.payload['target'].to eq('Talos IV')
+      expect(ptr.payload).to eq('ret' => 'hole', 'target' => 'Talos IV')
     end
 
     it 'lets the launcher wait for the presence of a task at a nid' do
@@ -213,8 +212,7 @@ describe Flor::Waiter do
       expect(ptr.type).to eq('tasker')
       expect(ptr.name).to eq('hole')
       expect(ptr.value).to eq('take 2')
-
-      #expect(ptr.payload).to eq({})
+      expect(ptr.payload).to eq('ret' => 'take 2')
     end
 
     it 'lets the launcher wait for two taskers' do
