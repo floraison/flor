@@ -4,6 +4,8 @@
 
 ## flor 1.6.5  not yet released
 
+* Add Pointer #message and #payload
+
 
 ## flor 1.6.4  released 2025-09-18
 

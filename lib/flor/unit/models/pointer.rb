@@ -59,6 +59,9 @@ module Flor
 
       attl.select { |e| e.is_a?(String) }
     end
+
+    def message; data && data['message']; end
+    def payload; message && message['payload']; end
   end
 end
 
